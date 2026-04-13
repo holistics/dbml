@@ -98,27 +98,6 @@
           }
         ]
       }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Table@t1@[L2:C0, L6:C1]",
-              "snippet": "Table t1 {...p1\n  ~p2\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
-              "snippet": "TablePartial p1 {}"
-            }
-          }
-        ]
-      }
     ]
   }
 }

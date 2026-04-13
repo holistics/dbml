@@ -177,21 +177,6 @@
           }
         ]
       }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Table@Users@[L0:C0, L3:C1]",
-              "snippet": "Table User...integer \n}"
-            }
-          }
-        ]
-      }
     ]
   }
 }

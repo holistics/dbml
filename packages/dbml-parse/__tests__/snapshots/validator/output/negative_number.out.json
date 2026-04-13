@@ -2429,12 +2429,6 @@
                   "snippet": "id int(-1)...fault: -2]"
                 }
               }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@P1@[L14:C3, L14:C5]",
-                "snippet": "P1"
-              }
             ]
           }
         },
@@ -2588,13 +2582,7 @@
                               }
                             },
                             "fullEnd": 291,
-                            "fullStart": 288,
-                            "referee": {
-                              "context": {
-                                "id": "symbol@TablePartial@P1@[L6:C0, L10:C1]",
-                                "snippet": "TableParti...negative\n}"
-                              }
-                            }
+                            "fullStart": 288
                           },
                           "op": {
                             "context": {
@@ -2727,7 +2715,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L15:C1]",
+        "id": "symbol@Schema@@[L0:C0, L15:C1]",
         "snippet": "Table a {\n...nt\n  ~P1\n}"
       },
       "declaration": {
@@ -2735,11 +2723,6 @@
         "snippet": "Table a {\n...nt\n  ~P1\n}"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@a@[L0:C0, L4:C1]",

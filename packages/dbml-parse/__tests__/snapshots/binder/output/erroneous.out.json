@@ -1,6 +1,20 @@
 {
   "errors": [
     {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect a comma ','",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@s@[L7:C35, L7:C36]",
+          "snippet": "s",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
       "filepath": "/main.dbml",
@@ -15,16 +29,14 @@
       }
     },
     {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect a comma ','",
+      "code": "UNKNOWN_COLUMN_SETTING",
+      "diagnostic": "Unknown column setting 'diagram_id'",
       "filepath": "/main.dbml",
       "level": "error",
-      "token": {
+      "node": {
         "context": {
-          "id": "token@<identifier>@s@[L7:C35, L7:C36]",
-          "snippet": "s",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
+          "id": "node@<attribute>@@[L9:C14, L9:C24]",
+          "snippet": "diagram_id"
         }
       }
     },
@@ -53,18 +65,6 @@
           "snippet": "}",
           "isInvalid": true,
           "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNKNOWN_COLUMN_SETTING",
-      "diagnostic": "Unknown column setting 'diagram_id'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L9:C14, L9:C24]",
-          "snippet": "diagram_id"
         }
       }
     }
@@ -462,39 +462,6 @@
           {
             "id": "node@<primary-expression>@diagrams@[L24:C5, L24:C15]",
             "snippet": "\"diagrams\""
-          }
-        ]
-      }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
-              "snippet": "Table diag...ncrement\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@permissions@[L13:C0, L16:C1]",
-              "snippet": "Table perm... varchar\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
-              "snippet": "Table user...) [pk]\n  }"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@users@[L0:C0, L2:C1]",
-              "snippet": "Table user...crement]\n}"
-            }
           }
         ]
       }

@@ -326,7 +326,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L4:C1]",
+        "id": "symbol@Schema@@[L0:C0, L4:C1]",
         "snippet": "Enum statu...  churn\r\n}"
       },
       "declaration": {
@@ -338,11 +338,6 @@
           "context": {
             "id": "symbol@Enum@status@[L0:C0, L4:C1]",
             "snippet": "Enum statu...  churn\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         }
       ]

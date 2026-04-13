@@ -1,18 +1,6 @@
 {
   "errors": [
     {
-      "code": "UNKNOWN_TABLE_SETTING",
-      "diagnostic": "Unknown 'what' setting",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L8:C4, L8:C17]",
-          "snippet": "what: 'ye ye'"
-        }
-      }
-    },
-    {
       "code": "DUPLICATE_TABLE_SETTING",
       "diagnostic": "'note' can only appear once",
       "filepath": "/main.dbml",
@@ -33,6 +21,18 @@
         "context": {
           "id": "node@<attribute>@@[L6:C4, L6:C32]",
           "snippet": "note: 'Thi...ther note'"
+        }
+      }
+    },
+    {
+      "code": "UNKNOWN_TABLE_SETTING",
+      "diagnostic": "Unknown 'what' setting",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L8:C4, L8:C17]",
+          "snippet": "what: 'ye ye'"
         }
       }
     },
@@ -228,12 +228,6 @@
                   "id": "symbol@Column@id@[L1:C4, L1:C14]",
                   "snippet": "id integer"
                 }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@t1@[L10:C4, L10:C6]",
-                "snippet": "t1"
               }
             ]
           }
@@ -637,13 +631,7 @@
                           }
                         },
                         "fullEnd": 153,
-                        "fullStart": 146,
-                        "referee": {
-                          "context": {
-                            "id": "symbol@Table@t1@[L0:C0, L2:C1]",
-                            "snippet": "Table t1 {... integer\n}"
-                          }
-                        }
+                        "fullStart": 146
                       }
                     },
                     "fullEnd": 153,
@@ -958,12 +946,6 @@
                   "snippet": "id int [pk]"
                 }
               }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@table2@[L20:C2, L20:C8]",
-                "snippet": "table2"
-              }
             ]
           }
         },
@@ -1130,13 +1112,7 @@
                           }
                         },
                         "fullEnd": 234,
-                        "fullStart": 225,
-                        "referee": {
-                          "context": {
-                            "id": "symbol@Table@table2@[L13:C0, L15:C1]",
-                            "snippet": "Table tabl...int [pk]\n}"
-                          }
-                        }
+                        "fullStart": 225
                       }
                     },
                     "fullEnd": 234,
@@ -1232,7 +1208,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L22:C0]",
+        "id": "symbol@Schema@@[L0:C0, L22:C0]",
         "snippet": "Table t1 {... table2\n}\n"
       },
       "declaration": {
@@ -1240,11 +1216,6 @@
         "snippet": "Table t1 {... table2\n}\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@t1@[L0:C0, L2:C1]",

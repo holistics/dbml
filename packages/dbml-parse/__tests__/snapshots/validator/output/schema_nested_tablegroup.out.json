@@ -103,13 +103,7 @@
             "declaration": {
               "id": "node@<element-declaration>@A@[L0:C0, L1:C1]",
               "snippet": "Table A {\n}"
-            },
-            "references": [
-              {
-                "id": "node@<primary-expression>@A@[L4:C2, L4:C3]",
-                "snippet": "A"
-              }
-            ]
+            }
           }
         },
         {
@@ -176,13 +170,7 @@
                           }
                         },
                         "fullEnd": 46,
-                        "fullStart": 42,
-                        "referee": {
-                          "context": {
-                            "id": "symbol@Table@A@[L0:C0, L1:C1]",
-                            "snippet": "Table A {\n}"
-                          }
-                        }
+                        "fullStart": 42
                       }
                     },
                     "fullEnd": 46,
@@ -326,7 +314,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L6:C0]",
+        "id": "symbol@Schema@@[L0:C0, L6:C0]",
         "snippet": "Table A {\n...t {\n  A\n}\n"
       },
       "declaration": {
@@ -334,11 +322,6 @@
         "snippet": "Table A {\n...t {\n  A\n}\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@A@[L0:C0, L1:C1]",

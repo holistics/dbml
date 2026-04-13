@@ -3616,23 +3616,6 @@
       }
     },
     "fullEnd": 463,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Program@@[L0:C0, L50:C0]",
-        "snippet": "Test Expre...---+1\r\n}\r\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L50:C0]",
-        "snippet": "Test Expre...---+1\r\n}\r\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

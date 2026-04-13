@@ -105,17 +105,7 @@
                       }
                     },
                     "fullEnd": 47,
-                    "fullStart": 30,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@timestamp@[L1:C2, L1:C16]",
-                        "snippet": "timestamp uuid"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@timestamp@[L1:C2, L1:C16]",
-                        "snippet": "timestamp uuid"
-                      }
-                    }
+                    "fullStart": 30
                   }
                 ]
               },
@@ -162,31 +152,7 @@
             }
           },
           "fullEnd": 49,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
-              "snippet": "TableParti...amp uuid\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@with_timestamp@[L0:C0, L2:C1]",
-              "snippet": "TableParti...amp uuid\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@timestamp@[L1:C2, L1:C16]",
-                  "snippet": "timestamp uuid"
-                }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@with_timestamp@[L5:C3, L5:C17]",
-                "snippet": "with_timestamp"
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -258,13 +224,7 @@
                               }
                             },
                             "fullEnd": 82,
-                            "fullStart": 67,
-                            "referee": {
-                              "context": {
-                                "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
-                                "snippet": "TableParti...amp uuid\n}"
-                              }
-                            }
+                            "fullStart": 67
                           },
                           "op": {
                             "context": {
@@ -281,17 +241,7 @@
                       }
                     },
                     "fullEnd": 82,
-                    "fullStart": 64,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
-                        "snippet": "~with_timestamp"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@@[L5:C2, L5:C17]",
-                        "snippet": "~with_timestamp"
-                      }
-                    }
+                    "fullStart": 64
                   }
                 ]
               },
@@ -338,31 +288,7 @@
             }
           },
           "fullEnd": 84,
-          "fullStart": 49,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@users@[L4:C0, L6:C1]",
-              "snippet": "Table user...imestamp\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@users@[L4:C0, L6:C1]",
-              "snippet": "Table user...imestamp\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@timestamp@[L1:C2, L1:C16]",
-                  "snippet": "timestamp uuid"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@PartialInjection@@[L5:C2, L5:C17]",
-                  "snippet": "~with_timestamp"
-                }
-              }
-            ]
-          }
+          "fullStart": 49
         }
       ],
       "eof": {
@@ -376,35 +302,6 @@
       }
     },
     "fullEnd": 84,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Program@@[L0:C0, L7:C0]",
-        "snippet": "TableParti...mestamp\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L7:C0]",
-        "snippet": "TableParti...mestamp\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@users@[L4:C0, L6:C1]",
-            "snippet": "Table user...imestamp\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TablePartial@with_timestamp@[L0:C0, L2:C1]",
-            "snippet": "TableParti...amp uuid\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

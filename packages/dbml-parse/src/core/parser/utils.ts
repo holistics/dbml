@@ -2,7 +2,6 @@ import { last } from 'lodash-es';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-
 import { alternateLists } from '@/core/utils/array';
 import NodeFactory from '@/core/parser/factory';
 import {
@@ -211,10 +210,6 @@ function markInvalidNode (node: SyntaxNode) {
   }
 }
 
-export function isInvalidToken (token?: SyntaxToken): boolean {
-  return !!token?.isInvalid;
-}
-
 function filterUndefined (
   ...args: (SyntaxNode | SyntaxToken | undefined)[]
 ): (SyntaxNode | SyntaxToken)[] {
@@ -340,8 +335,4 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   }
 
   throw new Error('Unreachable - no other possible cases');
-}
-
-export function isWildcardExpression (node: SyntaxNode | undefined): node is WildcardNode {
-  return node instanceof WildcardNode;
 }

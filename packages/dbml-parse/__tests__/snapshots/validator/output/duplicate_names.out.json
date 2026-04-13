@@ -25,30 +25,6 @@
       }
     },
     {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Enum name Users already exists in schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@Users@[L20:C5, L20:C10]",
-          "snippet": "Users"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "TablePartial name 'Users' already exists in schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@Users@[L28:C13, L28:C18]",
-          "snippet": "Users"
-        }
-      }
-    },
-    {
       "code": "EMPTY_ENUM",
       "diagnostic": "An Enum must have at least one element",
       "filepath": "/main.dbml",
@@ -69,6 +45,30 @@
         "context": {
           "id": "node@<element-declaration>@Users@[L20:C0, L22:C1]",
           "snippet": "Enum Users {\r\n\r\n}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Enum name Users already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@Users@[L20:C5, L20:C10]",
+          "snippet": "Users"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "TablePartial name 'Users' already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@Users@[L28:C13, L28:C18]",
+          "snippet": "Users"
         }
       }
     }
@@ -1032,7 +1032,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L31:C0]",
+        "id": "symbol@Schema@@[L0:C0, L31:C0]",
         "snippet": "Table User...s {\r\n\r\n}\r\n"
       },
       "declaration": {
@@ -1050,11 +1050,6 @@
           "context": {
             "id": "symbol@Enum@Users@[L20:C0, L22:C1]",
             "snippet": "Enum Users {\r\n\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         },
         {

@@ -1,20 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_OPERAND",
-      "diagnostic": "Invalid start of operand \"}\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<rbrace>@}@[L9:C0, L9:C1]",
-          "snippet": "}",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "INVALID_COLUMN",
       "diagnostic": "A column must have a type",
       "filepath": "/main.dbml",
@@ -59,6 +45,20 @@
         "context": {
           "id": "node@<prefix-expression>@@[L8:C2, L9:C1]",
           "snippet": "~\r\n}"
+        }
+      }
+    },
+    {
+      "code": "INVALID_OPERAND",
+      "diagnostic": "Invalid start of operand \"}\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rbrace>@}@[L9:C0, L9:C1]",
+          "snippet": "}",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -558,7 +558,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L10:C0]",
+        "id": "symbol@Schema@@[L0:C0, L10:C0]",
         "snippet": "Table User...\r\n  ~\r\n}\r\n"
       },
       "declaration": {
@@ -566,11 +566,6 @@
         "snippet": "Table User...\r\n  ~\r\n}\r\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@Users@[L0:C0, L9:C1]",

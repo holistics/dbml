@@ -468,3 +468,11 @@ export function extractVarNameFromPrimaryVariable (
 
   return value === undefined ? undefined : value;
 }
+
+export function isWildcardExpression (node: SyntaxNode | undefined): node is WildcardNode {
+  return node instanceof WildcardNode;
+}
+
+export function isInvalidToken (token?: SyntaxToken): boolean {
+  return !!token?.isInvalid;
+}

@@ -351,27 +351,6 @@
           }
         ]
       }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Table@b@[L0:C0, L3:C1]",
-              "snippet": "Table b [h...c_id int\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@c@[L5:C0, L8:C1]",
-              "snippet": "Table c {\n...b_id int\n}"
-            }
-          }
-        ]
-      }
     ]
   }
 }

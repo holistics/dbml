@@ -456,17 +456,7 @@
                       }
                     },
                     "fullEnd": 151,
-                    "fullStart": 33,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Indexes@@[L1:C4, L4:C5]",
-                        "snippet": "indexes [n...ue]\r\n    }"
-                      },
-                      "declaration": {
-                        "id": "node@<element-declaration>@@[L1:C4, L4:C5]",
-                        "snippet": "indexes [n...ue]\r\n    }"
-                      }
-                    }
+                    "fullStart": 33
                   },
                   {
                     "context": {
@@ -615,23 +605,6 @@
       }
     },
     "fullEnd": 227,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Program@@[L0:C0, L11:C1]",
-        "snippet": "Test Liter...\r\n    }\r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L11:C1]",
-        "snippet": "Test Liter...\r\n    }\r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

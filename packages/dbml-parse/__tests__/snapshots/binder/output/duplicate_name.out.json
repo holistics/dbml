@@ -35,27 +35,6 @@
           "snippet": "Table AB {\r\n    \r\n}"
         }
       }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Table@AB@[L0:C0, L2:C1]",
-              "snippet": "Table AB {\r\n\r\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@AB@[L4:C0, L6:C1]",
-              "snippet": "Table AB {\r\n    \r\n}"
-            }
-          }
-        ]
-      }
     ]
   }
 }

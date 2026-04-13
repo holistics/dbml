@@ -7,7 +7,7 @@ import {
 import { CompileErrorCode } from '@/core/types/errors';
 import { SyntaxNodeKind, ElementDeclarationNode } from '@/core/types/nodes';
 import { WildcardNode } from '@/core/types/nodes';
-import { isWildcardExpression } from '@/core/parser/utils';
+import { isWildcardExpression } from '@/core/utils/expression';
 import {
   lex, parse, analyze,
 } from '@tests/utils';

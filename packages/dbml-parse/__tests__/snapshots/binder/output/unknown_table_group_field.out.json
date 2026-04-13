@@ -92,27 +92,6 @@
           }
         ]
       }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Table@Users@[L0:C0, L2:C1]",
-              "snippet": "Table Users {\r\n\r\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
-              "snippet": "Tablegroup...roducts\r\n}"
-            }
-          }
-        ]
-      }
     ]
   }
 }

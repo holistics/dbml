@@ -278,12 +278,6 @@
                   "snippet": "id int [pk]"
                 }
               }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@table1@[L6:C2, L6:C8]",
-                "snippet": "table1"
-              }
             ]
           }
         },
@@ -418,13 +412,7 @@
                           }
                         },
                         "fullEnd": 83,
-                        "fullStart": 74,
-                        "referee": {
-                          "context": {
-                            "id": "symbol@Table@table1@[L0:C0, L2:C1]",
-                            "snippet": "Table tabl...int [pk]\n}"
-                          }
-                        }
+                        "fullStart": 74
                       }
                     },
                     "fullEnd": 83,
@@ -675,7 +663,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L19:C0]",
+        "id": "symbol@Schema@@[L0:C0, L19:C0]",
         "snippet": "Table tabl...te'\n  }\n}\n"
       },
       "declaration": {
@@ -683,11 +671,6 @@
         "snippet": "Table tabl...te'\n  }\n}\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@table1@[L0:C0, L2:C1]",

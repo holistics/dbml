@@ -157,12 +157,7 @@
                       }
                     },
                     "fullEnd": 49,
-                    "fullStart": 32,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Table@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 32
                   },
                   {
                     "context": {
@@ -210,12 +205,7 @@
                       }
                     },
                     "fullEnd": 80,
-                    "fullStart": 49,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 49
                   },
                   {
                     "context": {
@@ -301,12 +291,7 @@
                       }
                     },
                     "fullEnd": 106,
-                    "fullStart": 80,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 80
                   },
                   {
                     "context": {
@@ -392,12 +377,7 @@
                       }
                     },
                     "fullEnd": 130,
-                    "fullStart": 106,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 106
                   },
                   {
                     "context": {
@@ -483,12 +463,7 @@
                       }
                     },
                     "fullEnd": 150,
-                    "fullStart": 130,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Note@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 130
                   }
                 ]
               },
@@ -659,12 +634,7 @@
                       }
                     },
                     "fullEnd": 227,
-                    "fullStart": 210,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Table@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 210
                   },
                   {
                     "context": {
@@ -712,12 +682,7 @@
                       }
                     },
                     "fullEnd": 258,
-                    "fullStart": 227,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 227
                   },
                   {
                     "context": {
@@ -803,12 +768,7 @@
                       }
                     },
                     "fullEnd": 284,
-                    "fullStart": 258,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 258
                   },
                   {
                     "context": {
@@ -894,12 +854,7 @@
                       }
                     },
                     "fullEnd": 308,
-                    "fullStart": 284,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 284
                   },
                   {
                     "context": {
@@ -985,12 +940,7 @@
                       }
                     },
                     "fullEnd": 328,
-                    "fullStart": 308,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Note@@[L?:C?, L?:C?]"
-                      }
-                    }
+                    "fullStart": 308
                   }
                 ]
               },
@@ -1022,73 +972,6 @@
       }
     },
     "fullEnd": 351,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Program@@[L0:C0, L17:C0]",
-        "snippet": "use * from...dex.dbml'\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L17:C0]",
-        "snippet": "use * from...dex.dbml'\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Enum@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Enum@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Note@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Note@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TableGroup@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TablePartial@@[L?:C?, L?:C?]"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

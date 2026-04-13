@@ -142,27 +142,6 @@
           }
         ]
       }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Table@T1@[L0:C0, L4:C1]",
-              "snippet": "Table T1 {...un_col3]\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@T2@[L6:C0, L8:C1]",
-              "snippet": "Table T2 {... un_col]\n}"
-            }
-          }
-        ]
-      }
     ]
   }
 }

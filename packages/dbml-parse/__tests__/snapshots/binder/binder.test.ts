@@ -5,7 +5,7 @@ import type { ProgramNode } from '@/core/types/nodes';
 import { scanTestNames, toSnapshot, collectNodesWithReferee } from '@tests/utils';
 import Compiler from '@/compiler';
 import { DEFAULT_ENTRY, UNHANDLED } from '@/constants';
-import { SymbolKind } from '@/core/types/symbol';
+import { SymbolKind, SchemaSymbol } from '@/core/types/symbol';
 import type { NodeSymbol } from '@/core/types/symbol';
 
 function serializeBinderResult (compiler: Compiler, ast: ProgramNode): string {
@@ -23,9 +23,9 @@ function serializeBinderResult (compiler: Compiler, ast: ProgramNode): string {
     const symbolTable = compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);
     if (symbolTable) {
       for (const [, sym] of symbolTable.entries()) {
-        if (sym.isKind(SymbolKind.Schema)) {
+        if (sym.isKind(SymbolKind.Schema) && !(sym instanceof SchemaSymbol && sym.isPublicSchema())) {
           schemas.push(sym);
-        } else {
+        } else if (!sym.isKind(SymbolKind.Schema)) {
           publicSchemaMembers.push(sym);
         }
       }
@@ -36,7 +36,7 @@ function serializeBinderResult (compiler: Compiler, ast: ProgramNode): string {
     program: {
       schemas,
       publicSchema: publicSchemaMembers,
-    },
+    } as any,
     nodeReferees,
     errors,
     warnings,

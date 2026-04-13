@@ -25,9 +25,11 @@ describe('[snapshot] interpreter - master database', () => {
 
     it(name, () => expect(serializeInterpreterResult(compiler, masterDatabase)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${name}/master-database.out.json`)));
 
+    const singleExports: Record<string, unknown> = {};
     for (const [filename, filepath] of files) {
       const singleDatabase = compiler.exportSchemaJson(filepath);
-      it(`${name} - ${filename}`, () => expect(serializeInterpreterResult(compiler, singleDatabase)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${name}/single/${filename}.out.json`)));
+      singleExports[filename] = JSON.parse(serializeInterpreterResult(compiler, singleDatabase));
     }
+    it(`${name} - single`, () => expect(JSON.stringify(singleExports, null, 2)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${name}/single.out.json`)));
   });
 });

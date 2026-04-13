@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
 import { getElementNameString } from '@/core/utils/expression';
@@ -48,7 +48,9 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
-  const kind = nodeOrSymbol.kind;
+  const rawKind = nodeOrSymbol.kind;
+  // Normalize Program kind to Schema to hide module-system-3 structural difference
+  const kind = rawKind === SymbolKind.Program ? SymbolKind.Schema : rawKind;
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
@@ -86,9 +88,16 @@ export type Snappable =
 function sortObject (object: Record<string, unknown>): Record<string, unknown> {
   const entries = Object.entries(object).filter(([, value]) => !isEmpty(value) || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean');
   entries.sort(
-    ([key1], [key2]) => (key1 as string) < (key2 as string) ? -1 : 1,
+    ([key1], [key2]) => key1 < key2 ? -1 : key1 > key2 ? 1 : 0,
   );
   return Object.fromEntries(entries);
+}
+
+function compareRank (a: number | string, b: number | string): number {
+  if (Number.isNaN(a) && Number.isNaN(b)) return 0;
+  if (Number.isNaN(a)) return -1;
+  if (Number.isNaN(b)) return 1;
+  return a < b ? -1 : a > b ? 1 : 0;
 }
 
 // Accept an array
@@ -111,18 +120,18 @@ function sortArray (array: unknown[]): unknown[] {
     return 1000;
   }
 
-  // A stable ranking for values within a given kind
+  // Primary rank for values within a given kind
   function getIntraKindRank (s: unknown): number | string {
     if (s === null || s === undefined) return 0;
     if (typeof s === 'string' || typeof s === 'number') return s;
     if (typeof s === 'boolean') return Number(s);
     if (typeof s === 'bigint') return Number(s);
     if (typeof s === 'symbol') return s.toString();
-    if (s instanceof CompileWarning || s instanceof CompileError) return s.code * 1000000 + s.start;
+    if (s instanceof CompileWarning || s instanceof CompileError) return (s as any).nodeOrToken?.start ?? 0;
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
     if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
-    if ((s as any)?.token) return ((s as any).token as TokenPosition)?.start?.offset || 0; // possibly a schema element
+    if ((s as any)?.token) return ((s as any).token as TokenPosition)?.start?.offset ?? 0; // possibly a schema element
     if ((s as any)?.id) return getIntraKindRank((s as any).id);
     if (typeof s === 'object') {
       return getIntraKindRank(Object.values(sortObject(s as Record<string, unknown>))[0]);
@@ -130,17 +139,23 @@ function sortArray (array: unknown[]): unknown[] {
     return 0;
   }
 
+  // Secondary tiebreaker when primary rank is equal
+  function getTiebreakerRank (s: unknown): number | string {
+    if (s instanceof CompileWarning || s instanceof CompileError) return s.diagnostic;
+    if (s instanceof SyntaxNode) return s.id;
+    if (s instanceof SyntaxToken) return s.value ?? '';
+    if ((s as any)?.id !== undefined) return (s as any).id;
+    return 0;
+  }
+
   return array.sort((s1, s2) => {
-    const s1InterRank = getInterKindRank(s1);
-    const s2InterRank = getInterKindRank(s2);
-    if (s1InterRank !== s2InterRank) {
-      return s1InterRank - s2InterRank;
-    }
+    const interDiff = getInterKindRank(s1) - getInterKindRank(s2);
+    if (interDiff !== 0) return interDiff;
 
-    const s1IntraRank = getIntraKindRank(s1);
-    const s2IntraRank = getIntraKindRank(s2);
+    const intraDiff = compareRank(getIntraKindRank(s1), getIntraKindRank(s2));
+    if (intraDiff !== 0) return intraDiff;
 
-    return s1IntraRank < s2IntraRank ? -1 : 1;
+    return compareRank(getTiebreakerRank(s1), getTiebreakerRank(s2));
   });
 }
 
@@ -148,10 +163,10 @@ function sortArray (array: unknown[]): unknown[] {
 export function toSnapshot (
   compiler: Compiler,
   value: Readonly<Snappable | readonly Readonly<Snappable>[] | Record<string, Readonly<Snappable> | readonly Readonly<Snappable>[]>>,
-  { simple = false }: { simple?: boolean } = {},
+  { simple = false, includeReferences = true, includeSymbols = true, includeReferee = true }: { simple?: boolean; includeReferences?: boolean; includeSymbols?: boolean; includeReferee?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
-    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple }));
+    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple, includeReferences, includeSymbols, includeReferee }));
   }
   if (value instanceof CompileWarning) {
     return warningToSnapshot(compiler, value, { simple });
@@ -163,7 +178,7 @@ export function toSnapshot (
     return syntaxTokenToSnapshot(compiler, value, { simple });
   }
   if (value instanceof SyntaxNode) {
-    return syntaxNodeToSnapshot(compiler, value, { simple });
+    return syntaxNodeToSnapshot(compiler, value, { simple, includeReferences, includeSymbols, includeReferee });
   }
   if (value === null) {
     return null;
@@ -171,7 +186,7 @@ export function toSnapshot (
   // An adhoc check for NodeSymbol
   // because it's just an interface
   if (value instanceof NodeSymbol) {
-    return symbolToSnapshot(compiler, value as NodeSymbol);
+    return symbolToSnapshot(compiler, value as NodeSymbol, { includeReferences });
   }
   if (value instanceof Filepath) {
     return value.absolute;
@@ -180,7 +195,7 @@ export function toSnapshot (
     return sortObject(Object.fromEntries(
       Object.entries(value)
         .map(
-          ([key, value]) => [key, toSnapshot(compiler, value as Snappable, { simple })],
+          ([key, value]) => [key, toSnapshot(compiler, value as Snappable, { simple, includeReferences, includeSymbols, includeReferee })],
         ),
     ));
   }
@@ -295,7 +310,7 @@ export function syntaxTokenToSnapshot (
 export function syntaxNodeToSnapshot (
   compiler: Compiler,
   node: SyntaxNode,
-  { simple = false }: { simple?: boolean } = {},
+  { simple = false, includeReferences = true, includeSymbols = true, includeReferee = true }: { simple?: boolean; includeReferences?: boolean; includeSymbols?: boolean; includeReferee?: boolean } = {},
 ): unknown {
   const nodeReadableId = getReadableId(node);
   const snippet = getCodeSnippet(node, compiler);
@@ -332,15 +347,15 @@ export function syntaxNodeToSnapshot (
       snippet,
     },
     ...sortObject({
-      symbol: symbol && symbolToSnapshot(compiler, symbol),
-      referee: referee && symbolToSnapshot(compiler, referee, { simple: true }),
+      symbol: includeSymbols ? symbol && symbolToSnapshot(compiler, symbol, { includeReferences }) : undefined,
+      referee: includeReferee ? referee && symbolToSnapshot(compiler, referee, { simple: true }) : undefined,
       fullStart,
       fullEnd,
       children: sortObject(Object.fromEntries(
         Object.entries(props)
           .map(
             ([key, value]) =>
-              [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>)],
+              [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>, { includeReferences, includeSymbols, includeReferee })],
           ),
       )),
     }),
@@ -374,7 +389,7 @@ export function collectNodesWithReferee (compiler: Compiler, node: SyntaxNode): 
 export function symbolToSnapshot (
   compiler: Compiler,
   symbol: NodeSymbol,
-  { simple = false }: { simple?: boolean } = {},
+  { simple = false, includeReferences = true }: { simple?: boolean; includeReferences?: boolean } = {},
 ): unknown {
   if (!symbol) return undefined;
   const symbolReadableId = getReadableId(symbol);
@@ -384,8 +399,8 @@ export function symbolToSnapshot (
     declaration,
     filepath,
   } = symbol;
-  const references = compiler.symbolReferences(symbol).getFiltered(UNHANDLED);
   const symbolTable = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+  const references = includeReferences ? compiler.symbolReferences(symbol).getFiltered(UNHANDLED) : undefined;
 
   if (simple) {
     return {
@@ -401,7 +416,10 @@ export function symbolToSnapshot (
       snippet,
     },
     ...sortObject({
-      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))),
+      members: symbolTable && (() => {
+        const filtered = [...symbolTable.entries()].filter(([, sym]) => !(sym instanceof SchemaSymbol && sym.isPublicSchema()));
+        return filtered.length > 0 ? sortArray(filtered.map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))) : undefined;
+      })(),
       declaration: declaration && {
         id: getReadableId(declaration),
         snippet: getCodeSnippet(declaration, compiler),

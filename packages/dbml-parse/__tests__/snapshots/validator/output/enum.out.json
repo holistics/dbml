@@ -1,6 +1,18 @@
 {
   "errors": [
     {
+      "code": "EMPTY_ENUM",
+      "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@v.A@[L0:C0, L2:C1]",
+          "snippet": "enum v.\"A\" {\r\n\r\n}"
+        }
+      }
+    },
+    {
       "code": "NAME_NOT_FOUND",
       "diagnostic": "An Enum must have a name",
       "filepath": "/main.dbml",
@@ -45,18 +57,6 @@
         "context": {
           "id": "node@<primary-expression>@1@[L7:C4, L7:C5]",
           "snippet": "1"
-        }
-      }
-    },
-    {
-      "code": "EMPTY_ENUM",
-      "diagnostic": "An Enum must have at least one element",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@v.A@[L0:C0, L2:C1]",
-          "snippet": "enum v.\"A\" {\r\n\r\n}"
         }
       }
     }
@@ -553,7 +553,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L10:C1]",
+        "id": "symbol@Schema@@[L0:C0, L10:C1]",
         "snippet": "enum v.\"A\"...   \"ab\"\r\n}"
       },
       "declaration": {
@@ -561,11 +561,6 @@
         "snippet": "enum v.\"A\"...   \"ab\"\r\n}"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Schema@v@[L?:C?, L?:C?]"

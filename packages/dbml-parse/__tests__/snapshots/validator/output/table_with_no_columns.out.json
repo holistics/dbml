@@ -107,7 +107,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L2:C0]",
+        "id": "symbol@Schema@@[L0:C0, L2:C0]",
         "snippet": "Table empt...table {\n}\n"
       },
       "declaration": {
@@ -115,11 +115,6 @@
         "snippet": "Table empt...table {\n}\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@empty_table@[L0:C0, L1:C1]",

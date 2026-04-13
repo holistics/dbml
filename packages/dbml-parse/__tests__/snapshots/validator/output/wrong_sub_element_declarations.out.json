@@ -1,6 +1,30 @@
 {
   "errors": [
     {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
+          "snippet": "Indexes wr...x alias {}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
+          "snippet": "Indexes wr...x alias {}"
+        }
+      }
+    },
+    {
       "code": "INVALID_COLUMN",
       "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
       "filepath": "/main.dbml",
@@ -37,6 +61,30 @@
       }
     },
     {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@Indexes@[L2:C4, L2:C21]",
+          "snippet": "Indexes 2 args {}"
+        }
+      }
+    },
+    {
+      "code": "INVALID_COLUMN_TYPE",
+      "diagnostic": "Invalid column type",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@2@[L2:C12, L2:C13]",
+          "snippet": "2"
+        }
+      }
+    },
+    {
       "code": "INVALID_COLUMN",
       "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
       "filepath": "/main.dbml",
@@ -57,6 +105,18 @@
         "context": {
           "id": "node@<block-expression>@@[L2:C19, L2:C21]",
           "snippet": "{}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate column Indexes",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@Indexes@[L3:C4, L3:C35]",
+          "snippet": "Indexes wr...of args {}"
         }
       }
     },
@@ -105,66 +165,6 @@
         "context": {
           "id": "node@<block-expression>@@[L3:C33, L3:C35]",
           "snippet": "{}"
-        }
-      }
-    },
-    {
-      "code": "INVALID_COLUMN_TYPE",
-      "diagnostic": "Invalid column type",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@2@[L2:C12, L2:C13]",
-          "snippet": "2"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
-          "snippet": "Indexes wr...x alias {}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@Indexes@[L1:C4, L1:C32]",
-          "snippet": "Indexes wr...x alias {}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@Indexes@[L2:C4, L2:C21]",
-          "snippet": "Indexes 2 args {}"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate column Indexes",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@Indexes@[L3:C4, L3:C35]",
-          "snippet": "Indexes wr...of args {}"
         }
       }
     }
@@ -797,7 +797,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L5:C0]",
+        "id": "symbol@Schema@@[L0:C0, L5:C0]",
         "snippet": "Table A {\n... column\n}\n"
       },
       "declaration": {
@@ -805,11 +805,6 @@
         "snippet": "Table A {\n... column\n}\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@A@[L0:C0, L4:C1]",

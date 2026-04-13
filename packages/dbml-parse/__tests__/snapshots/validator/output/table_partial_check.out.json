@@ -1092,7 +1092,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L10:C0]",
+        "id": "symbol@Schema@@[L0:C0, L10:C0]",
         "snippet": "TableParti...: null]\n}\n"
       },
       "declaration": {
@@ -1100,11 +1100,6 @@
         "snippet": "TableParti...: null]\n}\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@TablePartial@Users@[L0:C0, L9:C1]",

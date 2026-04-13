@@ -1,20 +1,6 @@
 {
   "errors": [
     {
-      "code": "UNEXPECTED_EOF",
-      "diagnostic": "EOF reached while parsing",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
-          "snippet": "'''This is...e string\r\n",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
       "filepath": "/main.dbml",
@@ -37,6 +23,20 @@
         "context": {
           "id": "token@<string>@'This is an unclosed string literal\r@[L10:C0, L10:C36]",
           "snippet": "'This is a...g literal\r",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_EOF",
+      "diagnostic": "EOF reached while parsing",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@'''This is an unclosed multiline string\r\n@[L15:C0, L16:C0]",
+          "snippet": "'''This is...e string\r\n",
           "isInvalid": true,
           "filepath": "/main.dbml"
         }

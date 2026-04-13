@@ -1,18 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_NAME",
-      "diagnostic": "Invalid name for sticky note ",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L21:C0, L26:C1]",
-          "snippet": "Note schem...dy\n  '''\n}"
-        }
-      }
-    },
-    {
       "code": "DUPLICATE_NAME",
       "diagnostic": "Duplicate Note 'note2' in schema 'public'",
       "filepath": "/main.dbml",
@@ -33,6 +21,18 @@
         "context": {
           "id": "node@<primary-expression>@note3@[L17:C5, L17:C12]",
           "snippet": "\"note3\""
+        }
+      }
+    },
+    {
+      "code": "INVALID_NAME",
+      "diagnostic": "Invalid name for sticky note ",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L21:C0, L26:C1]",
+          "snippet": "Note schem...dy\n  '''\n}"
         }
       }
     },
@@ -1805,7 +1805,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L40:C0]",
+        "id": "symbol@Schema@@[L0:C0, L40:C0]",
         "snippet": "Table user...y\n  '''\n}\n"
       },
       "declaration": {
@@ -1841,11 +1841,6 @@
           "context": {
             "id": "symbol@Note@schema.note4@[L27:C0, L32:C1]",
             "snippet": "Note \"sche...dy\n  '''\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         },
         {

@@ -1,20 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_OPERAND",
-      "diagnostic": "Invalid start of operand \"}\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<rbrace>@}@[L8:C0, L8:C1]",
-          "snippet": "}",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "INVALID_COLUMN_TYPE",
       "diagnostic": "Invalid column type",
       "filepath": "/main.dbml",
@@ -35,6 +21,20 @@
         "context": {
           "id": "node@<infix-expression>@@[L7:C12, L7:C15]",
           "snippet": "v2."
+        }
+      }
+    },
+    {
+      "code": "INVALID_OPERAND",
+      "diagnostic": "Invalid start of operand \"}\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rbrace>@}@[L8:C0, L8:C1]",
+          "snippet": "}",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
         }
       }
     }
@@ -415,35 +415,6 @@
       }
     ],
     "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Enum@status@[L17:C0, L22:C1]",
-              "snippet": "Enum statu... tenant\r\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@Users@[L0:C0, L8:C1]",
-              "snippet": "Table User...us6 v2.\r\n}"
-            }
-          }
-        ],
-        "references": [
-          {
-            "id": "node@<primary-expression>@public@[L3:C12, L3:C18]",
-            "snippet": "public"
-          },
-          {
-            "id": "node@<primary-expression>@public@[L4:C12, L4:C18]",
-            "snippet": "public"
-          }
-        ]
-      },
       {
         "context": {
           "id": "symbol@Schema@v2@[L?:C?, L?:C?]"

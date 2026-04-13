@@ -13,18 +13,6 @@
       }
     },
     {
-      "code": "INVALID_REF_CONTEXT",
-      "diagnostic": "A Ref must appear top-level",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L14:C4, L14:C22]",
-          "snippet": "Ref: code > B.code"
-        }
-      }
-    },
-    {
       "code": "INVALID_REF_FIELD",
       "diagnostic": "Invalid column reference",
       "filepath": "/main.dbml",
@@ -33,6 +21,18 @@
         "context": {
           "id": "node@<primary-expression>@id@[L13:C9, L13:C11]",
           "snippet": "id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_CONTEXT",
+      "diagnostic": "A Ref must appear top-level",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L14:C4, L14:C22]",
+          "snippet": "Ref: code > B.code"
         }
       }
     },
@@ -164,13 +164,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id@[L1:C4, L1:C14]",
                         "snippet": "id integer"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id@[L13:C16, L13:C18]",
-                          "snippet": "id"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -320,12 +314,6 @@
                   "id": "symbol@Column@id@[L1:C4, L1:C14]",
                   "snippet": "id integer"
                 }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@A@[L13:C14, L13:C15]",
-                "snippet": "A"
               }
             ]
           }
@@ -518,13 +506,7 @@
                       "declaration": {
                         "id": "node@<function-application>@code@[L7:C4, L7:C15]",
                         "snippet": "code number"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@code@[L14:C18, L14:C22]",
-                          "snippet": "code"
-                        }
-                      ]
+                      }
                     }
                   }
                 ]
@@ -594,12 +576,6 @@
                   "id": "symbol@Column@id@[L6:C4, L6:C14]",
                   "snippet": "id integer"
                 }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@B@[L14:C16, L14:C17]",
-                "snippet": "B"
               }
             ]
           }
@@ -884,13 +860,7 @@
                                       }
                                     },
                                     "fullEnd": 144,
-                                    "fullStart": 143,
-                                    "referee": {
-                                      "context": {
-                                        "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                        "snippet": "Table A {\n...e number\n}"
-                                      }
-                                    }
+                                    "fullStart": 143
                                   },
                                   "op": {
                                     "context": {
@@ -928,13 +898,7 @@
                                       }
                                     },
                                     "fullEnd": 148,
-                                    "fullStart": 145,
-                                    "referee": {
-                                      "context": {
-                                        "id": "symbol@Column@id@[L1:C4, L1:C14]",
-                                        "snippet": "id integer"
-                                      }
-                                    }
+                                    "fullStart": 145
                                   }
                                 },
                                 "fullEnd": 148,
@@ -1059,13 +1023,7 @@
                                       }
                                     },
                                     "fullEnd": 165,
-                                    "fullStart": 164,
-                                    "referee": {
-                                      "context": {
-                                        "id": "symbol@Table@B@[L5:C0, L8:C1]",
-                                        "snippet": "Table B {\n...e number\n}"
-                                      }
-                                    }
+                                    "fullStart": 164
                                   },
                                   "op": {
                                     "context": {
@@ -1103,13 +1061,7 @@
                                       }
                                     },
                                     "fullEnd": 171,
-                                    "fullStart": 166,
-                                    "referee": {
-                                      "context": {
-                                        "id": "symbol@Column@code@[L7:C4, L7:C15]",
-                                        "snippet": "code number"
-                                      }
-                                    }
+                                    "fullStart": 166
                                   }
                                 },
                                 "fullEnd": 171,
@@ -1231,7 +1183,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L15:C1]",
+        "id": "symbol@Schema@@[L0:C0, L15:C1]",
         "snippet": "Table A {\n...> B.code\n}"
       },
       "declaration": {
@@ -1239,11 +1191,6 @@
         "snippet": "Table A {\n...> B.code\n}"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@A@[L0:C0, L3:C1]",

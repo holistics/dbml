@@ -1,5 +1,5 @@
 import {
-  SymbolKind, NodeSymbol, destructureIndex, createColumnSymbolIndex,
+  SymbolKind, NodeSymbol,
 } from '@/core/types/symbol';
 import {
   CompletionItemKind, CompletionItemInsertTextRule, type CompletionList,
@@ -12,9 +12,6 @@ import {
   SyntaxNode, TupleExpressionNode, FunctionApplicationNode,
 } from '@/core/types/nodes';
 import Compiler from '@/compiler';
-import {
-  ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol,
-} from '@/core/types/symbol/symbols';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import { isValidPartialInjection } from '@/core/utils/validate';
 import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';

@@ -13,14 +13,14 @@
       }
     },
     {
-      "code": "UNEXPECTED_SETTINGS",
-      "diagnostic": "A Ref shouldn't have a setting list",
+      "code": "INVALID_REF_SETTING_VALUE",
+      "diagnostic": "'color' must be a color literal",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<list-expression>@@[L42:C20, L42:C36]",
-          "snippet": "[color: #123456]"
+          "id": "node@<attribute>@@[L35:C17, L35:C36]",
+          "snippet": "color: #not_a_color"
         }
       }
     },
@@ -37,26 +37,14 @@
       }
     },
     {
-      "code": "UNKNOWN_REF_SETTING",
-      "diagnostic": "Unknown ref setting 'hello'",
+      "code": "UNEXPECTED_SETTINGS",
+      "diagnostic": "A Ref shouldn't have a setting list",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<attribute>@@[L44:C36, L44:C50]",
-          "snippet": "hello: goodbye"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_SETTING_VALUE",
-      "diagnostic": "'color' must be a color literal",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L35:C17, L35:C36]",
-          "snippet": "color: #not_a_color"
+          "id": "node@<list-expression>@@[L42:C20, L42:C36]",
+          "snippet": "[color: #123456]"
         }
       }
     },
@@ -69,6 +57,18 @@
         "context": {
           "id": "node@<attribute>@@[L43:C36, L43:C55]",
           "snippet": "color: #not_a_color"
+        }
+      }
+    },
+    {
+      "code": "UNKNOWN_REF_SETTING",
+      "diagnostic": "Unknown ref setting 'hello'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L44:C36, L44:C50]",
+          "snippet": "hello: goodbye"
         }
       }
     }
@@ -287,13 +287,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id@[L1:C2, L1:C8]",
                         "snippet": "id int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id@[L23:C17, L23:C19]",
-                          "snippet": "id"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -373,13 +367,7 @@
                       "declaration": {
                         "id": "node@<function-application>@c_id@[L2:C2, L2:C10]",
                         "snippet": "c_id int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@c_id@[L27:C11, L27:C15]",
-                          "snippet": "c_id"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -459,13 +447,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id2@[L3:C2, L3:C9]",
                         "snippet": "id2 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id2@[L31:C12, L31:C15]",
-                          "snippet": "id2"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -545,13 +527,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id3@[L4:C2, L4:C9]",
                         "snippet": "id3 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id3@[L35:C12, L35:C15]",
-                          "snippet": "id3"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -631,13 +607,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id4@[L5:C2, L5:C9]",
                         "snippet": "id4 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id4@[L39:C12, L39:C15]",
-                          "snippet": "id4"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -717,13 +687,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id5@[L6:C2, L6:C9]",
                         "snippet": "id5 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id5@[L42:C48, L42:C51]",
-                          "snippet": "id5"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -803,13 +767,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id6@[L7:C2, L7:C9]",
                         "snippet": "id6 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id6@[L43:C31, L43:C34]",
-                          "snippet": "id6"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -889,13 +847,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id7@[L8:C2, L8:C9]",
                         "snippet": "id7 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id7@[L44:C31, L44:C34]",
-                          "snippet": "id7"
-                        }
-                      ]
+                      }
                     }
                   }
                 ]
@@ -1001,40 +953,6 @@
                   "id": "symbol@Column@id@[L1:C2, L1:C8]",
                   "snippet": "id int"
                 }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@b@[L23:C15, L23:C16]",
-                "snippet": "b"
-              },
-              {
-                "id": "node@<primary-expression>@b@[L27:C9, L27:C10]",
-                "snippet": "b"
-              },
-              {
-                "id": "node@<primary-expression>@b@[L31:C10, L31:C11]",
-                "snippet": "b"
-              },
-              {
-                "id": "node@<primary-expression>@b@[L35:C10, L35:C11]",
-                "snippet": "b"
-              },
-              {
-                "id": "node@<primary-expression>@b@[L39:C10, L39:C11]",
-                "snippet": "b"
-              },
-              {
-                "id": "node@<primary-expression>@b@[L42:C46, L42:C47]",
-                "snippet": "b"
-              },
-              {
-                "id": "node@<primary-expression>@b@[L43:C29, L43:C30]",
-                "snippet": "b"
-              },
-              {
-                "id": "node@<primary-expression>@b@[L44:C29, L44:C30]",
-                "snippet": "b"
               }
             ]
           }
@@ -1147,17 +1065,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id@[L12:C2, L12:C8]",
                         "snippet": "id int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id@[L23:C24, L23:C26]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L27:C4, L27:C6]",
-                          "snippet": "id"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -1317,13 +1225,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id2@[L14:C2, L14:C9]",
                         "snippet": "id2 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id2@[L31:C4, L31:C7]",
-                          "snippet": "id2"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -1403,13 +1305,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id3@[L15:C2, L15:C9]",
                         "snippet": "id3 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id3@[L35:C4, L35:C7]",
-                          "snippet": "id3"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -1489,13 +1385,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id4@[L16:C2, L16:C9]",
                         "snippet": "id4 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id4@[L39:C4, L39:C7]",
-                          "snippet": "id4"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -1575,13 +1465,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id5@[L17:C2, L17:C9]",
                         "snippet": "id5 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id5@[L42:C40, L42:C43]",
-                          "snippet": "id5"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -1661,13 +1545,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id6@[L18:C2, L18:C9]",
                         "snippet": "id6 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id6@[L43:C23, L43:C26]",
-                          "snippet": "id6"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -1747,13 +1625,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id7@[L19:C2, L19:C9]",
                         "snippet": "id7 int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id7@[L44:C23, L44:C26]",
-                          "snippet": "id7"
-                        }
-                      ]
+                      }
                     }
                   }
                 ]
@@ -1859,40 +1731,6 @@
                   "id": "symbol@Column@id@[L12:C2, L12:C8]",
                   "snippet": "id int"
                 }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@c@[L23:C22, L23:C23]",
-                "snippet": "c"
-              },
-              {
-                "id": "node@<primary-expression>@c@[L27:C2, L27:C3]",
-                "snippet": "c"
-              },
-              {
-                "id": "node@<primary-expression>@c@[L31:C2, L31:C3]",
-                "snippet": "c"
-              },
-              {
-                "id": "node@<primary-expression>@c@[L35:C2, L35:C3]",
-                "snippet": "c"
-              },
-              {
-                "id": "node@<primary-expression>@c@[L39:C2, L39:C3]",
-                "snippet": "c"
-              },
-              {
-                "id": "node@<primary-expression>@c@[L42:C38, L42:C39]",
-                "snippet": "c"
-              },
-              {
-                "id": "node@<primary-expression>@c@[L43:C21, L43:C22]",
-                "snippet": "c"
-              },
-              {
-                "id": "node@<primary-expression>@c@[L44:C21, L44:C22]",
-                "snippet": "c"
               }
             ]
           }
@@ -2130,13 +1968,7 @@
                             }
                           },
                           "fullEnd": 239,
-                          "fullStart": 238,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
-                            }
-                          }
+                          "fullStart": 238
                         },
                         "op": {
                           "context": {
@@ -2174,13 +2006,7 @@
                             }
                           },
                           "fullEnd": 243,
-                          "fullStart": 240,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Column@id@[L1:C2, L1:C8]",
-                              "snippet": "id int"
-                            }
-                          }
+                          "fullStart": 240
                         }
                       },
                       "fullEnd": 243,
@@ -2228,13 +2054,7 @@
                             }
                           },
                           "fullEnd": 246,
-                          "fullStart": 245,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
-                            }
-                          }
+                          "fullStart": 245
                         },
                         "op": {
                           "context": {
@@ -2272,13 +2092,7 @@
                             }
                           },
                           "fullEnd": 250,
-                          "fullStart": 247,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Column@id@[L12:C2, L12:C8]",
-                              "snippet": "id int"
-                            }
-                          }
+                          "fullStart": 247
                         }
                       },
                       "fullEnd": 250,
@@ -2600,13 +2414,7 @@
                                   }
                                 },
                                 "fullEnd": 317,
-                                "fullStart": 314,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                                    "snippet": "Table c {\n... id7 int\n}"
-                                  }
-                                }
+                                "fullStart": 314
                               },
                               "op": {
                                 "context": {
@@ -2644,13 +2452,7 @@
                                   }
                                 },
                                 "fullEnd": 321,
-                                "fullStart": 318,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L12:C2, L12:C8]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 318
                               }
                             },
                             "fullEnd": 321,
@@ -2698,13 +2500,7 @@
                                   }
                                 },
                                 "fullEnd": 324,
-                                "fullStart": 323,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                                    "snippet": "Table b [h... id7 int\n}"
-                                  }
-                                }
+                                "fullStart": 323
                               },
                               "op": {
                                 "context": {
@@ -2742,13 +2538,7 @@
                                   }
                                 },
                                 "fullEnd": 330,
-                                "fullStart": 325,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@c_id@[L2:C2, L2:C10]",
-                                    "snippet": "c_id int"
-                                  }
-                                }
+                                "fullStart": 325
                               }
                             },
                             "fullEnd": 330,
@@ -2984,13 +2774,7 @@
                                   }
                                 },
                                 "fullEnd": 404,
-                                "fullStart": 401,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                                    "snippet": "Table c {\n... id7 int\n}"
-                                  }
-                                }
+                                "fullStart": 401
                               },
                               "op": {
                                 "context": {
@@ -3028,13 +2812,7 @@
                                   }
                                 },
                                 "fullEnd": 409,
-                                "fullStart": 405,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id2@[L14:C2, L14:C9]",
-                                    "snippet": "id2 int"
-                                  }
-                                }
+                                "fullStart": 405
                               }
                             },
                             "fullEnd": 409,
@@ -3082,13 +2860,7 @@
                                   }
                                 },
                                 "fullEnd": 412,
-                                "fullStart": 411,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                                    "snippet": "Table b [h... id7 int\n}"
-                                  }
-                                }
+                                "fullStart": 411
                               },
                               "op": {
                                 "context": {
@@ -3126,13 +2898,7 @@
                                   }
                                 },
                                 "fullEnd": 417,
-                                "fullStart": 413,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id2@[L3:C2, L3:C9]",
-                                    "snippet": "id2 int"
-                                  }
-                                }
+                                "fullStart": 413
                               }
                             },
                             "fullEnd": 417,
@@ -3370,13 +3136,7 @@
                                   }
                                 },
                                 "fullEnd": 440,
-                                "fullStart": 437,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                                    "snippet": "Table c {\n... id7 int\n}"
-                                  }
-                                }
+                                "fullStart": 437
                               },
                               "op": {
                                 "context": {
@@ -3414,13 +3174,7 @@
                                   }
                                 },
                                 "fullEnd": 445,
-                                "fullStart": 441,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id3@[L15:C2, L15:C9]",
-                                    "snippet": "id3 int"
-                                  }
-                                }
+                                "fullStart": 441
                               }
                             },
                             "fullEnd": 445,
@@ -3468,13 +3222,7 @@
                                   }
                                 },
                                 "fullEnd": 448,
-                                "fullStart": 447,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                                    "snippet": "Table b [h... id7 int\n}"
-                                  }
-                                }
+                                "fullStart": 447
                               },
                               "op": {
                                 "context": {
@@ -3512,13 +3260,7 @@
                                   }
                                 },
                                 "fullEnd": 453,
-                                "fullStart": 449,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id3@[L4:C2, L4:C9]",
-                                    "snippet": "id3 int"
-                                  }
-                                }
+                                "fullStart": 449
                               }
                             },
                             "fullEnd": 453,
@@ -3756,13 +3498,7 @@
                                   }
                                 },
                                 "fullEnd": 498,
-                                "fullStart": 495,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                                    "snippet": "Table c {\n... id7 int\n}"
-                                  }
-                                }
+                                "fullStart": 495
                               },
                               "op": {
                                 "context": {
@@ -3800,13 +3536,7 @@
                                   }
                                 },
                                 "fullEnd": 503,
-                                "fullStart": 499,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id4@[L16:C2, L16:C9]",
-                                    "snippet": "id4 int"
-                                  }
-                                }
+                                "fullStart": 499
                               }
                             },
                             "fullEnd": 503,
@@ -3854,13 +3584,7 @@
                                   }
                                 },
                                 "fullEnd": 506,
-                                "fullStart": 505,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                                    "snippet": "Table b [h... id7 int\n}"
-                                  }
-                                }
+                                "fullStart": 505
                               },
                               "op": {
                                 "context": {
@@ -3898,13 +3622,7 @@
                                   }
                                 },
                                 "fullEnd": 511,
-                                "fullStart": 507,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id4@[L5:C2, L5:C9]",
-                                    "snippet": "id4 int"
-                                  }
-                                }
+                                "fullStart": 507
                               }
                             },
                             "fullEnd": 511,
@@ -4115,13 +3833,7 @@
                             }
                           },
                           "fullEnd": 570,
-                          "fullStart": 569,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
-                            }
-                          }
+                          "fullStart": 569
                         },
                         "op": {
                           "context": {
@@ -4159,13 +3871,7 @@
                             }
                           },
                           "fullEnd": 575,
-                          "fullStart": 571,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Column@id5@[L17:C2, L17:C9]",
-                              "snippet": "id5 int"
-                            }
-                          }
+                          "fullStart": 571
                         }
                       },
                       "fullEnd": 575,
@@ -4213,13 +3919,7 @@
                             }
                           },
                           "fullEnd": 578,
-                          "fullStart": 577,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
-                            }
-                          }
+                          "fullStart": 577
                         },
                         "op": {
                           "context": {
@@ -4257,13 +3957,7 @@
                             }
                           },
                           "fullEnd": 583,
-                          "fullStart": 579,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Column@id5@[L6:C2, L6:C9]",
-                              "snippet": "id5 int"
-                            }
-                          }
+                          "fullStart": 579
                         }
                       },
                       "fullEnd": 583,
@@ -4480,13 +4174,7 @@
                             }
                           },
                           "fullEnd": 605,
-                          "fullStart": 604,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
-                            }
-                          }
+                          "fullStart": 604
                         },
                         "op": {
                           "context": {
@@ -4524,13 +4212,7 @@
                             }
                           },
                           "fullEnd": 610,
-                          "fullStart": 606,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Column@id6@[L18:C2, L18:C9]",
-                              "snippet": "id6 int"
-                            }
-                          }
+                          "fullStart": 606
                         }
                       },
                       "fullEnd": 610,
@@ -4578,13 +4260,7 @@
                             }
                           },
                           "fullEnd": 613,
-                          "fullStart": 612,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
-                            }
-                          }
+                          "fullStart": 612
                         },
                         "op": {
                           "context": {
@@ -4622,13 +4298,7 @@
                             }
                           },
                           "fullEnd": 618,
-                          "fullStart": 614,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Column@id6@[L7:C2, L7:C9]",
-                              "snippet": "id6 int"
-                            }
-                          }
+                          "fullStart": 614
                         }
                       },
                       "fullEnd": 618,
@@ -4845,13 +4515,7 @@
                             }
                           },
                           "fullEnd": 662,
-                          "fullStart": 661,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Table@c@[L11:C0, L20:C1]",
-                              "snippet": "Table c {\n... id7 int\n}"
-                            }
-                          }
+                          "fullStart": 661
                         },
                         "op": {
                           "context": {
@@ -4889,13 +4553,7 @@
                             }
                           },
                           "fullEnd": 667,
-                          "fullStart": 663,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Column@id7@[L19:C2, L19:C9]",
-                              "snippet": "id7 int"
-                            }
-                          }
+                          "fullStart": 663
                         }
                       },
                       "fullEnd": 667,
@@ -4943,13 +4601,7 @@
                             }
                           },
                           "fullEnd": 670,
-                          "fullStart": 669,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Table@b@[L0:C0, L9:C1]",
-                              "snippet": "Table b [h... id7 int\n}"
-                            }
-                          }
+                          "fullStart": 669
                         },
                         "op": {
                           "context": {
@@ -4987,13 +4639,7 @@
                             }
                           },
                           "fullEnd": 675,
-                          "fullStart": 671,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Column@id7@[L8:C2, L8:C9]",
-                              "snippet": "id7 int"
-                            }
-                          }
+                          "fullStart": 671
                         }
                       },
                       "fullEnd": 675,
@@ -5073,7 +4719,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L45:C0]",
+        "id": "symbol@Schema@@[L0:C0, L45:C0]",
         "snippet": "Table b [h... goodbye]\n"
       },
       "declaration": {
@@ -5081,11 +4727,6 @@
         "snippet": "Table b [h... goodbye]\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@b@[L0:C0, L9:C1]",

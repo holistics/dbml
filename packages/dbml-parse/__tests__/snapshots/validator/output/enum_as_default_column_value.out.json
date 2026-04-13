@@ -109,13 +109,7 @@
                       "declaration": {
                         "id": "node@<function-application>@active@[L1:C2, L1:C8]",
                         "snippet": "active"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@active@[L22:C33, L22:C39]",
-                          "snippet": "active"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -290,16 +284,6 @@
                   "snippet": "inactive"
                 }
               }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@status@[L22:C26, L22:C32]",
-                "snippet": "status"
-              },
-              {
-                "id": "node@<primary-expression>@status@[L22:C9, L22:C15]",
-                "snippet": "status"
-              }
             ]
           }
         },
@@ -380,13 +364,7 @@
                       "declaration": {
                         "id": "node@<function-application>@male@[L7:C2, L7:C6]",
                         "snippet": "male"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@male@[L23:C57, L23:C61]",
-                          "snippet": "male"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -553,16 +531,6 @@
                   "id": "symbol@Enum field@male@[L7:C2, L7:C6]",
                   "snippet": "male"
                 }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@gender@[L23:C21, L23:C27]",
-                "snippet": "gender"
-              },
-              {
-                "id": "node@<primary-expression>@gender@[L23:C50, L23:C56]",
-                "snippet": "gender"
               }
             ]
           }
@@ -791,13 +759,7 @@
                       "declaration": {
                         "id": "node@<function-application>@young_adult@[L15:C2, L15:C13]",
                         "snippet": "young_adult"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@young_adult@[L24:C73, L24:C84]",
-                          "snippet": "young_adult"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -982,16 +944,6 @@
                   "id": "symbol@Enum field@young_adult@[L15:C2, L15:C13]",
                   "snippet": "young_adult"
                 }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@age segment@[L24:C23, L24:C36]",
-                "snippet": "\"age segment\""
-              },
-              {
-                "id": "node@<primary-expression>@age segment@[L24:C59, L24:C72]",
-                "snippet": "\"age segment\""
               }
             ]
           }
@@ -1221,13 +1173,7 @@
                             }
                           },
                           "fullEnd": 232,
-                          "fullStart": 225,
-                          "referee": {
-                            "context": {
-                              "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-                              "snippet": "Enum statu...inactive\n}"
-                            }
-                          }
+                          "fullStart": 225
                         },
                         {
                           "context": {
@@ -1305,13 +1251,7 @@
                                           }
                                         },
                                         "fullEnd": 248,
-                                        "fullStart": 242,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-                                            "snippet": "Enum statu...inactive\n}"
-                                          }
-                                        }
+                                        "fullStart": 242
                                       },
                                       "op": {
                                         "context": {
@@ -1349,13 +1289,7 @@
                                           }
                                         },
                                         "fullEnd": 255,
-                                        "fullStart": 249,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Enum field@active@[L1:C2, L1:C8]",
-                                            "snippet": "active"
-                                          }
-                                        }
+                                        "fullStart": 249
                                       }
                                     },
                                     "fullEnd": 255,
@@ -1472,12 +1406,7 @@
                                 }
                               },
                               "fullEnd": 277,
-                              "fullStart": 266,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Schema@demographic@[L?:C?, L?:C?]"
-                                }
-                              }
+                              "fullStart": 266
                             },
                             "op": {
                               "context": {
@@ -1515,13 +1444,7 @@
                                 }
                               },
                               "fullEnd": 285,
-                              "fullStart": 278,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Enum@demographic.gender@[L6:C0, L9:C1]",
-                                  "snippet": "Enum demog...  female\n}"
-                                }
-                              }
+                              "fullStart": 278
                             }
                           },
                           "fullEnd": 285,
@@ -1609,12 +1532,7 @@
                                               }
                                             },
                                             "fullEnd": 306,
-                                            "fullStart": 295,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Schema@demographic@[L?:C?, L?:C?]"
-                                              }
-                                            }
+                                            "fullStart": 295
                                           },
                                           "op": {
                                             "context": {
@@ -1652,13 +1570,7 @@
                                               }
                                             },
                                             "fullEnd": 313,
-                                            "fullStart": 307,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Enum@demographic.gender@[L6:C0, L9:C1]",
-                                                "snippet": "Enum demog...  female\n}"
-                                              }
-                                            }
+                                            "fullStart": 307
                                           }
                                         },
                                         "fullEnd": 313,
@@ -1700,13 +1612,7 @@
                                           }
                                         },
                                         "fullEnd": 318,
-                                        "fullStart": 314,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Enum field@male@[L7:C2, L7:C6]",
-                                            "snippet": "male"
-                                          }
-                                        }
+                                        "fullStart": 314
                                       }
                                     },
                                     "fullEnd": 318,
@@ -1823,12 +1729,7 @@
                                 }
                               },
                               "fullEnd": 342,
-                              "fullStart": 331,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Schema@demographic@[L?:C?, L?:C?]"
-                                }
-                              }
+                              "fullStart": 331
                             },
                             "op": {
                               "context": {
@@ -1866,13 +1767,7 @@
                                 }
                               },
                               "fullEnd": 357,
-                              "fullStart": 343,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Enum@demographic.age segment@[L11:C0, L17:C1]",
-                                  "snippet": "Enum demog...\n  elder\n}"
-                                }
-                              }
+                              "fullStart": 343
                             }
                           },
                           "fullEnd": 357,
@@ -1960,12 +1855,7 @@
                                               }
                                             },
                                             "fullEnd": 378,
-                                            "fullStart": 367,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Schema@demographic@[L?:C?, L?:C?]"
-                                              }
-                                            }
+                                            "fullStart": 367
                                           },
                                           "op": {
                                             "context": {
@@ -2003,13 +1893,7 @@
                                               }
                                             },
                                             "fullEnd": 392,
-                                            "fullStart": 379,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Enum@demographic.age segment@[L11:C0, L17:C1]",
-                                                "snippet": "Enum demog...\n  elder\n}"
-                                              }
-                                            }
+                                            "fullStart": 379
                                           }
                                         },
                                         "fullEnd": 392,
@@ -2051,13 +1935,7 @@
                                           }
                                         },
                                         "fullEnd": 404,
-                                        "fullStart": 393,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Enum field@young_adult@[L15:C2, L15:C13]",
-                                            "snippet": "young_adult"
-                                          }
-                                        }
+                                        "fullStart": 393
                                       }
                                     },
                                     "fullEnd": 404,
@@ -2985,7 +2863,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L30:C0]",
+        "id": "symbol@Schema@@[L0:C0, L30:C0]",
         "snippet": "Enum statu..._field]\n}\n"
       },
       "declaration": {
@@ -3002,11 +2880,6 @@
         {
           "context": {
             "id": "symbol@Schema@demographic@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         },
         {

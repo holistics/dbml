@@ -1007,20 +1007,13 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L12:C1]",
+        "id": "symbol@Schema@@[L0:C0, L12:C1]",
         "snippet": "Project {\r...\r\n    }\r\n}"
       },
       "declaration": {
         "id": "node@<program>@@[L0:C0, L12:C1]",
         "snippet": "Project {\r...\r\n    }\r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        }
-      ]
+      }
     }
   }
 }

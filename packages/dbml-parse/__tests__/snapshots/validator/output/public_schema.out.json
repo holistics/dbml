@@ -1,18 +1,6 @@
 {
   "errors": [
     {
-      "code": "DUPLICATE_NAME",
-      "diagnostic": "Enum name status already exists in schema 'public'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
-          "snippet": "public.status"
-        }
-      }
-    },
-    {
       "code": "EMPTY_ENUM",
       "diagnostic": "An Enum must have at least one element",
       "filepath": "/main.dbml",
@@ -33,6 +21,18 @@
         "context": {
           "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
           "snippet": "Enum publi...{\r\n    \r\n}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Enum name status already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
+          "snippet": "public.status"
         }
       }
     }
@@ -279,7 +279,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L6:C1]",
+        "id": "symbol@Schema@@[L0:C0, L6:C1]",
         "snippet": "Enum statu...{\r\n    \r\n}"
       },
       "declaration": {
@@ -297,11 +297,6 @@
           "context": {
             "id": "symbol@Enum@status@[L0:C0, L2:C1]",
             "snippet": "Enum status {\r\n\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         }
       ]

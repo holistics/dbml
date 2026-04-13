@@ -223,39 +223,6 @@
           }
         ]
       }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Table@cities@[L12:C0, L17:C1]",
-              "snippet": "Table citi...\"sasasa\"\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@citites@[L24:C0, L30:C1]",
-              "snippet": "Table citi... name\n\t}\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@country@[L19:C0, L22:C1]",
-              "snippet": "Table coun...string[]\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@customer@[L0:C0, L10:C1]",
-              "snippet": "Table \"cus...ESTAMP`]\n}"
-            }
-          }
-        ]
-      }
     ]
   }
 }

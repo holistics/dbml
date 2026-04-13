@@ -4,7 +4,7 @@ import {
 import { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
 import Compiler from '@/compiler/index';
 import Lexer from '@/core/lexer/lexer';
-import { DEFAULT_ENTRY } from '@/constants';
+import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 
@@ -194,7 +194,7 @@ DiagramView my_view {
   });
 });
 
-// ─── syncDiagramView across multifile content ────────────────────────────────
+// syncDiagramView across multifile content
 
 describe('syncDiagramView - multifile scenarios', () => {
   it('appends a new view to a file that imports tables from another file', () => {
@@ -209,7 +209,7 @@ Table orders {
         operation: 'create',
         name: 'overview',
         visibleEntities: {
-          tables: [{ name: 'users', schemaName: null }, { name: 'orders', schemaName: null }],
+          tables: [{ name: 'users', schemaName: DEFAULT_SCHEMA_NAME }, { name: 'orders', schemaName: DEFAULT_SCHEMA_NAME }],
           stickyNotes: null,
           tableGroups: null,
           schemas: null,
@@ -288,7 +288,7 @@ DiagramView main {
         operation: 'create',
         name: 'overview',
         visibleEntities: {
-          tables: [{ name: 'users' }, { name: 'orders' }],
+          tables: [{ name: 'users', schemaName: DEFAULT_SCHEMA_NAME }, { name: 'orders', schemaName: DEFAULT_SCHEMA_NAME }],
           stickyNotes: null,
           tableGroups: null,
           schemas: null,

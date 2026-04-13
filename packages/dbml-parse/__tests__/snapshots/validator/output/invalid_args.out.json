@@ -1,42 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_TABLEGROUP_FIELD",
-      "diagnostic": "A TableGroup field should only have a single Table name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@a@[L13:C6, L13:C7]",
-          "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "INVALID_TABLEGROUP_FIELD",
-      "diagnostic": "A TableGroup field should only have a single Table name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@a@[L14:C6, L14:C7]",
-          "snippet": "a"
-        }
-      }
-    },
-    {
-      "code": "INVALID_TABLEGROUP_FIELD",
-      "diagnostic": "A TableGroup field should only have a single Table name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@a@[L14:C8, L14:C9]",
-          "snippet": "a"
-        }
-      }
-    },
-    {
       "code": "INVALID_COLUMN",
       "diagnostic": "A column must have a type",
       "filepath": "/main.dbml",
@@ -105,6 +69,42 @@
         "context": {
           "id": "node@<primary-expression>@e@[L9:C7, L9:C8]",
           "snippet": "e"
+        }
+      }
+    },
+    {
+      "code": "INVALID_TABLEGROUP_FIELD",
+      "diagnostic": "A TableGroup field should only have a single Table name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@a@[L13:C6, L13:C7]",
+          "snippet": "a"
+        }
+      }
+    },
+    {
+      "code": "INVALID_TABLEGROUP_FIELD",
+      "diagnostic": "A TableGroup field should only have a single Table name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@a@[L14:C6, L14:C7]",
+          "snippet": "a"
+        }
+      }
+    },
+    {
+      "code": "INVALID_TABLEGROUP_FIELD",
+      "diagnostic": "A TableGroup field should only have a single Table name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@a@[L14:C8, L14:C9]",
+          "snippet": "a"
         }
       }
     },
@@ -284,41 +284,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id@[L1:C4, L1:C10]",
                         "snippet": "id int"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id@[L18:C13, L18:C15]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L18:C6, L18:C8]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L22:C13, L22:C15]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L22:C6, L22:C8]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L26:C13, L26:C15]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L26:C6, L26:C8]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L30:C13, L30:C15]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L30:C6, L30:C8]",
-                          "snippet": "id"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -437,48 +403,6 @@
                   "id": "symbol@Column@ssid@[L2:C4, L2:C8]",
                   "snippet": "ssid"
                 }
-              }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@A@[L13:C4, L13:C5]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L14:C4, L14:C5]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L18:C11, L18:C12]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L18:C4, L18:C5]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L22:C11, L22:C12]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L22:C4, L22:C5]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L26:C11, L26:C12]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L26:C4, L26:C5]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L30:C11, L30:C12]",
-                "snippet": "A"
-              },
-              {
-                "id": "node@<primary-expression>@A@[L30:C4, L30:C5]",
-                "snippet": "A"
               }
             ]
           }
@@ -1239,13 +1163,7 @@
                           }
                         },
                         "fullEnd": 132,
-                        "fullStart": 126,
-                        "referee": {
-                          "context": {
-                            "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                            "snippet": "Table A {\n...    ssid\n}"
-                          }
-                        }
+                        "fullStart": 126
                       }
                     },
                     "fullEnd": 134,
@@ -1354,13 +1272,7 @@
                           }
                         },
                         "fullEnd": 140,
-                        "fullStart": 134,
-                        "referee": {
-                          "context": {
-                            "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                            "snippet": "Table A {\n...    ssid\n}"
-                          }
-                        }
+                        "fullStart": 134
                       }
                     },
                     "fullEnd": 144,
@@ -1653,13 +1565,7 @@
                                   }
                                 },
                                 "fullEnd": 158,
-                                "fullStart": 153,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}"
-                                  }
-                                }
+                                "fullStart": 153
                               },
                               "op": {
                                 "context": {
@@ -1697,13 +1603,7 @@
                                   }
                                 },
                                 "fullEnd": 162,
-                                "fullStart": 159,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 159
                               }
                             },
                             "fullEnd": 162,
@@ -1751,13 +1651,7 @@
                                   }
                                 },
                                 "fullEnd": 165,
-                                "fullStart": 164,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}"
-                                  }
-                                }
+                                "fullStart": 164
                               },
                               "op": {
                                 "context": {
@@ -1795,13 +1689,7 @@
                                   }
                                 },
                                 "fullEnd": 169,
-                                "fullStart": 166,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 166
                               }
                             },
                             "fullEnd": 169,
@@ -2039,13 +1927,7 @@
                                   }
                                 },
                                 "fullEnd": 203,
-                                "fullStart": 198,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}"
-                                  }
-                                }
+                                "fullStart": 198
                               },
                               "op": {
                                 "context": {
@@ -2083,13 +1965,7 @@
                                   }
                                 },
                                 "fullEnd": 207,
-                                "fullStart": 204,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 204
                               }
                             },
                             "fullEnd": 207,
@@ -2137,13 +2013,7 @@
                                   }
                                 },
                                 "fullEnd": 210,
-                                "fullStart": 209,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}"
-                                  }
-                                }
+                                "fullStart": 209
                               },
                               "op": {
                                 "context": {
@@ -2181,13 +2051,7 @@
                                   }
                                 },
                                 "fullEnd": 214,
-                                "fullStart": 211,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 211
                               }
                             },
                             "fullEnd": 214,
@@ -2326,13 +2190,7 @@
                                   }
                                 },
                                 "fullEnd": 248,
-                                "fullStart": 243,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}"
-                                  }
-                                }
+                                "fullStart": 243
                               },
                               "op": {
                                 "context": {
@@ -2370,13 +2228,7 @@
                                   }
                                 },
                                 "fullEnd": 252,
-                                "fullStart": 249,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 249
                               }
                             },
                             "fullEnd": 252,
@@ -2424,13 +2276,7 @@
                                   }
                                 },
                                 "fullEnd": 255,
-                                "fullStart": 254,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}"
-                                  }
-                                }
+                                "fullStart": 254
                               },
                               "op": {
                                 "context": {
@@ -2468,13 +2314,7 @@
                                   }
                                 },
                                 "fullEnd": 259,
-                                "fullStart": 256,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 256
                               }
                             },
                             "fullEnd": 259,
@@ -2642,13 +2482,7 @@
                                   }
                                 },
                                 "fullEnd": 275,
-                                "fullStart": 270,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}"
-                                  }
-                                }
+                                "fullStart": 270
                               },
                               "op": {
                                 "context": {
@@ -2686,13 +2520,7 @@
                                   }
                                 },
                                 "fullEnd": 279,
-                                "fullStart": 276,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 276
                               }
                             },
                             "fullEnd": 279,
@@ -2740,13 +2568,7 @@
                                   }
                                 },
                                 "fullEnd": 282,
-                                "fullStart": 281,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
-                                    "snippet": "Table A {\n...    ssid\n}"
-                                  }
-                                }
+                                "fullStart": 281
                               },
                               "op": {
                                 "context": {
@@ -2784,13 +2606,7 @@
                                   }
                                 },
                                 "fullEnd": 286,
-                                "fullStart": 283,
-                                "referee": {
-                                  "context": {
-                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                                    "snippet": "id int"
-                                  }
-                                }
+                                "fullStart": 283
                               }
                             },
                             "fullEnd": 286,
@@ -2837,7 +2653,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L31:C1]",
+        "id": "symbol@Schema@@[L0:C0, L31:C1]",
         "snippet": "Table A {\n...A.id a a\n}"
       },
       "declaration": {
@@ -2849,11 +2665,6 @@
           "context": {
             "id": "symbol@Enum@E@[L5:C0, L10:C1]",
             "snippet": "Enum E {\n ...    a4 e\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
           }
         },
         {

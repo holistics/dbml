@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_NAME",
-      "diagnostic": "Sticky note must have a name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L7:C0, L9:C1]",
-          "snippet": "Note {\r\n  ...l note'\r\n}"
-        }
-      }
-    },
-    {
-      "code": "INVALID_NAME",
-      "diagnostic": "Sticky note must have a name",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
-          "snippet": "Note: '''\r... note\r\n'''"
-        }
-      }
-    },
-    {
       "code": "NOTE_REDEFINED",
       "diagnostic": "Duplicate notes are defined",
       "filepath": "/main.dbml",
@@ -45,6 +21,30 @@
         "context": {
           "id": "node@<element-declaration>@@[L2:C4, L4:C5]",
           "snippet": "Note {\r\n  ...te'\r\n    }"
+        }
+      }
+    },
+    {
+      "code": "INVALID_NAME",
+      "diagnostic": "Sticky note must have a name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L7:C0, L9:C1]",
+          "snippet": "Note {\r\n  ...l note'\r\n}"
+        }
+      }
+    },
+    {
+      "code": "INVALID_NAME",
+      "diagnostic": "Sticky note must have a name",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L11:C0, L13:C3]",
+          "snippet": "Note: '''\r... note\r\n'''"
         }
       }
     }
@@ -489,7 +489,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L13:C3]",
+        "id": "symbol@Schema@@[L0:C0, L13:C3]",
         "snippet": "Table A {\r... note\r\n'''"
       },
       "declaration": {
@@ -497,11 +497,6 @@
         "snippet": "Table A {\r... note\r\n'''"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@A@[L0:C0, L5:C1]",

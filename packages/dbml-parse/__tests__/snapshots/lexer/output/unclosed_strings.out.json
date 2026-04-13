@@ -1,20 +1,6 @@
 {
   "errors": [
     {
-      "code": "UNEXPECTED_EOF",
-      "diagnostic": "EOF reached while parsing",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@'''This is also an unclosed string\n\n\\'''\n@[L4:C0, L7:C0]",
-          "snippet": "'''This is...ing\n\n\\'''\n",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
       "filepath": "/main.dbml",
@@ -37,6 +23,20 @@
         "context": {
           "id": "token@<string>@'This is also an unclosed string@[L2:C0, L2:C32]",
           "snippet": "'This is a...sed string",
+          "isInvalid": true,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_EOF",
+      "diagnostic": "EOF reached while parsing",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<string>@'''This is also an unclosed string\n\n\\'''\n@[L4:C0, L7:C0]",
+          "snippet": "'''This is...ing\n\n\\'''\n",
           "isInvalid": true,
           "filepath": "/main.dbml"
         }

@@ -2,6 +2,7 @@ import { ElementKind } from '@/core/types/keywords';
 import { ElementDeclarationNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
+import DiagramViewBinder from './bind';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
@@ -27,10 +28,11 @@ export const diagramViewModule: GlobalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  bindNode (_compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+  bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.DiagramView)) return Report.create(PASS_THROUGH);
-    // No cross-reference binding needed for DiagramView currently
-    return Report.create(undefined);
+    const decl = node as ElementDeclarationNode & { type: SyntaxToken };
+    const errors = new DiagramViewBinder(compiler, decl).bind();
+    return Report.create(undefined, errors);
   },
 
   interpretNode (compiler: Compiler, node: SyntaxNode): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {

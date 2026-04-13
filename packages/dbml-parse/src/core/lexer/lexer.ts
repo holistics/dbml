@@ -9,7 +9,7 @@ import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from '@/core/types/tokens';
 import { Position } from '@/core/types/position';
-import { isInvalidToken } from '@/core/parser/utils';
+import { isInvalidToken } from '@/core/utils/expression';
 import { Filepath } from '@/core/types/filepath';
 
 export default class Lexer {

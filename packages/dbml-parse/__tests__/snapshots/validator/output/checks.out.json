@@ -13,30 +13,6 @@
       }
     },
     {
-      "code": "UNKNOWN_CHECK_SETTING",
-      "diagnostic": "Unknown check setting 'invalid'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L10:C23, L10:C30]",
-          "snippet": "invalid"
-        }
-      }
-    },
-    {
-      "code": "UNKNOWN_CHECK_SETTING",
-      "diagnostic": "Unknown check setting 'invalid'",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L21:C23, L21:C30]",
-          "snippet": "invalid"
-        }
-      }
-    },
-    {
       "code": "DUPLICATE_CHECK_SETTING",
       "diagnostic": "'name' can only appear once",
       "filepath": "/main.dbml",
@@ -61,6 +37,18 @@
       }
     },
     {
+      "code": "UNKNOWN_CHECK_SETTING",
+      "diagnostic": "Unknown check setting 'invalid'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L10:C23, L10:C30]",
+          "snippet": "invalid"
+        }
+      }
+    },
+    {
       "code": "DUPLICATE_CHECK_SETTING",
       "diagnostic": "'name' can only appear once",
       "filepath": "/main.dbml",
@@ -81,6 +69,18 @@
         "context": {
           "id": "node@<attribute>@@[L20:C35, L20:C46]",
           "snippet": "name: 'dup'"
+        }
+      }
+    },
+    {
+      "code": "UNKNOWN_CHECK_SETTING",
+      "diagnostic": "Unknown check setting 'invalid'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L21:C23, L21:C30]",
+          "snippet": "invalid"
         }
       }
     }
@@ -1468,7 +1468,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L24:C0]",
+        "id": "symbol@Schema@@[L0:C0, L24:C0]",
         "snippet": "checks {}\n...id]\n  }\n}\n"
       },
       "declaration": {
@@ -1476,11 +1476,6 @@
         "snippet": "checks {}\n...id]\n  }\n}\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@Users@[L2:C0, L12:C1]",

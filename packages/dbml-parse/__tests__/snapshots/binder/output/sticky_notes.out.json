@@ -49,27 +49,6 @@
           "snippet": "Note nodeN...r.\n  '''\n}"
         }
       }
-    ],
-    "schemas": [
-      {
-        "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Note@nodeName@[L5:C0, L9:C1]",
-              "snippet": "Note nodeN...r.\n  '''\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@users@[L0:C0, L3:C1]",
-              "snippet": "Table user... unique]\n}"
-            }
-          }
-        ]
-      }
     ]
   }
 }

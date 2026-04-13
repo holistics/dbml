@@ -815,7 +815,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L11:C0]",
+        "id": "symbol@Schema@@[L0:C0, L11:C0]",
         "snippet": "Table User...d int\r\n}\r\n"
       },
       "declaration": {
@@ -823,11 +823,6 @@
         "snippet": "Table User...d int\r\n}\r\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@Users@[L0:C0, L4:C1]",

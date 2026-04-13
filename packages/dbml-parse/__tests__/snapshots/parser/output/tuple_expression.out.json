@@ -1,20 +1,6 @@
 {
   "errors": [
     {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect a comma ','",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<wildcard>@*@[L10:C14, L10:C15]",
-          "snippet": "*",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "INVALID_OPERAND",
       "diagnostic": "Invalid start of operand \")\"",
       "filepath": "/main.dbml",
@@ -24,6 +10,20 @@
           "id": "token@<rparen>@)@[L8:C6, L8:C7]",
           "snippet": ")",
           "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_TOKEN",
+      "diagnostic": "Expect a comma ','",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<wildcard>@*@[L10:C14, L10:C15]",
+          "snippet": "*",
+          "isInvalid": true,
           "filepath": "/main.dbml"
         }
       }
@@ -867,23 +867,6 @@
       }
     },
     "fullEnd": 142,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Program@@[L0:C0, L13:C1]",
-        "snippet": "Test Tuple...    12)\r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L13:C1]",
-        "snippet": "Test Tuple...    12)\r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

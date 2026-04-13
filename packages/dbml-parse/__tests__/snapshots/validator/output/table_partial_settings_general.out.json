@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "DUPLICATE_COLUMN_SETTING",
-      "diagnostic": "'note' can only appear once",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L7:C30, L7:C52]",
-          "snippet": "note: 'Thi...is a note'"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_COLUMN_SETTING",
-      "diagnostic": "'note' can only appear once",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<attribute>@@[L7:C54, L7:C82]",
-          "snippet": "note: 'Thi...ther note'"
-        }
-      }
-    },
-    {
       "code": "DUPLICATE_TABLE_PARTIAL_SETTING",
       "diagnostic": "'note' can only appear once",
       "filepath": "/main.dbml",
@@ -45,6 +21,30 @@
         "context": {
           "id": "node@<attribute>@@[L3:C4, L3:C36]",
           "snippet": "note: 'Thi...cate note'"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_SETTING",
+      "diagnostic": "'note' can only appear once",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L7:C30, L7:C52]",
+          "snippet": "note: 'Thi...is a note'"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_SETTING",
+      "diagnostic": "'note' can only appear once",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L7:C54, L7:C82]",
+          "snippet": "note: 'Thi...ther note'"
         }
       }
     }
@@ -1021,12 +1021,7 @@
                                 }
                               },
                               "fullEnd": 341,
-                              "fullStart": 339,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
-                                }
-                              }
+                              "fullStart": 339
                             },
                             "op": {
                               "context": {
@@ -1064,13 +1059,7 @@
                                 }
                               },
                               "fullEnd": 349,
-                              "fullStart": 342,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Enum@v2.status@[L14:C0, L19:C1]",
-                                  "snippet": "Enum v2.st... tenant\r\n}"
-                                }
-                              }
+                              "fullStart": 342
                             }
                           },
                           "fullEnd": 349,
@@ -1158,12 +1147,7 @@
                                               }
                                             },
                                             "fullEnd": 361,
-                                            "fullStart": 359,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
-                                              }
-                                            }
+                                            "fullStart": 359
                                           },
                                           "op": {
                                             "context": {
@@ -1201,13 +1185,7 @@
                                               }
                                             },
                                             "fullEnd": 368,
-                                            "fullStart": 362,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Enum@v2.status@[L14:C0, L19:C1]",
-                                                "snippet": "Enum v2.st... tenant\r\n}"
-                                              }
-                                            }
+                                            "fullStart": 362
                                           }
                                         },
                                         "fullEnd": 368,
@@ -1249,13 +1227,7 @@
                                           }
                                         },
                                         "fullEnd": 372,
-                                        "fullStart": 369,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Enum field@new@[L16:C4, L16:C7]",
-                                            "snippet": "new"
-                                          }
-                                        }
+                                        "fullStart": 369
                                       }
                                     },
                                     "fullEnd": 372,
@@ -1757,13 +1729,7 @@
                       "declaration": {
                         "id": "node@<function-application>@new@[L16:C4, L16:C7]",
                         "snippet": "new"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@new@[L10:C41, L10:C44]",
-                          "snippet": "new"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -1992,16 +1958,6 @@
                   "snippet": "tenant"
                 }
               }
-            ],
-            "references": [
-              {
-                "id": "node@<primary-expression>@status@[L10:C14, L10:C20]",
-                "snippet": "status"
-              },
-              {
-                "id": "node@<primary-expression>@status@[L10:C34, L10:C40]",
-                "snippet": "status"
-              }
             ]
           }
         },
@@ -2196,7 +2152,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L24:C0]",
+        "id": "symbol@Schema@@[L0:C0, L24:C0]",
         "snippet": "TableParti... text\r\n}\r\n"
       },
       "declaration": {
@@ -2204,11 +2160,6 @@
         "snippet": "TableParti... text\r\n}\r\n"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Schema@v2@[L?:C?, L?:C?]"

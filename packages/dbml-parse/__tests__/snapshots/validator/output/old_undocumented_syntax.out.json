@@ -2989,13 +2989,7 @@
                       "declaration": {
                         "id": "node@<function-application>@id@[L25:C1, L25:C11]",
                         "snippet": "id integer"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id@[L28:C2, L28:C4]",
-                          "snippet": "id"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -3075,13 +3069,7 @@
                       "declaration": {
                         "id": "node@<function-application>@name@[L26:C1, L26:C12]",
                         "snippet": "name string"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@name@[L28:C5, L28:C9]",
-                          "snippet": "name"
-                        }
-                      ]
+                      }
                     }
                   },
                   {
@@ -3149,13 +3137,7 @@
                                       }
                                     },
                                     "fullEnd": 628,
-                                    "fullStart": 623,
-                                    "referee": {
-                                      "context": {
-                                        "id": "symbol@Column@name@[L26:C1, L26:C12]",
-                                        "snippet": "name string"
-                                      }
-                                    }
+                                    "fullStart": 623
                                   }
                                 ],
                                 "callee": {
@@ -3185,13 +3167,7 @@
                                     }
                                   },
                                   "fullEnd": 623,
-                                  "fullStart": 618,
-                                  "referee": {
-                                    "context": {
-                                      "id": "symbol@Column@id@[L25:C1, L25:C11]",
-                                      "snippet": "id integer"
-                                    }
-                                  }
+                                  "fullStart": 618
                                 }
                               },
                               "fullEnd": 628,
@@ -3317,7 +3293,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L30:C1]",
+        "id": "symbol@Schema@@[L0:C0, L30:C1]",
         "snippet": "Table \"cus... name\n\t}\n}"
       },
       "declaration": {
@@ -3325,11 +3301,6 @@
         "snippet": "Table \"cus... name\n\t}\n}"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@cities@[L12:C0, L17:C1]",

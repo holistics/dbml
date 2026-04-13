@@ -817,7 +817,7 @@
     "fullStart": 0,
     "symbol": {
       "context": {
-        "id": "symbol@Program@@[L0:C0, L6:C1]",
+        "id": "symbol@Schema@@[L0:C0, L6:C1]",
         "snippet": "Table User... int(10)\n}"
       },
       "declaration": {
@@ -825,11 +825,6 @@
         "snippet": "Table User... int(10)\n}"
       },
       "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
         {
           "context": {
             "id": "symbol@Table@User@[L0:C0, L6:C1]",

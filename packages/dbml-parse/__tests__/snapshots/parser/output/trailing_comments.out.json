@@ -149,39 +149,7 @@
                       }
                     },
                     "fullEnd": 32,
-                    "fullStart": 18,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C2, L1:C12]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C2, L1:C12]",
-                        "snippet": "id integer"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@id@[L12:C7, L12:C9]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L13:C7, L13:C9]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L14:C12, L14:C14]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L14:C7, L14:C9]",
-                          "snippet": "id"
-                        },
-                        {
-                          "id": "node@<primary-expression>@id@[L7:C7, L7:C9]",
-                          "snippet": "id"
-                        }
-                      ]
-                    }
+                    "fullStart": 18
                   },
                   {
                     "context": {
@@ -251,27 +219,7 @@
                       }
                     },
                     "fullEnd": 51,
-                    "fullStart": 32,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@country@[L2:C2, L2:C17]",
-                        "snippet": "country varchar"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@country@[L2:C2, L2:C17]",
-                        "snippet": "country varchar"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@country@[L10:C7, L10:C14]",
-                          "snippet": "country"
-                        },
-                        {
-                          "id": "node@<primary-expression>@country@[L7:C11, L7:C18]",
-                          "snippet": "country"
-                        }
-                      ]
-                    }
+                    "fullStart": 32
                   },
                   {
                     "context": {
@@ -341,31 +289,7 @@
                       }
                     },
                     "fullEnd": 72,
-                    "fullStart": 51,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
-                        "snippet": "booking_date date"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@booking_date@[L3:C2, L3:C19]",
-                        "snippet": "booking_date date"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@booking_date@[L10:C16, L10:C28]",
-                          "snippet": "booking_date"
-                        },
-                        {
-                          "id": "node@<primary-expression>@booking_date@[L11:C6, L11:C18]",
-                          "snippet": "booking_date"
-                        },
-                        {
-                          "id": "node@<primary-expression>@booking_date@[L9:C6, L9:C18]",
-                          "snippet": "booking_date"
-                        }
-                      ]
-                    }
+                    "fullStart": 51
                   },
                   {
                     "context": {
@@ -435,23 +359,7 @@
                       }
                     },
                     "fullEnd": 96,
-                    "fullStart": 72,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@created_at@[L4:C2, L4:C22]",
-                        "snippet": "created_at timestamp"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@created_at@[L4:C2, L4:C22]",
-                        "snippet": "created_at timestamp"
-                      },
-                      "references": [
-                        {
-                          "id": "node@<primary-expression>@created_at@[L8:C6, L8:C16]",
-                          "snippet": "created_at"
-                        }
-                      ]
-                    }
+                    "fullStart": 72
                   },
                   {
                     "context": {
@@ -598,13 +506,7 @@
                                           }
                                         },
                                         "fullEnd": 120,
-                                        "fullStart": 118,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@id@[L1:C2, L1:C12]",
-                                            "snippet": "id integer"
-                                          }
-                                        }
+                                        "fullStart": 118
                                       },
                                       {
                                         "context": {
@@ -633,13 +535,7 @@
                                           }
                                         },
                                         "fullEnd": 129,
-                                        "fullStart": 122,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@country@[L2:C2, L2:C17]",
-                                            "snippet": "country varchar"
-                                          }
-                                        }
+                                        "fullStart": 122
                                       }
                                     ],
                                     "tupleCloseParen": {
@@ -882,13 +778,7 @@
                                     }
                                   },
                                   "fullEnd": 179,
-                                  "fullStart": 162,
-                                  "referee": {
-                                    "context": {
-                                      "id": "symbol@Column@created_at@[L4:C2, L4:C22]",
-                                      "snippet": "created_at timestamp"
-                                    }
-                                  }
+                                  "fullStart": 162
                                 }
                               },
                               "fullEnd": 221,
@@ -927,13 +817,7 @@
                                     }
                                   },
                                   "fullEnd": 241,
-                                  "fullStart": 221,
-                                  "referee": {
-                                    "context": {
-                                      "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
-                                      "snippet": "booking_date date"
-                                    }
-                                  }
+                                  "fullStart": 221
                                 }
                               },
                               "fullEnd": 241,
@@ -1053,13 +937,7 @@
                                           }
                                         },
                                         "fullEnd": 255,
-                                        "fullStart": 248,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@country@[L2:C2, L2:C17]",
-                                            "snippet": "country varchar"
-                                          }
-                                        }
+                                        "fullStart": 248
                                       },
                                       {
                                         "context": {
@@ -1088,13 +966,7 @@
                                           }
                                         },
                                         "fullEnd": 269,
-                                        "fullStart": 257,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
-                                            "snippet": "booking_date date"
-                                          }
-                                        }
+                                        "fullStart": 257
                                       }
                                     ],
                                     "tupleCloseParen": {
@@ -1257,13 +1129,7 @@
                                     }
                                   },
                                   "fullEnd": 300,
-                                  "fullStart": 281,
-                                  "referee": {
-                                    "context": {
-                                      "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
-                                      "snippet": "booking_date date"
-                                    }
-                                  }
+                                  "fullStart": 281
                                 }
                               },
                               "fullEnd": 314,
@@ -1309,13 +1175,7 @@
                                           }
                                         },
                                         "fullEnd": 323,
-                                        "fullStart": 321,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@id@[L1:C2, L1:C12]",
-                                            "snippet": "id integer"
-                                          }
-                                        }
+                                        "fullStart": 321
                                       }
                                     ],
                                     "tupleCloseParen": {
@@ -1395,13 +1255,7 @@
                                           }
                                         },
                                         "fullEnd": 337,
-                                        "fullStart": 335,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@id@[L1:C2, L1:C12]",
-                                            "snippet": "id integer"
-                                          }
-                                        }
+                                        "fullStart": 335
                                       },
                                       {
                                         "context": {
@@ -1500,13 +1354,7 @@
                                           }
                                         },
                                         "fullEnd": 363,
-                                        "fullStart": 361,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@id@[L1:C2, L1:C12]",
-                                            "snippet": "id integer"
-                                          }
-                                        }
+                                        "fullStart": 361
                                       },
                                       {
                                         "context": {
@@ -1535,13 +1383,7 @@
                                           }
                                         },
                                         "fullEnd": 368,
-                                        "fullStart": 366,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@id@[L1:C2, L1:C12]",
-                                            "snippet": "id integer"
-                                          }
-                                        }
+                                        "fullStart": 366
                                       }
                                     ],
                                     "tupleCloseParen": {
@@ -1586,17 +1428,7 @@
                       }
                     },
                     "fullEnd": 376,
-                    "fullStart": 97,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Indexes@@[L6:C2, L15:C3]",
-                        "snippet": "indexes {\r...3,id)\r\n  }"
-                      },
-                      "declaration": {
-                        "id": "node@<element-declaration>@@[L6:C2, L15:C3]",
-                        "snippet": "indexes {\r...3,id)\r\n  }"
-                      }
-                    }
+                    "fullStart": 97
                   }
                 ]
               },
@@ -1643,49 +1475,7 @@
             }
           },
           "fullEnd": 379,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@bookings@[L0:C0, L16:C1]",
-              "snippet": "Table book...d)\r\n  }\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@bookings@[L0:C0, L16:C1]",
-              "snippet": "Table book...d)\r\n  }\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
-                  "snippet": "booking_date date"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@country@[L2:C2, L2:C17]",
-                  "snippet": "country varchar"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@created_at@[L4:C2, L4:C22]",
-                  "snippet": "created_at timestamp"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C2, L1:C12]",
-                  "snippet": "id integer"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Indexes@@[L6:C2, L15:C3]",
-                  "snippet": "indexes {\r...3,id)\r\n  }"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         }
       ],
       "eof": {
@@ -1699,29 +1489,6 @@
       }
     },
     "fullEnd": 396,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Program@@[L0:C0, L17:C17]",
-        "snippet": "Table book...of program"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L17:C17]",
-        "snippet": "Table book...of program"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@bookings@[L0:C0, L16:C1]",
-            "snippet": "Table book...d)\r\n  }\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

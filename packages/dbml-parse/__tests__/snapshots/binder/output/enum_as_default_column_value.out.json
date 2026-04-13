@@ -608,25 +608,6 @@
     "schemas": [
       {
         "context": {
-          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-              "snippet": "Enum statu...inactive\n}"
-            }
-          },
-          {
-            "context": {
-              "id": "symbol@Table@user@[L19:C0, L29:C1]",
-              "snippet": "Table user...d_field]\n}"
-            }
-          }
-        ]
-      },
-      {
-        "context": {
           "id": "symbol@Schema@demographic@[L?:C?, L?:C?]"
         },
         "members": [

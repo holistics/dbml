@@ -1,0 +1,336 @@
+{
+  "base.dbml": {
+    "database": {
+      "refs": [
+        {
+          "endpoints": [
+            {
+              "fieldNames": [
+                "user_id"
+              ],
+              "relation": "*",
+              "tableName": "orders",
+              "token": {
+                "end": {
+                  "column": 32,
+                  "line": 8,
+                  "offset": 134
+                },
+                "filepath": "/base.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 8,
+                  "offset": 105
+                }
+              }
+            },
+            {
+              "fieldNames": [
+                "id"
+              ],
+              "relation": "1",
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 31,
+                  "line": 8,
+                  "offset": 133
+                },
+                "filepath": "/base.dbml",
+                "start": {
+                  "column": 16,
+                  "line": 8,
+                  "offset": 118
+                }
+              }
+            }
+          ],
+          "token": {
+            "end": {
+              "column": 31,
+              "line": 8,
+              "offset": 133
+            },
+            "filepath": "/base.dbml",
+            "start": {
+              "column": 16,
+              "line": 8,
+              "offset": 118
+            }
+          }
+        }
+      ],
+      "tables": [
+        {
+          "fields": [
+            {
+              "increment": false,
+              "name": "id",
+              "pk": true,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 70
+                },
+                "filepath": "/base.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 59
+                }
+              },
+              "type": {
+                "type_name": "int"
+              },
+              "unique": false
+            }
+          ],
+          "name": "users",
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 4,
+              "offset": 72
+            },
+            "filepath": "/base.dbml",
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 43
+            }
+          }
+        },
+        {
+          "fields": [
+            {
+              "increment": false,
+              "name": "id",
+              "pk": true,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 7,
+                  "offset": 102
+                },
+                "filepath": "/base.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 7,
+                  "offset": 91
+                }
+              },
+              "type": {
+                "type_name": "int"
+              },
+              "unique": false
+            },
+            {
+              "increment": false,
+              "inline_refs": [
+                {
+                  "fieldNames": [
+                    "id"
+                  ],
+                  "relation": ">",
+                  "tableName": "users",
+                  "token": {
+                    "end": {
+                      "column": 31,
+                      "line": 8,
+                      "offset": 133
+                    },
+                    "filepath": "/base.dbml",
+                    "start": {
+                      "column": 16,
+                      "line": 8,
+                      "offset": 118
+                    }
+                  }
+                }
+              ],
+              "name": "user_id",
+              "pk": false,
+              "token": {
+                "end": {
+                  "column": 32,
+                  "line": 8,
+                  "offset": 134
+                },
+                "filepath": "/base.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 8,
+                  "offset": 105
+                }
+              },
+              "type": {
+                "type_name": "int"
+              },
+              "unique": false
+            }
+          ],
+          "name": "orders",
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 9,
+              "offset": 136
+            },
+            "filepath": "/base.dbml",
+            "start": {
+              "column": 1,
+              "line": 6,
+              "offset": 74
+            }
+          }
+        }
+      ],
+      "token": {
+        "end": {
+          "column": 1,
+          "line": 10,
+          "offset": 137
+        },
+        "filepath": "/base.dbml",
+        "start": {
+          "column": 1,
+          "line": 2,
+          "offset": 43
+        }
+      }
+    }
+  },
+  "main.dbml": {
+    "database": {
+      "externals": {
+        "tables": [
+          {
+            "name": "users",
+            "visibleNames": [
+              {
+                "name": "users"
+              }
+            ]
+          }
+        ]
+      },
+      "tables": [
+        {
+          "fields": [
+            {
+              "increment": false,
+              "name": "id",
+              "pk": true,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 3,
+                  "offset": 70
+                },
+                "filepath": "/base.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 3,
+                  "offset": 59
+                }
+              },
+              "type": {
+                "type_name": "int"
+              },
+              "unique": false
+            }
+          ],
+          "name": "users",
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 4,
+              "offset": 72
+            },
+            "filepath": "/base.dbml",
+            "start": {
+              "column": 1,
+              "line": 2,
+              "offset": 43
+            }
+          }
+        },
+        {
+          "fields": [
+            {
+              "increment": false,
+              "name": "id",
+              "pk": true,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 5,
+                  "offset": 148
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 5,
+                  "offset": 137
+                }
+              },
+              "type": {
+                "type_name": "int"
+              },
+              "unique": false
+            },
+            {
+              "name": "user_id",
+              "pk": false,
+              "token": {
+                "end": {
+                  "column": 14,
+                  "line": 6,
+                  "offset": 162
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 3,
+                  "line": 6,
+                  "offset": 151
+                }
+              },
+              "type": {
+                "type_name": "int"
+              },
+              "unique": false
+            }
+          ],
+          "name": "invoices",
+          "token": {
+            "end": {
+              "column": 2,
+              "line": 7,
+              "offset": 164
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 1,
+              "line": 4,
+              "offset": 118
+            }
+          }
+        }
+      ],
+      "token": {
+        "end": {
+          "column": 1,
+          "line": 8,
+          "offset": 165
+        },
+        "filepath": "/main.dbml",
+        "start": {
+          "column": 1,
+          "line": 2,
+          "offset": 78
+        }
+      }
+    }
+  }
+}
