@@ -41,7 +41,9 @@ import {
   ref, onMounted, onBeforeUnmount, watch, nextTick,
 } from 'vue';
 import * as monaco from 'monaco-editor';
-import { DBMLLanguageService } from '@/components/monaco/dbml-language';
+import {
+  DBMLLanguageService,
+} from '@/components/monaco/dbml-language';
 import consoleLogger from '@/utils/logger';
 
 interface Props {
@@ -110,7 +112,9 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   language: props.language,
   theme: getThemeForLanguage(props.language),
   readOnly: props.readOnly,
-  minimap: { enabled: props.minimap },
+  minimap: {
+    enabled: props.minimap,
+  },
   wordWrap: props.wordWrap,
   scrollBeyondLastLine: false,
   fontSize: 14,
@@ -147,7 +151,9 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   selectOnLineNumbers: false, // Disable line number selection for vim compatibility
   cursorWidth: props.vimMode ? 2 : 1, // Slightly wider cursor for vim visibility
   quickSuggestions: false, // Disable auto-suggestions for vim mode compatibility
-  parameterHints: { enabled: false }, // Disable parameter hints for cleaner vim experience
+  parameterHints: {
+    enabled: false,
+  }, // Disable parameter hints for cleaner vim experience
   suggestOnTriggerCharacters: false, // Disable suggestion popup on typing
   acceptSuggestionOnEnter: 'off', // Prevent Enter from accepting suggestions
   tabCompletion: 'off', // Disable tab completion to avoid conflicts with vim
@@ -165,7 +171,9 @@ const setupVimMode = async (): Promise<void> => {
 
   try {
     // Dynamically import monaco-vim
-    const { initVimMode } = await import('monaco-vim' as any);
+    const {
+      initVimMode,
+    } = await import('monaco-vim' as any);
 
     // Initialize vim mode with status tracking
     vimMode = initVimMode(editor);
@@ -317,7 +325,9 @@ watch(() => props.modelValue, (newValue) => {
 
 watch(() => props.readOnly, (newReadOnly) => {
   if (editor) {
-    editor.updateOptions({ readOnly: newReadOnly });
+    editor.updateOptions({
+      readOnly: newReadOnly,
+    });
   }
 });
 
@@ -326,7 +336,9 @@ watch(() => props.language, (newLanguage) => {
     const model = editor.getModel();
     if (model) {
       monaco.editor.setModelLanguage(model, newLanguage);
-      editor.updateOptions({ theme: getThemeForLanguage(newLanguage) });
+      editor.updateOptions({
+        theme: getThemeForLanguage(newLanguage),
+      });
     }
   }
 });

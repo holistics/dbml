@@ -102,7 +102,9 @@ import {
   computed, inject,
 } from 'vue';
 import ASTIcon from './ASTIcon.vue';
-import type { TokenNavigationEventBus } from '@/core/token-navigation';
+import type {
+  TokenNavigationEventBus,
+} from '@/core/token-navigation';
 import type {
   InterpreterTreeNode, InterpreterTreeNodeProps,
 } from '@/types';

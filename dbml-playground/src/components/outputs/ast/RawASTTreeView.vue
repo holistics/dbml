@@ -23,7 +23,9 @@
 import {
   computed, ref,
 } from 'vue';
-import RawASTTreeNode, { type RawASTNode } from './RawASTTreeNode.vue';
+import RawASTTreeNode, {
+  type RawASTNode,
+} from './RawASTTreeNode.vue';
 
 interface Props {
   readonly rawAST: any;

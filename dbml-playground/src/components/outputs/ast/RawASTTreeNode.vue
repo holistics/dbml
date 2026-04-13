@@ -99,7 +99,9 @@
  * Shows real parser properties like body, callee, args, kind, etc.
  * Preserves the original AST hierarchy without artificial semantic grouping.
  */
-import { computed } from 'vue';
+import {
+  computed,
+} from 'vue';
 
 export interface RawASTNode {
   id: string;

@@ -71,7 +71,9 @@
  * - Consistency: Provides uniform appearance across all JSON output stages
  * - Deep Module: Rich functionality with simple interface
  */
-import { ref } from 'vue';
+import {
+  ref,
+} from 'vue';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
 import consoleLogger from '@/utils/logger';
 

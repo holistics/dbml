@@ -34,7 +34,9 @@ export class TokenMappingService {
     tokenMetadata: new Map(),
   };
 
-  private dbmlToLexer: DbmlToLexerMapInternal = { positionToTokens: new Map() };
+  private dbmlToLexer: DbmlToLexerMapInternal = {
+    positionToTokens: new Map(),
+  };
 
   /**
    * Build mapping tables from lexer tokens

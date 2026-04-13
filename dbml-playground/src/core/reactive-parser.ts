@@ -12,7 +12,9 @@
 import {
   ref, computed, watch, type Ref,
 } from 'vue';
-import { ParserService } from './parser-service';
+import {
+  ParserService,
+} from './parser-service';
 import type {
   ReactiveParserOptions, ParserResult,
 } from '@/types';
@@ -77,7 +79,9 @@ export class ReactiveParser {
   private setupReactiveParsing (): void {
     watch(this.input, (newInput) => {
       this.debouncedParse(newInput);
-    }, { immediate: true });
+    }, {
+      immediate: true,
+    });
   }
 
   /**

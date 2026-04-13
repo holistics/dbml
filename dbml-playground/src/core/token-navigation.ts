@@ -11,7 +11,9 @@
  * - Pull Complexity Downwards: Complex event filtering handled internally
  */
 import * as monaco from 'monaco-editor';
-import { TokenMappingService } from './token-mapping';
+import {
+  TokenMappingService,
+} from './token-mapping';
 import type {
   Token, TokenNavigationEvents,
 } from '@/types';
@@ -23,7 +25,9 @@ export class TokenNavigationEventBus extends EventTarget {
     event: K,
     data: TokenNavigationEvents[K],
   ): void {
-    this.dispatchEvent(new CustomEvent(event, { detail: data }));
+    this.dispatchEvent(new CustomEvent(event, {
+      detail: data,
+    }));
   }
 
   on<K extends TokenNavigationEventType>(
@@ -199,7 +203,9 @@ export class TokenNavigationCoordinator {
    */
   private setupEventHandlers (): void {
     // Token → DBML navigation
-    this.eventBus.on('navigate:token-to-dbml', ({ tokenIndex }) => {
+    this.eventBus.on('navigate:token-to-dbml', ({
+      tokenIndex,
+    }) => {
       if (this.isNavigating) return;
       this.highlightTokenInDbml(tokenIndex);
     });

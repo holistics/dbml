@@ -121,7 +121,9 @@ const DBML_TOKEN_PROVIDER: monaco.languages.IMonarchLanguage = {
           '@default': 'identifier',
         },
       }],
-      { include: '@whitespace' },
+      {
+        include: '@whitespace',
+      },
       [/[{}()\[\]]/, '@brackets'],
       [/[<>](?!@symbols)/, '@brackets'],
       [/@symbols/, {
@@ -286,7 +288,9 @@ export class DBMLLanguageService {
 
     try {
       // Register the language
-      monaco.languages.register({ id: this.LANGUAGE_ID });
+      monaco.languages.register({
+        id: this.LANGUAGE_ID,
+      });
 
       // Set token provider for syntax highlighting
       monaco.languages.setMonarchTokensProvider(this.LANGUAGE_ID, DBML_TOKEN_PROVIDER);

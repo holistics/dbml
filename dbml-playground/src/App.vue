@@ -270,16 +270,26 @@
 import {
   ref, provide, watch, onMounted,
 } from 'vue';
-import { useParser } from '@/composables/useParser';
-import { useUserData } from '@/composables/useUserData';
+import {
+  useParser,
+} from '@/composables/useParser';
+import {
+  useUserData,
+} from '@/composables/useUserData';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
 import ParserOutputViewer from '@/components/outputs/ParserOutputViewer.vue';
 import JsonOutputViewer from '@/components/outputs/JsonOutputViewer.vue';
 import * as monaco from 'monaco-editor';
-import { TokenMappingService } from '@/core/token-mapping';
-import { TokenNavigationCoordinator } from '@/core/token-navigation';
+import {
+  TokenMappingService,
+} from '@/core/token-mapping';
+import {
+  TokenNavigationCoordinator,
+} from '@/core/token-navigation';
 import packageJson from '../package.json';
-import type { PipelineStage } from '@/types';
+import type {
+  PipelineStage,
+} from '@/types';
 import consoleLogger from './utils/logger';
 
 // Initialize parser with clean interface
@@ -375,7 +385,9 @@ onMounted(() => {
       const initialViewMode = userData.value.isRawJson ? 'json' : 'cards';
       newViewer.setViewMode?.(initialViewMode);
     }
-  }, { immediate: true });
+  }, {
+    immediate: true,
+  });
 });
 
 /**
@@ -400,7 +412,9 @@ watch(() => parser.tokens.value, (newTokens) => {
   if (newTokens && Array.isArray(newTokens)) {
     tokenNavigationCoordinator.updateTokenMapping(newTokens);
   }
-}, { immediate: true });
+}, {
+  immediate: true,
+});
 
 /**
  * Provide services to child components

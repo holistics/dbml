@@ -12,7 +12,9 @@
 import {
   ref, watch, type Ref,
 } from 'vue';
-import type { UserData } from '@/types';
+import type {
+  UserData,
+} from '@/types';
 import consoleLogger from '@/utils/logger';
 
 const defaultUserData: UserData = {
@@ -60,7 +62,9 @@ const loadUserData = (): UserData => {
   } catch (error) {
     consoleLogger.warn('Failed to load user data from localStorage:', error);
   }
-  return { ...defaultUserData };
+  return {
+    ...defaultUserData,
+  };
 };
 
 /**
@@ -84,7 +88,9 @@ export function useUserData () {
   // Auto-save when data changes
   watch(userData, (newData) => {
     saveUserData(newData);
-  }, { deep: true });
+  }, {
+    deep: true,
+  });
 
   /**
    * Update a specific property
@@ -97,7 +103,9 @@ export function useUserData () {
    * Reset to default values
    */
   const resetUserData = (): void => {
-    userData.value = { ...defaultUserData };
+    userData.value = {
+      ...defaultUserData,
+    };
   };
 
   /**

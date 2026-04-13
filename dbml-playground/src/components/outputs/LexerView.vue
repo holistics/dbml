@@ -178,7 +178,9 @@ import {
   computed, ref, inject,
 } from 'vue';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
-import type { TokenNavigationEventBus } from '@/core/token-navigation';
+import type {
+  TokenNavigationEventBus,
+} from '@/core/token-navigation';
 import consoleLogger from '@/utils/logger';
 
 interface Props {

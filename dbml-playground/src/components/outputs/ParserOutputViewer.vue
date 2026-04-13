@@ -110,11 +110,15 @@ const transformedData = computed(() => {
     try {
       return JSON.parse(props.data);
     } catch {
-      return { value: props.data };
+      return {
+        value: props.data,
+      };
     }
   }
 
-  return { value: props.data };
+  return {
+    value: props.data,
+  };
 });
 
 /**

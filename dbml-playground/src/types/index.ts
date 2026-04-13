@@ -20,7 +20,9 @@ import type {
 export type {
   Database, ElementKind,
 } from '@dbml/parse';
-export type { Range } from 'monaco-editor';
+export type {
+  Range,
+} from 'monaco-editor';
 
 // ===== PIPELINE TYPES =====
 

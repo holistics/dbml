@@ -10,8 +10,12 @@
  * - Single Responsibility: Only handles Vue composable concerns
  * - Information Hiding: Complex parsing logic is hidden in services
  */
-import { ReactiveParser } from '@/core/reactive-parser';
-import { DEFAULT_SAMPLE_CONTENT } from '@/core/sample-content';
+import {
+  ReactiveParser,
+} from '@/core/reactive-parser';
+import {
+  DEFAULT_SAMPLE_CONTENT,
+} from '@/core/sample-content';
 import type {
   ParserError, PipelineStage,
 } from '@/types';

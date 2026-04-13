@@ -10,7 +10,9 @@
  * - Information Hiding: Internal parser details are completely hidden
  * - Pull Complexity Downwards: Complex logic handled internally
  */
-import { Compiler } from '@dbml/parse';
+import {
+  Compiler,
+} from '@dbml/parse';
 import type {
   ParserError, ParserResult,
 } from '@/types';
