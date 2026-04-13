@@ -3,6 +3,7 @@ import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from 
 import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
 import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
 import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
+import { DepInterpreter } from '@/core/interpreter/elementInterpreter/dep';
 import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tableGroup';
 import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
 import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
@@ -88,6 +89,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     tables: Array.from(env.tables.values()).map(processColumnInDb),
     notes: Array.from(env.notes.values()),
     refs: Array.from(env.ref.values()),
+    deps: Array.from(env.dep.values()),
     enums: Array.from(env.enums.values()),
     tableGroups: Array.from(env.tableGroups.values()),
     aliases: env.aliases,
@@ -111,6 +113,8 @@ export default class Interpreter {
       notes: new Map(),
       refIds: { },
       ref: new Map(),
+      depIds: { },
+      dep: new Map(),
       enums: new Map(),
       tableOwnerGroup: { },
       tableGroups: new Map(),
@@ -137,6 +141,8 @@ export default class Interpreter {
           return (new StickyNoteInterpreter(element, this.env)).interpret();
         case ElementKind.Ref:
           return (new RefInterpreter(element, this.env)).interpret();
+        case ElementKind.Dep:
+          return (new DepInterpreter(element, this.env)).interpret();
         case ElementKind.TableGroup:
           return (new TableGroupInterpreter(element, this.env)).interpret();
         case ElementKind.TablePartial:

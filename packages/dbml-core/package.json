@@ -46,7 +46,8 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@dbml/parse": "^7.0.0",
+
+    "@dbml/parse": "file:../dbml-parse",
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",

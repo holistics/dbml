@@ -371,10 +371,13 @@ export default class Lexer {
   operator (c: string) {
     switch (c) {
       case '<':
-        if (['>', '='].includes(this.peek()!)) this.advance(); // <, >, <=
+        if (['>', '=', '-'].includes(this.peek()!)) this.advance(); // <, <>, <=, <-
         break;
       case '>':
         if (this.peek() === '=') this.advance(); // >, >=
+        break;
+      case '-':
+        if (this.peek() === '>') this.advance(); // -, ->
         break;
       case '=':
         if (this.peek() === '=') this.advance(); // =, ==

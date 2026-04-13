@@ -13,7 +13,7 @@ import {
   CallExpressionNode,
 } from '@/core/parser/nodes';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
+import { isDependencyOp, isRelationshipOp, isTupleOfVariables } from '@/core/analyzer/validator/utils';
 import { NodeSymbolIndex, isPublicSchemaIndex } from '@/core/analyzer/symbol/symbolIndex';
 import { NodeSymbol } from '@/core/analyzer/symbol/symbols';
 import {
@@ -32,6 +32,7 @@ export function getElementKind (node?: ElementDeclarationNode): Option<ElementKi
     case ElementKind.Note:
     case ElementKind.Project:
     case ElementKind.Ref:
+    case ElementKind.Dep:
     case ElementKind.TableGroup:
     case ElementKind.TablePartial:
     case ElementKind.Check:
@@ -204,6 +205,23 @@ export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpress
   }
 
   if (!isRelationshipOp(value.op?.value)) {
+    return false;
+  }
+
+  return (
+    destructureComplexVariableTuple(value.leftExpression)
+      .and_then(() => destructureComplexVariableTuple(value.rightExpression))
+      .unwrap_or(undefined) !== undefined
+  );
+}
+
+/** Lineage / dependency edges use `->` or `<-` (table-level or column-level). */
+export function isBinaryDependency (value?: SyntaxNode): value is InfixExpressionNode {
+  if (!(value instanceof InfixExpressionNode)) {
+    return false;
+  }
+
+  if (!isDependencyOp(value.op?.value)) {
     return false;
   }
 

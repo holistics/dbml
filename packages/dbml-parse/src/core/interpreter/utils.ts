@@ -43,10 +43,18 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table):
   }
 
   if (variables.length === 1) {
+    if (owner) {
+      return {
+        schemaName: owner.schemaName,
+        tableName: owner.name,
+        fieldNames: [variableNames[0]!],
+      };
+    }
+    // Top-level table-only operand (e.g. Dep: raw_users -> stg_users)
     return {
-      schemaName: owner!.schemaName,
-      tableName: owner!.name,
-      fieldNames: [variableNames[0]],
+      schemaName: null,
+      tableName: variableNames[0]!,
+      fieldNames: [],
     };
   }
 

@@ -38,6 +38,9 @@ export interface InterpreterDatabase {
   // for keeping track of circular refs
   refIds: { [refid: string]: ElementDeclarationNode };
   ref: Map<ElementDeclarationNode, Ref>;
+  // for keeping track of deps (one map entry per dependency line / function application)
+  depIds: { [depid: string]: SyntaxNode };
+  dep: Map<SyntaxNode, Dep>;
   enums: Map<ElementDeclarationNode, Enum>;
   tableOwnerGroup: { [tableid: string]: ElementDeclarationNode };
   tableGroups: Map<ElementDeclarationNode, TableGroup>;
@@ -89,6 +92,7 @@ export interface Database {
   tables: Table[];
   notes: Note[];
   refs: Ref[];
+  deps: Dep[];
   enums: Enum[];
   tableGroups: TableGroup[];
   aliases: Alias[];
@@ -204,6 +208,28 @@ export interface RefEndpoint {
 }
 
 export type RelationCardinality = '1' | '*';
+
+// Dep (Dependency) - for data lineage edges
+export interface Dep {
+  schemaName: string | null;
+  name: string | null;
+  endpoints: DepEndpointPair;
+  color?: string;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  token: TokenPosition;
+}
+
+export type DepEndpointPair = [DepEndpoint, DepEndpoint];
+
+export interface DepEndpoint {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  token: TokenPosition;
+}
 
 export interface Enum {
   name: string;

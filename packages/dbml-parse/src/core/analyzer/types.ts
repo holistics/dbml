@@ -2,6 +2,7 @@ export enum ElementKind {
   Table = 'table',
   Enum = 'enum',
   Ref = 'ref',
+  Dep = 'dep',
   Note = 'note',
   Project = 'project',
   Indexes = 'indexes',

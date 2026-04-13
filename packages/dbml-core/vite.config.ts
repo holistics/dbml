@@ -7,6 +7,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src/'),
+      // Ensure core always builds against repo-local @dbml/parse
+      '@dbml/parse': path.resolve(__dirname, '../dbml-parse/dist/dbml-parse.mjs'),
     },
     extensions: ['.ts', '.js', '.cjs', '.mjs', '.json'],
   },

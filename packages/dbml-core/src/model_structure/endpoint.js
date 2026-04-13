@@ -4,10 +4,10 @@ import { shouldPrintSchema, shouldPrintSchemaName } from './utils';
 
 class Endpoint extends Element {
   /**
-   * @param {{ tableName: string, schemaName: string, fieldNames: string[], relation: any, token: import('../../types/model_structure/element').Token, ref: import('../../types/model_structure/ref').default }} param0
+   * @param {{ tableName: string, schemaName: string, fieldNames: string[], relation: any, token: import('../../types/model_structure/element').Token, ref: any, allowEmptyFields?: boolean }} param0
    */
   constructor ({
-    tableName, schemaName, fieldNames, relation, token, ref,
+    tableName, schemaName, fieldNames, relation, token, ref, allowEmptyFields = false,
   }) {
     super(token);
     /** @type {any} */
@@ -36,7 +36,7 @@ class Endpoint extends Element {
         ? `"${schemaName}".`
         : ''}"${tableName}"`);
     }
-    this.setFields(fieldNames, table);
+    this.setFields(fieldNames, table, allowEmptyFields);
   }
 
   generateId () {
@@ -50,6 +50,12 @@ class Endpoint extends Element {
    */
   equals (endpoint) {
     if (this.fields.length !== endpoint.fields.length) return false;
+
+    // Table-level endpoint: no fields bound. Compare table identity instead of fields.
+    if (this.fields.length === 0) {
+      return this.schemaName === endpoint.schemaName && this.tableName === endpoint.tableName;
+    }
+
     return this.compareFields(endpoint);
   }
 
@@ -91,9 +97,15 @@ class Endpoint extends Element {
   /**
    * @param {string[]} fieldNames
    * @param {import('../../types/model_structure/table').default} table
+   * @param {boolean} allowEmptyFields
    */
-  setFields (fieldNames, table) {
+  setFields (fieldNames, table, allowEmptyFields = false) {
     let newFieldNames = (fieldNames && fieldNames.length) ? [...fieldNames] : [];
+    if (!newFieldNames.length && allowEmptyFields) {
+      // Used by Dep table-level lineage edges (e.g. Dep: raw_users -> stg_users).
+      // Keep endpoints at table-level; do NOT auto-expand to PK fields.
+      return;
+    }
     if (!newFieldNames.length) {
       const fieldHasPK = table.fields.find((field) => field.pk);
       if (fieldHasPK) {

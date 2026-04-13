@@ -7,8 +7,9 @@ import Table from './table';
 import StickyNote from './stickyNote';
 import Element from './element';
 import {
-  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
+  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, DEP, NOTE,
 } from './config';
+import Dep from './dep';
 import DbState from './dbState';
 import TablePartial from './tablePartial';
 
@@ -22,6 +23,7 @@ class Database extends Element {
     notes = [],
     enums = [],
     refs = [],
+    deps = [],
     tableGroups = [],
     project = {},
     aliases = [],
@@ -58,6 +60,7 @@ class Database extends Element {
     this.linkRecordsToTables();
     this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
+    this.processSchemaElements(deps, DEP);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
 
     this.injectedRawRefs.forEach((rawRef) => {
@@ -155,6 +158,10 @@ class Database extends Element {
 
         case REF:
           schema.pushRef(new Ref({ ...element, schema }));
+          break;
+
+        case DEP:
+          schema.pushDep(new Dep({ ...element, schema }));
           break;
 
         default:
@@ -283,6 +290,7 @@ class Database extends Element {
       schemas: {},
       notes: {},
       refs: {},
+      deps: {},
       enums: {},
       tableGroups: {},
       tables: {},

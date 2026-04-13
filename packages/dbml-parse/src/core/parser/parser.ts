@@ -1213,6 +1213,8 @@ const infixBindingPowerMap: {
   '>': { left: 7, right: 8 },
   '>=': { left: 7, right: 8 },
   '<>': { left: 7, right: 8 },
+  '->': { left: 7, right: 8 },
+  '<-': { left: 7, right: 8 },
   '=': { left: 2, right: 3 },
   '==': { left: 4, right: 5 },
   '!=': { left: 4, right: 5 },

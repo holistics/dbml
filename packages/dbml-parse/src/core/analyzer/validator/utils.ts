@@ -40,6 +40,7 @@ import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 import RecordsValidator from './elementValidators/records';
 import DiagramViewValidator from './elementValidators/diagramView';
+import DepValidator from './elementValidators/dep';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (element.type.value.toLowerCase() as ElementKind) {
@@ -53,6 +54,8 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
       return ProjectValidator;
     case ElementKind.Ref:
       return RefValidator;
+    case ElementKind.Dep:
+      return DepValidator;
     case ElementKind.Note:
       return NoteValidator;
     case ElementKind.Indexes:
@@ -150,6 +153,10 @@ export function registerSchemaStack (
 
 export function isRelationshipOp (op?: string): boolean {
   return op === '-' || op === '<>' || op === '>' || op === '<';
+}
+
+export function isDependencyOp (op?: string): boolean {
+  return op === '->' || op === '<-';
 }
 
 export function isValidColor (value?: SyntaxNode): boolean {
