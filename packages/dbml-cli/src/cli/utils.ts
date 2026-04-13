@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import {
   CompilerError,
+  ExportFormat,
 } from '@dbml/core';
 import {
   reduce,
@@ -16,6 +17,8 @@ interface ConnectionOpt {
   databaseType: string;
 }
 
+function resolvePaths (paths: string): string;
+function resolvePaths (paths: string[]): string[];
 function resolvePaths (paths: string | string[]): string | string[] {
   if (!Array.isArray(paths)) {
     return path.resolve(process.cwd(), paths);
@@ -27,7 +30,7 @@ function validateInputFilePaths (paths: string[], validatePlugin: (_path: string
   return paths.every((_path) => validatePlugin(_path));
 }
 
-function getFormatOpt (opts: Record<string, unknown>): string {
+function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
   const formatOpts = Object.keys(opts).filter((opt) => {
     return ['postgres', 'mysql', 'mssql', 'postgresLegacy', 'mysqlLegacy', 'mssqlLegacy', 'oracle', 'snowflake'].includes(opt);
   });
@@ -43,7 +46,7 @@ function getFormatOpt (opts: Record<string, unknown>): string {
     }
   });
 
-  return format;
+  return format as ExportFormat;
 }
 
 function getConnectionOpt (args: string[]): ConnectionOpt {
