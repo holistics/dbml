@@ -35,10 +35,16 @@ import {
 import {
   parse, lex,
 } from '../utils';
-import { SyntaxNodeKind } from '@/core/types/nodes';
+import {
+  SyntaxNodeKind,
+} from '@/core/types/nodes';
 
-const FUZZ_CONFIG = { numRuns: 50 };
-const ROBUSTNESS_CONFIG = { numRuns: 25 };
+const FUZZ_CONFIG = {
+  numRuns: 50,
+};
+const ROBUSTNESS_CONFIG = {
+  numRuns: 25,
+};
 
 describe('[fuzz] parser - valid input', () => {
   it('should parse valid tables without errors and produce valid AST', () => {
@@ -218,7 +224,9 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
           expect(ast.end).toBeLessThanOrEqual(source.length);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -236,7 +244,9 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
           expect(result.getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -254,7 +264,9 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
           expect(result.getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -274,7 +286,9 @@ describe('[fuzz] parser - robustness (arbitrary input)', () => {
           expect(ast.body.length).toBeGreaterThanOrEqual(0);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });
@@ -297,7 +311,9 @@ describe('[fuzz] parser - error recovery', () => {
 
   it('should report errors with valid locations', () => {
     fc.assert(
-      fc.property(fc.string({ minLength: 1 }), (source: string) => {
+      fc.property(fc.string({
+        minLength: 1,
+      }), (source: string) => {
         const result = parse(source);
         const errors = result.getErrors();
 
@@ -372,7 +388,9 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.end).toBeLessThanOrEqual(mutated.length);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -393,7 +411,9 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -408,7 +428,9 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -423,7 +445,9 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -438,7 +462,9 @@ describe('[fuzz] parser - mutation resilience', () => {
           expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });
@@ -471,7 +497,9 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           }
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -495,7 +523,9 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -526,7 +556,9 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -560,7 +592,9 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });
@@ -576,7 +610,9 @@ describe('[fuzz] parser - malformed input (true fuzzing)', () => {
         expect(ast.kind).toBe(SyntaxNodeKind.PROGRAM);
         expect(ast.body).toBeInstanceOf(Array);
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -648,7 +684,9 @@ describe('[fuzz] parser - malformed input (true fuzzing)', () => {
 
         expect(result.getValue().ast.kind).toBe(SyntaxNodeKind.PROGRAM);
       }),
-      { numRuns: 25 },
+      {
+        numRuns: 25,
+      },
     );
   });
 

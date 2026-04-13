@@ -1,9 +1,13 @@
-import { last } from 'lodash-es';
+import {
+  last,
+} from 'lodash-es';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
 
-import { alternateLists } from '@/core/utils/array';
+import {
+  alternateLists,
+} from '@/core/utils/array';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -31,7 +35,9 @@ import {
   VariableNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { destructureComplexVariable } from '@/core/analyzer/utils';
+import {
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (

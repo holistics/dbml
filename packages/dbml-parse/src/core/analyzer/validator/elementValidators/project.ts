@@ -1,4 +1,6 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -6,8 +8,12 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import {
   isSimpleName, pickValidator,
 } from '@/core/analyzer/validator/utils';

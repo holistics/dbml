@@ -1,4 +1,6 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
@@ -17,7 +19,9 @@ import {
   CallExpressionNode,
   ArrayNode,
 } from '@/core/types/nodes';
-import { isHexChar } from '@/core/utils/chars';
+import {
+  isHexChar,
+} from '@/core/utils/chars';
 import {
   destructureComplexVariable, destructureMemberAccessExpression,
 } from '@/core/analyzer/utils';
@@ -29,20 +33,30 @@ import ProjectValidator from './elementValidators/project';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
-import { createSchemaSymbolIndex } from '@/core/types/symbol';
-import { SchemaSymbol } from '@/core/types/symbol/symbols';
+import {
+  createSchemaSymbolIndex,
+} from '@/core/types/symbol';
+import {
+  SchemaSymbol,
+} from '@/core/types/symbol/symbols';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
-import { NUMERIC_LITERAL_PREFIX } from '@/constants';
+import {
+  NUMERIC_LITERAL_PREFIX,
+} from '@/constants';
 import Report from '@/core/types/report';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { ElementKind } from '@/core/analyzer/types';
-import { convertStringToEnum } from '@/core/utils/enum';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
 import TablePartialValidator from './elementValidators/tablePartial';
 import ChecksValidator from './elementValidators/checks';
 import RecordsValidator from './elementValidators/records';
@@ -143,7 +157,10 @@ export function registerSchemaStack (
 
     if (!prevSchema.has(curId)) {
       curSchema = new SymbolTable();
-      const curSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: curSchema, name: curName });
+      const curSymbol = symbolFactory.create(SchemaSymbol, {
+        symbolTable: curSchema,
+        name: curName,
+      });
       prevSchema.set(curId, curSymbol);
     } else {
       curSchema = prevSchema.get(curId)?.symbolTable;

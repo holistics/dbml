@@ -1,5 +1,9 @@
-import { Filepath } from './filepath';
-import type { Position } from './position';
+import {
+  Filepath,
+} from './filepath';
+import type {
+  Position,
+} from './position';
 
 export interface TokenPosition {
   start: Position;
@@ -24,8 +28,10 @@ export interface ElementRef {
  * - null = hide all
  */
 export interface FilterConfig {
-  tables: Array<{ name: string;
-    schemaName: string; }> | null;
+  tables: Array<{
+    name: string;
+    schemaName: string;
+  }> | null;
   stickyNotes: Array<{ name: string }> | null;
   tableGroups: Array<{ name: string }> | null;
   schemas: Array<{ name: string }> | null;

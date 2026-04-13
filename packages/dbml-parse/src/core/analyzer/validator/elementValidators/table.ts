@@ -1,4 +1,6 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
   last, forIn, partition,
 } from 'lodash-es';
@@ -36,7 +38,9 @@ import {
   pickValidator,
   registerSchemaStack,
 } from '@/core/analyzer/validator/utils';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import {
   ColumnSymbol, PartialInjectionSymbol, TableSymbol,
 } from '@/core/types/symbol/symbols';
@@ -48,7 +52,9 @@ import {
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
-import { SyntaxToken } from '@/core/types/tokens';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   ElementKind, SettingName,
@@ -270,7 +276,9 @@ export default class TableValidator implements ElementValidator {
       const columnName = extractVarNameFromPrimaryVariable(field.callee)!;
       const columnId = createColumnSymbolIndex(columnName);
 
-      const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
+      const columnSymbol = this.symbolFactory.create(ColumnSymbol, {
+        declaration: field,
+      });
       field.symbol = columnSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;

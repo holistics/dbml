@@ -1,9 +1,13 @@
 import {
   ElementDeclarationNode, ProgramNode, SyntaxToken,
 } from '../../../..';
-import { CompileError } from '@/core/types/errors';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { ElementBinder } from '../types';
+import {
+  ElementBinder,
+} from '../types';
 
 export default class ChecksBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

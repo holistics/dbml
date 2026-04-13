@@ -1,5 +1,9 @@
-import { SyntaxToken } from '../../../types/tokens';
-import { ElementBinder } from '../types';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  ElementBinder,
+} from '../types';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '../../../types/nodes';
@@ -17,10 +21,18 @@ import {
 import {
   createColumnSymbolIndex, SymbolKind,
 } from '@/core/types/symbol/symbolIndex';
-import { ElementKind } from '../../types';
-import { isTupleOfVariables } from '../../validator/utils';
-import { NodeSymbol } from '@/core/types/symbol/symbols';
-import { getElementNameString } from '@/core/parser/utils';
+import {
+  ElementKind,
+} from '../../types';
+import {
+  isTupleOfVariables,
+} from '../../validator/utils';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  getElementNameString,
+} from '@/core/parser/utils';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

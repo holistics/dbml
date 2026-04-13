@@ -12,8 +12,12 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { mergeTableAndPartials } from '@/core/interpreter/utils';
-import { isSerialType } from '../data';
+import {
+  mergeTableAndPartials,
+} from '@/core/interpreter/utils';
+import {
+  isSerialType,
+} from '../data';
 import {
   keyBy, groupBy, partition, compact, isEmpty, difference, filter, flatMap,
 } from 'lodash-es';
@@ -25,7 +29,12 @@ const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';
 
 export function validatePrimaryKey (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([table, { rows }]) => {
+  return flatMap(Array.from(env.records), ([
+    table,
+    {
+      rows,
+    },
+  ]) => {
     if (isEmpty(rows)) return [];
 
     if (!env.cachedMergedTables.has(table)) {

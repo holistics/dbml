@@ -1,4 +1,6 @@
-import type { languages } from 'monaco-editor-core';
+import type {
+  languages,
+} from 'monaco-editor-core';
 
 const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
   tokenPostfix: '.dbml',
@@ -126,12 +128,18 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
     root: [
       [/[{}[\]()]/, '@bracket'],
       [/[,.:]/, 'delimiter'],
-      { include: '@numbers' },
-      { include: 'common' },
+      {
+        include: '@numbers',
+      },
+      {
+        include: 'common',
+      },
     ],
 
     common: [
-      { include: '@whitespace' },
+      {
+        include: '@whitespace',
+      },
 
       // Reference operators
       [/[<>-]/, 'operators'],
@@ -214,4 +222,6 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
   },
 };
 
-export { dbmlMonarchTokensProvider };
+export {
+  dbmlMonarchTokensProvider,
+};

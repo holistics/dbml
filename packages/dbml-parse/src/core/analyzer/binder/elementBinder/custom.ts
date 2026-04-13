@@ -1,10 +1,18 @@
-import { CompileError } from '@/core/types/errors';
-import { ElementBinder } from '../types';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  ElementBinder,
+} from '../types';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '../../../types/nodes';
-import { SyntaxToken } from '../../../types/tokens';
-import { pickBinder } from '../utils';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  pickBinder,
+} from '../utils';
 import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class CustomBinder implements ElementBinder {

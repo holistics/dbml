@@ -2,8 +2,12 @@ import {
   CallExpressionNode,
   FunctionApplicationNode,
 } from '@/core/types/nodes';
-import { extractNumericLiteral } from '@/core/analyzer/utils';
-import { ColumnSymbol } from '@/core/types/symbol/symbols';
+import {
+  extractNumericLiteral,
+} from '@/core/analyzer/utils';
+import {
+  ColumnSymbol,
+} from '@/core/types/symbol/symbols';
 
 export type SqlDialect = 'mysql' | 'postgres' | 'mssql' | 'oracle' | 'snowflake';
 
@@ -301,7 +305,9 @@ export function getLengthTypeParam (columnSymbol: ColumnSymbol): { length?: numb
   const length = extractNumericLiteral(typeNode.argumentList.elementList[0]);
   if (length === null) return {};
 
-  return { length: Math.trunc(length) };
+  return {
+    length: Math.trunc(length),
+  };
 }
 
 // Get the record value type based on SQL type

@@ -1,9 +1,15 @@
 import {
   describe, expect, test,
 } from 'vitest';
-import { CompileErrorCode } from '@/index';
-import { interpret } from '@tests/utils';
-import { DateTime } from 'luxon';
+import {
+  CompileErrorCode,
+} from '@/index';
+import {
+  interpret,
+} from '@tests/utils';
+import {
+  DateTime,
+} from 'luxon';
 
 describe('[example - record] data type interpretation', () => {
   test('should interpret integer values correctly', () => {

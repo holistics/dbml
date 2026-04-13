@@ -1,8 +1,14 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import type Compiler from '../../index';
-import { SyntaxNode } from '@/core/types/nodes';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { TableSymbol } from '@/core/types/symbol/symbols';
+import {
+  TableSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   createSchemaSymbolIndex, createTableSymbolIndex,
 } from '@/core/types/symbol';

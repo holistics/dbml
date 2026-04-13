@@ -25,14 +25,18 @@ import {
 import {
   aggregateSettingList, isValidPartialInjection,
 } from '@/core/analyzer/validator/utils';
-import { ColumnSymbol } from '@/core/types/symbol/symbols';
+import {
+  ColumnSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   destructureIndex, SymbolKind,
 } from '@/core/types/symbol';
 import {
   ElementKind, SettingName,
 } from '@/core/analyzer/types';
-import { convertStringToEnum } from '@/core/utils/enum';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
 import {
   ElementInterpreter, InterpreterDatabase,
 } from '../types';
@@ -350,7 +354,9 @@ export class TableInterpreter implements ElementInterpreter {
 
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [] };
+      const index: Partial<Index> = {
+        columns: [],
+      };
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);

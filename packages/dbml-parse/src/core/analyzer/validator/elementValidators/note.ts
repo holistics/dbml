@@ -1,5 +1,9 @@
-import { partition } from 'lodash-es';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  partition,
+} from 'lodash-es';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -7,15 +11,31 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  isExpressionAQuotedString,
+} from '@/core/parser/utils';
+import {
+  pickValidator,
+} from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { ElementKind } from '@/core/analyzer/types';
-import { destructureComplexVariable } from '@/core/analyzer/utils';
-import { createStickyNoteSymbolIndex } from '@/core/types/symbol/symbolIndex';
-import { StickyNoteSymbol } from '@/core/types/symbol/symbols';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
+import {
+  createStickyNoteSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  StickyNoteSymbol,
+} from '@/core/types/symbol/symbols';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -88,7 +108,9 @@ export default class NoteValidator implements ElementValidator {
       return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate Note '${trueName}' in schema '${DEFAULT_SCHEMA_NAME}'`, nameNode)];
     }
 
-    this.declarationNode.symbol = this.symbolFactory.create(StickyNoteSymbol, { declaration: this.declarationNode });
+    this.declarationNode.symbol = this.symbolFactory.create(StickyNoteSymbol, {
+      declaration: this.declarationNode,
+    });
     this.publicSymbolTable.set(noteId, this.declarationNode.symbol);
 
     return [];

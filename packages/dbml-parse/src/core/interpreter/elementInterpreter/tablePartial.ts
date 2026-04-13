@@ -21,12 +21,18 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { ColumnSymbol } from '@/core/types/symbol/symbols';
+import {
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
+import {
+  ColumnSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   ElementKind, SettingName,
 } from '@/core/analyzer/types';
-import { convertStringToEnum } from '@/core/utils/enum';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
 import {
   ElementInterpreter, InterpreterDatabase,
 } from '../types';
@@ -92,7 +98,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
 
     this.tablePartial.name = name;
 
@@ -259,7 +267,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.tablePartial.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [] };
+      const index: Partial<Index> = {
+        columns: [],
+      };
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);

@@ -4,15 +4,25 @@ import {
   PrefixExpressionNode,
   SyntaxNode,
 } from '@/core/types/nodes';
-import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
-import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
+import {
+  isExpressionASignedNumberExpression,
+} from '@/core/analyzer/validator/utils';
 import {
   destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral,
 } from '@/core/analyzer/utils';
-import { last } from 'lodash-es';
-import { DateTime } from 'luxon';
+import {
+  last,
+} from 'lodash-es';
+import {
+  DateTime,
+} from 'luxon';
 
-export { extractNumericLiteral } from '@/core/analyzer/utils';
+export {
+  extractNumericLiteral,
+} from '@/core/analyzer/utils';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {
@@ -256,7 +266,9 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
 
   // We prioritize more specific formats, like time-only & date-only before ISO-8601, which includes both date and time
   for (const format of SUPPORTED_TIME_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       // https://moment.github.io/luxon/api-docs/index.html#datetimetoisotime
       return dt.toISOTime({
@@ -267,7 +279,9 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   }
 
   for (const format of SUPPORTED_DATE_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       // https://moment.github.io/luxon/api-docs/index.html#datetimetoisodate
       return dt.toISODate();
@@ -275,7 +289,9 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   }
 
   for (const format of SUPPORTED_DATETIME_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
       return dt.toISO({
@@ -285,7 +301,9 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
     }
   }
 
-  const isoDate = DateTime.fromISO(extractedValue, { setZone: true });
+  const isoDate = DateTime.fromISO(extractedValue, {
+    setZone: true,
+  });
   if (isoDate.isValid) {
     // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
     return isoDate.toISO({

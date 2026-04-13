@@ -1,5 +1,7 @@
 import type Compiler from '../../index';
-import { ScopeKind } from '../../types';
+import {
+  ScopeKind,
+} from '../../types';
 import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';

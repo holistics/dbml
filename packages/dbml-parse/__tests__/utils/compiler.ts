@@ -1,6 +1,8 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { DEFAULT_ENTRY } from '@/constants';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
 import Analyzer from '@/core/analyzer/analyzer';
 import {
   ProgramNode,
@@ -26,12 +28,16 @@ import {
   ArrayNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
+import {
+  NodeSymbolIdGenerator,
+} from '@/core/types/symbol/symbols';
 import Report from '@/core/types/report';
 import {
   Compiler, SyntaxToken,
 } from '@/index';
-import { Database } from '@/core/types/schemaJson';
+import {
+  Database,
+} from '@/core/types/schemaJson';
 
 export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source, DEFAULT_ENTRY).lex();
@@ -43,13 +49,17 @@ export function parse (source: string): Report<{ ast: ProgramNode;
 }
 
 export function analyze (source: string): Report<ProgramNode> {
-  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
+  return parse(source).chain(({
+    ast,
+  }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
 }
 
 export function interpret (source: string): Report<Database | undefined> {
   const compiler = new Compiler();
   compiler.setSource(source);
-  return compiler.parse._().map(({ rawDb }) => rawDb);
+  return compiler.parse._().map(({
+    rawDb,
+  }) => rawDb);
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {

@@ -7,4 +7,6 @@ function validateFilePlugin (_path: string) {
   }
 }
 
-export { validateFilePlugin };
+export {
+  validateFilePlugin,
+};

@@ -1,7 +1,9 @@
 import {
   destructureComplexVariable, extractVariableFromExpression,
 } from '@/core/analyzer/utils';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import {
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -14,7 +16,9 @@ import {
 import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
 } from '@/core/interpreter/utils';
-import { extractStringFromIdentifierStream } from '@/core/parser/utils';
+import {
+  extractStringFromIdentifierStream,
+} from '@/core/parser/utils';
 import {
   ElementInterpreter, InterpreterDatabase,
 } from '../types';

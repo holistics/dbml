@@ -1,12 +1,18 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
 } from '../../../types/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../types/tokens';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -16,8 +22,12 @@ import {
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable,
 } from '../../utils';
-import { ElementKind } from '../../types';
-import { createColumnSymbolIndex } from '@/core/types/symbol/symbolIndex';
+import {
+  ElementKind,
+} from '../../types';
+import {
+  createColumnSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
 import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class IndexesBinder implements ElementBinder {

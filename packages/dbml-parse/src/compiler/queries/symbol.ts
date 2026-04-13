@@ -2,11 +2,15 @@ import type Compiler from '../index';
 import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';
-import { NodeSymbol } from '@/core/types/symbol/symbols';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   SymbolKind, destructureIndex,
 } from '@/core/types/symbol';
-import { generatePossibleIndexes } from '@/core/types/symbol/utils';
+import {
+  generatePossibleIndexes,
+} from '@/core/types/symbol/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
@@ -40,7 +44,9 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
       continue;
     }
 
-    const { symbolTable } = currentOwner.symbol;
+    const {
+      symbolTable,
+    } = currentOwner.symbol;
     let currentPossibleSymbolTables: SymbolTable[] = [symbolTable];
     let currentPossibleSymbols: { symbol: NodeSymbol;
       kind: SymbolKind;

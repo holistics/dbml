@@ -4,9 +4,15 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../types/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../types/tokens';
-import { CompileError } from '@/core/types/errors';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
 } from '../utils';
@@ -26,7 +32,9 @@ import SymbolFactory from '@/core/types/symbol/factory';
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '../../../parser/utils';
-import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import {
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
 
 export default class TableBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -49,7 +57,9 @@ export default class TableBinder implements ElementBinder {
 
   // Must call this before any bind methods of any binder classes
   resolvePartialInjections (): CompileError[] {
-    const { body } = this.declarationNode;
+    const {
+      body,
+    } = this.declarationNode;
     const members = !body
       ? []
       : body instanceof BlockExpressionNode

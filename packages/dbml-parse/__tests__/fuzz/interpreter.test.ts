@@ -18,9 +18,15 @@ import {
   interpret, analyze,
 } from '../utils';
 
-const FUZZ_CONFIG = { numRuns: 50 };
-const ROBUSTNESS_CONFIG = { numRuns: 25 };
-const SEMANTIC_CONFIG = { numRuns: 50 };
+const FUZZ_CONFIG = {
+  numRuns: 50,
+};
+const ROBUSTNESS_CONFIG = {
+  numRuns: 25,
+};
+const SEMANTIC_CONFIG = {
+  numRuns: 50,
+};
 
 describe('[fuzz] interpreter - valid input', () => {
   it('should interpret valid DBML schemas without throwing', () => {
@@ -173,7 +179,9 @@ describe('[fuzz] interpreter - robustness (arbitrary input)', () => {
           }
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -335,7 +343,9 @@ describe('[fuzz] interpreter - consistency', () => {
         expect(result1.getErrors().length).toBe(result2.getErrors().length);
         expect(result2.getErrors().length).toBe(result3.getErrors().length);
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -402,7 +412,9 @@ describe('[fuzz] interpreter - mutation resilience', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });
@@ -433,7 +445,9 @@ describe('[fuzz] interpreter - edge cases', () => {
           }
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -463,7 +477,9 @@ describe('[fuzz] interpreter - edge cases', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });

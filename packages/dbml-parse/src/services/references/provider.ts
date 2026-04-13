@@ -1,6 +1,10 @@
-import { getOffsetFromMonacoPosition } from '@/services/utils';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
 import Compiler from '@/compiler';
-import { SyntaxNodeKind } from '@/core/types/nodes';
+import {
+  SyntaxNodeKind,
+} from '@/core/types/nodes';
 import {
   Location, ReferenceProvider, TextModel, Position,
 } from '@/services/types';
@@ -13,7 +17,9 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
   }
 
   provideReferences (model: TextModel, position: Position): Location[] {
-    const { uri } = model;
+    const {
+      uri,
+    } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
 
     const containers = [...this.compiler.container.stack(offset)];
@@ -23,7 +29,9 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
         node
         && [SyntaxNodeKind.ELEMENT_DECLARATION, SyntaxNodeKind.FUNCTION_APPLICATION, SyntaxNodeKind.PRIMARY_EXPRESSION].includes(node?.kind)
       ) {
-        const { symbol } = node;
+        const {
+          symbol,
+        } = node;
         if (symbol?.references.length) {
           return symbol.references.map(({
             startPos, endPos,

@@ -1,4 +1,6 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -6,18 +8,28 @@ import {
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import {
   isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator,
 } from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { destructureComplexVariable } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 import {
   isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/parser/utils';
-import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import {
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
 
 export default class RecordsValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

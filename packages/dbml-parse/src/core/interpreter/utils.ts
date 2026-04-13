@@ -1,7 +1,9 @@
 import {
   last, zip, uniqBy,
 } from 'lodash-es';
-import { ColumnSymbol } from '@/core/types/symbol/symbols';
+import {
+  ColumnSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVariableFromExpression,
@@ -15,7 +17,9 @@ import {
   ColumnType, RelationCardinality, Table, TokenPosition, Ref,
   Column,
 } from '@/core/types/schemaJson';
-import { SyntaxTokenKind } from '@/core/types/tokens';
+import {
+  SyntaxTokenKind,
+} from '@/core/types/tokens';
 import {
   isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString,
 } from '@/core/parser/utils';
@@ -29,7 +33,9 @@ import {
 import {
   isExpressionASignedNumberExpression, isValidPartialInjection,
 } from '../analyzer/validator/utils';
-import { InterpreterDatabase } from './types';
+import {
+  InterpreterDatabase,
+} from './types';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null;
   tableName: string;
@@ -132,8 +138,12 @@ export function getRefId (sym1: ColumnSymbol, sym2: ColumnSymbol): string;
 export function getRefId (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
 export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
   if (Array.isArray(sym1)) {
-    const firstIds = sym1.map(({ id }) => id).sort().join(',');
-    const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort().join(',');
+    const firstIds = sym1.map(({
+      id,
+    }) => id).sort().join(',');
+    const secondIds = (sym2 as ColumnSymbol[]).map(({
+      id,
+    }) => id).sort().join(',');
     return firstIds < secondIds ? `${firstIds}-${secondIds}` : `${secondIds}-${firstIds}`;
   }
 
@@ -146,8 +156,12 @@ export function isSameEndpoint (sym1: ColumnSymbol, sym2: ColumnSymbol): boolean
 export function isSameEndpoint (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
 export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
   if (Array.isArray(sym1)) {
-    const firstIds = sym1.map(({ id }) => id).sort();
-    const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort();
+    const firstIds = sym1.map(({
+      id,
+    }) => id).sort();
+    const secondIds = (sym2 as ColumnSymbol[]).map(({
+      id,
+    }) => id).sort();
     return zip(firstIds, secondIds).every(([first, second]) => first === second);
   }
 
@@ -253,7 +267,9 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
     } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
       const length = parseNumber(argElements[0]);
       if (!isNaN(length)) {
-        lengthParam = { length: Math.trunc(length) };
+        lengthParam = {
+          length: Math.trunc(length),
+        };
       }
     }
 
@@ -337,7 +353,9 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
   const tablePartials = [...env.tablePartials.values()];
   // Prioritize later table partials
   for (const tablePartial of [...table.partials].reverse()) {
-    const { name } = tablePartial;
+    const {
+      name,
+    } = tablePartial;
     const partial = tablePartials.find((p) => p.name === name);
     if (!partial) continue;
 
@@ -407,7 +425,9 @@ export function extractInlineRefsFromTablePartials (table: Table, env: Interpret
 
   // Process partials in the same order as mergeTableAndPartials
   for (const tablePartial of [...table.partials].reverse()) {
-    const { name } = tablePartial;
+    const {
+      name,
+    } = tablePartial;
     const partial = tablePartials.find((p) => p.name === name);
     if (!partial) continue;
 

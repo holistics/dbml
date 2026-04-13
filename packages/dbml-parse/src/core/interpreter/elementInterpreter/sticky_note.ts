@@ -1,7 +1,9 @@
 import {
   partition, get,
 } from 'lodash-es';
-import { Note } from '@/core/types/schemaJson';
+import {
+  Note,
+} from '@/core/types/schemaJson';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
@@ -11,7 +13,9 @@ import {
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import {
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import {
   ElementInterpreter, InterpreterDatabase,
 } from '../types';
@@ -41,7 +45,9 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
 
     this.note.name = name;
 

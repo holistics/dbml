@@ -1,5 +1,9 @@
-import { importer } from '@dbml/core';
-import { connector } from '@dbml/connector';
+import {
+  importer,
+} from '@dbml/core';
+import {
+  connector,
+} from '@dbml/connector';
 import figures from 'figures';
 import chalk from 'chalk';
 import path from 'path';

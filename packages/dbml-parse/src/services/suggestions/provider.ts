@@ -6,12 +6,18 @@ import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
-import Compiler, { ScopeKind } from '@/compiler';
+import Compiler, {
+  ScopeKind,
+} from '@/compiler';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { isOffsetWithinSpan } from '@/core/utils/span';
-import { convertStringToEnum } from '@/core/utils/enum';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
 import {
   type CompletionList,
   type TextModel,
@@ -36,7 +42,9 @@ import {
   addSuggestAllSuggestion,
   isTupleEmpty,
 } from '@/services/suggestions/utils';
-import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
+import {
+  suggestRecordRowSnippet,
+} from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
   CallExpressionNode,
@@ -51,12 +59,18 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import { getOffsetFromMonacoPosition } from '@/services/utils';
-import { isComment } from '@/core/lexer/utils';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
+import {
+  isComment,
+} from '@/core/lexer/utils';
 import {
   ElementKind, SettingName,
 } from '@/core/analyzer/types';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
@@ -213,7 +227,9 @@ function suggestMembersOfSymbol (
   return addQuoteToSuggestionIfNeeded({
     suggestions: compiler.symbol
       .members(symbol)
-      .filter(({ kind }) => acceptedKinds.includes(kind))
+      .filter(({
+        kind,
+      }) => acceptedKinds.includes(kind))
       .map(({
         name, kind,
       }) => ({
@@ -238,10 +254,14 @@ function suggestNamesInScope (
   }
 
   let curElement: SyntaxNode | undefined = parent;
-  const res: CompletionList = { suggestions: [] };
+  const res: CompletionList = {
+    suggestions: [],
+  };
   while (curElement) {
     if (curElement?.symbol?.symbolTable) {
-      const { symbol } = curElement;
+      const {
+        symbol,
+      } = curElement;
       res.suggestions.push(
         ...suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions,
       );
@@ -322,7 +342,9 @@ function suggestInAttribute (
   offset: number,
   container: AttributeNode,
 ): CompletionList {
-  const { token } = compiler.container.token(offset);
+  const {
+    token,
+  } = compiler.container.token(offset);
   if ([SyntaxTokenKind.COMMA, SyntaxTokenKind.LBRACKET].includes(token?.kind as any)) {
     const res = suggestAttributeName(compiler, offset);
 
@@ -531,7 +553,9 @@ function suggestMembers (
   return addQuoteToSuggestionIfNeeded({
     suggestions: compiler.symbol
       .ofName(nameStack, compiler.container.element(offset))
-      .flatMap(({ symbol }) => compiler.symbol.members(symbol))
+      .flatMap(({
+        symbol,
+      }) => compiler.symbol.members(symbol))
       .map(({
         kind, name,
       }) => ({
@@ -759,7 +783,9 @@ function suggestInCallExpression (
 
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-    const { argumentList } = container;
+    const {
+      argumentList,
+    } = container;
     // If the user already typed some columns, we do not suggest "all columns" anymore
     if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
     return addSuggestAllSuggestion(suggestions);
@@ -779,7 +805,9 @@ function suggestInCallExpression (
     const tableSymbol = compiler.container.element(offset).symbol;
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
-    const { argumentList } = container;
+    const {
+      argumentList,
+    } = container;
     // If the user already typed some columns, we do not suggest "all columns" anymore
     if (!argumentList || !isTupleEmpty(argumentList)) return suggestions;
     return addSuggestAllSuggestion(suggestions);
@@ -862,11 +890,15 @@ function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): Comp
   switch (blockType) {
     case 'tables': {
       const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Table, SymbolKind.Schema]);
-      return { suggestions: [wildcard, ...namesInScope.suggestions] };
+      return {
+        suggestions: [wildcard, ...namesInScope.suggestions],
+      };
     }
     case 'tablegroups': {
       const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TableGroup]);
-      return { suggestions: [wildcard, ...namesInScope.suggestions] };
+      return {
+        suggestions: [wildcard, ...namesInScope.suggestions],
+      };
     }
     case 'schemas': {
       const defaultSchema = {
@@ -877,11 +909,15 @@ function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): Comp
         range: undefined as any,
       };
       const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Schema]);
-      return { suggestions: [wildcard, defaultSchema, ...namesInScope.suggestions] };
+      return {
+        suggestions: [wildcard, defaultSchema, ...namesInScope.suggestions],
+      };
     }
     case 'notes': {
       const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.StickyNote]);
-      return { suggestions: [wildcard, ...namesInScope.suggestions] };
+      return {
+        suggestions: [wildcard, ...namesInScope.suggestions],
+      };
     }
     default:
       return noSuggestions();
@@ -972,7 +1008,9 @@ function suggestColumnNameInIndexes (compiler: Compiler, offset: number): Comple
     return noSuggestions();
   }
 
-  const { symbolTable } = tableNode.symbol;
+  const {
+    symbolTable,
+  } = tableNode.symbol;
 
   return addQuoteToSuggestionIfNeeded({
     suggestions: [...symbolTable.entries()].flatMap(([index]) => {
@@ -980,7 +1018,9 @@ function suggestColumnNameInIndexes (compiler: Compiler, offset: number): Comple
       if (res === undefined) {
         return [];
       }
-      const { name } = res;
+      const {
+        name,
+      } = res;
 
       return {
         label: name,

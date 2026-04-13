@@ -1,5 +1,9 @@
-import { NodeSymbolIndex } from './symbolIndex';
-import { NodeSymbol } from './symbols';
+import {
+  NodeSymbolIndex,
+} from './symbolIndex';
+import {
+  NodeSymbol,
+} from './symbols';
 
 export default class SymbolTable {
   private table: Map<NodeSymbolIndex, NodeSymbol>;

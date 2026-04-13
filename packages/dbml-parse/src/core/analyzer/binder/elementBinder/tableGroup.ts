@@ -1,14 +1,24 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '../../../types/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../types/tokens';
-import { CompileError } from '@/core/types/errors';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
 } from '../utils';
-import { SymbolKind } from '@/core/types/symbol/symbolIndex';
+import {
+  SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
 import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class TableGroupBinder implements ElementBinder {

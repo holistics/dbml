@@ -3,7 +3,9 @@ import fs from 'fs';
 import util from 'util';
 import childProcess from 'child_process';
 import stripAnsi from 'strip-ansi';
-import { scanDirNames } from './testHelpers';
+import {
+  scanDirNames,
+} from './testHelpers';
 
 const exec = util.promisify(childProcess.exec);
 
@@ -20,7 +22,9 @@ describe('@dbml/cli', () => {
       fs.mkdirSync(path.join(dirName, './out-files'));
     }
 
-    const { stdout } = await exec(`node ${args.join(' ')}`);
+    const {
+      stdout,
+    } = await exec(`node ${args.join(' ')}`);
     const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
     const actualStdout = stripAnsi(stdout);
 

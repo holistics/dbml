@@ -1,4 +1,6 @@
-import { last } from 'lodash-es';
+import {
+  last,
+} from 'lodash-es';
 
 import {
   ElementDeclarationNode,
@@ -21,7 +23,9 @@ import {
 import {
   NodeSymbolIndex, isPublicSchemaIndex,
 } from '@/core/types/symbol';
-import { NodeSymbol } from '@/core/types/symbol/symbols';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
@@ -216,8 +220,12 @@ export function isEqualTupleOperands (value: InfixExpressionNode): value is Infi
     return false;
   }
 
-  const { tupleElements: leftTuple } = leftRes;
-  const { tupleElements: rightTuple } = rightRes;
+  const {
+    tupleElements: leftTuple,
+  } = leftRes;
+  const {
+    tupleElements: rightTuple,
+  } = rightRes;
 
   if (leftTuple?.length !== rightTuple?.length) {
     return false;

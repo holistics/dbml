@@ -1,4 +1,6 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
   last, partition,
 } from 'lodash-es';
@@ -12,13 +14,21 @@ import {
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/parser/utils';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import {
   isValidName, pickValidator,
 } from '@/core/analyzer/validator/utils';
-import { registerSchemaStack } from '@/core/analyzer/validator/utils';
+import {
+  registerSchemaStack,
+} from '@/core/analyzer/validator/utils';
 import {
   createEnumFieldSymbolIndex, createEnumSymbolIndex,
 } from '@/core/types/symbol/symbolIndex';
@@ -92,7 +102,9 @@ export default class EnumValidator implements ElementValidator {
       declaration: this.declarationNode,
       symbolTable: new SymbolTable(),
     });
-    const { name } = this.declarationNode;
+    const {
+      name,
+    } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments !== undefined) {
@@ -202,7 +214,9 @@ export default class EnumValidator implements ElementValidator {
       const enumFieldName = extractVarNameFromPrimaryVariable(field.callee)!;
       const enumFieldId = createEnumFieldSymbolIndex(enumFieldName);
 
-      const enumSymbol = this.symbolFactory.create(EnumFieldSymbol, { declaration: field });
+      const enumSymbol = this.symbolFactory.create(EnumFieldSymbol, {
+        declaration: field,
+      });
       field.symbol = enumSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;

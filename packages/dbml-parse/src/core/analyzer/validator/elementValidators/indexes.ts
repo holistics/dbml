@@ -23,11 +23,19 @@ import {
 import {
   aggregateSettingList, pickValidator,
 } from '@/core/analyzer/validator/utils';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { destructureIndexNode } from '@/core/analyzer/utils';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  destructureIndexNode,
+} from '@/core/analyzer/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 
 export default class IndexesValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

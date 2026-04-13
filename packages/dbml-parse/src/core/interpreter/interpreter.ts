@@ -1,22 +1,52 @@
-import { ProgramNode } from '@/core/types/nodes';
+import {
+  ProgramNode,
+} from '@/core/types/nodes';
 import {
   Database, Table, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
-import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
-import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
-import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
-import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tableGroup';
-import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
-import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
-import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
-import { DiagramViewInterpreter } from '@/core/interpreter/elementInterpreter/diagramView';
-import { RecordsInterpreter } from '@/core/interpreter/records';
+import {
+  TableInterpreter,
+} from '@/core/interpreter/elementInterpreter/table';
+import {
+  StickyNoteInterpreter,
+} from '@/core/interpreter/elementInterpreter/sticky_note';
+import {
+  RefInterpreter,
+} from '@/core/interpreter/elementInterpreter/ref';
+import {
+  TableGroupInterpreter,
+} from '@/core/interpreter/elementInterpreter/tableGroup';
+import {
+  EnumInterpreter,
+} from '@/core/interpreter/elementInterpreter/enum';
+import {
+  ProjectInterpreter,
+} from '@/core/interpreter/elementInterpreter/project';
+import {
+  TablePartialInterpreter,
+} from '@/core/interpreter/elementInterpreter/tablePartial';
+import {
+  DiagramViewInterpreter,
+} from '@/core/interpreter/elementInterpreter/diagramView';
+import {
+  RecordsInterpreter,
+} from '@/core/interpreter/records';
 import Report from '@/core/types/report';
-import { ElementKind } from '@/core/analyzer/types';
-import { convertStringToEnum } from '@/core/utils/enum';
-import { CompileWarning } from '@/core/types/errors';
-import { getTokenPosition } from './utils';
-import { InterpreterDatabase } from './types';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
+import {
+  CompileWarning,
+} from '@/core/types/errors';
+import {
+  getTokenPosition,
+} from './utils';
+import {
+  InterpreterDatabase,
+} from './types';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {
@@ -53,7 +83,9 @@ function expandDiagramViewWildcards (env: InterpreterDatabase): void {
     if (wildcards.has('tableGroups') && ve.tableGroups && ve.tableGroups.length === 0) {
       const otherTrinitySet = explicitlySet.has('tables') || explicitlySet.has('schemas');
       if (!otherTrinitySet) {
-        ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({ name: tg.name! }));
+        ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({
+          name: tg.name!,
+        }));
       }
     }
   }

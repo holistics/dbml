@@ -38,9 +38,15 @@ import {
 import {
   destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression,
 } from '@/core/analyzer/utils';
-import { last } from 'lodash-es';
-import { mergeTableAndPartials } from '../utils';
-import { InterpreterDatabase } from '../types';
+import {
+  last,
+} from 'lodash-es';
+import {
+  mergeTableAndPartials,
+} from '../utils';
+import {
+  InterpreterDatabase,
+} from '../types';
 
 export class RecordsInterpreter {
   private env: InterpreterDatabase;
@@ -433,7 +439,9 @@ function extractValue (
 
     // Validate string length (using UTF-8 byte length like SQL engines)
     if (column.type.lengthParam) {
-      const { length } = column.type.lengthParam;
+      const {
+        length,
+      } = column.type.lengthParam;
       // Calculate byte length in UTF-8 encoding (matching SQL behavior)
       const actualByteLength = new TextEncoder().encode(strValue).length;
 

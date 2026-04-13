@@ -1,4 +1,6 @@
-import { CompileError } from '@/core/types/errors';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   Ref, RefEndpoint, Table,
 } from '@/core/types/schemaJson';
@@ -9,7 +11,9 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
   mergeTableAndPartials, extractInlineRefsFromTablePartials,
 } from '@/core/interpreter/utils';

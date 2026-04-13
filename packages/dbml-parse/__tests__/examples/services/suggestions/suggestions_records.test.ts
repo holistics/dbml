@@ -6,8 +6,12 @@ import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import {
   createMockTextModel, createPosition,
 } from '@tests/utils';
-import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
-import { TableSymbol } from '@/core/types/symbol/symbols';
+import {
+  getColumnsFromTableSymbol,
+} from '@/services/suggestions/utils';
+import {
+  TableSymbol,
+} from '@/core/types/symbol/symbols';
 
 describe('[example] CompletionItemProvider - Records', () => {
   describe('should NOT suggest record entry snippets in Records body (handled by inline completions)', () => {

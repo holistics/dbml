@@ -2,7 +2,9 @@ import Compiler from '@/compiler/index';
 import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
-export { ElementKind } from '@/core/analyzer/types';
+export {
+  ElementKind,
+} from '@/core/analyzer/types';
 
 export * from '@/core/interpreter/records/utils';
 
@@ -82,9 +84,13 @@ export {
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
 } from '@/compiler/queries/transform/syncDiagramView';
-export type { TextEdit } from '@/compiler/queries/transform/applyTextEdits';
+export type {
+  TextEdit,
+} from '@/compiler/queries/transform/applyTextEdits';
 
-export { dbmlMonarchTokensProvider } from '@/services/monarch';
+export {
+  dbmlMonarchTokensProvider,
+} from '@/services/monarch';
 
 export {
   Compiler, services,

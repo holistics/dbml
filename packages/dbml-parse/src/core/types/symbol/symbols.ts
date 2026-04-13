@@ -1,8 +1,16 @@
 import SymbolTable from './symbolTable';
-import { SyntaxNode } from '@/core/types/nodes';
-import { Filepath } from '@/core/types/filepath';
-import { DEFAULT_ENTRY } from '@/constants';
-import { SymbolKind } from './symbolIndex';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
+  SymbolKind,
+} from './symbolIndex';
 
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {
@@ -58,7 +66,10 @@ export class SchemaSymbol extends NodeSymbol {
   declare symbolTable: SymbolTable;
   name?: string;
 
-  constructor ({ symbolTable, name }: { symbolTable: SymbolTable; name?: string }, id: NodeSymbolId) {
+  constructor ({
+    symbolTable, name,
+  }: { symbolTable: SymbolTable;
+    name?: string; }, id: NodeSymbolId) {
     super({
       kind: SymbolKind.Schema,
       symbolTable,
@@ -92,7 +103,9 @@ export class EnumSymbol extends NodeSymbol {
 export class EnumFieldSymbol extends NodeSymbol {
   declare declaration: SyntaxNode;
 
-  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({
+    declaration,
+  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     super({
       kind: SymbolKind.EnumField,
       declaration,
@@ -125,7 +138,9 @@ export class TableSymbol extends NodeSymbol {
 export class ColumnSymbol extends NodeSymbol {
   declare declaration: SyntaxNode;
 
-  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({
+    declaration,
+  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     super({
       kind: SymbolKind.Column,
       declaration,
@@ -158,7 +173,9 @@ export class TableGroupSymbol extends NodeSymbol {
 export class TableGroupFieldSymbol extends NodeSymbol {
   declare declaration: SyntaxNode;
 
-  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({
+    declaration,
+  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     super({
       kind: SymbolKind.TableGroupField,
       declaration,
@@ -253,7 +270,9 @@ export class DiagramViewFieldSymbol extends NodeSymbol {
   declare declaration: SyntaxNode;
   declare filepath: Filepath;
 
-  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({
+    declaration,
+  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     super({
       kind: SymbolKind.DiagramViewField,
       declaration,
@@ -266,7 +285,9 @@ export class StickyNoteSymbol extends NodeSymbol {
   declare declaration: SyntaxNode;
   declare filepath: Filepath;
 
-  constructor ({ declaration }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  constructor ({
+    declaration,
+  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
     super({
       kind: SymbolKind.StickyNote,
       declaration,

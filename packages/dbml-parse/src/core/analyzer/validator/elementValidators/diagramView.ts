@@ -1,14 +1,22 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
-import { isSimpleName } from '@/core/analyzer/validator/utils';
+import {
+  isSimpleName,
+} from '@/core/analyzer/validator/utils';
 import {
   registerSchemaStack, aggregateSettingList,
 } from '@/core/analyzer/validator/utils';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { SyntaxToken } from '@/core/types/tokens';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
@@ -104,7 +112,9 @@ export default class DiagramViewValidator implements ElementValidator {
   }
 
   registerElement (): CompileError[] {
-    const { name } = this.declarationNode;
+    const {
+      name,
+    } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(DiagramViewSymbol, {
       declaration: this.declarationNode,
       symbolTable: new SymbolTable(),
@@ -286,7 +296,9 @@ export default class DiagramViewValidator implements ElementValidator {
         const fieldName = extractVarNameFromPrimaryVariable(field.callee)!;
         const fieldId = createDiagramViewFieldSymbolIndex(fieldName);
 
-        const fieldSymbol = this.symbolFactory.create(DiagramViewFieldSymbol, { declaration: field });
+        const fieldSymbol = this.symbolFactory.create(DiagramViewFieldSymbol, {
+          declaration: field,
+        });
         field.symbol = fieldSymbol;
 
         const symbolTable = this.declarationNode.symbol!.symbolTable!;

@@ -1,10 +1,16 @@
-import { DEFAULT_ENTRY } from '@/constants';
-import { readFileSync } from 'node:fs';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
+  readFileSync,
+} from 'node:fs';
 import path from 'node:path';
 import {
   describe, expect, it,
 } from 'vitest';
-import type { ProgramNode } from '@/core/types/nodes';
+import type {
+  ProgramNode,
+} from '@/core/types/nodes';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import Validator from '@/core/analyzer/validator/validator';
@@ -23,7 +29,9 @@ function serializeValidatorResult (compiler: Compiler, report: Report<ProgramNod
     program: value,
     errors,
     warnings,
-  }, { includeSymbols: false }), null, 2);
+  }, {
+    includeSymbols: false,
+  }), null, 2);
 }
 
 describe('[snapshot] validator', () => {
@@ -45,7 +53,9 @@ describe('[snapshot] validator', () => {
       .chain((tokens) => {
         return new Parser(program, tokens, nodeIdGenerator, DEFAULT_ENTRY).parse();
       })
-      .chain(({ ast }) => {
+      .chain(({
+        ast,
+      }) => {
         return new Validator(ast, new SymbolFactory(symbolIdGenerator)).validate();
       });
     const output = serializeValidatorResult(compiler, report);

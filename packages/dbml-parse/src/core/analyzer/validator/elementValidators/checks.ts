@@ -15,14 +15,22 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
+import {
+  isExpressionAQuotedString,
+} from '@/core/parser/utils';
 import {
   aggregateSettingList, pickValidator,
 } from '@/core/analyzer/validator/utils';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 
 export default class ChecksValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

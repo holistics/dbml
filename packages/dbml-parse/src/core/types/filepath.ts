@@ -1,8 +1,12 @@
 import {
   basename, dirname, extname, isAbsolute, join, normalize, relative, resolve,
 } from 'pathe';
-import type { Internable } from './internable';
-import { DBML_EXT } from '@/constants';
+import type {
+  Internable,
+} from './internable';
+import {
+  DBML_EXT,
+} from '@/constants';
 
 declare const __filepathIdBrand: unique symbol;
 export type FilepathId = string & { [__filepathIdBrand]: true };

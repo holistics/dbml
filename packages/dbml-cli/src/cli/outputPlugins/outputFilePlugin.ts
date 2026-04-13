@@ -14,7 +14,9 @@ class OutputFilePlugin {
 
   start () {
     fs.writeFileSync(this.filePath, '');
-    this.stream = fs.createWriteStream(this.filePath, { flags: 'a' });
+    this.stream = fs.createWriteStream(this.filePath, {
+      flags: 'a',
+    });
     if (this.header) this.stream.write(this.header);
     this.isWrite = true;
   }

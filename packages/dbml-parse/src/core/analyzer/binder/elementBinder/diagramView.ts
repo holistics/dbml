@@ -1,15 +1,27 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '../../../types/nodes';
-import { isWildcardExpression } from '../../../parser/utils';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../types/tokens';
-import { CompileError } from '@/core/types/errors';
+import {
+  isWildcardExpression,
+} from '../../../parser/utils';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
 } from '../utils';
-import { SymbolKind } from '@/core/types/symbol/symbolIndex';
+import {
+  SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
 import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class DiagramViewBinder implements ElementBinder {

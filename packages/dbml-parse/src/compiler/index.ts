@@ -1,11 +1,21 @@
 import {
   SyntaxNodeIdGenerator, ProgramNode,
 } from '@/core/types/nodes';
-import { Filepath } from '@/core/types/filepath';
-import { DEFAULT_ENTRY } from '@/constants';
-import { NodeSymbolIdGenerator } from '@/core/types/symbol/symbols';
-import { SyntaxToken } from '@/core/types/tokens';
-import { Database } from '@/core/types/schemaJson';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
+  NodeSymbolIdGenerator,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  Database,
+} from '@/core/types/schemaJson';
 import Report from '@/core/types/report';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
@@ -41,7 +51,9 @@ import {
 } from './queries/utils';
 
 // Re-export types
-export { ScopeKind } from './types';
+export {
+  ScopeKind,
+} from './types';
 export type {
   TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock,
 };

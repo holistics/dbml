@@ -4,10 +4,18 @@ import {
 import {
   SyntaxTokenKind, isTriviaToken,
 } from '@/core/types/tokens';
-import { CompileErrorCode } from '@/core/types/errors';
-import { SyntaxNodeKind } from '@/core/types/nodes';
-import { WildcardNode } from '@/core/types/nodes';
-import { isWildcardExpression } from '@/core/parser/utils';
+import {
+  CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  SyntaxNodeKind,
+} from '@/core/types/nodes';
+import {
+  WildcardNode,
+} from '@/core/types/nodes';
+import {
+  isWildcardExpression,
+} from '@/core/parser/utils';
 import {
   lex, parse, analyze,
 } from '@tests/utils';
@@ -51,7 +59,9 @@ describe('[example] wildcard', () => {
   describe('parser', () => {
     test('should parse * as WildcardNode', () => {
       const source = 'Table t { * }';
-      const { ast } = parse(source).getValue();
+      const {
+        ast,
+      } = parse(source).getValue();
       const table = ast.body[0];
       const body = table.body as any;
       const field = body.body[0];
@@ -62,7 +72,9 @@ describe('[example] wildcard', () => {
 
     test('isWildcardExpression should return true for WildcardNode', () => {
       const source = 'Table t { * }';
-      const { ast } = parse(source).getValue();
+      const {
+        ast,
+      } = parse(source).getValue();
       const table = ast.body[0];
       const body = table.body as any;
       const field = body.body[0];
@@ -72,7 +84,9 @@ describe('[example] wildcard', () => {
 
     test('isWildcardExpression should return false for non-wildcard', () => {
       const source = 'Table t { id int }';
-      const { ast } = parse(source).getValue();
+      const {
+        ast,
+      } = parse(source).getValue();
       const table = ast.body[0];
       const body = table.body as any;
       const field = body.body[0];

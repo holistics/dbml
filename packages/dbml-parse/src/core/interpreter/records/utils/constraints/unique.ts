@@ -1,4 +1,6 @@
-import { CompileError } from '@/core/types/errors';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   Table, Column,
 } from '@/core/types/schemaJson';
@@ -9,7 +11,9 @@ import {
   formatValues,
   createConstraintErrors,
 } from './helper';
-import { mergeTableAndPartials } from '@/core/interpreter/utils';
+import {
+  mergeTableAndPartials,
+} from '@/core/interpreter/utils';
 import {
   keyBy, groupBy, compact, isEmpty, filter, flatMap,
 } from 'lodash-es';
@@ -21,7 +25,12 @@ const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';
 
 export function validateUnique (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([table, { rows }]) => {
+  return flatMap(Array.from(env.records), ([
+    table,
+    {
+      rows,
+    },
+  ]) => {
     if (!env.cachedMergedTables.has(table)) {
       env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
     }

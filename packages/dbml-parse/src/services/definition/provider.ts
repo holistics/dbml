@@ -1,7 +1,9 @@
 import {
   Definition, DefinitionProvider, TextModel, Position,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition } from '@/services/utils';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
 import Compiler from '@/compiler';
 import {
   SyntaxNode, SyntaxNodeKind,
@@ -15,7 +17,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
   }
 
   provideDefinition (model: TextModel, position: Position): Definition {
-    const { uri } = model;
+    const {
+      uri,
+    } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
     const containers = [...this.compiler.container.stack(offset)];
     while (containers.length !== 0) {
@@ -28,7 +32,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
         node.referee?.declaration
         && [SyntaxNodeKind.PRIMARY_EXPRESSION, SyntaxNodeKind.VARIABLE].includes(node?.kind)
       ) {
-        ({ declaration } = node.referee);
+        ({
+          declaration,
+        } = node.referee);
       }
 
       if (declaration) {

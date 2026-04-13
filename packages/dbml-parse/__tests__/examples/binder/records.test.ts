@@ -4,7 +4,9 @@ import {
 import {
   TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol,
 } from '@/core/types/symbol/symbols';
-import { analyze } from '@tests/utils';
+import {
+  analyze,
+} from '@tests/utils';
 
 describe('[example] records binder', () => {
   test('should bind records to table and columns', () => {

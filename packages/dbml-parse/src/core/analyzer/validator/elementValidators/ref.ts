@@ -15,7 +15,9 @@ import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import {
   isSimpleName, isValidColor, pickValidator, aggregateSettingList,
 } from '@/core/analyzer/validator/utils';

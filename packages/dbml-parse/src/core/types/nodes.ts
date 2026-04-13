@@ -4,14 +4,24 @@ import {
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { NodeSymbol } from '@/core/types/symbol/symbols';
-import { Position } from '@/core/types';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  Position,
+} from '@/core/types';
 import {
   getTokenFullEnd, getTokenFullStart,
 } from '@/core/lexer/utils';
-import { Filepath } from '@/core/types/filepath';
-import { type Internable } from '@/core/types/internable';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  type Internable,
+} from '@/core/types/internable';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;
@@ -249,7 +259,9 @@ export class ElementDeclarationNode extends SyntaxNode {
 export class IdentiferStreamNode extends SyntaxNode {
   identifiers: SyntaxToken[];
 
-  constructor ({ identifiers = [] }: { identifiers?: SyntaxToken[] }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor ({
+    identifiers = [],
+  }: { identifiers?: SyntaxToken[] }, id: SyntaxNodeId, filepath: Filepath) {
     super(id, SyntaxNodeKind.IDENTIFIER_STREAM, filepath, identifiers || []);
     this.identifiers = identifiers;
   }
@@ -393,7 +405,9 @@ export class PostfixExpressionNode extends SyntaxNode {
 export class FunctionExpressionNode extends SyntaxNode {
   value?: SyntaxToken;
 
-  constructor ({ value }: { value?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor ({
+    value,
+  }: { value?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
     super(id, SyntaxNodeKind.FUNCTION_EXPRESSION, filepath, [value]);
     this.value = value;
   }
@@ -622,7 +636,9 @@ export class CallExpressionNode extends SyntaxNode {
 export class LiteralNode extends SyntaxNode {
   literal?: SyntaxToken;
 
-  constructor ({ literal }: { literal?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor ({
+    literal,
+  }: { literal?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
     super(id, SyntaxNodeKind.LITERAL, filepath, [literal]);
     this.literal = literal;
   }
@@ -632,7 +648,9 @@ export class LiteralNode extends SyntaxNode {
 export class WildcardNode extends SyntaxNode {
   token?: SyntaxToken;
 
-  constructor ({ token }: { token?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor ({
+    token,
+  }: { token?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
     super(id, SyntaxNodeKind.WILDCARD, filepath, [token]);
     this.token = token;
   }
@@ -645,7 +663,9 @@ export class WildcardNode extends SyntaxNode {
 export class VariableNode extends SyntaxNode {
   variable?: SyntaxToken;
 
-  constructor ({ variable }: { variable?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor ({
+    variable,
+  }: { variable?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
     super(id, SyntaxNodeKind.VARIABLE, filepath, [variable]);
     this.variable = variable;
   }
@@ -658,7 +678,9 @@ export class VariableNode extends SyntaxNode {
 export class PrimaryExpressionNode extends SyntaxNode {
   expression?: LiteralNode | VariableNode;
 
-  constructor ({ expression }: { expression?: LiteralNode | VariableNode }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor ({
+    expression,
+  }: { expression?: LiteralNode | VariableNode }, id: SyntaxNodeId, filepath: Filepath) {
     super(id, SyntaxNodeKind.PRIMARY_EXPRESSION, filepath, [expression]);
     this.expression = expression;
   }
@@ -670,7 +692,9 @@ export class PrimaryExpressionNode extends SyntaxNode {
 // - Empty fields in comma expressions (e.g. 1, , 3)
 // - Trailing commas in comma expressions (e.g. 1, 2,)
 export class EmptyNode extends SyntaxNode {
-  constructor ({ prevToken }: { prevToken: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor ({
+    prevToken,
+  }: { prevToken: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId, filepath: Filepath) {
     const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, filepath, prevToken.endPos, prevToken.endPos, ' ', false);
     super(id, SyntaxNodeKind.EMPTY, filepath, [nextToken]);
   }

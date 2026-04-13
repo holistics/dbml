@@ -19,14 +19,18 @@ import {
 import {
   ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
 } from '@/core/types/symbol/symbols';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 import Compiler from '@/compiler';
 import {
   noSuggestions,
   getColumnsFromTableSymbol,
   extractNameAndTypeOfColumnSymbol,
 } from '@/services/suggestions/utils';
-import { isOffsetWithinSpan } from '@/core/utils/span';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

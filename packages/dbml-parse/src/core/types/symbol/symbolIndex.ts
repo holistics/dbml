@@ -1,4 +1,6 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 
 // Used to index a symbol table to obtain a symbol
 export type NodeSymbolIndex = string;

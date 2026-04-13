@@ -1,4 +1,6 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import Report from '@/core/types/report';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -6,12 +8,20 @@ import {
 import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';
-import { SchemaSymbol } from '@/core/types/symbol/symbols';
+import {
+  SchemaSymbol,
+} from '@/core/types/symbol/symbols';
 import SymbolFactory from '@/core/types/symbol/factory';
-import { pickValidator } from '@/core/analyzer/validator/utils';
+import {
+  pickValidator,
+} from '@/core/analyzer/validator/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 
 export default class Validator {
   private ast: ProgramNode;
@@ -23,7 +33,10 @@ export default class Validator {
   constructor (ast: ProgramNode, symbolFactory: SymbolFactory) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
-    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable(), name: DEFAULT_SCHEMA_NAME });
+    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
+      symbolTable: new SymbolTable(),
+      name: DEFAULT_SCHEMA_NAME,
+    });
 
     this.ast.symbol = this.publicSchemaSymbol;
     this.ast.symbol.declaration = this.ast;

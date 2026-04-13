@@ -1,17 +1,27 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import {
   destructureComplexVariable, extractReferee,
 } from '@/core/analyzer/utils';
-import { CompileError } from '@/core/types/errors';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { isWildcardExpression } from '@/core/parser/utils';
+import {
+  isWildcardExpression,
+} from '@/core/parser/utils';
 import {
   ElementInterpreter, InterpreterDatabase, DiagramView,
 } from '@/core/interpreter/types';
-import { getTokenPosition } from '@/core/interpreter/utils';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  getTokenPosition,
+} from '@/core/interpreter/utils';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 
 export class DiagramViewInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -202,13 +212,25 @@ export class DiagramViewInterpreter implements ElementInterpreter {
         this.diagramView.visibleEntities!.tables = items.length > 0 ? items : null;
         break;
       case 'notes':
-        this.diagramView.visibleEntities!.stickyNotes = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        this.diagramView.visibleEntities!.stickyNotes = items.length > 0
+          ? items.map((i) => ({
+              name: i.name,
+            }))
+          : null;
         break;
       case 'tablegroups':
-        this.diagramView.visibleEntities!.tableGroups = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        this.diagramView.visibleEntities!.tableGroups = items.length > 0
+          ? items.map((i) => ({
+              name: i.name,
+            }))
+          : null;
         break;
       case 'schemas':
-        this.diagramView.visibleEntities!.schemas = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        this.diagramView.visibleEntities!.schemas = items.length > 0
+          ? items.map((i) => ({
+              name: i.name,
+            }))
+          : null;
         break;
     }
   }

@@ -4,19 +4,25 @@ import path from 'path';
 import {
   exporter, CompilerError,
 } from '@dbml/core';
-import type { ExportFormat } from '@dbml/core';
+import type {
+  ExportFormat,
+} from '@dbml/core';
 import {
   validateInputFilePaths,
   resolvePaths,
   getFormatOpt,
   generate,
 } from './utils';
-import { validateFilePlugin } from './validatePlugins/validatePlugins';
+import {
+  validateFilePlugin,
+} from './validatePlugins/validatePlugins';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import config from './config';
 import logger from '../helpers/logger';
-import { SyntaxError } from '../errors';
+import {
+  SyntaxError,
+} from '../errors';
 
 interface Program {
   args: string[];
@@ -50,6 +56,8 @@ export default async function exportHandler (program: Program) {
     }
   } catch (error) {
     const e = error as CompilerError;
-    logger.error(`\n    ${e.diags.map((diag) => new SyntaxError(diag.filepath ?? '', diag)).map(({ message }) => message).join('\n    ')}`);
+    logger.error(`\n    ${e.diags.map((diag) => new SyntaxError(diag.filepath ?? '', diag)).map(({
+      message,
+    }) => message).join('\n    ')}`);
   }
 }

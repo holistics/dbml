@@ -7,7 +7,9 @@ import {
 import {
   TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol,
 } from '@/core/types/symbol/symbols';
-import { analyze } from '@tests/utils';
+import {
+  analyze,
+} from '@tests/utils';
 
 describe('[example] binder', () => {
   describe('Table', () => {

@@ -1,8 +1,12 @@
 import {
   forIn, partition,
 } from 'lodash-es';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
@@ -12,9 +16,13 @@ import {
 import {
   isValidColor, registerSchemaStack, aggregateSettingList,
 } from '@/core/analyzer/validator/utils';
-import { ElementValidator } from '@/core/analyzer/validator/types';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import SymbolTable from '@/core/types/symbol/symbolTable';
-import { SyntaxToken } from '@/core/types/tokens';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
@@ -111,7 +119,9 @@ export default class TableGroupValidator implements ElementValidator {
   }
 
   registerElement (): CompileError[] {
-    const { name } = this.declarationNode;
+    const {
+      name,
+    } = this.declarationNode;
     this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, {
       declaration: this.declarationNode,
       symbolTable: new SymbolTable(),
@@ -241,7 +251,9 @@ export default class TableGroupValidator implements ElementValidator {
       const tableGroupField = extractVarNameFromPrimaryVariable(field.callee)!;
       const tableGroupFieldId = createTableGroupFieldSymbolIndex(tableGroupField);
 
-      const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, { declaration: field });
+      const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, {
+        declaration: field,
+      });
       field.symbol = tableGroupSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;

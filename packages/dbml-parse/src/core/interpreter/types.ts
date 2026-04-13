@@ -1,7 +1,9 @@
 import {
   ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { CompileError } from '@/core/types/errors';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import type {
   Table,
   Note,

@@ -2,7 +2,9 @@ import {
   describe, expect, test,
 } from 'vitest';
 import Compiler from '@/compiler/index';
-import { applyTextEdits } from '@/compiler/queries/transform/applyTextEdits';
+import {
+  applyTextEdits,
+} from '@/compiler/queries/transform/applyTextEdits';
 
 describe('[example] applyTextEdits', () => {
   describe('standalone function', () => {

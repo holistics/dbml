@@ -13,8 +13,12 @@ import {
   MockTextModel, createPosition,
 } from '../utils';
 
-const FUZZ_CONFIG = { numRuns: 50 };
-const ROBUSTNESS_CONFIG = { numRuns: 25 };
+const FUZZ_CONFIG = {
+  numRuns: 50,
+};
+const ROBUSTNESS_CONFIG = {
+  numRuns: 25,
+};
 
 // Helper to create valid position within source bounds
 function clampPosition (line: number, col: number, source: string): { line: number;
@@ -347,7 +351,9 @@ describe('[fuzz] services - consistency', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });
@@ -394,7 +400,9 @@ describe('[fuzz] services - edge cases', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -419,7 +427,9 @@ describe('[fuzz] services - edge cases', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -448,7 +458,9 @@ describe('[fuzz] services - edge cases', () => {
   });
 
   it('should handle source with many lines', () => {
-    const manyLines = Array.from({ length: 500 }, (_, i) => `Table t${i} { id int }`).join('\n');
+    const manyLines = Array.from({
+      length: 500,
+    }, (_, i) => `Table t${i} { id int }`).join('\n');
     const compiler = new Compiler();
     compiler.setSource(manyLines);
 
@@ -495,7 +507,9 @@ describe('[fuzz] services - unicode handling', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });
