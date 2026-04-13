@@ -14,7 +14,7 @@
     },
     {
       "code": "DUPLICATE_NAME",
-      "diagnostic": "TableGroup name 'Users' already exists",
+      "diagnostic": "TableGroup name 'Users' already exists in schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -62,7 +62,7 @@
     },
     {
       "code": "DUPLICATE_NAME",
-      "diagnostic": "TablePartial name 'Users' already exists",
+      "diagnostic": "TablePartial name 'Users' already exists in schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

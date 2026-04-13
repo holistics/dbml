@@ -1,6 +1,7 @@
 import {
   partition, forIn, last,
 } from 'lodash-es';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -176,12 +177,12 @@ export default class TablePartialValidator implements ElementValidator {
     const maybeNamePartials = destructureComplexVariable(name);
     if (maybeNamePartials === undefined) return [];
 
-    const namePartials = maybeNamePartials;
+    const namePartials = [...maybeNamePartials];
     const tablePartialName = namePartials.pop()!;
     const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory);
     const tablePartialId = createTablePartialSymbolIndex(tablePartialName);
     if (symbolTable.has(tablePartialId)) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${tablePartialName}' already exists`, name!)];
+      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${tablePartialName}' already exists in schema '${namePartials.join('.') || DEFAULT_SCHEMA_NAME}'`, name!)];
     }
     symbolTable.set(tablePartialId, this.declarationNode.symbol!);
 

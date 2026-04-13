@@ -2,7 +2,7 @@
   "errors": [
     {
       "code": "DUPLICATE_NAME",
-      "diagnostic": "Sticky note \"note2\" has already been defined",
+      "diagnostic": "Duplicate Note 'note2' in schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -14,7 +14,7 @@
     },
     {
       "code": "DUPLICATE_NAME",
-      "diagnostic": "Sticky note \"note3\" has already been defined",
+      "diagnostic": "Duplicate Note 'note3' in schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

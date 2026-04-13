@@ -1,4 +1,5 @@
 import { partition } from 'lodash-es';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -84,7 +85,7 @@ export default class NoteValidator implements ElementValidator {
     const noteId = createStickyNoteSymbolIndex(trueName);
 
     if (this.publicSymbolTable.has(noteId)) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode)];
+      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate Note '${trueName}' in schema '${DEFAULT_SCHEMA_NAME}'`, nameNode)];
     }
 
     this.declarationNode.symbol = this.symbolFactory.create(StickyNoteSymbol, { declaration: this.declarationNode });
