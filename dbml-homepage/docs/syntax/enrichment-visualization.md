@@ -198,7 +198,7 @@ DiagramView full_view {
 DiagramView empty_view {
 }
 
-// Filter specific tables
+// Select specific tables
 DiagramView sales_view {
   Tables {
     users
