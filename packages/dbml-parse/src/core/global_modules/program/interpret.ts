@@ -318,6 +318,8 @@ export default class ProgramInterpreter {
     if (db.externals.tables.some((t) => t.visibleNames.some(
       (v) => v.name === tableName && (v.schemaName ?? DEFAULT_SCHEMA_NAME) === sName,
     ))) return true;
+    // Check aliases (schemaName is null for aliases)
+    if (schemaName === null && db.aliases.some((a) => a.name === tableName)) return true;
     return false;
   }
 
