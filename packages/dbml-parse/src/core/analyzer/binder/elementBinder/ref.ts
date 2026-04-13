@@ -2,30 +2,30 @@ import {
   partition,
 } from 'lodash-es';
 import {
+  CompileError,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
+import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
 } from '../../../types/nodes';
 import {
-  ElementBinder,
-} from '../types';
-import {
   SyntaxToken,
 } from '../../../types/tokens';
-import {
-  CompileError,
-} from '@/core/types/errors';
-import {
-  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
-} from '../utils';
 import {
   ElementKind,
 } from '../../types';
 import {
-  SymbolKind,
-} from '@/core/types/symbol/symbolIndex';
-import SymbolFactory from '@/core/types/symbol/factory';
+  ElementBinder,
+} from '../types';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class RefBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

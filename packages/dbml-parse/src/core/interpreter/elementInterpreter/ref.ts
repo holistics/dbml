@@ -5,6 +5,12 @@ import {
   aggregateSettingList,
 } from '@/core/analyzer/validator/utils';
 import {
+  extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
+} from '@/core/interpreter/utils';
+import {
+  extractStringFromIdentifierStream,
+} from '@/core/parser/utils';
+import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
@@ -13,12 +19,6 @@ import {
 import {
   Ref, Table,
 } from '@/core/types/schemaJson';
-import {
-  extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
-} from '@/core/interpreter/utils';
-import {
-  extractStringFromIdentifierStream,
-} from '@/core/parser/utils';
 import {
   ElementInterpreter, InterpreterDatabase,
 } from '../types';

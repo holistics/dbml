@@ -1,35 +1,35 @@
 import {
   partition,
 } from 'lodash-es';
-import SymbolFactory from '@/core/types/symbol/factory';
 import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
 import {
-  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
-} from '@/core/types/nodes';
+  ElementKind,
+} from '@/core/analyzer/types';
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
 import {
   ElementValidator,
 } from '@/core/analyzer/validator/types';
 import {
   isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator,
 } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/types/symbol/symbolTable';
-import {
-  destructureComplexVariable,
-} from '@/core/analyzer/utils';
-import {
-  ElementKind,
-} from '@/core/analyzer/types';
 import {
   isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/parser/utils';
 import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class RecordsValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

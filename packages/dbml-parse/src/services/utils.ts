@@ -1,5 +1,5 @@
 import type {
-  TextModel, Position,
+  Position, TextModel,
 } from '@/services/types';
 
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {

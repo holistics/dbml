@@ -1,21 +1,21 @@
 import {
-  ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
-} from '@/core/types/nodes';
-import {
   CompileError,
 } from '@/core/types/errors';
+import {
+  ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
+} from '@/core/types/nodes';
 import type {
-  Table,
-  Note,
-  Ref,
-  Enum,
-  TableGroup,
   Alias,
-  TablePartial,
-  RecordValueType,
-  Project,
   DiagramView,
+  Enum,
   FilterConfig,
+  Note,
+  Project,
+  RecordValueType,
+  Ref,
+  Table,
+  TableGroup,
+  TablePartial,
 } from '@/core/types/schemaJson';
 
 export type {

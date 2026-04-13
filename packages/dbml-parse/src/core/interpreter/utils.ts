@@ -1,32 +1,32 @@
 import {
-  last, zip, uniqBy,
+  last, uniqBy, zip,
 } from 'lodash-es';
+import {
+  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken,
+  extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
+} from '@/core/analyzer/utils';
+import {
+  isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode,
+  PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  Column, ColumnType, Ref, RelationCardinality, Table,
+  TokenPosition,
+} from '@/core/types/schemaJson';
 import {
   ColumnSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
-  extractVariableFromExpression,
-  extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
-import {
-  ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionExpressionNode, FunctionApplicationNode, LiteralNode,
-  PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
-} from '@/core/types/nodes';
-import {
-  ColumnType, RelationCardinality, Table, TokenPosition, Ref,
-  Column,
-} from '@/core/types/schemaJson';
-import {
   SyntaxTokenKind,
 } from '@/core/types/tokens';
-import {
-  isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString,
-} from '@/core/parser/utils';
-import Report from '@/core/types/report';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
 import {
   getNumberTextFromExpression, parseNumber,
 } from '@/core/utils/numbers';

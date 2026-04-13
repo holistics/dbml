@@ -1,28 +1,28 @@
 import {
+  flatMap, isEmpty,
+} from 'lodash-es';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  InterpreterDatabase, TableRecordRow,
+} from '@/core/interpreter/types';
+import {
+  extractInlineRefsFromTablePartials, mergeTableAndPartials,
+} from '@/core/interpreter/utils';
+import {
   CompileError,
 } from '@/core/types/errors';
 import {
   Ref, RefEndpoint, Table,
 } from '@/core/types/schemaJson';
 import {
+  createConstraintErrors,
   extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
   formatFullColumnNames,
   formatValues,
-  createConstraintErrors,
+  hasNullWithoutDefaultInKey,
 } from './helper';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  mergeTableAndPartials, extractInlineRefsFromTablePartials,
-} from '@/core/interpreter/utils';
-import {
-  isEmpty, flatMap,
-} from 'lodash-es';
-import {
-  InterpreterDatabase, TableRecordRow,
-} from '@/core/interpreter/types';
 
 type TableInfo = {
   rows: TableRecordRow[];

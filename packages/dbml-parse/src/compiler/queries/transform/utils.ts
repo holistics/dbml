@@ -2,15 +2,15 @@ import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  splitQualifiedIdentifier,
-} from '../utils';
-import {
-  createTableSymbolIndex, createSchemaSymbolIndex,
+  createSchemaSymbolIndex, createTableSymbolIndex,
 } from '@/core/types/symbol';
 import type SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   TableSymbol,
 } from '@/core/types/symbol/symbols';
+import {
+  splitQualifiedIdentifier,
+} from '../utils';
 
 export type TableNameInput = string | { schema?: string;
   table: string; };

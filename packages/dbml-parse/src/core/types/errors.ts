@@ -1,9 +1,9 @@
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
   SyntaxNode,
 } from '@/core/types/nodes';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   Filepath,
 } from './filepath';

@@ -2,6 +2,13 @@ import {
   last,
 } from 'lodash-es';
 import {
+  hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine,
+} from '@/core/lexer/utils';
+import {
+  ParsingContext, ParsingContextStack,
+} from '@/core/parser/contextStack';
+import NodeFactory from '@/core/parser/factory';
+import {
   convertFuncAppToElem,
   isAsKeyword,
   markInvalid,
@@ -10,20 +17,16 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  SyntaxToken, SyntaxTokenKind, isOpToken,
-} from '@/core/types/tokens';
-import Report from '@/core/types/report';
-import {
-  ParsingContext, ParsingContextStack,
-} from '@/core/parser/contextStack';
+  Filepath,
+} from '@/core/types/filepath';
 import {
   ArrayNode,
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
   CommaExpressionNode,
-  EmptyNode,
   ElementDeclarationNode,
+  EmptyNode,
   ExpressionNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
@@ -43,13 +46,10 @@ import {
   VariableNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import NodeFactory from '@/core/parser/factory';
+import Report from '@/core/types/report';
 import {
-  hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine,
-} from '@/core/lexer/utils';
-import {
-  Filepath,
-} from '@/core/types/filepath';
+  SyntaxToken, SyntaxTokenKind, isOpToken,
+} from '@/core/types/tokens';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {

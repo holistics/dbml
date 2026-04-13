@@ -1,39 +1,39 @@
 import {
-  partition, last,
+  last, partition,
 } from 'lodash-es';
 import {
-  Column, Check, Index, InlineRef,
-  Table, TablePartialInjection,
-} from '@/core/types/schemaJson';
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
 import {
-  AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
-  FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
-  SyntaxNode,
-} from '@/core/types/nodes';
+  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
+} from '@/core/analyzer/utils';
+import {
+  aggregateSettingList, isValidPartialInjection,
+} from '@/core/analyzer/validator/utils';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities,
   getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent,
   processColumnType, processDefaultValue,
 } from '@/core/interpreter/utils';
 import {
-  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
-  extractVariableFromExpression,
-} from '@/core/analyzer/utils';
-import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  aggregateSettingList, isValidPartialInjection,
-} from '@/core/analyzer/validator/utils';
+  AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
+  FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
+  SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  Check, Column, Index, InlineRef,
+  Table, TablePartialInjection,
+} from '@/core/types/schemaJson';
+import {
+  SymbolKind, destructureIndex,
+} from '@/core/types/symbol';
 import {
   ColumnSymbol,
 } from '@/core/types/symbol/symbols';
-import {
-  destructureIndex, SymbolKind,
-} from '@/core/types/symbol';
-import {
-  ElementKind, SettingName,
-} from '@/core/analyzer/types';
 import {
   convertStringToEnum,
 } from '@/core/utils/enum';

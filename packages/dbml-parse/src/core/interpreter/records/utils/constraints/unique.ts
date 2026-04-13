@@ -1,25 +1,25 @@
 import {
-  CompileError,
-} from '@/core/types/errors';
-import {
-  Table, Column,
-} from '@/core/types/schemaJson';
-import {
-  extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
-  formatFullColumnNames,
-  formatValues,
-  createConstraintErrors,
-} from './helper';
-import {
-  mergeTableAndPartials,
-} from '@/core/interpreter/utils';
-import {
-  keyBy, groupBy, compact, isEmpty, filter, flatMap,
+  compact, filter, flatMap, groupBy, isEmpty, keyBy,
 } from 'lodash-es';
 import {
   InterpreterDatabase, TableRecordRow,
 } from '@/core/interpreter/types';
+import {
+  mergeTableAndPartials,
+} from '@/core/interpreter/utils';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  Column, Table,
+} from '@/core/types/schemaJson';
+import {
+  createConstraintErrors,
+  extractKeyValueWithDefault,
+  formatFullColumnNames,
+  formatValues,
+  hasNullWithoutDefaultInKey,
+} from './helper';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';

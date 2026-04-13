@@ -1,25 +1,25 @@
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import type Compiler from '../../index';
 import {
   SyntaxNode,
 } from '@/core/types/nodes';
+import {
+  createSchemaSymbolIndex, createTableSymbolIndex,
+} from '@/core/types/symbol';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   TableSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  createSchemaSymbolIndex, createTableSymbolIndex,
-} from '@/core/types/symbol';
-import {
-  applyTextEdits, TextEdit,
-} from './applyTextEdits';
-import {
   isAlphaOrUnderscore, isDigit,
 } from '@/core/utils/chars';
+import type Compiler from '../../index';
 import {
-  normalizeTableName, lookupTableSymbol, stripQuotes, type TableNameInput,
+  TextEdit, applyTextEdits,
+} from './applyTextEdits';
+import {
+  type TableNameInput, lookupTableSymbol, normalizeTableName, stripQuotes,
 } from './utils';
 
 interface FormattedTableName {

@@ -8,21 +8,23 @@ import {
   ElementKind,
 } from '@/core/analyzer/types';
 import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import {
   isSimpleName, pickValidator,
 } from '@/core/analyzer/validator/utils';
 import {
-  isValidColor, registerSchemaStack, aggregateSettingList,
+  aggregateSettingList, isValidColor, registerSchemaStack,
 } from '@/core/analyzer/validator/utils';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
-import SymbolTable from '@/core/types/symbol/symbolTable';
+  isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
@@ -30,15 +32,13 @@ import SymbolFactory from '@/core/types/symbol/factory';
 import {
   createTableGroupFieldSymbolIndex, createTableGroupSymbolIndex,
 } from '@/core/types/symbol/symbolIndex';
-import {
-  destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   TableGroupFieldSymbol, TableGroupSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  isExpressionAVariableNode, isExpressionAQuotedString,
-} from '@/core/parser/utils';
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class TableGroupValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

@@ -2,12 +2,8 @@ import {
   last,
 } from 'lodash-es';
 import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-
-import {
-  alternateLists,
-} from '@/core/utils/array';
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -15,8 +11,8 @@ import {
   BlockExpressionNode,
   CallExpressionNode,
   CommaExpressionNode,
-  EmptyNode,
   ElementDeclarationNode,
+  EmptyNode,
   ExpressionNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
@@ -36,8 +32,11 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import {
-  destructureComplexVariable,
-} from '@/core/analyzer/utils';
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  alternateLists,
+} from '@/core/utils/array';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (

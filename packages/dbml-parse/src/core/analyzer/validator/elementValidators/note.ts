@@ -4,26 +4,6 @@ import {
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
-} from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
-import {
-  isExpressionAQuotedString,
-} from '@/core/parser/utils';
-import {
-  pickValidator,
-} from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   ElementKind,
 } from '@/core/analyzer/types';
@@ -31,11 +11,31 @@ import {
   destructureComplexVariable,
 } from '@/core/analyzer/utils';
 import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
   createStickyNoteSymbolIndex,
 } from '@/core/types/symbol/symbolIndex';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   StickyNoteSymbol,
 } from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

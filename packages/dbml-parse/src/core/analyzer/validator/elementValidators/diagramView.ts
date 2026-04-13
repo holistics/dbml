@@ -2,21 +2,23 @@ import {
   partition,
 } from 'lodash-es';
 import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
 import {
   isSimpleName,
 } from '@/core/analyzer/validator/utils';
 import {
-  registerSchemaStack, aggregateSettingList,
+  aggregateSettingList, registerSchemaStack,
 } from '@/core/analyzer/validator/utils';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
-import SymbolTable from '@/core/types/symbol/symbolTable';
+  isExpressionAVariableNode, isWildcardExpression,
+} from '@/core/parser/utils';
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
@@ -24,15 +26,13 @@ import SymbolFactory from '@/core/types/symbol/factory';
 import {
   createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex,
 } from '@/core/types/symbol/symbolIndex';
-import {
-  destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   DiagramViewFieldSymbol, DiagramViewSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  isExpressionAVariableNode, isWildcardExpression,
-} from '@/core/parser/utils';
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class DiagramViewValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

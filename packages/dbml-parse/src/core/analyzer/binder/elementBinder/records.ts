@@ -1,38 +1,38 @@
 import {
-  SyntaxToken,
-} from '../../../types/tokens';
+  getElementNameString,
+} from '@/core/parser/utils';
 import {
-  ElementBinder,
-} from '../types';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SymbolKind, createColumnSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '../../../types/nodes';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+  SyntaxToken,
+} from '../../../types/tokens';
 import {
-  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
-} from '../utils';
-import SymbolFactory from '@/core/types/symbol/factory';
+  ElementKind,
+} from '../../types';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
 } from '../../utils';
 import {
-  createColumnSymbolIndex, SymbolKind,
-} from '@/core/types/symbol/symbolIndex';
-import {
-  ElementKind,
-} from '../../types';
-import {
   isTupleOfVariables,
 } from '../../validator/utils';
 import {
-  NodeSymbol,
-} from '@/core/types/symbol/symbols';
+  ElementBinder,
+} from '../types';
 import {
-  getElementNameString,
-} from '@/core/parser/utils';
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

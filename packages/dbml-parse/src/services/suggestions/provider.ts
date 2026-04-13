@@ -1,50 +1,23 @@
+import Compiler, {
+  ScopeKind,
+} from '@/compiler';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
 } from '@/core/analyzer/utils';
 import {
+  isComment,
+} from '@/core/lexer/utils';
+import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
-import Compiler, {
-  ScopeKind,
-} from '@/compiler';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  isOffsetWithinSpan,
-} from '@/core/utils/span';
-import {
-  convertStringToEnum,
-} from '@/core/utils/enum';
-import {
-  type CompletionList,
-  type TextModel,
-  type CompletionItemProvider,
-  type Position,
-  CompletionItemKind,
-  CompletionItemInsertTextRule,
-} from '@/services/types';
-import {
-  TableSymbol, type NodeSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  SymbolKind, destructureIndex,
-} from '@/core/types/symbol';
-import {
-  pickCompletionItemKind,
-  shouldPrependSpace,
-  addQuoteToSuggestionIfNeeded,
-  noSuggestions,
-  prependSpace,
-  isOffsetWithinElementHeader,
-  addSuggestAllSuggestion,
-  isTupleEmpty,
-} from '@/services/suggestions/utils';
-import {
-  suggestRecordRowSnippet,
-} from '@/services/suggestions/recordRowSnippet';
 import {
   AttributeNode,
   CallExpressionNode,
@@ -60,17 +33,44 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
+  SymbolKind, destructureIndex,
+} from '@/core/types/symbol';
+import {
+  type NodeSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import {
+  suggestRecordRowSnippet,
+} from '@/services/suggestions/recordRowSnippet';
+import {
+  addQuoteToSuggestionIfNeeded,
+  addSuggestAllSuggestion,
+  isOffsetWithinElementHeader,
+  isTupleEmpty,
+  noSuggestions,
+  pickCompletionItemKind,
+  prependSpace,
+  shouldPrependSpace,
+} from '@/services/suggestions/utils';
+import {
+  CompletionItemInsertTextRule,
+  CompletionItemKind,
+  type CompletionItemProvider,
+  type CompletionList,
+  type Position,
+  type TextModel,
+} from '@/services/types';
+import {
   getOffsetFromMonacoPosition,
 } from '@/services/utils';
-import {
-  isComment,
-} from '@/core/lexer/utils';
-import {
-  ElementKind, SettingName,
-} from '@/core/analyzer/types';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;

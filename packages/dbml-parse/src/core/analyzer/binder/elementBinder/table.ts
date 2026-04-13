@@ -2,39 +2,39 @@ import {
   last, partition,
 } from 'lodash-es';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
-} from '../../../types/nodes';
-import {
-  ElementBinder,
-} from '../types';
-import {
-  SyntaxToken,
-} from '../../../types/tokens';
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
 import {
   CompileError,
 } from '@/core/types/errors';
-import {
-  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
-} from '../utils';
-import {
-  aggregateSettingList, isValidPartialInjection,
-} from '../../validator/utils';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
   SymbolKind, createColumnSymbolIndex,
 } from '@/core/types/symbol/symbolIndex';
 import {
-  destructureComplexVariableTuple, extractVariableFromExpression,
-} from '../../utils';
-import {
   TablePartialInjectedColumnSymbol, TablePartialSymbol,
 } from '@/core/types/symbol/symbols';
-import SymbolFactory from '@/core/types/symbol/factory';
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '../../../parser/utils';
 import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
+} from '../../../types/nodes';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  destructureComplexVariableTuple, extractVariableFromExpression,
+} from '../../utils';
+import {
+  aggregateSettingList, isValidPartialInjection,
+} from '../../validator/utils';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class TableBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

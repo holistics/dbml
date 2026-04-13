@@ -1,4 +1,13 @@
 import {
+  last,
+} from 'lodash-es';
+import {
+  destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression,
+} from '@/core/analyzer/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
   BlockExpressionNode,
   CommaExpressionNode,
   ElementDeclarationNode,
@@ -7,46 +16,37 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
 import Report from '@/core/types/report';
 import {
+  Column,
   RecordValue,
   Table,
-  Column,
 } from '@/core/types/schemaJson';
 import {
-  isNullish,
-  isEmptyStringLiteral,
-  tryExtractNumeric,
-  tryExtractBoolean,
-  tryExtractString,
-  tryExtractDateTime,
-  isNumericType,
-  isIntegerType,
-  isFloatType,
-  isBooleanType,
-  isStringType,
-  isDateTimeType,
-  getRecordValueType,
-  validatePrimaryKey,
-  validateUnique,
-  validateForeignKeys,
-  isSerialType,
-} from './utils';
-import {
-  destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression,
-} from '@/core/analyzer/utils';
-import {
-  last,
-} from 'lodash-es';
+  InterpreterDatabase,
+} from '../types';
 import {
   mergeTableAndPartials,
 } from '../utils';
 import {
-  InterpreterDatabase,
-} from '../types';
+  getRecordValueType,
+  isBooleanType,
+  isDateTimeType,
+  isEmptyStringLiteral,
+  isFloatType,
+  isIntegerType,
+  isNullish,
+  isNumericType,
+  isSerialType,
+  isStringType,
+  tryExtractBoolean,
+  tryExtractDateTime,
+  tryExtractNumeric,
+  tryExtractString,
+  validateForeignKeys,
+  validatePrimaryKey,
+  validateUnique,
+} from './utils';
 
 export class RecordsInterpreter {
   private env: InterpreterDatabase;

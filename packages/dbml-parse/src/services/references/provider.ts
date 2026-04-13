@@ -1,13 +1,13 @@
-import {
-  getOffsetFromMonacoPosition,
-} from '@/services/utils';
 import Compiler from '@/compiler';
 import {
   SyntaxNodeKind,
 } from '@/core/types/nodes';
 import {
-  Location, ReferenceProvider, TextModel, Position,
+  Location, Position, ReferenceProvider, TextModel,
 } from '@/services/types';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;

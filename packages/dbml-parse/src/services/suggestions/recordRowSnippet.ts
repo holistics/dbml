@@ -1,3 +1,7 @@
+import Compiler from '@/compiler';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 import {
   extractReferee,
   extractVariableFromExpression,
@@ -10,27 +14,23 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  type CompletionList,
-  type TextModel,
-  type Position,
-  CompletionItemKind,
-  CompletionItemInsertTextRule,
-} from '@/services/types';
-import {
   ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  ElementKind,
-} from '@/core/analyzer/types';
-import Compiler from '@/compiler';
-import {
-  noSuggestions,
-  getColumnsFromTableSymbol,
-  extractNameAndTypeOfColumnSymbol,
-} from '@/services/suggestions/utils';
-import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
+import {
+  extractNameAndTypeOfColumnSymbol,
+  getColumnsFromTableSymbol,
+  noSuggestions,
+} from '@/services/suggestions/utils';
+import {
+  CompletionItemInsertTextRule,
+  CompletionItemKind,
+  type CompletionList,
+  type Position,
+  type TextModel,
+} from '@/services/types';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

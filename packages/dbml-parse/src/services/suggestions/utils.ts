@@ -1,28 +1,28 @@
-import {
-  SymbolKind, destructureIndex, createColumnSymbolIndex,
-} from '@/core/types/symbol';
-import {
-  CompletionItemKind, CompletionItemInsertTextRule, type CompletionList,
-} from '@/services/types';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  hasTrailingSpaces,
-} from '@/core/lexer/utils';
-import {
-  SyntaxNode, TupleExpressionNode, FunctionApplicationNode,
-} from '@/core/types/nodes';
 import Compiler from '@/compiler';
 import {
-  ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol,
-} from '@/core/types/symbol/symbols';
+  addDoubleQuoteIfNeeded,
+} from '@/compiler/queries/utils';
 import {
   extractVariableFromExpression,
 } from '@/core/analyzer/utils';
 import {
-  addDoubleQuoteIfNeeded,
-} from '@/compiler/queries/utils';
+  hasTrailingSpaces,
+} from '@/core/lexer/utils';
+import {
+  FunctionApplicationNode, SyntaxNode, TupleExpressionNode,
+} from '@/core/types/nodes';
+import {
+  SymbolKind, createColumnSymbolIndex, destructureIndex,
+} from '@/core/types/symbol';
+import {
+  ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  CompletionItemInsertTextRule, CompletionItemKind, type CompletionList,
+} from '@/services/types';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {

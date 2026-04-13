@@ -2,6 +2,9 @@ import {
   extractQuotedStringToken,
 } from '@/core/analyzer/utils';
 import {
+  extractElementName, getTokenPosition, normalizeNoteContent,
+} from '@/core/interpreter/utils';
+import {
   CompileError,
 } from '@/core/types/errors';
 import {
@@ -11,8 +14,8 @@ import {
   Project,
 } from '@/core/types/schemaJson';
 import {
-  extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/interpreter/utils';
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 import {
   EnumInterpreter,
 } from './enum';
@@ -28,9 +31,6 @@ import {
 import {
   TablePartialInterpreter,
 } from './tablePartial';
-import {
-  ElementInterpreter, InterpreterDatabase,
-} from '../types';
 
 export class ProjectInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

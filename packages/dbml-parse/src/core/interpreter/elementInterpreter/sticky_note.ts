@@ -1,12 +1,9 @@
 import {
-  partition, get,
+  get, partition,
 } from 'lodash-es';
 import {
-  Note,
-} from '@/core/types/schemaJson';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/types/nodes';
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
 } from '@/core/interpreter/utils';
@@ -14,8 +11,11 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  Note,
+} from '@/core/types/schemaJson';
 import {
   ElementInterpreter, InterpreterDatabase,
 } from '../types';

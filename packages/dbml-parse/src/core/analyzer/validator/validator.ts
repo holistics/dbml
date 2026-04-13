@@ -1,27 +1,27 @@
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import Report from '@/core/types/report';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  pickValidator,
+} from '@/core/analyzer/validator/utils';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   SchemaSymbol,
 } from '@/core/types/symbol/symbols';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  pickValidator,
-} from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
-import {
-  ElementKind,
-} from '@/core/analyzer/types';
 
 export default class Validator {
   private ast: ProgramNode;

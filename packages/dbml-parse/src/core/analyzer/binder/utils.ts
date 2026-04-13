@@ -1,12 +1,27 @@
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariableTuple, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  getElementNameString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   ElementDeclarationNode, InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, TupleExpressionNode, VariableNode,
 } from '@/core/types/nodes';
 import {
-  ElementKind,
-} from '@/core/analyzer/types';
+  SymbolKind, createNodeSymbolIndex,
+} from '@/core/types/symbol';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   convertStringToEnum,
 } from '@/core/utils/enum';
@@ -17,26 +32,11 @@ import EnumBinder from './elementBinder/enum';
 import IndexesBinder from './elementBinder/indexes';
 import NoteBinder from './elementBinder/note';
 import ProjectBinder from './elementBinder/project';
+import RecordsBinder from './elementBinder/records';
 import RefBinder from './elementBinder/ref';
 import TableBinder from './elementBinder/table';
 import TableGroupBinder from './elementBinder/tableGroup';
 import TablePartialBinder from './elementBinder/tablePartial';
-import {
-  destructureComplexVariableTuple, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
-import {
-  SymbolKind, createNodeSymbolIndex,
-} from '@/core/types/symbol';
-import {
-  getElementNameString, isExpressionAVariableNode,
-} from '@/core/parser/utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import RecordsBinder from './elementBinder/records';
 
 export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (convertStringToEnum(ElementKind, element.type.value)) {

@@ -1,29 +1,29 @@
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  Table, Column,
-} from '@/core/types/schemaJson';
-import {
-  extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
-  isAutoIncrementColumn,
-  formatFullColumnNames,
-  formatValues,
-  createConstraintErrors,
-} from './helper';
-import {
-  mergeTableAndPartials,
-} from '@/core/interpreter/utils';
-import {
-  isSerialType,
-} from '../data';
-import {
-  keyBy, groupBy, partition, compact, isEmpty, difference, filter, flatMap,
+  compact, difference, filter, flatMap, groupBy, isEmpty, keyBy, partition,
 } from 'lodash-es';
 import {
   InterpreterDatabase, TableRecordRow,
 } from '@/core/interpreter/types';
+import {
+  mergeTableAndPartials,
+} from '@/core/interpreter/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  Column, Table,
+} from '@/core/types/schemaJson';
+import {
+  isSerialType,
+} from '../data';
+import {
+  createConstraintErrors,
+  extractKeyValueWithDefault,
+  formatFullColumnNames,
+  formatValues,
+  hasNullWithoutDefaultInKey,
+  isAutoIncrementColumn,
+} from './helper';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';

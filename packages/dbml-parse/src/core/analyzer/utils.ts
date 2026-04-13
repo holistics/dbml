@@ -1,8 +1,16 @@
 import {
   last,
 } from 'lodash-es';
-
 import {
+  isRelationshipOp, isTupleOfVariables,
+} from '@/core/analyzer/validator/utils';
+import {
+  isAccessExpression,
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
+} from '@/core/parser/utils';
+import {
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   InfixExpressionNode,
@@ -12,14 +20,7 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-  CallExpressionNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  isRelationshipOp, isTupleOfVariables,
-} from '@/core/analyzer/validator/utils';
 import {
   NodeSymbolIndex, isPublicSchemaIndex,
 } from '@/core/types/symbol';
@@ -27,10 +28,8 @@ import {
   NodeSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  isAccessExpression,
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-} from '@/core/parser/utils';
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 export function destructureMemberAccessExpression (node?: SyntaxNode): SyntaxNode[] | undefined {
   if (!node) return undefined;

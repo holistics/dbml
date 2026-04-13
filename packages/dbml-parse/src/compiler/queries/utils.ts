@@ -1,11 +1,11 @@
 import {
   isBooleanType,
-  isNumericType,
   isDateTimeType,
+  isNumericType,
   tryExtractBoolean,
+  tryExtractDateTime,
   tryExtractNumeric,
   tryExtractString,
-  tryExtractDateTime,
 } from '@/core/interpreter/records/utils';
 import {
   isAlphaOrUnderscore, isDigit,

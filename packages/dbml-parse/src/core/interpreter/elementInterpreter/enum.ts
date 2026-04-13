@@ -5,6 +5,9 @@ import {
   aggregateSettingList,
 } from '@/core/analyzer/validator/utils';
 import {
+  extractElementName, getTokenPosition, normalizeNoteContent,
+} from '@/core/interpreter/utils';
+import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
@@ -13,9 +16,6 @@ import {
 import {
   Enum, EnumField,
 } from '@/core/types/schemaJson';
-import {
-  extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/interpreter/utils';
 import {
   ElementInterpreter, InterpreterDatabase,
 } from '../types';

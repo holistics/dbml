@@ -1,20 +1,20 @@
 import {
+  pickBinder,
+} from '@/core/analyzer/binder/utils';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
   CompileError,
 } from '@/core/types/errors';
 import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';
-import {
-  pickBinder,
-} from '@/core/analyzer/binder/utils';
 import Report from '@/core/types/report';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  ElementKind,
-} from '@/core/analyzer/types';
 import TableBinder from './elementBinder/table';
 
 export default class Binder {

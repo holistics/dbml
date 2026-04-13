@@ -1,22 +1,12 @@
 import {
+  last, partition,
+} from 'lodash-es';
+import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  last, partition,
-} from 'lodash-es';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
-} from '@/core/types/nodes';
-import {
-  isExpressionAQuotedString, isExpressionAVariableNode,
-} from '@/core/parser/utils';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
 import {
   ElementValidator,
 } from '@/core/analyzer/validator/types';
@@ -30,15 +20,25 @@ import {
   registerSchemaStack,
 } from '@/core/analyzer/validator/utils';
 import {
+  isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
   createEnumFieldSymbolIndex, createEnumSymbolIndex,
 } from '@/core/types/symbol/symbolIndex';
-import {
-  destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   EnumFieldSymbol, EnumSymbol,
 } from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class EnumValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

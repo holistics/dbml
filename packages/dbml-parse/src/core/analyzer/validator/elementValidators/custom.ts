@@ -1,23 +1,23 @@
 import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
-} from '@/core/types/nodes';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+  ElementKind,
+} from '@/core/analyzer/types';
 import {
   ElementValidator,
 } from '@/core/analyzer/validator/types';
 import {
   isExpressionAQuotedString,
 } from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
 import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
-  ElementKind,
-} from '@/core/analyzer/types';
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class CustomValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

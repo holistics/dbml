@@ -1,21 +1,9 @@
 import {
-  ProgramNode,
-} from '@/core/types/nodes';
+  ElementKind,
+} from '@/core/analyzer/types';
 import {
-  Database, Table, TablePartial, TableRecord,
-} from '@/core/types/schemaJson';
-import {
-  TableInterpreter,
-} from '@/core/interpreter/elementInterpreter/table';
-import {
-  StickyNoteInterpreter,
-} from '@/core/interpreter/elementInterpreter/sticky_note';
-import {
-  RefInterpreter,
-} from '@/core/interpreter/elementInterpreter/ref';
-import {
-  TableGroupInterpreter,
-} from '@/core/interpreter/elementInterpreter/tableGroup';
+  DiagramViewInterpreter,
+} from '@/core/interpreter/elementInterpreter/diagramView';
 import {
   EnumInterpreter,
 } from '@/core/interpreter/elementInterpreter/enum';
@@ -23,30 +11,42 @@ import {
   ProjectInterpreter,
 } from '@/core/interpreter/elementInterpreter/project';
 import {
+  RefInterpreter,
+} from '@/core/interpreter/elementInterpreter/ref';
+import {
+  StickyNoteInterpreter,
+} from '@/core/interpreter/elementInterpreter/sticky_note';
+import {
+  TableInterpreter,
+} from '@/core/interpreter/elementInterpreter/table';
+import {
+  TableGroupInterpreter,
+} from '@/core/interpreter/elementInterpreter/tableGroup';
+import {
   TablePartialInterpreter,
 } from '@/core/interpreter/elementInterpreter/tablePartial';
 import {
-  DiagramViewInterpreter,
-} from '@/core/interpreter/elementInterpreter/diagramView';
-import {
   RecordsInterpreter,
 } from '@/core/interpreter/records';
-import Report from '@/core/types/report';
-import {
-  ElementKind,
-} from '@/core/analyzer/types';
-import {
-  convertStringToEnum,
-} from '@/core/utils/enum';
 import {
   CompileWarning,
 } from '@/core/types/errors';
 import {
-  getTokenPosition,
-} from './utils';
+  ProgramNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  Database, Table, TablePartial, TableRecord,
+} from '@/core/types/schemaJson';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
 import {
   InterpreterDatabase,
 } from './types';
+import {
+  getTokenPosition,
+} from './utils';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {

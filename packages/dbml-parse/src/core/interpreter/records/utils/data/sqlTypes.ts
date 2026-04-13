@@ -1,10 +1,10 @@
 import {
+  extractNumericLiteral,
+} from '@/core/analyzer/utils';
+import {
   CallExpressionNode,
   FunctionApplicationNode,
 } from '@/core/types/nodes';
-import {
-  extractNumericLiteral,
-} from '@/core/analyzer/utils';
 import {
   ColumnSymbol,
 } from '@/core/types/symbol/symbols';

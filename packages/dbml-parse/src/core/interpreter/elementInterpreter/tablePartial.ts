@@ -1,35 +1,35 @@
 import {
-  last, head, partition,
+  head, last, partition,
 } from 'lodash-es';
 import {
-  Column, Check, Index, InlineRef,
-  TablePartial,
-} from '@/core/types/schemaJson';
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
+} from '@/core/analyzer/utils';
+import {
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
+import {
+  extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
+  isSameEndpoint, normalizeNoteContent, processColumnType, processDefaultValue,
+} from '@/core/interpreter/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
   FunctionExpressionNode,
   ListExpressionNode, PrefixExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import {
-  extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
-  isSameEndpoint, normalizeNoteContent, processColumnType, processDefaultValue,
-} from '@/core/interpreter/utils';
-import {
-  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
-  extractVariableFromExpression,
-} from '@/core/analyzer/utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
+  Check, Column, Index, InlineRef,
+  TablePartial,
+} from '@/core/types/schemaJson';
 import {
   ColumnSymbol,
 } from '@/core/types/symbol/symbols';
-import {
-  ElementKind, SettingName,
-} from '@/core/analyzer/types';
 import {
   convertStringToEnum,
 } from '@/core/utils/enum';

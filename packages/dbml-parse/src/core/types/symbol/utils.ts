@@ -1,11 +1,27 @@
 import {
+  ColumnSymbol,
+  DiagramViewFieldSymbol,
+  DiagramViewSymbol,
+  EnumFieldSymbol,
+  EnumSymbol,
+  NodeSymbol,
+  PartialInjectionSymbol,
+  SchemaSymbol,
+  StickyNoteSymbol,
+  TableGroupFieldSymbol,
+  TableGroupSymbol,
+  TablePartialInjectedColumnSymbol,
+  TablePartialSymbol,
+  TableSymbol,
+} from '@/core/types/symbol';
+import {
   NodeSymbolIndex,
   SymbolKind,
   createColumnSymbolIndex,
-  createEnumFieldSymbolIndex,
-  createEnumSymbolIndex,
   createDiagramViewFieldSymbolIndex,
   createDiagramViewSymbolIndex,
+  createEnumFieldSymbolIndex,
+  createEnumSymbolIndex,
   createPartialInjectionSymbolIndex,
   createSchemaSymbolIndex,
   createTableGroupFieldSymbolIndex,
@@ -13,22 +29,6 @@ import {
   createTablePartialSymbolIndex,
   createTableSymbolIndex,
 } from '@/core/types/symbol/symbolIndex';
-import {
-  ColumnSymbol,
-  NodeSymbol,
-  TablePartialInjectedColumnSymbol,
-  SchemaSymbol,
-  TableGroupFieldSymbol,
-  TableGroupSymbol,
-  TableSymbol,
-  EnumSymbol,
-  EnumFieldSymbol,
-  TablePartialSymbol,
-  PartialInjectionSymbol,
-  DiagramViewSymbol,
-  StickyNoteSymbol,
-  DiagramViewFieldSymbol,
-} from '@/core/types/symbol';
 
 // Given `name`, generate indexes with `name` and all possible kind
 // e.g `Schema:name`, `Table:name`, etc.

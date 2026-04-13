@@ -1,16 +1,16 @@
-import SymbolTable from './symbolTable';
-import {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  Filepath,
-} from '@/core/types/filepath';
 import {
   DEFAULT_ENTRY,
 } from '@/constants';
 import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import {
   SymbolKind,
 } from './symbolIndex';
+import SymbolTable from './symbolTable';
 
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {

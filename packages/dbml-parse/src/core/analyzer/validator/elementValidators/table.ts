@@ -1,10 +1,36 @@
 import {
+  forIn, last, partition,
+} from 'lodash-es';
+import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  last, forIn, partition,
-} from 'lodash-es';
-import SymbolFactory from '@/core/types/symbol/factory';
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable, extractVariableFromExpression,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList,
+  isSimpleName,
+  isUnaryRelationship,
+  isValidAlias,
+  isValidColor,
+  isValidColumnType,
+  isValidDefaultValue,
+  isValidName,
+  isValidPartialInjection,
+  pickValidator,
+  registerSchemaStack,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
+  isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
@@ -22,43 +48,17 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
-  destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
-import {
-  aggregateSettingList,
-  isSimpleName,
-  isUnaryRelationship,
-  isValidAlias,
-  isValidColor,
-  isValidColumnType,
-  isValidDefaultValue,
-  isValidName,
-  isValidPartialInjection,
-  pickValidator,
-  registerSchemaStack,
-} from '@/core/analyzer/validator/utils';
-import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   ColumnSymbol, PartialInjectionSymbol, TableSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex,
-} from '@/core/types/symbol/symbolIndex';
-import {
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-  isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
-import {
   SyntaxToken,
 } from '@/core/types/tokens';
-import SymbolTable from '@/core/types/symbol/symbolTable';
-import {
-  ElementKind, SettingName,
-} from '@/core/analyzer/types';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

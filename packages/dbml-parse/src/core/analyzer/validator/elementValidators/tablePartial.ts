@@ -1,10 +1,33 @@
 import {
-  partition, forIn, last,
+  forIn, last, partition,
 } from 'lodash-es';
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList,
+  isSimpleName,
+  isUnaryRelationship,
+  isValidColor,
+  isValidColumnType,
+  isValidDefaultValue,
+  pickValidator,
+  registerSchemaStack,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
+  isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
@@ -20,40 +43,17 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
-  destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
-import {
-  aggregateSettingList,
-  isSimpleName,
-  isUnaryRelationship,
-  isValidColor,
-  isValidColumnType,
-  isValidDefaultValue,
-  registerSchemaStack,
-  pickValidator,
-} from '@/core/analyzer/validator/utils';
-import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  createColumnSymbolIndex, createTablePartialSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   ColumnSymbol, TablePartialSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  createColumnSymbolIndex, createTablePartialSymbolIndex,
-} from '@/core/types/symbol/symbolIndex';
-import {
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-  isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
-import {
   SyntaxToken,
 } from '@/core/types/tokens';
-import SymbolTable from '@/core/types/symbol/symbolTable';
-import {
-  ElementKind, SettingName,
-} from '@/core/analyzer/types';
 
 export default class TablePartialValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

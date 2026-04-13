@@ -1,12 +1,20 @@
 import {
-  SyntaxNodeIdGenerator, ProgramNode,
-} from '@/core/types/nodes';
+  DEFAULT_ENTRY,
+} from '@/constants';
+import Analyzer from '@/core/analyzer/analyzer';
+import Interpreter from '@/core/interpreter/interpreter';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
 import {
   Filepath,
 } from '@/core/types/filepath';
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
+  ProgramNode, SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  Database,
+} from '@/core/types/schemaJson';
 import {
   NodeSymbolIdGenerator,
 } from '@/core/types/symbol/symbols';
@@ -14,40 +22,32 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  Database,
-} from '@/core/types/schemaJson';
-import Report from '@/core/types/report';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
-import {
-  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider,
+  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
 } from '@/services/index';
 import {
-  ast, errors, warnings, tokens, rawDb, publicSymbolTable,
-} from './queries/parse';
-import {
-  invalidStream, flatStream,
-} from './queries/token';
-import {
-  symbolOfName, symbolOfNameToKey, symbolMembers,
-} from './queries/symbol';
-import {
-  containerStack, containerToken, containerElement, containerScope, containerScopeKind,
+  containerElement, containerScope, containerScopeKind, containerStack, containerToken,
 } from './queries/container';
 import {
-  renameTable,
-  applyTextEdits,
-  syncDiagramView,
-  findDiagramViewBlocks,
-  type TextEdit,
-  type TableNameInput,
-  type DiagramViewSyncOperation,
+  ast, errors, publicSymbolTable, rawDb, tokens, warnings,
+} from './queries/parse';
+import {
+  symbolMembers, symbolOfName, symbolOfNameToKey,
+} from './queries/symbol';
+import {
+  flatStream, invalidStream,
+} from './queries/token';
+import {
   type DiagramViewBlock,
+  type DiagramViewSyncOperation,
+  type TableNameInput,
+  type TextEdit,
+  applyTextEdits,
+  findDiagramViewBlocks,
+  renameTable,
+  syncDiagramView,
 } from './queries/transform';
 import {
-  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
 } from './queries/utils';
 
 // Re-export types

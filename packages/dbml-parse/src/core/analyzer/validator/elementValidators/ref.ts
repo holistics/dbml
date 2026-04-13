@@ -1,30 +1,30 @@
 import {
-  partition, last,
+  last, partition,
 } from 'lodash-es';
 import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import SymbolFactory from '@/core/types/symbol/factory';
+  destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList, isSimpleName, isValidColor, pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  extractStringFromIdentifierStream,
+  isExpressionAVariableNode,
+} from '@/core/parser/utils';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import {
-  extractStringFromIdentifierStream,
-  isExpressionAVariableNode,
-} from '@/core/parser/utils';
-import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
-import {
-  isSimpleName, isValidColor, pickValidator, aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
-import {
-  destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands,
-} from '@/core/analyzer/utils';
+import SymbolFactory from '@/core/types/symbol/factory';
 import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

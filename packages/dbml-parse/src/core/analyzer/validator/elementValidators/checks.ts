@@ -1,7 +1,18 @@
 import {
   last, partition,
 } from 'lodash-es';
-import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList, pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString,
+} from '@/core/parser/utils';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
@@ -15,22 +26,11 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import {
-  isExpressionAQuotedString,
-} from '@/core/parser/utils';
-import {
-  aggregateSettingList, pickValidator,
-} from '@/core/analyzer/validator/utils';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
-import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
-import SymbolTable from '@/core/types/symbol/symbolTable';
-import {
-  ElementKind,
-} from '@/core/analyzer/types';
 
 export default class ChecksValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };

@@ -2,17 +2,14 @@ import {
   flatten, zip,
 } from 'lodash-es';
 import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  NodeSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  Position,
-} from '@/core/types';
+  ElementKind,
+} from '@/core/analyzer/types';
 import {
   getTokenFullEnd, getTokenFullStart,
 } from '@/core/lexer/utils';
+import {
+  Position,
+} from '@/core/types';
 import {
   Filepath,
 } from '@/core/types/filepath';
@@ -20,8 +17,11 @@ import {
   type Internable,
 } from '@/core/types/internable';
 import {
-  ElementKind,
-} from '@/core/analyzer/types';
+  NodeSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;

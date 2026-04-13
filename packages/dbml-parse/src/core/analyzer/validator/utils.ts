@@ -2,11 +2,25 @@ import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+  NUMERIC_LITERAL_PREFIX,
+} from '@/constants';
 import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable, destructureMemberAccessExpression,
+} from '@/core/analyzer/utils';
+import {
+  extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   ListExpressionNode,
@@ -16,51 +30,37 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-  CallExpressionNode,
-  ArrayNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  createSchemaSymbolIndex,
+} from '@/core/types/symbol';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SchemaSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 import {
   isHexChar,
 } from '@/core/utils/chars';
 import {
-  destructureComplexVariable, destructureMemberAccessExpression,
-} from '@/core/analyzer/utils';
+  convertStringToEnum,
+} from '@/core/utils/enum';
+import ChecksValidator from './elementValidators/checks';
 import CustomValidator from './elementValidators/custom';
+import DiagramViewValidator from './elementValidators/diagramView';
 import EnumValidator from './elementValidators/enum';
 import IndexesValidator from './elementValidators/indexes';
 import NoteValidator from './elementValidators/note';
 import ProjectValidator from './elementValidators/project';
+import RecordsValidator from './elementValidators/records';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
-import {
-  createSchemaSymbolIndex,
-} from '@/core/types/symbol';
-import {
-  SchemaSymbol,
-} from '@/core/types/symbol/symbols';
-import SymbolTable from '@/core/types/symbol/symbolTable';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
-import {
-  NUMERIC_LITERAL_PREFIX,
-} from '@/constants';
-import Report from '@/core/types/report';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/analyzer/types';
-import {
-  convertStringToEnum,
-} from '@/core/utils/enum';
 import TablePartialValidator from './elementValidators/tablePartial';
-import ChecksValidator from './elementValidators/checks';
-import RecordsValidator from './elementValidators/records';
-import DiagramViewValidator from './elementValidators/diagramView';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (convertStringToEnum(ElementKind, element.type.value)) {

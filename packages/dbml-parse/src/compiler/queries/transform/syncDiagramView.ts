@@ -1,23 +1,23 @@
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
+import {
+  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
   ElementKind,
 } from '@/core/analyzer/types';
 import {
-  DEFAULT_SCHEMA_NAME, DEFAULT_ENTRY,
-} from '@/constants';
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
 import {
   SyntaxNodeIdGenerator,
 } from '@/core/types/nodes';
 import {
-  destructureComplexVariable,
-} from '@/core/analyzer/utils';
-import {
-  applyTextEdits, TextEdit,
-} from './applyTextEdits';
-import {
   addDoubleQuoteIfNeeded,
 } from '../utils';
+import {
+  TextEdit, applyTextEdits,
+} from './applyTextEdits';
 
 export interface DiagramViewSyncOperation {
   operation: 'create' | 'update' | 'delete';

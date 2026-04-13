@@ -2,26 +2,26 @@ import {
   partition,
 } from 'lodash-es';
 import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
   destructureComplexVariable, extractReferee,
 } from '@/core/analyzer/utils';
+import {
+  DiagramView, ElementInterpreter, InterpreterDatabase,
+} from '@/core/interpreter/types';
+import {
+  getTokenPosition,
+} from '@/core/interpreter/utils';
+import {
+  isWildcardExpression,
+} from '@/core/parser/utils';
 import {
   CompileError,
 } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  isWildcardExpression,
-} from '@/core/parser/utils';
-import {
-  ElementInterpreter, InterpreterDatabase, DiagramView,
-} from '@/core/interpreter/types';
-import {
-  getTokenPosition,
-} from '@/core/interpreter/utils';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
 
 export class DiagramViewInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;

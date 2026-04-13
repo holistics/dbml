@@ -1,17 +1,17 @@
-import type Compiler from '../index';
-import type {
-  ProgramNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
 import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
 import type {
+  ProgramNode,
+} from '@/core/types/nodes';
+import type {
   Database,
 } from '@/core/types/schemaJson';
 import type SymbolTable from '@/core/types/symbol/symbolTable';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import type Compiler from '../index';
 
 export function ast (this: Compiler): Readonly<ProgramNode> {
   return this.parse._().getValue().ast;

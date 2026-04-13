@@ -2,30 +2,30 @@ import {
   last, partition,
 } from 'lodash-es';
 import {
+  CompileError,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
+import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '../../../types/nodes';
 import {
   SyntaxToken,
 } from '../../../types/tokens';
 import {
-  ElementBinder,
-} from '../types';
-import {
-  CompileError,
-} from '@/core/types/errors';
+  destructureComplexVariableTuple,
+} from '../../utils';
 import {
   aggregateSettingList,
 } from '../../validator/utils';
 import {
-  destructureComplexVariableTuple,
-} from '../../utils';
+  ElementBinder,
+} from '../types';
 import {
   lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
 } from '../utils';
-import {
-  SymbolKind,
-} from '@/core/types/symbol/symbolIndex';
-import SymbolFactory from '@/core/types/symbol/factory';
 
 export default class TablePartialBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;

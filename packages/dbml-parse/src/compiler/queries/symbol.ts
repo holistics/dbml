@@ -1,17 +1,17 @@
-import type Compiler from '../index';
 import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';
 import {
+  SymbolKind, destructureIndex,
+} from '@/core/types/symbol';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
   NodeSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  SymbolKind, destructureIndex,
-} from '@/core/types/symbol';
-import {
   generatePossibleIndexes,
 } from '@/core/types/symbol/utils';
-import SymbolTable from '@/core/types/symbol/symbolTable';
+import type Compiler from '../index';
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
   if (!ownerSymbol.symbolTable) {
