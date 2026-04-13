@@ -1,2 +1,2 @@
-export * from './symbolFactory';
+export * from './factory';
 export * from './symbols';

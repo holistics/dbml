@@ -289,7 +289,7 @@ use { tablegroup content } from './base.dbml'
   test('tablegroup members list both tables', () => {
     const db = exportDb(compiler, fps['/main.dbml']);
     const tg = db.tableGroups.find((g) => g.name === 'content')!;
-    const memberNames = tg.tables.map((t) => t.tableName ?? t.name);
+    const memberNames = tg.tables.map((t) => t.name);
     // expect: users and posts are the declared members
     expect(memberNames).toContain('users');
     expect(memberNames).toContain('posts');

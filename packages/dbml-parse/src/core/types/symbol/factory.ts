@@ -5,7 +5,7 @@ import {
   NodeSymbol, NodeSymbolId, NodeSymbolIdGenerator,
 } from './symbols';
 
-export default class SymbolFactory {
+export class SymbolFactory {
   private generator: NodeSymbolIdGenerator;
 
   constructor (generator: NodeSymbolIdGenerator) {
