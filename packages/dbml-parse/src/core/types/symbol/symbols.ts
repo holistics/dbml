@@ -27,9 +27,6 @@ export enum SymbolKind {
   IndexesField = 'Indexes field',
 
   DiagramView = 'DiagramView',
-  DiagramViewField = 'DiagramView field',
-
-  StickyNote = 'StickyNote',
 
   Program = 'Program',
 }
