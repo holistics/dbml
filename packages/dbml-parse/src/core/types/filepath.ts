@@ -1,12 +1,15 @@
 import {
-  basename, dirname, extname, join, normalize, relative, resolve,
+  basename, dirname, extname, isAbsolute, join, normalize, relative, resolve,
 } from 'pathe';
 import type {
   Internable,
 } from './internable';
-import { DBML_EXT } from '@/constants';
+import {
+  DBML_EXT,
+} from '@/constants';
 
-// Matches a Windows drive-letter prefix after normalization (e.g. "C:/")
+// Matches a Windows drive-letter prefix after normalization (e.g. "C:/").
+// Used only in fromUri/toUri where URL parsing adds/needs an extra leading slash.
 const WIN_DRIVE_RE = /^[a-zA-Z]:\//;
 
 declare const __filepathIdBrand: unique symbol;
@@ -17,7 +20,7 @@ export class Filepath implements Internable<FilepathId> {
 
   constructor (absolutePath: string) {
     const normalized = normalize(absolutePath);
-    if (!normalized.startsWith('/') && !WIN_DRIVE_RE.test(normalized)) {
+    if (!isAbsolute(normalized)) {
       throw new Error(`FilePath requires an absolute path, got: "${absolutePath}"`);
     }
     this.path = normalized;
@@ -38,7 +41,7 @@ export class Filepath implements Internable<FilepathId> {
   static fromUri (uri: string): Filepath {
     if (uri.startsWith('file://')) {
       let p = decodeURIComponent(new URL(uri).pathname);
-      // Windows: URL gives /C:/path — strip the leading slash
+      // Windows: URL gives /C:/path - strip the leading slash
       if (/^\/[a-zA-Z]:[\\/]/.test(p)) p = p.slice(1);
       return new Filepath(normalize(p));
     }
@@ -90,14 +93,13 @@ export class Filepath implements Internable<FilepathId> {
 
   toUri (): string {
     // Use URL to handle percent-encoding of spaces and non-ASCII characters.
-    // Windows: C:/path needs an extra leading slash → file:///C:/path
+    // Windows: C:/path needs an extra leading slash -> file:///C:/path
     const prefix = WIN_DRIVE_RE.test(this.path) ? 'file:///' : 'file://';
     return new URL(prefix + this.path).href;
   }
 
   static isRelative (p: string): boolean {
-    const normalized = normalize(p);
-    return !normalized.startsWith('/') && !WIN_DRIVE_RE.test(normalized);
+    return !isAbsolute(normalize(p));
   }
 }
 
