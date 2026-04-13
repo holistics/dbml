@@ -144,11 +144,13 @@ export default class DiagramViewValidator {
         }
         return [];
       }
-      return [new CompileError(
-        CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
-        'Fields are not allowed at DiagramView level. Use Tables, Notes, TableGroups, or Schemas blocks instead.',
-        field,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
+          'Fields are not allowed at DiagramView level. Use Tables, Notes, TableGroups, or Schemas blocks instead.',
+          field,
+        ),
+      ];
     });
   }
 
@@ -157,7 +159,12 @@ export default class DiagramViewValidator {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 
-    const allowedBlocks = ['tables', 'notes', 'tablegroups', 'schemas'];
+    const allowedBlocks = [
+      'tables',
+      'notes',
+      'tablegroups',
+      'schemas',
+    ];
 
     for (const sub of subs) {
       if (!sub.type) {

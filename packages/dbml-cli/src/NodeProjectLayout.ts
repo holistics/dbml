@@ -1,5 +1,9 @@
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
-import { Filepath, type DbmlProjectLayout } from '@dbml/parse';
+import {
+  existsSync, readFileSync, readdirSync,
+} from 'node:fs';
+import {
+  Filepath, type DbmlProjectLayout,
+} from '@dbml/parse';
 
 /**
  * A DbmlProjectLayout backed by the Node.js filesystem.

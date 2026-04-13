@@ -44,7 +44,8 @@ function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
   return format;
 }
 
-function getConnectionOpt (args: string[]): { connection: string; databaseType: string } {
+function getConnectionOpt (args: string[]): { connection: string;
+  databaseType: string; } {
   const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery', 'oracle'];
   const defaultConnectionOpt: ConnectionOpt = {
     connection: args[0],
@@ -85,7 +86,10 @@ function generate (
     } catch (e: any) {
       if (e && typeof e.map === 'function') {
         throw e.map((diag: any) => ({
-          ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack,
+          ...diag,
+          message: diag.message,
+          filepath: path.basename(_path),
+          stack: diag.stack,
         }));
       }
       throw e;

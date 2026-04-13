@@ -1,7 +1,9 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { ElementKind } from '@/core/types/keywords';
-import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import {

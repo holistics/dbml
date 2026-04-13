@@ -1,8 +1,12 @@
 import figures from 'figures';
 import chalk from 'chalk';
 import path from 'path';
-import { ModelExporter, Parser } from '@dbml/core';
-import { Compiler, Filepath } from '@dbml/parse';
+import {
+  ModelExporter, Parser,
+} from '@dbml/core';
+import {
+  Compiler, Filepath,
+} from '@dbml/parse';
 import { Command } from 'commander';
 import { NodeProjectLayout } from '../NodeProjectLayout';
 import {
