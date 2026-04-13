@@ -440,5 +440,27 @@ describe('[example] multifile binder', () => {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
     });
+
+    test('selective use { DiagramView myView } is rejected at validation', () => {
+      // 'diagramview' is not a valid ImportKind — the validator rejects it as an
+      // invalid specifier type; the binder silently ignores unknown kinds.
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': `
+          Table users { id int [pk] }
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+        '/main.dbml': "use { DiagramView myView } from './base.dbml'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const validationErrors = compiler.validateNode(mainAst).getErrors();
+      expect(validationErrors.some((e) => e.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
+
+      // DiagramView must NOT appear in consumer scope
+      const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView').getValue();
+      expect(dvInMain).toBeUndefined();
+    });
   });
 });

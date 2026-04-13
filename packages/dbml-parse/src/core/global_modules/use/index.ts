@@ -57,10 +57,12 @@ export const useModule: GlobalModule = {
     const useSpecifier = node.parentOfKind(UseSpecifierNode);
     if (!useSpecifier) return Report.create(PASS_THROUGH);
 
-    // Determine if we're in the schema qualified part
-    // use { table public.table } from '...'
-    //               ^      ^
-    const symbolKind = (useSpecifier.name === node || (isAccessExpression(useSpecifier.name) && useSpecifier.name.rightExpression === node)) ? useSpecifier.getSymbolKind() : SymbolKind.Schema;
+    // `node` is the terminal name fragment when it IS the specifier name,
+    // or is the rightmost part of a qualified name (e.g. `table` in `public.table`).
+    // Otherwise it's a schema prefix → always resolved as Schema.
+    const isTerminalFragment = useSpecifier.name === node
+      || (isAccessExpression(useSpecifier.name) && useSpecifier.name.rightExpression === node);
+    const symbolKind = isTerminalFragment ? useSpecifier.getSymbolKind() : SymbolKind.Schema;
     if (symbolKind === undefined) return Report.create(undefined);
 
     const fullname = destructureComplexVariable(node.parentOfKind(InfixExpressionNode));
