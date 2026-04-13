@@ -34,6 +34,8 @@ export const useModule: GlobalModule = {
 
     const symbolKind = node.getSymbolKind();
     if (symbolKind === undefined) return Report.create(PASS_THROUGH);
+    // Imported schemas are merged into the existing SchemaSymbol hierarchy, not wrapped in UseSymbol.
+    if (symbolKind === SymbolKind.Schema) return Report.create(PASS_THROUGH);
 
     const originalSymbol = compiler.nodeReferee(node.name).getFiltered(UNHANDLED);
 
