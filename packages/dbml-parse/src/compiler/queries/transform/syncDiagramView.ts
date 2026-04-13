@@ -106,19 +106,30 @@ function findDiagramViewBlock (
 function serializeVisibleEntities (ve: FilterConfig): string {
   const lines: string[] = [];
 
-  function renderBlock (keyword: string, items: Array<{ name: string;
-    schemaName?: string; }> | null) {
+  function renderBlock (
+    keyword: string,
+    items: Array<{ name: string }> | null,
+    formatEntry: (i: { name: string }) => string = (i) => formatName(i.name),
+  ) {
     if (items === null) return;
     if (items.length === 0) {
       lines.push(`  ${keyword} { * }`);
     } else {
-      const entries = items.map((i) => `    ${formatName(i.name)}`).join('\n');
+      const entries = items.map((i) => `    ${formatEntry(i)}`).join('\n');
       lines.push(`  ${keyword} {\n${entries}\n  }`);
     }
   }
 
-  renderBlock('Tables', ve.tables as Array<{ name: string;
-    schemaName?: string; }> | null);
+  renderBlock(
+    'Tables',
+    ve.tables,
+    (t) => {
+      const table = t as { name: string; schemaName?: string | null };
+      return table.schemaName
+        ? `${formatName(table.schemaName)}.${formatName(table.name)}`
+        : formatName(table.name);
+    },
+  );
   renderBlock('Notes', ve.stickyNotes);
   renderBlock('TableGroups', ve.tableGroups);
   renderBlock('Schemas', ve.schemas);

@@ -299,4 +299,25 @@ DiagramView main {
     expect(newDbml).toContain('users');
     expect(newDbml).toContain('orders');
   });
+
+  it('serialises schema-qualified table names preserving the schema prefix', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'overview',
+        visibleEntities: {
+          tables: [
+            { name: 'users', schemaName: 'auth' },
+            { name: 'orders', schemaName: DEFAULT_SCHEMA_NAME },
+          ],
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
+      },
+    ]);
+    expect(newDbml).toContain('auth.users');
+    // default-schema table keeps its schema prefix for round-trip consistency
+    expect(newDbml).toContain(`${DEFAULT_SCHEMA_NAME}.orders`);
+  });
 });
