@@ -53,10 +53,10 @@ export default defineConfig(
         ...js.configs.recommended.rules,
         ...tseslint.configs.recommended.rules,
         '@stylistic/object-curly-newline': ['error', {
-          ObjectExpression: { multiline: true, minProperties: 2 },
-          ObjectPattern: { multiline: true, minProperties: 2 },
-          ImportDeclaration: { multiline: true, minProperties: 2 },
-          ExportDeclaration: { multiline: true, minProperties: 2 },
+          ObjectExpression: { multiline: true, minProperties: 1 },
+          ObjectPattern: { multiline: true, minProperties: 1 },
+          ImportDeclaration: { multiline: true, minProperties: 1 },
+          ExportDeclaration: { multiline: true, minProperties: 1 },
         }],
         '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: false }],
 
