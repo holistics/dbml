@@ -109,7 +109,11 @@ export default class Compiler {
 
   symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  setSource (filepath: Filepath, source: string) {
+  setSource (source: string): void;
+  setSource (filepath: Filepath, source: string): void;
+  setSource (filepathOrSource: Filepath | string, _source?: string) {
+    const filepath = filepathOrSource instanceof Filepath ? filepathOrSource : DEFAULT_ENTRY;
+    const source = filepathOrSource instanceof Filepath ? _source! : filepathOrSource;
     this.layout.setSource(filepath, source);
     // Local queries are keyed per-file: only the changed file's cache is stale.
     // Global queries depend on all files: always invalidate the entire global cache.
@@ -123,7 +127,7 @@ export default class Compiler {
     this.globalCache.clear();
   }
 
-  deleteSource (filepath: Filepath) {
+  deleteSource (filepath: Filepath = DEFAULT_ENTRY) {
     this.layout.deleteSource(filepath);
     // Same invalidation logic as setSource: local per-file, global always full clear.
     this.localCache.delete(filepath.intern());
@@ -306,7 +310,7 @@ export default class Compiler {
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
     source: () => this.layout.getSource(DEFAULT_ENTRY) as Readonly<string>,
-    _: this.query(exportSchemaJson),
+    _: () => this.exportSchemaJson(DEFAULT_ENTRY),
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),

@@ -344,10 +344,11 @@ Table orders {
 
 
 describe('[example] multifile interpreter — mixed selective + wildcard from same file', () => {
-  // BUG: `use { table users } from './shared.dbml'` followed by
-  // `use * from './shared.dbml'` exposes the same underlying `users` table twice;
-  // duplicate-checking in schemaModule.symbolMembers fails to dedupe the pair of
-  // UseSymbols and surfaces a DUPLICATE_NAME error, which poisons interpretation.
+  // `use { table users } from './shared.dbml'` followed by `use * from
+  // './shared.dbml'` exposes the same underlying `users` table twice via two
+  // distinct UseSymbol wrappers. schemaModule.symbolMembers dedupes them by
+  // (originalSymbol, locally-visible name), so the consumer sees a single
+  // entry per name and interpretation runs cleanly.
   const { compiler, fps } = makeCompiler({
     '/shared.dbml': `
 Table users {
@@ -372,7 +373,7 @@ Table memberships {
 `,
   });
 
-  test.fails('interpretation succeeds and surfaces users, roles, memberships without errors', () => {
+  test('interpretation succeeds and surfaces users, roles, memberships without errors', () => {
     const db = exportDb(compiler, fps['/main.dbml']);
     const names = db.tables.map((t) => t.name).sort();
     expect(names).toEqual(['memberships', 'roles', 'users']);

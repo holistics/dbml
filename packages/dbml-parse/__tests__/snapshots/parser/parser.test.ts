@@ -39,9 +39,6 @@ describe('[snapshot] parser', () => {
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
 
-    const { nodeIdGenerator } = compiler;
-
-    const lexer = new Lexer(program, DEFAULT_ENTRY);
     const output = serializeParserResult(
       compiler,
       compiler.parseFile(DEFAULT_ENTRY).map(({ ast }) => ast),

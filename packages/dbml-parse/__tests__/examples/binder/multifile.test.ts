@@ -355,14 +355,14 @@ describe('[example] multifile binder', () => {
     });
   });
 
-  describe('mixed selective + wildcard from the same file (known bug)', () => {
-    // BUG: importing the same symbol twice from the same file — once via a selective
-    // `use { table users }` and once via `use * from` — must be idempotent. Both
-    // specifiers resolve to the same underlying declaration, so the consumer scope
-    // should contain a single `users`, not two. Today the UseSymbols are deduped by
-    // object identity in schemaModule.symbolMembers, so two distinct UseSymbol
-    // wrappers around the same original leak through and collide as DUPLICATE_NAME.
-    test.fails('selective + wildcard from the same file is idempotent (no DUPLICATE_NAME)', () => {
+  describe('mixed selective + wildcard from the same file', () => {
+    // Importing the same symbol twice from the same file — once via a
+    // selective `use { table users }` and once via `use *` — is idempotent.
+    // schemaModule.symbolMembers dedupes UseSymbols by
+    // (originalSymbol, locally-visible name), so two distinct UseSymbol
+    // wrappers around the same underlying table collapse into a single entry
+    // instead of colliding as DUPLICATE_NAME.
+    test('selective + wildcard from the same file is idempotent (no DUPLICATE_NAME)', () => {
       const { compiler, fps } = makeCompiler({
         '/shared.dbml': 'Table users { id int [pk] }\nTable roles { id int [pk] }',
         '/main.dbml': [

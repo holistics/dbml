@@ -36,9 +36,11 @@ describe('[snapshot] lexer', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, program);
+    compiler.setSource(program);
 
-    const output = serializeLexerResult(compiler, new Lexer(program, DEFAULT_ENTRY).lex());
+    const lexer = new Lexer(program, DEFAULT_ENTRY);
+
+    const output = serializeLexerResult(compiler, lexer.lex());
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

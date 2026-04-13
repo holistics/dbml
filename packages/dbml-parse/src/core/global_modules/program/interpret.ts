@@ -1,6 +1,6 @@
 import Compiler from '@/compiler/index';
 import {
-  CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode,
+  CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode, UseSpecifierNode,
 } from '@/core/types/nodes';
 import {
   ElementKind,
@@ -34,7 +34,7 @@ import {
   getBody,
 } from '@/core/utils/expression';
 import {
-  UseSymbol, SymbolKind,
+  UseSymbol, SymbolKind, SchemaSymbol,
 } from '@/core/types/symbol';
 
 export default class ProgramInterpreter {
@@ -152,6 +152,41 @@ export default class ProgramInterpreter {
             extMap.set(canonicalKey, ref);
             list.push(ref);
           }
+        }
+      }
+
+      // Wildcard imports are not enumerated at the AST level — every importable
+      // member becomes a synthesized UseSymbol in `schemaModule.symbolMembers`.
+      // Walk the public schema to pick those up so they land in `externals`.
+      const publicSchema = this.compiler.lookupMembers(this.programNode, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue();
+      if (publicSchema instanceof SchemaSymbol) {
+        const schemaMembers = this.compiler.symbolMembers(publicSchema).getFiltered(UNHANDLED) ?? [];
+        for (const member of schemaMembers) {
+          if (!(member instanceof UseSymbol)) continue;
+          // Selective specs are already handled above; skip them here to avoid
+          // duplicating the per-spec visibleName accounting.
+          if (member.useSpecifierDeclaration instanceof UseSpecifierNode) continue;
+          const name = member.usedSymbol ? this.compiler.symbolName(member.usedSymbol) : undefined;
+          if (!name) continue;
+          const list = listForKind(member);
+          if (!list) continue;
+
+          const schemaName = member.usedSymbol?.declaration
+            ? (this.compiler.nodeFullname(member.usedSymbol.declaration).getFiltered(UNHANDLED)?.slice(0, -1).join('.') || null)
+            : null;
+
+          const canonicalKey = `${kindKey(member)}:${schemaName ?? ''}.${name}`;
+          if (extMap.has(canonicalKey)) continue; // already covered by selective import
+          const ref: ElementRef = {
+            name,
+            schemaName,
+            visibleNames: [{
+              schemaName,
+              name,
+            }],
+          };
+          extMap.set(canonicalKey, ref);
+          list.push(ref);
         }
       }
     }

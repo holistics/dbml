@@ -83,9 +83,18 @@ export const schemaModule: GlobalModule = {
       }
     }
 
-    // Filter out duplicate symbols (same real symbol), but keep distinct UseSymbols even if they
-    // wrap the same underlying symbol (e.g. two aliases for the same table).
-    const uniqueExpandedMembers = uniqBy(membersWithExpansions, (m) => (m instanceof UseSymbol ? m : m.originalSymbol));
+    // Filter out duplicate symbols (same real symbol). UseSymbols dedupe by
+    // (originalSymbol, locally-visible name) so that:
+    //   - `use { table users }` plus `use *` from the same source collapse to
+    //     one entry (same original, same name) instead of colliding;
+    //   - `use { table users as u }` and `use { table users }` stay distinct
+    //     because their local names differ (`u` vs. `users`).
+    const uniqueExpandedMembers = uniqBy(membersWithExpansions, (m) => {
+      if (m instanceof UseSymbol) {
+        return `use:${m.originalSymbol.id}:${compiler.symbolName(m) ?? ''}`;
+      }
+      return m.originalSymbol;
+    });
 
     const errors: CompileError[] = [];
 

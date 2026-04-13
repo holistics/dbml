@@ -94,46 +94,40 @@ describe('@dbml/core multifile', () => {
   });
 
   describe('mixed imports from same source file', () => {
-    test.fails(
-      'selective + wildcard from same file: should be idempotent, not a DUPLICATE_NAME error',
-      () => {
-        // BUG in @dbml/parse: `use { table users }` followed by `use * from same file`
-        // produces DUPLICATE_NAME for 'users' even though it's the same symbol from the same source.
-        // Expected: parse succeeds; actual: Parser throws CompilerError with DUPLICATE_NAME.
-        const layout = loadLayout('wildcard-imports', 'consumer-selective-and-wildcard.dbml');
-        const db = new Parser().parse(layout, 'dbmlv2');
+    test('selective + wildcard from same file is idempotent (no DUPLICATE_NAME)', () => {
+      // `use { table users }` followed by `use * from` the same source produces
+      // two distinct UseSymbol wrappers around the same underlying table; they
+      // collapse to a single member via (originalSymbol, name) dedupe, so all
+      // three tables surface in the @dbml/core model.
+      const layout = loadLayout('wildcard-imports', 'consumer-selective-and-wildcard.dbml');
+      const db = new Parser().parse(layout, 'dbmlv2');
 
-        const allTables = db.schemas.flatMap((s) => s.tables);
-        const tableNames = allTables.map((t) => t.name);
-        expect(tableNames).toContain('memberships');
-        expect(tableNames).toContain('users');
-        expect(tableNames).toContain('roles');
-      },
-    );
+      const allTables = db.schemas.flatMap((s) => s.tables);
+      const tableNames = allTables.map((t) => t.name);
+      expect(tableNames).toContain('memberships');
+      expect(tableNames).toContain('users');
+      expect(tableNames).toContain('roles');
+    });
   });
 
   describe('cross-file refs and indexes', () => {
-    test.fails(
-      'cross-file index: imported table with composite indexes accessible in @dbml/core model',
-      () => {
-        // BUG in @dbml/core: @dbml/parse correctly exports both 'bookings' (imported) and
-        // 'events' (local) along with the ref. But @dbml/core model_structure/endpoint.js
-        // throws "Can't find table null.bookings" because it only resolves locally-defined tables.
-        // Expected: both tables visible with indexes and ref intact.
-        const layout = loadLayout('cross-file-refs', 'consumer-cross-file-index.dbml');
-        const db = new Parser().parse(layout, 'dbmlv2');
+    test('cross-file index: imported table with composite indexes accessible in @dbml/core model', () => {
+      // @dbml/parse exposes the imported `bookings` table via exportSchemaJson's
+      // reconciled output, so @dbml/core sees it alongside the locally-defined
+      // `events` table — refs and composite indexes survive the import.
+      const layout = loadLayout('cross-file-refs', 'consumer-cross-file-index.dbml');
+      const db = new Parser().parse(layout, 'dbmlv2');
 
-        const allTables = db.schemas.flatMap((s) => s.tables);
-        const tableNames = allTables.map((t) => t.name);
-        expect(tableNames).toContain('events');
-        expect(tableNames).toContain('bookings');
+      const allTables = db.schemas.flatMap((s) => s.tables);
+      const tableNames = allTables.map((t) => t.name);
+      expect(tableNames).toContain('events');
+      expect(tableNames).toContain('bookings');
 
-        const bookings = allTables.find((t) => t.name === 'bookings')!;
-        // Composite unique index should survive the cross-file import
-        expect(bookings.indexes.length).toBeGreaterThan(0);
-        expect(bookings.indexes.find((i: Index) => i.unique && i.columns.length === 2)).toBeDefined();
-      },
-    );
+      const bookings = allTables.find((t) => t.name === 'bookings')!;
+      // Composite unique index should survive the cross-file import
+      expect(bookings.indexes.length).toBeGreaterThan(0);
+      expect(bookings.indexes.find((i: Index) => i.unique && i.columns.length === 2)).toBeDefined();
+    });
   });
 
   describe('error handling', () => {
