@@ -73,12 +73,10 @@
         "name": "g1",
         "tables": [
           {
-            "name": "merchants",
-            "schemaName": ""
+            "name": "merchants"
           },
           {
-            "name": "users",
-            "schemaName": ""
+            "name": "users"
           }
         ],
         "token": {
