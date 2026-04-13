@@ -49,8 +49,7 @@ function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
   return format as ExportFormat;
 }
 
-function getConnectionOpt (args: string[]): { connection: string;
-  databaseType: string; } {
+function getConnectionOpt (args: string[]): ConnectionOpt {
   const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery', 'oracle'];
   const defaultConnectionOpt: ConnectionOpt = {
     connection: args[0],
