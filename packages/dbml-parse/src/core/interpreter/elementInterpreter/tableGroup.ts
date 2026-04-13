@@ -109,7 +109,7 @@ export class TableGroupInterpreter implements ElementInterpreter {
 
       return {
         name: fragments.pop()!,
-        schemaName: fragments.join('.'),
+        schemaName: fragments.join('.') || null,
       };
     });
 

@@ -243,6 +243,7 @@ export default class TableValidator implements ElementValidator {
           symbolTable: new SymbolTable(),
           declaration: field,
         });
+        field.symbol = partialInjectionSymbol;
         const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
         const symbolTable = this.declarationNode.symbol!.symbolTable!;
         if (symbolTable.has(partialInjectionSymbolId)) {
