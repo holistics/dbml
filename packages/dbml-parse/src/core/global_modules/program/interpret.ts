@@ -304,11 +304,10 @@ export default class ProgramInterpreter {
     // Filter records: table must exist in db.tables
     db.records = db.records.filter((rec) => this.isTableVisible(db, rec.schemaName ?? null, rec.tableName));
 
-    // Filter tableGroups: keep only tables that exist in db.tables
+    // Filter tableGroups: keep only table entries that exist in db.tables, but keep the group itself even if empty
     db.tableGroups.forEach((tg) => {
       tg.tables = tg.tables.filter((t) => this.isTableVisible(db, t.schemaName, t.name));
     });
-    db.tableGroups = db.tableGroups.filter((tg) => tg.tables.length > 0);
   }
 
   private isTableVisible (db: Database, schemaName: string | null, tableName: string): boolean {
