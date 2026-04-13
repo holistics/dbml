@@ -316,8 +316,10 @@ DiagramView main {
         },
       },
     ]);
+    // non-default schema is always prefixed
     expect(newDbml).toContain('auth.users');
-    // default-schema table keeps its schema prefix for round-trip consistency
-    expect(newDbml).toContain(`${DEFAULT_SCHEMA_NAME}.orders`);
+    // default-schema table is output without schema prefix (DBML convention)
+    expect(newDbml).toContain('orders');
+    expect(newDbml).not.toContain(`${DEFAULT_SCHEMA_NAME}.orders`);
   });
 });
