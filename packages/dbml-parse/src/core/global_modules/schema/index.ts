@@ -167,7 +167,7 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
 
   const usableMembers = compiler.fileUsableMembers(externalSchemaSymbol).getFiltered(UNHANDLED);
   if (!usableMembers) return [];
-  const members = usableMembers.nonSchemaMembers
+  const members: NodeSymbol[] = usableMembers.nonSchemaMembers
     .filter((m) => m.canBeImported)
     .map((m) => compiler.symbolFactory.create(UseSymbol, {
       kind: m.kind,
@@ -242,17 +242,18 @@ function expandTableGroup (compiler: Compiler, tableGroupSymbol: NodeSymbol): No
     if (field.isKind(SymbolKind.TableGroupField) && field.declaration) {
       const originalTable = compiler.nodeReferee(field.declaration).getFiltered(UNHANDLED);
       if (originalTable && originalTable.isKind(SymbolKind.Table)) {
-        let useSpecifierDeclaration: UseSpecifierNode | WildcardNode | undefined;
         if (tableGroupSymbol instanceof UseSymbol) {
-          useSpecifierDeclaration = tableGroupSymbol.useSpecifierDeclaration;
+          extraSymbols.push(compiler.symbolFactory.create(UseSymbol, {
+            kind: SymbolKind.Table,
+            declaration: originalTable.declaration,
+            usedSymbol: originalTable,
+            useSpecifierDeclaration: tableGroupSymbol.useSpecifierDeclaration,
+          }, tableGroupSymbol.filepath));
+        } else {
+          // Local TableGroup: tables are already direct schema members; expose via originalSymbol
+          // so deduplication in symbolMembers collapses them correctly.
+          extraSymbols.push(originalTable.originalSymbol);
         }
-
-        extraSymbols.push(compiler.symbolFactory.create(UseSymbol, {
-          kind: SymbolKind.Table,
-          declaration: originalTable.declaration,
-          usedSymbol: originalTable,
-          useSpecifierDeclaration,
-        }, tableGroupSymbol.filepath));
       }
     }
   }

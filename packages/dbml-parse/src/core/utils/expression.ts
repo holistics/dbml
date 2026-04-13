@@ -473,6 +473,15 @@ export function isWildcardExpression (node: SyntaxNode | undefined): node is Wil
   return node instanceof WildcardNode;
 }
 
+// Returns true if `node` is the rightmost (terminal) fragment of an access expression chain.
+// A node is terminal when its containing access expression is NOT itself the left-hand side
+// of a further access expression (e.g. `users` in `public.users` or `auth.public.users`).
+// Precondition: node must be the right child of an access expression (isAccessExpression(node.parentNode)).
+export function isTerminalAccessFragment (node: SyntaxNode): boolean {
+  const currentAccess = node.parentNode as InfixExpressionNode;
+  return !(isAccessExpression(currentAccess.parentNode) && (currentAccess.parentNode as InfixExpressionNode).leftExpression === currentAccess);
+}
+
 export function isInvalidToken (token?: SyntaxToken): boolean {
   return !!token?.isInvalid;
 }

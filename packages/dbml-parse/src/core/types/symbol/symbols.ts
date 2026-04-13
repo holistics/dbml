@@ -119,7 +119,7 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
 }
 
 export class UseSymbol extends NodeSymbol {
-  useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
+  useSpecifierDeclaration: UseSpecifierNode | WildcardNode;
   usedSymbol?: NodeSymbol;
 
   constructor ({
@@ -130,7 +130,7 @@ export class UseSymbol extends NodeSymbol {
   }: {
     kind: SymbolKind;
     declaration?: SyntaxNode;
-    useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
+    useSpecifierDeclaration: UseSpecifierNode | WildcardNode;
     usedSymbol?: NodeSymbol;
   }, id: NodeSymbolId, filepath: Filepath) {
     super({

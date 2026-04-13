@@ -27,6 +27,7 @@ import {
   isAccessExpression,
   isExpressionAVariableNode,
   isElementFieldNode,
+  isTerminalAccessFragment,
 } from '@/core/utils/expression';
 import {
   lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
@@ -274,8 +275,9 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
+      const isTerminal = isTerminalAccessFragment(node);
       return lookupMember(compiler, left, name, {
-        kinds: [SymbolKind.Enum, SymbolKind.Schema],
+        kinds: isTerminal ? [SymbolKind.Enum] : [SymbolKind.Schema],
         errorNode: node,
       });
     }

@@ -17,12 +17,11 @@ import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import {
-  isAccessExpression, isElementNode, isExpressionAVariableNode, isInsideSettingList,
+  extractVarNameFromPrimaryVariable, isAccessExpression, isElementNode, isExpressionAVariableNode, isInsideSettingList, isTerminalAccessFragment,
 } from '@/core/utils/expression';
 import {
   lookupMember, lookupInDefaultSchema, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
-import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { DiagramViewInterpreter } from './interpret';
 
 export const diagramViewModule: GlobalModule = {
@@ -113,19 +112,22 @@ function nodeRefereeOfDiagramViewTableRef (
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
   // Right side of access expression (e.g. `public` in `public.users`):
-  // resolve via the left sibling's schema symbol
+  // resolve via the left sibling's schema symbol.
+  // If this access expression is itself nested inside another (e.g. `public` in `auth.public.users`),
+  // the fragment is intermediate and must resolve to Schema; otherwise it is terminal and must be Table.
   if (isAccessExpression(node.parentNode)) {
     const left = nodeRefereeOfLeftExpression(compiler, node);
     if (left) {
       if (left.isKind(SymbolKind.Schema)) {
+        const isTerminal = isTerminalAccessFragment(node);
         return lookupMember(compiler, left, name, {
-          kinds: [SymbolKind.Table, SymbolKind.Schema],
+          kinds: isTerminal ? [SymbolKind.Table] : [SymbolKind.Schema],
           errorNode: node,
         });
       }
       return new Report(undefined);
     }
-    // Left side of access: look up as Schema
+    // Left side of access: always a Schema
     return lookupMember(compiler, globalSymbol, name, {
       kinds: [SymbolKind.Schema],
       errorNode: node,
