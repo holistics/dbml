@@ -144,17 +144,7 @@
             }
           },
           "fullEnd": 26,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Users@[L0:C0, L2:C1]",
-              "snippet": "Table User... U1 {\r\n\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
-              "snippet": "Table User... U1 {\r\n\r\n}"
-            }
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -268,17 +258,7 @@
             }
           },
           "fullEnd": 54,
-          "fullStart": 27,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Users@[L4:C0, L6:C1]",
-              "snippet": "Table User... U2 {\r\n\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L4:C0, L6:C1]",
-              "snippet": "Table User... U2 {\r\n\r\n}"
-            }
-          }
+          "fullStart": 27
         },
         {
           "context": {
@@ -392,17 +372,7 @@
             }
           },
           "fullEnd": 87,
-          "fullStart": 55,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Products@[L8:C0, L10:C1]",
-              "snippet": "Table Prod...{\r\n    \r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Products@[L8:C0, L10:C1]",
-              "snippet": "Table Prod...{\r\n    \r\n}"
-            }
-          }
+          "fullStart": 55
         }
       ],
       "eof": {
@@ -416,36 +386,6 @@
       }
     },
     "fullEnd": 87,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L10:C1]",
-        "snippet": "Table User...{\r\n    \r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L10:C1]",
-        "snippet": "Table User...{\r\n    \r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@Products@[L8:C0, L10:C1]",
-            "snippet": "Table Prod...{\r\n    \r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L0:C0, L2:C1]",
-            "snippet": "Table User... U1 {\r\n\r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L4:C0, L6:C1]",
-            "snippet": "Table User... U2 {\r\n\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

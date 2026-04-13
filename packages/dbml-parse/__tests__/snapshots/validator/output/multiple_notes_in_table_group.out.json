@@ -204,17 +204,7 @@
                       }
                     },
                     "fullEnd": 29,
-                    "fullStart": 15,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C2, L1:C13]",
-                        "snippet": "id int [pk]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C2, L1:C13]",
-                        "snippet": "id int [pk]"
-                      }
-                    }
+                    "fullStart": 15
                   }
                 ]
               },
@@ -261,25 +251,7 @@
             }
           },
           "fullEnd": 31,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@table1@[L0:C0, L2:C1]",
-              "snippet": "Table tabl...int [pk]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@table1@[L0:C0, L2:C1]",
-              "snippet": "Table tabl...int [pk]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C2, L1:C13]",
-                  "snippet": "id int [pk]"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -416,17 +388,7 @@
                       }
                     },
                     "fullEnd": 83,
-                    "fullStart": 74,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup field@table1@[L6:C2, L6:C8]",
-                        "snippet": "table1"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@table1@[L6:C2, L6:C8]",
-                        "snippet": "table1"
-                      }
-                    }
+                    "fullStart": 74
                   },
                   {
                     "context": {
@@ -628,25 +590,7 @@
             }
           },
           "fullEnd": 262,
-          "fullStart": 31,
-          "symbol": {
-            "context": {
-              "id": "symbol@TableGroup@group1@[L4:C0, L18:C1]",
-              "snippet": "TableGroup...ote'\n  }\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@group1@[L4:C0, L18:C1]",
-              "snippet": "TableGroup...ote'\n  }\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@TableGroup field@table1@[L6:C2, L6:C8]",
-                  "snippet": "table1"
-                }
-              }
-            ]
-          }
+          "fullStart": 31
         }
       ],
       "eof": {
@@ -660,30 +604,6 @@
       }
     },
     "fullEnd": 262,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L19:C0]",
-        "snippet": "Table tabl...te'\n  }\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L19:C0]",
-        "snippet": "Table tabl...te'\n  }\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@table1@[L0:C0, L2:C1]",
-            "snippet": "Table tabl...int [pk]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TableGroup@group1@[L4:C0, L18:C1]",
-            "snippet": "TableGroup...ote'\n  }\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

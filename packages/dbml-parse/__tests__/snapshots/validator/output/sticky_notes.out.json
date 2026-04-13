@@ -324,17 +324,7 @@
                       }
                     },
                     "fullEnd": 64,
-                    "fullStart": 37,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C2, L1:C26]",
-                        "snippet": "id integer...imary key]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C2, L1:C26]",
-                        "snippet": "id integer...imary key]"
-                      }
-                    }
+                    "fullStart": 37
                   },
                   {
                     "context": {
@@ -585,17 +575,7 @@
                       }
                     },
                     "fullEnd": 107,
-                    "fullStart": 64,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@username@[L2:C2, L2:C42]",
-                        "snippet": "username v...l, unique]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@username@[L2:C2, L2:C42]",
-                        "snippet": "username v...l, unique]"
-                      }
-                    }
+                    "fullStart": 64
                   }
                 ]
               },
@@ -642,31 +622,7 @@
             }
           },
           "fullEnd": 109,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@users@[L0:C0, L3:C1]",
-              "snippet": "Table user... unique]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@users@[L0:C0, L3:C1]",
-              "snippet": "Table user... unique]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C2, L1:C26]",
-                  "snippet": "id integer...imary key]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@username@[L2:C2, L2:C42]",
-                  "snippet": "username v...l, unique]"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -783,17 +739,7 @@
             }
           },
           "fullEnd": 143,
-          "fullStart": 109,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@note2@[L5:C0, L7:C1]",
-              "snippet": "Note note2...ne note'\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@note2@[L5:C0, L7:C1]",
-              "snippet": "Note note2...ne note'\n}"
-            }
-          }
+          "fullStart": 109
         },
         {
           "context": {
@@ -910,17 +856,7 @@
             }
           },
           "fullEnd": 177,
-          "fullStart": 143,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@note2@[L9:C0, L11:C1]",
-              "snippet": "Note note2...ne note'\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@note2@[L9:C0, L11:C1]",
-              "snippet": "Note note2...ne note'\n}"
-            }
-          }
+          "fullStart": 143
         },
         {
           "context": {
@@ -1037,17 +973,7 @@
             }
           },
           "fullEnd": 211,
-          "fullStart": 177,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@note3@[L13:C0, L15:C1]",
-              "snippet": "Note note3...ne note'\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@note3@[L13:C0, L15:C1]",
-              "snippet": "Note note3...ne note'\n}"
-            }
-          }
+          "fullStart": 177
         },
         {
           "context": {
@@ -1164,17 +1090,7 @@
             }
           },
           "fullEnd": 247,
-          "fullStart": 211,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@note3@[L17:C0, L19:C1]",
-              "snippet": "Note \"note...ne note'\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@note3@[L17:C0, L19:C1]",
-              "snippet": "Note \"note...ne note'\n}"
-            }
-          }
+          "fullStart": 211
         },
         {
           "context": {
@@ -1377,17 +1293,7 @@
             }
           },
           "fullEnd": 305,
-          "fullStart": 247,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@@[L21:C0, L26:C1]",
-              "snippet": "Note schem...dy\n  '''\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@@[L21:C0, L26:C1]",
-              "snippet": "Note schem...dy\n  '''\n}"
-            }
-          }
+          "fullStart": 247
         },
         {
           "context": {
@@ -1504,17 +1410,7 @@
             }
           },
           "fullEnd": 362,
-          "fullStart": 305,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@schema.note4@[L27:C0, L32:C1]",
-              "snippet": "Note \"sche...dy\n  '''\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@schema.note4@[L27:C0, L32:C1]",
-              "snippet": "Note \"sche...dy\n  '''\n}"
-            }
-          }
+          "fullStart": 305
         },
         {
           "context": {
@@ -1522,15 +1418,114 @@
             "snippet": "Note \"sche...dy\n  '''\n}"
           },
           "children": {
+            "attributeList": {
+              "context": {
+                "id": "node@<list-expression>@@[L34:C22, L34:C44]",
+                "snippet": "[headercol...: #3457DB]"
+              },
+              "children": {
+                "elementList": [
+                  {
+                    "context": {
+                      "id": "node@<attribute>@@[L34:C23, L34:C43]",
+                      "snippet": "headercolor: #3457DB"
+                    },
+                    "children": {
+                      "colon": {
+                        "context": {
+                          "id": "token@<colon>@:@[L34:C34, L34:C35]",
+                          "snippet": ":"
+                        },
+                        "leadingTrivia": "",
+                        "trailingTrivia": " ",
+                        "value": ":"
+                      },
+                      "name": {
+                        "context": {
+                          "id": "node@<identifer-stream>@@[L34:C23, L34:C34]",
+                          "snippet": "headercolor"
+                        },
+                        "children": {
+                          "identifiers": [
+                            {
+                              "context": {
+                                "id": "token@<identifier>@headercolor@[L34:C23, L34:C34]",
+                                "snippet": "headercolor"
+                              },
+                              "leadingTrivia": "",
+                              "trailingTrivia": "",
+                              "value": "headercolor"
+                            }
+                          ]
+                        },
+                        "fullEnd": 397,
+                        "fullStart": 386
+                      },
+                      "value": {
+                        "context": {
+                          "id": "node@<primary-expression>@#3457DB@[L34:C36, L34:C43]",
+                          "snippet": "#3457DB"
+                        },
+                        "children": {
+                          "expression": {
+                            "context": {
+                              "id": "node@<literal>@#3457DB@[L34:C36, L34:C43]",
+                              "snippet": "#3457DB"
+                            },
+                            "children": {
+                              "literal": {
+                                "context": {
+                                  "id": "token@<color>@#3457DB@[L34:C36, L34:C43]",
+                                  "snippet": "#3457DB"
+                                },
+                                "leadingTrivia": "",
+                                "trailingTrivia": "",
+                                "value": "#3457DB"
+                              }
+                            },
+                            "fullEnd": 406,
+                            "fullStart": 399
+                          }
+                        },
+                        "fullEnd": 406,
+                        "fullStart": 399
+                      }
+                    },
+                    "fullEnd": 406,
+                    "fullStart": 386
+                  }
+                ],
+                "listCloseBracket": {
+                  "context": {
+                    "id": "token@<rbracket>@]@[L34:C43, L34:C44]",
+                    "snippet": "]"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": " ",
+                  "value": "]"
+                },
+                "listOpenBracket": {
+                  "context": {
+                    "id": "token@<lbracket>@[@[L34:C22, L34:C23]",
+                    "snippet": "["
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "",
+                  "value": "["
+                }
+              },
+              "fullEnd": 408,
+              "fullStart": 385
+            },
             "body": {
               "context": {
-                "id": "node@<block-expression>@@[L5:C11, L7:C1]",
-                "snippet": "{\n  'One l...ne note'\n}"
+                "id": "node@<block-expression>@@[L34:C45, L39:C1]",
+                "snippet": "{\n  '''\n  ...dy\n  '''\n}"
               },
               "children": {
                 "blockCloseBrace": {
                   "context": {
-                    "id": "token@<rbrace>@}@[L7:C0, L7:C1]",
+                    "id": "token@<rbrace>@}@[L39:C0, L39:C1]",
                     "snippet": "}"
                   },
                   "leadingTrivia": "",
@@ -1539,7 +1534,7 @@
                 },
                 "blockOpenBrace": {
                   "context": {
-                    "id": "token@<lbrace>@{@[L5:C11, L5:C12]",
+                    "id": "token@<lbrace>@{@[L34:C45, L34:C46]",
                     "snippet": "{"
                   },
                   "leadingTrivia": "",
@@ -1549,80 +1544,128 @@
                 "body": [
                   {
                     "context": {
-                      "id": "node@<function-application>@One line note@[L6:C2, L6:C17]",
-                      "snippet": "'One line note'"
+                      "id": "node@<function-application>@\n    # Title\n    body\n  @[L35:C2, L38:C5]",
+                      "snippet": "'''\n    # ...body\n  '''"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<primary-expression>@One line note@[L6:C2, L6:C17]",
-                          "snippet": "'One line note'"
+                          "id": "node@<primary-expression>@\n    # Title\n    body\n  @[L35:C2, L38:C5]",
+                          "snippet": "'''\n    # ...body\n  '''"
                         },
                         "children": {
                           "expression": {
                             "context": {
-                              "id": "node@<literal>@One line note@[L6:C2, L6:C17]",
-                              "snippet": "'One line note'"
+                              "id": "node@<literal>@\n    # Title\n    body\n  @[L35:C2, L38:C5]",
+                              "snippet": "'''\n    # ...body\n  '''"
                             },
                             "children": {
                               "literal": {
                                 "context": {
-                                  "id": "token@<string>@One line note@[L6:C2, L6:C17]",
-                                  "snippet": "'One line note'"
+                                  "id": "token@<string>@\n    # Title\n    body\n  @[L35:C2, L38:C5]",
+                                  "snippet": "'''\n    # ...body\n  '''"
                                 },
                                 "leadingTrivia": "  ",
                                 "trailingTrivia": "\n",
-                                "value": "One line note"
+                                "value": "\n    # Title\n    body\n  "
                               }
                             },
-                            "fullEnd": 141,
-                            "fullStart": 123
+                            "fullEnd": 443,
+                            "fullStart": 410
                           }
                         },
-                        "fullEnd": 141,
-                        "fullStart": 123
+                        "fullEnd": 443,
+                        "fullStart": 410
                       }
                     },
-                    "fullEnd": 141,
-                    "fullStart": 123
+                    "fullEnd": 443,
+                    "fullStart": 410
                   }
                 ]
               },
-              "fullEnd": 143,
-              "fullStart": 121
+              "fullEnd": 445,
+              "fullStart": 408
             },
             "name": {
               "context": {
-                "id": "node@<primary-expression>@note2@[L5:C5, L5:C10]",
-                "snippet": "note2"
+                "id": "node@<infix-expression>@@[L34:C5, L34:C21]",
+                "snippet": "\"schema\".\"note5\""
               },
               "children": {
-                "expression": {
+                "leftExpression": {
                   "context": {
-                    "id": "node@<variable>@note2@[L5:C5, L5:C10]",
-                    "snippet": "note2"
+                    "id": "node@<primary-expression>@schema@[L34:C5, L34:C13]",
+                    "snippet": "\"schema\""
                   },
                   "children": {
-                    "variable": {
+                    "expression": {
                       "context": {
-                        "id": "token@<identifier>@note2@[L5:C5, L5:C10]",
-                        "snippet": "note2"
+                        "id": "node@<variable>@schema@[L34:C5, L34:C13]",
+                        "snippet": "\"schema\""
                       },
-                      "leadingTrivia": "",
-                      "trailingTrivia": " ",
-                      "value": "note2"
+                      "children": {
+                        "variable": {
+                          "context": {
+                            "id": "token@<variable>@schema@[L34:C5, L34:C13]",
+                            "snippet": "\"schema\""
+                          },
+                          "leadingTrivia": "",
+                          "trailingTrivia": "",
+                          "value": "schema"
+                        }
+                      },
+                      "fullEnd": 376,
+                      "fullStart": 368
                     }
                   },
-                  "fullEnd": 121,
-                  "fullStart": 115
+                  "fullEnd": 376,
+                  "fullStart": 368
+                },
+                "op": {
+                  "context": {
+                    "id": "token@<op>@.@[L34:C13, L34:C14]",
+                    "snippet": "."
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "",
+                  "value": "."
+                },
+                "rightExpression": {
+                  "context": {
+                    "id": "node@<primary-expression>@note5@[L34:C14, L34:C21]",
+                    "snippet": "\"note5\""
+                  },
+                  "children": {
+                    "expression": {
+                      "context": {
+                        "id": "node@<variable>@note5@[L34:C14, L34:C21]",
+                        "snippet": "\"note5\""
+                      },
+                      "children": {
+                        "variable": {
+                          "context": {
+                            "id": "token@<variable>@note5@[L34:C14, L34:C21]",
+                            "snippet": "\"note5\""
+                          },
+                          "leadingTrivia": "",
+                          "trailingTrivia": " ",
+                          "value": "note5"
+                        }
+                      },
+                      "fullEnd": 385,
+                      "fullStart": 377
+                    }
+                  },
+                  "fullEnd": 385,
+                  "fullStart": 377
                 }
               },
-              "fullEnd": 121,
-              "fullStart": 115
+              "fullEnd": 385,
+              "fullStart": 368
             },
             "type": {
               "context": {
-                "id": "token@<identifier>@Note@[L5:C0, L5:C4]",
+                "id": "token@<identifier>@Note@[L34:C0, L34:C4]",
                 "snippet": "Note"
               },
               "leadingTrivia": "\n",
@@ -1630,18 +1673,8 @@
               "value": "Note"
             }
           },
-          "fullEnd": 143,
-          "fullStart": 109,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@note2@[L5:C0, L7:C1]",
-              "snippet": "Note note2...ne note'\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@note2@[L5:C0, L7:C1]",
-              "snippet": "Note note2...ne note'\n}"
-            }
-          }
+          "fullEnd": 445,
+          "fullStart": 362
         }
       ],
       "eof": {
@@ -1655,59 +1688,6 @@
       }
     },
     "fullEnd": 445,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L40:C0]",
-        "snippet": "Table user...y\n  '''\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L40:C0]",
-        "snippet": "Table user...y\n  '''\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Note@note2@[L5:C0, L7:C1]",
-            "snippet": "Note note2...ne note'\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Note@note2@[L9:C0, L11:C1]",
-            "snippet": "Note note2...ne note'\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Note@note3@[L13:C0, L15:C1]",
-            "snippet": "Note note3...ne note'\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Note@note3@[L17:C0, L19:C1]",
-            "snippet": "Note \"note...ne note'\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Note@schema.note4@[L27:C0, L32:C1]",
-            "snippet": "Note \"sche...dy\n  '''\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@schema@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@users@[L0:C0, L3:C1]",
-            "snippet": "Table user... unique]\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

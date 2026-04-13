@@ -100,17 +100,7 @@
                       }
                     },
                     "fullEnd": 23,
-                    "fullStart": 14,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@active@[L1:C2, L1:C8]",
-                        "snippet": "active"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@active@[L1:C2, L1:C8]",
-                        "snippet": "active"
-                      }
-                    }
+                    "fullStart": 14
                   },
                   {
                     "context": {
@@ -149,17 +139,7 @@
                       }
                     },
                     "fullEnd": 33,
-                    "fullStart": 23,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@churned@[L2:C2, L2:C9]",
-                        "snippet": "churned"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@churned@[L2:C2, L2:C9]",
-                        "snippet": "churned"
-                      }
-                    }
+                    "fullStart": 23
                   },
                   {
                     "context": {
@@ -198,17 +178,7 @@
                       }
                     },
                     "fullEnd": 44,
-                    "fullStart": 33,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@inactive@[L3:C2, L3:C10]",
-                        "snippet": "inactive"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@inactive@[L3:C2, L3:C10]",
-                        "snippet": "inactive"
-                      }
-                    }
+                    "fullStart": 33
                   }
                 ]
               },
@@ -255,37 +225,7 @@
             }
           },
           "fullEnd": 46,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-              "snippet": "Enum statu...inactive\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
-              "snippet": "Enum statu...inactive\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Enum field@active@[L1:C2, L1:C8]",
-                  "snippet": "active"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@churned@[L2:C2, L2:C9]",
-                  "snippet": "churned"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@inactive@[L3:C2, L3:C10]",
-                  "snippet": "inactive"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -355,17 +295,7 @@
                       }
                     },
                     "fullEnd": 80,
-                    "fullStart": 73,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@male@[L7:C2, L7:C6]",
-                        "snippet": "male"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@male@[L7:C2, L7:C6]",
-                        "snippet": "male"
-                      }
-                    }
+                    "fullStart": 73
                   },
                   {
                     "context": {
@@ -404,17 +334,7 @@
                       }
                     },
                     "fullEnd": 89,
-                    "fullStart": 80,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@female@[L8:C2, L8:C8]",
-                        "snippet": "female"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@female@[L8:C2, L8:C8]",
-                        "snippet": "female"
-                      }
-                    }
+                    "fullStart": 80
                   }
                 ]
               },
@@ -509,31 +429,7 @@
             }
           },
           "fullEnd": 91,
-          "fullStart": 46,
-          "symbol": {
-            "context": {
-              "id": "symbol@Enum@demographic.gender@[L6:C0, L9:C1]",
-              "snippet": "Enum demog...  female\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@demographic.gender@[L6:C0, L9:C1]",
-              "snippet": "Enum demog...  female\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Enum field@female@[L8:C2, L8:C8]",
-                  "snippet": "female"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@male@[L7:C2, L7:C6]",
-                  "snippet": "male"
-                }
-              }
-            ]
-          }
+          "fullStart": 46
         },
         {
           "context": {
@@ -603,17 +499,7 @@
                       }
                     },
                     "fullEnd": 135,
-                    "fullStart": 125,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@toddler@[L12:C2, L12:C9]",
-                        "snippet": "toddler"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@toddler@[L12:C2, L12:C9]",
-                        "snippet": "toddler"
-                      }
-                    }
+                    "fullStart": 125
                   },
                   {
                     "context": {
@@ -652,17 +538,7 @@
                       }
                     },
                     "fullEnd": 146,
-                    "fullStart": 135,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@children@[L13:C2, L13:C10]",
-                        "snippet": "children"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@children@[L13:C2, L13:C10]",
-                        "snippet": "children"
-                      }
-                    }
+                    "fullStart": 135
                   },
                   {
                     "context": {
@@ -701,17 +577,7 @@
                       }
                     },
                     "fullEnd": 157,
-                    "fullStart": 146,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@teenager@[L14:C2, L14:C10]",
-                        "snippet": "teenager"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@teenager@[L14:C2, L14:C10]",
-                        "snippet": "teenager"
-                      }
-                    }
+                    "fullStart": 146
                   },
                   {
                     "context": {
@@ -750,17 +616,7 @@
                       }
                     },
                     "fullEnd": 171,
-                    "fullStart": 157,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@young_adult@[L15:C2, L15:C13]",
-                        "snippet": "young_adult"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@young_adult@[L15:C2, L15:C13]",
-                        "snippet": "young_adult"
-                      }
-                    }
+                    "fullStart": 157
                   },
                   {
                     "context": {
@@ -799,17 +655,7 @@
                       }
                     },
                     "fullEnd": 179,
-                    "fullStart": 171,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@elder@[L16:C2, L16:C7]",
-                        "snippet": "elder"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@elder@[L16:C2, L16:C7]",
-                        "snippet": "elder"
-                      }
-                    }
+                    "fullStart": 171
                   }
                 ]
               },
@@ -904,49 +750,7 @@
             }
           },
           "fullEnd": 181,
-          "fullStart": 91,
-          "symbol": {
-            "context": {
-              "id": "symbol@Enum@demographic.age segment@[L11:C0, L17:C1]",
-              "snippet": "Enum demog...\n  elder\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@demographic.age segment@[L11:C0, L17:C1]",
-              "snippet": "Enum demog...\n  elder\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Enum field@children@[L13:C2, L13:C10]",
-                  "snippet": "children"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@elder@[L16:C2, L16:C7]",
-                  "snippet": "elder"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@teenager@[L14:C2, L14:C10]",
-                  "snippet": "teenager"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@toddler@[L12:C2, L12:C9]",
-                  "snippet": "toddler"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@young_adult@[L15:C2, L15:C13]",
-                  "snippet": "young_adult"
-                }
-              }
-            ]
-          }
+          "fullStart": 91
         },
         {
           "context": {
@@ -1047,17 +851,7 @@
                       }
                     },
                     "fullEnd": 207,
-                    "fullStart": 195,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@name@[L20:C2, L20:C11]",
-                        "snippet": "name text"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@name@[L20:C2, L20:C11]",
-                        "snippet": "name text"
-                      }
-                    }
+                    "fullStart": 195
                   },
                   {
                     "context": {
@@ -1127,17 +921,7 @@
                       }
                     },
                     "fullEnd": 216,
-                    "fullStart": 207,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L21:C2, L21:C8]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L21:C2, L21:C8]",
-                        "snippet": "id int"
-                      }
-                    }
+                    "fullStart": 207
                   },
                   {
                     "context": {
@@ -1354,17 +1138,7 @@
                       }
                     },
                     "fullEnd": 257,
-                    "fullStart": 216,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@status@[L22:C2, L22:C40]",
-                        "snippet": "status sta...us.active]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@status@[L22:C2, L22:C40]",
-                        "snippet": "status sta...us.active]"
-                      }
-                    }
+                    "fullStart": 216
                   },
                   {
                     "context": {
@@ -1677,17 +1451,7 @@
                       }
                     },
                     "fullEnd": 320,
-                    "fullStart": 257,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@gender@[L23:C2, L23:C62]",
-                        "snippet": "gender dem...nder.male]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@gender@[L23:C2, L23:C62]",
-                        "snippet": "gender dem...nder.male]"
-                      }
-                    }
+                    "fullStart": 257
                   },
                   {
                     "context": {
@@ -2000,17 +1764,7 @@
                       }
                     },
                     "fullEnd": 406,
-                    "fullStart": 320,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@age_type@[L24:C2, L24:C85]",
-                        "snippet": "age_type d...ung_adult]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@age_type@[L24:C2, L24:C85]",
-                        "snippet": "age_type d...ung_adult]"
-                      }
-                    }
+                    "fullStart": 320
                   },
                   {
                     "context": {
@@ -2179,17 +1933,7 @@
                       }
                     },
                     "fullEnd": 468,
-                    "fullStart": 406,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@invalid_validate_col@[L26:C2, L26:C60]",
-                        "snippet": "invalid_va...lid_value]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@invalid_validate_col@[L26:C2, L26:C60]",
-                        "snippet": "invalid_va...lid_value]"
-                      }
-                    }
+                    "fullStart": 406
                   },
                   {
                     "context": {
@@ -2502,17 +2246,7 @@
                       }
                     },
                     "fullEnd": 544,
-                    "fullStart": 468,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@invalid_validate_col2@[L27:C2, L27:C75]",
-                        "snippet": "invalid_va...d3.field4]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@invalid_validate_col2@[L27:C2, L27:C75]",
-                        "snippet": "invalid_va...d3.field4]"
-                      }
-                    }
+                    "fullStart": 468
                   },
                   {
                     "context": {
@@ -2729,17 +2463,7 @@
                       }
                     },
                     "fullEnd": 614,
-                    "fullStart": 544,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@invalid_bind_col@[L28:C2, L28:C69]",
-                        "snippet": "invalid_bi...lid_field]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@invalid_bind_col@[L28:C2, L28:C69]",
-                        "snippet": "invalid_bi...lid_field]"
-                      }
-                    }
+                    "fullStart": 544
                   }
                 ]
               },
@@ -2786,67 +2510,7 @@
             }
           },
           "fullEnd": 616,
-          "fullStart": 181,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@user@[L19:C0, L29:C1]",
-              "snippet": "Table user...d_field]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@user@[L19:C0, L29:C1]",
-              "snippet": "Table user...d_field]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@age_type@[L24:C2, L24:C85]",
-                  "snippet": "age_type d...ung_adult]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@gender@[L23:C2, L23:C62]",
-                  "snippet": "gender dem...nder.male]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L21:C2, L21:C8]",
-                  "snippet": "id int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@invalid_bind_col@[L28:C2, L28:C69]",
-                  "snippet": "invalid_bi...lid_field]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@invalid_validate_col2@[L27:C2, L27:C75]",
-                  "snippet": "invalid_va...d3.field4]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@invalid_validate_col@[L26:C2, L26:C60]",
-                  "snippet": "invalid_va...lid_value]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@name@[L20:C2, L20:C11]",
-                  "snippet": "name text"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@status@[L22:C2, L22:C40]",
-                  "snippet": "status sta...us.active]"
-                }
-              }
-            ]
-          }
+          "fullStart": 181
         }
       ],
       "eof": {
@@ -2860,35 +2524,6 @@
       }
     },
     "fullEnd": 616,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L30:C0]",
-        "snippet": "Enum statu..._field]\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L30:C0]",
-        "snippet": "Enum statu..._field]\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-            "snippet": "Enum statu...inactive\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Schema@demographic@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@user@[L19:C0, L29:C1]",
-            "snippet": "Table user...d_field]\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

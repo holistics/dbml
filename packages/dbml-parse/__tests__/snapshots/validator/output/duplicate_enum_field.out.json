@@ -124,17 +124,7 @@
                       }
                     },
                     "fullEnd": 26,
-                    "fullStart": 15,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@churn@[L1:C4, L1:C9]",
-                        "snippet": "churn"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@churn@[L1:C4, L1:C9]",
-                        "snippet": "churn"
-                      }
-                    }
+                    "fullStart": 15
                   },
                   {
                     "context": {
@@ -173,17 +163,7 @@
                       }
                     },
                     "fullEnd": 37,
-                    "fullStart": 26,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@churn@[L2:C4, L2:C9]",
-                        "snippet": "churn"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@churn@[L2:C4, L2:C9]",
-                        "snippet": "churn"
-                      }
-                    }
+                    "fullStart": 26
                   },
                   {
                     "context": {
@@ -222,17 +202,7 @@
                       }
                     },
                     "fullEnd": 48,
-                    "fullStart": 37,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@churn@[L3:C4, L3:C9]",
-                        "snippet": "churn"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@churn@[L3:C4, L3:C9]",
-                        "snippet": "churn"
-                      }
-                    }
+                    "fullStart": 37
                   }
                 ]
               },
@@ -279,37 +249,7 @@
             }
           },
           "fullEnd": 49,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-              "snippet": "Enum statu...  churn\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@status@[L0:C0, L4:C1]",
-              "snippet": "Enum statu...  churn\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Enum field@churn@[L1:C4, L1:C9]",
-                  "snippet": "churn"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@churn@[L2:C4, L2:C9]",
-                  "snippet": "churn"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@churn@[L3:C4, L3:C9]",
-                  "snippet": "churn"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         }
       ],
       "eof": {
@@ -323,24 +263,6 @@
       }
     },
     "fullEnd": 49,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L4:C1]",
-        "snippet": "Enum statu...  churn\r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L4:C1]",
-        "snippet": "Enum statu...  churn\r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Enum@status@[L0:C0, L4:C1]",
-            "snippet": "Enum statu...  churn\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

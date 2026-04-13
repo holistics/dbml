@@ -118,17 +118,7 @@
             }
           },
           "fullEnd": 20,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Enum@status@[L0:C0, L2:C1]",
-              "snippet": "Enum status {\r\n\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
-              "snippet": "Enum status {\r\n\r\n}"
-            }
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -252,17 +242,7 @@
             }
           },
           "fullEnd": 51,
-          "fullStart": 21,
-          "symbol": {
-            "context": {
-              "id": "symbol@Enum@public.status@[L4:C0, L6:C1]",
-              "snippet": "Enum publi...{\r\n    \r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
-              "snippet": "Enum publi...{\r\n    \r\n}"
-            }
-          }
+          "fullStart": 21
         }
       ],
       "eof": {
@@ -276,30 +256,6 @@
       }
     },
     "fullEnd": 51,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L6:C1]",
-        "snippet": "Enum statu...{\r\n    \r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L6:C1]",
-        "snippet": "Enum statu...{\r\n    \r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Enum@public.status@[L4:C0, L6:C1]",
-            "snippet": "Enum publi...{\r\n    \r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Enum@status@[L0:C0, L2:C1]",
-            "snippet": "Enum status {\r\n\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

@@ -155,17 +155,7 @@
                       }
                     },
                     "fullEnd": 25,
-                    "fullStart": 10,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C4, L1:C14]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C4, L1:C14]",
-                        "snippet": "id integer"
-                      }
-                    }
+                    "fullStart": 10
                   },
                   {
                     "context": {
@@ -235,17 +225,7 @@
                       }
                     },
                     "fullEnd": 41,
-                    "fullStart": 25,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@code@[L2:C4, L2:C15]",
-                        "snippet": "code number"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@code@[L2:C4, L2:C15]",
-                        "snippet": "code number"
-                      }
-                    }
+                    "fullStart": 25
                   }
                 ]
               },
@@ -292,31 +272,7 @@
             }
           },
           "fullEnd": 43,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@A@[L0:C0, L3:C1]",
-              "snippet": "Table A {\n...e number\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@A@[L0:C0, L3:C1]",
-              "snippet": "Table A {\n...e number\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@code@[L2:C4, L2:C15]",
-                  "snippet": "code number"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C4, L1:C14]",
-                  "snippet": "id integer"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -417,17 +373,7 @@
                       }
                     },
                     "fullEnd": 69,
-                    "fullStart": 54,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L6:C4, L6:C14]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L6:C4, L6:C14]",
-                        "snippet": "id integer"
-                      }
-                    }
+                    "fullStart": 54
                   },
                   {
                     "context": {
@@ -497,17 +443,7 @@
                       }
                     },
                     "fullEnd": 85,
-                    "fullStart": 69,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@code@[L7:C4, L7:C15]",
-                        "snippet": "code number"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@code@[L7:C4, L7:C15]",
-                        "snippet": "code number"
-                      }
-                    }
+                    "fullStart": 69
                   }
                 ]
               },
@@ -554,31 +490,7 @@
             }
           },
           "fullEnd": 87,
-          "fullStart": 43,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@B@[L5:C0, L8:C1]",
-              "snippet": "Table B {\n...e number\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@B@[L5:C0, L8:C1]",
-              "snippet": "Table B {\n...e number\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@code@[L7:C4, L7:C15]",
-                  "snippet": "code number"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L6:C4, L6:C14]",
-                  "snippet": "id integer"
-                }
-              }
-            ]
-          }
+          "fullStart": 43
         },
         {
           "context": {
@@ -679,17 +591,7 @@
                       }
                     },
                     "fullEnd": 113,
-                    "fullStart": 98,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L11:C4, L11:C14]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L11:C4, L11:C14]",
-                        "snippet": "id integer"
-                      }
-                    }
+                    "fullStart": 98
                   },
                   {
                     "context": {
@@ -759,17 +661,7 @@
                       }
                     },
                     "fullEnd": 129,
-                    "fullStart": 113,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@code@[L12:C4, L12:C15]",
-                        "snippet": "code number"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@code@[L12:C4, L12:C15]",
-                        "snippet": "code number"
-                      }
-                    }
+                    "fullStart": 113
                   },
                   {
                     "context": {
@@ -1142,31 +1034,7 @@
             }
           },
           "fullEnd": 172,
-          "fullStart": 87,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@C@[L10:C0, L15:C1]",
-              "snippet": "Table C {\n...> B.code\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@C@[L10:C0, L15:C1]",
-              "snippet": "Table C {\n...> B.code\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@code@[L12:C4, L12:C15]",
-                  "snippet": "code number"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L11:C4, L11:C14]",
-                  "snippet": "id integer"
-                }
-              }
-            ]
-          }
+          "fullStart": 87
         }
       ],
       "eof": {
@@ -1180,36 +1048,6 @@
       }
     },
     "fullEnd": 172,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L15:C1]",
-        "snippet": "Table A {\n...> B.code\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L15:C1]",
-        "snippet": "Table A {\n...> B.code\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@A@[L0:C0, L3:C1]",
-            "snippet": "Table A {\n...e number\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@B@[L5:C0, L8:C1]",
-            "snippet": "Table B {\n...e number\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@C@[L10:C0, L15:C1]",
-            "snippet": "Table C {\n...> B.code\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

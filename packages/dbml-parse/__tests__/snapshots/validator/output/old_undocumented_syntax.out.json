@@ -257,17 +257,7 @@
                       }
                     },
                     "fullEnd": 70,
-                    "fullStart": 19,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@customer_id@[L1:C2, L1:C50]",
-                        "snippet": "\"customer_...increment]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@customer_id@[L1:C2, L1:C50]",
-                        "snippet": "\"customer_...increment]"
-                      }
-                    }
+                    "fullStart": 19
                   },
                   {
                     "context": {
@@ -407,17 +397,7 @@
                       }
                     },
                     "fullEnd": 102,
-                    "fullStart": 70,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@store_id@[L2:C2, L2:C31]",
-                        "snippet": "\"store_id\"...[not null]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@store_id@[L2:C2, L2:C31]",
-                        "snippet": "\"store_id\"...[not null]"
-                      }
-                    }
+                    "fullStart": 70
                   },
                   {
                     "context": {
@@ -626,17 +606,7 @@
                       }
                     },
                     "fullEnd": 140,
-                    "fullStart": 102,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@first_name@[L3:C2, L3:C37]",
-                        "snippet": "\"first_nam...[not null]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@first_name@[L3:C2, L3:C37]",
-                        "snippet": "\"first_nam...[not null]"
-                      }
-                    }
+                    "fullStart": 102
                   },
                   {
                     "context": {
@@ -925,17 +895,7 @@
                       }
                     },
                     "fullEnd": 193,
-                    "fullStart": 140,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@last_name@[L4:C2, L4:C52]",
-                        "snippet": "\"last_name...lt: faLse]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@last_name@[L4:C2, L4:C52]",
-                        "snippet": "\"last_name...lt: faLse]"
-                      }
-                    }
+                    "fullStart": 140
                   },
                   {
                     "context": {
@@ -1173,17 +1133,7 @@
                       }
                     },
                     "fullEnd": 231,
-                    "fullStart": 193,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@email@[L5:C2, L5:C37]",
-                        "snippet": "\"email\" VA...ult: NULL]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@email@[L5:C2, L5:C37]",
-                        "snippet": "\"email\" VA...ult: NULL]"
-                      }
-                    }
+                    "fullStart": 193
                   },
                   {
                     "context": {
@@ -1323,17 +1273,7 @@
                       }
                     },
                     "fullEnd": 266,
-                    "fullStart": 231,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@address_id@[L6:C2, L6:C34]",
-                        "snippet": "\"address_i...[not NULL]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@address_id@[L6:C2, L6:C34]",
-                        "snippet": "\"address_i...[not NULL]"
-                      }
-                    }
+                    "fullStart": 231
                   },
                   {
                     "context": {
@@ -1553,17 +1493,7 @@
                       }
                     },
                     "fullEnd": 311,
-                    "fullStart": 266,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@active@[L7:C2, L7:C44]",
-                        "snippet": "\"active\" B...ult: TRUE]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@active@[L7:C2, L7:C44]",
-                        "snippet": "\"active\" B...ult: TRUE]"
-                      }
-                    }
+                    "fullStart": 266
                   },
                   {
                     "context": {
@@ -1703,17 +1633,7 @@
                       }
                     },
                     "fullEnd": 347,
-                    "fullStart": 311,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@create_date@[L8:C2, L8:C35]",
-                        "snippet": "\"create_da...[not null]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@create_date@[L8:C2, L8:C35]",
-                        "snippet": "\"create_da...[not null]"
-                      }
-                    }
+                    "fullStart": 311
                   },
                   {
                     "context": {
@@ -1872,17 +1792,7 @@
                       }
                     },
                     "fullEnd": 404,
-                    "fullStart": 347,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@last_update@[L9:C2, L9:C56]",
-                        "snippet": "\"last_upda...IMESTAMP`]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@last_update@[L9:C2, L9:C56]",
-                        "snippet": "\"last_upda...IMESTAMP`]"
-                      }
-                    }
+                    "fullStart": 347
                   }
                 ]
               },
@@ -1929,73 +1839,7 @@
             }
           },
           "fullEnd": 406,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@customer@[L0:C0, L10:C1]",
-              "snippet": "Table \"cus...ESTAMP`]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@customer@[L0:C0, L10:C1]",
-              "snippet": "Table \"cus...ESTAMP`]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@active@[L7:C2, L7:C44]",
-                  "snippet": "\"active\" B...ult: TRUE]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@address_id@[L6:C2, L6:C34]",
-                  "snippet": "\"address_i...[not NULL]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@create_date@[L8:C2, L8:C35]",
-                  "snippet": "\"create_da...[not null]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@customer_id@[L1:C2, L1:C50]",
-                  "snippet": "\"customer_...increment]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@email@[L5:C2, L5:C37]",
-                  "snippet": "\"email\" VA...ult: NULL]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@first_name@[L3:C2, L3:C37]",
-                  "snippet": "\"first_nam...[not null]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@last_name@[L4:C2, L4:C52]",
-                  "snippet": "\"last_name...lt: faLse]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@last_update@[L9:C2, L9:C56]",
-                  "snippet": "\"last_upda...IMESTAMP`]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@store_id@[L2:C2, L2:C31]",
-                  "snippet": "\"store_id\"...[not null]"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -2166,17 +2010,7 @@
                       }
                     },
                     "fullEnd": 449,
-                    "fullStart": 422,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L13:C2, L13:C26]",
-                        "snippet": "id integer...imary key]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L13:C2, L13:C26]",
-                        "snippet": "id integer...imary key]"
-                      }
-                    }
+                    "fullStart": 422
                   },
                   {
                     "context": {
@@ -2345,17 +2179,7 @@
                       }
                     },
                     "fullEnd": 477,
-                    "fullStart": 449,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@name@[L14:C2, L14:C27]",
-                        "snippet": "name e [de...: \"hello\"]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@name@[L14:C2, L14:C27]",
-                        "snippet": "name e [de...: \"hello\"]"
-                      }
-                    }
+                    "fullStart": 449
                   },
                   {
                     "context": {
@@ -2425,17 +2249,7 @@
                       }
                     },
                     "fullEnd": 498,
-                    "fullStart": 477,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@country_id@[L15:C2, L15:C20]",
-                        "snippet": "country_id integer"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@country_id@[L15:C2, L15:C20]",
-                        "snippet": "country_id integer"
-                      }
-                    }
+                    "fullStart": 477
                   },
                   {
                     "context": {
@@ -2549,37 +2363,7 @@
             }
           },
           "fullEnd": 517,
-          "fullStart": 406,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@cities@[L12:C0, L17:C1]",
-              "snippet": "Table citi...\"sasasa\"\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@cities@[L12:C0, L17:C1]",
-              "snippet": "Table citi...\"sasasa\"\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@country_id@[L15:C2, L15:C20]",
-                  "snippet": "country_id integer"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L13:C2, L13:C26]",
-                  "snippet": "id integer...imary key]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@name@[L14:C2, L14:C27]",
-                  "snippet": "name e [de...: \"hello\"]"
-                }
-              }
-            ]
-          }
+          "fullStart": 406
         },
         {
           "context": {
@@ -2680,17 +2464,7 @@
                       }
                     },
                     "fullEnd": 546,
-                    "fullStart": 534,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L20:C1, L20:C11]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L20:C1, L20:C11]",
-                        "snippet": "id integer"
-                      }
-                    }
+                    "fullStart": 534
                   },
                   {
                     "context": {
@@ -2798,17 +2572,7 @@
                       }
                     },
                     "fullEnd": 563,
-                    "fullStart": 546,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@cities@[L21:C1, L21:C16]",
-                        "snippet": "cities string[]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@cities@[L21:C1, L21:C16]",
-                        "snippet": "cities string[]"
-                      }
-                    }
+                    "fullStart": 546
                   }
                 ]
               },
@@ -2855,31 +2619,7 @@
             }
           },
           "fullEnd": 565,
-          "fullStart": 517,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@country@[L19:C0, L22:C1]",
-              "snippet": "Table coun...string[]\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@country@[L19:C0, L22:C1]",
-              "snippet": "Table coun...string[]\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@cities@[L21:C1, L21:C16]",
-                  "snippet": "cities string[]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L20:C1, L20:C11]",
-                  "snippet": "id integer"
-                }
-              }
-            ]
-          }
+          "fullStart": 517
         },
         {
           "context": {
@@ -2980,17 +2720,7 @@
                       }
                     },
                     "fullEnd": 594,
-                    "fullStart": 582,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L25:C1, L25:C11]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L25:C1, L25:C11]",
-                        "snippet": "id integer"
-                      }
-                    }
+                    "fullStart": 582
                   },
                   {
                     "context": {
@@ -3060,17 +2790,7 @@
                       }
                     },
                     "fullEnd": 607,
-                    "fullStart": 594,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@name@[L26:C1, L26:C12]",
-                        "snippet": "name string"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@name@[L26:C1, L26:C12]",
-                        "snippet": "name string"
-                      }
-                    }
+                    "fullStart": 594
                   },
                   {
                     "context": {
@@ -3189,17 +2909,7 @@
                       }
                     },
                     "fullEnd": 631,
-                    "fullStart": 607,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Indexes@@[L27:C1, L29:C2]",
-                        "snippet": "indexes {\n...id name\n\t}"
-                      },
-                      "declaration": {
-                        "id": "node@<element-declaration>@@[L27:C1, L29:C2]",
-                        "snippet": "indexes {\n...id name\n\t}"
-                      }
-                    }
+                    "fullStart": 607
                   }
                 ]
               },
@@ -3246,37 +2956,7 @@
             }
           },
           "fullEnd": 632,
-          "fullStart": 565,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@citites@[L24:C0, L30:C1]",
-              "snippet": "Table citi... name\n\t}\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@citites@[L24:C0, L30:C1]",
-              "snippet": "Table citi... name\n\t}\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L25:C1, L25:C11]",
-                  "snippet": "id integer"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@name@[L26:C1, L26:C12]",
-                  "snippet": "name string"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Indexes@@[L27:C1, L29:C2]",
-                  "snippet": "indexes {\n...id name\n\t}"
-                }
-              }
-            ]
-          }
+          "fullStart": 565
         }
       ],
       "eof": {
@@ -3290,42 +2970,6 @@
       }
     },
     "fullEnd": 632,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L30:C1]",
-        "snippet": "Table \"cus... name\n\t}\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L30:C1]",
-        "snippet": "Table \"cus... name\n\t}\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@cities@[L12:C0, L17:C1]",
-            "snippet": "Table citi...\"sasasa\"\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@citites@[L24:C0, L30:C1]",
-            "snippet": "Table citi... name\n\t}\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@country@[L19:C0, L22:C1]",
-            "snippet": "Table coun...string[]\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@customer@[L0:C0, L10:C1]",
-            "snippet": "Table \"cus...ESTAMP`]\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

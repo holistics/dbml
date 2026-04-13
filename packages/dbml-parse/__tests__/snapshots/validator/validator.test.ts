@@ -23,7 +23,9 @@ function serializeValidatorResult (compiler: Compiler, ast: ProgramNode): string
     program: ast,
     errors,
     warnings,
-  }, { includeReferences: false, includeReferee: false }), null, 2);
+  }, {
+    includeReferences: false, includeReferee: false, includeSymbols: false,
+  }), null, 2);
 }
 
 describe('[snapshot] validator', () => {

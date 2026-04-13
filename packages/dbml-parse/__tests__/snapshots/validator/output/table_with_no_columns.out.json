@@ -80,17 +80,7 @@
             }
           },
           "fullEnd": 22,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@empty_table@[L0:C0, L1:C1]",
-              "snippet": "Table empt..._table {\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@empty_table@[L0:C0, L1:C1]",
-              "snippet": "Table empt..._table {\n}"
-            }
-          }
+          "fullStart": 0
         }
       ],
       "eof": {
@@ -104,24 +94,6 @@
       }
     },
     "fullEnd": 22,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L2:C0]",
-        "snippet": "Table empt...table {\n}\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L2:C0]",
-        "snippet": "Table empt...table {\n}\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@empty_table@[L0:C0, L1:C1]",
-            "snippet": "Table empt..._table {\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }
