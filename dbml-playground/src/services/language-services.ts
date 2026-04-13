@@ -1,39 +1,7 @@
 import logger from '@/utils/logger';
 import * as monaco from 'monaco-editor';
 import type { Compiler } from '@dbml/parse';
-import { dbmlMonarchTokensProvider } from '@dbml/parse';
-
-const DBML_LANGUAGE_CONFIG: monaco.languages.LanguageConfiguration = {
-  comments: {
-    lineComment: '//',
-    blockComment: ['/*', '*/'],
-  },
-  brackets: [
-    ['{', '}'],
-    ['[', ']'],
-    ['(', ')'],
-  ],
-  autoClosingPairs: [
-    { open: '{', close: '}' },
-    { open: '[', close: ']' },
-    { open: '(', close: ')' },
-    { open: '"', close: '"' },
-    { open: '\'', close: '\'' },
-    { open: '`', close: '`' },
-  ],
-  surroundingPairs: [
-    { open: '{', close: '}' },
-    { open: '[', close: ']' },
-    { open: '(', close: ')' },
-    { open: '"', close: '"' },
-    { open: '\'', close: '\'' },
-    { open: '`', close: '`' },
-  ],
-  indentationRules: {
-    increaseIndentPattern: /^(.*\{[^}]*|\s*[\{\[].*)$/,
-    decreaseIndentPattern: /^(.*\}.*|\s*[\}\]].*)$/,
-  },
-};
+import { dbmlMonarchTokensProvider, dbmlLanguageConfig } from '@dbml/parse';
 
 const DBML_THEME: monaco.editor.IStandaloneThemeData = {
   base: 'vs',
@@ -68,7 +36,7 @@ export function registerDbmlLanguage (): void {
   try {
     monaco.languages.register({ id: DBML_LANGUAGE_ID });
     monaco.languages.setMonarchTokensProvider(DBML_LANGUAGE_ID, dbmlMonarchTokensProvider as monaco.languages.IMonarchLanguage);
-    monaco.languages.setLanguageConfiguration(DBML_LANGUAGE_ID, DBML_LANGUAGE_CONFIG);
+    monaco.languages.setLanguageConfiguration(DBML_LANGUAGE_ID, dbmlLanguageConfig);
     monaco.editor.defineTheme(DBML_THEME_NAME, DBML_THEME);
     isLanguageRegistered = true;
   } catch (error) {
