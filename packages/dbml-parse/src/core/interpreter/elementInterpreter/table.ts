@@ -134,6 +134,7 @@ export class TableInterpreter implements ElementInterpreter {
         name: alias,
         kind: 'table',
         value: {
+          elementName: this.table.name!,
           tableName: this.table.name!,
           schemaName: this.table.schemaName!,
         },

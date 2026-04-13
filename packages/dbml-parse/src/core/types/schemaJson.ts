@@ -203,6 +203,8 @@ export interface Alias {
   name: string;
   kind: AliasKind;
   value: {
+    elementName: string;
+    /** @deprecated Use elementName instead */
     tableName: string;
     schemaName: string | null;
   };
