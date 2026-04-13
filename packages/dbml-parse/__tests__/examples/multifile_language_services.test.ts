@@ -3,7 +3,7 @@ import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import { UseStatementMerger } from '@/services/completion/utils/useStatementMerger';
-import { MockTextModel, createPosition } from '../utils';
+import { createMockTextModel, createPosition } from '../utils';
 import { Filepath } from '@/core/types/filepath';
 
 // Inline project source maps. Each entry maps a filepath (relative to /) onto
@@ -166,12 +166,12 @@ function pickFile (files: Map<Filepath, string>, basename: string): Filepath {
 
 describe('[inline] multifile language services', () => {
   describe('enum-imports project', () => {
+    const { compiler, files } = setupCompiler(ENUM_IMPORTS);
+
     it('should find definition of imported enum', () => {
-      const { compiler, files } = setupCompiler(ENUM_IMPORTS);
       const mainFile = pickFile(files, 'consumer-direct-import.dbml');
-      const mainContent = files.get(mainFile)!;
       const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(mainContent, mainFile.toUri()) as any;
+      const model = createMockTextModel(files.get(mainFile)!, mainFile.toUri());
 
       // "  status job_status" sits on the field-type token a few lines into the file
       const definitions = definitionProvider.provideDefinition(model, createPosition(6, 10));
@@ -183,11 +183,9 @@ describe('[inline] multifile language services', () => {
     });
 
     it('should find all references to imported enum', () => {
-      const { compiler, files } = setupCompiler(ENUM_IMPORTS);
       const typesFile = pickFile(files, 'enum-source.dbml');
-      const typesContent = files.get(typesFile)!;
       const referencesProvider = new DBMLReferencesProvider(compiler);
-      const model = new MockTextModel(typesContent, typesFile.toUri()) as any;
+      const model = createMockTextModel(files.get(typesFile)!, typesFile.toUri());
 
       // Position at the `job_status` enum declaration name
       const references = referencesProvider.provideReferences(model, createPosition(2, 8));
@@ -203,16 +201,9 @@ describe('[inline] multifile language services', () => {
       const mainFile = pickFile(files, 'main.dbml');
       const mainContent = files.get(mainFile)!;
       const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(mainContent, mainFile.toUri()) as any;
+      const model = createMockTextModel(mainContent, mainFile.toUri());
 
-      // Should not crash when querying definitions in multifile context
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(1, 5));
-      } catch {
-        didThrow = true;
-      }
-      expect(didThrow).toBe(false);
+      expect(() => definitionProvider.provideDefinition(model, createPosition(1, 5))).not.toThrow();
     });
   });
 
@@ -220,30 +211,15 @@ describe('[inline] multifile language services', () => {
     it('should navigate through transitive references', () => {
       const { compiler, files } = setupCompiler(TRANSITIVE_REF_CHAIN);
       expect(files.size).toBe(3);
-      const fileNames = Array.from(files.keys()).map((f) => f.basename);
-      expect(fileNames).toContain('a.dbml');
+      expect(Array.from(files.keys()).map((f) => f.basename)).toContain('a.dbml');
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const referencesProvider = new DBMLReferencesProvider(compiler);
 
       for (const [filepath, content] of files) {
-        const model = new MockTextModel(content, filepath.toUri()) as any;
-
-        let defThrow = false;
-        let refThrow = false;
-        try {
-          definitionProvider.provideDefinition(model, createPosition(1, 1));
-        } catch {
-          defThrow = true;
-        }
-        try {
-          referencesProvider.provideReferences(model, createPosition(1, 1));
-        } catch {
-          refThrow = true;
-        }
-
-        expect(defThrow).toBe(false);
-        expect(refThrow).toBe(false);
+        const model = createMockTextModel(content, filepath.toUri());
+        expect(() => definitionProvider.provideDefinition(model, createPosition(1, 1))).not.toThrow();
+        expect(() => referencesProvider.provideReferences(model, createPosition(1, 1))).not.toThrow();
       }
     });
   });
@@ -252,38 +228,26 @@ describe('[inline] multifile language services', () => {
     it('should handle tablegroup imports across files', () => {
       const { compiler, files } = setupCompiler(IMPORTED_TABLEGROUP);
       const mainFile = pickFile(files, 'main.dbml');
-      const mainContent = files.get(mainFile)!;
       const referencesProvider = new DBMLReferencesProvider(compiler);
-      const model = new MockTextModel(mainContent, mainFile.toUri()) as any;
+      const model = createMockTextModel(files.get(mainFile)!, mainFile.toUri());
 
-      let didThrow = false;
-      try {
-        referencesProvider.provideReferences(model, createPosition(3, 10));
-      } catch {
-        didThrow = true;
-      }
-      expect(didThrow).toBe(false);
+      expect(() => referencesProvider.provideReferences(model, createPosition(3, 10))).not.toThrow();
     });
   });
 
   describe('circular-ref project', () => {
+    // Circular structures must not crash or infinite-loop in language services.
     it('should handle circular references gracefully', () => {
       const { compiler, files } = setupCompiler(CIRCULAR_REF);
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const referencesProvider = new DBMLReferencesProvider(compiler);
 
       for (const [filepath, content] of files) {
-        const model = new MockTextModel(content, filepath.toUri()) as any;
-
-        // Must not crash or infinite-loop on circular structures
-        let didThrow = false;
-        try {
+        const model = createMockTextModel(content, filepath.toUri());
+        expect(() => {
           definitionProvider.provideDefinition(model, createPosition(1, 1));
           referencesProvider.provideReferences(model, createPosition(1, 1));
-        } catch {
-          didThrow = true;
-        }
-        expect(didThrow).toBe(false);
+        }).not.toThrow();
       }
     });
   });
@@ -295,17 +259,11 @@ describe('[inline] multifile language services', () => {
       const referencesProvider = new DBMLReferencesProvider(compiler);
 
       for (const filepath of [pickFile(files, 'base.dbml'), pickFile(files, 'consumer.dbml')]) {
-        const content = files.get(filepath)!;
-        const model = new MockTextModel(content, filepath.toUri()) as any;
-
-        let didThrow = false;
-        try {
+        const model = createMockTextModel(files.get(filepath)!, filepath.toUri());
+        expect(() => {
           definitionProvider.provideDefinition(model, createPosition(1, 1));
           referencesProvider.provideReferences(model, createPosition(1, 1));
-        } catch {
-          didThrow = true;
-        }
-        expect(didThrow).toBe(false);
+        }).not.toThrow();
       }
     });
   });
@@ -317,17 +275,13 @@ describe('[inline] multifile language services', () => {
       const definitionProvider = new DBMLDefinitionProvider(compiler);
 
       for (const [filepath, content] of files) {
-        const model = new MockTextModel(content, filepath.toUri()) as any;
+        const model = createMockTextModel(content, filepath.toUri());
 
-        let didThrow = false;
-        try {
+        expect(() => {
           for (let line = 1; line <= 5; line++) {
             definitionProvider.provideDefinition(model, createPosition(line, 5));
           }
-        } catch {
-          didThrow = true;
-        }
-        expect(didThrow).toBe(false);
+        }).not.toThrow();
       }
     });
   });
@@ -439,47 +393,24 @@ Table jobs {
     });
   });
 
-  describe('robustness across all inline projects', () => {
-    const PROJECTS: Array<[string, ProjectFiles]> = [
-      ['enum-imports', ENUM_IMPORTS],
-      ['alias-and-schema-strip', ALIAS_AND_SCHEMA_STRIP],
-      ['transitive-ref-chain', TRANSITIVE_REF_CHAIN],
-      ['imported-tablegroup', IMPORTED_TABLEGROUP],
-      ['circular-ref', CIRCULAR_REF],
-      ['duplicate-records', DUPLICATE_RECORDS],
-      ['same-table-two-aliases', SAME_TABLE_TWO_ALIASES],
-    ];
+  describe('robustness sweep across representative projects', () => {
+    // Per-project describes already exercise binding; this loop only adds the
+    // (line=2, col=5) probe across multiple files of each project to catch
+    // any provider that crashes when invoked at a non-trivial position.
+    const PROJECTS: ProjectFiles[] = [ENUM_IMPORTS, ALIAS_AND_SCHEMA_STRIP, TRANSITIVE_REF_CHAIN];
 
-    it('should bind each project without throwing', () => {
-      for (const [name, project] of PROJECTS) {
-        let didThrow = false;
-        try {
-          setupCompiler(project);
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to load project: ${name}`, e);
-          didThrow = true;
-        }
-        expect(didThrow).toBe(false);
-      }
-    });
-
-    it('should run language services on a representative subset without throwing', () => {
-      for (const [, project] of PROJECTS.slice(0, 3)) {
+    it('language services do not throw at probe positions', () => {
+      for (const project of PROJECTS) {
         const { compiler, files } = setupCompiler(project);
         const definitionProvider = new DBMLDefinitionProvider(compiler);
         const referencesProvider = new DBMLReferencesProvider(compiler);
 
         for (const [filepath, content] of files) {
-          const model = new MockTextModel(content, filepath.toUri()) as any;
-          let didThrow = false;
-          try {
+          const model = createMockTextModel(content, filepath.toUri());
+          expect(() => {
             definitionProvider.provideDefinition(model, createPosition(2, 5));
             referencesProvider.provideReferences(model, createPosition(2, 5));
-          } catch {
-            didThrow = true;
-          }
-          expect(didThrow).toBe(false);
+          }).not.toThrow();
         }
       }
     });

@@ -19,17 +19,19 @@ function makeLayout (files: Record<string, string>, entry: string): MemoryProjec
   return layout;
 }
 
-describe('@dbml/core multifile', () => {
-  describe('basic cross-file enum import', () => {
-    test('direct import: field type resolves to enum defined in another file', () => {
-      const layout = makeLayout({
-        '/enum-source.dbml': `
+const ENUM_SOURCE_DBML = `
 Enum job_status {
   pending
   running
   done
 }
-`,
+`;
+
+describe('@dbml/core multifile', () => {
+  describe('basic cross-file enum import', () => {
+    test('direct import: field type resolves to enum defined in another file', () => {
+      const layout = makeLayout({
+        '/enum-source.dbml': ENUM_SOURCE_DBML,
         '/consumer-direct-import.dbml': `
 use { enum job_status } from './enum-source.dbml'
 
@@ -52,13 +54,7 @@ Table jobs {
 
     test('aliased import: field type resolves via the alias, not the original name', () => {
       const layout = makeLayout({
-        '/enum-source.dbml': `
-Enum job_status {
-  pending
-  running
-  done
-}
-`,
+        '/enum-source.dbml': ENUM_SOURCE_DBML,
         '/consumer-aliased-import.dbml': `
 use { enum job_status as Status } from './enum-source.dbml'
 
