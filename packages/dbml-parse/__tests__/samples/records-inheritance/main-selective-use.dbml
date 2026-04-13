@@ -1,5 +1,0 @@
-// should pull in both tables and records
-use {
-  table a
-  table b as d
-} from './records-and-tables.dbml'

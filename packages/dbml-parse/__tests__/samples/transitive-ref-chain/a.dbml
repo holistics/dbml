@@ -1,9 +1,0 @@
-// top level: imports only orders, not payments
-// the inline ref orders.payment_id > payments.id should be filtered out
-// because payments is not visible here
-use { table orders } from './b.dbml'
-
-Table users {
-  id int [pk]
-  email varchar
-}

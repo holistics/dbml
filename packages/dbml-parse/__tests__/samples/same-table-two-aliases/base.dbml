@@ -1,5 +1,0 @@
-// single source table imported under different names in two consumer files
-Table users {
-  id int [pk]
-  email varchar
-}

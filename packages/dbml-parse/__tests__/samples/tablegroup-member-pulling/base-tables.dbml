@@ -1,9 +1,0 @@
-Table users {
-  id int [pk]
-  email varchar
-}
-
-Table posts {
-  id int [pk]
-  user_id int [ref: > users.id]
-}

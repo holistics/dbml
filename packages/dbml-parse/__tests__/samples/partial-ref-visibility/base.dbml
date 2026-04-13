@@ -1,9 +1,0 @@
-// both tables and an inline ref live here
-Table users {
-  id int [pk]
-}
-
-Table orders {
-  id int [pk]
-  user_id int [ref: > users.id]
-}

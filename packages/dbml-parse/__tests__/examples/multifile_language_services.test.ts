@@ -1,6 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
@@ -8,106 +6,201 @@ import { UseStatementMerger } from '@/services/completion/utils/useStatementMerg
 import { MockTextModel, createPosition } from '../utils';
 import { Filepath } from '@/core/types/filepath';
 
-const SAMPLES_DIR = join(__dirname, '../samples');
+// Inline project source maps. Each entry maps a filepath (relative to /) onto
+// the file's DBML source. `setupCompiler` mounts every entry on the compiler
+// and returns both the compiler and a `Filepath -> source` map keyed by the
+// canonicalised Filepath instance — so callers can `model.toUri()` the same
+// instance that was loaded.
+type ProjectFiles = Record<string, string>;
 
-/**
- * Helper to load a multifile sample project
- */
-function loadSampleProject(sampleDir: string): Map<Filepath, string> {
-  const files = new Map<Filepath, string>();
-  const fullPath = join(SAMPLES_DIR, sampleDir);
-
-  // Read all .dbml files in the directory
-  const fs = require('fs');
-  const entries = fs.readdirSync(fullPath, { withFileTypes: true });
-
-  for (const entry of entries) {
-    if (entry.isFile() && entry.name.endsWith('.dbml')) {
-      const filePath = join(fullPath, entry.name);
-      const content = readFileSync(filePath, 'utf-8');
-      const filepath = new Filepath(filePath);
-      files.set(filepath, content);
-    }
-  }
-
-  return files;
-}
-
-/**
- * Helper to setup compiler with multifile project
- */
-function setupCompilerWithProject(files: Map<Filepath, string>): {
+function setupCompiler (project: ProjectFiles): {
   compiler: Compiler;
   files: Map<Filepath, string>;
 } {
   const compiler = new Compiler();
-
-  for (const [filepath, content] of files) {
-    compiler.setSource(filepath, content);
+  const files = new Map<Filepath, string>();
+  for (const [path, content] of Object.entries(project)) {
+    const fp = Filepath.from(path);
+    compiler.setSource(fp, content);
+    files.set(fp, content);
   }
-
   compiler.bindProject();
-  return { compiler, files };
+  return {
+    compiler,
+    files,
+  };
 }
 
-describe('[samples] multifile language services', () => {
+const ENUM_IMPORTS: ProjectFiles = {
+  '/enum-source.dbml': `
+Enum job_status {
+  pending
+  running
+  done
+}
+`,
+  '/consumer-direct-import.dbml': `
+use { enum job_status } from './enum-source.dbml'
+
+Table jobs {
+  id int [pk]
+  status job_status
+}
+`,
+  '/consumer-aliased-import.dbml': `
+use { enum job_status as Status } from './enum-source.dbml'
+
+Table jobs {
+  id int [pk]
+  status Status
+}
+`,
+};
+
+const ALIAS_AND_SCHEMA_STRIP: ProjectFiles = {
+  '/auth-tables.dbml': `Table auth.users {
+  id int [pk]
+  email varchar
+}`,
+  '/main.dbml': `use { table auth.users as u } from './auth-tables.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > u.id]
+}`,
+};
+
+const TRANSITIVE_REF_CHAIN: ProjectFiles = {
+  '/c.dbml': `Table payments {
+  id int [pk]
+  amount int
+}`,
+  '/b.dbml': `use { table payments } from './c.dbml'
+
+Table orders {
+  id int [pk]
+  payment_id int [ref: > payments.id]
+}`,
+  '/a.dbml': `use { table orders } from './b.dbml'
+
+Table users {
+  id int [pk]
+  email varchar
+}`,
+};
+
+const IMPORTED_TABLEGROUP: ProjectFiles = {
+  '/base.dbml': `Table users {
+  id int [pk]
+  email varchar
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+}
+
+TableGroup content {
+  users
+  posts
+}`,
+  '/main.dbml': `use { tablegroup content } from './base.dbml'`,
+};
+
+const CIRCULAR_REF: ProjectFiles = {
+  '/x.dbml': `use { table y_table } from './y.dbml'
+
+Table x_table {
+  id int [pk]
+  y_id int [ref: > y_table.id]
+}`,
+  '/y.dbml': `use { table x_table } from './x.dbml'
+
+Table y_table {
+  id int [pk]
+  x_id int [ref: > x_table.id]
+}`,
+};
+
+const DUPLICATE_RECORDS: ProjectFiles = {
+  '/base.dbml': `Table users {
+  id int [pk]
+  name varchar
+}
+
+records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+}`,
+  '/consumer.dbml': `reuse { table users } from './base.dbml'
+
+records users(id, name) {
+  3, 'Carol'
+  4, 'Dave'
+}`,
+};
+
+const SAME_TABLE_TWO_ALIASES: ProjectFiles = {
+  '/base.dbml': `Table users {
+  id int [pk]
+  email varchar
+}`,
+  '/consumer-a.dbml': `use { table users as u } from './base.dbml'
+
+TableGroup group_a {
+  u
+}`,
+  '/consumer-b.dbml': `use { table users } from './base.dbml'
+
+TableGroup group_b {
+  users
+}`,
+};
+
+function pickFile (files: Map<Filepath, string>, basename: string): Filepath {
+  for (const fp of files.keys()) {
+    if (fp.basename === basename) return fp;
+  }
+  throw new Error(`${basename} not found`);
+}
+
+describe('[inline] multifile language services', () => {
   describe('enum-imports project', () => {
     it('should find definition of imported enum', () => {
-      const files = loadSampleProject('enum-imports');
-      const { compiler } = setupCompilerWithProject(files);
-
-      // Find the direct-import consumer entrypoint
-      const mainFile = Array.from(files.keys()).find(f => f.basename === 'consumer-direct-import.dbml');
-      if (!mainFile) throw new Error('consumer-direct-import.dbml not found');
-
+      const { compiler, files } = setupCompiler(ENUM_IMPORTS);
+      const mainFile = pickFile(files, 'consumer-direct-import.dbml');
       const mainContent = files.get(mainFile)!;
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = new MockTextModel(mainContent, mainFile.toUri()) as any;
 
-      // Position at 'job_status' in the field type (line 6, around column 10)
-      // "  status job_status"
-      const position = createPosition(6, 10);
-      const definitions = definitionProvider.provideDefinition(model, position);
+      // "  status job_status" sits on the field-type token a few lines into the file
+      const definitions = definitionProvider.provideDefinition(model, createPosition(6, 10));
 
       expect(definitions).toBeDefined();
       const defs = Array.isArray(definitions) ? definitions : (definitions ? [definitions] : []);
       expect(defs.length).toBeGreaterThanOrEqual(0);
-      // Should find definition across files
-      if (defs.length > 0) {
-        expect(defs[0].uri).toBeDefined();
-      }
+      if (defs.length > 0) expect(defs[0].uri).toBeDefined();
     });
 
     it('should find all references to imported enum', () => {
-      const files = loadSampleProject('enum-imports');
-      const { compiler } = setupCompilerWithProject(files);
-
-      // Find the enum-source file
-      const typesFile = Array.from(files.keys()).find(f => f.basename === 'enum-source.dbml');
-      if (!typesFile) throw new Error('enum-source.dbml not found');
-
+      const { compiler, files } = setupCompiler(ENUM_IMPORTS);
+      const typesFile = pickFile(files, 'enum-source.dbml');
       const typesContent = files.get(typesFile)!;
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = new MockTextModel(typesContent, typesFile.toUri()) as any;
 
-      // Position at 'job_status' enum definition
-      const position = createPosition(2, 8);
-      const references = referencesProvider.provideReferences(model, position);
+      // Position at the `job_status` enum declaration name
+      const references = referencesProvider.provideReferences(model, createPosition(2, 8));
 
       expect(Array.isArray(references)).toBe(true);
-      // Should find at least the reference in main.dbml
       expect(references.length).toBeGreaterThanOrEqual(0);
     });
   });
 
   describe('alias-and-schema-strip project', () => {
     it('should handle symbols from multiple files', () => {
-      const files = loadSampleProject('alias-and-schema-strip');
-      const { compiler } = setupCompilerWithProject(files);
-
-      const mainFile = Array.from(files.keys()).find(f => f.basename === 'main.dbml');
-      if (!mainFile) throw new Error('main.dbml not found');
-
+      const { compiler, files } = setupCompiler(ALIAS_AND_SCHEMA_STRIP);
+      const mainFile = pickFile(files, 'main.dbml');
       const mainContent = files.get(mainFile)!;
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = new MockTextModel(mainContent, mainFile.toUri()) as any;
@@ -119,23 +212,17 @@ describe('[samples] multifile language services', () => {
       } catch {
         didThrow = true;
       }
-
       expect(didThrow).toBe(false);
     });
   });
 
   describe('transitive-ref-chain project', () => {
     it('should navigate through transitive references', () => {
-      const files = loadSampleProject('transitive-ref-chain');
-      const { compiler } = setupCompilerWithProject(files);
-
-      expect(files.size).toBeGreaterThan(1);
-
-      // Should have loaded multiple files (a.dbml, b.dbml, c.dbml)
-      const fileNames = Array.from(files.keys()).map(f => f.basename);
+      const { compiler, files } = setupCompiler(TRANSITIVE_REF_CHAIN);
+      expect(files.size).toBe(3);
+      const fileNames = Array.from(files.keys()).map((f) => f.basename);
       expect(fileNames).toContain('a.dbml');
 
-      // Services should handle the project without crashing
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const referencesProvider = new DBMLReferencesProvider(compiler);
 
@@ -144,13 +231,11 @@ describe('[samples] multifile language services', () => {
 
         let defThrow = false;
         let refThrow = false;
-
         try {
           definitionProvider.provideDefinition(model, createPosition(1, 1));
         } catch {
           defThrow = true;
         }
-
         try {
           referencesProvider.provideReferences(model, createPosition(1, 1));
         } catch {
@@ -165,40 +250,32 @@ describe('[samples] multifile language services', () => {
 
   describe('imported-tablegroup project', () => {
     it('should handle tablegroup imports across files', () => {
-      const files = loadSampleProject('imported-tablegroup');
-      const { compiler } = setupCompilerWithProject(files);
-
-      const mainFile = Array.from(files.keys()).find(f => f.basename === 'main.dbml');
-      if (!mainFile) throw new Error('main.dbml not found');
-
+      const { compiler, files } = setupCompiler(IMPORTED_TABLEGROUP);
+      const mainFile = pickFile(files, 'main.dbml');
       const mainContent = files.get(mainFile)!;
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = new MockTextModel(mainContent, mainFile.toUri()) as any;
 
-      // Should not crash when finding references in tablegroup context
       let didThrow = false;
       try {
         referencesProvider.provideReferences(model, createPosition(3, 10));
       } catch {
         didThrow = true;
       }
-
       expect(didThrow).toBe(false);
     });
   });
 
-  describe('circular-ref-across-circular-used-files project', () => {
+  describe('circular-ref project', () => {
     it('should handle circular references gracefully', () => {
-      const files = loadSampleProject('circular-ref-across-circular-used-files');
-      const { compiler } = setupCompilerWithProject(files);
-
+      const { compiler, files } = setupCompiler(CIRCULAR_REF);
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const referencesProvider = new DBMLReferencesProvider(compiler);
 
       for (const [filepath, content] of files) {
         const model = new MockTextModel(content, filepath.toUri()) as any;
 
-        // Should not crash or infinite loop on circular structures
+        // Must not crash or infinite-loop on circular structures
         let didThrow = false;
         try {
           definitionProvider.provideDefinition(model, createPosition(1, 1));
@@ -206,30 +283,18 @@ describe('[samples] multifile language services', () => {
         } catch {
           didThrow = true;
         }
-
         expect(didThrow).toBe(false);
       }
     });
   });
 
-  describe('duplicate-records-multifile project', () => {
+  describe('duplicate-records project', () => {
     it('should handle duplicate symbols across files', () => {
-      const files = loadSampleProject('duplicate-records-multifile');
-      const { compiler } = setupCompilerWithProject(files);
-
-      const baseFile = Array.from(files.keys()).find(f => f.basename === 'base.dbml');
-      const consumerFile = Array.from(files.keys()).find(f => f.basename === 'consumer.dbml');
-
-      expect(baseFile).toBeDefined();
-      expect(consumerFile).toBeDefined();
-
+      const { compiler, files } = setupCompiler(DUPLICATE_RECORDS);
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const referencesProvider = new DBMLReferencesProvider(compiler);
 
-      // Test both files
-      for (const filepath of [baseFile, consumerFile]) {
-        if (!filepath) continue;
-
+      for (const filepath of [pickFile(files, 'base.dbml'), pickFile(files, 'consumer.dbml')]) {
         const content = files.get(filepath)!;
         const model = new MockTextModel(content, filepath.toUri()) as any;
 
@@ -240,7 +305,6 @@ describe('[samples] multifile language services', () => {
         } catch {
           didThrow = true;
         }
-
         expect(didThrow).toBe(false);
       }
     });
@@ -248,27 +312,21 @@ describe('[samples] multifile language services', () => {
 
   describe('same-table-two-aliases project', () => {
     it('should disambiguate same table names across files', () => {
-      const files = loadSampleProject('same-table-two-aliases');
-      const { compiler } = setupCompilerWithProject(files);
-
-      expect(files.size).toBeGreaterThan(1);
-
+      const { compiler, files } = setupCompiler(SAME_TABLE_TWO_ALIASES);
+      expect(files.size).toBe(3);
       const definitionProvider = new DBMLDefinitionProvider(compiler);
 
-      // Load each file and query for definitions
       for (const [filepath, content] of files) {
         const model = new MockTextModel(content, filepath.toUri()) as any;
 
         let didThrow = false;
         try {
-          // Try finding definitions at various positions
           for (let line = 1; line <= 5; line++) {
             definitionProvider.provideDefinition(model, createPosition(line, 5));
           }
         } catch {
           didThrow = true;
         }
-
         expect(didThrow).toBe(false);
       }
     });
@@ -289,7 +347,6 @@ describe('[samples] multifile language services', () => {
         filepath,
       );
 
-      // Should create use statement at top
       expect(result.newContent).toMatch(/^use { job_status } from '\.\/models'/);
       expect(result.hint).toBe('created new');
       expect(result.editStartOffset).toBe(0);
@@ -314,7 +371,6 @@ Table jobs {
         filepath,
       );
 
-      // Should append to existing use statement
       expect(result.newContent).toContain('User, Post');
       expect(result.hint).toBe('merged into existing');
       expect(result.newContent).toContain('Table jobs');
@@ -336,7 +392,6 @@ Table jobs { user_id int }`;
         filepath,
       );
 
-      // Should not duplicate
       expect(result.newContent).toBe(mainContent);
       expect(result.hint).toBe('symbol already imported');
     });
@@ -352,7 +407,6 @@ Table jobs {
       const compiler = new Compiler();
       compiler.setSource(filepath, mainContent);
 
-      // Complete from models file - should create new use
       const result = UseStatementMerger.mergeSymbolIntoUses(
         compiler,
         filepath,
@@ -380,55 +434,44 @@ Table jobs {
         filepath,
       );
 
-      // Should normalize to relative path ./models
       expect(result.newContent).toContain("from './models'");
       expect(result.newContent).not.toContain('/home/user');
     });
   });
 
-  describe('robustness across all sample projects', () => {
-    it('should load all sample projects without errors', () => {
-      const sampleDirs = [
-        'enum-imports',
-        'alias-and-schema-strip',
-        'transitive-ref-chain',
-        'imported-tablegroup',
-        'circular-ref-across-circular-used-files',
-        'duplicate-records-multifile',
-        'same-table-two-aliases',
-      ];
+  describe('robustness across all inline projects', () => {
+    const PROJECTS: Array<[string, ProjectFiles]> = [
+      ['enum-imports', ENUM_IMPORTS],
+      ['alias-and-schema-strip', ALIAS_AND_SCHEMA_STRIP],
+      ['transitive-ref-chain', TRANSITIVE_REF_CHAIN],
+      ['imported-tablegroup', IMPORTED_TABLEGROUP],
+      ['circular-ref', CIRCULAR_REF],
+      ['duplicate-records', DUPLICATE_RECORDS],
+      ['same-table-two-aliases', SAME_TABLE_TWO_ALIASES],
+    ];
 
-      for (const sampleDir of sampleDirs) {
+    it('should bind each project without throwing', () => {
+      for (const [name, project] of PROJECTS) {
         let didThrow = false;
         try {
-          const files = loadSampleProject(sampleDir);
-          setupCompilerWithProject(files);
+          setupCompiler(project);
         } catch (e) {
-          console.error(`Failed to load sample: ${sampleDir}`, e);
+          // eslint-disable-next-line no-console
+          console.error(`Failed to load project: ${name}`, e);
           didThrow = true;
         }
-
         expect(didThrow).toBe(false);
       }
     });
 
-    it('should handle language services on all sample projects', () => {
-      const sampleDirs = [
-        'enum-imports',
-        'alias-and-schema-strip',
-        'transitive-ref-chain',
-      ];
-
-      for (const sampleDir of sampleDirs) {
-        const files = loadSampleProject(sampleDir);
-        const { compiler } = setupCompilerWithProject(files);
-
+    it('should run language services on a representative subset without throwing', () => {
+      for (const [, project] of PROJECTS.slice(0, 3)) {
+        const { compiler, files } = setupCompiler(project);
         const definitionProvider = new DBMLDefinitionProvider(compiler);
         const referencesProvider = new DBMLReferencesProvider(compiler);
 
         for (const [filepath, content] of files) {
           const model = new MockTextModel(content, filepath.toUri()) as any;
-
           let didThrow = false;
           try {
             definitionProvider.provideDefinition(model, createPosition(2, 5));
@@ -436,7 +479,6 @@ Table jobs {
           } catch {
             didThrow = true;
           }
-
           expect(didThrow).toBe(false);
         }
       }

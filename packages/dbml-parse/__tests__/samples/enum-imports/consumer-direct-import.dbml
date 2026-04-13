@@ -1,7 +1,0 @@
-// import the enum under its original name and use it as a column type
-use { enum job_status } from './enum-source.dbml'
-
-Table jobs {
-  id int [pk]
-  status job_status
-}

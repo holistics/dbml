@@ -1,6 +1,0 @@
-// imports both tables: the ref defined in shared-tables.dbml should be
-// pulled into this file's single-file export since both endpoints are visible
-use {
-  table users
-  table orders
-} from './shared-tables.dbml'
