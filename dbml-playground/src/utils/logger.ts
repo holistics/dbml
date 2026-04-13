@@ -1,17 +1,15 @@
-function disableBearerLogger (logger: (...args: unknown[]) => void) {
-  return (...args: unknown[]) => {
-    // bearer:disable javascript_lang_logger
-    logger(...args);
-  };
+const disableBearerLog = (logFunction: any) => (...args: any[]) => {
+  // bearer:disable javascript_lang_logger
+  logFunction(...args);
 };
 
-export const logger = {
-  log: disableBearerLogger(console.log),
-  error: disableBearerLogger(console.error),
-  warn: disableBearerLogger(console.warn),
-  info: disableBearerLogger(console.info),
-  debug: disableBearerLogger(console.debug),
-  trace: disableBearerLogger(console.trace),
+export const consoleLogger = {
+  log: disableBearerLog(console.log),
+  error: disableBearerLog(console.error),
+  warn: disableBearerLog(console.warn),
+  info: disableBearerLog(console.info),
+  debug: disableBearerLog(console.debug),
+  trace: disableBearerLog(console.trace),
 };
 
-export default logger;
+export default consoleLogger;
