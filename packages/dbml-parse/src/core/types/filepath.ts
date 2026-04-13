@@ -8,6 +8,10 @@ import {
   DBML_EXT,
 } from '@/constants';
 
+// Matches a Windows drive-letter prefix after normalization (e.g. "C:/").
+// Used only in fromUri/toUri where URL parsing adds/needs an extra leading slash.
+const WIN_DRIVE_RE = /^[a-zA-Z]:\//;
+
 declare const __filepathIdBrand: unique symbol;
 export type FilepathId = string & { [__filepathIdBrand]: true };
 
@@ -15,10 +19,11 @@ export class Filepath implements Internable<FilepathId> {
   private readonly path: string;
 
   constructor (absolutePath: string) {
-    if (!isAbsolute(absolutePath)) {
+    const normalized = normalize(absolutePath);
+    if (!isAbsolute(normalized)) {
       throw new Error(`FilePath requires an absolute path, got: "${absolutePath}"`);
     }
-    this.path = normalize(absolutePath);
+    this.path = normalized;
   }
 
   intern (): FilepathId {
@@ -31,6 +36,16 @@ export class Filepath implements Internable<FilepathId> {
 
   static resolve (fromDir: string, relativePath: string): Filepath {
     return new Filepath(resolve(fromDir, relativePath));
+  }
+
+  static fromUri (uri: string): Filepath {
+    if (uri.startsWith('file://')) {
+      let p = decodeURIComponent(new URL(uri).pathname);
+      // Windows: URL gives /C:/path - strip the leading slash
+      if (/^\/[a-zA-Z]:[\\/]/.test(p)) p = p.slice(1);
+      return new Filepath(normalize(p));
+    }
+    return new Filepath(normalize(uri));
   }
 
   get absolute (): string {
@@ -76,8 +91,15 @@ export class Filepath implements Internable<FilepathId> {
     return this.path === other.path;
   }
 
+  toUri (): string {
+    // Use URL to handle percent-encoding of spaces and non-ASCII characters.
+    // Windows: C:/path needs an extra leading slash -> file:///C:/path
+    const prefix = WIN_DRIVE_RE.test(this.path) ? 'file:///' : 'file://';
+    return new URL(prefix + this.path).href;
+  }
+
   static isRelative (p: string): boolean {
-    return !isAbsolute(p);
+    return !isAbsolute(normalize(p));
   }
 }
 
