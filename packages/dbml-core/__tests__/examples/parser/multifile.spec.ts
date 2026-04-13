@@ -3,6 +3,9 @@ import path from 'path';
 import { describe, test, expect } from 'vitest';
 import Parser from '../../../src/parse/Parser';
 import { MemoryProjectLayout, Filepath } from '@dbml/parse';
+import { CompilerError } from '../../../src/parse/error';
+import type { CompilerDiagnostic } from '../../../src/parse/error';
+import type { Index } from '../../../types';
 
 const SAMPLES_DIR = path.resolve(__dirname, '../../../../dbml-parse/__tests__/samples');
 
@@ -128,7 +131,7 @@ describe('@dbml/core multifile', () => {
         const bookings = allTables.find((t) => t.name === 'bookings')!;
         // Composite unique index should survive the cross-file import
         expect(bookings.indexes.length).toBeGreaterThan(0);
-        expect(bookings.indexes.find((i: any) => i.unique && i.columns.length === 2)).toBeDefined();
+        expect(bookings.indexes.find((i: Index) => i.unique && i.columns.length === 2)).toBeDefined();
       },
     );
   });
@@ -136,17 +139,26 @@ describe('@dbml/core multifile', () => {
   describe('error handling', () => {
     test('non-dbmlv2 format rejects layout', () => {
       const layout = loadLayout('enum-imports', 'consumer-direct-import.dbml');
-      expect(() => new Parser().parse(layout as any, 'mysql')).toThrow();
+      // Cast to string so the call type-checks; runtime should still throw because
+      // non-dbmlv2 backends only accept raw source strings, not a project layout.
+      expect(() => new Parser().parse(layout as unknown as string, 'mysql')).toThrow();
     });
 
-    test('duplicate-ref project: layout without /main.dbml silently produces empty output instead of surfacing REF_REDEFINED errors', () => {
-      // BUG: when no entry file is mounted at /main.dbml, Parser.parse uses
-      // DEFAULT_ENTRY which doesn't exist in the layout, so @dbml/parse returns
-      // empty results with no errors rather than throwing. This means the
-      // REF_REDEFINED errors in consumer-duplicate-ref.dbml are never surfaced.
-      const layout = loadLayout('cross-file-refs'); // no entryFile → nothing at /main.dbml
-      const db = new Parser().parse(layout, 'dbmlv2');
-      expect(db.schemas.flatMap((s: any) => s.tables)).toHaveLength(0);
+    test('duplicate cross-file ref: REF_REDEFINED is surfaced when the consumer is the entrypoint', () => {
+      // consumer-duplicate-ref.dbml does `use *` from duplicate-ref-base.dbml
+      // (which already declares `Ref: orders.user_id > users.id`) and then
+      // declares the same ref again. The parser must throw with REF_REDEFINED
+      // (code 5001) rather than swallow the duplicate.
+      const layout = loadLayout('cross-file-refs', 'consumer-duplicate-ref.dbml');
+      let thrown: unknown;
+      try {
+        new Parser().parse(layout, 'dbmlv2');
+      } catch (e) {
+        thrown = e;
+      }
+      expect(thrown).toBeInstanceOf(CompilerError);
+      const diags = (thrown as CompilerError).diags;
+      expect(diags.some((d: CompilerDiagnostic) => d.code === 5001)).toBe(true);
     });
   });
 });
