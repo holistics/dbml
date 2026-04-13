@@ -1,3 +1,4 @@
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import Report from '@/core/types/report';
 import {
   CompileError, CompileErrorCode, CompileWarning,
@@ -22,7 +23,7 @@ export default class Validator {
   constructor (ast: ProgramNode, symbolFactory: SymbolFactory) {
     this.ast = ast;
     this.symbolFactory = symbolFactory;
-    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable() });
+    this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, { symbolTable: new SymbolTable(), name: DEFAULT_SCHEMA_NAME });
 
     this.ast.symbol = this.publicSchemaSymbol;
     this.ast.symbol.declaration = this.ast;

@@ -56,12 +56,14 @@ export class NodeSymbol {
 // A symbol for a schema, contains the schema's symbol table
 export class SchemaSymbol extends NodeSymbol {
   declare symbolTable: SymbolTable;
+  name?: string;
 
-  constructor ({ symbolTable }: { symbolTable: SymbolTable }, id: NodeSymbolId) {
+  constructor ({ symbolTable, name }: { symbolTable: SymbolTable; name?: string }, id: NodeSymbolId) {
     super({
       kind: SymbolKind.Schema,
       symbolTable,
     }, id);
+    this.name = name;
   }
 }
 

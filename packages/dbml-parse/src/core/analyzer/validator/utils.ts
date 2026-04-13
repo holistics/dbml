@@ -143,7 +143,7 @@ export function registerSchemaStack (
 
     if (!prevSchema.has(curId)) {
       curSchema = new SymbolTable();
-      const curSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: curSchema });
+      const curSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: curSchema, name: curName });
       prevSchema.set(curId, curSymbol);
     } else {
       curSchema = prevSchema.get(curId)?.symbolTable;

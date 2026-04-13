@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import { NodeSymbol } from '@/core/types/symbol/symbols';
+import { NodeSymbol, SchemaSymbol } from '@/core/types/symbol/symbols';
 import { SyntaxToken } from '@/core/types/tokens';
 import {
   ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode,
@@ -57,7 +57,7 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
-  const nameHint = node ? getNameHint(node) : '';
+  const nameHint = node ? getNameHint(node) : (nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.name ?? '' : '');
 
   return `${type}@${kind}@${nameHint}@[${start}, ${end}]`;
 }
