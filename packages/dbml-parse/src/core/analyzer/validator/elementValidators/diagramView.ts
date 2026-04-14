@@ -128,7 +128,9 @@ export default class DiagramViewValidator implements ElementValidator {
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const diagramViewId = createDiagramViewSymbolIndex(diagramViewName);
       if (symbolTable.has(diagramViewId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_DIAGRAMVIEW_NAME, `DiagramView '${diagramViewName}' already exists`, name!)];
+        return [
+          new CompileError(CompileErrorCode.DUPLICATE_DIAGRAMVIEW_NAME, `DiagramView '${diagramViewName}' already exists`, name!),
+        ];
       }
       symbolTable.set(diagramViewId, this.declarationNode.symbol!);
     }
@@ -174,10 +176,16 @@ export default class DiagramViewValidator implements ElementValidator {
       };
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     const subResult = this.validateSubElements(subs as ElementDeclarationNode[]);
     return {
-      errors: [...this.validateFields(fields as FunctionApplicationNode[]), ...subResult.errors],
+      errors: [
+        ...this.validateFields(fields as FunctionApplicationNode[]),
+        ...subResult.errors,
+      ],
       warnings: subResult.warnings,
     };
   }

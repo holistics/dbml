@@ -51,12 +51,20 @@ export default class RefBinder implements ElementBinder {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.bindFields([body]);
+      return this.bindFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
-    return [...this.bindFields(fields as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.bindFields(fields as FunctionApplicationNode[]),
+      ...this.bindSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -65,7 +73,10 @@ export default class RefBinder implements ElementBinder {
         return [];
       }
 
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       const bindees = args.flatMap(scanNonListNodeForBinding);
 
       return bindees.flatMap((bindee) => {
@@ -75,7 +86,9 @@ export default class RefBinder implements ElementBinder {
           return [];
         }
         if (!Array.isArray(columnBindees)) {
-          columnBindees = [columnBindees];
+          columnBindees = [
+            columnBindees,
+          ];
         }
 
         const schemaBindees = bindee.variables;

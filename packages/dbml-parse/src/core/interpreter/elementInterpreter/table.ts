@@ -118,7 +118,9 @@ export class TableInterpreter implements ElementInterpreter {
       this.table.name = name;
       this.table.schemaName = schemaName.join('.');
 
-      return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode),
+      ];
     }
 
     this.table.name = name;
@@ -156,7 +158,9 @@ export class TableInterpreter implements ElementInterpreter {
       ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value as any)
       : undefined;
 
-    const [noteNode] = settingMap[SettingName.Note] || [];
+    const [
+      noteNode,
+    ] = settingMap[SettingName.Note] || [];
     this.table.note = noteNode && {
       value: normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
@@ -166,8 +170,14 @@ export class TableInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.interpretFields(fields as FunctionApplicationNode[]),
+      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -213,16 +223,22 @@ export class TableInterpreter implements ElementInterpreter {
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     const symbolTableEntries = this.declarationNode.symbol?.symbolTable
-      ? [...this.declarationNode.symbol.symbolTable.entries()]
+      ? [
+          ...this.declarationNode.symbol.symbolTable.entries(),
+        ]
       : [];
-    const columnEntries = symbolTableEntries.filter(([index]) => {
+    const columnEntries = symbolTableEntries.filter(([
+      index,
+    ]) => {
       const res = destructureIndex(index) ?? null;
       return res?.kind === SymbolKind.Column;
     });
 
     const columnCountErrors = columnEntries.length
       ? []
-      : [new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode)];
+      : [
+          new CompileError(CompileErrorCode.EMPTY_TABLE, 'A Table must have at least one column', this.declarationNode),
+        ];
 
     const interpretFieldErrors = fields.flatMap((field, order) => {
       return isValidPartialInjection(field.callee)
@@ -230,7 +246,10 @@ export class TableInterpreter implements ElementInterpreter {
         : this.interpretColumn(field);
     });
 
-    return [...columnCountErrors, ...interpretFieldErrors];
+    return [
+      ...columnCountErrors,
+      ...interpretFieldErrors,
+    ];
   }
 
   private interpretColumn (field: FunctionApplicationNode): CompileError[] {
@@ -270,7 +289,9 @@ export class TableInterpreter implements ElementInterpreter {
 
       const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+        const [
+          referredSymbol,
+        ] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
 
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
@@ -283,30 +304,45 @@ export class TableInterpreter implements ElementInterpreter {
 
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 1) {
-          const [columnName] = fragments;
+          const [
+            columnName,
+          ] = fragments;
 
           inlineRef = {
             schemaName: this.table.schemaName!,
             tableName: this.table.name!,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else if (fragments.length === 2) {
-          const [table, columnName] = fragments;
+          const [
+            table,
+            columnName,
+          ] = fragments;
           inlineRef = {
             schemaName: null,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else if (fragments.length === 3) {
-          const [schema, table, columnName] = fragments;
+          const [
+            schema,
+            table,
+            columnName,
+          ] = fragments;
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
@@ -318,7 +354,9 @@ export class TableInterpreter implements ElementInterpreter {
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
@@ -360,7 +398,10 @@ export class TableInterpreter implements ElementInterpreter {
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);
-      const args = [indexField.callee!, ...indexField.args];
+      const args = [
+        indexField.callee!,
+        ...indexField.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap[SettingName.PK]?.length;
@@ -436,7 +477,10 @@ export class TableInterpreter implements ElementInterpreter {
   private registerInlineRefToEnv (column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
     const refId = getRefId(column.symbol as ColumnSymbol, referredSymbol);
     if (this.env.refIds[refId]) {
-      return [new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref), new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId])];
+      return [
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
+      ];
     }
 
     const multiplicities = getMultiplicities(inlineRef.relation);
@@ -453,7 +497,9 @@ export class TableInterpreter implements ElementInterpreter {
         {
           schemaName: this.table.schemaName!,
           tableName: this.table.name!,
-          fieldNames: [extractVariableFromExpression(column.callee!)!],
+          fieldNames: [
+            extractVariableFromExpression(column.callee!)!,
+          ],
           token: getTokenPosition(column),
           relation: multiplicities[0],
         },

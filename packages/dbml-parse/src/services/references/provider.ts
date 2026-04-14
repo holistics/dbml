@@ -22,12 +22,18 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
 
-    const containers = [...this.compiler.container.stack(offset)];
+    const containers = [
+      ...this.compiler.container.stack(offset),
+    ];
     while (containers.length !== 0) {
       const node = containers.pop();
       if (
         node
-        && [SyntaxNodeKind.ELEMENT_DECLARATION, SyntaxNodeKind.FUNCTION_APPLICATION, SyntaxNodeKind.PRIMARY_EXPRESSION].includes(node?.kind)
+        && [
+          SyntaxNodeKind.ELEMENT_DECLARATION,
+          SyntaxNodeKind.FUNCTION_APPLICATION,
+          SyntaxNodeKind.PRIMARY_EXPRESSION,
+        ].includes(node?.kind)
       ) {
         const {
           symbol,

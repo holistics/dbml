@@ -18,7 +18,12 @@ export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
     return [];
   }
 
-  return [...ownerSymbol.symbolTable.entries()].map(([index, symbol]) => ({
+  return [
+    ...ownerSymbol.symbolTable.entries(),
+  ].map(([
+    index,
+    symbol,
+  ]) => ({
     ...destructureIndex(index)!,
     symbol,
   }));
@@ -47,7 +52,9 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
     const {
       symbolTable,
     } = currentOwner.symbol;
-    let currentPossibleSymbolTables: SymbolTable[] = [symbolTable];
+    let currentPossibleSymbolTables: SymbolTable[] = [
+      symbolTable,
+    ];
     let currentPossibleSymbols: { symbol: NodeSymbol;
       kind: SymbolKind;
       name: string; }[] = [];

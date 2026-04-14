@@ -44,7 +44,9 @@ export default class DiagramViewBinder implements ElementBinder {
   }
 
   private bindBody (body: BlockExpressionNode): CompileError[] {
-    const [, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      , subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return this.bindSubElements(subs as ElementDeclarationNode[]);
   }
@@ -88,7 +90,9 @@ export default class DiagramViewBinder implements ElementBinder {
   }
 
   private bindTableReferences (body: BlockExpressionNode): CompileError[] {
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee) {
@@ -100,7 +104,10 @@ export default class DiagramViewBinder implements ElementBinder {
         return [];
       }
 
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       const bindees = args.flatMap(scanNonListNodeForBinding);
 
       return bindees.flatMap((bindee) => {
@@ -125,7 +132,9 @@ export default class DiagramViewBinder implements ElementBinder {
   }
 
   private bindNoteReferences (body: BlockExpressionNode): CompileError[] {
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee) {
@@ -156,7 +165,9 @@ export default class DiagramViewBinder implements ElementBinder {
   }
 
   private bindTableGroupReferences (body: BlockExpressionNode): CompileError[] {
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee) {
@@ -192,7 +203,9 @@ export default class DiagramViewBinder implements ElementBinder {
   }
 
   private bindSchemaReferences (body: BlockExpressionNode): CompileError[] {
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee) {

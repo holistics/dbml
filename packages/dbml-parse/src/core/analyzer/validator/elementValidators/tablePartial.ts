@@ -113,7 +113,9 @@ export default class TablePartialValidator implements ElementValidator {
       ];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TablePartial name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TablePartial name', nameNode),
+      ];
     }
     if (!isSimpleName(nameNode)) {
       return [
@@ -187,12 +189,16 @@ export default class TablePartialValidator implements ElementValidator {
     const maybeNamePartials = destructureComplexVariable(name);
     if (maybeNamePartials === undefined) return [];
 
-    const namePartials = [...maybeNamePartials];
+    const namePartials = [
+      ...maybeNamePartials,
+    ];
     const tablePartialName = namePartials.pop()!;
     const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory);
     const tablePartialId = createTablePartialSymbolIndex(tablePartialName);
     if (symbolTable.has(tablePartialId)) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial '${tablePartialName}' already exists in schema '${namePartials.join('.') || DEFAULT_SCHEMA_NAME}'`, name!)];
+      return [
+        new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial '${tablePartialName}' already exists in schema '${namePartials.join('.') || DEFAULT_SCHEMA_NAME}'`, name!),
+      ];
     }
     symbolTable.set(tablePartialId, this.declarationNode.symbol!);
 
@@ -203,10 +209,15 @@ export default class TablePartialValidator implements ElementValidator {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TablePartial\'s body must be a block', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TablePartial\'s body must be a block', body),
+      ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -298,7 +309,9 @@ export default class TablePartialValidator implements ElementValidator {
         return;
       }
       if (settingMap[name] === undefined) {
-        settingMap[name] = [part as PrimaryExpressionNode];
+        settingMap[name] = [
+          part as PrimaryExpressionNode,
+        ];
       } else {
         settingMap[name]!.push(part as PrimaryExpressionNode);
       }
@@ -307,7 +320,10 @@ export default class TablePartialValidator implements ElementValidator {
     const pkAttrs = settingMap[SettingName.PK] || [];
     const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
     if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
-      errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(
+      errors.push(...[
+        ...pkAttrs,
+        ...pkeyAttrs,
+      ].map((attr) => new CompileError(
         CompileErrorCode.DUPLICATE_COLUMN_SETTING,
         'Either one of \'primary key\' and \'pk\' can appear',
         attr,
@@ -363,7 +379,10 @@ export default class TablePartialValidator implements ElementValidator {
           }
           const nullAttrs = settingMap[SettingName.Null] || [];
           if (attrs.length >= 1 && nullAttrs.length >= 1) {
-            errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(
+            errors.push(...[
+              ...attrs,
+              ...nullAttrs,
+            ].map((attr) => new CompileError(
               CompileErrorCode.CONFLICTING_SETTING,
               '\'not null\' and \'null\' can not be set at the same time',
               attr,

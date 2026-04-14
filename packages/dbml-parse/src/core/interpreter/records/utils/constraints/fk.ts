@@ -31,7 +31,10 @@ type TableInfo = {
 
 export function validateForeignKeys (env: InterpreterDatabase): CompileError[] {
   // Collect all refs: explicit refs + inline refs from table partials
-  const refs = [...env.ref.values(), ...flatMap(Array.from(env.tables.values()), (t) => extractInlineRefsFromTablePartials(t, env))];
+  const refs = [
+    ...env.ref.values(),
+    ...flatMap(Array.from(env.tables.values()), (t) => extractInlineRefsFromTablePartials(t, env)),
+  ];
 
   // Build table info map
   const tableInfoMap = buildTableInfoMap(env);
@@ -111,7 +114,10 @@ function validateFkSourceToTarget (
 function validateRef (ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileError[] {
   if (!ref.endpoints) return [];
 
-  const [endpoint1, endpoint2] = ref.endpoints;
+  const [
+    endpoint1,
+    endpoint2,
+  ] = ref.endpoints;
   const table1 = tableInfoMap.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
   const table2 = tableInfoMap.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
 
@@ -132,7 +138,10 @@ function validateRelationship (
   // Bidirectional relationships: both 1-1 and many-to-many
   const isBidirectional = (rel1 === '1' && rel2 === '1') || (rel1 === '*' && rel2 === '*');
   if (isBidirectional) {
-    return [...validateFkSourceToTarget(table1, table2, endpoint1, endpoint2), ...validateFkSourceToTarget(table2, table1, endpoint2, endpoint1)];
+    return [
+      ...validateFkSourceToTarget(table1, table2, endpoint1, endpoint2),
+      ...validateFkSourceToTarget(table2, table1, endpoint2, endpoint1),
+    ];
   }
 
   // Many-to-one: validate FK from "many" side to "one" side

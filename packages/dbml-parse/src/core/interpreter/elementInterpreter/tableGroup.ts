@@ -68,8 +68,14 @@ export class TableGroupInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.interpretFields(fields as FunctionApplicationNode[]),
+      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -131,7 +137,9 @@ export class TableGroupInterpreter implements ElementInterpreter {
       ? extractColor(settingMap.color?.at(0)?.value as any)
       : undefined;
 
-    const [noteNode] = settingMap.note || [];
+    const [
+      noteNode,
+    ] = settingMap.note || [];
     this.tableGroup.note = noteNode && {
       value: normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),

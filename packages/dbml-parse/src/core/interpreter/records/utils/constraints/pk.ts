@@ -76,7 +76,10 @@ function validatePkConstraint (
   );
 
   // Partition rows into those with NULL and those without
-  const [rowsWithNull, rowsWithoutNull] = partition(rows, (row) =>
+  const [
+    rowsWithNull,
+    rowsWithoutNull,
+  ] = partition(rows, (row) =>
     hasNullWithoutDefaultInKey(row.values, pkColumns, pkColumnFields),
   );
 
@@ -93,7 +96,10 @@ function validatePkConstraint (
     mergedTable,
   );
 
-  return [...nullErrors, ...duplicateErrors];
+  return [
+    ...nullErrors,
+    ...duplicateErrors,
+  ];
 }
 
 function createNullErrors (
@@ -149,7 +155,12 @@ function findDuplicateErrors (
 }
 
 function collectPkConstraints (mergedTable: Table): string[][] {
-  return [...mergedTable.fields.filter((field) => field.pk).map((field) => [field.name]), ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value))];
+  return [
+    ...mergedTable.fields.filter((field) => field.pk).map((field) => [
+      field.name,
+    ]),
+    ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value)),
+  ];
 }
 
 function collectAvailableColumns (rows: TableRecordRow[]): Set<string> {

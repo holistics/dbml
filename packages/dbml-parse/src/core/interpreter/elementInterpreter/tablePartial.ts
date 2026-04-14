@@ -60,7 +60,11 @@ export class TablePartialInterpreter implements ElementInterpreter {
     this.tablePartial.token = getTokenPosition(this.declarationNode);
     this.env.tablePartials.set(this.declarationNode, this.tablePartial as TablePartial);
 
-    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretSettingList(this.declarationNode.attributeList), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretSettingList(this.declarationNode.attributeList),
+      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
+    ];
 
     // Handle cases where there are multiple primary columns
     // all the pk field of the columns are reset to false
@@ -115,7 +119,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
       ? extractColor(firstHeaderColor.value as any)
       : undefined;
 
-    const [noteNode] = settingMap[SettingName.Note] || [];
+    const [
+      noteNode,
+    ] = settingMap[SettingName.Note] || [];
     this.tablePartial.note = noteNode && {
       value: normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
@@ -125,8 +131,14 @@ export class TablePartialInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.interpretFields(fields as FunctionApplicationNode[]),
+      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -198,7 +210,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
       const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+        const [
+          referredSymbol,
+        ] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
 
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
@@ -210,20 +224,31 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 2) {
-          const [table, columnName] = fragments;
+          const [
+            table,
+            columnName,
+          ] = fragments;
           inlineRef = {
             schemaName: null,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else if (fragments.length === 3) {
-          const [schema, table, columnName] = fragments;
+          const [
+            schema,
+            table,
+            columnName,
+          ] = fragments;
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
@@ -235,7 +260,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
@@ -273,7 +300,10 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);
-      const args = [indexField.callee!, ...indexField.args];
+      const args = [
+        indexField.callee!,
+        ...indexField.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap[SettingName.PK]?.length;

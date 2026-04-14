@@ -50,16 +50,28 @@ export default class Report<T> {
   chainFiltered<S extends symbol, U>(filteredValue: S, fn: (_: Exclude<T, S>) => Report<U>): Report<U | undefined> {
     if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings);
     const res = fn(this.value as Exclude<T, S>);
-    const errors = [...this.errors, ...res.errors];
-    const warnings = [...this.getWarnings(), ...res.getWarnings()];
+    const errors = [
+      ...this.errors,
+      ...res.errors,
+    ];
+    const warnings = [
+      ...this.getWarnings(),
+      ...res.getWarnings(),
+    ];
 
     return new Report<U>(res.value, errors, warnings);
   }
 
   chain<U>(fn: (_: T) => Report<U>): Report<U> {
     const res = fn(this.value);
-    const errors = [...this.errors, ...res.errors];
-    const warnings = [...this.getWarnings(), ...res.getWarnings()];
+    const errors = [
+      ...this.errors,
+      ...res.errors,
+    ];
+    const warnings = [
+      ...this.getWarnings(),
+      ...res.getWarnings(),
+    ];
 
     return new Report<U>(res.value, errors, warnings);
   }

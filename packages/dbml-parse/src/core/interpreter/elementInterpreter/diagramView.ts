@@ -100,7 +100,9 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       }
     }
 
-    const [subs] = partition(body.body, (e) => e instanceof ElementDeclarationNode);
+    const [
+      subs,
+    ] = partition(body.body, (e) => e instanceof ElementDeclarationNode);
     const explicitlySet = new Set<string>();
 
     for (const sub of subs as ElementDeclarationNode[]) {

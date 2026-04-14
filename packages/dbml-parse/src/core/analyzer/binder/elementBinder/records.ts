@@ -207,7 +207,10 @@ export default class RecordsBinder implements ElementBinder {
     const functions = body.body.filter((e) => e instanceof FunctionApplicationNode);
     const subs = body.body.filter((e) => e instanceof ElementDeclarationNode);
 
-    return [...this.bindDataRows(functions as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.bindDataRows(functions as FunctionApplicationNode[]),
+      ...this.bindSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private bindDataRows (rows: FunctionApplicationNode[]): CompileError[] {
@@ -224,7 +227,9 @@ export default class RecordsBinder implements ElementBinder {
 
     const values = row.callee instanceof CommaExpressionNode
       ? row.callee.elementList
-      : [row.callee];
+      : [
+          row.callee,
+        ];
 
     const bindees = values.flatMap(scanNonListNodeForBinding);
 

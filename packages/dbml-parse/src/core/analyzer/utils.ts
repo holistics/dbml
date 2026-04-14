@@ -35,7 +35,9 @@ export function destructureMemberAccessExpression (node?: SyntaxNode): SyntaxNod
   if (!node) return undefined;
 
   if (!isAccessExpression(node)) {
-    return [node];
+    return [
+      node,
+    ];
   }
 
   const fragments = destructureMemberAccessExpression(node.leftExpression);
@@ -125,12 +127,16 @@ export function destructureIndexNode (node?: SyntaxNode): {
   if (isValidIndexName(node)) {
     return node instanceof FunctionExpressionNode
       ? {
-          functional: [node],
+          functional: [
+            node,
+          ],
           nonFunctional: [],
         }
       : {
           functional: [],
-          nonFunctional: [node],
+          nonFunctional: [
+            node,
+          ],
         };
   }
 
@@ -281,7 +287,9 @@ export function destructureCallExpression (
   // Get args from argument list
   let args: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
   if (isTupleOfVariables(node.argumentList)) {
-    args = [...node.argumentList.elementList];
+    args = [
+      ...node.argumentList.elementList,
+    ];
   }
 
   return {

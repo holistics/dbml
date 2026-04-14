@@ -172,7 +172,10 @@ export default class Parser {
     }
 
     curValid = this.tokens[i];
-    curValid.leadingInvalid = [...firstInvalidList, ...curValid.leadingInvalid];
+    curValid.leadingInvalid = [
+      ...firstInvalidList,
+      ...curValid.leadingInvalid,
+    ];
     tokens.push(curValid);
     for (i += 1; i < this.tokens.length; i += 1) {
       const curToken = this.tokens[i];
@@ -512,7 +515,9 @@ export default class Parser {
       elementList: NormalExpressionNode[];
       commaList: SyntaxToken[];
     } = {
-      elementList: [firstExpr],
+      elementList: [
+        firstExpr,
+      ],
       commaList: [],
     };
 

@@ -91,7 +91,9 @@ export default class RecordsValidator implements ElementValidator {
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', nameNode),
+      ];
     }
     const parent = this.declarationNode.parent;
     const isTopLevel = parent instanceof ProgramNode;
@@ -160,14 +162,18 @@ export default class RecordsValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', aliasNode),
+      ];
     }
     return [];
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList),
+      ];
     }
     return [];
   }
@@ -195,7 +201,10 @@ export default class RecordsValidator implements ElementValidator {
       return this.validateDataRow(body);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateDataRows(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),

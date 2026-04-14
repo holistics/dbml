@@ -78,7 +78,9 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
   if (isExpressionAVariableNode(node)) {
     return [
       {
-        variables: [node],
+        variables: [
+          node,
+        ],
         tupleElements: [],
       },
     ];
@@ -87,10 +89,15 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
   if (node instanceof InfixExpressionNode) {
     const fragments = destructureComplexVariableTuple(node);
     if (!fragments) {
-      return [...scanNonListNodeForBinding(node.leftExpression), ...scanNonListNodeForBinding(node.rightExpression)];
+      return [
+        ...scanNonListNodeForBinding(node.leftExpression),
+        ...scanNonListNodeForBinding(node.rightExpression),
+      ];
     }
 
-    return [fragments];
+    return [
+      fragments,
+    ];
   }
 
   if (node instanceof PrefixExpressionNode) {
@@ -108,7 +115,9 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
       // Recurse into each element
       return node.elementList.flatMap(scanNonListNodeForBinding);
     }
-    return [fragments];
+    return [
+      fragments,
+    ];
   }
 
   // The other cases are not supported as practically they shouldn't arise
@@ -147,7 +156,9 @@ export function lookupAndBindInScope (
     const symbol = curSymbolTable.get(index);
 
     if (!symbol) {
-      return [new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} '${name}' does not exist in ${curName === undefined ? 'global scope' : `${curKind} '${curName}'`}`, node)];
+      return [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} '${name}' does not exist in ${curName === undefined ? 'global scope' : `${curKind} '${curName}'`}`, node),
+      ];
     }
     node.referee = symbol;
     symbol.references.push(node);

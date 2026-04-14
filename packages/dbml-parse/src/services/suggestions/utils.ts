@@ -162,7 +162,10 @@ export function getColumnsFromTableSymbol (
   const columns: Array<{ name: string;
     type: string; }> = [];
 
-  for (const [index, columnSymbol] of tableSymbol.symbolTable.entries()) {
+  for (const [
+    index,
+    columnSymbol,
+  ] of tableSymbol.symbolTable.entries()) {
     const res = destructureIndex(index);
     if (res === undefined || res.kind !== SymbolKind.Column) continue;
     if (!(columnSymbol instanceof ColumnSymbol || columnSymbol instanceof TablePartialInjectedColumnSymbol)) continue;

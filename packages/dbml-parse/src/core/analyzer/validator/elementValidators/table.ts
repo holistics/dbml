@@ -94,23 +94,33 @@ export default class TableValidator implements ElementValidator {
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode),
+      ];
     }
     return [];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode),
+      ];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Table name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Table name', nameNode),
+      ];
     }
     if (nameNode instanceof ArrayNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid array as Table name, maybe you forget to add a space between the name and the setting list?', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid array as Table name, maybe you forget to add a space between the name and the setting list?', nameNode),
+      ];
     }
     if (!isValidName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Table name must be of the form <table> or <schema>.<table>', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'A Table name must be of the form <table> or <schema>.<table>', nameNode),
+      ];
     }
 
     return [];
@@ -122,7 +132,9 @@ export default class TableValidator implements ElementValidator {
     }
 
     if (!isValidAlias(aliasNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contains alphanumeric and underscore unless surrounded by double quotes', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contains alphanumeric and underscore unless surrounded by double quotes', aliasNode),
+      ];
     }
 
     return [];
@@ -175,7 +187,9 @@ export default class TableValidator implements ElementValidator {
 
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments !== undefined) {
-      const nameFragments = [...maybeNameFragments];
+      const nameFragments = [
+        ...maybeNameFragments,
+      ];
       const tableName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableSymbolIndex(tableName);
@@ -206,10 +220,15 @@ export default class TableValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body),
+      ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -260,9 +279,9 @@ export default class TableValidator implements ElementValidator {
         if (symbolTable.has(partialInjectionSymbolId)) {
           const symbol = symbolTable.get(partialInjectionSymbolId);
           return [
-          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, field),
-          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, symbol!.declaration!),
-        ];
+            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, field),
+            new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, symbol!.declaration!),
+          ];
         }
         symbolTable.set(partialInjectionSymbolId, partialInjectionSymbol);
       }
@@ -335,7 +354,9 @@ export default class TableValidator implements ElementValidator {
         return;
       }
       if (settingMap[name] === undefined) {
-        settingMap[name] = [part as PrimaryExpressionNode];
+        settingMap[name] = [
+          part as PrimaryExpressionNode,
+        ];
       } else {
         settingMap[name]!.push(part as PrimaryExpressionNode);
       }
@@ -345,7 +366,10 @@ export default class TableValidator implements ElementValidator {
     const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
     if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
       errors.push(
-        ...[...pkAttrs, ...pkeyAttrs]
+        ...[
+          ...pkAttrs,
+          ...pkeyAttrs,
+        ]
           .map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'Either one of \'primary key\' and \'pk\' can appear', attr)),
       );
     }
@@ -396,7 +420,10 @@ export default class TableValidator implements ElementValidator {
           const nullAttrs = settingMap[SettingName.Null] || [];
           if (attrs.length >= 1 && nullAttrs.length >= 1) {
             errors.push(
-              ...[...attrs, ...nullAttrs]
+              ...[
+                ...attrs,
+                ...nullAttrs,
+              ]
                 .map((attr) => new CompileError(CompileErrorCode.CONFLICTING_SETTING, '\'not null\' and \'null\' can not be set at the same time', attr)),
             );
           }

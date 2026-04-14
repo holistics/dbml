@@ -64,7 +64,9 @@ export default class TableBinder implements ElementBinder {
       ? []
       : body instanceof BlockExpressionNode
         ? body.body
-        : [body];
+        : [
+            body,
+          ];
     // Prioritize the later injections
     return members
       .filter((i) => i instanceof FunctionApplicationNode && isValidPartialInjection(i.callee))
@@ -114,12 +116,20 @@ export default class TableBinder implements ElementBinder {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.bindFields([body]);
+      return this.bindFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
-    return [...this.bindFields(fields as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.bindFields(fields as FunctionApplicationNode[]),
+      ...this.bindSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -133,7 +143,10 @@ export default class TableBinder implements ElementBinder {
 
         const errors: CompileError[] = [];
 
-        const args = [c.callee, ...c.args];
+        const args = [
+          c.callee,
+          ...c.args,
+        ];
         if (last(args) instanceof ListExpressionNode) {
           const listExpression = last(args) as ListExpressionNode;
           const settingsMap = aggregateSettingList(listExpression).getValue();

@@ -37,7 +37,11 @@ const DIALECT_INTEGER_TYPES: Record<SqlDialect, Set<string>> = {
     'bigint',
     'tinyint',
   ]),
-  oracle: new Set(['int', 'integer', 'smallint']),
+  oracle: new Set([
+    'int',
+    'integer',
+    'smallint',
+  ]),
   snowflake: new Set([
     'int',
     'integer',
@@ -86,11 +90,22 @@ const DIALECT_FLOAT_TYPES: Record<SqlDialect, Set<string>> = {
 };
 
 const DIALECT_BOOL_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['bool', 'boolean', 'bit']),
-  postgres: new Set(['bool', 'boolean']),
-  mssql: new Set(['bit']),
+  mysql: new Set([
+    'bool',
+    'boolean',
+    'bit',
+  ]),
+  postgres: new Set([
+    'bool',
+    'boolean',
+  ]),
+  mssql: new Set([
+    'bit',
+  ]),
   oracle: new Set([]), // Oracle typically uses number(1)
-  snowflake: new Set(['boolean']),
+  snowflake: new Set([
+    'boolean',
+  ]),
 };
 
 const DIALECT_STRING_TYPES: Record<SqlDialect, Set<string>> = {
@@ -145,10 +160,21 @@ const DIALECT_BINARY_TYPES: Record<SqlDialect, Set<string>> = {
     'mediumblob',
     'longblob',
   ]),
-  postgres: new Set(['bytea']),
-  mssql: new Set(['binary', 'varbinary']),
-  oracle: new Set(['blob', 'raw']),
-  snowflake: new Set(['binary', 'varbinary']),
+  postgres: new Set([
+    'bytea',
+  ]),
+  mssql: new Set([
+    'binary',
+    'varbinary',
+  ]),
+  oracle: new Set([
+    'blob',
+    'raw',
+  ]),
+  snowflake: new Set([
+    'binary',
+    'varbinary',
+  ]),
 };
 
 const DIALECT_DATETIME_TYPES: Record<SqlDialect, Set<string>> = {
@@ -192,7 +218,11 @@ const DIALECT_DATETIME_TYPES: Record<SqlDialect, Set<string>> = {
 
 const DIALECT_SERIAL_TYPES: Record<SqlDialect, Set<string>> = {
   mysql: new Set([]),
-  postgres: new Set(['serial', 'smallserial', 'bigserial']),
+  postgres: new Set([
+    'serial',
+    'smallserial',
+    'bigserial',
+  ]),
   mssql: new Set([]),
   oracle: new Set([]),
   snowflake: new Set([]),

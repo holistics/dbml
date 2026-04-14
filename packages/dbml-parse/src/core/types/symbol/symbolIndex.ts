@@ -100,7 +100,10 @@ export function createNodeSymbolIndex (key: string, symbolKind: SymbolKind): Nod
 
 export function destructureIndex (id: NodeSymbolIndex): { name: string;
   kind: SymbolKind; } | undefined {
-  const [kind, name] = id.split(':');
+  const [
+    kind,
+    name,
+  ] = id.split(':');
 
   return Object.values(SymbolKind).includes(kind as SymbolKind)
     ? {

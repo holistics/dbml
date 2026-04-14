@@ -12,7 +12,11 @@ export interface TextEdit {
  * @returns The modified source string with all edits applied
  */
 export function applyTextEdits (source: string, edits: TextEdit[], sorted = false): string {
-  const sortedEdits = sorted ? edits : [...edits].sort((a, b) => b.start - a.start);
+  const sortedEdits = sorted
+    ? edits
+    : [
+        ...edits,
+      ].sort((a, b) => b.start - a.start);
 
   let result = source;
   for (const {

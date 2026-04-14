@@ -92,7 +92,9 @@ export default class TableGroupValidator implements ElementValidator {
       ];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode),
+      ];
     }
     if (!isSimpleName(nameNode)) {
       return [
@@ -130,12 +132,16 @@ export default class TableGroupValidator implements ElementValidator {
     });
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments !== undefined) {
-      const nameFragments = [...maybeNameFragments];
+      const nameFragments = [
+        ...maybeNameFragments,
+      ];
       const tableGroupName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableGroupSymbolIndex(tableGroupName);
       if (symbolTable.has(tableId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup '${tableGroupName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!)];
+        return [
+          new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup '${tableGroupName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!),
+        ];
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
@@ -211,7 +217,10 @@ export default class TableGroupValidator implements ElementValidator {
       ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),

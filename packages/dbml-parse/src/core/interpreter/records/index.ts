@@ -173,7 +173,11 @@ function extractDataFromRow (
   const rowObj: Record<string, RecordValue> = {};
   const columnNodes: Record<string, SyntaxNode> = {};
 
-  const args = row.callee instanceof CommaExpressionNode ? row.callee.elementList : [row.callee!];
+  const args = row.callee instanceof CommaExpressionNode
+    ? row.callee.elementList
+    : [
+        row.callee!,
+      ];
   if (args.length !== mergedColumns.length) {
     errors.push(new CompileError(
       CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -263,7 +267,9 @@ function extractValue (
 
   // Enum type
   if (isEnum) {
-    const enumMembers = ([...env.enums.values()].find((e) => e.schemaName === column.type.schemaName && e.name === column.type.type_name)?.values || []).map((field) => field.name);
+    const enumMembers = ([
+      ...env.enums.values(),
+    ].find((e) => e.schemaName === column.type.schemaName && e.name === column.type.type_name)?.values || []).map((field) => field.name);
     let enumValue = extractQuotedStringToken(node);
     if (enumValue === undefined) {
       enumValue = (destructureComplexVariable(node) ?? []).pop();

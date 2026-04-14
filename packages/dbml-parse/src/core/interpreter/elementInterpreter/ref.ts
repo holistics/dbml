@@ -39,7 +39,10 @@ export class RefInterpreter implements ElementInterpreter {
   interpret (): CompileError[] {
     this.ref.token = getTokenPosition(this.declarationNode);
     this.env.ref.set(this.declarationNode, this.ref as Ref);
-    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretBody(this.declarationNode.body!),
+    ];
     return errors;
   }
 
@@ -74,12 +77,17 @@ export class RefInterpreter implements ElementInterpreter {
     const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!);
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
-      return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field)];
+      return [
+        new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field),
+      ];
     }
 
     const refId = getRefId(leftSymbols, rightSymbols);
     if (this.env.refIds[refId]) {
-      return [new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode), new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId])];
+      return [
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
+        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
+      ];
     }
 
     if (field.args[0]) {

@@ -51,13 +51,18 @@ export function convertFuncAppToElem (
   //   records () // --> call expression here
   // }
   if (callee instanceof CallExpressionNode && callee.argumentList) {
-    args = [callee.argumentList, ...args];
+    args = [
+      callee.argumentList,
+      ...args,
+    ];
     callee = callee.callee;
   }
   if (!callee || !isExpressionAnIdentifierNode(callee) || args.length === 0) {
     return undefined;
   }
-  const cpArgs = [...args];
+  const cpArgs = [
+    ...args,
+  ];
 
   const type = extractVariableNode(callee)!;
 
@@ -242,7 +247,11 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   }
 
   if (node instanceof LiteralNode) {
-    return node.literal ? [node.literal] : [];
+    return node.literal
+      ? [
+          node.literal,
+        ]
+      : [];
   }
 
   if (node instanceof VariableNode) {

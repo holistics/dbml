@@ -67,12 +67,16 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table):
     return {
       schemaName: owner!.schemaName,
       tableName: owner!.name,
-      fieldNames: [variableNames[0]],
+      fieldNames: [
+        variableNames[0],
+      ],
     };
   }
 
   return {
-    fieldNames: [variableNames.pop()!],
+    fieldNames: [
+      variableNames.pop()!,
+    ],
     tableName: variableNames.pop()!,
     schemaName: variableNames.pop() || null,
   };
@@ -83,13 +87,25 @@ export function getMultiplicities (
 ): [RelationCardinality, RelationCardinality] {
   switch (op) {
     case '<':
-      return ['1', '*'];
+      return [
+        '1',
+        '*',
+      ];
     case '<>':
-      return ['*', '*'];
+      return [
+        '*',
+        '*',
+      ];
     case '>':
-      return ['*', '1'];
+      return [
+        '*',
+        '1',
+      ];
     case '-':
-      return ['1', '1'];
+      return [
+        '1',
+        '1',
+      ];
     default:
       throw new Error('Invalid relation op');
   }
@@ -116,7 +132,9 @@ export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
   if (colNode instanceof TupleExpressionNode) {
     return colNode.elementList.map((e) => e.referee as ColumnSymbol);
   }
-  return [colNode!.referee as ColumnSymbol];
+  return [
+    colNode!.referee as ColumnSymbol,
+  ];
 }
 
 export function extractElementName (nameNode: SyntaxNode): { schemaName: string[];
@@ -162,7 +180,10 @@ export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: Colum
     const secondIds = (sym2 as ColumnSymbol[]).map(({
       id,
     }) => id).sort();
-    return zip(firstIds, secondIds).every(([first, second]) => first === second);
+    return zip(firstIds, secondIds).every(([
+      first,
+      second,
+    ]) => first === second);
   }
 
   const firstId = sym1.id;
@@ -309,7 +330,9 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
   // Check if this type references an enum
   const schema = typeSchemaName.length === 0 ? null : typeSchemaName[0];
 
-  const isEnum = !![...env.enums.values()].find((e) => e.name === typeName && e.schemaName === schema);
+  const isEnum = !![
+    ...env.enums.values(),
+  ].find((e) => e.name === typeName && e.schemaName === schema);
 
   if (typeSchemaName.length > 1) {
     return new Report(
@@ -321,7 +344,9 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
         lengthParam,
         isEnum,
       },
-      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
+      [
+        new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode),
+      ],
     );
   }
 
@@ -337,7 +362,11 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
 
 // The returned table respects (injected) column definition order
 export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): Table {
-  const tableElement = [...env.tables.entries()].find(([, t]) => t === table)?.[0];
+  const tableElement = [
+    ...env.tables.entries(),
+  ].find(([
+    , t,
+  ]) => t === table)?.[0];
   if (!tableElement) {
     throw new Error('mergeTableAndPartials should be called after all tables are interpreted');
   }
@@ -345,14 +374,22 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
     throw new Error('Table element should have a block body');
   }
 
-  const indexes = [...table.indexes];
-  const checks = [...table.checks];
+  const indexes = [
+    ...table.indexes,
+  ];
+  const checks = [
+    ...table.checks,
+  ];
   let headerColor = table.headerColor;
   let note = table.note;
 
-  const tablePartials = [...env.tablePartials.values()];
+  const tablePartials = [
+    ...env.tablePartials.values(),
+  ];
   // Prioritize later table partials
-  for (const tablePartial of [...table.partials].reverse()) {
+  for (const tablePartial of [
+    ...table.partials,
+  ].reverse()) {
     const {
       name,
     } = tablePartial;
@@ -374,9 +411,15 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
     }
   }
 
-  const directFieldMap = new Map(table.fields.map((f) => [f.name, f]));
+  const directFieldMap = new Map(table.fields.map((f) => [
+    f.name,
+    f,
+  ]));
   const directFieldNames = new Set(directFieldMap.keys());
-  const partialMap = new Map(tablePartials.map((p) => [p.name, p]));
+  const partialMap = new Map(tablePartials.map((p) => [
+    p.name,
+    p,
+  ]));
 
   // Collect all fields in declaration order
   const allFields: Column[] = [];
@@ -406,7 +449,9 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
 
   // Use uniqBy to keep last occurrence of each field (later partials win)
   // Process from end to start, then reverse to maintain declaration order
-  const fields = uniqBy([...allFields].reverse(), 'name').reverse();
+  const fields = uniqBy([
+    ...allFields,
+  ].reverse(), 'name').reverse();
 
   return {
     ...table,
@@ -420,11 +465,15 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
 
 export function extractInlineRefsFromTablePartials (table: Table, env: InterpreterDatabase): Ref[] {
   const refs: Ref[] = [];
-  const tablePartials = [...env.tablePartials.values()];
+  const tablePartials = [
+    ...env.tablePartials.values(),
+  ];
   const originalFieldNames = new Set(table.fields.map((f) => f.name));
 
   // Process partials in the same order as mergeTableAndPartials
-  for (const tablePartial of [...table.partials].reverse()) {
+  for (const tablePartial of [
+    ...table.partials,
+  ].reverse()) {
     const {
       name,
     } = tablePartial;
@@ -453,7 +502,9 @@ export function extractInlineRefsFromTablePartials (table: Table, env: Interpret
             {
               schemaName: table.schemaName,
               tableName: table.name,
-              fieldNames: [field.name],
+              fieldNames: [
+                field.name,
+              ],
               token: field.token,
               relation: multiplicities[0],
             },
