@@ -1,36 +1,53 @@
-import {
-  isElementNode, isExpressionAVariableNode, isAccessExpression, isElementFieldNode, isInsideElementBody, isInsideSettingList, getBody,
-} from '@/core/utils/expression';
-import { ElementKind } from '@/core/types/keywords';
-import {
-  PrimaryExpressionNode, VariableNode, ElementDeclarationNode,
-} from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
-import {
-  DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/constants';
-import Report from '@/core/types/report';
 import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
 import {
-  getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
-} from '../utils';
-import { extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
+import {
+  ElementDeclarationNode, PrimaryExpressionNode, VariableNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  getBody, isAccessExpression, isElementFieldNode, isElementNode, isExpressionAVariableNode, isInsideElementBody, isInsideSettingList,
+} from '@/core/utils/expression';
+import {
+  extractVarNameFromPrimaryVariable,
+} from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
+import {
+  getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+} from '../utils';
 import TableGroupBinder from './bind';
-import { TableGroupInterpreter } from './interpret';
+import {
+  TableGroupInterpreter,
+} from './interpret';
 
 // Public utils that other modules can use
 export const tableGroupUtils = {
   getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup name '${name}' already exists in schema '${schemaLabel}'`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `TableGroup '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
   getFieldDuplicateError (name: string, errorNode: SyntaxNode): CompileError {
     return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate TableGroupField '${name}'`, errorNode);
@@ -146,11 +163,15 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, { kinds: [SymbolKind.Table, SymbolKind.Schema] });
+      return lookupMember(compiler, left, name, {
+        kinds: [SymbolKind.Table, SymbolKind.Schema],
+      });
     }
     return new Report(undefined);
   }
 
   // Left side of access: look up as Schema
-  return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Schema] });
+  return lookupMember(compiler, globalSymbol, name, {
+    kinds: [SymbolKind.Schema],
+  });
 }

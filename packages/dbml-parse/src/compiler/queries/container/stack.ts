@@ -1,24 +1,28 @@
-import type Compiler from '../../index';
 import {
   findLastIndex, last,
 } from 'lodash-es';
 import {
-  SyntaxNode,
+  getMemberChain,
+} from '@/core/parser/utils';
+import {
+  BlockExpressionNode,
+  CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  PrefixExpressionNode,
+  IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
+  PrefixExpressionNode,
+  SyntaxNode,
   TupleExpressionNode,
-  CommaExpressionNode,
-  BlockExpressionNode,
-  IdentiferStreamNode,
 } from '@/core/types/nodes';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { isOffsetWithinSpan } from '@/core/utils/span';
-import { getMemberChain } from '@/core/parser/utils';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import type Compiler from '../../index';
 
 export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
   const tokens = this.token.flatStream();

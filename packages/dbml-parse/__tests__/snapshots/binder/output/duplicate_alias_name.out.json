@@ -1,0 +1,78 @@
+{
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@A@[L0:C0, L2:C1]",
+          "snippet": "Table A as...ary key]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@A@[L0:C0, L2:C1]",
+          "snippet": "Table A as...ary key]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C4, L1:C24]",
+              "snippet": "id int [primary key]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@B@[L4:C0, L6:C1]",
+          "snippet": "Table \"B\" ...ary key]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@B@[L4:C0, L6:C1]",
+          "snippet": "Table \"B\" ...ary key]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L5:C4, L5:C24]",
+              "snippet": "id int [primary key]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@C@[L8:C0, L10:C1]",
+          "snippet": "Table C as...ary key]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@C@[L8:C0, L10:C1]",
+          "snippet": "Table C as...ary key]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L9:C4, L9:C24]",
+              "snippet": "id int [primary key]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@D@[L12:C0, L14:C1]",
+          "snippet": "Table \"D\" ...ary key]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@D@[L12:C0, L14:C1]",
+          "snippet": "Table \"D\" ...ary key]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L13:C4, L13:C24]",
+              "snippet": "id int [primary key]"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

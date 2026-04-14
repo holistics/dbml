@@ -1,4 +1,13 @@
-import { last } from 'lodash-es';
+import {
+  last,
+} from 'lodash-es';
+import {
+  hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine,
+} from '@/core/lexer/utils';
+import {
+  ParsingContext, ParsingContextStack,
+} from '@/core/parser/contextStack';
+import NodeFactory from '@/core/parser/factory';
 import {
   convertFuncAppToElem,
   getMemberChain,
@@ -8,12 +17,8 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  SyntaxToken, SyntaxTokenKind, isOpToken,
-} from '@/core/types/tokens';
-import Report from '@/core/types/report';
-import {
-  ParsingContext, ParsingContextStack,
-} from '@/core/parser/contextStack';
+  Filepath,
+} from '@/core/types/filepath';
 import {
   ArrayNode,
   AttributeNode,
@@ -36,22 +41,21 @@ import {
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
-  TupleExpressionNode,
-  VariableNode,
-  WildcardNode,
   SyntaxNodeIdGenerator,
+  TupleExpressionNode,
   UseDeclarationNode,
   UseSpecifierListNode,
   UseSpecifierNode,
+  VariableNode,
+  WildcardNode,
 } from '@/core/types/nodes';
-import NodeFactory from '@/core/parser/factory';
+import Report from '@/core/types/report';
 import {
-  hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine,
-} from '@/core/lexer/utils';
+  SyntaxToken, SyntaxTokenKind, isOpToken,
+} from '@/core/types/tokens';
 import {
   isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword,
 } from '@/core/utils/expression';
-import { Filepath } from '@/core/types/filepath';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {
@@ -270,7 +274,9 @@ export default class Parser {
     // Entire-file use: use * from './path.dbml'
     if (this.peek().kind === SyntaxTokenKind.WILDCARD) {
       this.advance();
-      args.specifiers = this.nodeFactory.create(WildcardNode, { token: this.previous() });
+      args.specifiers = this.nodeFactory.create(WildcardNode, {
+        token: this.previous(),
+      });
     } else {
       // Selective use: use { ... } from './path.dbml'
       try {
@@ -620,7 +626,9 @@ export default class Parser {
     const args: {
       callee?: ExpressionNode;
       args: ExpressionNode[];
-    } = { args: [] };
+    } = {
+      args: [],
+    };
 
     // Try interpreting the function application as an element declaration expression
     // if fail, fall back to the generic function application
@@ -691,7 +699,9 @@ export default class Parser {
   private commaExpression (): NormalExpressionNode | CommaExpressionNode {
     // If we start with a comma, treat the first field as an empty node
     const firstExpr = this.check(SyntaxTokenKind.COMMA)
-      ? this.nodeFactory.create(EmptyNode, { prevToken: this.previous() })
+      ? this.nodeFactory.create(EmptyNode, {
+          prevToken: this.previous(),
+        })
       : this.normalExpression();
 
     // If there's no comma, just return the normal expression
@@ -712,13 +722,17 @@ export default class Parser {
 
       // Check for empty field (trailing commas)
       if (this.shouldStopCommaExpression()) {
-        args.elementList.push(this.nodeFactory.create(EmptyNode, { prevToken: this.previous() }));
+        args.elementList.push(this.nodeFactory.create(EmptyNode, {
+          prevToken: this.previous(),
+        }));
         break;
       }
 
       // Check for empty field (consecutive commas)
       if (this.check(SyntaxTokenKind.COMMA)) {
-        args.elementList.push(this.nodeFactory.create(EmptyNode, { prevToken: this.previous() }));
+        args.elementList.push(this.nodeFactory.create(EmptyNode, {
+          prevToken: this.previous(),
+        }));
         continue;
       }
 
@@ -776,7 +790,9 @@ export default class Parser {
       const token = this.peek();
 
       if (token.kind === SyntaxTokenKind.LPAREN) {
-        const { left } = postfixBindingPower(token);
+        const {
+          left,
+        } = postfixBindingPower(token);
         if ((left as number) < mbp) {
           break;
         }
@@ -893,7 +909,9 @@ export default class Parser {
 
         throw new PartialParsingError(
           args.op,
-          this.nodeFactory.create(EmptyNode, { prevToken: args.op }),
+          this.nodeFactory.create(EmptyNode, {
+            prevToken: args.op,
+          }),
           this.contextStack.findHandlerContext(this.tokens, this.current),
         );
       }
@@ -919,7 +937,9 @@ export default class Parser {
       if (leftExpression instanceof EmptyNode) {
         throw new PartialParsingError(
           this.peek(),
-          this.nodeFactory.create(EmptyNode, { prevToken: this.peek() }),
+          this.nodeFactory.create(EmptyNode, {
+            prevToken: this.peek(),
+          }),
           this.contextStack.findHandlerContext(this.tokens, this.current),
         );
       }
@@ -942,7 +962,9 @@ export default class Parser {
     | WildcardNode {
     if (this.check(SyntaxTokenKind.WILDCARD)) {
       this.advance();
-      return this.nodeFactory.create(WildcardNode, { token: this.previous() });
+      return this.nodeFactory.create(WildcardNode, {
+        token: this.previous(),
+      });
     }
 
     if (
@@ -991,7 +1013,9 @@ export default class Parser {
       );
     }
 
-    return this.nodeFactory.create(EmptyNode, { prevToken: this.previous() });
+    return this.nodeFactory.create(EmptyNode, {
+      prevToken: this.previous(),
+    });
   }
 
   /* Parsing FunctionExpression */
@@ -1017,7 +1041,9 @@ export default class Parser {
 
   private wildcardExpression (): WildcardNode {
     this.advance();
-    return this.nodeFactory.create(WildcardNode, { token: this.previous() });
+    return this.nodeFactory.create(WildcardNode, {
+      token: this.previous(),
+    });
   }
 
   /* Parsing and synchronizing BlockExpression */
@@ -1027,7 +1053,9 @@ export default class Parser {
       blockOpenBrace?: SyntaxToken;
       body: (ElementDeclarationNode | FunctionApplicationNode)[];
       blockCloseBrace?: SyntaxToken;
-    } = { body: [] };
+    } = {
+      body: [],
+    };
     const buildBlock = () => this.nodeFactory.create(BlockExpressionNode, args);
 
     try {
@@ -1114,12 +1142,20 @@ export default class Parser {
         SyntaxTokenKind.NUMERIC_LITERAL,
       )
     ) {
-      return this.nodeFactory.create(PrimaryExpressionNode, { expression: this.nodeFactory.create(LiteralNode, { literal: this.previous() }) });
+      return this.nodeFactory.create(PrimaryExpressionNode, {
+        expression: this.nodeFactory.create(LiteralNode, {
+          literal: this.previous(),
+        }),
+      });
     }
 
     // Primary expression containing a nested VariableNode
     if (this.match(SyntaxTokenKind.QUOTED_STRING, SyntaxTokenKind.IDENTIFIER)) {
-      return this.nodeFactory.create(PrimaryExpressionNode, { expression: this.nodeFactory.create(VariableNode, { variable: this.previous() }) });
+      return this.nodeFactory.create(PrimaryExpressionNode, {
+        expression: this.nodeFactory.create(VariableNode, {
+          variable: this.previous(),
+        }),
+      });
     }
 
     this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect a variable or literal');
@@ -1326,7 +1362,9 @@ export default class Parser {
         CompileErrorCode.EMPTY_ATTRIBUTE_NAME,
         'Expect a non-empty attribute name',
       );
-      args.name = this.nodeFactory.create(IdentiferStreamNode, { identifiers: [] });
+      args.name = this.nodeFactory.create(IdentiferStreamNode, {
+        identifiers: [],
+      });
     } else {
       try {
         args.name = this.attributeName();
@@ -1414,13 +1452,17 @@ export default class Parser {
         }
         throw new PartialParsingError(
           e.token,
-          this.nodeFactory.create(IdentiferStreamNode, { identifiers }),
+          this.nodeFactory.create(IdentiferStreamNode, {
+            identifiers,
+          }),
           e.handlerContext,
         );
       }
     }
 
-    return this.nodeFactory.create(IdentiferStreamNode, { identifiers });
+    return this.nodeFactory.create(IdentiferStreamNode, {
+      identifiers,
+    });
   }
 
   private logError (nodeOrToken: SyntaxToken | SyntaxNode, code: CompileErrorCode, message: string) {

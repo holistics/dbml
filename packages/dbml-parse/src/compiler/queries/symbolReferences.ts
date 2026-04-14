@@ -1,15 +1,23 @@
-import type Compiler from '../index';
 import {
-  SyntaxNode, TupleExpressionNode, InfixExpressionNode,
+  nodeReferee,
+} from '@/core/global_modules';
+import {
+  getMemberChain,
+} from '@/core/parser/utils';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  InfixExpressionNode, SyntaxNode, TupleExpressionNode,
 } from '@/core/types/nodes';
-import { NodeSymbol } from '@/core/types/symbol';
-import { UNHANDLED } from '@/constants';
-import {
-  isExpressionAVariableNode, isAccessExpression,
-} from '@/core/utils/expression';
-import { getMemberChain } from '@/core/parser/utils';
 import Report from '@/core/types/report';
-import { nodeReferee } from '@/core/global_modules';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol';
+import {
+  isAccessExpression, isExpressionAVariableNode,
+} from '@/core/utils/expression';
+import type Compiler from '../index';
 
 // Get the right-most variable node in a member access chain (e.g., for schema.table, returns the table node)
 function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {

@@ -1,12 +1,23 @@
-import Report from '@/core/types/report';
-import { GlobalModule } from '../types';
 import Compiler from '@/compiler';
 import {
-  InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, UseSpecifierListNode,
-} from '@/core/types/nodes';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/constants';
+  Filepath, resolveImportFilepath,
+} from '@/core/types/filepath';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
+import {
+  InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
+import {
+  NodeSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
 import {
   destructureComplexVariable,
   extractVariableFromExpression,
@@ -17,16 +28,11 @@ import {
   isUseSpecifier,
 } from '@/core/utils/expression';
 import {
-  NodeSymbol, SymbolKind, UseSymbol,
-} from '@/core/types/symbol';
+  GlobalModule,
+} from '../types';
 import {
-  Filepath, resolveImportFilepath,
-} from '@/core/types/filepath';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import { lookupMember } from '../utils';
-import type { SchemaElement } from '@/core/types/schemaJson';
+  lookupMember,
+} from '../utils';
 
 export const useModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
@@ -34,6 +40,8 @@ export const useModule: GlobalModule = {
 
     const symbolKind = node.getSymbolKind();
     if (symbolKind === undefined) return Report.create(PASS_THROUGH);
+    // Imported schemas are merged into the existing SchemaSymbol hierarchy, not wrapped in UseSymbol.
+    if (symbolKind === SymbolKind.Schema) return Report.create(PASS_THROUGH);
 
     const originalSymbol = compiler.nodeReferee(node.name).getFiltered(UNHANDLED);
 
@@ -53,12 +61,14 @@ export const useModule: GlobalModule = {
     if (!isExpressionAVariableNode(node) && !isDotDelimitedIdentifier(node)) return Report.create(PASS_THROUGH);
 
     const useSpecifier = node.parentOfKind(UseSpecifierNode);
-    if (!useSpecifier) return Report.create(undefined);
+    if (!useSpecifier) return Report.create(PASS_THROUGH);
 
-    // Determine if we're in the schema qualified part
-    // use { table public.table } from '...'
-    //               ^      ^
-    const symbolKind = (useSpecifier.name === node || (isAccessExpression(useSpecifier.name) && useSpecifier.name.rightExpression === node)) ? useSpecifier.getSymbolKind() : SymbolKind.Schema;
+    // `node` is the terminal name fragment when it IS the specifier name,
+    // or is the rightmost part of a qualified name (e.g. `table` in `public.table`).
+    // Otherwise it's a schema prefix → always resolved as Schema.
+    const isTerminalFragment = useSpecifier.name === node
+      || (isAccessExpression(useSpecifier.name) && useSpecifier.name.rightExpression === node);
+    const symbolKind = isTerminalFragment ? useSpecifier.getSymbolKind() : SymbolKind.Schema;
     if (symbolKind === undefined) return Report.create(undefined);
 
     const fullname = destructureComplexVariable(node.parentOfKind(InfixExpressionNode));
@@ -190,7 +200,9 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   }
 
   // 4. Wildcard reuses
-  for (const { importPath: wildcardPath } of usable.reuses.wildcard) {
+  for (const {
+    importPath: wildcardPath,
+  } of usable.reuses.wildcard) {
     const member = lookupMemberInFilepath(compiler, wildcardPath, name, symbolKind, visited);
     if (member) return member;
   }

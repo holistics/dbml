@@ -47,20 +47,6 @@
           "snippet": "~\r\n}"
         }
       }
-    },
-    {
-      "code": "INVALID_OPERAND",
-      "diagnostic": "Invalid start of operand \"}\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<rbrace>@}@[L9:C0, L9:C1]",
-          "snippet": "}",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
     }
   ],
   "program": {
@@ -169,17 +155,7 @@
                       }
                     },
                     "fullEnd": 25,
-                    "fullStart": 15,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C2, L1:C8]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C2, L1:C8]",
-                        "snippet": "id int"
-                      }
-                    }
+                    "fullStart": 15
                   },
                   {
                     "context": {
@@ -333,17 +309,7 @@
                       }
                     },
                     "fullEnd": 60,
-                    "fullStart": 26,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@@[L3:C2, L5:C9]",
-                        "snippet": "!common\r\n ...\n  -common"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@@[L3:C2, L5:C9]",
-                        "snippet": "!common\r\n ...\n  -common"
-                      }
-                    }
+                    "fullStart": 26
                   },
                   {
                     "context": {
@@ -401,17 +367,7 @@
                       }
                     },
                     "fullEnd": 68,
-                    "fullStart": 61,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@@[L7:C2, L7:C4]",
-                        "snippet": "~1"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@@[L7:C2, L7:C4]",
-                        "snippet": "~1"
-                      }
-                    }
+                    "fullStart": 61
                   },
                   {
                     "context": {
@@ -448,17 +404,7 @@
                       }
                     },
                     "fullEnd": 74,
-                    "fullStart": 68,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@@[L8:C2, L9:C1]",
-                        "snippet": "~\r\n}"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@@[L8:C2, L9:C1]",
-                        "snippet": "~\r\n}"
-                      }
-                    }
+                    "fullStart": 68
                   }
                 ]
               },
@@ -505,43 +451,7 @@
             }
           },
           "fullEnd": 76,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Users@[L0:C0, L9:C1]",
-              "snippet": "Table User...~1\r\n  ~\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L0:C0, L9:C1]",
-              "snippet": "Table User...~1\r\n  ~\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@@[L3:C2, L5:C9]",
-                  "snippet": "!common\r\n ...\n  -common"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@@[L7:C2, L7:C4]",
-                  "snippet": "~1"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@@[L8:C2, L9:C1]",
-                  "snippet": "~\r\n}"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C2, L1:C8]",
-                  "snippet": "id int"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         }
       ],
       "eof": {
@@ -555,24 +465,6 @@
       }
     },
     "fullEnd": 76,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L10:C0]",
-        "snippet": "Table User...\r\n  ~\r\n}\r\n"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L10:C0]",
-        "snippet": "Table User...\r\n  ~\r\n}\r\n"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L0:C0, L9:C1]",
-            "snippet": "Table User...~1\r\n  ~\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

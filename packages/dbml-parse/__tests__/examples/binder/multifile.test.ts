@@ -285,6 +285,18 @@ describe('[example] multifile binder', () => {
       expect(compiler.bindNode(xAst).getErrors()).toHaveLength(0);
       expect(compiler.bindNode(yAst).getErrors()).toHaveLength(0);
     });
+
+    test('circular reuse chain does not infinite loop or crash', () => {
+      const { compiler, fps } = makeCompiler({
+        '/a.dbml': "reuse * from './b.dbml'\nTable a_table { id int [pk] }",
+        '/b.dbml': "reuse * from './a.dbml'\nTable b_table { id int [pk] }",
+      });
+
+      const aAst = compiler.parseFile(fps['/a.dbml']).getValue().ast;
+      const bAst = compiler.parseFile(fps['/b.dbml']).getValue().ast;
+      expect(() => compiler.bindNode(aAst)).not.toThrow();
+      expect(() => compiler.bindNode(bAst)).not.toThrow();
+    });
   });
 
   describe('enum import', () => {
@@ -311,6 +323,25 @@ describe('[example] multifile binder', () => {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
       expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('schema-qualified enum import has no binding errors and UseSymbol points to the declaration', () => {
+      // `Enum auth.roles` is declared with an explicit schema prefix.
+      // `use { enum auth.roles }` must resolve the specifier without errors,
+      // and the resulting UseSymbol must point to the original enum declaration.
+      const { compiler, fps } = makeCompiler({
+        '/types.dbml': 'Enum auth.roles { admin member }',
+        '/main.dbml': "use { enum auth.roles } from './types.dbml'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+
+      const spec = mainAst.uses[0].specifiers as any;
+      const useSymbol = compiler.nodeSymbol(spec.specifiers[0]).getValue() as UseSymbol;
+      expect(useSymbol).toBeInstanceOf(UseSymbol);
+      expect(useSymbol.usedSymbol).toBeDefined();
+      expect(compiler.symbolName(useSymbol.usedSymbol!)).toBe('roles');
     });
   });
 
@@ -352,6 +383,206 @@ describe('[example] multifile binder', () => {
       expect(u2).toBeInstanceOf(UseSymbol);
       // Both point to the same original declaration (users in base.dbml)
       expect((u1 as UseSymbol).usedSymbol?.declaration).toBe((u2 as UseSymbol).usedSymbol?.declaration);
+    });
+  });
+
+  describe('alias shadows local name', () => {
+    test('importing a symbol under an alias that matches a locally-defined table produces DUPLICATE_NAME', () => {
+      // `use { table accounts as users }` creates a local name 'users'.
+      // The file also defines `Table users` — these two collide.
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table accounts { id int [pk] }',
+        '/main.dbml': [
+          "use { table accounts as users } from './base.dbml'",
+          'Table users { id int [pk] }',
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(mainAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+    });
+  });
+
+  describe('wildcard import from two files with overlapping names', () => {
+    test('use * from two files with the same table name produces DUPLICATE_NAME', () => {
+      const { compiler, fps } = makeCompiler({
+        '/a.dbml': 'Table users { id int [pk] }',
+        '/b.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': [
+          "use * from './a.dbml'",
+          "use * from './b.dbml'",
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(mainAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+    });
+  });
+
+  describe('file with both element declarations and reuse', () => {
+    test('file with elements AND reuse * still exposes all symbols correctly', () => {
+      // Regression for topLevelSchemaMembers: a file that declares elements
+      // AND has use/reuse declarations must not lose its own elements from
+      // the public schema when the reuse-only synthetic-schema path runs.
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table products { id int [pk] }',
+        '/hub.dbml': [
+          "reuse * from './base.dbml'",
+          'Table categories { id int [pk] }',
+        ].join('\n'),
+        '/main.dbml': "use * from './hub.dbml'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      // products comes through the reuse chain; categories is defined directly in hub
+      const products = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'products').getValue();
+      const categories = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'categories').getValue();
+      expect(products).toBeInstanceOf(UseSymbol);
+      expect(categories).toBeInstanceOf(UseSymbol);
+    });
+  });
+
+  describe('mixed selective + wildcard from the same file', () => {
+    // Importing the same symbol twice from the same file — once via a
+    // selective `use { table users }` and once via `use *` — is idempotent.
+    // schemaModule.symbolMembers dedupes UseSymbols by
+    // (originalSymbol, locally-visible name), so two distinct UseSymbol
+    // wrappers around the same underlying table collapse into a single entry
+    // instead of colliding as DUPLICATE_NAME.
+    test('selective + wildcard from the same file is idempotent (no DUPLICATE_NAME)', () => {
+      const { compiler, fps } = makeCompiler({
+        '/shared.dbml': 'Table users { id int [pk] }\nTable roles { id int [pk] }',
+        '/main.dbml': [
+          "use { table users } from './shared.dbml'",
+          "use * from './shared.dbml'",
+          'Table memberships { user_id int [ref: > users.id] }',
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const bindErrors = compiler.bindNode(mainAst).getErrors();
+      expect(bindErrors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
+      const roles = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'roles').getValue();
+      // expect: both tables reachable — selective import does not conflict with wildcard re-exposure
+      expect(users).toBeInstanceOf(UseSymbol);
+      expect(roles).toBeInstanceOf(UseSymbol);
+    });
+  });
+
+  describe('DiagramView — non-importable', () => {
+    test('wildcard use does NOT pull DiagramView into consumer scope', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': `
+          Table users { id int [pk] }
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+        '/main.dbml': "use * from './base.dbml'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+
+      const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView').getValue();
+      expect(dvInMain).toBeUndefined();
+    });
+
+    test('reuse wildcard does NOT re-export DiagramView to downstream importers', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': `
+          Table users { id int [pk] }
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+        '/middle.dbml': "reuse * from './base.dbml'",
+        '/consumer.dbml': "use * from './middle.dbml'",
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+
+      const dvInConsumer = compiler.lookupMembers(consumerAst, SymbolKind.DiagramView, 'myView').getValue();
+      expect(dvInConsumer).toBeUndefined();
+    });
+
+    test('DiagramView is still visible in its own file scope', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': `
+          Table users { id int [pk] }
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+      });
+
+      const baseAst = compiler.parseFile(fps['/base.dbml']).getValue().ast;
+      expect(compiler.bindNode(baseAst).getErrors()).toHaveLength(0);
+
+      const dvInBase = compiler.lookupMembers(baseAst, SymbolKind.DiagramView, 'myView').getValue();
+      expect(dvInBase).toBeDefined();
+      expect(dvInBase!.isKind(SymbolKind.DiagramView)).toBe(true);
+    });
+
+    test('DiagramView can reference a table imported from another file', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': `
+          use { table users } from './base.dbml'
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+    });
+
+    test('DiagramView can reference a table from a wildcard import', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }\nTable posts { id int [pk] }',
+        '/main.dbml': `
+          use * from './base.dbml'
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+    });
+
+    test('selective use { DiagramView myView } is rejected at validation', () => {
+      // 'diagramview' is not a valid ImportKind — the validator rejects it as an
+      // invalid specifier type; the binder silently ignores unknown kinds.
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': `
+          Table users { id int [pk] }
+          DiagramView myView {
+            Tables { users }
+          }
+        `,
+        '/main.dbml': "use { DiagramView myView } from './base.dbml'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const validationErrors = compiler.validateNode(mainAst).getErrors();
+      expect(validationErrors.some((e) => e.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
+
+      // DiagramView must NOT appear in consumer scope
+      const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView').getValue();
+      expect(dvInMain).toBeUndefined();
     });
   });
 });

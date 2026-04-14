@@ -1,20 +1,26 @@
-import { isElementNode } from '@/core/utils/expression';
-import { destructureComplexVariable } from '@/core/utils/expression';
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
+import {
   ElementDeclarationNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
+import Report from '@/core/types/report';
+import {
+  isElementNode,
+} from '@/core/utils/expression';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
 import {
   type LocalModule, type Settings,
 } from '../types';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
 import NoteValidator from './validate';
 
 export const noteModule: LocalModule = {

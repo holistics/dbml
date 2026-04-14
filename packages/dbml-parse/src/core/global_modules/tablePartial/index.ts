@@ -1,46 +1,61 @@
+import type Compiler from '@/compiler/index';
 import {
-  isElementNode,
-  isExpressionAVariableNode,
-  isAccessExpression,
-  isElementFieldNode,
-  isInsideElementBody,
-  isWithinNthArgOfField,
-  isInsideSettingValue,
-  extractVarNameFromPrimaryVariable,
-  getBody,
-} from '@/core/utils/expression';
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  InfixExpressionNode, ElementDeclarationNode,
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
+import {
+  ElementDeclarationNode, InfixExpressionNode,
 } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
-  PASS_THROUGH, type PassThrough, UNHANDLED, KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
+  extractVarNameFromPrimaryVariable,
+  getBody,
+  isAccessExpression,
+  isElementFieldNode,
+  isElementNode,
+  isExpressionAVariableNode,
+  isInsideElementBody,
+  isInsideSettingValue,
+  isWithinNthArgOfField,
+} from '@/core/utils/expression';
 import {
-  lookupMember, nodeRefereeOfLeftExpression, lookupInDefaultSchema, shouldInterpretNode,
+  tableUtils,
+} from '../table';
+import type {
+  GlobalModule,
+} from '../types';
+import {
+  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import { tableUtils } from '../table';
 import TablePartialBinder from './bind';
-import { TablePartialInterpreter } from './interpret';
+import {
+  TablePartialInterpreter,
+} from './interpret';
 
 // Public utils that other modules can use
 export const tablePartialUtils = {
   getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial name '${name}' already exists in schema '${schemaLabel}'`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `TablePartial '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
 };
 

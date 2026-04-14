@@ -1,47 +1,63 @@
+import type Compiler from '@/compiler/index';
+import {
+  DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  ElementDeclarationNode, FunctionApplicationNode, PrefixExpressionNode, InfixExpressionNode, ProgramNode,
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
+import {
+  ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, PrefixExpressionNode, ProgramNode,
 } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
-import {
-  NodeSymbol, SchemaSymbol, InjectedColumnSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
-import {
-  DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING, PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/constants';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
 import {
-  extractVariableFromExpression,
+  InjectedColumnSymbol, NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
   extractVarNameFromPrimaryVariable,
-  isInsideSettingValue,
-  isElementNode,
-  isInsideElementBody,
+  extractVariableFromExpression,
   getBody,
-  isWithinNthArgOfField,
   isAccessExpression,
-  isExpressionAVariableNode,
   isElementFieldNode,
+  isElementNode,
+  isExpressionAVariableNode,
+  isInsideElementBody,
+  isInsideSettingValue,
+  isTerminalAccessFragment,
+  isWithinNthArgOfField,
 } from '@/core/utils/expression';
+import {
+  isValidPartialInjection,
+} from '@/core/utils/validate';
+import type {
+  GlobalModule,
+} from '../types';
 import {
   lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
-import { isValidPartialInjection } from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
 import TableBinder from './bind';
-import { TableInterpreter } from './interpret';
+import {
+  TableInterpreter,
+} from './interpret';
 
 // Public utils that other modules can use
 export const tableUtils = {
   getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${name}' already exists in schema '${schemaLabel}'`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
   getColumnDuplicateError (name: string, errorNode: SyntaxNode): CompileError {
     return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${name}`, errorNode);
@@ -274,8 +290,9 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
+      const isTerminal = isTerminalAccessFragment(node);
       return lookupMember(compiler, left, name, {
-        kinds: [SymbolKind.Enum, SymbolKind.Schema],
+        kinds: isTerminal ? [SymbolKind.Enum] : [SymbolKind.Schema],
         errorNode: node,
       });
     }

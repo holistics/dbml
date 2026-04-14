@@ -2,7 +2,7 @@
   "errors": [
     {
       "code": "DUPLICATE_NAME",
-      "diagnostic": "Table name 'AB' already exists in schema 'public'",
+      "diagnostic": "Table 'AB' already exists in schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

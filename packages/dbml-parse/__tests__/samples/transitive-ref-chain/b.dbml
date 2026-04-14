@@ -1,7 +1,0 @@
-// middle level: imports payments, defines orders with inline ref to payments
-use { table payments } from './c.dbml'
-
-Table orders {
-  id int [pk]
-  payment_id int [ref: > payments.id]
-}

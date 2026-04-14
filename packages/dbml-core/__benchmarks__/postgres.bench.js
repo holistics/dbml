@@ -1,7 +1,6 @@
-import { bench, describe } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-
+import { bench, describe } from 'vitest';
 // import importer from '../lib/import';
 import importer from '../src/import';
 

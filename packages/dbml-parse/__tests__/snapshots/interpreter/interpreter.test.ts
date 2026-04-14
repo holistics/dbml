@@ -1,4 +1,6 @@
-import { readFileSync } from 'node:fs';
+import {
+  readFileSync,
+} from 'node:fs';
 import path from 'node:path';
 import {
   describe, expect, it,
@@ -12,9 +14,9 @@ import type Report from '@/core/types/report';
 import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
-  const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();
+  const value = errors.length > 0 ? undefined : report.getValue();
   return JSON.stringify(toSnapshot(compiler, {
     database: value as any,
     errors,
@@ -30,7 +32,7 @@ describe('[snapshot] interpreter', () => {
 
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
-    const report = compiler.parse._(DEFAULT_ENTRY);
+    const report = compiler.parse._();
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

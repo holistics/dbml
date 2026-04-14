@@ -1,6 +1,6 @@
 import { tryExtractDateTime } from '@dbml/parse';
-import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import { DateTime } from 'luxon';
+import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 
 export function hasWhiteSpace (s) {
   return /\s/g.test(s);

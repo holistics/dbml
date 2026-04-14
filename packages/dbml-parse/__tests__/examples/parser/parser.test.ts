@@ -17,8 +17,12 @@ import {
   CommaExpressionNode,
   LiteralNode,
 } from '@/core/types/nodes';
-import { SyntaxTokenKind } from '@/core/types/tokens';
-import { parse } from '@tests/utils';
+import {
+  SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  parse,
+} from '@tests/utils';
 
 // Helper to extract a value from a PrimaryExpressionNode
 function getPrimaryValue (node: PrimaryExpressionNode | undefined): string | undefined {

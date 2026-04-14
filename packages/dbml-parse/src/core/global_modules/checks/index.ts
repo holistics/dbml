@@ -1,19 +1,31 @@
-import { isElementNode } from '@/core/utils/expression';
-import { ElementKind } from '@/core/types/keywords';
+import type Compiler from '@/compiler/index';
 import {
-  type SyntaxNode, type ElementDeclarationNode,
-} from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
-import type { GlobalModule } from '../types';
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   PASS_THROUGH, type PassThrough,
-} from '@/constants';
+} from '@/core/types/module';
+import {
+  type ElementDeclarationNode, type SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
-import type { SchemaElement } from '@/core/types/schemaJson';
+import type {
+  SchemaElement,
+} from '@/core/types/schemaJson';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  isElementNode,
+} from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
+import {
+  shouldInterpretNode,
+} from '../utils';
 import ChecksBinder from './bind';
 import ChecksInterpreter from './interpret';
-import { shouldInterpretNode } from '../utils';
 
 export const checksModule: GlobalModule = {
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

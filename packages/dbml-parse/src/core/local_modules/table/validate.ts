@@ -1,10 +1,13 @@
 import {
-  last, forIn, partition,
+  forIn, last, partition,
 } from 'lodash-es';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
+import {
+  SettingName,
+} from '@/core/types/keywords';
 import {
   ArrayNode,
   AttributeNode,
@@ -19,8 +22,17 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { extractVariableFromExpression } from '@/core/utils/expression';
+import Report from '@/core/types/report';
 import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
+import {
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
+  isExpressionAnIdentifierNode,
+} from '@/core/utils/expression';
+import {
+  Settings,
   aggregateSettingList,
   isUnaryRelationship,
   isValidAlias,
@@ -28,17 +40,9 @@ import {
   isValidColumnType,
   isValidDefaultValue,
   isValidName,
-  isValidPartialInjection,
 
-  Settings,
+  isValidPartialInjection,
 } from '@/core/utils/validate';
-import {
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-  isExpressionAnIdentifierNode,
-} from '@/core/utils/expression';
-import { SettingName } from '@/core/types/keywords';
-import Report from '@/core/types/report';
 
 export default class TableValidator {
   private declarationNode: ElementDeclarationNode;

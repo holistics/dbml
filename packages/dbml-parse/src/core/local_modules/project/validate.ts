@@ -1,4 +1,6 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
@@ -6,11 +8,13 @@ import {
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { destructureComplexVariable } from '@/core/utils/expression';
-import {
-  isSimpleName, type Settings,
-} from '@/core/utils/validate';
 import Report from '@/core/types/report';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
+import {
+  type Settings, isSimpleName,
+} from '@/core/utils/validate';
 
 export default class ProjectValidator {
   private declarationNode: ElementDeclarationNode;

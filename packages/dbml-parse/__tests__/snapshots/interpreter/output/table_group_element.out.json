@@ -40,6 +40,70 @@
             "offset": 64
           }
         }
+      },
+      {
+        "name": "group2",
+        "note": {
+          "token": {
+            "end": {
+              "column": 6,
+              "line": 30,
+              "offset": 423
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 3,
+              "line": 27,
+              "offset": 349
+            }
+          },
+          "value": "# Note\n* Support define element's note inside element body\n  "
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 31,
+            "offset": 425
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 26,
+            "offset": 327
+          }
+        }
+      },
+      {
+        "name": "group3",
+        "note": {
+          "token": {
+            "end": {
+              "column": 22,
+              "line": 34,
+              "offset": 468
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 3,
+              "line": 34,
+              "offset": 449
+            }
+          },
+          "value": "simple note"
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 35,
+            "offset": 470
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 33,
+            "offset": 427
+          }
+        }
       }
     ],
     "tables": [

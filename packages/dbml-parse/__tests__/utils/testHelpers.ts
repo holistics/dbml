@@ -5,7 +5,7 @@ import { ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode
 import { getElementNameString } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
-import { UNHANDLED } from '@/constants';
+import { UNHANDLED } from '@/core/types/module';
 import { Filepath, SchemaElement, TokenPosition } from '@/core/types';
 import { isEmpty } from 'lodash-es';
 
@@ -49,7 +49,7 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
   const rawKind = nodeOrSymbol.kind;
-  // Normalize Program kind to Schema to hide module-system-3 structural difference
+  // Program symbols are displayed as Schema in snapshots for readability
   const kind = rawKind === SymbolKind.Program ? SymbolKind.Schema : rawKind;
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
@@ -134,7 +134,10 @@ function sortArray (array: unknown[]): unknown[] {
     if ((s as any)?.token) return ((s as any).token as TokenPosition)?.start?.offset ?? 0; // possibly a schema element
     if ((s as any)?.id) return getIntraKindRank((s as any).id);
     if (typeof s === 'object') {
-      return getIntraKindRank(Object.values(sortObject(s as Record<string, unknown>))[0]);
+      const obj = s as Record<string, unknown>;
+      const tokenOffset = (obj.token as any)?.start?.offset;
+      if (typeof tokenOffset === 'number') return tokenOffset;
+      return getIntraKindRank(Object.values(sortObject(obj))[0]);
     }
     return 0;
   }
@@ -169,13 +172,19 @@ export function toSnapshot (
     return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple, includeReferences, includeSymbols, includeReferee }));
   }
   if (value instanceof CompileWarning) {
-    return warningToSnapshot(compiler, value, { simple });
+    return warningToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof CompileError) {
-    return errorToSnapshot(compiler, value, { simple });
+    return errorToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof SyntaxToken) {
-    return syntaxTokenToSnapshot(compiler, value, { simple });
+    return syntaxTokenToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof SyntaxNode) {
     return syntaxNodeToSnapshot(compiler, value, { simple, includeReferences, includeSymbols, includeReferee });
@@ -205,7 +214,9 @@ export function toSnapshot (
 export function errorToSnapshot (
   compiler: Compiler,
   error: CompileError,
-  { simple = false }: { simple?: boolean } = {},
+  {
+    simple = false,
+  }: { simple?: boolean } = {},
 ): unknown {
   const {
     code,
@@ -227,15 +238,25 @@ export function errorToSnapshot (
     diagnostic,
     filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
-      ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
-      : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
+      ? {
+          node: syntaxNodeToSnapshot(compiler, nodeOrToken, {
+            simple: true,
+          }),
+        }
+      : {
+          token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, {
+            simple: true,
+          }),
+        }),
   });
 }
 
 export function warningToSnapshot (
   compiler: Compiler,
   warning: CompileWarning,
-  { simple = false }: { simple?: boolean } = {},
+  {
+    simple = false,
+  }: { simple?: boolean } = {},
 ): unknown {
   const {
     code,
@@ -257,15 +278,25 @@ export function warningToSnapshot (
     diagnostic,
     filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
-      ? { node: syntaxNodeToSnapshot(compiler, nodeOrToken, { simple: true }) }
-      : { token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, { simple: true }) }),
+      ? {
+          node: syntaxNodeToSnapshot(compiler, nodeOrToken, {
+            simple: true,
+          }),
+        }
+      : {
+          token: syntaxTokenToSnapshot(compiler, nodeOrToken as SyntaxToken, {
+            simple: true,
+          }),
+        }),
   });
 }
 
 export function syntaxTokenToSnapshot (
   compiler: Compiler,
   token: SyntaxToken,
-  { simple = false }: { simple?: boolean } = {},
+  {
+    simple = false,
+  }: { simple?: boolean } = {},
 ): unknown {
   const tokenReadableId = getReadableId(token);
   const snippet = getCodeSnippet(token, compiler);

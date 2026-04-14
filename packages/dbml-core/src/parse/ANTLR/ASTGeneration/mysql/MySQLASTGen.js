@@ -1,11 +1,11 @@
-import { last, flatten, flattenDepth } from 'lodash-es';
+import { flatten, flattenDepth, last } from 'lodash-es';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
 import {
-  Endpoint, Enum, Field, Index, Table, Ref,
+  Endpoint, Enum, Field, Index, Ref, Table,
   TableRecord,
 } from '../AST';
 import {
-  TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE,
+  COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND,
 } from '../constants';
 import { getOriginalText } from '../helpers';
 

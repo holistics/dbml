@@ -1,7 +1,0 @@
-// wildcard import where all source tables are schema-qualified
-use * from './auth-tables.dbml'
-
-Table orders {
-  id int [pk]
-  user_id int
-}

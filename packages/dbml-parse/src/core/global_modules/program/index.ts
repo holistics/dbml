@@ -1,18 +1,29 @@
-import { isProgramNode } from '@/core/utils/expression';
+import type Compiler from '@/compiler/index';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   ProgramNode, type SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import type {
+  Database,
+} from '@/core/types/schemaJson';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
 import {
-  DEFAULT_SCHEMA_NAME, PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/constants';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
-import { shouldInterpretNode } from '../utils';
-import type { Database } from '@/core/types/schemaJson';
+  isProgramNode,
+} from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
+import {
+  shouldInterpretNode,
+} from '../utils';
 import Binder from './bind';
 import ProgramInterpreter from './interpret';
 
@@ -44,7 +55,14 @@ export const programModule: GlobalModule = {
     if (!(ast instanceof ProgramNode)) return Report.create([]);
 
     // Collect and create schemas
-    const schemaMembers = new Map<string, SchemaSymbol>([[DEFAULT_SCHEMA_NAME, compiler.symbolFactory.create(SchemaSymbol, { name: DEFAULT_SCHEMA_NAME }, symbol.filepath)]]);
+    const schemaMembers = new Map<string, SchemaSymbol>([
+      [
+        DEFAULT_SCHEMA_NAME,
+        compiler.symbolFactory.create(SchemaSymbol, {
+          name: DEFAULT_SCHEMA_NAME,
+        }, symbol.filepath),
+      ],
+    ]);
 
     for (const element of ast.body) {
       const fullname = compiler.nodeFullname(element).getValue();
@@ -52,7 +70,9 @@ export const programModule: GlobalModule = {
 
       const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0]; // When fullname doesn't have a schema name, `public` is assumed
       if (!schemaMembers.has(schemaName)) {
-        schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, { name: schemaName }, symbol.filepath));
+        schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, {
+          name: schemaName,
+        }, symbol.filepath));
       }
     }
 

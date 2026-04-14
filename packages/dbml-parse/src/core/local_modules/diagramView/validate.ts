@@ -1,19 +1,23 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
+import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import {
-  isSimpleName, aggregateSettingList,
-} from '@/core/utils/validate';
-import { SyntaxToken } from '@/core/types/tokens';
-import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   extractVarNameFromPrimaryVariable,
   isExpressionAVariableNode, isWildcardExpression,
 } from '@/core/utils/expression';
-import Compiler from '@/compiler';
+import {
+  aggregateSettingList, isSimpleName,
+} from '@/core/utils/validate';
 
 export default class DiagramViewValidator {
   private compiler: Compiler;
@@ -144,11 +148,13 @@ export default class DiagramViewValidator {
         }
         return [];
       }
-      return [new CompileError(
-        CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
-        'Fields are not allowed at DiagramView level. Use Tables, Notes, TableGroups, or Schemas blocks instead.',
-        field,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
+          'Fields are not allowed at DiagramView level. Use Tables, Notes, TableGroups, or Schemas blocks instead.',
+          field,
+        ),
+      ];
     });
   }
 
@@ -157,7 +163,12 @@ export default class DiagramViewValidator {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 
-    const allowedBlocks = ['tables', 'notes', 'tablegroups', 'schemas'];
+    const allowedBlocks = [
+      'tables',
+      'notes',
+      'tablegroups',
+      'schemas',
+    ];
 
     for (const sub of subs) {
       if (!sub.type) {

@@ -1,21 +1,29 @@
-import { ElementKind } from '@/core/types/keywords';
-import {
-  isElementNode, isElementFieldNode, destructureComplexVariable,
-} from '@/core/utils/expression';
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { type LocalModule } from '../types';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   PASS_THROUGH, type PassThrough,
-} from '@/constants';
-import { SyntaxNode } from '@/core/types/nodes';
+} from '@/core/types/module';
 import {
-  isSimpleName, Settings,
-} from '@/core/utils/validate';
+  SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
-import TableGroupValidator, { validateSettingList } from './validate';
+import {
+  destructureComplexVariable, isElementFieldNode, isElementNode,
+} from '@/core/utils/expression';
+import {
+  Settings, isSimpleName,
+} from '@/core/utils/validate';
+import {
+  type LocalModule,
+} from '../types';
+import TableGroupValidator, {
+  validateSettingList,
+} from './validate';
 
 export const tableGroupModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

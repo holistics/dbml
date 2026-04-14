@@ -1,10 +1,18 @@
 import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import type {
+  Filepath,
+} from '@/core/types/filepath';
+import type {
+  Internable,
+} from '@/core/types/internable';
+import {
+  ImportKind,
+} from '@/core/types/keywords';
+import {
   type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode,
 } from '@/core/types/nodes';
-import type { Internable } from '@/core/types/internable';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import type { Filepath } from '@/core/types/filepath';
-import { ImportKind } from '@/core/types/keywords';
 
 export enum SymbolKind {
   Schema = 'Schema',
@@ -27,9 +35,6 @@ export enum SymbolKind {
   IndexesField = 'Indexes field',
 
   DiagramView = 'DiagramView',
-  DiagramViewField = 'DiagramView field',
-
-  StickyNote = 'StickyNote',
 
   Program = 'Program',
 }
@@ -86,9 +91,10 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
     this.filepath = filepath;
   }
 
-  // Whether this symbol can be imported from other files
+  // Whether this symbol can be imported from other files.
+  // DiagramView is file-local: wildcard imports must not pull it in.
   get canBeImported (): boolean {
-    return true;
+    return this.kind !== SymbolKind.DiagramView;
   }
 
   get originalSymbol (): NodeSymbol {
@@ -118,7 +124,7 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
 }
 
 export class UseSymbol extends NodeSymbol {
-  useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
+  useSpecifierDeclaration: UseSpecifierNode | WildcardNode;
   usedSymbol?: NodeSymbol;
 
   constructor ({
@@ -129,7 +135,7 @@ export class UseSymbol extends NodeSymbol {
   }: {
     kind: SymbolKind;
     declaration?: SyntaxNode;
-    useSpecifierDeclaration?: UseSpecifierNode | WildcardNode;
+    useSpecifierDeclaration: UseSpecifierNode | WildcardNode;
     usedSymbol?: NodeSymbol;
   }, id: NodeSymbolId, filepath: Filepath) {
     super({
@@ -142,7 +148,8 @@ export class UseSymbol extends NodeSymbol {
 
   get canBeImported (): boolean {
     const useDeclaration = this.useSpecifierDeclaration?.parentOfKind(UseDeclarationNode);
-    return !useDeclaration || useDeclaration.isReuse;
+    const isReuse = !useDeclaration || useDeclaration.isReuse;
+    return isReuse && this.originalSymbol.canBeImported;
   }
 
   get originalSymbol (): NodeSymbol {
@@ -198,7 +205,9 @@ export class SchemaSymbol extends NodeSymbol {
     id: NodeSymbolId,
     filepath: Filepath,
   ) {
-    super({ kind: SymbolKind.Schema }, id, filepath);
+    super({
+      kind: SymbolKind.Schema,
+    }, id, filepath);
     this.name = name ?? '';
     this.parent = parent;
   }

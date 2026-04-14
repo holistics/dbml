@@ -1,16 +1,20 @@
-import { extractQuotedStringToken } from '@/core/utils/expression';
-import { CompileError } from '@/core/types/errors';
+import Compiler from '@/compiler';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type {
   Enum, Project, Ref, Table, TableGroup, TablePartial,
 } from '@/core/types/schemaJson';
 import {
+  extractQuotedStringToken,
+} from '@/core/utils/expression';
+import {
   extractElementName, getTokenPosition, normalizeNoteContent,
 } from '../utils';
-import Compiler from '@/compiler';
-import Report from '@/core/types/report';
 
 export class ProjectInterpreter {
   private compiler: Compiler;
@@ -43,7 +47,9 @@ export class ProjectInterpreter {
       return [];
     }
 
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
     this.project.name = name;
 
     return [];

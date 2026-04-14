@@ -1,42 +1,46 @@
 import {
-  last, head, partition,
+  head, last, partition,
 } from 'lodash-es';
 import Compiler from '@/compiler/index';
-import type {
-  Column, Check, SchemaElement, Index, InlineRef,
-  TokenPosition, ColumnType, TablePartial,
-} from '@/core/types/schemaJson';
-import {
-  BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
-  FunctionExpressionNode,
-  ListExpressionNode, PrefixExpressionNode, SyntaxNode, ArrayNode,
-} from '@/core/types/nodes';
-import {
-  extractColor, extractElementName, getTokenPosition,
-  normalizeNoteContent,
-} from '../utils';
-import {
-  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
-  isElementNode, isElementFieldNode,
-  isExpressionASignedNumberExpression, getNumberTextFromExpression,
-  isExpressionAQuotedString, isExpressionAVariableNode,
-  parseNumber, isRelationshipOp,
-} from '@/core/utils/expression';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import { aggregateSettingList } from '@/core/utils/validate';
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
   PASS_THROUGH, UNHANDLED,
-} from '@/constants';
-import { SymbolKind } from '@/core/types/symbol';
+} from '@/core/types/module';
+import {
+  ArrayNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
+  FunctionApplicationNode,
+  FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
 import Report from '@/core/types/report';
+import type {
+  Check, Column, ColumnType, Index, InlineRef,
+  SchemaElement, TablePartial, TokenPosition,
+} from '@/core/types/schemaJson';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
+import {
+  getNumberTextFromExpression, isElementFieldNode,
+  isElementNode, isExpressionAQuotedString,
+  isExpressionASignedNumberExpression, isExpressionAVariableNode,
+  isRelationshipOp, parseNumber,
+} from '@/core/utils/expression';
+import {
+  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
+import {
+  extractColor, extractElementName, getTokenPosition,
+  normalizeNoteContent,
+} from '../utils';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -117,13 +121,19 @@ export class TablePartialInterpreter {
       token: this.tablePartial.token!,
       indexes: this.tablePartial.indexes!,
       checks: this.tablePartial.checks!,
-      ...(this.tablePartial.headerColor && { headerColor: this.tablePartial.headerColor }),
-      ...(this.tablePartial.note && { note: this.tablePartial.note }),
+      ...(this.tablePartial.headerColor && {
+        headerColor: this.tablePartial.headerColor,
+      }),
+      ...(this.tablePartial.note && {
+        note: this.tablePartial.note,
+      }),
     }, errors);
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
 
     this.tablePartial.name = name;
 
@@ -384,7 +394,9 @@ export class TablePartialInterpreter {
 
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.tablePartial.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [] };
+      const index: Partial<Index> = {
+        columns: [],
+      };
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);

@@ -1,10 +1,18 @@
 import type Compiler from '@/compiler';
-import type { PassThrough } from '@/constants';
-import type { Module } from '@/core/types/module';
-import type { SyntaxNode } from '@/core/types/nodes';
+import type {
+  Module, PassThrough,
+} from '@/core/types/module';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
 import type Report from '@/core/types/report';
-import type { Settings } from '@/core/utils/validate';
-export type { Settings };
+import type {
+  Settings,
+} from '@/core/utils/validate';
+
+export type {
+  Settings,
+};
 
 // Local modules handle syntax-level queries (validation, naming, settings) for each DBML element kind.
 // All methods are optional, missing methods are treated as returning PASS_THROUGH.

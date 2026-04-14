@@ -1,11 +1,11 @@
 import Database from '../model_structure/database';
 import {
-  Table,
+  Endpoint,
+  Enum,
   Field,
   Index,
   Ref,
-  Endpoint,
-  Enum,
+  Table,
 } from './ANTLR/ASTGeneration/AST';
 
 const parseJSONToDatabase = (rawDatabase) => {

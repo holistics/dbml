@@ -275,17 +275,7 @@
                       }
                     },
                     "fullEnd": 21,
-                    "fullStart": 10,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                        "snippet": "id int"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C4, L1:C10]",
-                        "snippet": "id int"
-                      }
-                    }
+                    "fullStart": 10
                   },
                   {
                     "context": {
@@ -324,17 +314,7 @@
                       }
                     },
                     "fullEnd": 30,
-                    "fullStart": 21,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@ssid@[L2:C4, L2:C8]",
-                        "snippet": "ssid"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@ssid@[L2:C4, L2:C8]",
-                        "snippet": "ssid"
-                      }
-                    }
+                    "fullStart": 21
                   }
                 ]
               },
@@ -381,31 +361,7 @@
             }
           },
           "fullEnd": 32,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@A@[L0:C0, L3:C1]",
-              "snippet": "Table A {\n...    ssid\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@A@[L0:C0, L3:C1]",
-              "snippet": "Table A {\n...    ssid\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C4, L1:C10]",
-                  "snippet": "id int"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@ssid@[L2:C4, L2:C8]",
-                  "snippet": "ssid"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -605,17 +561,7 @@
                       }
                     },
                     "fullEnd": 65,
-                    "fullStart": 42,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@a1@[L6:C4, L6:C22]",
-                        "snippet": "a1 e [note: 'abc']"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@a1@[L6:C4, L6:C22]",
-                        "snippet": "a1 e [note: 'abc']"
-                      }
-                    }
+                    "fullStart": 42
                   },
                   {
                     "context": {
@@ -784,17 +730,7 @@
                       }
                     },
                     "fullEnd": 88,
-                    "fullStart": 65,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@a2@[L7:C4, L7:C22]",
-                        "snippet": "a2 [note: 'abc'] e"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@a2@[L7:C4, L7:C22]",
-                        "snippet": "a2 [note: 'abc'] e"
-                      }
-                    }
+                    "fullStart": 65
                   },
                   {
                     "context": {
@@ -893,17 +829,7 @@
                       }
                     },
                     "fullEnd": 99,
-                    "fullStart": 88,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@a3@[L8:C4, L8:C10]",
-                        "snippet": "a3 e f"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@a3@[L8:C4, L8:C10]",
-                        "snippet": "a3 e f"
-                      }
-                    }
+                    "fullStart": 88
                   },
                   {
                     "context": {
@@ -973,17 +899,7 @@
                       }
                     },
                     "fullEnd": 108,
-                    "fullStart": 99,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@a4@[L9:C4, L9:C8]",
-                        "snippet": "a4 e"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@a4@[L9:C4, L9:C8]",
-                        "snippet": "a4 e"
-                      }
-                    }
+                    "fullStart": 99
                   }
                 ]
               },
@@ -1030,43 +946,7 @@
             }
           },
           "fullEnd": 110,
-          "fullStart": 32,
-          "symbol": {
-            "context": {
-              "id": "symbol@Enum@E@[L5:C0, L10:C1]",
-              "snippet": "Enum E {\n ...    a4 e\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@E@[L5:C0, L10:C1]",
-              "snippet": "Enum E {\n ...    a4 e\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Enum field@a1@[L6:C4, L6:C22]",
-                  "snippet": "a1 e [note: 'abc']"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@a2@[L7:C4, L7:C22]",
-                  "snippet": "a2 [note: 'abc'] e"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@a3@[L8:C4, L8:C10]",
-                  "snippet": "a3 e f"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@a4@[L9:C4, L9:C8]",
-                  "snippet": "a4 e"
-                }
-              }
-            ]
-          }
+          "fullStart": 32
         },
         {
           "context": {
@@ -1167,17 +1047,7 @@
                       }
                     },
                     "fullEnd": 134,
-                    "fullStart": 126,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup field@A@[L13:C4, L13:C7]",
-                        "snippet": "A a"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@A@[L13:C4, L13:C7]",
-                        "snippet": "A a"
-                      }
-                    }
+                    "fullStart": 126
                   },
                   {
                     "context": {
@@ -1276,17 +1146,7 @@
                       }
                     },
                     "fullEnd": 144,
-                    "fullStart": 134,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@TableGroup field@A@[L14:C4, L14:C9]",
-                        "snippet": "A a a"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@A@[L14:C4, L14:C9]",
-                        "snippet": "A a a"
-                      }
-                    }
+                    "fullStart": 134
                   }
                 ]
               },
@@ -1333,31 +1193,7 @@
             }
           },
           "fullEnd": 146,
-          "fullStart": 110,
-          "symbol": {
-            "context": {
-              "id": "symbol@TableGroup@G@[L12:C0, L15:C1]",
-              "snippet": "TableGroup...   A a a\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@G@[L12:C0, L15:C1]",
-              "snippet": "TableGroup...   A a a\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@TableGroup field@A@[L13:C4, L13:C7]",
-                  "snippet": "A a"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@TableGroup field@A@[L14:C4, L14:C9]",
-                  "snippet": "A a a"
-                }
-              }
-            ]
-          }
+          "fullStart": 110
         },
         {
           "context": {
@@ -2650,36 +2486,6 @@
       }
     },
     "fullEnd": 291,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L31:C1]",
-        "snippet": "Table A {\n...A.id a a\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L31:C1]",
-        "snippet": "Table A {\n...A.id a a\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Enum@E@[L5:C0, L10:C1]",
-            "snippet": "Enum E {\n ...    a4 e\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@A@[L0:C0, L3:C1]",
-            "snippet": "Table A {\n...    ssid\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TableGroup@G@[L12:C0, L15:C1]",
-            "snippet": "TableGroup...   A a a\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

@@ -1,13 +1,17 @@
-import Report from '@/core/types/report';
+import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';
-import Compiler from '@/compiler';
-import { SyntaxToken } from '@/core/types/tokens';
-import { ElementKind } from '@/core/types/keywords';
+import Report from '@/core/types/report';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class ProgramValidator {
   private ast: ProgramNode;

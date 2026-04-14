@@ -1,35 +1,46 @@
-import { readFileSync, readdirSync, statSync } from 'fs';
-import path from 'path';
 import { describe, test, expect } from 'vitest';
 import Parser from '../../../src/parse/Parser';
 import { MemoryProjectLayout, Filepath } from '@dbml/parse';
+import { CompilerError } from '../../../src/parse/error';
+import type { CompilerDiagnostic } from '../../../src/parse/error';
+import type { Index } from '../../../types';
 
-const SAMPLES_DIR = path.resolve(__dirname, '../../../../dbml-parse/__tests__/samples');
-
-function loadLayout (projectName: string): MemoryProjectLayout {
-  const dir = path.join(SAMPLES_DIR, projectName);
+// Builds an in-memory project layout from a filepath -> source map. The file
+// at `entry` is mounted as `/main.dbml` so `Parser.parse(layout, 'dbmlv2')`
+// (which always reads from DEFAULT_ENTRY) starts from it. Every other file
+// keeps its natural relative path so `use { ... } from './...'` imports
+// resolve as written.
+function makeLayout (files: Record<string, string>, entry: string): MemoryProjectLayout {
   const layout = new MemoryProjectLayout();
-
-  function walk (d: string) {
-    for (const entry of readdirSync(d)) {
-      const full = path.join(d, entry);
-      if (statSync(full).isDirectory()) {
-        walk(full);
-      } else if (full.endsWith('.dbml')) {
-        const rel = full.slice(dir.length); // e.g. /main.dbml
-        layout.setSource(Filepath.from(rel), readFileSync(full, 'utf-8'));
-      }
-    }
+  for (const [relPath, source] of Object.entries(files)) {
+    const targetPath = relPath === entry ? '/main.dbml' : relPath;
+    layout.setSource(Filepath.from(targetPath), source);
   }
-
-  walk(dir);
   return layout;
 }
 
+const ENUM_SOURCE_DBML = `
+Enum job_status {
+  pending
+  running
+  done
+}
+`;
+
 describe('@dbml/core multifile', () => {
   describe('basic cross-file enum import', () => {
-    test('enum-across-files: field type resolves to enum defined in another file', () => {
-      const layout = loadLayout('enum-across-files');
+    test('direct import: field type resolves to enum defined in another file', () => {
+      const layout = makeLayout({
+        '/enum-source.dbml': ENUM_SOURCE_DBML,
+        '/consumer-direct-import.dbml': `
+use { enum job_status } from './enum-source.dbml'
+
+Table jobs {
+  id int [pk]
+  status job_status
+}
+`,
+      }, '/consumer-direct-import.dbml');
       const db = new Parser().parse(layout, 'dbmlv2');
 
       const allTables = db.schemas.flatMap((s) => s.tables);
@@ -41,8 +52,18 @@ describe('@dbml/core multifile', () => {
       expect(statusField!.type.type_name).toBe('job_status');
     });
 
-    test('enum-alias: field type resolves via imported enum alias (not original name)', () => {
-      const layout = loadLayout('enum-alias');
+    test('aliased import: field type resolves via the alias, not the original name', () => {
+      const layout = makeLayout({
+        '/enum-source.dbml': ENUM_SOURCE_DBML,
+        '/consumer-aliased-import.dbml': `
+use { enum job_status as Status } from './enum-source.dbml'
+
+Table jobs {
+  id int [pk]
+  status Status
+}
+`,
+      }, '/consumer-aliased-import.dbml');
       const db = new Parser().parse(layout, 'dbmlv2');
 
       const allTables = db.schemas.flatMap((s) => s.tables);
@@ -51,98 +72,221 @@ describe('@dbml/core multifile', () => {
 
       const statusField = jobs!.fields.find((f) => f.name === 'status');
       expect(statusField).toBeDefined();
-      // The alias 'Status' is used in the entry file — not the original 'job_status'
       expect(statusField!.type.type_name).toBe('Status');
     });
   });
 
   describe('wildcard imports', () => {
-    test('wildcard-with-schema-tables: locally-defined table accessible after wildcard import', () => {
-      const layout = loadLayout('wildcard-with-schema-tables');
+    test('schema-qualified wildcard: locally-defined table accessible after wildcard import', () => {
+      const layout = makeLayout({
+        '/schema-qualified-tables.dbml': `
+Table auth.users {
+  id int [pk]
+  email varchar
+}
+
+Table auth.roles {
+  id int [pk]
+  name varchar
+}
+`,
+        '/consumer-schema-qualified-wildcard.dbml': `
+use * from './schema-qualified-tables.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+`,
+      }, '/consumer-schema-qualified-wildcard.dbml');
       const db = new Parser().parse(layout, 'dbmlv2');
 
       const allTables = db.schemas.flatMap((s) => s.tables);
       expect(allTables.map((t) => t.name)).toContain('orders');
     });
 
-    test('wildcard-reuse-chain: only entry-file-defined tables appear; imported tables from reuse chain are absent', () => {
-      // BUG: tables imported via reuse * chain (a → b → main via use *) are NOT visible
-      // in @dbml/core output, even though @dbml/parse resolves them correctly.
-      // users, orders from a.dbml should be visible but are absent.
-      const layout = loadLayout('wildcard-reuse-chain');
+    test('reuse chain: tables imported via reuse chain are visible', () => {
+      const layout = makeLayout({
+        '/reuse-chain-base.dbml': `
+Enum order_status {
+  pending
+  shipped
+  delivered
+}
+
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+  status order_status
+}
+
+Ref: orders.user_id > users.id
+`,
+        '/reuse-chain-middle.dbml': `reuse * from './reuse-chain-base.dbml'`,
+        '/consumer-reuse-chain.dbml': `
+use * from './reuse-chain-middle.dbml'
+
+Table payments {
+  id int [pk]
+  order_id int
+}
+`,
+      }, '/consumer-reuse-chain.dbml');
       const db = new Parser().parse(layout, 'dbmlv2');
 
       const allTables = db.schemas.flatMap((s) => s.tables);
       const tableNames = allTables.map((t) => t.name);
 
-      // 'payments' is locally defined in main.dbml — always visible
       expect(tableNames).toContain('payments');
-
-      // 'users' and 'orders' are from the reuse chain — currently NOT visible through @dbml/core
-      // This documents the gap: rawDb() for DEFAULT_ENTRY omits transitively-imported tables
-      expect(tableNames).not.toContain('users');
-      expect(tableNames).not.toContain('orders');
+      expect(tableNames).toContain('users');
+      expect(tableNames).toContain('orders');
     });
   });
 
   describe('mixed imports from same source file', () => {
-    test.fails(
-      'mixed-import-same-file: importing same symbol twice (selective + wildcard) should be idempotent, not a DUPLICATE_NAME error',
-      () => {
-        // BUG in @dbml/parse: `use { table users }` followed by `use * from same file`
-        // produces DUPLICATE_NAME for 'users' even though it's the same symbol from the same source.
-        // Expected: parse succeeds; actual: Parser throws CompilerError with DUPLICATE_NAME.
-        const layout = loadLayout('mixed-import-same-file');
-        const db = new Parser().parse(layout, 'dbmlv2');
+    test('selective + wildcard from same file is idempotent (no DUPLICATE_NAME)', () => {
+      // `use { table users }` followed by `use * from` the same source produces
+      // two distinct UseSymbol wrappers around the same underlying table; they
+      // collapse to a single member via (originalSymbol, name) dedupe, so all
+      // three tables surface in the @dbml/core model.
+      const layout = makeLayout({
+        '/single-source-tables.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
 
-        const allTables = db.schemas.flatMap((s) => s.tables);
-        const tableNames = allTables.map((t) => t.name);
-        expect(tableNames).toContain('memberships');
-        expect(tableNames).toContain('users');
-        expect(tableNames).toContain('roles');
-      },
-    );
+Table roles {
+  id int [pk]
+  label varchar
+}
+
+Enum user_role {
+  admin
+  member
+}
+`,
+        '/consumer-selective-and-wildcard.dbml': `
+use { table users } from './single-source-tables.dbml'
+use * from './single-source-tables.dbml'
+
+Table memberships {
+  id int [pk]
+  user_id int
+  role_id int
+  kind user_role
+}
+
+Ref: memberships.user_id > users.id
+Ref: memberships.role_id > roles.id
+`,
+      }, '/consumer-selective-and-wildcard.dbml');
+      const db = new Parser().parse(layout, 'dbmlv2');
+
+      const allTables = db.schemas.flatMap((s) => s.tables);
+      const tableNames = allTables.map((t) => t.name);
+      expect(tableNames).toContain('memberships');
+      expect(tableNames).toContain('users');
+      expect(tableNames).toContain('roles');
+    });
   });
 
   describe('cross-file refs and indexes', () => {
-    test.fails(
-      'indexes-cross-file: imported table with composite indexes accessible in @dbml/core model',
-      () => {
-        // BUG in @dbml/core: @dbml/parse correctly exports both 'bookings' (imported) and
-        // 'events' (local) along with the ref. But @dbml/core model_structure/endpoint.js
-        // throws "Can't find table null.bookings" because it only resolves locally-defined tables.
-        // Expected: both tables visible with indexes and ref intact.
-        const layout = loadLayout('indexes-cross-file');
-        const db = new Parser().parse(layout, 'dbmlv2');
+    test('cross-file index: imported table with composite indexes accessible in @dbml/core model', () => {
+      // @dbml/parse exposes the imported `bookings` table via exportSchemaJson's
+      // reconciled output, so @dbml/core sees it alongside the locally-defined
+      // `events` table — refs and composite indexes survive the import.
+      const layout = makeLayout({
+        '/composite-index-source.dbml': `
+Table bookings {
+  id int [pk]
+  user_id int
+  event_id int
+  created_at timestamp
 
-        const allTables = db.schemas.flatMap((s) => s.tables);
-        const tableNames = allTables.map((t) => t.name);
-        expect(tableNames).toContain('events');
-        expect(tableNames).toContain('bookings');
+  indexes {
+    (user_id, event_id) [unique, name: 'unique_booking']
+    created_at
+  }
+}
+`,
+        '/consumer-cross-file-index.dbml': `
+use { table bookings } from './composite-index-source.dbml'
 
-        const bookings = allTables.find((t) => t.name === 'bookings')!;
-        // Composite unique index should survive the cross-file import
-        expect(bookings.indexes.length).toBeGreaterThan(0);
-        expect(bookings.indexes.find((i: any) => i.unique && i.columns.length === 2)).toBeDefined();
-      },
-    );
+Table events {
+  id int [pk]
+  name varchar
+}
+
+Ref: bookings.event_id > events.id
+`,
+      }, '/consumer-cross-file-index.dbml');
+      const db = new Parser().parse(layout, 'dbmlv2');
+
+      const allTables = db.schemas.flatMap((s) => s.tables);
+      const tableNames = allTables.map((t) => t.name);
+      expect(tableNames).toContain('events');
+      expect(tableNames).toContain('bookings');
+
+      const bookings = allTables.find((t) => t.name === 'bookings')!;
+      // Composite unique index should survive the cross-file import
+      expect(bookings.indexes.length).toBeGreaterThan(0);
+      expect(bookings.indexes.find((i: Index) => i.unique && i.columns.length === 2)).toBeDefined();
+    });
   });
 
   describe('error handling', () => {
     test('non-dbmlv2 format rejects layout', () => {
-      const layout = loadLayout('enum-across-files');
-      expect(() => new Parser().parse(layout as any, 'mysql')).toThrow();
+      const layout = makeLayout({
+        '/enum-source.dbml': 'Enum job_status { pending running done }',
+        '/consumer.dbml': `use { enum job_status } from './enum-source.dbml'
+Table jobs { id int [pk] status job_status }`,
+      }, '/consumer.dbml');
+      // Cast to string so the call type-checks; runtime should still throw because
+      // non-dbmlv2 backends only accept raw source strings, not a project layout.
+      expect(() => new Parser().parse(layout as unknown as string, 'mysql')).toThrow();
     });
 
-    test('cross-file-duplicate-ref: layout without main.dbml silently produces empty output instead of surfacing REF_REDEFINED errors', () => {
-      // BUG: cross-file-duplicate-ref has base.dbml + consumer.dbml but no main.dbml.
-      // Parser.parse uses DEFAULT_ENTRY (/main.dbml) which doesn't exist in the layout,
-      // so @dbml/parse returns empty results with no errors rather than throwing.
-      // This means the REF_REDEFINED errors in consumer.dbml are never surfaced.
-      const layout = loadLayout('cross-file-duplicate-ref');
-      // Should ideally throw because the layout's entry point is absent, but currently silently returns
-      const db = new Parser().parse(layout, 'dbmlv2');
-      expect(db.schemas.flatMap((s: any) => s.tables)).toHaveLength(0);
+    test('duplicate cross-file ref: REF_REDEFINED is surfaced when the consumer is the entrypoint', () => {
+      // The consumer does `use *` from a base file that already declares
+      // `Ref: orders.user_id > users.id` and then declares the same ref
+      // again. The parser must throw with REF_REDEFINED (code 5001) rather
+      // than swallow the duplicate.
+      const layout = makeLayout({
+        '/duplicate-ref-base.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+
+Ref: orders.user_id > users.id
+`,
+        '/consumer-duplicate-ref.dbml': `
+use * from './duplicate-ref-base.dbml'
+
+// Declaring the same ref endpoints again should produce an error
+Ref: orders.user_id > users.id
+`,
+      }, '/consumer-duplicate-ref.dbml');
+      let thrown: unknown;
+      try {
+        new Parser().parse(layout, 'dbmlv2');
+      } catch (e) {
+        thrown = e;
+      }
+      expect(thrown).toBeInstanceOf(CompilerError);
+      const diags = (thrown as CompilerError).diags;
+      expect(diags.some((d: CompilerDiagnostic) => d.code === 5001)).toBe(true);
     });
   });
 });

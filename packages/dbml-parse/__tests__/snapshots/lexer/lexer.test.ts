@@ -1,5 +1,9 @@
-import { DEFAULT_ENTRY } from '@/constants';
-import { readFileSync } from 'node:fs';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
+  readFileSync,
+} from 'node:fs';
 import path from 'node:path';
 import {
   describe, expect, it,
@@ -9,7 +13,9 @@ import {
   scanTestNames, toSnapshot,
 } from '@tests/utils';
 import Compiler from '@/compiler';
-import type { SyntaxToken } from '@/index';
+import type {
+  SyntaxToken,
+} from '@/index';
 import type Report from '@/core/types/report';
 
 function serializeLexerResult (compiler: Compiler, report: Report<readonly Readonly<SyntaxToken>[]>): string {
@@ -30,9 +36,11 @@ describe('[snapshot] lexer', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, program);
+    compiler.setSource(program);
 
-    const output = serializeLexerResult(compiler, new Lexer(program, DEFAULT_ENTRY).lex());
+    const lexer = new Lexer(program, DEFAULT_ENTRY);
+
+    const output = serializeLexerResult(compiler, lexer.lex());
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

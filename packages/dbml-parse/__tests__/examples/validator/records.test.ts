@@ -1,7 +1,9 @@
 import {
   describe, expect, test,
 } from 'vitest';
-import { analyze } from '@tests/utils';
+import {
+  analyze,
+} from '@tests/utils';
 
 describe('[example] records validator', () => {
   test('should accept valid records', () => {

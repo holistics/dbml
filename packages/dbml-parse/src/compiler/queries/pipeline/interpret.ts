@@ -1,18 +1,23 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY, UNHANDLED,
+  DEFAULT_ENTRY,
 } from '@/constants';
-import Report from '@/core/types/report';
-import { AliasKind } from '@/core/types';
+import {
+  AliasKind,
+} from '@/core/types';
 import type {
   Database, ElementRef, MasterDatabase, Table, TablePartial,
 } from '@/core/types';
-import {
-  Filepath, type FilepathId,
-} from '@/core/types/filepath';
 import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
+import {
+  Filepath, type FilepathId,
+} from '@/core/types/filepath';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import Report from '@/core/types/report';
 
 // Strip internal-only column type properties for public JSON export.
 function stripColumnInternals<T extends Table | TablePartial> (table: T): T {
@@ -40,7 +45,9 @@ function stripDatabase (db: Database): Database {
 
 // Interpret a single file. Returns raw Database
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  return this.parseFile(filepath).chain(({ ast }) =>
+  return this.parseFile(filepath).chain(({
+    ast,
+  }) =>
     this.interpretNode(ast).map((v) => v === UNHANDLED ? undefined : v as Database),
   );
 }

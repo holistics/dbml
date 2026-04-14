@@ -1,7 +1,13 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  Filepath, resolveImportFilepath,
+} from '@/core/types/filepath';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   ElementDeclarationNode, UseDeclarationNode, type UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';
@@ -9,9 +15,6 @@ import Report from '@/core/types/report';
 import {
   type NodeSymbol, SchemaSymbol,
 } from '@/core/types/symbol';
-import {
-  Filepath, resolveImportFilepath,
-} from '@/core/types/filepath';
 
 // This does not perform duplicate checks
 export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | Filepath): Report<{
@@ -43,7 +46,9 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
   const filepath = symbolOrFilepath instanceof Filepath ? symbolOrFilepath : symbolOrFilepath.filepath;
 
   const parseResult = this.parseFile(filepath);
-  const { ast } = parseResult.getValue();
+  const {
+    ast,
+  } = parseResult.getValue();
 
   for (const element of ast.body) {
     if (!(element instanceof UseDeclarationNode) || !element.specifiers || !element.importPath) continue;

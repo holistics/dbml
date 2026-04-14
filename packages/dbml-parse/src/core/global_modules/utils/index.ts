@@ -1,26 +1,35 @@
+import {
+  zip,
+} from 'lodash-es';
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import { SyntaxTokenKind } from '@/core/types/tokens';
-import {
-  ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
-} from '@/core/types/nodes';
-import { getMemberChain } from '@/core/parser/utils';
-import Report from '@/core/types/report';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
-} from '@/core/types/symbol';
+  getMemberChain,
+} from '@/core/parser/utils';
 import type {
   ColumnType, RelationCardinality, Table, TokenPosition,
 } from '@/core/types';
 import {
-  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression, extractVarNameFromPrimaryVariable, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, parseNumber,
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  ArrayNode, CallExpressionNode, FunctionExpressionNode, InfixExpressionNode, LiteralNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
+import {
+  SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, isExpressionAnIdentifierNode, parseNumber,
 } from '@/core/utils/expression';
-import { zip } from 'lodash-es';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): { schemaName: string | null;
   tableName: string;
@@ -110,8 +119,12 @@ export function isSameEndpoint (sym1?: NodeSymbol[], sym2?: NodeSymbol[]): boole
 export function isSameEndpoint (sym1?: NodeSymbol | NodeSymbol[], sym2?: NodeSymbol | NodeSymbol[]): boolean {
   if (sym1 === undefined || sym2 === undefined) return false;
   if (Array.isArray(sym1)) {
-    const firstIds = sym1.map(({ id }) => id).sort();
-    const secondIds = (sym2 as NodeSymbol[]).map(({ id }) => id).sort();
+    const firstIds = sym1.map(({
+      id,
+    }) => id).sort();
+    const secondIds = (sym2 as NodeSymbol[]).map(({
+      id,
+    }) => id).sort();
     return zip(firstIds, secondIds).every(([first, second]) => first === second);
   }
 
@@ -217,7 +230,9 @@ export function processColumnType (compiler: Compiler, typeNode: SyntaxNode): Re
     } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
       const length = parseNumber(argElements[0]);
       if (!Number.isNaN(length)) {
-        lengthParam = { length: Math.trunc(length) };
+        lengthParam = {
+          length: Math.trunc(length),
+        };
       }
     }
 

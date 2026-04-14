@@ -1,217 +1,292 @@
 import {
-  isAlphaOrUnderscore, isDigit,
-} from '@/core/utils/chars';
-import type { FilterConfig } from '@/core/types/schemaJson';
+  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
+import type {
+  Filepath,
+} from '@/core/types/filepath';
 import {
-  applyTextEdits, TextEdit,
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
+import type Compiler from '../../index';
+import {
+  addDoubleQuoteIfNeeded,
+} from '../utils';
+import {
+  TextEdit, applyTextEdits,
 } from './applyTextEdits';
 
-export interface DiagramViewCreateOperation {
-  operation: 'create';
+export interface DiagramViewSyncOperation {
+  operation: 'create' | 'update' | 'delete';
   name: string;
-  visibleEntities: FilterConfig;
+  newName?: string;
+  visibleEntities?: {
+    tables?: Array<{
+      name: string;
+      schemaName: string;
+    }> | null;
+    stickyNotes?: Array<{ name: string }> | null;
+    tableGroups?: Array<{ name: string }> | null;
+    schemas?: Array<{ name: string }> | null;
+  };
 }
 
-export interface DiagramViewUpdateOperation {
-  operation: 'update';
+export interface DiagramViewBlock {
   name: string;
-  newName: string;
-}
-
-export interface DiagramViewDeleteOperation {
-  operation: 'delete';
-  name: string;
-}
-
-export type DiagramViewSyncOperation = DiagramViewCreateOperation | DiagramViewUpdateOperation | DiagramViewDeleteOperation;
-
-/** Returns true when a name can be used unquoted in DBML. */
-function isSimpleIdentifier (name: string): boolean {
-  if (!name) return false;
-  return (
-    (isAlphaOrUnderscore(name[0]) || name[0] === '_')
-    && name.split('').every((c) => isAlphaOrUnderscore(c) || isDigit(c))
-  );
-}
-
-/** Wraps a name in double-quotes, escaping internal double-quotes. */
-function quoteName (name: string): string {
-  return `"${name.replace(/"/g, '\\"')}"`;
-}
-
-/** Formats a name for DBML output – quoted only when necessary. */
-function formatName (name: string): string {
-  return isSimpleIdentifier(name) ? name : quoteName(name);
+  startIndex: number;
+  endIndex: number;
 }
 
 /**
- * Normalises a raw DBML token value (which may be double-quoted) to a plain
- * string so it can be compared with operation names.
+ * Returns the start/end byte positions of every DiagramView block in `source`.
+ *
+ * Returns an empty array on any lex or parse error — callers cannot
+ * distinguish "no DiagramView blocks present" from "malformed DBML" based on
+ * the return value alone. If you need to detect malformed input, lex/parse
+ * the source separately and check for errors before calling this function.
  */
-function stripQuotes (raw: string): string {
-  if (raw.startsWith('"') && raw.endsWith('"')) {
-    return raw.slice(1, -1).replace(/\\"/g, '"');
-  }
-  return raw;
-}
+export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
+  const blocks: DiagramViewBlock[] = [];
+  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
+  if (lexerResult.getErrors().length > 0) return blocks; // malformed — cannot tokenize
 
-/**
- * Finds the start/end offset (in `source`) of a `DiagramView <name> { … }` block
- * whose name resolves to `targetName`.  Returns null when not found.
- */
-function findDiagramViewBlock (
-  source: string,
-  targetName: string,
-): { nameStart: number;
-  nameEnd: number;
-  blockStart: number;
-  blockEnd: number; } | null {
-  const pattern = /DiagramView\s+("(?:[^"\\]|\\.)*"|[A-Za-z_][A-Za-z0-9_]*)\s*\{/g;
-  let match: RegExpExecArray | null;
+  const tokens = lexerResult.getValue();
+  const ast = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
+  if (ast.getErrors().length > 0) return blocks; // malformed — cannot parse
 
-  while ((match = pattern.exec(source)) !== null) {
-    const rawName = match[1];
-    if (stripQuotes(rawName) !== targetName) continue;
+  const program = ast.getValue().ast;
 
-    const nameStart = match.index + match[0].indexOf(match[1]);
-    const nameEnd = nameStart + rawName.length;
-    const openBrace = match.index + match[0].length - 1; // index of '{'
-
-    // Find matching closing brace
-    let depth = 1;
-    let i = openBrace + 1;
-    while (i < source.length && depth > 0) {
-      if (source[i] === '{') depth++;
-      else if (source[i] === '}') depth--;
-      i++;
+  for (const element of program.declarations) {
+    if (element.isKind(ElementKind.DiagramView)) {
+      const fragments = element.name ? (destructureComplexVariable(element.name) ?? []) : [];
+      const name = fragments.length > 0 ? fragments[fragments.length - 1] : '';
+      blocks.push({
+        name,
+        startIndex: element.start,
+        endIndex: element.end,
+      });
     }
-
-    if (depth !== 0) continue; // malformed – skip
-
-    return {
-      nameStart,
-      nameEnd,
-      blockStart: match.index,
-      blockEnd: i,
-    };
   }
 
-  return null;
+  return blocks;
 }
 
-/**
- * Serialises a FilterConfig into the body lines of a DiagramView block.
- * Each sub-block is only emitted when its value is non-null.
- */
-function serializeVisibleEntities (ve: FilterConfig): string {
-  const lines: string[] = [];
+function generateDiagramViewBlock (
+  name: string,
+  visibleEntities: DiagramViewSyncOperation['visibleEntities'],
+): string {
+  const lines: string[] = [`DiagramView ${addDoubleQuoteIfNeeded(name)} {`];
 
-  function renderBlock (keyword: string, items: Array<{ name: string;
-    schemaName?: string; }> | null) {
-    if (items === null) return;
-    if (items.length === 0) {
-      lines.push(`  ${keyword} { * }`);
+  // Tables
+  if (visibleEntities?.tables !== undefined) {
+    if (visibleEntities.tables === null) {
+      // Hide all - don't add block
+    } else if (visibleEntities.tables.length === 0) {
+      lines.push('  Tables { * }');
     } else {
-      const entries = items.map((i) => `    ${formatName(i.name)}`).join('\n');
-      lines.push(`  ${keyword} {\n${entries}\n  }`);
+      const tableNames = visibleEntities.tables.map((t) => (t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`));
+      lines.push('  Tables {');
+      tableNames.forEach((n) => lines.push(`    ${n}`));
+      lines.push('  }');
     }
   }
 
-  renderBlock('Tables', ve.tables as Array<{ name: string;
-    schemaName?: string; }> | null);
-  renderBlock('Notes', ve.stickyNotes);
-  renderBlock('TableGroups', ve.tableGroups);
-  renderBlock('Schemas', ve.schemas);
+  // Notes
+  if (visibleEntities?.stickyNotes !== undefined) {
+    if (visibleEntities.stickyNotes === null) {
+      // Hide all - don't add block
+    } else if (visibleEntities.stickyNotes.length === 0) {
+      lines.push('  Notes { * }');
+    } else {
+      lines.push('  Notes {');
+      visibleEntities.stickyNotes.forEach((n) => lines.push(`    ${n.name}`));
+      lines.push('  }');
+    }
+  }
 
+  // TableGroups
+  if (visibleEntities?.tableGroups !== undefined) {
+    if (visibleEntities.tableGroups === null) {
+      // Hide all - don't add block
+    } else if (visibleEntities.tableGroups.length === 0) {
+      lines.push('  TableGroups { * }');
+    } else {
+      lines.push('  TableGroups {');
+      visibleEntities.tableGroups.forEach((n) => lines.push(`    ${n.name}`));
+      lines.push('  }');
+    }
+  }
+
+  // Schemas
+  if (visibleEntities?.schemas !== undefined) {
+    if (visibleEntities.schemas === null) {
+      // Hide all - don't add block
+    } else if (visibleEntities.schemas.length === 0) {
+      lines.push('  Schemas { * }');
+    } else {
+      lines.push('  Schemas {');
+      visibleEntities.schemas.forEach((n) => lines.push(`    ${n.name}`));
+      lines.push('  }');
+    }
+  }
+
+  lines.push('}');
   return lines.join('\n');
 }
 
 /**
- * Builds a complete `DiagramView <name> { … }` block string.
- */
-function buildBlock (name: string, ve: FilterConfig): string {
-  const body = serializeVisibleEntities(ve);
-  const formattedName = formatName(name);
-  if (!body) {
-    return `DiagramView ${formattedName} {\n}`;
-  }
-  return `DiagramView ${formattedName} {\n${body}\n}`;
-}
-
-/**
- * Applies a sequence of create / update / delete operations to a DBML string
- * and returns the updated string.
+ * Synchronizes DiagramView blocks in the DBML source at `filepath`.
  *
- * - **create** is idempotent: if a block with the same name already exists it
- *   is replaced in-place; otherwise the new block is appended.
- * - **update** renames the name token of an existing block (no-op when not found).
- * - **delete** removes the entire block (no-op when not found).
+ * @param filepath   The file whose source should be rewritten. Source is
+ *                   read from the compiler's project layout, which makes the
+ *                   query multifile-aware.
+ * @param operations Array of operations to apply (create, update, delete).
+ * @param blocks     Optional pre-parsed blocks from findDiagramViewBlocks. If
+ *                   not provided, parses internally.
+ * @returns Object containing the new DBML source code and the text edits applied.
  */
 export function syncDiagramView (
-  source: string,
+  this: Compiler,
+  filepath: Filepath,
   operations: DiagramViewSyncOperation[],
-): { newDbml: string } {
-  let result = source;
+  blocks?: DiagramViewBlock[],
+): {
+  newDbml: string;
+  edits: TextEdit[];
+} {
+  const dbml = this.layout.getSource(filepath) ?? '';
+  const originalBlocks = blocks ?? findDiagramViewBlocks(dbml);
+  const allEdits: TextEdit[] = [];
 
   for (const op of operations) {
-    switch (op.operation) {
-      case 'create': {
-        const existing = findDiagramViewBlock(result, op.name);
-        if (existing) {
-          // Replace existing block body
-          const newBlock = buildBlock(op.name, op.visibleEntities);
-          const edits: TextEdit[] = [
-            {
-              start: existing.blockStart,
-              end: existing.blockEnd,
-              newText: newBlock,
-            },
-          ];
-          result = applyTextEdits(result, edits);
-        } else {
-          // Append new block
-          const newBlock = buildBlock(op.name, op.visibleEntities);
-          const separator = result.length > 0 && !result.endsWith('\n') ? '\n' : '';
-          result = result + separator + newBlock;
-        }
-        break;
-      }
+    const edits = applyOperation(dbml, op, originalBlocks);
+    allEdits.push(...edits);
+  }
 
-      case 'update': {
-        const existing = findDiagramViewBlock(result, op.name);
-        if (!existing) break;
-        const newFormattedName = formatName(op.newName);
-        const edits: TextEdit[] = [
-          {
-            start: existing.nameStart,
-            end: existing.nameEnd,
-            newText: newFormattedName,
-          },
-        ];
-        result = applyTextEdits(result, edits);
-        break;
-      }
+  // Sort edits descending by start position for tail-first application
+  allEdits.sort((a, b) => b.start - a.start);
+  const newDbml = applyTextEdits(dbml, allEdits, true);
+  return {
+    newDbml,
+    edits: allEdits,
+  };
+}
 
-      case 'delete': {
-        const existing = findDiagramViewBlock(result, op.name);
-        if (!existing) break;
-        // Remove the whole block and any leading newline
-        let deleteStart = existing.blockStart;
-        if (deleteStart > 0 && result[deleteStart - 1] === '\n') {
-          deleteStart--;
-        }
-        const edits: TextEdit[] = [
-          {
-            start: deleteStart,
-            end: existing.blockEnd,
-            newText: '',
-          },
-        ];
-        result = applyTextEdits(result, edits);
-        break;
+function applyOperation (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): TextEdit[] {
+  switch (operation.operation) {
+    case 'create':
+      return computeCreateEdit(dbml, operation, blocks);
+    case 'update':
+      return computeUpdateEdit(dbml, operation, blocks);
+    case 'delete':
+      return computeDeleteEdit(dbml, operation, blocks);
+    default:
+      return [];
+  }
+}
+
+function computeCreateEdit (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): TextEdit[] {
+  // If a block with this name already exists, treat as update to avoid duplicate blocks
+  const existing = blocks.find((b) => b.name === operation.name);
+  if (existing) {
+    return computeUpdateEdit(dbml, operation, blocks);
+  }
+
+  const newBlock = generateDiagramViewBlock(operation.name, operation.visibleEntities);
+  const appendText = '\n\n' + newBlock + '\n';
+  return [
+    {
+      start: dbml.length,
+      end: dbml.length,
+      newText: appendText,
+    },
+  ];
+}
+
+function computeUpdateEdit (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): TextEdit[] {
+  const block = blocks.find((b) => b.name === operation.name);
+  if (!block) return [];
+
+  const edits: TextEdit[] = [];
+
+  if (operation.newName || operation.visibleEntities) {
+    // Generate new block content
+    const newName = operation.newName || operation.name;
+    const newBlock = generateDiagramViewBlock(newName, operation.visibleEntities);
+
+    // Replace entire block
+    edits.push({
+      start: block.startIndex,
+      end: block.endIndex,
+      newText: newBlock,
+    });
+  }
+
+  return edits;
+}
+
+function computeDeleteEdit (
+  dbml: string,
+  operation: DiagramViewSyncOperation,
+  blocks: DiagramViewBlock[],
+): TextEdit[] {
+  const block = blocks.find((b) => b.name === operation.name);
+  if (!block) return [];
+
+  // Expand range to include surrounding whitespace/newlines
+  let start = block.startIndex;
+  let end = block.endIndex;
+
+  // Expand backwards to consume preceding blank lines
+  while (start > 0 && dbml[start - 1] === '\n') {
+    start--;
+    // Also consume \r for CRLF
+    if (start > 0 && dbml[start - 1] === '\r') {
+      start--;
+    }
+    // Check if the line before is blank — if not, stop
+    const prevLineStart = dbml.lastIndexOf('\n', start - 1) + 1;
+    const prevLine = dbml.substring(prevLineStart, start);
+    if (prevLine.trim() !== '') {
+      // Not a blank line, restore position
+      start = block.startIndex;
+      // But still consume one newline before the block
+      if (start > 0 && dbml[start - 1] === '\n') {
+        start--;
+        if (start > 0 && dbml[start - 1] === '\r') start--;
       }
+      break;
     }
   }
 
-  return { newDbml: result };
+  // Expand forward to consume trailing newline
+  if (end < dbml.length && dbml[end] === '\r') end++;
+  if (end < dbml.length && dbml[end] === '\n') end++;
+
+  return [
+    {
+      start,
+      end,
+      newText: '',
+    },
+  ];
 }

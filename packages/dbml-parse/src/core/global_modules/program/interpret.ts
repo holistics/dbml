@@ -1,31 +1,44 @@
 import Compiler from '@/compiler/index';
 import {
-  CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode,
-} from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
-import {
-  DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import Report from '@/core/types/report';
-import { AliasKind } from '@/core/types/schemaJson';
-import type {
-  Database, DiagramView, ElementRef, Ref, RefEndpoint, Table, TableRecord, SchemaElement, Enum, TableGroup, TablePartial, Note, Project,
-} from '@/core/types/schemaJson';
-import {
-  getTokenPosition, getMultiplicities,
-} from '../utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import type { CompileWarning } from '@/core/types/errors';
-import { validateForeignKeys } from '../records/utils/constraints';
+import type {
+  CompileWarning,
+} from '@/core/types/errors';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  CallExpressionNode, ElementDeclarationNode, ProgramNode, UseSpecifierListNode, UseSpecifierNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  AliasKind,
+} from '@/core/types/schemaJson';
+import type {
+  Database, DiagramView, ElementRef, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
+} from '@/core/types/schemaJson';
+import {
+  SchemaSymbol, SymbolKind, UseSymbol,
+} from '@/core/types/symbol';
+import {
+  getBody,
+} from '@/core/utils/expression';
+import {
+  validateForeignKeys,
+} from '../records/utils/constraints';
 import {
   buildMergedTableFromElement, extractInlineRefsFromTablePartials,
 } from '../records/utils/interpret';
-import { getBody } from '@/core/utils/expression';
 import {
-  UseSymbol, SymbolKind,
-} from '@/core/types/symbol';
+  getMultiplicities, getTokenPosition,
+} from '../utils';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -142,6 +155,43 @@ export default class ProgramInterpreter {
             extMap.set(canonicalKey, ref);
             list.push(ref);
           }
+        }
+      }
+
+      // Wildcard imports are not enumerated at the AST level — every importable
+      // member becomes a synthesized UseSymbol in `schemaModule.symbolMembers`.
+      // Walk the public schema to pick those up so they land in `externals`.
+      const publicSchema = this.compiler.lookupMembers(this.programNode, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue();
+      if (publicSchema instanceof SchemaSymbol) {
+        const schemaMembers = this.compiler.symbolMembers(publicSchema).getFiltered(UNHANDLED) ?? [];
+        for (const member of schemaMembers) {
+          if (!(member instanceof UseSymbol)) continue;
+          // Selective specs are already handled above; skip them here to avoid
+          // duplicating the per-spec visibleName accounting.
+          if (member.useSpecifierDeclaration instanceof UseSpecifierNode) continue;
+          const name = member.usedSymbol ? this.compiler.symbolName(member.usedSymbol) : undefined;
+          if (!name) continue;
+          const list = listForKind(member);
+          if (!list) continue;
+
+          const schemaName = member.usedSymbol?.declaration
+            ? (this.compiler.nodeFullname(member.usedSymbol.declaration).getFiltered(UNHANDLED)?.slice(0, -1).join('.') || null)
+            : null;
+
+          const canonicalKey = `${kindKey(member)}:${schemaName ?? ''}.${name}`;
+          if (extMap.has(canonicalKey)) continue; // already covered by selective import
+          const ref: ElementRef = {
+            name,
+            schemaName,
+            visibleNames: [
+              {
+                schemaName,
+                name,
+              },
+            ],
+          };
+          extMap.set(canonicalKey, ref);
+          list.push(ref);
         }
       }
     }
@@ -304,11 +354,10 @@ export default class ProgramInterpreter {
     // Filter records: table must exist in db.tables
     db.records = db.records.filter((rec) => this.isTableVisible(db, rec.schemaName ?? null, rec.tableName));
 
-    // Filter tableGroups: keep only tables that exist in db.tables
+    // Filter tableGroups: keep only table entries that exist in db.tables, but keep the group itself even if empty
     db.tableGroups.forEach((tg) => {
       tg.tables = tg.tables.filter((t) => this.isTableVisible(db, t.schemaName, t.name));
     });
-    db.tableGroups = db.tableGroups.filter((tg) => tg.tables.length > 0);
   }
 
   private isTableVisible (db: Database, schemaName: string | null, tableName: string): boolean {
@@ -319,6 +368,8 @@ export default class ProgramInterpreter {
     if (db.externals.tables.some((t) => t.visibleNames.some(
       (v) => v.name === tableName && (v.schemaName ?? DEFAULT_SCHEMA_NAME) === sName,
     ))) return true;
+    // Check aliases (schemaName is null for aliases)
+    if (schemaName === null && db.aliases.some((a) => a.name === tableName)) return true;
     return false;
   }
 

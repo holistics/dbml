@@ -1,17 +1,29 @@
 import Compiler from '@/compiler/index';
-import { SettingName } from '@/core/types/keywords';
+import {
+  SettingName,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH,
+} from '@/core/types/module';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode,
 } from '@/core/types/nodes';
-import { PASS_THROUGH } from '@/constants';
 import Report from '@/core/types/report';
 import type {
   Check, SchemaElement,
 } from '@/core/types/schemaJson';
-import { getTokenPosition } from '../utils';
-import { extractQuotedStringToken } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
-import { SyntaxToken } from '@/core/types/tokens';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  extractQuotedStringToken,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
+import {
+  getTokenPosition,
+} from '../utils';
 
 export default class ChecksInterpreter {
   private compiler: Compiler;

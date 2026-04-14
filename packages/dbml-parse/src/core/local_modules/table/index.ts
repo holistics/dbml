@@ -1,25 +1,29 @@
-import {
-  isElementNode, isElementFieldNode, destructureComplexVariable, extractVariableFromExpression,
-} from '@/core/utils/expression';
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import type { LocalModule } from '../types';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   PASS_THROUGH, type PassThrough,
-} from '@/constants';
+} from '@/core/types/module';
 import {
   ArrayNode,
   SyntaxNode,
 } from '@/core/types/nodes';
-import { ElementKind } from '@/core/types/keywords';
-import {
-  isValidAlias, Settings,
-} from '@/core/utils/validate';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
+import {
+  destructureComplexVariable, extractVariableFromExpression, isElementFieldNode, isElementNode,
+} from '@/core/utils/expression';
+import {
+  Settings, isValidAlias,
+} from '@/core/utils/validate';
+import type {
+  LocalModule,
+} from '../types';
 import TableValidator, {
-  validateTableSettings, validateFieldSetting,
+  validateFieldSetting, validateTableSettings,
 } from './validate';
 
 export const tableModule: LocalModule = {

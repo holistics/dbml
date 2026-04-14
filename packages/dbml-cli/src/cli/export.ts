@@ -1,20 +1,30 @@
-import figures from 'figures';
-import chalk from 'chalk';
 import path from 'path';
-import { ModelExporter, Parser } from '@dbml/core';
-import { Compiler, Filepath } from '@dbml/parse';
-import { Command } from 'commander';
-import { NodeProjectLayout } from '../NodeProjectLayout';
 import {
-  validateInputFilePaths,
-  resolvePaths,
-  getFormatOpt,
-} from './utils';
-import { validateFilePlugin } from './validatePlugins/validatePlugins';
+  ModelExporter, Parser,
+} from '@dbml/core';
+import {
+  Compiler, Filepath,
+} from '@dbml/parse';
+import chalk from 'chalk';
+import {
+  Command,
+} from 'commander';
+import figures from 'figures';
+import {
+  NodeProjectLayout,
+} from '../NodeProjectLayout';
+import logger from '../helpers/logger';
+import config from './config';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
-import config from './config';
-import logger from '../helpers/logger';
+import {
+  getFormatOpt,
+  resolvePaths,
+  validateInputFilePaths,
+} from './utils';
+import {
+  validateFilePlugin,
+} from './validatePlugins/validatePlugins';
 
 export default async function exportHandler (program: Command): Promise<void> {
   const inputPaths = resolvePaths(program.args);

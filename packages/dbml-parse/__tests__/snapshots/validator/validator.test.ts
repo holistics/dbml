@@ -5,25 +5,16 @@ import type { ProgramNode } from '@/core/types/nodes';
 import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import { DEFAULT_ENTRY } from '@/constants';
-import { CompileErrorCode } from '@/core/types/errors';
-
-const BINDING_PHASE_ERROR_CODES = new Set([
-  CompileErrorCode.BINDING_ERROR,
-  CompileErrorCode.SAME_ENDPOINT,
-  CompileErrorCode.CIRCULAR_REF,
-  CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP,
-  CompileErrorCode.EMPTY_TABLE,
-]);
 
 function serializeValidatorResult (compiler: Compiler, ast: ProgramNode): string {
-  const allErrors = compiler.parse.errors();
-  const errors = allErrors.filter((e) => !BINDING_PHASE_ERROR_CODES.has(e.code));
-  const warnings = compiler.parse.warnings();
+  const validation = compiler.validateNode(ast);
   return JSON.stringify(toSnapshot(compiler, {
     program: ast,
-    errors,
-    warnings,
-  }, { includeReferences: false, includeReferee: false }), null, 2);
+    errors: validation.getErrors(),
+    warnings: validation.getWarnings(),
+  }, {
+    includeReferences: false, includeReferee: false, includeSymbols: false,
+  }), null, 2);
 }
 
 describe('[snapshot] validator', () => {

@@ -1,24 +1,32 @@
-import { partition } from 'lodash-es';
 import {
-  extractQuotedStringToken, destructureComplexVariable,
-} from '@/core/utils/expression';
+  partition,
+} from 'lodash-es';
+import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode, ListExpressionNode,
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import type {
   TableGroup, TableGroupField,
 } from '@/core/types/schemaJson';
 import {
-  extractElementName, getTokenPosition, normalizeNoteContent, extractColor, getSymbolSchemaAndName,
+  SymbolKind,
+} from '@/core/types/symbol';
+import {
+  destructureComplexVariable, extractQuotedStringToken,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
+import {
+  extractColor, extractElementName, getSymbolSchemaAndName, getTokenPosition, normalizeNoteContent,
 } from '../utils';
-import { aggregateSettingList } from '@/core/utils/validate';
-import Compiler from '@/compiler';
-import Report from '@/core/types/report';
-import { UNHANDLED } from '@/constants';
-import { SymbolKind } from '@/core/types/symbol';
 
 export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -28,7 +36,9 @@ export class TableGroupInterpreter {
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
     this.compiler = compiler;
-    this.tableGroup = { tables: [] };
+    this.tableGroup = {
+      tables: [],
+    };
   }
 
   interpret (): Report<TableGroup> {

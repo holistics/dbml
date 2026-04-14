@@ -2,19 +2,29 @@ import {
   flatten, zip,
 } from 'lodash-es';
 import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+  getTokenFullEnd, getTokenFullStart,
+} from '@/core/lexer/utils';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  type Internable,
+} from '@/core/types/internable';
 import {
   ElementKind, ImportKind,
 } from '@/core/types/keywords';
-import { Position } from '@/core/types/position';
-import type { SymbolKind } from '@/core/types/symbol';
 import {
-  getTokenFullEnd, getTokenFullStart,
-} from '@/core/lexer/utils';
-import { Filepath } from '@/core/types/filepath';
-import { type Internable } from '@/core/types/internable';
-import { isReuseKeyword } from '@/core/utils/expression';
+  Position,
+} from '@/core/types/position';
+import type {
+  SymbolKind,
+} from '@/core/types/symbol';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  isReuseKeyword,
+} from '@/core/utils/expression';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;
@@ -454,7 +464,9 @@ export class IdentiferStreamNode extends SyntaxNode {
   identifiers: SyntaxToken[];
 
   constructor (
-    { identifiers = [] }: { identifiers?: SyntaxToken[] },
+    {
+      identifiers = [],
+    }: { identifiers?: SyntaxToken[] },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -622,7 +634,9 @@ export class FunctionExpressionNode extends SyntaxNode {
   value?: SyntaxToken;
 
   constructor (
-    { value }: { value?: SyntaxToken },
+    {
+      value,
+    }: { value?: SyntaxToken },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -875,7 +889,9 @@ export class LiteralNode extends SyntaxNode {
   literal?: SyntaxToken;
 
   constructor (
-    { literal }: { literal?: SyntaxToken },
+    {
+      literal,
+    }: { literal?: SyntaxToken },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -895,7 +911,9 @@ export class WildcardNode extends SyntaxNode {
   token?: SyntaxToken;
 
   constructor (
-    { token }: { token?: SyntaxToken },
+    {
+      token,
+    }: { token?: SyntaxToken },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -917,7 +935,9 @@ export class VariableNode extends SyntaxNode {
   variable?: SyntaxToken;
 
   constructor (
-    { variable }: { variable?: SyntaxToken },
+    {
+      variable,
+    }: { variable?: SyntaxToken },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -939,7 +959,9 @@ export class PrimaryExpressionNode extends SyntaxNode {
   expression?: LiteralNode | VariableNode;
 
   constructor (
-    { expression }: { expression?: LiteralNode | VariableNode },
+    {
+      expression,
+    }: { expression?: LiteralNode | VariableNode },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -960,7 +982,9 @@ export class PrimaryExpressionNode extends SyntaxNode {
 // - Trailing commas in comma expressions (e.g. 1, 2,)
 export class EmptyNode extends SyntaxNode {
   constructor (
-    { prevToken }: { prevToken: Readonly<SyntaxNode> | Readonly<SyntaxToken> },
+    {
+      prevToken,
+    }: { prevToken: Readonly<SyntaxNode> | Readonly<SyntaxToken> },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {

@@ -1,28 +1,47 @@
-import { uniqBy } from 'lodash-es';
+import {
+  uniqBy,
+} from 'lodash-es';
+import type Compiler from '@/compiler/index';
+import {
+  shouldBelongToThisSchema,
+} from '@/compiler/queries/usableMembers';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  type Filepath,
+} from '@/core/types/filepath';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode,
 } from '@/core/types/nodes';
 import {
   SyntaxNode, UseSpecifierNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
 import {
-  PASS_THROUGH, type PassThrough, UNHANDLED, DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
+  enumUtils,
+} from '../enum';
 import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import { tableUtils } from '../table';
-import { enumUtils } from '../enum';
-import { tablePartialUtils } from '../tablePartial';
-import { tableGroupUtils } from '../tableGroup';
-import { shouldBelongToThisSchema } from '@/compiler/queries/usableMembers';
-import { type Filepath } from '@/core/types/filepath';
+  tableUtils,
+} from '../table';
+import {
+  tableGroupUtils,
+} from '../tableGroup';
+import {
+  tablePartialUtils,
+} from '../tablePartial';
+import type {
+  GlobalModule,
+} from '../types';
 
 export const schemaModule: GlobalModule = {
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
@@ -67,9 +86,18 @@ export const schemaModule: GlobalModule = {
       }
     }
 
-    // Filter out duplicate symbols (same real symbol), but keep distinct UseSymbols even if they
-    // wrap the same underlying symbol (e.g. two aliases for the same table).
-    const uniqueExpandedMembers = uniqBy(membersWithExpansions, (m) => (m instanceof UseSymbol ? m : m.originalSymbol));
+    // Filter out duplicate symbols (same real symbol). UseSymbols dedupe by
+    // (originalSymbol, locally-visible name) so that:
+    //   - `use { table users }` plus `use *` from the same source collapse to
+    //     one entry (same original, same name) instead of colliding;
+    //   - `use { table users as u }` and `use { table users }` stay distinct
+    //     because their local names differ (`u` vs. `users`).
+    const uniqueExpandedMembers = uniqBy(membersWithExpansions, (m) => {
+      if (m instanceof UseSymbol) {
+        return `use:${m.originalSymbol.id}:${compiler.symbolName(m) ?? ''}`;
+      }
+      return m.originalSymbol;
+    });
 
     const errors: CompileError[] = [];
 
@@ -167,12 +195,14 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
 
   const usableMembers = compiler.fileUsableMembers(externalSchemaSymbol).getFiltered(UNHANDLED);
   if (!usableMembers) return [];
-  const members = usableMembers.nonSchemaMembers.map((m) => compiler.symbolFactory.create(UseSymbol, {
-    kind: m.kind,
-    declaration: m.declaration,
-    usedSymbol: m,
-    useSpecifierDeclaration: wildcardNode,
-  }, symbol.filepath));
+  const members: NodeSymbol[] = usableMembers.nonSchemaMembers
+    .filter((m) => m.canBeImported)
+    .map((m) => compiler.symbolFactory.create(UseSymbol, {
+      kind: m.kind,
+      declaration: m.declaration,
+      usedSymbol: m,
+      useSpecifierDeclaration: wildcardNode,
+    }, symbol.filepath));
 
   for (const schemaMember of usableMembers.schemaMembers) {
     if (!childSchemas.has(schemaMember.name)) {
@@ -180,7 +210,9 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
         schemaMember.name,
         compiler.symbolFactory.create(
           SchemaSymbol,
-          { name: schemaMember.name },
+          {
+            name: schemaMember.name,
+          },
           symbol.filepath,
         ),
       );
@@ -199,7 +231,9 @@ function handleMemberWildcardUses (compiler: Compiler, symbol: SchemaSymbol, imp
     if (externalSymbol) members.push(externalSymbol);
   }
 
-  for (const { importPath: externalFilepath } of wildcard) {
+  for (const {
+    importPath: externalFilepath,
+  } of wildcard) {
     members.push(...handleMemberWildcardUses(compiler, symbol, externalFilepath, wildcardNode, childSchemas, visited));
   }
 
@@ -212,7 +246,9 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
   const usableSymbols = compiler.fileUsableMembers(filepath).getFiltered(UNHANDLED);
   if (!usableSymbols) return undefined;
 
-  let { schemaMembers } = usableSymbols;
+  let {
+    schemaMembers,
+  } = usableSymbols;
   let currentSchema: SchemaSymbol | undefined;
 
   const fullname = [...schemaFullname];
@@ -221,7 +257,9 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
     currentSchema = schemaMembers.find((member) => member.name === currentSchemaName);
     if (!currentSchema) return undefined;
     const currentUsableSymbols = compiler.fileUsableMembers(currentSchema).getValue();
-    ({ schemaMembers } = currentUsableSymbols);
+    ({
+      schemaMembers,
+    } = currentUsableSymbols);
   }
 
   return currentSchema;
@@ -240,17 +278,18 @@ function expandTableGroup (compiler: Compiler, tableGroupSymbol: NodeSymbol): No
     if (field.isKind(SymbolKind.TableGroupField) && field.declaration) {
       const originalTable = compiler.nodeReferee(field.declaration).getFiltered(UNHANDLED);
       if (originalTable && originalTable.isKind(SymbolKind.Table)) {
-        let useSpecifierDeclaration: UseSpecifierNode | WildcardNode | undefined;
         if (tableGroupSymbol instanceof UseSymbol) {
-          useSpecifierDeclaration = tableGroupSymbol.useSpecifierDeclaration;
+          extraSymbols.push(compiler.symbolFactory.create(UseSymbol, {
+            kind: SymbolKind.Table,
+            declaration: originalTable.declaration,
+            usedSymbol: originalTable,
+            useSpecifierDeclaration: tableGroupSymbol.useSpecifierDeclaration,
+          }, tableGroupSymbol.filepath));
+        } else {
+          // Local TableGroup: tables are already direct schema members; expose via originalSymbol
+          // so deduplication in symbolMembers collapses them correctly.
+          extraSymbols.push(originalTable.originalSymbol);
         }
-
-        extraSymbols.push(compiler.symbolFactory.create(UseSymbol, {
-          kind: SymbolKind.Table,
-          declaration: originalTable.declaration,
-          usedSymbol: originalTable,
-          useSpecifierDeclaration,
-        }, tableGroupSymbol.filepath));
       }
     }
   }

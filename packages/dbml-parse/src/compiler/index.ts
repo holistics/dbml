@@ -1,76 +1,137 @@
 import {
-  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider,
-} from '@/services/index';
+  DEFAULT_ENTRY,
+} from '@/constants';
 import {
-  invalidStream, flatStream,
-} from './queries/legacy/token';
-import {
-  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
-} from './queries/utils';
-import {
-  containerStack, containerToken, containerElement, containerScope, containerScopeKind,
-} from './queries/container';
-import { renameTable } from './queries/transform';
-export { ScopeKind } from './types';
-export type {
-  TextEdit, TableNameInput,
-} from './queries/transform';
-import {
-  nodeSymbol,
-  symbolMembers,
-  nodeReferee,
   bindNode,
   interpretNode,
+  nodeReferee,
+  nodeSymbol,
+  symbolMembers,
 } from '@/core/global_modules';
-import { symbolReferences } from './queries/symbolReferences';
 import {
-  intern, type Internable, type Primitive,
-} from '@/core/types/internable';
-import { DEFAULT_ENTRY } from '@/constants';
-import {
-  nodeAlias, nodeFullname as fullname, nodeSettings, validateNode,
+  nodeFullname as fullname, nodeAlias, nodeSettings, validateNode,
 } from '@/core/local_modules';
-import { NodeSymbolIdGenerator } from '@/core/types/symbol';
-import { SymbolFactory } from '@/core/types/symbol';
-import { lookupMembers } from './queries/lookupMembers';
-import { symbolName } from './queries/symbolName';
-import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  type Internable, type Primitive, intern,
+} from '@/core/types/internable';
+import {
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
+import {
+  NodeSymbolIdGenerator, SymbolFactory,
+} from '@/core/types/symbol';
+import {
+  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
+} from '@/services/index';
 import {
   type DbmlProjectLayout, MemoryProjectLayout,
 } from './projectLayout';
-import { fileDependencies } from './queries/fileDependencies';
-import { Filepath } from '@/core/types/filepath';
-import { usableMembers } from './queries/usableMembers';
-import { topLevelSchemaMembers } from './queries/topLevelSchemaMembers';
-import { reachableFiles } from './queries/reachableFiles';
 import {
-  parseFile, parseProject,
-} from './queries/pipeline/parse';
+  containerElement, containerScope, containerScopeKind, containerStack, containerToken,
+} from './queries/container';
+import {
+  fileDependencies,
+} from './queries/fileDependencies';
 import {
   ast, errors, publicSymbolTable, rawDb, tokens, warnings,
 } from './queries/legacy/parse';
 import {
-  interpretFile, interpretProject, exportSchemaJson,
-} from './queries/pipeline/interpret';
+  flatStream, invalidStream,
+} from './queries/legacy/token';
+import {
+  lookupMembers,
+} from './queries/lookupMembers';
 import {
   bindFile, bindProject,
 } from './queries/pipeline/bind';
+import {
+  exportSchemaJson, interpretFile, interpretProject,
+} from './queries/pipeline/interpret';
+import {
+  parseFile, parseProject,
+} from './queries/pipeline/parse';
+import {
+  reachableFiles,
+} from './queries/reachableFiles';
+import {
+  symbolName,
+} from './queries/symbolName';
+import {
+  symbolReferences,
+} from './queries/symbolReferences';
+import {
+  topLevelSchemaMembers,
+} from './queries/topLevelSchemaMembers';
+import {
+  renameTable, syncDiagramView,
+} from './queries/transform';
+import {
+  usableMembers,
+} from './queries/usableMembers';
+import {
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+} from './queries/utils';
 
+// Re-export types
+export {
+  ScopeKind,
+} from './types';
+export type {
+  TableNameInput, TextEdit,
+} from './queries/transform';
 // Re-export utilities
 export {
-  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
 };
 
-// To detect cyclic queries
-// Indicating that a query is being computed, but we're trying to compute it again
+// Sentinel placed in the cache while a query is being computed.
+// If a re-entrant call hits the same cache slot it means we have a cycle.
 const COMPUTING = Symbol('COMPUTING');
 
 type QuerySubCache = Map<string, any>;
 
+/**
+ * ## Query system invariants
+ *
+ * Every public method on Compiler that begins with a lowercase noun (e.g.
+ * `parseFile`, `bindNode`, `symbolName`) is a **query**: a memoised,
+ * lazily-evaluated function with the following invariants:
+ *
+ * 1. **Purity** — queries must not mutate any shared state. They read from
+ *    `this.layout` and from other cached queries, and return a value.
+ *    Side-effecting logic belongs in `setSource` / `deleteSource`.
+ *
+ * 2. **Cache scope** — each query is registered with `this.query()` (global)
+ *    or `this.localQuery()` (per-file):
+ *    - `query()`: cached across all files. Invalidated entirely on any
+ *      `setSource` / `deleteSource` / `clearSource` call.
+ *    - `localQuery()`: cached per `Filepath.intern()` key. Only the changed
+ *      file's cache entry is deleted on `setSource(filepath, ...)`.
+ *    Use `localQuery` only when the function's output depends solely on the
+ *    content of a single file (e.g. `parseFile`, `topLevelSchemaMembers`).
+ *
+ * 3. **Single wrapping** — each query function must be passed to `query()` or
+ *    `localQuery()` exactly once. Each call allocates a unique `Symbol()` as
+ *    the cache key; double-wrapping creates a second key and defeats caching.
+ *
+ * 4. **Cycle detection** — if a query calls itself (directly or transitively)
+ *    before its result is stored, the COMPUTING sentinel is found in the cache
+ *    and an error is thrown. This surfaces infinite loops at development time.
+ *
+ * 5. **Error propagation** — query functions return `Report<T>` objects that
+ *    carry errors alongside values. A thrown exception is NOT caught by the
+ *    cache layer; it propagates to the caller and the cache slot is left as
+ *    COMPUTING (i.e., the entry is poisoned). Do not throw from queries.
+ */
 export default class Compiler {
   private globalCache = new Map<symbol, QuerySubCache>();
 
-  // Outer key: FilepathId; inner key: queryKey symbol; innermost key: serialized remaining args
+  // Outer key: Filepath.intern() string; inner key: queryKey symbol; innermost key: serialized remaining args.
+  // Invariant: Filepath.intern() must return a stable, unique string per logical filepath across the
+  // lifetime of this Compiler instance. If interning semantics change, per-file cache invalidation breaks.
   private localCache = new Map<string, Map<symbol, QuerySubCache>>();
 
   layout: DbmlProjectLayout = new MemoryProjectLayout();
@@ -81,7 +142,11 @@ export default class Compiler {
 
   symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  setSource (filepath: Filepath, source: string) {
+  setSource (source: string): void;
+  setSource (filepath: Filepath, source: string): void;
+  setSource (filepathOrSource: Filepath | string, _source?: string) {
+    const filepath = filepathOrSource instanceof Filepath ? filepathOrSource : DEFAULT_ENTRY;
+    const source = filepathOrSource instanceof Filepath ? _source! : filepathOrSource;
     this.layout.setSource(filepath, source);
     // Local queries are keyed per-file: only the changed file's cache is stale.
     // Global queries depend on all files: always invalidate the entire global cache.
@@ -95,7 +160,7 @@ export default class Compiler {
     this.globalCache.clear();
   }
 
-  deleteSource (filepath: Filepath) {
+  deleteSource (filepath: Filepath = DEFAULT_ENTRY) {
     this.layout.deleteSource(filepath);
     // Same invalidation logic as setSource: local per-file, global always full clear.
     this.localCache.delete(filepath.intern());
@@ -267,6 +332,7 @@ export default class Compiler {
 
   // transform queries
   renameTable = renameTable.bind(this);
+  syncDiagramView = syncDiagramView.bind(this);
 
   // @deprecated - legacy APIs for services compatibility
   readonly token = {
@@ -277,7 +343,7 @@ export default class Compiler {
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
     source: () => this.layout.getSource(DEFAULT_ENTRY) as Readonly<string>,
-    _: this.query(exportSchemaJson),
+    _: () => this.exportSchemaJson(DEFAULT_ENTRY),
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),

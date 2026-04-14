@@ -1,5 +1,0 @@
-// source: schema-qualified table
-Table auth.users {
-  id int [pk]
-  email varchar
-}

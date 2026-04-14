@@ -1,7 +1,13 @@
-import type { ElementDeclarationNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
-import type { CompileError } from '@/core/types/errors';
 import type Compiler from '@/compiler';
+import type {
+  CompileError,
+} from '@/core/types/errors';
+import type {
+  ElementDeclarationNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class ChecksBinder {
   private compiler: Compiler;

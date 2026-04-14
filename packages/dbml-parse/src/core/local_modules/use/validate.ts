@@ -1,12 +1,16 @@
+import type Compiler from '@/compiler';
+import {
+  ImportKind,
+} from '@/core/types';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
   ProgramNode, UseDeclarationNode, UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';
-import { ImportKind } from '@/core/types';
-import { Filepath } from '@/core/types/filepath';
-import type Compiler from '@/compiler';
 
 export default class UseDeclarationValidator {
   private compiler: Compiler;

@@ -1,6 +1,0 @@
-// should pull in both tables and records
-
-reuse {
-  table a as c
-  table b
-} from './records-and-tables.dbml'

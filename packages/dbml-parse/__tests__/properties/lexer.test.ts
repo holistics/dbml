@@ -2,14 +2,22 @@ import {
   describe, expect, it,
 } from 'vitest';
 import * as fc from 'fast-check';
-import { SyntaxTokenKind } from '../../src';
+import {
+  SyntaxTokenKind,
+} from '../../src';
 import {
   tokenStreamArbitrary, identifierArbitrary,
 } from '../utils/arbitraries';
-import { lex } from '../utils';
+import {
+  lex,
+} from '../utils';
 
-const PROPERTY_TEST_CONFIG = { numRuns: 50 };
-const EXTENDED_CONFIG = { numRuns: 25 };
+const PROPERTY_TEST_CONFIG = {
+  numRuns: 50,
+};
+const EXTENDED_CONFIG = {
+  numRuns: 25,
+};
 
 describe('[property] lexer', () => {
   it('should roundtrip', () => {

@@ -6,6 +6,9 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
@@ -19,9 +22,12 @@ import {
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/utils/expression';
-import { destructureIndexNode } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  destructureIndexNode,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
 
 export default class IndexesValidator {
   private compiler: Compiler;

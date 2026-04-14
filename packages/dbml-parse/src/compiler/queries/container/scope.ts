@@ -1,6 +1,10 @@
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol';
 import type Compiler from '../../index';
-import { NodeSymbol } from '@/core/types/symbol';
-import { UNHANDLED } from '@/constants';
 
 // @deprecated - returns the members of the element at offset
 export function containerScope (this: Compiler, offset: number): NodeSymbol[] | undefined {

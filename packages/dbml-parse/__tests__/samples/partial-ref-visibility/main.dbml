@@ -1,7 +1,0 @@
-// only users is imported; orders (and therefore its ref) should be invisible
-use { table users } from './base.dbml'
-
-Table invoices {
-  id int [pk]
-  user_id int
-}

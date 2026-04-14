@@ -1,7 +1,0 @@
-// import enum under an alias; the alias should be the resolvable name
-use { enum job_status as Status } from './types.dbml'
-
-Table jobs {
-  id int [pk]
-  status Status
-}

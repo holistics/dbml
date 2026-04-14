@@ -66,7 +66,7 @@ class Parser {
 
     if (diags.length > 0) throw CompilerError.create(diags);
 
-    return compiler.parse.rawDb();
+    return compiler.exportSchemaJson(DEFAULT_ENTRY).getValue();
   }
 
   /**
@@ -161,7 +161,7 @@ class Parser {
             }));
             if (diags.length > 0) throw CompilerError.create(diags);
             // @ts-expect-error "The type definition of @dbml/core's RawDatabase and @dbml/parse's Database have some mismatches"
-            rawDatabase = this.DBMLCompiler.parse.rawDb();
+            rawDatabase = this.DBMLCompiler.exportSchemaJson(DEFAULT_ENTRY).getValue();
           }
           break;
 

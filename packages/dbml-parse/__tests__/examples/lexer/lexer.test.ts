@@ -4,8 +4,12 @@ import {
 import {
   SyntaxTokenKind, SyntaxToken, isTriviaToken,
 } from '@/core/types/tokens';
-import { CompileErrorCode } from '@/core/types/errors';
-import { lex } from '@tests/utils';
+import {
+  CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  lex,
+} from '@tests/utils';
 
 // Helper to get non-trivia, non-EOF tokens
 function getTokens (source: string) {
@@ -632,7 +636,9 @@ describe('[example] lexer', () => {
     });
 
     test('should handle source with many lines', () => {
-      const lines = Array.from({ length: 1000 }, (_, i) => `id${i}`).join('\n');
+      const lines = Array.from({
+        length: 1000,
+      }, (_, i) => `id${i}`).join('\n');
       const result = lex(lines);
       const tokens = result.getValue().filter((t) => !isTriviaToken(t) && t.kind !== SyntaxTokenKind.EOF);
 

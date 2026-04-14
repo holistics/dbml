@@ -1,33 +1,37 @@
 import {
-  IdentiferStreamNode,
-  InfixExpressionNode,
-  LiteralNode,
-  PrefixExpressionNode,
-  PrimaryExpressionNode,
-  SyntaxNode,
-  TupleExpressionNode,
-  VariableNode,
-  ElementDeclarationNode,
-  FunctionApplicationNode,
-  BlockExpressionNode,
-  ProgramNode,
-  ListExpressionNode,
-  AttributeNode,
-  FunctionExpressionNode,
-  CallExpressionNode,
-  UseDeclarationNode,
-  UseSpecifierNode,
-  WildcardNode,
-  UseSpecifierListNode,
-} from '@/core/types/nodes';
+  last,
+} from 'lodash-es';
+import {
+  NUMERIC_LITERAL_PREFIX,
+} from '@/constants';
 import type {
   ElementKind, ImportKind, SettingName,
 } from '@/core/types/keywords';
 import {
+  AttributeNode,
+  BlockExpressionNode,
+  CallExpressionNode,
+  ElementDeclarationNode,
+  FunctionApplicationNode,
+  FunctionExpressionNode,
+  IdentiferStreamNode,
+  InfixExpressionNode,
+  ListExpressionNode,
+  LiteralNode,
+  PrefixExpressionNode,
+  PrimaryExpressionNode,
+  ProgramNode,
+  SyntaxNode,
+  TupleExpressionNode,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
+  VariableNode,
+  WildcardNode,
+} from '@/core/types/nodes';
+import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import { last } from 'lodash-es';
-import { NUMERIC_LITERAL_PREFIX } from '@/constants';
 
 export function getNumberTextFromExpression (node: PrimaryExpressionNode | PrefixExpressionNode): string {
   if (node instanceof PrefixExpressionNode) {
@@ -471,6 +475,15 @@ export function extractVarNameFromPrimaryVariable (
 
 export function isWildcardExpression (node: SyntaxNode | undefined): node is WildcardNode {
   return node instanceof WildcardNode;
+}
+
+// Returns true if `node` is the rightmost (terminal) fragment of an access expression chain.
+// A node is terminal when its containing access expression is NOT itself the left-hand side
+// of a further access expression (e.g. `users` in `public.users` or `auth.public.users`).
+// Precondition: node must be the right child of an access expression (isAccessExpression(node.parentNode)).
+export function isTerminalAccessFragment (node: SyntaxNode): boolean {
+  const currentAccess = node.parentNode as InfixExpressionNode;
+  return !(isAccessExpression(currentAccess.parentNode) && (currentAccess.parentNode as InfixExpressionNode).leftExpression === currentAccess);
 }
 
 export function isInvalidToken (token?: SyntaxToken): boolean {

@@ -1,9 +1,13 @@
-import { SyntaxToken } from '@/core/types/tokens';
+import Compiler from '@/compiler';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '@/core/types/nodes';
-import { CompileError } from '@/core/types/errors';
-import Compiler from '@/compiler';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class ProjectBinder {
   private compiler: Compiler;

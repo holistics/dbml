@@ -10,6 +10,65 @@
         }
       }
     ],
+    "refs": [
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "admin_id"
+            ],
+            "relation": "*",
+            "tableName": "merchants",
+            "token": {
+              "end": {
+                "column": 29,
+                "line": 13,
+                "offset": 213
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 13,
+                "offset": 187
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "U",
+            "token": {
+              "end": {
+                "column": 28,
+                "line": 13,
+                "offset": 212
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 17,
+                "line": 13,
+                "offset": 201
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 28,
+            "line": 13,
+            "offset": 212
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 17,
+            "line": 13,
+            "offset": 201
+          }
+        }
+      }
+    ],
     "tableGroups": [
       {
         "name": "g1",

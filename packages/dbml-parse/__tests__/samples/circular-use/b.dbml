@@ -1,5 +1,0 @@
-use { table c_table } from './c.dbml'
-Table b_table {
-  id int [pk]
-  c_id int [ref: > c_table.id]
-}

@@ -1,3 +1,13 @@
+import Compiler from '@/compiler/index';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH, UNHANDLED,
+} from '@/core/types/module';
 import {
   BlockExpressionNode,
   CommaExpressionNode,
@@ -7,52 +17,44 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
 import Report from '@/core/types/report';
 import type {
+  Column,
   RecordValue,
   Table,
   TableRecord,
-  Column,
 } from '@/core/types/schemaJson';
-import {
-  isNullish,
-  isEmptyStringLiteral,
-  tryExtractBoolean,
-  tryExtractString,
-  tryExtractDateTime,
-  extractSignedNumber,
-} from './utils/data/values';
-import {
-  isIntegerType,
-  isFloatType,
-  isBooleanType,
-  isStringType,
-  isDateTimeType,
-  getRecordValueType,
-  isSerialType,
-} from './utils/data/sqlTypes';
-import {
-  destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode, isElementNode,
-} from '@/core/utils/expression';
-import Compiler from '@/compiler/index';
-import { ElementKind } from '@/core/types/keywords';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
-  PASS_THROUGH, UNHANDLED,
-} from '@/constants';
+  destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isElementNode, isExpressionAVariableNode,
+} from '@/core/utils/expression';
 import {
-  getTokenPosition, lookupMember, lookupInDefaultSchema,
+  getTokenPosition, lookupInDefaultSchema, lookupMember,
 } from '../utils';
 import {
   validateForeignKeys, validatePrimaryKey, validateUnique,
 } from './utils/constraints';
 import {
-  buildMergedTableFromElement, getEnumMembers, parseNumericParams, parseLengthParam,
+  getRecordValueType,
+  isBooleanType,
+  isDateTimeType,
+  isFloatType,
+  isIntegerType,
+  isSerialType,
+  isStringType,
+} from './utils/data/sqlTypes';
+import {
+  extractSignedNumber,
+  isEmptyStringLiteral,
+  isNullish,
+  tryExtractBoolean,
+  tryExtractDateTime,
+  tryExtractString,
+} from './utils/data/values';
+import {
+  buildMergedTableFromElement, getEnumMembers, parseLengthParam, parseNumericParams,
 } from './utils/interpret';
 
 export default class RecordsInterpreter {
@@ -477,7 +479,9 @@ function extractValue (
     // Validate string length (using UTF-8 byte length like SQL engines)
     const lengthParam = parseLengthParam(column);
     if (lengthParam) {
-      const { length } = lengthParam;
+      const {
+        length,
+      } = lengthParam;
       // Calculate byte length in UTF-8 encoding (matching SQL behavior)
       const actualByteLength = new TextEncoder().encode(strValue).length;
 

@@ -1,19 +1,27 @@
-import type { SyntaxNode } from '@/core/types/nodes';
 import {
-  FunctionExpressionNode,
-  PrefixExpressionNode,
-  EmptyNode,
+  last,
+} from 'lodash-es';
+import {
+  DateTime,
+} from 'luxon';
+import type {
+  SyntaxNode,
 } from '@/core/types/nodes';
 import {
-  isExpressionAnIdentifierNode, isExpressionASignedNumberExpression,
+  EmptyNode,
+  FunctionExpressionNode,
+  PrefixExpressionNode,
+} from '@/core/types/nodes';
+import {
+  isExpressionASignedNumberExpression, isExpressionAnIdentifierNode,
 } from '@/core/utils/expression';
 import {
-  destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral,
+  destructureComplexVariable, extractNumericLiteral, extractQuotedStringToken,
 } from '@/core/utils/expression';
-import { last } from 'lodash-es';
-import { DateTime } from 'luxon';
 
-export { extractNumericLiteral } from '@/core/utils/expression';
+export {
+  extractNumericLiteral,
+} from '@/core/utils/expression';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {
@@ -228,7 +236,9 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
 
   // We prioritize more specific formats, like time-only & date-only before ISO-8601
   for (const format of SUPPORTED_TIME_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       return dt.toISOTime({
         suppressMilliseconds: true,
@@ -238,14 +248,18 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   }
 
   for (const format of SUPPORTED_DATE_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       return dt.toISODate();
     }
   }
 
   for (const format of SUPPORTED_DATETIME_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       return dt.toISO({
         suppressMilliseconds: true,
@@ -254,7 +268,9 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
     }
   }
 
-  const isoDate = DateTime.fromISO(extractedValue, { setZone: true });
+  const isoDate = DateTime.fromISO(extractedValue, {
+    setZone: true,
+  });
   if (isoDate.isValid) {
     return isoDate.toISO({
       suppressMilliseconds: true,

@@ -1,9 +1,16 @@
 import {
   basename, dirname, extname, isAbsolute, join, normalize, relative, resolve,
 } from 'pathe';
-import type { Internable } from './internable';
+import {
+  DBML_EXT,
+} from '@/constants';
+import type {
+  Internable,
+} from './internable';
 
-const DBML_EXT = '.dbml';
+// Matches a Windows drive-letter prefix after normalization (e.g. "C:/").
+// Used only in fromUri/toUri where URL parsing adds/needs an extra leading slash.
+const WIN_DRIVE_RE = /^[a-zA-Z]:\//;
 
 declare const __filepathIdBrand: unique symbol;
 export type FilepathId = string & { [__filepathIdBrand]: true };
@@ -12,10 +19,11 @@ export class Filepath implements Internable<FilepathId> {
   private readonly path: string;
 
   constructor (absolutePath: string) {
-    if (!isAbsolute(absolutePath)) {
+    const normalized = normalize(absolutePath);
+    if (!isAbsolute(normalized)) {
       throw new Error(`FilePath requires an absolute path, got: "${absolutePath}"`);
     }
-    this.path = normalize(absolutePath);
+    this.path = normalized;
   }
 
   intern (): FilepathId {
@@ -31,19 +39,13 @@ export class Filepath implements Internable<FilepathId> {
   }
 
   static fromUri (uri: string): Filepath {
-    // Parse file:// URIs to absolute paths
-    // file:///C:/Users/... (Windows) or file:///home/user/... (Unix)
-    let path = uri;
     if (uri.startsWith('file://')) {
-      path = uri.slice(7); // Remove 'file://'
-      // On Windows, file:///C:/path becomes C:/path after removing file://
-      // On Unix, file:///path stays /path
-      if (path.startsWith('/') && /^\/[a-zA-Z]:/.test(path)) {
-        // Windows: file:///C:/path → C:/path (remove leading /)
-        path = path.slice(1);
-      }
+      let p = decodeURIComponent(new URL(uri).pathname);
+      // Windows: URL gives /C:/path - strip the leading slash
+      if (/^\/[a-zA-Z]:[\\/]/.test(p)) p = p.slice(1);
+      return new Filepath(normalize(p));
     }
-    return new Filepath(resolve(path));
+    return new Filepath(normalize(uri));
   }
 
   get absolute (): string {
@@ -90,22 +92,16 @@ export class Filepath implements Internable<FilepathId> {
   }
 
   toUri (): string {
-    // Convert absolute path to file:// URI
-    // C:/Users/... → file:///C:/Users/...
-    // /home/user/... → file:///home/user/...
-    if (process.platform === 'win32') {
-      return `file:///${this.path.replace(/\\/g, '/')}`;
-    }
-    return `file://${this.path}`;
+    // Use URL to handle percent-encoding of spaces and non-ASCII characters.
+    // Windows: C:/path needs an extra leading slash -> file:///C:/path
+    const prefix = WIN_DRIVE_RE.test(this.path) ? 'file:///' : 'file://';
+    return new URL(prefix + this.path).href;
   }
 
   static isRelative (p: string): boolean {
-    return !isAbsolute(p);
+    return !isAbsolute(normalize(p));
   }
 }
-
-// Virtual filepath used when no real filesystem path is available (single-file / in-memory mode)
-export const DEFAULT_FILEPATH = new Filepath('/main.dbml');
 
 // Resolve the relativePath
 // based on the currentFilepath

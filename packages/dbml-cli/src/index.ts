@@ -1,5 +1,5 @@
 import {
-  dbml2sql, sql2dbml, db2dbml,
+  db2dbml, dbml2sql, sql2dbml,
 } from './cli';
 
 export {

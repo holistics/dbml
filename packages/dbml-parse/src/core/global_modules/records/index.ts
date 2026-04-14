@@ -1,35 +1,45 @@
+import type Compiler from '@/compiler/index';
 import {
-  isElementNode,
-  isExpressionAVariableNode,
-  isAccessExpression,
-  destructureMemberAccessExpression,
-  extractVarNameFromPrimaryVariable,
-} from '@/core/utils/expression';
-import { ElementKind } from '@/core/types/keywords';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH, type PassThrough, UNHANDLED,
+} from '@/core/types/module';
 import {
   CallExpressionNode,
   ElementDeclarationNode,
   InfixExpressionNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import type {
+  TableRecord,
+} from '@/core/types/schemaJson';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import type { GlobalModule } from '../types';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/constants';
-import Report from '@/core/types/report';
-import type Compiler from '@/compiler/index';
+  destructureMemberAccessExpression,
+  extractVarNameFromPrimaryVariable,
+  isAccessExpression,
+  isElementNode,
+  isExpressionAVariableNode,
+} from '@/core/utils/expression';
+import type {
+  GlobalModule,
+} from '../types';
 import {
-  lookupMember, lookupInDefaultSchema, nodeRefereeOfLeftExpression, shouldInterpretNode,
+  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import type { TableRecord } from '@/core/types/schemaJson';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
 
@@ -127,7 +137,9 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
       compiler,
       globalSymbol,
       name,
-      { kinds: [SymbolKind.Table, SymbolKind.Schema] },
+      {
+        kinds: [SymbolKind.Table, SymbolKind.Schema],
+      },
     );
   }
 
@@ -137,7 +149,9 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
       compiler,
       globalSymbol,
       name,
-      { kinds: [SymbolKind.Table, SymbolKind.Schema] },
+      {
+        kinds: [SymbolKind.Table, SymbolKind.Schema],
+      },
     );
   }
 
@@ -146,7 +160,9 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
       compiler,
       left,
       name,
-      { kinds: [SymbolKind.Table, SymbolKind.Schema] },
+      {
+        kinds: [SymbolKind.Table, SymbolKind.Schema],
+      },
     );
   }
 
@@ -164,7 +180,9 @@ function nodeRefereeOfRecordsColumn (compiler: Compiler, tableSymbol: NodeSymbol
     compiler,
     tableSymbol,
     name,
-    { kinds: [SymbolKind.Column] },
+    {
+      kinds: [SymbolKind.Column],
+    },
   );
 }
 
@@ -183,10 +201,14 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, { kinds: [SymbolKind.Enum, SymbolKind.Schema] });
+      return lookupMember(compiler, left, name, {
+        kinds: [SymbolKind.Enum, SymbolKind.Schema],
+      });
     }
     if (left.isKind(SymbolKind.Enum)) {
-      return lookupMember(compiler, left, name, { kinds: [SymbolKind.EnumField] });
+      return lookupMember(compiler, left, name, {
+        kinds: [SymbolKind.EnumField],
+      });
     }
     return new Report(undefined);
   }
@@ -196,7 +218,9 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
   if (parent.leftExpression === node) {
     // If our parent is also the left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return lookupMember(compiler, globalSymbol, name, { kinds: [SymbolKind.Schema] });
+      return lookupMember(compiler, globalSymbol, name, {
+        kinds: [SymbolKind.Schema],
+      });
     }
     // Look up as Enum in default (public) schema first, then fall back to program scope
     const symbolResult = lookupInDefaultSchema(
@@ -230,7 +254,9 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
       compiler,
       globalSymbol,
       name,
-      { kinds: [SymbolKind.Enum] },
+      {
+        kinds: [SymbolKind.Enum],
+      },
     );
   }
 

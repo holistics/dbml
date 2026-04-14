@@ -1,4 +1,0 @@
-Table ecommerce.users as EU {
-  id int [pk]
-  name varchar
-}

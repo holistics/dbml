@@ -1,17 +1,21 @@
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  PASS_THROUGH, type PassThrough,
+} from '@/core/types/module';
+import {
   ElementDeclarationNode, SyntaxNode,
 } from '@/core/types/nodes';
-import type { LocalModule } from '../types';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/constants';
 import Report from '@/core/types/report';
-import type Compiler from '@/compiler';
+import {
+  Settings,
+} from '@/core/utils/validate';
+import type {
+  LocalModule,
+} from '../types';
 import CustomValidator from './validate';
-import { Settings } from '@/core/utils/validate';
 
 function isCustomElement (node: SyntaxNode): node is ElementDeclarationNode {
   return node instanceof ElementDeclarationNode && !!node.type?.value;

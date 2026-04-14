@@ -6,6 +6,9 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -14,9 +17,12 @@ import {
   ProgramNode,
   SyntaxNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
-import { ElementKind } from '@/core/types/keywords';
+import {
+  isExpressionAQuotedString,
+} from '@/core/utils/expression';
+import {
+  aggregateSettingList,
+} from '@/core/utils/validate';
 
 export default class ChecksValidator {
   private compiler: Compiler;

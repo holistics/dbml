@@ -1,22 +1,28 @@
-import {
-  importer, CompilerError,
-} from '@dbml/core';
-import type { ImportFormat } from '@dbml/core';
-import figures from 'figures';
-import chalk from 'chalk';
 import path from 'path';
-import config from './config';
 import {
-  validateInputFilePaths,
-  resolvePaths,
-  getFormatOpt,
-  generate,
-} from './utils';
-import { validateFilePlugin } from './validatePlugins/validatePlugins';
+  CompilerError, importer,
+} from '@dbml/core';
+import type {
+  ImportFormat,
+} from '@dbml/core';
+import chalk from 'chalk';
+import figures from 'figures';
+import {
+  SyntaxError,
+} from '../errors';
+import logger from '../helpers/logger';
+import config from './config';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
-import logger from '../helpers/logger';
-import { SyntaxError } from '../errors';
+import {
+  generate,
+  getFormatOpt,
+  resolvePaths,
+  validateInputFilePaths,
+} from './utils';
+import {
+  validateFilePlugin,
+} from './validatePlugins/validatePlugins';
 
 interface Program {
   args: string[];
@@ -40,7 +46,9 @@ export default async function importHandler (program: Program) {
     }
   } catch (error) {
     if (error instanceof CompilerError) {
-      logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath ?? '', diag)).map(({ message }) => message).join('\n    ')}`);
+      logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath ?? '', diag)).map(({
+        message,
+      }) => message).join('\n    ')}`);
       return;
     }
     throw error;

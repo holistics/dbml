@@ -1,13 +1,22 @@
 import {
-  DEFAULT_SCHEMA_NAME, UNHANDLED,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import { splitQualifiedIdentifier } from '../utils';
-import type Compiler from '../../index';
+import {
+  lookupMember,
+} from '@/core/global_modules/utils';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import { lookupMember } from '@/core/global_modules/utils';
-import { Filepath } from '@/core/types/filepath';
+import type Compiler from '../../index';
+import {
+  splitQualifiedIdentifier,
+} from '../utils';
 
 export type TableNameInput = string | { schema?: string;
   table: string; };

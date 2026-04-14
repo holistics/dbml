@@ -1,6 +1,0 @@
-// imports users under the alias 'u'
-use { table users as u } from './base.dbml'
-
-TableGroup group_a {
-  u
-}

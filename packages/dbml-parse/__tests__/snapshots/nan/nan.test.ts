@@ -1,4 +1,6 @@
-import { readFileSync } from 'node:fs';
+import {
+  readFileSync,
+} from 'node:fs';
 import path from 'node:path';
 import {
   describe, expect, it,
@@ -9,7 +11,6 @@ import {
 import Compiler from '@/compiler';
 import type { Database } from '@/core/types/schemaJson';
 import type Report from '@/core/types/report';
-import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
   const value = report.getValue();
@@ -29,8 +30,8 @@ describe('[snapshot] nan', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, program);
-    const report = compiler.parse._(DEFAULT_ENTRY);
+    compiler.setSource(program);
+    const report = compiler.parse._();
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

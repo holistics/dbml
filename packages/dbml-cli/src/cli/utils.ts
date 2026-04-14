@@ -1,7 +1,12 @@
-import path from 'path';
 import fs from 'fs';
-import { type ExportFormat } from '@dbml/core';
-import { reduce } from 'lodash-es';
+import path from 'path';
+import {
+  CompilerError,
+  type ExportFormat,
+} from '@dbml/core';
+import {
+  reduce,
+} from 'lodash-es';
 
 interface OutputPlugin {
   write(content: string): void;
@@ -21,8 +26,8 @@ function resolvePaths (paths: string | string[]): string | string[] {
   return paths.map((_path) => path.resolve(process.cwd(), _path));
 }
 
-function validateInputFilePaths (paths: string[], validatePlugin: (p: string) => void): void {
-  paths.forEach((_path) => validatePlugin(_path));
+function validateInputFilePaths (paths: string[], validatePlugin: (_path: string) => void) {
+  return paths.every((_path) => validatePlugin(_path));
 }
 
 function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
@@ -41,10 +46,10 @@ function getFormatOpt (opts: Record<string, unknown>): ExportFormat {
     }
   });
 
-  return format;
+  return format as ExportFormat;
 }
 
-function getConnectionOpt (args: string[]): { connection: string; databaseType: string } {
+function getConnectionOpt (args: string[]): ConnectionOpt {
   const supportedDatabases = ['postgres', 'mysql', 'mssql', 'snowflake', 'bigquery', 'oracle'];
   const defaultConnectionOpt: ConnectionOpt = {
     connection: args[0],
@@ -82,10 +87,13 @@ function generate (
     try {
       const content = transform(source);
       outputPlugin.write(content);
-    } catch (e: any) {
-      if (e && typeof e.map === 'function') {
-        throw e.map((diag: any) => ({
-          ...diag, message: diag.message, filepath: path.basename(_path), stack: diag.stack,
+    } catch (e) {
+      if (e instanceof CompilerError) {
+        throw e.map((diag) => ({
+          ...diag,
+          message: diag.message,
+          filepath: path.basename(_path),
+          stack: diag.stack,
         }));
       }
       throw e;

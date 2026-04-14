@@ -1,18 +1,20 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  isSimpleName, isValidColor, aggregateSettingList, Settings,
-} from '@/core/utils/validate';
-import Report from '@/core/types/report';
-import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import {
   destructureComplexVariable, isExpressionAQuotedString,
 } from '@/core/utils/expression';
+import {
+  Settings, aggregateSettingList, isSimpleName, isValidColor,
+} from '@/core/utils/validate';
 
 export default class TableGroupValidator {
   private declarationNode: ElementDeclarationNode;

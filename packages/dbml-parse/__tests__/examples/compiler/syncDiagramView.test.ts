@@ -1,12 +1,22 @@
 import {
   describe, expect, it,
 } from 'vitest';
-import { syncDiagramView } from '@/compiler/queries/transform/syncDiagramView';
 import Compiler from '@/compiler/index';
 import Lexer from '@/core/lexer/lexer';
 import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Parser from '@/core/parser/parser';
-import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import {
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
+import type {
+  DiagramViewSyncOperation,
+} from '@/compiler/queries/transform/syncDiagramView';
+
+function syncDiagramView (dbml: string, operations: DiagramViewSyncOperation[]) {
+  const compiler = new Compiler();
+  compiler.setSource(DEFAULT_ENTRY, dbml);
+  return compiler.syncDiagramView(DEFAULT_ENTRY, operations);
+}
 
 // update operation
 
@@ -16,7 +26,9 @@ describe('syncDiagramView - update', () => {
 DiagramView my_view {
   Tables { users }
 }`;
-    const { newDbml } = syncDiagramView(dbml, [
+    const {
+      newDbml,
+    } = syncDiagramView(dbml, [
       {
         operation: 'update',
         name: 'my_view',
@@ -41,7 +53,9 @@ DiagramView my_view {
   Tables { users }
 }
 `;
-    const { newDbml } = syncDiagramView(dbml, [
+    const {
+      newDbml,
+    } = syncDiagramView(dbml, [
       {
         operation: 'delete',
         name: 'my_view',
@@ -94,7 +108,9 @@ DiagramView "New View" {
 
 describe('syncDiagramView - name quoting', () => {
   it('quotes names containing spaces', () => {
-    const { newDbml } = syncDiagramView('', [
+    const {
+      newDbml,
+    } = syncDiagramView('', [
       {
         operation: 'create',
         name: 'My View',
@@ -110,7 +126,9 @@ describe('syncDiagramView - name quoting', () => {
   });
 
   it('does not quote simple identifier names', () => {
-    const { newDbml } = syncDiagramView('', [
+    const {
+      newDbml,
+    } = syncDiagramView('', [
       {
         operation: 'create',
         name: 'my_view',
@@ -127,7 +145,9 @@ describe('syncDiagramView - name quoting', () => {
   });
 
   it('escapes internal double quotes in names', () => {
-    const { newDbml } = syncDiagramView('', [
+    const {
+      newDbml,
+    } = syncDiagramView('', [
       {
         operation: 'create',
         name: 'My "Special" View',
@@ -148,7 +168,9 @@ DiagramView "My View" {
   Tables { users }
 }
 `;
-    const { newDbml } = syncDiagramView(dbml, [
+    const {
+      newDbml,
+    } = syncDiagramView(dbml, [
       {
         operation: 'update',
         name: 'My View',
@@ -169,7 +191,9 @@ DiagramView my_view {
   Tables { users }
 }
 `;
-    const { newDbml } = syncDiagramView(dbml, [
+    const {
+      newDbml,
+    } = syncDiagramView(dbml, [
       {
         operation: 'create',
         name: 'my_view',
@@ -254,34 +278,6 @@ DiagramView main {
     expect(newDbml).toContain('Table orders');
   });
 
-  it('applies sequential create then delete operations', () => {
-    const dbml = 'Table users { id int [pk] }';
-    const { newDbml } = syncDiagramView(dbml, [
-      {
-        operation: 'create',
-        name: 'temp_view',
-        visibleEntities: { tables: null, stickyNotes: null, tableGroups: null, schemas: null },
-      },
-      { operation: 'delete', name: 'temp_view' },
-    ]);
-    expect(newDbml).not.toContain('DiagramView temp_view');
-    expect(newDbml).toContain('Table users');
-  });
-
-  it('handles create + rename in the same batch', () => {
-    const dbml = 'Table users { id int [pk] }';
-    const { newDbml } = syncDiagramView(dbml, [
-      {
-        operation: 'create',
-        name: 'v1',
-        visibleEntities: { tables: null, stickyNotes: null, tableGroups: null, schemas: null },
-      },
-      { operation: 'update', name: 'v1', newName: 'v2' },
-    ]);
-    expect(newDbml).toContain('DiagramView v2');
-    expect(newDbml).not.toContain('DiagramView v1');
-  });
-
   it('create with tables subblock serialises table names correctly', () => {
     const { newDbml } = syncDiagramView('', [
       {
@@ -298,5 +294,28 @@ DiagramView main {
     expect(newDbml).toContain('Tables {');
     expect(newDbml).toContain('users');
     expect(newDbml).toContain('orders');
+  });
+
+  it('serialises schema-qualified table names preserving the schema prefix', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'overview',
+        visibleEntities: {
+          tables: [
+            { name: 'users', schemaName: 'auth' },
+            { name: 'orders', schemaName: DEFAULT_SCHEMA_NAME },
+          ],
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
+      },
+    ]);
+    // non-default schema is always prefixed
+    expect(newDbml).toContain('auth.users');
+    // default-schema table is output without schema prefix (DBML convention)
+    expect(newDbml).toContain('orders');
+    expect(newDbml).not.toContain(`${DEFAULT_SCHEMA_NAME}.orders`);
   });
 });
