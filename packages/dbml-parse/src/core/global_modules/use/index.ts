@@ -112,6 +112,11 @@ export const useModule: GlobalModule = {
     );
   },
 
+  symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
+    if (!(symbol instanceof UseSymbol)) return Report.create(PASS_THROUGH);
+    return compiler.symbolMembers(symbol.originalSymbol);
+  },
+
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isUseDeclaration(node)) {
       const errors: CompileError[] = [];

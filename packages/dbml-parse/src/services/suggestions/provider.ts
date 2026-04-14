@@ -32,10 +32,7 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  type NodeSymbol,
-} from '@/core/types/symbol';
-import {
-  SymbolKind,
+  type NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
   SyntaxToken, SyntaxTokenKind,
