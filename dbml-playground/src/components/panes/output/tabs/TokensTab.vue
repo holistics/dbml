@@ -25,7 +25,7 @@
       >
         <span class="text-gray-400 w-7 text-right flex-shrink-0 text-xs">{{ i }}</span>
         <span class="text-blue-500 min-w-[80px] flex-shrink-0 hover:underline">{{ tok.kind }}</span>
-        <span class="text-green-700 truncate flex-1">{{ tok.value !== '' ? tok.value : '·' }}</span>
+        <span class="text-green-700 truncate flex-1">{{ rawTexts[i] !== '' ? rawTexts[i] : '·' }}</span>
         <span class="text-gray-400 text-xs flex-shrink-0">{{ tok.startPos.line + 1 }}:{{ tok.startPos.column + 1 }}</span>
       </div>
     </div>
@@ -52,7 +52,21 @@ const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('d
 
 const scrollEl = ref<HTMLElement | null>(null);
 const rowEls: HTMLElement[] = [];
-let decorations: monaco.editor.IEditorDecorationsCollection | null = null;
+
+// Raw text from the editor model (not tok.value which is normalized)
+const rawTexts = ref<string[]>([]);
+
+function updateRawTexts () {
+  const model = getEditor?.()?.getModel();
+  if (!model) { rawTexts.value = props.tokens.map((t) => t.value); return; }
+  rawTexts.value = props.tokens.map((t) => model.getValueInRange(new monaco.Range(
+    t.startPos.line + 1, t.startPos.column + 1,
+    t.endPos.line + 1, t.endPos.column + 1,
+  )));
+}
+
+watch(() => props.tokens, updateRawTexts);
+
 const activeIndex = ref(-1);
 
 function setRowEl (i: number, el: HTMLElement | null) {
@@ -91,6 +105,7 @@ let cursorListener: monaco.IDisposable | null = null;
 function attachCursorListener (editor: monaco.editor.IStandaloneCodeEditor) {
   cursorListener?.dispose();
   updateActiveIndex();
+  updateRawTexts();
   cursorListener = editor.onDidChangeCursorPosition(() => updateActiveIndex());
 }
 
@@ -109,29 +124,6 @@ onUnmounted(() => {
   cursorListener = null;
 });
 
-function updateDecorations () {
-  const editor = getEditor?.();
-  if (!editor) return;
-  decorations?.clear();
-  if (props.tokens.length === 0) return;
-  decorations = editor.createDecorationsCollection(
-    props.tokens.map((t) => ({
-      range: new monaco.Range(
-        t.startPos.line + 1, t.startPos.column + 1,
-        t.endPos.line + 1, t.endPos.column + 2,
-      ),
-      options: {
-        inlineClassName: 'token-box-decoration',
-      },
-    })),
-  );
-}
-
-watch(() => props.tokens, updateDecorations, {
-  immediate: true,
-});
-onUnmounted(() => { decorations?.clear(); decorations = null; });
-
 function navigateTo (tok: SyntaxToken) {
   const editor = getEditor?.();
   if (!editor) return;
@@ -139,12 +131,12 @@ function navigateTo (tok: SyntaxToken) {
     startLineNumber: tok.startPos.line + 1,
     startColumn: tok.startPos.column + 1,
     endLineNumber: tok.endPos.line + 1,
-    endColumn: tok.endPos.column + 2,
+    endColumn: tok.endPos.column + 1,
   };
   // Reverse anchor so cursor lands at token start — activeIndex uses cursor pos
   editor.setSelection({
     selectionStartLineNumber: tok.endPos.line + 1,
-    selectionStartColumn: tok.endPos.column + 2,
+    selectionStartColumn: tok.endPos.column + 1,
     positionLineNumber: tok.startPos.line + 1,
     positionColumn: tok.startPos.column + 1,
   });
@@ -162,12 +154,3 @@ defineExpose({
   scrollToToken,
 });
 </script>
-
-<style>
-.token-box-decoration {
-  outline: 1px solid rgba(99, 102, 241, 0.3);
-  outline-offset: -1px;
-  border-radius: 2px;
-  background: rgba(99, 102, 241, 0.05);
-}
-</style>

@@ -43,6 +43,34 @@
           <span class="text-xs">{{ tab.label }}</span>
         </template>
       </VTooltip>
+
+      <VDropdown
+        :distance="6"
+        placement="bottom-end"
+        :arrow-padding="0"
+        no-auto-focus
+        class="ml-auto flex-shrink-0"
+      >
+        <VTooltip placement="bottom" :distance="6">
+          <button class="p-1.5 rounded transition-colors cursor-pointer text-gray-500 hover:text-gray-900">
+            <Cog6ToothIcon class="w-3.5 h-3.5" />
+          </button>
+          <template #popper>
+            <span class="text-xs">View settings</span>
+          </template>
+        </VTooltip>
+        <template #popper>
+          <div class="py-1 min-w-[10rem]">
+            <button
+              class="flex items-center gap-2 w-full px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer"
+              @click="showDecorations = !showDecorations"
+            >
+              <component :is="showDecorations ? EyeIcon : EyeSlashIcon" class="w-3.5 h-3.5 flex-shrink-0" />
+              <span>{{ showDecorations ? 'Hide highlights' : 'Show highlights' }}</span>
+            </button>
+          </div>
+        </template>
+      </VDropdown>
     </div>
 
     <div class="flex-1 overflow-hidden">
@@ -81,7 +109,7 @@
 
 <script setup lang="ts">
 import {
-  ref, computed, inject, onMounted, onBeforeUnmount, nextTick, type Component,
+  ref, computed, watch, inject, onMounted, onBeforeUnmount, nextTick, type Component, type Ref,
 } from 'vue';
 import {
   RectangleGroupIcon,
@@ -91,6 +119,9 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   ExclamationCircleIcon,
+  Cog6ToothIcon,
+  EyeIcon,
+  EyeSlashIcon,
 } from '@heroicons/vue/24/outline';
 import TokensTab from './tabs/TokensTab.vue';
 import AstTab from './tabs/AstTab.vue';
@@ -105,6 +136,7 @@ import type {
 } from './ast/RawAstTreeNode.vue';
 import type {
   DeclPos,
+  SymbolInfo,
 } from '@/stores/parserStore';
 import {
   useParser,
@@ -176,6 +208,114 @@ const activeTab = computed({
   get: () => user.prefs.activeOutputTab,
   set: (v: OutputTabId) => { user.set('activeOutputTab', v); },
 });
+const showDecorations = ref(true);
+const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
+let editorDecorations: monaco.editor.IEditorDecorationsCollection | null = null;
+
+// --- Per-tab range extraction ---
+
+const AST_SKIP_KEYS = new Set(['parentNode', 'parent', 'symbol', 'referee', 'source', 'filepath']);
+
+function collectAstRanges (ast: unknown): monaco.IRange[] {
+  const ranges: monaco.IRange[] = [];
+  const visited = new WeakSet<object>();
+  function walk (node: unknown) {
+    if (!node || typeof node !== 'object') return;
+    if (visited.has(node)) return;
+    visited.add(node);
+    if (Array.isArray(node)) { node.forEach(walk); return; }
+    const obj = node as Record<string, unknown>;
+    const sp = obj.startPos as { line?: number; column?: number } | null | undefined;
+    const ep = obj.endPos as { line?: number; column?: number } | null | undefined;
+    if (sp && ep && typeof sp.line === 'number' && !Number.isNaN(sp.line)
+      && typeof ep.line === 'number' && !Number.isNaN(ep.line)) {
+      ranges.push(new monaco.Range(
+        sp.line + 1, (sp.column ?? 0) + 1,
+        ep.line + 1, (ep.column ?? 0) + 1,
+      ));
+    }
+    for (const [key, val] of Object.entries(obj)) {
+      if (AST_SKIP_KEYS.has(key)) continue;
+      walk(val);
+    }
+  }
+  walk(ast);
+  return ranges;
+}
+
+function collectSymbolRanges (symbols: SymbolInfo[]): monaco.IRange[] {
+  const ranges: monaco.IRange[] = [];
+  function walk (sym: SymbolInfo) {
+    if (sym.declPos) {
+      ranges.push(new monaco.Range(
+        sym.declPos.startLine, sym.declPos.startCol,
+        sym.declPos.endLine, sym.declPos.endCol,
+      ));
+    }
+    sym.members.forEach(walk);
+  }
+  symbols.forEach(walk);
+  return ranges;
+}
+
+function collectDatabaseRanges (): monaco.IRange[] {
+  const db = parser.database;
+  if (!db) return [];
+  const ranges: monaco.IRange[] = [];
+  function addToken (tp: { start: { line: number; column: number }; end: { line: number; column: number } } | undefined) {
+    if (!tp) return;
+    ranges.push(new monaco.Range(tp.start.line, tp.start.column, tp.end.line, tp.end.column));
+  }
+  for (const t of db.tables) { addToken(t.token); }
+  for (const r of db.refs) { addToken(r.token); }
+  for (const e of db.enums) { addToken(e.token); }
+  for (const n of db.notes) { addToken(n.token); }
+  for (const tg of db.tableGroups) { addToken(tg.token); }
+  for (const tp of db.tablePartials ?? []) { addToken((tp as { token?: { start: { line: number; column: number }; end: { line: number; column: number } } }).token); }
+  return ranges;
+}
+
+const TAB_DECOR_CLASS: Partial<Record<string, string>> = {
+  [OutputTabId.Tokens]: 'hl-tokens',
+  [OutputTabId.Nodes]: 'hl-nodes',
+  [OutputTabId.Symbols]: 'hl-symbols',
+  [OutputTabId.Database]: 'hl-database',
+};
+
+function updateEditorDecorations () {
+  const editor = dbmlEditorRef?.value;
+  editorDecorations?.clear();
+  if (!editor || !showDecorations.value) return;
+  const cls = TAB_DECOR_CLASS[activeTab.value];
+  if (!cls) return;
+
+  let ranges: monaco.IRange[] = [];
+  if (activeTab.value === OutputTabId.Tokens) {
+    ranges = parser.tokens.map((t) => new monaco.Range(
+      t.startPos.line + 1, t.startPos.column + 1,
+      t.endPos.line + 1, t.endPos.column + 1,
+    ));
+  } else if (activeTab.value === OutputTabId.Nodes) {
+    ranges = collectAstRanges(parser.ast);
+  } else if (activeTab.value === OutputTabId.Symbols) {
+    ranges = collectSymbolRanges(parser.symbols);
+  } else if (activeTab.value === OutputTabId.Database) {
+    ranges = collectDatabaseRanges();
+  }
+  if (ranges.length === 0) return;
+  editorDecorations = editor.createDecorationsCollection(
+    ranges.map((range) => ({ range, options: { inlineClassName: cls } })),
+  );
+}
+
+watch(
+  [activeTab, showDecorations, () => parser.tokens, () => parser.ast, () => parser.symbols, () => parser.database, () => dbmlEditorRef?.value],
+  updateEditorDecorations,
+  { immediate: true },
+);
+
+onBeforeUnmount(() => { editorDecorations?.clear(); editorDecorations = null; });
+
 const tokensTabRef = ref<InstanceType<typeof TokensTab> | null>(null);
 const tabBarRef = ref<HTMLElement | null>(null);
 const iconsOnly = ref(false);
@@ -267,3 +407,30 @@ defineExpose({
   scrollToToken: (i: number) => tokensTabRef.value?.scrollToToken(i),
 });
 </script>
+
+<style>
+.hl-tokens {
+  outline: 1px solid rgba(99, 102, 241, 0.35);
+  outline-offset: -1px;
+  border-radius: 2px;
+  background: rgba(99, 102, 241, 0.06);
+}
+.hl-nodes {
+  outline: 1px solid rgba(59, 130, 246, 0.35);
+  outline-offset: -1px;
+  border-radius: 2px;
+  background: rgba(59, 130, 246, 0.06);
+}
+.hl-symbols {
+  outline: 1px solid rgba(245, 158, 11, 0.4);
+  outline-offset: -1px;
+  border-radius: 2px;
+  background: rgba(245, 158, 11, 0.07);
+}
+.hl-database {
+  outline: 1px solid rgba(16, 185, 129, 0.4);
+  outline-offset: -1px;
+  border-radius: 2px;
+  background: rgba(16, 185, 129, 0.07);
+}
+</style>
