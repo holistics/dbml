@@ -46,13 +46,15 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@dbml/parse": "^7.0.0",
     "antlr4": "^4.13.1",
     "lodash": "^4.17.15",
     "lodash-es": "^4.17.15",
     "luxon": "^3.4.4",
     "parsimmon": "^1.13.0",
     "pluralize": "^8.0.0"
+  },
+  "peerDependencies": {
+    "@dbml/parse": "^7.0.0"
   },
   "devDependencies": {
     "bluebird": "^3.5.5"
