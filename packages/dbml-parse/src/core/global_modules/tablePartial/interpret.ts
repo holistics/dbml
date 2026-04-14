@@ -81,7 +81,11 @@ export class TablePartialInterpreter {
     this.declarationNode = this.node as ElementDeclarationNode;
     this.tablePartial.token = getTokenPosition(this.declarationNode);
 
-    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretSettingList(this.declarationNode.attributeList), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretSettingList(this.declarationNode.attributeList),
+      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
+    ];
 
     // Handle cases where there are multiple primary columns
     // all the pk field of the columns are reset to false
@@ -148,7 +152,9 @@ export class TablePartialInterpreter {
       ? extractColor(firstHeaderColor.value as any)
       : undefined;
 
-    const [noteNode] = settingMap[SettingName.Note] || [];
+    const [
+      noteNode,
+    ] = settingMap[SettingName.Note] || [];
     this.tablePartial.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value) ? normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!) : '',
       token: getTokenPosition(noteNode),
@@ -158,8 +164,14 @@ export class TablePartialInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.interpretFields(fields as FunctionApplicationNode[]), ...this.interpretSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.interpretFields(fields as FunctionApplicationNode[]),
+      ...this.interpretSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -275,20 +287,31 @@ export class TablePartialInterpreter {
 
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 2) {
-          const [table, columnName] = fragments;
+          const [
+            table,
+            columnName,
+          ] = fragments;
           inlineRef = {
             schemaName: null,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else if (fragments.length === 3) {
-          const [schema, table, columnName] = fragments;
+          const [
+            schema,
+            table,
+            columnName,
+          ] = fragments;
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
@@ -299,13 +322,19 @@ export class TablePartialInterpreter {
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         }
 
-        return inlineRef ? [inlineRef] : [];
+        return inlineRef
+          ? [
+              inlineRef,
+            ]
+          : [];
       });
 
       const checkNodes = settingMap[SettingName.Check] || [];
@@ -400,7 +429,10 @@ export class TablePartialInterpreter {
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);
-      const args = [indexField.callee!, ...indexField.args];
+      const args = [
+        indexField.callee!,
+        ...indexField.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap[SettingName.PK]?.length;

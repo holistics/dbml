@@ -85,7 +85,9 @@ export function lookupTableSymbol (
       astSymbol,
       table,
       {
-        kinds: [SymbolKind.Table],
+        kinds: [
+          SymbolKind.Table,
+        ],
         ignoreNotFound: true,
       },
     );
@@ -97,7 +99,9 @@ export function lookupTableSymbol (
     astSymbol,
     schema,
     {
-      kinds: [SymbolKind.Schema],
+      kinds: [
+        SymbolKind.Schema,
+      ],
       ignoreNotFound: true,
     },
   ).getValue();
@@ -108,7 +112,9 @@ export function lookupTableSymbol (
     schemaSymbol,
     table,
     {
-      kinds: [SymbolKind.Table],
+      kinds: [
+        SymbolKind.Table,
+      ],
       ignoreNotFound: true,
     },
   );

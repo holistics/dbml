@@ -53,12 +53,20 @@ export default class IndexesBinder {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.bindFields([body]);
+      return this.bindFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
-    return [...this.bindFields(fields as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.bindFields(fields as FunctionApplicationNode[]),
+      ...this.bindSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -72,7 +80,10 @@ export default class IndexesBinder {
         ?.join('.')
         || '<unnamed>';
 
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       const bindees = args.flatMap(scanNonListNodeForBinding)
         .flatMap((bindee) => {
           if (bindee.variables.length + bindee.tupleElements.length > 1) {

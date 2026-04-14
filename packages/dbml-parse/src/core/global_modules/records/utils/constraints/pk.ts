@@ -30,7 +30,10 @@ export function validatePrimaryKey (record: TableRecord, mergedTable: Table): Co
   const pkConstraints = collectPkConstraints(mergedTable);
   const columnIndex = buildColumnIndex(record);
   const availableColumns = collectAvailableColumns(record);
-  const columnMap = new Map(mergedTable.fields.map((f) => [f.name, f]));
+  const columnMap = new Map(mergedTable.fields.map((f) => [
+    f.name,
+    f,
+  ]));
 
   return flatMap(pkConstraints, (pkColumns) =>
     validatePkConstraint(pkColumns, record, availableColumns, columnMap, columnIndex, mergedTable),
@@ -63,7 +66,10 @@ function validatePkConstraint (
 
   // Partition rows into those with NULL and those without
   const rowIndices = record.values.map((_, i) => i);
-  const [rowsWithNull, rowsWithoutNull] = partition(rowIndices, (i) =>
+  const [
+    rowsWithNull,
+    rowsWithoutNull,
+  ] = partition(rowIndices, (i) =>
     hasNullWithoutDefaultInKey(record.values[i], pkColumns, columnIndex, pkColumnFields),
   );
 
@@ -82,7 +88,10 @@ function validatePkConstraint (
     mergedTable,
   );
 
-  return [...nullErrors, ...duplicateErrors];
+  return [
+    ...nullErrors,
+    ...duplicateErrors,
+  ];
 }
 
 function createNullErrors (
@@ -142,7 +151,12 @@ function findDuplicateErrors (
 }
 
 function collectPkConstraints (mergedTable: Table): string[][] {
-  return [...mergedTable.fields.filter((field) => field.pk).map((field) => [field.name]), ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value))];
+  return [
+    ...mergedTable.fields.filter((field) => field.pk).map((field) => [
+      field.name,
+    ]),
+    ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value)),
+  ];
 }
 
 function collectAvailableColumns (record: TableRecord): Set<string> {

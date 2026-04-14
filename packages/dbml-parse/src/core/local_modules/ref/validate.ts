@@ -45,7 +45,9 @@ export default class RefValidator {
     if (this.declarationNode.parent instanceof ProgramNode) {
       return [];
     }
-    return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level', this.declarationNode)];
+    return [
+      new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level', this.declarationNode),
+    ];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
@@ -54,10 +56,14 @@ export default class RefValidator {
     }
 
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Ref name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Ref name', nameNode),
+      ];
     }
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode),
+      ];
     }
 
     return [];
@@ -65,7 +71,9 @@ export default class RefValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -73,7 +81,9 @@ export default class RefValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -84,16 +94,26 @@ export default class RefValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.validateFields([body]);
+      return this.validateFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode),
+      ];
     }
 
     const errors: CompileError[] = [];
@@ -129,7 +149,9 @@ export default class RefValidator {
         errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee));
       }
 
-      const args = [...field.args];
+      const args = [
+        ...field.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         const errs = this.validateFieldSettings(last(args) as ListExpressionNode);
         errors.push(...errs);
@@ -201,7 +223,10 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
   const settingMap = aggReport.getValue();
   const clean: Settings = {};
 
-  for (const [name, attrs] of Object.entries(settingMap)) {
+  for (const [
+    name,
+    attrs,
+  ] of Object.entries(settingMap)) {
     switch (name) {
       case SettingName.Delete:
       case SettingName.Update:

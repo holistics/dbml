@@ -27,7 +27,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       uri,
     } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
-    const containers = [...this.compiler.container.stack(offset)];
+    const containers = [
+      ...this.compiler.container.stack(offset),
+    ];
     while (containers.length !== 0) {
       const node = containers.pop();
       if (!node) continue;
@@ -40,7 +42,10 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       let declaration: SyntaxNode | undefined;
       if (
         referee.declaration
-        && [SyntaxNodeKind.PRIMARY_EXPRESSION, SyntaxNodeKind.VARIABLE].includes(node.kind)
+        && [
+          SyntaxNodeKind.PRIMARY_EXPRESSION,
+          SyntaxNodeKind.VARIABLE,
+        ].includes(node.kind)
       ) {
         ({
           declaration,

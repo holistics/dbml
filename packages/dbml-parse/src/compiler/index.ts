@@ -201,7 +201,10 @@ export default class Compiler {
   ): (...args: Args) => Return {
     const queryKey = Symbol();
     return ((...args: Args): Return => {
-      const [filepath, ...rest] = args;
+      const [
+        filepath,
+        ...rest
+      ] = args;
       const filepathId = filepath.intern();
       const argKey = rest.map((a) => intern(a)).join('\0');
 

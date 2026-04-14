@@ -111,13 +111,17 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
       const tableResult = compiler.nodeReferee(leftExpr);
       if (!tableResult.hasValue(UNHANDLED) && tableResult.getValue()?.isKind(SymbolKind.Table)) {
         return lookupMember(compiler, tableResult.getValue()!, name, {
-          kinds: [SymbolKind.Column],
+          kinds: [
+            SymbolKind.Column,
+          ],
           errorNode: node,
         });
       }
     }
     return lookupMember(compiler, globalSymbol, name, {
-      kinds: [SymbolKind.Column],
+      kinds: [
+        SymbolKind.Column,
+      ],
       ignoreNotFound: true,
       errorNode: node,
     });
@@ -128,13 +132,18 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
       return lookupMember(compiler, left, name, {
-        kinds: [SymbolKind.Table, SymbolKind.Schema],
+        kinds: [
+          SymbolKind.Table,
+          SymbolKind.Schema,
+        ],
         errorNode: node,
       });
     }
     if (left.isKind(SymbolKind.Table)) {
       return lookupMember(compiler, left, name, {
-        kinds: [SymbolKind.Column],
+        kinds: [
+          SymbolKind.Column,
+        ],
         errorNode: node,
       });
     }
@@ -147,7 +156,9 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
     // If parent is also left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
       return lookupMember(compiler, globalSymbol, name, {
-        kinds: [SymbolKind.Schema],
+        kinds: [
+          SymbolKind.Schema,
+        ],
         errorNode: node,
       });
     }
@@ -155,14 +166,18 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
     const schemaSymbol = getDefaultSchemaSymbol(compiler, globalSymbol);
     if (schemaSymbol) {
       const result = lookupMember(compiler, schemaSymbol, name, {
-        kinds: [SymbolKind.Table],
+        kinds: [
+          SymbolKind.Table,
+        ],
         ignoreNotFound: true,
         errorNode: node,
       });
       if (result.getValue()) return result;
     }
     return lookupMember(compiler, globalSymbol, name, {
-      kinds: [SymbolKind.Table],
+      kinds: [
+        SymbolKind.Table,
+      ],
       errorNode: node,
     });
   }

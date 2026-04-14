@@ -166,19 +166,25 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   if (schemaName) {
     // Schema-qualified: look up the schema first, then the table within it
     const schemaResult = lookupMember(compiler, programSymbol.getValue(), schemaName, {
-      kinds: [SymbolKind.Schema],
+      kinds: [
+        SymbolKind.Schema,
+      ],
       ignoreNotFound: true,
     });
     if (schemaResult.getValue()) {
       tableSymbol = lookupMember(compiler, schemaResult.getValue()!, tableName, {
-        kinds: [SymbolKind.Table],
+        kinds: [
+          SymbolKind.Table,
+        ],
         ignoreNotFound: true,
       }).getValue() ?? undefined;
     }
   }
   if (!tableSymbol) {
     tableSymbol = lookupInDefaultSchema(compiler, programSymbol.getValue(), tableName, {
-      kinds: [SymbolKind.Table],
+      kinds: [
+        SymbolKind.Table,
+      ],
       ignoreNotFound: true,
     }).getValue() ?? undefined;
   }
@@ -213,7 +219,11 @@ function extractDataFromRow (
   const warnings: CompileWarning[] = [];
   const columnNodes: Record<string, SyntaxNode> = {};
 
-  const args = row.callee instanceof CommaExpressionNode ? row.callee.elementList : [row.callee!];
+  const args = row.callee instanceof CommaExpressionNode
+    ? row.callee.elementList
+    : [
+        row.callee!,
+      ];
   if (args.length !== mergedColumns.length) {
     errors.push(new CompileError(
       CompileErrorCode.INVALID_RECORDS_FIELD,

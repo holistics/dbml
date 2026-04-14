@@ -126,7 +126,11 @@ export function interpretInlineRefs (refs: any[]): InlineRef[] {
           fieldNames = targetTuple.tupleElements.map((e) => e.expression.variable?.value ?? '');
         } else {
           // table.column or schema.table.column
-          fieldNames = vars.length > 0 ? [vars.at(-1)!] : [];
+          fieldNames = vars.length > 0
+            ? [
+                vars.at(-1)!,
+              ]
+            : [];
           tableName = vars.length > 1 ? vars.at(-2)! : '';
           schemaName = vars.length > 2 ? vars.slice(0, -2).join('.') : null;
         }

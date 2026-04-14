@@ -242,7 +242,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     // Check if we're inside a comment
     if (
-      [...(bOcToken?.trailingTrivia || []), ...(bOcToken?.leadingTrivia || []), ...(abOcToken?.leadingTrivia || [])].find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
+      [
+        ...(bOcToken?.trailingTrivia || []),
+        ...(bOcToken?.leadingTrivia || []),
+        ...(abOcToken?.leadingTrivia || []),
+      ].find((token) => isComment(token) && isOffsetWithinSpan(offset, token))
     ) {
       return noSuggestions();
     }
@@ -252,7 +256,10 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     }
 
     // Check if we're inside a string
-    if ([SyntaxTokenKind.STRING_LITERAL, SyntaxTokenKind.QUOTED_STRING].includes(bOcToken.kind) && isOffsetWithinSpan(offset, bOcToken)) {
+    if ([
+      SyntaxTokenKind.STRING_LITERAL,
+      SyntaxTokenKind.QUOTED_STRING,
+    ].includes(bOcToken.kind) && isOffsetWithinSpan(offset, bOcToken)) {
       return noSuggestions();
     }
 
@@ -267,7 +274,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return suggestTopLevelElementType();
     }
 
-    const containers = [...this.compiler.container.stack(offset)].reverse();
+    const containers = [
+      ...this.compiler.container.stack(offset),
+    ].reverse();
 
     for (const container of containers) {
       if (container instanceof PrefixExpressionNode) {
@@ -345,7 +354,9 @@ function suggestOnPartialInjectionOp (
   compiler: Compiler,
   offset: number,
 ) {
-  return suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TablePartial]);
+  return suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+    SymbolKind.TablePartial,
+  ]);
 }
 
 function suggestOnRelOp (
@@ -357,15 +368,27 @@ function suggestOnRelOp (
 ): CompletionList {
   const scopeKind = compiler.container.scopeKind(offset);
 
-  if ([ScopeKind.REF, ScopeKind.TABLE, ScopeKind.TABLEPARTIAL].includes(scopeKind)) {
-    const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Table, SymbolKind.Schema, SymbolKind.Column]);
+  if ([
+    ScopeKind.REF,
+    ScopeKind.TABLE,
+    ScopeKind.TABLEPARTIAL,
+  ].includes(scopeKind)) {
+    const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      SymbolKind.Table,
+      SymbolKind.Schema,
+      SymbolKind.Column,
+    ]);
 
     // Add cross-file symbol suggestions if available
     if (model && provider && model.uri) {
       const currentFilepath = Filepath.fromUri(model.uri as any);
       const fileContent = model.getValue();
       const crossFileSuggestions = provider.suggestCrossFileSymbols(
-        [SymbolKind.Table, SymbolKind.Schema, SymbolKind.Column],
+        [
+          SymbolKind.Table,
+          SymbolKind.Schema,
+          SymbolKind.Column,
+        ],
         currentFilepath,
         fileContent,
       );
@@ -450,7 +473,9 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
   const element = compiler.container.element(offset);
 
   // Check if we're inside a CallExpression - delegate to suggestInCallExpression
-  const containers = [...compiler.container.stack(offset)];
+  const containers = [
+    ...compiler.container.stack(offset),
+  ];
   for (const c of containers) {
     if (c instanceof CallExpressionNode && c.argumentList === tupleContainer) {
       return suggestInCallExpression(compiler, offset, c);
@@ -469,7 +494,9 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
 
     const tableSymbol = parentSymbol || refereeSymbol;
     if (tableSymbol) {
-      const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+      const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [
+        SymbolKind.Column,
+      ]);
       // If the user already typed some columns, we do not suggest "all columns" anymore
       if (!isTupleEmpty(tupleContainer)) return suggestions;
       return addSuggestAllSuggestion(suggestions);
@@ -507,7 +534,11 @@ function suggestInCommaExpression (compiler: Compiler, offset: number): Completi
   // CommaExpressionNode is used in records data rows
   if (scopeKind === ScopeKind.RECORDS) {
     // In records, suggest enum values if applicable
-    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Schema, SymbolKind.Enum, SymbolKind.EnumField]);
+    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      SymbolKind.Schema,
+      SymbolKind.Enum,
+      SymbolKind.EnumField,
+    ]);
   }
 
   return noSuggestions();
@@ -521,7 +552,10 @@ function suggestInAttribute (
   const {
     token,
   } = compiler.container.token(offset);
-  if ([SyntaxTokenKind.COMMA, SyntaxTokenKind.LBRACKET].includes(token?.kind as any)) {
+  if ([
+    SyntaxTokenKind.COMMA,
+    SyntaxTokenKind.LBRACKET,
+  ].includes(token?.kind as any)) {
     const res = suggestAttributeName(compiler, offset);
 
     return token?.kind === SyntaxTokenKind.COMMA && shouldPrependSpace(token, offset)
@@ -557,11 +591,17 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
     switch (scopeKind) {
       case ScopeKind.TABLE:
       case ScopeKind.TABLEPARTIAL:
-        attributes = [SettingName.HeaderColor, SettingName.Note];
+        attributes = [
+          SettingName.HeaderColor,
+          SettingName.Note,
+        ];
         break;
 
       case ScopeKind.TABLEGROUP:
-        attributes = [SettingName.Color, SettingName.Note];
+        attributes = [
+          SettingName.Color,
+          SettingName.Note,
+        ];
         break;
 
       default:
@@ -617,7 +657,9 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
     case ScopeKind.ENUM:
       return {
         suggestions: [
-          ...[SettingName.Note].map((name) => ({
+          ...[
+            SettingName.Note,
+          ].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
@@ -629,14 +671,21 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
     case ScopeKind.INDEXES:
       return {
         suggestions: [
-          ...[SettingName.Unique, SettingName.PK].map((name) => ({
+          ...[
+            SettingName.Unique,
+            SettingName.PK,
+          ].map((name) => ({
             label: name,
             insertText: name,
             insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
             kind: CompletionItemKind.Property,
             range: undefined as any,
           })),
-          ...[SettingName.Note, SettingName.Name, SettingName.Type].map((name) => ({
+          ...[
+            SettingName.Note,
+            SettingName.Name,
+            SettingName.Type,
+          ].map((name) => ({
             label: name,
             insertText: `${name}: `,
             kind: CompletionItemKind.Property,
@@ -647,7 +696,11 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
       };
     case ScopeKind.REF:
       return {
-        suggestions: [SettingName.Update, SettingName.Delete, SettingName.Color].map((name) => ({
+        suggestions: [
+          SettingName.Update,
+          SettingName.Delete,
+          SettingName.Color,
+        ].map((name) => ({
           label: name,
           insertText: `${name}: `,
           kind: CompletionItemKind.Property,
@@ -657,7 +710,9 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
       };
     case ScopeKind.CHECKS:
       return {
-        suggestions: [SettingName.Name].map((name) => ({
+        suggestions: [
+          SettingName.Name,
+        ].map((name) => ({
           label: name,
           insertText: `${name}: `,
           kind: CompletionItemKind.Property,
@@ -696,7 +751,10 @@ function suggestAttributeValue (
       };
     case 'type':
       return {
-        suggestions: ['btree', 'hash'].map((name) => ({
+        suggestions: [
+          'btree',
+          'hash',
+        ].map((name) => ({
           label: name,
           insertText: `${name}`,
           kind: CompletionItemKind.Value,
@@ -705,7 +763,10 @@ function suggestAttributeValue (
         })),
       };
     case 'default':
-      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Schema, SymbolKind.Enum]);
+      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+        SymbolKind.Schema,
+        SymbolKind.Enum,
+      ]);
     default:
       break;
   }
@@ -858,7 +919,11 @@ function suggestInEnumField (
   const containerArgId = findContainerArg(offset, container);
 
   if (containerArgId === 1) {
-    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Schema, SymbolKind.Table, SymbolKind.Column]);
+    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      SymbolKind.Schema,
+      SymbolKind.Table,
+      SymbolKind.Column,
+    ]);
   }
 
   return noSuggestions();
@@ -951,7 +1016,11 @@ function suggestInProjectField (
 }
 
 function suggestInRefField (compiler: Compiler, offset: number): CompletionList {
-  return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Schema, SymbolKind.Table, SymbolKind.Column]);
+  return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+    SymbolKind.Schema,
+    SymbolKind.Table,
+    SymbolKind.Column,
+  ]);
 }
 
 function suggestInElementHeader (
@@ -960,7 +1029,10 @@ function suggestInElementHeader (
   container: ElementDeclarationNode,
 ): CompletionList {
   if (container.isKind(ElementKind.Records)) {
-    return suggestNamesInScope(compiler, offset, container.parent, [SymbolKind.Schema, SymbolKind.Table]);
+    return suggestNamesInScope(compiler, offset, container.parent, [
+      SymbolKind.Schema,
+      SymbolKind.Table,
+    ]);
   }
   return noSuggestions();
 }
@@ -982,18 +1054,25 @@ function suggestInCallExpression (
     && element.isKind(ElementKind.Records)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [SymbolKind.Schema, SymbolKind.Table]);
+    if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
+      SymbolKind.Schema,
+      SymbolKind.Table,
+    ]);
     if (!inArgs) return noSuggestions();
 
     const callee = container.callee;
     if (!callee) return noSuggestions();
 
-    const fragments = destructureMemberAccessExpression(callee) ?? [callee];
+    const fragments = destructureMemberAccessExpression(callee) ?? [
+      callee,
+    ];
     const rightmostExpr = fragments[fragments.length - 1];
     const tableSymbol = rightmostExpr ? compiler.nodeReferee(rightmostExpr).getFiltered(UNHANDLED) : undefined;
 
     if (!tableSymbol) return noSuggestions();
-    const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+    const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [
+      SymbolKind.Column,
+    ]);
     const {
       argumentList,
     } = container;
@@ -1007,7 +1086,9 @@ function suggestInCallExpression (
   // Table T {
   //   Records () // This is currently treated as a CallExpressionNode
   // }
-  const containers = [...compiler.container.stack(offset)];
+  const containers = [
+    ...compiler.container.stack(offset),
+  ];
   for (const c of containers) {
     if (!inArgs) continue;
     if (!(c instanceof FunctionApplicationNode)) continue;
@@ -1015,7 +1096,9 @@ function suggestInCallExpression (
     if ((extractVariableFromExpression(container.callee) ?? '').toLowerCase() !== ElementKind.Records) continue;
     const tableSymbol = compiler.nodeSymbol(compiler.container.element(offset)).getFiltered(UNHANDLED);
     if (!tableSymbol) return noSuggestions();
-    const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [SymbolKind.Column]);
+    const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [
+      SymbolKind.Column,
+    ]);
     const {
       argumentList,
     } = container;
@@ -1048,7 +1131,9 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
           };
         }),
       }).suggestions,
-      ...['Note'].map((name) => ({
+      ...[
+        'Note',
+      ].map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -1131,7 +1216,10 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
         sortText: CompletionItemKind.TypeParameter.toString().padStart(2, '0'),
         range: undefined as any,
       })),
-      ...suggestNamesInScope(compiler, offset, compiler.container.element(offset), [SymbolKind.Enum, SymbolKind.Schema]).suggestions,
+      ...suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+        SymbolKind.Enum,
+        SymbolKind.Schema,
+      ]).suggestions,
     ],
   };
 }
@@ -1167,7 +1255,10 @@ function suggestColumnNameInIndexes (compiler: Compiler, offset: number): Comple
 // Return the index of the argument we're at in an element's subfield
 function findContainerArg (offset: number, node: FunctionApplicationNode): number {
   if (!node.callee) return -1;
-  const args = [node.callee, ...node.args];
+  const args = [
+    node.callee,
+    ...node.args,
+  ];
 
   const containerArgId = args.findIndex((c) => offset <= c.end);
 
@@ -1210,15 +1301,26 @@ function suggestInDiagramViewSubBlock (
   const blockType = elem.type?.value.toLowerCase();
   switch (blockType) {
     case 'tables': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Table, SymbolKind.Schema]);
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+      ]);
       return {
-        suggestions: [wildcardSuggestion, ...namesInScope.suggestions],
+        suggestions: [
+          wildcardSuggestion,
+          ...namesInScope.suggestions,
+        ],
       };
     }
     case 'tablegroups': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.TableGroup]);
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+        SymbolKind.TableGroup,
+      ]);
       return {
-        suggestions: [wildcardSuggestion, ...namesInScope.suggestions],
+        suggestions: [
+          wildcardSuggestion,
+          ...namesInScope.suggestions,
+        ],
       };
     }
     case 'schemas': {
@@ -1229,15 +1331,26 @@ function suggestInDiagramViewSubBlock (
         kind: CompletionItemKind.Module,
         range: undefined as any,
       };
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Schema]);
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+        SymbolKind.Schema,
+      ]);
       return {
-        suggestions: [wildcardSuggestion, defaultSchema, ...namesInScope.suggestions],
+        suggestions: [
+          wildcardSuggestion,
+          defaultSchema,
+          ...namesInScope.suggestions,
+        ],
       };
     }
     case 'notes': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [SymbolKind.Note]);
+      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+        SymbolKind.Note,
+      ]);
       return {
-        suggestions: [wildcardSuggestion, ...namesInScope.suggestions],
+        suggestions: [
+          wildcardSuggestion,
+          ...namesInScope.suggestions,
+        ],
       };
     }
     default:

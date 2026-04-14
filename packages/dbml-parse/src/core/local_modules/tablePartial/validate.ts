@@ -141,11 +141,19 @@ export default class TablePartialValidator {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TablePartial\'s body must be a block', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A TablePartial\'s body must be a block', body),
+      ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -181,7 +189,9 @@ export default class TablePartialValidator {
       !parts.slice(0, -1).every(isExpressionAnIdentifierNode)
       || !(isExpressionAnIdentifierNode(lastPart) || lastPart instanceof ListExpressionNode)
     ) {
-      return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
+      return [
+        ...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part)),
+      ];
     }
 
     if (parts.length === 0) return [];
@@ -207,7 +217,9 @@ export default class TablePartialValidator {
         return;
       }
       if (settingMap[name] === undefined) {
-        settingMap[name] = [part as PrimaryExpressionNode];
+        settingMap[name] = [
+          part as PrimaryExpressionNode,
+        ];
       } else {
         settingMap[name]!.push(part as PrimaryExpressionNode);
       }
@@ -216,7 +228,10 @@ export default class TablePartialValidator {
     const pkAttrs = settingMap[SettingName.PK] || [];
     const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
     if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
-      errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(
+      errors.push(...[
+        ...pkAttrs,
+        ...pkeyAttrs,
+      ].map((attr) => new CompileError(
         CompileErrorCode.DUPLICATE_COLUMN_SETTING,
         'Either one of \'primary key\' and \'pk\' can appear',
         attr,
@@ -272,7 +287,10 @@ export default class TablePartialValidator {
           }
           const nullAttrs = settingMap[SettingName.Null] || [];
           if (attrs.length >= 1 && nullAttrs.length >= 1) {
-            errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(
+            errors.push(...[
+              ...attrs,
+              ...nullAttrs,
+            ].map((attr) => new CompileError(
               CompileErrorCode.CONFLICTING_SETTING,
               '\'not null\' and \'null\' can not be set at the same time',
               attr,
@@ -407,7 +425,9 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
     && (!parts.slice(0, -1).every(isExpressionAnIdentifierNode)
       || !(isExpressionAnIdentifierNode(lastPart) || lastPart instanceof ListExpressionNode))
   ) {
-    return new Report({}, [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))]);
+    return new Report({}, [
+      ...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part)),
+    ]);
   }
 
   if (parts.length === 0) return new Report({});
@@ -433,7 +453,9 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
       return;
     }
     if (settingMap[name] === undefined) {
-      settingMap[name] = [part as PrimaryExpressionNode];
+      settingMap[name] = [
+        part as PrimaryExpressionNode,
+      ];
     } else {
       settingMap[name]!.push(part as PrimaryExpressionNode);
     }
@@ -442,7 +464,10 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
   const pkAttrs = settingMap[SettingName.PK] || [];
   const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
   if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
-    errors.push(...[...pkAttrs, ...pkeyAttrs].map((attr) => new CompileError(
+    errors.push(...[
+      ...pkAttrs,
+      ...pkeyAttrs,
+    ].map((attr) => new CompileError(
       CompileErrorCode.DUPLICATE_COLUMN_SETTING,
       'Either one of \'primary key\' and \'pk\' can appear',
       attr,
@@ -498,7 +523,10 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         }
         const nullAttrs = settingMap[SettingName.Null] || [];
         if (attrs.length >= 1 && nullAttrs.length >= 1) {
-          errors.push(...[...attrs, ...nullAttrs].map((attr) => new CompileError(
+          errors.push(...[
+            ...attrs,
+            ...nullAttrs,
+          ].map((attr) => new CompileError(
             CompileErrorCode.CONFLICTING_SETTING,
             '\'not null\' and \'null\' can not be set at the same time',
             attr,

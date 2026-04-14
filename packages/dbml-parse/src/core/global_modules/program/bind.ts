@@ -127,7 +127,9 @@ export default class Binder {
     if (result.hasValue(UNHANDLED)) return undefined;
     const sym = result.getValue();
     if (!sym) return undefined;
-    return [sym.id];
+    return [
+      sym.id,
+    ];
   }
 
   private isSameEndpoint (left: number[], right: number[]): boolean {
@@ -217,7 +219,9 @@ export default class Binder {
 
               const rightIds = this.getColumnSymbolIds(refValue.expression);
               if (!rightIds) continue;
-              const leftIds = [colSym.id];
+              const leftIds = [
+                colSym.id,
+              ];
 
               if (this.isSameEndpoint(leftIds, rightIds)) {
                 errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));

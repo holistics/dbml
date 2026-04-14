@@ -35,7 +35,10 @@ export class ProjectInterpreter {
 
   interpret (): Report<Project> {
     this.project.token = getTokenPosition(this.declarationNode);
-    const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name),
+      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
+    ];
 
     return new Report(this.project as Project, errors);
   }

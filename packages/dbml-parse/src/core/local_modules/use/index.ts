@@ -41,7 +41,9 @@ export const useModule: LocalModule = {
     // (default) scope rather than the source element's schema.
     if (node.alias) {
       const alias = extractVariableFromExpression(node.alias);
-      if (alias) return Report.create([alias]);
+      if (alias) return Report.create([
+        alias,
+      ]);
     }
 
     const name = destructureComplexVariable(node.name);
@@ -57,14 +59,18 @@ export const useModule: LocalModule = {
     if (node.isKind(ImportKind.TableGroup) && name.length > 1) {
       return Report.create(
         name,
-        [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TableGroup name must be a simple name', node)],
+        [
+          new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TableGroup name must be a simple name', node),
+        ],
       );
     }
 
     if (node.isKind(ImportKind.Note) && name.length > 1) {
       return Report.create(
         name,
-        [new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Sticky note name must be a simple name', node)],
+        [
+          new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A Sticky note name must be a simple name', node),
+        ],
       );
     }
 
@@ -75,7 +81,9 @@ export const useModule: LocalModule = {
     if (!isUseSpecifier(node)) return Report.create(PASS_THROUGH); // Only use specifiers can have aliases
     if (!node.alias) return new Report(undefined);
     if (!isValidAlias(node.alias)) {
-      return new Report(undefined, [new CompileError(CompileErrorCode.INVALID_ALIAS, 'Use aliases can only contains alphanumeric and underscore unless surrounded by double quotes', node.alias)]);
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.INVALID_ALIAS, 'Use aliases can only contains alphanumeric and underscore unless surrounded by double quotes', node.alias),
+      ]);
     }
     return new Report(extractVariableFromExpression(node.alias));
   },

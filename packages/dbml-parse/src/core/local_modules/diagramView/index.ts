@@ -37,7 +37,9 @@ export const diagramViewModule: LocalModule = {
     if (!isElementNode(node, ElementKind.DiagramView)) return Report.create(PASS_THROUGH);
     const decl = node as ElementDeclarationNode;
     if (!decl.name) {
-      return new Report(undefined, [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A DiagramView must have a name', decl)]);
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A DiagramView must have a name', decl),
+      ]);
     }
     const fragments = destructureComplexVariable(decl.name);
     if (!fragments) return new Report(undefined);

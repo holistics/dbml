@@ -47,7 +47,10 @@ export default class IndexesInterpreter {
 
       const columns: Index['columns'] = [];
       const token = getTokenPosition(field);
-      const args: SyntaxNode[] = [field.callee, ...field.args];
+      const args: SyntaxNode[] = [
+        field.callee,
+        ...field.args,
+      ];
 
       // Extract settings from trailing list expression
       let pk: boolean | undefined;
@@ -124,7 +127,9 @@ export default class IndexesInterpreter {
         type,
         token,
       };
-      return [idx];
+      return [
+        idx,
+      ];
     });
 
     return new Report(indexes);

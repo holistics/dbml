@@ -135,7 +135,9 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
         if (!(schema instanceof SchemaSymbol)) continue;
         // lookupMember checks aliases only for public schemas; for non-public, also check aliases explicitly
         const result = lookupMember(compiler, schema, name, {
-          kinds: [SymbolKind.Table],
+          kinds: [
+            SymbolKind.Table,
+          ],
           ignoreNotFound: true,
           errorNode: node,
         });
@@ -153,7 +155,9 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
       }
     }
     return lookupMember(compiler, globalSymbol, name, {
-      kinds: [SymbolKind.Table],
+      kinds: [
+        SymbolKind.Table,
+      ],
       ignoreNotFound: false,
       errorNode: node,
     });
@@ -164,7 +168,10 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
       return lookupMember(compiler, left, name, {
-        kinds: [SymbolKind.Table, SymbolKind.Schema],
+        kinds: [
+          SymbolKind.Table,
+          SymbolKind.Schema,
+        ],
       });
     }
     return new Report(undefined);
@@ -172,6 +179,8 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
 
   // Left side of access: look up as Schema
   return lookupMember(compiler, globalSymbol, name, {
-    kinds: [SymbolKind.Schema],
+    kinds: [
+      SymbolKind.Schema,
+    ],
   });
 }

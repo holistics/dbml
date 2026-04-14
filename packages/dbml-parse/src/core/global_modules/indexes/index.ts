@@ -89,7 +89,9 @@ export const indexesModule: GlobalModule = {
 
     const varName = isExpressionAVariableNode(node) ? (node.expression.variable?.value ?? '') : '';
     return lookupMember(compiler, tableSymbol.getValue(), varName, {
-      kinds: [SymbolKind.Column],
+      kinds: [
+        SymbolKind.Column,
+      ],
     });
   },
 

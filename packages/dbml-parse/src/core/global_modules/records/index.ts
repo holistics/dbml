@@ -138,7 +138,10 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
       globalSymbol,
       name,
       {
-        kinds: [SymbolKind.Table, SymbolKind.Schema],
+        kinds: [
+          SymbolKind.Table,
+          SymbolKind.Schema,
+        ],
       },
     );
   }
@@ -150,7 +153,10 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
       globalSymbol,
       name,
       {
-        kinds: [SymbolKind.Table, SymbolKind.Schema],
+        kinds: [
+          SymbolKind.Table,
+          SymbolKind.Schema,
+        ],
       },
     );
   }
@@ -161,7 +167,10 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
       left,
       name,
       {
-        kinds: [SymbolKind.Table, SymbolKind.Schema],
+        kinds: [
+          SymbolKind.Table,
+          SymbolKind.Schema,
+        ],
       },
     );
   }
@@ -181,7 +190,9 @@ function nodeRefereeOfRecordsColumn (compiler: Compiler, tableSymbol: NodeSymbol
     tableSymbol,
     name,
     {
-      kinds: [SymbolKind.Column],
+      kinds: [
+        SymbolKind.Column,
+      ],
     },
   );
 }
@@ -202,12 +213,17 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
       return lookupMember(compiler, left, name, {
-        kinds: [SymbolKind.Enum, SymbolKind.Schema],
+        kinds: [
+          SymbolKind.Enum,
+          SymbolKind.Schema,
+        ],
       });
     }
     if (left.isKind(SymbolKind.Enum)) {
       return lookupMember(compiler, left, name, {
-        kinds: [SymbolKind.EnumField],
+        kinds: [
+          SymbolKind.EnumField,
+        ],
       });
     }
     return new Report(undefined);
@@ -219,7 +235,9 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
     // If our parent is also the left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
       return lookupMember(compiler, globalSymbol, name, {
-        kinds: [SymbolKind.Schema],
+        kinds: [
+          SymbolKind.Schema,
+        ],
       });
     }
     // Look up as Enum in default (public) schema first, then fall back to program scope
@@ -228,7 +246,9 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
       globalSymbol,
       name,
       {
-        kinds: [SymbolKind.Enum],
+        kinds: [
+          SymbolKind.Enum,
+        ],
         ignoreNotFound: true,
       },
     );
@@ -255,7 +275,9 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
       globalSymbol,
       name,
       {
-        kinds: [SymbolKind.Enum],
+        kinds: [
+          SymbolKind.Enum,
+        ],
       },
     );
   }

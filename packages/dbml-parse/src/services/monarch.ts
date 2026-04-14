@@ -126,8 +126,14 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
 
   tokenizer: {
     root: [
-      [/[{}[\]()]/, '@bracket'],
-      [/[,.:]/, 'delimiter'],
+      [
+        /[{}[\]()]/,
+        '@bracket',
+      ],
+      [
+        /[,.:]/,
+        'delimiter',
+      ],
       {
         include: '@numbers',
       },
@@ -142,33 +148,80 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
       },
 
       // Reference operators
-      [/[<>-]/, 'operators'],
+      [
+        /[<>-]/,
+        'operators',
+      ],
 
       // Wildcard — standalone * gets its own token type for distinct styling
-      [/\*/, 'keyword.wildcard'],
+      [
+        /\*/,
+        'keyword.wildcard',
+      ],
 
       // Quoted column name followed by type
-      [/("[^"\\]*(?:\\.[^"\\]*)*")(\s+)(@idtf(?:\.@idtf*)*)/, ['string', '', 'keyword']],
+      [
+        /("[^"\\]*(?:\\.[^"\\]*)*")(\s+)(@idtf(?:\.@idtf*)*)/,
+        [
+          'string',
+          '',
+          'keyword',
+        ],
+      ],
 
       // strings
-      [/"([^"\\]|\\.)*$/, ''],
-      [/'([^'\\]|\\.)*$/, ''],
-      [/"/, 'string', '@string_double'],
-      [/'/, 'string', '@string_single'],
-      [/`/, 'string', '@string_backtick'],
+      [
+        /"([^"\\]|\\.)*$/,
+        '',
+      ],
+      [
+        /'([^'\\]|\\.)*$/,
+        '',
+      ],
+      [
+        /"/,
+        'string',
+        '@string_double',
+      ],
+      [
+        /'/,
+        'string',
+        '@string_single',
+      ],
+      [
+        /`/,
+        'string',
+        '@string_backtick',
+      ],
 
       [
         /(@idtf)(\s+)(@idtf(?:\.@idtf)*)/,
         {
           cases: {
-            '$1@decls': ['keyword', '', 'identifier'],
+            '$1@decls': [
+              'keyword',
+              '',
+              'identifier',
+            ],
             '$1==not': {
               cases: {
-                '$3==null': ['keyword', '', 'keyword'],
-                '@default': ['identifier', '', 'identifier'],
+                '$3==null': [
+                  'keyword',
+                  '',
+                  'keyword',
+                ],
+                '@default': [
+                  'identifier',
+                  '',
+                  'identifier',
+                ],
               },
             },
-            '@default': ['identifier', '', 'keyword'],
+            '@default': [
+              'identifier',
+              '',
+              'keyword',
+            ],
           },
         },
       ],
@@ -186,39 +239,136 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
     ],
 
     numbers: [
-      [/0[xX][0-9a-fA-F]*/, 'number'],
-      [/[$][+-]*\d*(\.\d*)?/, 'number'],
-      [/((\d+(\.\d*)?)|(\.\d+))([eE][-+]?\d+)?/, 'number'],
-      [/#([0-9A-F]{3}){1,2}/, 'number.hex'],
+      [
+        /0[xX][0-9a-fA-F]*/,
+        'number',
+      ],
+      [
+        /[$][+-]*\d*(\.\d*)?/,
+        'number',
+      ],
+      [
+        /((\d+(\.\d*)?)|(\.\d+))([eE][-+]?\d+)?/,
+        'number',
+      ],
+      [
+        /#([0-9A-F]{3}){1,2}/,
+        'number.hex',
+      ],
     ],
 
     string_double: [
-      [/[^\\"]+/, 'string'],
-      [/@escapes/, 'string.escape'],
-      [/\\./, 'string.escape.invalid'],
-      [/"/, 'string', '@pop'],
+      [
+        /[^\\"]+/,
+        'string',
+      ],
+      [
+        /@escapes/,
+        'string.escape',
+      ],
+      [
+        /\\./,
+        'string.escape.invalid',
+      ],
+      [
+        /"/,
+        'string',
+        '@pop',
+      ],
     ],
 
     string_single: [
-      [/[^\\']+/, 'string'],
-      [/@escapes/, 'string.escape'],
-      [/\\./, 'string.escape.invalid'],
-      [/'/, 'string', '@pop'],
+      [
+        /[^\\']+/,
+        'string',
+      ],
+      [
+        /@escapes/,
+        'string.escape',
+      ],
+      [
+        /\\./,
+        'string.escape.invalid',
+      ],
+      [
+        /'/,
+        'string',
+        '@pop',
+      ],
     ],
 
-    string_backtick: [[/[^\\`$]+/, 'string'], [/@escapes/, 'string.escape'], [/`/, 'string', '@pop']],
+    string_backtick: [
+      [
+        /[^\\`$]+/,
+        'string',
+      ],
+      [
+        /@escapes/,
+        'string.escape',
+      ],
+      [
+        /`/,
+        'string',
+        '@pop',
+      ],
+    ],
 
-    endTripleQuotesString: [[/\\'/, 'string'], [/(.*[^\\])?(\\\\)*'''/, 'string', '@popall'], [/.*$/, 'string']],
+    endTripleQuotesString: [
+      [
+        /\\'/,
+        'string',
+      ],
+      [
+        /(.*[^\\])?(\\\\)*'''/,
+        'string',
+        '@popall',
+      ],
+      [
+        /.*$/,
+        'string',
+      ],
+    ],
 
     whitespace: [
-      [/[ \t\r\n]+/, ''],
-      [/\/\*/, 'comment', '@comment'],
-      [/\/\/.*$/, 'comment'],
-      [/'''(.*[^\\])?(\\\\)*'''/, 'string'],
-      [/'''.*$/, 'string', '@endTripleQuotesString'],
+      [
+        /[ \t\r\n]+/,
+        '',
+      ],
+      [
+        /\/\*/,
+        'comment',
+        '@comment',
+      ],
+      [
+        /\/\/.*$/,
+        'comment',
+      ],
+      [
+        /'''(.*[^\\])?(\\\\)*'''/,
+        'string',
+      ],
+      [
+        /'''.*$/,
+        'string',
+        '@endTripleQuotesString',
+      ],
     ],
 
-    comment: [[/[^/*]+/, 'comment'], [/\*\//, 'comment', '@pop'], [/[/*]/, 'comment']],
+    comment: [
+      [
+        /[^/*]+/,
+        'comment',
+      ],
+      [
+        /\*\//,
+        'comment',
+        '@pop',
+      ],
+      [
+        /[/*]/,
+        'comment',
+      ],
+    ],
   },
 };
 

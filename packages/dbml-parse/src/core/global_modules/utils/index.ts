@@ -61,12 +61,16 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: s
     return {
       schemaName: ownerSchema ?? null,
       tableName: ownerName ?? '',
-      fieldNames: [variableNames[0]],
+      fieldNames: [
+        variableNames[0],
+      ],
     };
   }
 
   return {
-    fieldNames: [variableNames.pop()!],
+    fieldNames: [
+      variableNames.pop()!,
+    ],
     tableName: variableNames.pop()!,
     schemaName: variableNames.pop() || null,
   };
@@ -93,7 +97,9 @@ export function getColumnSymbolsOfRefOperand (compiler: Compiler, ref: SyntaxNod
   if (colNode instanceof TupleExpressionNode) {
     return colNode.elementList.map((e) => compiler.nodeReferee(e).getFiltered(UNHANDLED)!);
   }
-  return [compiler.nodeReferee(colNode).getFiltered(UNHANDLED)!];
+  return [
+    compiler.nodeReferee(colNode).getFiltered(UNHANDLED)!,
+  ];
 }
 
 export function extractElementName (nameNode: SyntaxNode): { schemaName: string[];
@@ -125,7 +131,10 @@ export function isSameEndpoint (sym1?: NodeSymbol | NodeSymbol[], sym2?: NodeSym
     const secondIds = (sym2 as NodeSymbol[]).map(({
       id,
     }) => id).sort();
-    return zip(firstIds, secondIds).every(([first, second]) => first === second);
+    return zip(firstIds, secondIds).every(([
+      first,
+      second,
+    ]) => first === second);
   }
 
   const firstId = sym1.id;
@@ -282,7 +291,9 @@ export function processColumnType (compiler: Compiler, typeNode: SyntaxNode): Re
         lengthParam,
         isEnum,
       },
-      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
+      [
+        new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode),
+      ],
     );
   }
 
@@ -297,7 +308,9 @@ export function processColumnType (compiler: Compiler, typeNode: SyntaxNode): Re
 }
 
 export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
-  const hasParseError = [...compiler.parseProject().values()].some((r) => r.getErrors().length > 0);
+  const hasParseError = [
+    ...compiler.parseProject().values(),
+  ].some((r) => r.getErrors().length > 0);
   const hasValidateError = compiler.validateNode(node).getErrors().length > 0;
   const hasBindError = compiler.bindNode(node).getErrors().length > 0;
   return !hasParseError && !hasValidateError && !hasBindError;
@@ -315,9 +328,20 @@ export function getNodeMemberSymbols (compiler: Compiler, node: SyntaxNode): Rep
       const symbol = compiler.nodeSymbol(child);
       const nestedSymbols = getNodeMemberSymbols(compiler, child);
       return new Report(
-        [...report.getValue(), ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getValue())],
-        [...report.getErrors(), ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getErrors()), ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getErrors())],
-        [...report.getWarnings(), ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getWarnings()), ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getWarnings())],
+        [
+          ...report.getValue(),
+          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getValue()),
+        ],
+        [
+          ...report.getErrors(),
+          ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getErrors()),
+          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getErrors()),
+        ],
+        [
+          ...report.getWarnings(),
+          ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getWarnings()),
+          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getWarnings()),
+        ],
       );
     },
     new Report<NodeSymbol[]>([]),
@@ -333,7 +357,9 @@ export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (Pri
   if (isExpressionAVariableNode(node)) {
     return [
       {
-        variables: [node],
+        variables: [
+          node,
+        ],
         tupleElements: [],
       },
     ];
@@ -342,9 +368,14 @@ export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (Pri
   if (node instanceof InfixExpressionNode) {
     const fragments = destructureComplexVariableTuple(node);
     if (!fragments) {
-      return [...scanNonListNodeForBinding(node.leftExpression), ...scanNonListNodeForBinding(node.rightExpression)];
+      return [
+        ...scanNonListNodeForBinding(node.leftExpression),
+        ...scanNonListNodeForBinding(node.rightExpression),
+      ];
     }
-    return [fragments];
+    return [
+      fragments,
+    ];
   }
 
   if (node instanceof PrefixExpressionNode) {
@@ -360,7 +391,9 @@ export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (Pri
     if (!fragments) {
       return node.elementList.flatMap(scanNonListNodeForBinding);
     }
-    return [fragments];
+    return [
+      fragments,
+    ];
   }
 
   return [];
@@ -468,13 +501,25 @@ export function getMultiplicities (
 ): [RelationCardinality, RelationCardinality] | undefined {
   switch (op) {
     case '<':
-      return ['1', '*'];
+      return [
+        '1',
+        '*',
+      ];
     case '<>':
-      return ['*', '*'];
+      return [
+        '*',
+        '*',
+      ];
     case '>':
-      return ['*', '1'];
+      return [
+        '*',
+        '1',
+      ];
     case '-':
-      return ['1', '1'];
+      return [
+        '1',
+        '1',
+      ];
     default:
       return undefined;
   }

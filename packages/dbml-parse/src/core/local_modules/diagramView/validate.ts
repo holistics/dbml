@@ -128,10 +128,16 @@ export default class DiagramViewValidator {
       };
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     const subResult = this.validateSubElements(subs as ElementDeclarationNode[]);
     return {
-      errors: [...this.validateFields(fields as FunctionApplicationNode[]), ...subResult.errors],
+      errors: [
+        ...this.validateFields(fields as FunctionApplicationNode[]),
+        ...subResult.errors,
+      ],
       warnings: subResult.warnings,
     };
   }

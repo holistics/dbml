@@ -151,7 +151,11 @@ export function shouldBelongToThisSchema (compiler: Compiler, schemaSymbol: Sche
 
   // Elements with no name or no schema prefix belong to the default (public) schema
   // e.g. anonymous Refs, Notes, etc.
-  const elementSchemaChain = !fullname || fullname.length <= 1 ? [DEFAULT_SCHEMA_NAME] : fullname.slice(0, -1);
+  const elementSchemaChain = !fullname || fullname.length <= 1
+    ? [
+        DEFAULT_SCHEMA_NAME,
+      ]
+    : fullname.slice(0, -1);
 
   // Must start with this schema's qualified name
   if (elementSchemaChain.length < qualifiedName.length) return false;

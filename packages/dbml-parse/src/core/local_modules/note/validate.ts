@@ -63,7 +63,9 @@ export default class NoteValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -71,7 +73,9 @@ export default class NoteValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -82,17 +86,27 @@ export default class NoteValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.validateFields([body]);
+      return this.validateFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode),
+      ];
     }
     if (fields.length > 1) {
       fields.slice(1).forEach((field) => errors.push(new CompileError(CompileErrorCode.NOTE_CONTENT_REDEFINED, 'A Note can only contain one string', field)));

@@ -34,13 +34,17 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
     : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);
 
   if (validIndex === -1) {
-    return [this.parse.ast()];
+    return [
+      this.parse.ast(),
+    ];
   }
 
   const searchOffset = tokens[validIndex].start;
 
   let curNode: Readonly<SyntaxNode> = this.parse.ast();
-  const res: SyntaxNode[] = [curNode];
+  const res: SyntaxNode[] = [
+    curNode,
+  ];
 
   while (true) {
     const memberChain = getMemberChain(curNode);

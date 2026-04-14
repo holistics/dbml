@@ -150,7 +150,9 @@ export default class ProgramInterpreter {
             const ref: ElementRef = {
               name,
               schemaName,
-              visibleNames: [visibleName],
+              visibleNames: [
+                visibleName,
+              ],
             };
             extMap.set(canonicalKey, ref);
             list.push(ref);
@@ -237,7 +239,9 @@ export default class ProgramInterpreter {
           const leftEndpoint: RefEndpoint = {
             schemaName: table.schemaName,
             tableName: table.name,
-            fieldNames: [field.name],
+            fieldNames: [
+              field.name,
+            ],
             token: field.token,
             relation: cardinalities[0],
           };
@@ -254,16 +258,25 @@ export default class ProgramInterpreter {
             name: null,
             schemaName: null,
             token: inlineRef.token,
-            endpoints: [rightEndpoint, leftEndpoint],
+            endpoints: [
+              rightEndpoint,
+              leftEndpoint,
+            ],
           };
           inlineRefs.push(ref);
         }
       }
     }
-    db.refs = [...inlineRefs, ...db.refs];
+    db.refs = [
+      ...inlineRefs,
+      ...db.refs,
+    ];
 
     // Validate duplicate records blocks for the same table
-    for (const [table, records] of this.recordsByTable) {
+    for (const [
+      table,
+      records,
+    ] of this.recordsByTable) {
       if (records.length <= 1) continue;
       const tableName = this.compiler.nodeFullname(table).getFiltered(UNHANDLED)?.join('.') || '';
       const msg = `Duplicate Records blocks for the same Table '${tableName}' - A Table can only have one Records block`;
@@ -280,7 +293,9 @@ export default class ProgramInterpreter {
     // Run FK validation
     const recordTableMap = new Map<string, { rows: TableRecord;
       mergedTable: Table; }>();
-    const allRefs: Ref[] = [...db.refs]; // Collect both table partial refs and table refs
+    const allRefs: Ref[] = [
+      ...db.refs,
+    ]; // Collect both table partial refs and table refs
     for (const table of db.tables) {
       const key = `${table.schemaName ?? DEFAULT_SCHEMA_NAME}.${table.name}`;
       const merged = mergedTables.get(table) ?? table;

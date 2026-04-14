@@ -40,7 +40,9 @@ export const refModule: LocalModule = {
     if (isElementNode(node, ElementKind.Ref)) {
       if (!node.name) return new Report(undefined);
       if (!isSimpleName(node.name)) {
-        return new Report(undefined, [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', node.name)]);
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', node.name),
+        ]);
       }
       return new Report(destructureComplexVariable(node.name));
     }
@@ -53,7 +55,9 @@ export const refModule: LocalModule = {
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Ref)) {
       if (node.alias) {
-        return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', node.alias)]);
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', node.alias),
+        ]);
       }
       return new Report(undefined);
     }
@@ -77,7 +81,9 @@ export const refModule: LocalModule = {
       return new Report({});
     }
     if (isElementFieldNode(node, ElementKind.Ref)) {
-      const args = [...node.args];
+      const args = [
+        ...node.args,
+      ];
       let settingsList: ListExpressionNode | undefined;
       if (last(args) instanceof ListExpressionNode) {
         settingsList = last(args) as ListExpressionNode;

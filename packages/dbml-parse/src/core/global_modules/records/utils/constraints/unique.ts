@@ -35,7 +35,12 @@ export function validateUnique (record: TableRecord, mergedTable: Table): Compil
 }
 
 function collectUniqueConstraints (mergedTable: Table): string[][] {
-  return [...mergedTable.fields.filter((field) => field.unique).map((field) => [field.name]), ...mergedTable.indexes.filter((index) => index.unique).map((index) => index.columns.map((c) => c.value))];
+  return [
+    ...mergedTable.fields.filter((field) => field.unique).map((field) => [
+      field.name,
+    ]),
+    ...mergedTable.indexes.filter((index) => index.unique).map((index) => index.columns.map((c) => c.value)),
+  ];
 }
 
 function checkUniqueDuplicates (

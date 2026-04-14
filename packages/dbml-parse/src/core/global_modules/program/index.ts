@@ -79,10 +79,17 @@ export const programModule: GlobalModule = {
     // Flatten public schema members into program members for lookups.
     // Errors are NOT propagated - the binder collects them by walking schemas explicitly.
     const publicSymbol = schemaMembers.get(DEFAULT_SCHEMA_NAME);
-    if (!publicSymbol) return Report.create([...schemaMembers.values()]);
+    if (!publicSymbol) return Report.create([
+      ...schemaMembers.values(),
+    ]);
     const publicMembers = compiler.symbolMembers(publicSymbol);
-    if (publicMembers.hasValue(UNHANDLED)) return Report.create([...schemaMembers.values()]);
-    return Report.create([...schemaMembers.values(), ...publicMembers.getValue()]);
+    if (publicMembers.hasValue(UNHANDLED)) return Report.create([
+      ...schemaMembers.values(),
+    ]);
+    return Report.create([
+      ...schemaMembers.values(),
+      ...publicMembers.getValue(),
+    ]);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -93,7 +100,10 @@ export const programModule: GlobalModule = {
   interpretNode (compiler: Compiler, node: SyntaxNode): Report<Database | undefined> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
 
-    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [...compiler.validateNode(node).getErrors(), ...compiler.bindNode(node).getErrors()],
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined, [
+      ...compiler.validateNode(node).getErrors(),
+      ...compiler.bindNode(node).getErrors(),
+    ],
     );
 
     return new ProgramInterpreter(compiler, node).interpret() as Report<Database | undefined>;

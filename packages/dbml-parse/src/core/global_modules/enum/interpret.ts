@@ -34,7 +34,10 @@ export default class EnumInterpreter {
 
   interpret (): Report<Enum> {
     this.enum.token = getTokenPosition(this.declarationNode);
-    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
+    ];
 
     return Report.create(
       this.enum as Enum,
@@ -51,7 +54,9 @@ export default class EnumInterpreter {
       this.enum.name = name;
       this.enum.schemaName = schemaName.join('.');
 
-      return [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode),
+      ];
     }
 
     this.enum.name = name;

@@ -213,8 +213,13 @@ export class SchemaSymbol extends NodeSymbol {
   }
 
   get qualifiedName (): string[] {
-    if (!this.parent) return [this.name];
-    return [...this.parent.qualifiedName, this.name];
+    if (!this.parent) return [
+      this.name,
+    ];
+    return [
+      ...this.parent.qualifiedName,
+      this.name,
+    ];
   }
 
   override isPublicSchema (): this is SchemaSymbol {

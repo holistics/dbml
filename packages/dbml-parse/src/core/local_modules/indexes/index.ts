@@ -42,7 +42,9 @@ export const indexesModule: LocalModule = {
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Indexes)) {
       if (node.name) {
-        return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', node.name)]);
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', node.name),
+        ]);
       }
       return new Report(undefined);
     }
@@ -55,7 +57,9 @@ export const indexesModule: LocalModule = {
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Indexes)) {
       if (node.alias) {
-        return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', node.alias)]);
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', node.alias),
+        ]);
       }
       return new Report(undefined);
     }
@@ -82,7 +86,10 @@ export const indexesModule: LocalModule = {
       return new Report({});
     }
     if (isElementFieldNode(node, ElementKind.Indexes)) {
-      const args = [node.callee, ...node.args];
+      const args = [
+        node.callee,
+        ...node.args,
+      ];
       let settingsList: ListExpressionNode | undefined;
       if (last(args) instanceof ListExpressionNode) {
         settingsList = last(args) as ListExpressionNode;
@@ -95,7 +102,10 @@ export const indexesModule: LocalModule = {
       const settingMap = settingsReport.getValue();
       const clean: Settings = {};
 
-      for (const [name, attrs] of Object.entries(settingMap)) {
+      for (const [
+        name,
+        attrs,
+      ] of Object.entries(settingMap)) {
         switch (name) {
           case SettingName.Note:
           case SettingName.Name:

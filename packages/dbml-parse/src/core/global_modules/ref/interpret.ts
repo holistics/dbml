@@ -83,7 +83,10 @@ export class RefInterpreter {
 
   interpret (): Report<Ref> {
     this.ref.token = getTokenPosition(this.declarationNode);
-    const errors = [...this.interpretName(this.declarationNode.name!), ...this.interpretBody(this.declarationNode.body!)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretBody(this.declarationNode.body!),
+    ];
     return new Report(this.ref as Ref, errors);
   }
 
@@ -135,7 +138,10 @@ export class RefInterpreter {
 
     const leftNames = extractNamesFromRefOperand(leftExpression!, this.ownerSchema, this.ownerTable);
     const rightNames = extractNamesFromRefOperand(rightExpression!, this.ownerSchema, this.ownerTable);
-    this.ref.endpoints = [buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)), buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!))];
+    this.ref.endpoints = [
+      buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)),
+      buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!)),
+    ];
 
     return [];
   }

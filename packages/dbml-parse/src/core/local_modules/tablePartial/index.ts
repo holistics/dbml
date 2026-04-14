@@ -57,7 +57,11 @@ export const tablePartialModule: LocalModule = {
     }
     if (isElementFieldNode(node, ElementKind.TablePartial)) {
       const name = extractVariableFromExpression(node.callee);
-      return new Report(name ? [name] : undefined);
+      return new Report(name
+        ? [
+            name,
+          ]
+        : undefined);
     }
     return Report.create(PASS_THROUGH);
   },

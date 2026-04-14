@@ -59,7 +59,9 @@ export default class TableGroupValidator {
       ];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TableGroup name', nameNode),
+      ];
     }
     if (!isSimpleName(nameNode)) {
       return [
@@ -92,7 +94,10 @@ export default class TableGroupValidator {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const [name, attrs] of Object.entries(settingMap)) {
+    for (const [
+      name,
+      attrs,
+    ] of Object.entries(settingMap)) {
       switch (name) {
         case 'color':
           if (attrs.length > 1) {
@@ -155,8 +160,14 @@ export default class TableGroupValidator {
       ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -194,7 +205,10 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
   const settingMap = aggReport.getValue();
   const clean: Settings = {};
 
-  for (const [name, attrs] of Object.entries(settingMap)) {
+  for (const [
+    name,
+    attrs,
+  ] of Object.entries(settingMap)) {
     switch (name) {
       case 'color':
         if (attrs.length > 1) {
