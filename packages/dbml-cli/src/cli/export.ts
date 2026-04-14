@@ -6,6 +6,9 @@ import type {
   ExportFormat,
 } from '@dbml/core';
 import chalk from 'chalk';
+import type {
+  Command,
+} from 'commander';
 import figures from 'figures';
 import {
   SyntaxError,
@@ -24,14 +27,9 @@ import {
   validateFilePlugin,
 } from './validatePlugins/validatePlugins';
 
-interface Program {
-  args: string[];
-  opts(): Record<string, unknown>;
-}
-
-export default async function exportHandler (program: Program) {
+export default async function exportHandler (program: Command) {
   try {
-    const inputPaths = resolvePaths(program.args) as string[];
+    const inputPaths = resolvePaths(program.args);
     validateInputFilePaths(inputPaths, validateFilePlugin);
     const opts = program.opts();
 
