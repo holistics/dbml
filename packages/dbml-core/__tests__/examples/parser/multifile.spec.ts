@@ -105,11 +105,7 @@ Table orders {
       expect(allTables.map((t) => t.name)).toContain('orders');
     });
 
-    test('reuse chain: only entry-file-defined tables appear; tables imported via reuse chain are absent', () => {
-      // BUG: tables imported via reuse * chain (base → middle → entry via use *)
-      // are NOT visible in @dbml/core output, even though @dbml/parse resolves
-      // them correctly. users, orders from reuse-chain-base.dbml should be
-      // visible but are absent.
+    test('reuse chain: tables imported via reuse chain are visible', () => {
       const layout = makeLayout({
         '/reuse-chain-base.dbml': `
 Enum order_status {
@@ -146,12 +142,9 @@ Table payments {
       const allTables = db.schemas.flatMap((s) => s.tables);
       const tableNames = allTables.map((t) => t.name);
 
-      // 'payments' is locally defined in the consumer — always visible
       expect(tableNames).toContain('payments');
-
-      // 'users' and 'orders' are from the reuse chain — currently NOT visible through @dbml/core
-      expect(tableNames).not.toContain('users');
-      expect(tableNames).not.toContain('orders');
+      expect(tableNames).toContain('users');
+      expect(tableNames).toContain('orders');
     });
   });
 
