@@ -196,6 +196,7 @@ function shouldSkipProperty (key: string, value: unknown): boolean {
   const skipProperties = [
     'parent', 'parentNode', 'symbol', 'referee', '__proto__',
     'startPos', 'endPos', 'start', 'end', 'fullStart', 'fullEnd', 'kind',
+    'source', // full source text on ProgramNode — bloats the tree
   ];
 
   return skipProperties.includes(key);

@@ -20,19 +20,19 @@
         >
           <span class="relative inline-flex flex-shrink-0">
             <component
-              :is="tab.id === 'diagnostics' ? diagnosticsIcon : tab.icon"
+              :is="tab.id === OutputTabId.Diagnostics ? diagnosticsIcon : tab.icon"
               class="w-3.5 h-3.5"
-              :class="tab.id === 'diagnostics' ? diagnosticsColor : ''"
+              :class="tab.id === OutputTabId.Diagnostics ? diagnosticsColor : ''"
             />
             <span
-              v-if="tab.id === 'database' && parser.hasDatabase"
+              v-if="tab.id === OutputTabId.Database && parser.hasDatabase"
               class="absolute bottom-0 right-0 flex items-center justify-center"
             >
               <span class="animate-ping absolute w-2 h-2 rounded-full bg-blue-400 opacity-40 [animation-duration:2s]" />
               <span class="relative w-1.5 h-1.5 rounded-full bg-blue-500" />
             </span>
             <span
-              v-if="tab.id === 'diagnostics' && (parser.errors.length + parser.warnings.length) > 0"
+              v-if="tab.id === OutputTabId.Diagnostics && (parser.errors.length + parser.warnings.length) > 0"
               class="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[12px] h-[12px] rounded-full px-[3px] text-[8px] font-bold leading-none text-white"
               :class="parser.errors.length > 0 ? 'bg-red-500' : 'bg-yellow-500'"
             >{{ parser.errors.length + parser.warnings.length }}</span>
@@ -47,27 +47,30 @@
 
     <div class="flex-1 overflow-hidden">
       <TokensTab
-        v-if="activeTab === 'tokens'"
+        v-show="activeTab === OutputTabId.Tokens"
         ref="tokensTabRef"
         :tokens="parser.tokens"
+        class="h-full"
       />
       <AstTab
-        v-else-if="activeTab === 'nodes'"
+        v-show="activeTab === OutputTabId.Nodes"
         :ast="parser.ast"
+        class="h-full"
         @node-click="handleNodeClick"
         @position-click="handlePositionClick"
       />
       <SymbolsTab
-        v-else-if="activeTab === 'symbols'"
+        v-show="activeTab === OutputTabId.Symbols"
         :symbols="parser.symbols"
+        class="h-full"
         @declaration-click="handleDeclarationClick"
       />
       <DatabaseTab
-        v-else-if="activeTab === 'database'"
+        v-if="activeTab === OutputTabId.Database"
         :database="parser.database"
       />
       <DiagnosticsTab
-        v-else-if="activeTab === 'diagnostics'"
+        v-if="activeTab === OutputTabId.Diagnostics"
         :errors="parser.errors"
         :warnings="parser.warnings"
         :current-file="project.currentFile"
@@ -109,16 +112,22 @@ import {
 import {
   useProject,
 } from '@/stores/projectStore';
+import {
+  useUser,
+} from '@/stores/userStore';
+import {
+  OutputTabId,
+} from '@/stores/userStore';
 import logger from '@/utils/logger';
 import * as monaco from 'monaco-editor';
 
 const parser = useParser();
 const project = useProject();
+const user = useUser();
 
-type TabId = 'tokens' | 'nodes' | 'symbols' | 'database' | 'diagnostics';
 
 interface Tab {
-  id: TabId;
+  id: OutputTabId;
   label: string;
   icon: Component;
 }
@@ -137,33 +146,36 @@ const diagnosticsColor = computed(() => {
 
 const TABS: Tab[] = [
   {
-    id: 'tokens',
+    id: OutputTabId.Tokens,
     label: 'Tokens',
     icon: RectangleGroupIcon,
   },
   {
-    id: 'nodes',
+    id: OutputTabId.Nodes,
     label: 'Nodes',
     icon: ShareIcon,
   },
   {
-    id: 'symbols',
+    id: OutputTabId.Symbols,
     label: 'Symbols',
     icon: AtSymbolIcon,
   },
   {
-    id: 'database',
+    id: OutputTabId.Database,
     label: 'Database',
     icon: CircleStackIcon,
   },
   {
-    id: 'diagnostics',
+    id: OutputTabId.Diagnostics,
     label: 'Diagnostics',
     icon: ExclamationCircleIcon,
   },
 ];
 
-const activeTab = ref<TabId>('nodes');
+const activeTab = computed({
+  get: () => user.prefs.activeOutputTab,
+  set: (v: OutputTabId) => { user.set('activeOutputTab', v); },
+});
 const tokensTabRef = ref<InstanceType<typeof TokensTab> | null>(null);
 const tabBarRef = ref<HTMLElement | null>(null);
 const iconsOnly = ref(false);
@@ -242,7 +254,7 @@ function handlePositionClick (event: { node: RawAstNode;
 }
 
 function handleDeclarationClick (pos: DeclPos) {
-  activeTab.value = 'nodes';
+  activeTab.value = OutputTabId.Nodes;
   navigateTo({
     startLineNumber: pos.startLine,
     startColumn: pos.startCol,

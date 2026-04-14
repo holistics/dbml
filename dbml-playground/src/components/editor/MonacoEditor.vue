@@ -42,8 +42,8 @@ import {
 } from 'vue';
 import * as monaco from 'monaco-editor';
 import {
-  registerDbmlLanguage, DBML_THEME_NAME,
-} from '@/services/language-services';
+  DBMLLanguageService,
+} from '@/components/monaco/dbml-language';
 import logger from '@/utils/logger';
 import {
   useParser,
@@ -108,7 +108,7 @@ const vimModeStatus = ref('NORMAL');
  * Use DBML theme for both DBML and JSON to maintain consistency
  */
 const getThemeForLanguage = (_language: string): string => {
-  return DBML_THEME_NAME;
+  return DBMLLanguageService.getThemeName();
 };
 
 /**
@@ -220,7 +220,7 @@ const initializeEditor = async (): Promise<void> => {
   if (!editorContainer.value) return;
 
   // Ensure DBML language support is registered
-  registerDbmlLanguage();
+  DBMLLanguageService.registerLanguage();
 
   // Wait for next tick to ensure container is properly mounted
   await nextTick();
@@ -365,31 +365,11 @@ watch(() => props.language, (newLanguage) => {
 // Update Monaco markers whenever parser errors/warnings change.
 // errors/warnings are replaced wholesale on each parse (ref<readonly ParserError[]>),
 // so a shallow watch on the array reference is sufficient — no deep traversal needed.
-watch([() => parser.errors, () => parser.warnings], ([errors, warnings]) => {
+watch([() => parser.errors, () => parser.warnings], () => {
   if (!editor || props.language !== 'dbml') return;
   const model = editor.getModel();
   if (!model) return;
-
-  const markers: monaco.editor.IMarkerData[] = [
-    ...errors.map((e) => ({
-      message: e.message,
-      severity: monaco.MarkerSeverity.Error,
-      startLineNumber: e.location.line,
-      startColumn: e.location.column,
-      endLineNumber: e.endLocation.line,
-      endColumn: e.endLocation.column,
-    })),
-    ...warnings.map((w) => ({
-      message: w.message,
-      severity: monaco.MarkerSeverity.Warning,
-      startLineNumber: w.location.line,
-      startColumn: w.location.column,
-      endLineNumber: w.endLocation.line,
-      endColumn: w.endLocation.column,
-    })),
-  ];
-
-  monaco.editor.setModelMarkers(model, 'dbml', markers);
+  parser.updateDiagnostics(model);
 });
 
 // Watch for vim mode changes

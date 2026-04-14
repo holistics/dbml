@@ -6,14 +6,24 @@ import {
 } from 'pinia';
 import logger from '../utils/logger';
 
+export enum OutputTabId {
+  Tokens = 'tokens',
+  Nodes = 'nodes',
+  Symbols = 'symbols',
+  Database = 'database',
+  Diagnostics = 'diagnostics',
+}
+
 export interface UserPreferences {
   isVim: boolean;
+  activeOutputTab: OutputTabId;
 }
 
 const STORAGE_KEY = 'USER_DATA';
 
 const defaults: UserPreferences = {
   isVim: false,
+  activeOutputTab: OutputTabId.Nodes,
 };
 
 function load (): UserPreferences {

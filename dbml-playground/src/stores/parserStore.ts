@@ -15,8 +15,8 @@ import type {
   SyntaxToken, ProgramNode, Database, NodeSymbol,
 } from '@dbml/parse';
 import {
-  registerLanguageServices,
-} from '@/services/language-services';
+  DBMLLanguageService,
+} from '@/components/monaco/dbml-language';
 import type {
   ParserError,
 } from '../types';
@@ -197,12 +197,39 @@ export const useParser = defineStore('parser', () => {
   // store is not running heavy compilation work before the UI is ready.
   nextTick(() => debouncedParse(project.currentFile));
 
+  // Stable proxy objects whose internal delegates are swapped on each setupMonacoServices call.
+  // Monaco provider registration is permanent (cannot be re-registered), so we register once using
+  // these proxies and update the delegates to point at the current Compiler's services whenever the
+  // store creates a new Compiler instance (e.g. on hot-reload or test teardown).
+  type MonacoServices = Awaited<ReturnType<Compiler['initMonacoServices']>>;
+  let currentServices: MonacoServices | null = null;
+  let areServicesRegistered = false;
+  const languageId = DBMLLanguageService.getLanguageId();
+
   async function setupMonacoServices (_editor: monaco.editor.IStandaloneCodeEditor) {
     try {
-      await registerLanguageServices(compiler);
+      currentServices = await compiler.initMonacoServices();
+      if (areServicesRegistered) return;
+      areServicesRegistered = true;
+      monaco.languages.registerDefinitionProvider(languageId, {
+        provideDefinition: (...args) => currentServices?.definitionProvider.provideDefinition(...args) ?? null,
+      });
+      monaco.languages.registerReferenceProvider(languageId, {
+        provideReferences: (...args) => currentServices?.referenceProvider.provideReferences(...args) ?? [],
+      });
+      monaco.languages.registerCompletionItemProvider(languageId, {
+        triggerCharacters: ['.', ' '],
+        provideCompletionItems: (...args) => currentServices?.autocompletionProvider.provideCompletionItems(...args) ?? { suggestions: [] },
+      });
     } catch (err) {
       logger.warn('Failed to register Monaco language services:', err);
     }
+  }
+
+  function updateDiagnostics (model: monaco.editor.ITextModel): void {
+    if (!currentServices) return;
+    const markers = (currentServices.diagnosticsProvider as { provideMarkers(): monaco.editor.IMarkerData[] }).provideMarkers();
+    monaco.editor.setModelMarkers(model, languageId, markers);
   }
 
   return {
@@ -215,5 +242,6 @@ export const useParser = defineStore('parser', () => {
     errors,
     warnings,
     setupMonacoServices,
+    updateDiagnostics,
   };
 });

@@ -130,7 +130,13 @@ function navigateTo (tok: SyntaxToken) {
     endLineNumber: tok.endPos.line + 1,
     endColumn: tok.endPos.column + 2,
   };
-  editor.setSelection(range);
+  // Reverse anchor so cursor lands at token start — activeIndex uses cursor pos
+  editor.setSelection({
+    selectionStartLineNumber: tok.endPos.line + 1,
+    selectionStartColumn: tok.endPos.column + 2,
+    positionLineNumber: tok.startPos.line + 1,
+    positionColumn: tok.startPos.column + 1,
+  });
   editor.revealRangeInCenter(range);
 }
 
