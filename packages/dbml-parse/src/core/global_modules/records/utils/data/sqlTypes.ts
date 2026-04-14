@@ -197,6 +197,7 @@ export function isIntegerType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_INTEGER_TYPES[dialect].has(normalized);
   }
+  // Check if any dialect has this type
   return Object.values(DIALECT_INTEGER_TYPES).some((set) => set.has(normalized));
 }
 
@@ -205,6 +206,7 @@ export function isFloatType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_FLOAT_TYPES[dialect].has(normalized);
   }
+  // Check if any dialect has this type
   return Object.values(DIALECT_FLOAT_TYPES).some((set) => set.has(normalized));
 }
 
@@ -217,6 +219,7 @@ export function isBooleanType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_BOOL_TYPES[dialect].has(normalized);
   }
+  // Check if any dialect has this type
   return Object.values(DIALECT_BOOL_TYPES).some((set) => set.has(normalized));
 }
 
@@ -225,6 +228,7 @@ export function isStringType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_STRING_TYPES[dialect].has(normalized);
   }
+  // Check if any dialect has this type
   return Object.values(DIALECT_STRING_TYPES).some((set) => set.has(normalized));
 }
 
@@ -233,6 +237,7 @@ export function isBinaryType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_BINARY_TYPES[dialect].has(normalized);
   }
+  // Check if any dialect has this type
   return Object.values(DIALECT_BINARY_TYPES).some((set) => set.has(normalized));
 }
 
@@ -241,6 +246,7 @@ export function isDateTimeType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_DATETIME_TYPES[dialect].has(normalized);
   }
+  // Check if any dialect has this type
   return Object.values(DIALECT_DATETIME_TYPES).some((set) => set.has(normalized));
 }
 
@@ -249,6 +255,7 @@ export function isSerialType (type: string, dialect?: SqlDialect): boolean {
   if (dialect) {
     return DIALECT_SERIAL_TYPES[dialect].has(normalized);
   }
+  // Check if any dialect has this type
   return Object.values(DIALECT_SERIAL_TYPES).some((set) => set.has(normalized));
 }
 

@@ -75,6 +75,7 @@ import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
 } from './queries/utils';
 
+// Re-export types
 export {
   ScopeKind,
 } from './types';
