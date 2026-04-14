@@ -53,7 +53,7 @@ import {
 } from '@/core/utils/span';
 import {
   UseStatementMerger,
-} from '@/services/completion/utils/useStatementMerger';
+} from '@/services/completion/utils/useMerger';
 import {
   suggestRecordRowSnippet,
 } from '@/services/suggestions/recordRowSnippet';

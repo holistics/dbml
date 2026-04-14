@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
-import { UseStatementMerger } from '@/services/completion/utils/useStatementMerger';
-import { createMockTextModel, createPosition } from '../utils';
+import { UseStatementMerger } from '@/services/completion/utils/useMerger';
+import { createMockTextModel, createPosition } from '../../utils';
 import { Filepath } from '@/core/types/filepath';
 
 // Inline project source maps. Each entry maps a filepath (relative to /) onto

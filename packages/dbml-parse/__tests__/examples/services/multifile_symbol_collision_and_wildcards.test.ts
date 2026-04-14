@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
-import { MockTextModel, createPosition } from '../utils';
+import { MockTextModel, createPosition } from '../../utils';
 import { Filepath } from '@/core/types/filepath';
 
 describe('[samples] multifile symbol collision and wildcard imports', () => {
