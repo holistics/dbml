@@ -76,7 +76,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, inject, onMounted, onBeforeUnmount, nextTick, type Component } from 'vue';
+import {
+  ref, computed, inject, onMounted, onBeforeUnmount, nextTick, type Component,
+} from 'vue';
 import {
   RectangleGroupIcon,
   ShareIcon,
@@ -121,11 +123,31 @@ const diagnosticsColor = computed(() => {
 });
 
 const TABS: Tab[] = [
-  { id: 'tokens', label: 'Tokens', icon: RectangleGroupIcon },
-  { id: 'nodes', label: 'Nodes', icon: ShareIcon },
-  { id: 'symbols', label: 'Symbols', icon: AtSymbolIcon },
-  { id: 'database', label: 'Database', icon: CircleStackIcon },
-  { id: 'diagnostics', label: 'Diagnostics', icon: ExclamationCircleIcon },
+  {
+    id: 'tokens',
+    label: 'Tokens',
+    icon: RectangleGroupIcon,
+  },
+  {
+    id: 'nodes',
+    label: 'Nodes',
+    icon: ShareIcon,
+  },
+  {
+    id: 'symbols',
+    label: 'Symbols',
+    icon: AtSymbolIcon,
+  },
+  {
+    id: 'database',
+    label: 'Database',
+    icon: CircleStackIcon,
+  },
+  {
+    id: 'diagnostics',
+    label: 'Diagnostics',
+    icon: ExclamationCircleIcon,
+  },
 ];
 
 const activeTab = ref<TabId>('nodes');
@@ -135,6 +157,7 @@ const iconsOnly = ref(false);
 
 let fullTextWidth = 0;
 let resizeObserver: ResizeObserver | null = null;
+let highlightTimer: ReturnType<typeof setTimeout> | null = null;
 
 function updateMode () {
   if (!tabBarRef.value) return;
@@ -153,11 +176,15 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   resizeObserver?.disconnect();
+  if (highlightTimer !== null) clearTimeout(highlightTimer);
 });
 
 const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getDbmlEditor');
 
-function navigateTo (range: { startLineNumber: number; startColumn: number; endLineNumber: number; endColumn: number }) {
+function navigateTo (range: { startLineNumber: number;
+  startColumn: number;
+  endLineNumber: number;
+  endColumn: number; }) {
   const editor = getEditor?.();
   if (!editor) return;
   try {
@@ -165,9 +192,13 @@ function navigateTo (range: { startLineNumber: number; startColumn: number; endL
     editor.revealRangeInCenter(range);
     const decorations = editor.createDecorationsCollection([{
       range,
-      options: { className: 'token-navigation-highlight', inlineClassName: 'token-navigation-highlight-inline' },
+      options: {
+        className: 'token-navigation-highlight',
+        inlineClassName: 'token-navigation-highlight-inline',
+      },
     }]);
-    setTimeout(() => decorations.clear(), 2000);
+    if (highlightTimer !== null) clearTimeout(highlightTimer);
+    highlightTimer = setTimeout(() => { decorations.clear(); highlightTimer = null; }, 2000);
   } catch (err) {
     logger.warn('Navigation failed:', err);
   }
@@ -187,7 +218,8 @@ function handleNodeClick (node: RawAstNode) {
   });
 }
 
-function handlePositionClick (event: { node: RawAstNode; position: NavigationPosition }) {
+function handlePositionClick (event: { node: RawAstNode;
+  position: NavigationPosition; }) {
   navigateTo({
     startLineNumber: event.position.start.line,
     startColumn: event.position.start.column,

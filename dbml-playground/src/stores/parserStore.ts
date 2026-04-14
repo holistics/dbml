@@ -1,9 +1,15 @@
-import { ref, shallowRef, computed, watch } from 'vue';
+import {
+  ref, shallowRef, computed, watch, nextTick,
+} from 'vue';
 import { defineStore } from 'pinia';
 import { debounce } from 'lodash-es';
 import * as monaco from 'monaco-editor';
-import { Compiler, DBMLDiagnosticsProvider, Filepath } from '@dbml/parse';
-import type { SyntaxToken, ProgramNode, Database, NodeSymbol } from '@dbml/parse';
+import {
+  Compiler, DBMLDiagnosticsProvider, Filepath,
+} from '@dbml/parse';
+import type {
+  SyntaxToken, ProgramNode, Database, NodeSymbol,
+} from '@dbml/parse';
 import { registerLanguageServices } from '@/services/language-services';
 import type { ParserError } from '../types';
 import logger from '../utils/logger';
@@ -56,15 +62,27 @@ function buildSymbolInfo (compiler: Compiler, sym: NodeSymbol, depth = 0): Symbo
     ? getSymbolMembers(compiler, sym).map((m) => buildSymbolInfo(compiler, m, depth + 1))
     : [];
 
-  return { id: sym.id, kind: sym.kind, name, declPos, members };
+  return {
+    id: sym.id,
+    kind: sym.kind,
+    name,
+    declPos,
+    members,
+  };
 }
 
 function diagnosticToParserError (d: Record<string, unknown>): ParserError {
   return {
     code: typeof d.code === 'number' ? d.code : -1,
     message: String(d.text ?? ''),
-    location: { line: Number(d.startRow), column: Number(d.startColumn) },
-    endLocation: { line: Number(d.endRow), column: Number(d.endColumn) },
+    location: {
+      line: Number(d.startRow),
+      column: Number(d.startColumn),
+    },
+    endLocation: {
+      line: Number(d.endRow),
+      column: Number(d.endColumn),
+    },
   };
 }
 
@@ -111,7 +129,9 @@ export const useParser = defineStore('parser', () => {
         ast.value = null;
       }
 
-      errors.value = (diagnosticsProvider.provideErrors() as Array<Record<string, unknown>>).map(diagnosticToParserError);
+      // Errors/warnings are scoped to the current file so Monaco markers only
+      // highlight positions that exist in the editor being shown.
+      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Array<Record<string, unknown>>).map(diagnosticToParserError);
 
       database.value = errors.value.length === 0
         ? (compiler.parse.rawDb() as Database | undefined ?? null)
@@ -131,12 +151,18 @@ export const useParser = defineStore('parser', () => {
       errors.value = [{
         code: -1,
         message,
-        location: { line: 1, column: 1 },
-        endLocation: { line: 1, column: 2 },
+        location: {
+          line: 1,
+          column: 1,
+        },
+        endLocation: {
+          line: 1,
+          column: 2,
+        },
       }];
     } finally {
       try {
-        warnings.value = (diagnosticsProvider.provideWarnings() as Array<Record<string, unknown>>).map(diagnosticToParserError);
+        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Array<Record<string, unknown>>).map(diagnosticToParserError);
       } catch (err) {
         logger.warn('Failed to get warnings:', err);
         warnings.value = [];
@@ -154,8 +180,9 @@ export const useParser = defineStore('parser', () => {
     debouncedParse();
   });
 
-  // Initial parse
-  debouncedParse();
+  // Defer the initial parse until after all components have mounted so the
+  // store is not running heavy compilation work before the UI is ready.
+  nextTick(() => debouncedParse());
 
   async function setupMonacoServices (_editor: monaco.editor.IStandaloneCodeEditor) {
     try {

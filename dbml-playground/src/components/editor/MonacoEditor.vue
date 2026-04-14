@@ -41,7 +41,9 @@ import {
   ref, onMounted, onBeforeUnmount, watch, nextTick,
 } from 'vue';
 import * as monaco from 'monaco-editor';
-import { registerDbmlLanguage, DBML_THEME_NAME } from '@/services/language-services';
+import {
+  registerDbmlLanguage, DBML_THEME_NAME,
+} from '@/services/language-services';
 import logger from '@/utils/logger';
 import { useParser } from '@/stores/parserStore';
 
@@ -57,7 +59,8 @@ interface Props {
 interface Emits {
   (e: 'update:modelValue', value: string): void;
   (e: 'editor-mounted', editor: monaco.editor.IStandaloneCodeEditor): void;
-  (e: 'cursor-move', pos: { line: number; column: number }): void;
+  (e: 'cursor-move', pos: { line: number;
+    column: number; }): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -94,7 +97,8 @@ const selectionInfo = ref({
  * Vim mode state
  */
 // eslint-disable-next-line vue/no-dupe-keys
-let vimMode: { on?: (event: string, handler: (mode: { mode?: string }) => void) => void; dispose?: () => void } | null = null;
+let vimMode: { on?: (event: string, handler: (mode: { mode?: string }) => void) => void;
+  dispose?: () => void; } | null = null;
 const vimModeStatus = ref('NORMAL');
 
 /**
@@ -152,7 +156,11 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   disableLayerHinting: true, // Disable GPU acceleration that can interfere with vim
   selectOnLineNumbers: false, // Disable line number selection for vim compatibility
   cursorWidth: props.vimMode ? 2 : 1, // Slightly wider cursor for vim visibility
-  quickSuggestions: { other: true, comments: false, strings: false },
+  quickSuggestions: {
+    other: true,
+    comments: false,
+    strings: false,
+  },
   parameterHints: { enabled: false },
   suggestOnTriggerCharacters: true,
   acceptSuggestionOnEnter: 'on',
@@ -281,7 +289,10 @@ const setupEventListeners = (): void => {
   editor.onDidChangeCursorPosition(() => {
     updateCursorPosition();
     const pos = editor?.getPosition();
-    if (pos) emit('cursor-move', { line: pos.lineNumber, column: pos.column });
+    if (pos) emit('cursor-move', {
+      line: pos.lineNumber,
+      column: pos.column,
+    });
   });
 
   // Selection change listener
@@ -339,8 +350,10 @@ watch(() => props.language, (newLanguage) => {
   }
 });
 
-// Update Monaco markers whenever parser errors/warnings change
-watch(() => [parser.errors, parser.warnings] as const, ([errors, warnings]) => {
+// Update Monaco markers whenever parser errors/warnings change.
+// errors/warnings are replaced wholesale on each parse (ref<readonly ParserError[]>),
+// so a shallow watch on the array reference is sufficient — no deep traversal needed.
+watch([() => parser.errors, () => parser.warnings], ([errors, warnings]) => {
   if (!editor || props.language !== 'dbml') return;
   const model = editor.getModel();
   if (!model) return;
@@ -365,7 +378,7 @@ watch(() => [parser.errors, parser.warnings] as const, ([errors, warnings]) => {
   ];
 
   monaco.editor.setModelMarkers(model, 'dbml', markers);
-}, { deep: true });
+});
 
 // Watch for vim mode changes
 watch(() => props.vimMode, (newVimMode) => {

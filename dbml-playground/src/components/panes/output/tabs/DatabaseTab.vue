@@ -188,7 +188,7 @@ interface Props {
   database: Database | null;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const expandedTables = ref(new Set<number>());
 const expandedEnums = ref(new Set<number>());

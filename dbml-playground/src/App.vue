@@ -56,6 +56,21 @@
       </div>
     </header>
 
+    <div
+      v-if="project.isLarge"
+      class="flex-shrink-0 bg-yellow-50 border-b border-yellow-200 px-4 py-1.5 text-xs text-yellow-800 flex items-center gap-2"
+    >
+      <span class="font-medium">Project too large to share.</span>
+      <span>Reduce file sizes to enable the Copy link button.</span>
+    </div>
+
+    <div
+      class="h-0.5 flex-shrink-0 transition-opacity duration-200"
+      :class="parser.isLoading ? 'opacity-100' : 'opacity-0'"
+    >
+      <div class="h-full bg-blue-500 animate-pulse w-full" />
+    </div>
+
     <main class="flex-1 overflow-hidden p-2">
       <Splitpanes class="h-full">
         <Pane
@@ -90,10 +105,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide, onMounted, onBeforeUnmount } from 'vue';
-import { Splitpanes, Pane } from 'splitpanes';
+import {
+  ref, provide, onMounted, onBeforeUnmount,
+} from 'vue';
+import {
+  Splitpanes, Pane,
+} from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
-import { ClipboardDocumentCheckIcon, CheckIcon } from '@heroicons/vue/24/outline';
+import {
+  ClipboardDocumentCheckIcon, CheckIcon,
+} from '@heroicons/vue/24/outline';
 import { useParser } from '@/stores/parserStore';
 import { useProject } from '@/stores/projectStore';
 import FilesPane from '@/components/panes/files/FilesPane.vue';
@@ -134,7 +155,10 @@ onMounted(() => window.addEventListener('keydown', onKeyDown));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown));
 
 let dbmlEditor: monaco.editor.IStandaloneCodeEditor | null = null;
-const dbmlCursorPos = ref({ line: 1, column: 1 });
+const dbmlCursorPos = ref({
+  line: 1,
+  column: 1,
+});
 const outputPaneRef = ref<InstanceType<typeof OutputPane> | null>(null);
 
 const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {

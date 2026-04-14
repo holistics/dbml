@@ -1,4 +1,6 @@
-import { ref, computed, watch } from 'vue';
+import {
+  ref, computed, watch,
+} from 'vue';
 import { defineStore } from 'pinia';
 import { debounce } from 'lodash-es';
 import lzbase62 from 'lzbase62';
@@ -18,7 +20,10 @@ interface ProjectData {
 
 function saveProject (files: Record<string, string>, folders: string[]): void {
   try {
-    const data: ProjectData = { files, folders };
+    const data: ProjectData = {
+      files,
+      folders,
+    };
     localStorage.setItem(PROJECT_KEY, JSON.stringify(data));
   } catch (err) {
     logger.warn('Failed to persist project:', err);
@@ -33,21 +38,30 @@ function loadFromUrl (): ProjectData | null {
     const decoded = JSON.parse(lzbase62.decompress(code));
     if (decoded && typeof decoded === 'object' && 'files' in decoded) return decoded as ProjectData;
     // Legacy: plain files object
-    if (decoded && typeof decoded === 'object') return { files: decoded as Record<string, string>, folders: [] };
+    if (decoded && typeof decoded === 'object') return {
+      files: decoded as Record<string, string>,
+      folders: [],
+    };
     return null;
   } catch {
     return null;
   }
 }
 
-function initProject (): { files: Record<string, string>; folders: string[]; currentFile: string } {
+function initProject (): { files: Record<string, string>;
+  folders: string[];
+  currentFile: string; } {
   const fromUrl = loadFromUrl();
   if (fromUrl && Object.keys(fromUrl.files).length > 0) {
     saveProject(fromUrl.files, fromUrl.folders ?? []);
     const url = new URL(window.location.href);
     url.searchParams.delete('code');
     window.history.replaceState(null, '', url.toString());
-    return { files: fromUrl.files, folders: fromUrl.folders ?? [], currentFile: Object.keys(fromUrl.files).sort()[0] };
+    return {
+      files: fromUrl.files,
+      folders: fromUrl.folders ?? [],
+      currentFile: Object.keys(fromUrl.files).sort()[0],
+    };
   }
 
   try {
@@ -57,7 +71,11 @@ function initProject (): { files: Record<string, string>; folders: string[]; cur
       if (Object.keys(stored.files ?? {}).length > 0) {
         const saved = localStorage.getItem(CURRENT_FILE_KEY);
         const currentFile = (saved && stored.files[saved] !== undefined) ? saved : Object.keys(stored.files).sort()[0];
-        return { files: stored.files, folders: stored.folders ?? [], currentFile };
+        return {
+          files: stored.files,
+          folders: stored.folders ?? [],
+          currentFile,
+        };
       }
     }
   } catch (err) {
@@ -66,11 +84,17 @@ function initProject (): { files: Record<string, string>; folders: string[]; cur
 
   const files = { [DEFAULT_FILE]: DEFAULT_SAMPLE_CONTENT };
   saveProject(files, []);
-  return { files, folders: [], currentFile: DEFAULT_FILE };
+  return {
+    files,
+    folders: [],
+    currentFile: DEFAULT_FILE,
+  };
 }
 
 export const useProject = defineStore('project', () => {
-  const { files: initialFiles, folders: initialFolders, currentFile: initialCurrentFile } = initProject();
+  const {
+    files: initialFiles, folders: initialFolders, currentFile: initialCurrentFile,
+  } = initProject();
 
   const files = ref<Record<string, string>>(initialFiles);
   const folders = ref<string[]>(initialFolders);
@@ -80,6 +104,13 @@ export const useProject = defineStore('project', () => {
     get: () => files.value[currentFile.value] ?? '',
     set: (content: string) => { files.value[currentFile.value] = content; },
   });
+
+  // Warn when the total project size is large enough that sharing will fail.
+  // MAX_SHARE_SIZE is the compressed limit; uncompressed content >50 KB is a
+  // good heuristic that compression will likely exceed it.
+  const LOCAL_SIZE_WARN_BYTES = 50_000;
+  const totalSize = computed(() => Object.values(files.value).reduce((sum, v) => sum + v.length, 0));
+  const isLarge = computed(() => totalSize.value > LOCAL_SIZE_WARN_BYTES);
 
   const persistProject = debounce(() => saveProject(files.value, folders.value), 500);
 
@@ -135,8 +166,8 @@ export const useProject = defineStore('project', () => {
 
   function deleteFolder (folderPath: string) {
     const prefix = folderPath + '/';
-    folders.value = folders.value.filter(f => f !== folderPath && !f.startsWith(prefix));
-    for (const p of Object.keys(files.value).filter(f => f.startsWith(prefix))) {
+    folders.value = folders.value.filter((f) => f !== folderPath && !f.startsWith(prefix));
+    for (const p of Object.keys(files.value).filter((f) => f.startsWith(prefix))) {
       delete files.value[p];
     }
     if (!files.value[currentFile.value]) {
@@ -150,12 +181,12 @@ export const useProject = defineStore('project', () => {
   function renameFolder (oldPath: string, newPath: string) {
     if (oldPath === newPath) return;
     const prefix = oldPath + '/';
-    folders.value = folders.value.map(f => {
+    folders.value = folders.value.map((f) => {
       if (f === oldPath) return newPath;
       if (f.startsWith(prefix)) return newPath + '/' + f.slice(prefix.length);
       return f;
     });
-    for (const p of Object.keys(files.value).filter(f => f.startsWith(prefix))) {
+    for (const p of Object.keys(files.value).filter((f) => f.startsWith(prefix))) {
       renameFile(p, newPath + '/' + p.slice(prefix.length));
     }
     persistProject();
@@ -176,7 +207,10 @@ export const useProject = defineStore('project', () => {
 
   function getShareUrl (): string | null {
     try {
-      const data: ProjectData = { files: files.value, folders: folders.value };
+      const data: ProjectData = {
+        files: files.value,
+        folders: folders.value,
+      };
       const encoded = lzbase62.compress(JSON.stringify(data));
       if (encoded.length > MAX_SHARE_SIZE) return null;
       const url = new URL(window.location.href);
@@ -193,6 +227,8 @@ export const useProject = defineStore('project', () => {
     folders,
     currentFile,
     currentContent,
+    totalSize,
+    isLarge,
     setCurrentFile,
     addFile,
     deleteFile,
