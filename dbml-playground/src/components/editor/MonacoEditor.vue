@@ -56,6 +56,7 @@ interface Props {
   minimap?: boolean;
   wordWrap?: 'on' | 'off' | 'wordWrapColumn' | 'bounded';
   vimMode?: boolean;
+  filepath?: string;
 }
 
 interface Emits {
@@ -112,11 +113,25 @@ const getThemeForLanguage = (_language: string): string => {
 };
 
 /**
+ * Create a Monaco model with the correct URI so language services can key on filepath.
+ */
+const createModel = (): monaco.editor.ITextModel => {
+  const uri = props.filepath
+    ? monaco.Uri.file(props.filepath)
+    : undefined;
+  // Reuse existing model with that URI if already created (e.g. on hot-reload).
+  const existing = uri ? monaco.editor.getModel(uri) : undefined;
+  if (existing) {
+    existing.setValue(props.modelValue);
+    return existing;
+  }
+  return monaco.editor.createModel(props.modelValue, props.language ?? 'dbml', uri);
+};
+
+/**
  * Create Monaco Editor configuration
  */
 const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOptions => ({
-  value: props.modelValue,
-  language: props.language,
   theme: getThemeForLanguage(props.language),
   readOnly: props.readOnly,
   minimap: {
@@ -226,7 +241,11 @@ const initializeEditor = async (): Promise<void> => {
   await nextTick();
 
   // Create the editor with configuration
-  editor = monaco.editor.create(editorContainer.value, createEditorConfig());
+  const model = createModel();
+  editor = monaco.editor.create(editorContainer.value, {
+    ...createEditorConfig(),
+    model,
+  });
 
   // Set up event listeners
   setupEventListeners();
@@ -360,6 +379,12 @@ watch(() => props.language, (newLanguage) => {
       });
     }
   }
+});
+
+watch(() => props.filepath, () => {
+  if (!editor) return;
+  const newModel = createModel();
+  editor.setModel(newModel);
 });
 
 // Update Monaco markers whenever parser errors/warnings change.

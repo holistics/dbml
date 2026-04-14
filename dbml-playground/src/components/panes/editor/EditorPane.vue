@@ -46,6 +46,7 @@
         :minimap="false"
         word-wrap="on"
         :vim-mode="vimModeEnabled"
+        :filepath="project.currentFile"
         @editor-mounted="emit('editor-mounted', $event)"
         @cursor-move="emit('cursor-move', $event)"
       />
