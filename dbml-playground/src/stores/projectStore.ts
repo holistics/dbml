@@ -1,12 +1,20 @@
 import {
   ref, computed, watch,
 } from 'vue';
-import { defineStore } from 'pinia';
-import { debounce } from 'lodash-es';
+import {
+  defineStore,
+} from 'pinia';
+import {
+  debounce,
+} from 'lodash-es';
 import lzbase62 from 'lzbase62';
-import { DEFAULT_SAMPLE_CONTENT } from '@/services/sample-content';
+import {
+  DEFAULT_SAMPLE_CONTENT,
+} from '@/services/sample-content';
 import logger from '../utils/logger';
-import { DEFAULT_ENTRY } from '@dbml/parse';
+import {
+  DEFAULT_ENTRY,
+} from '@dbml/parse';
 
 const PROJECT_KEY = 'PROJECT_DATA';
 const CURRENT_FILE_KEY = 'PROJECT_CURRENT_FILE';
@@ -82,7 +90,9 @@ function initProject (): { files: Record<string, string>;
     logger.warn('Failed to load project from storage:', err);
   }
 
-  const files = { [DEFAULT_FILE]: DEFAULT_SAMPLE_CONTENT };
+  const files = {
+    [DEFAULT_FILE]: DEFAULT_SAMPLE_CONTENT,
+  };
   saveProject(files, []);
   return {
     files,
@@ -114,8 +124,12 @@ export const useProject = defineStore('project', () => {
 
   const persistProject = debounce(() => saveProject(files.value, folders.value), 500);
 
-  watch(files, () => persistProject(), { deep: true });
-  watch(folders, () => persistProject(), { deep: true });
+  watch(files, () => persistProject(), {
+    deep: true,
+  });
+  watch(folders, () => persistProject(), {
+    deep: true,
+  });
 
   watch(currentFile, (path) => {
     localStorage.setItem(CURRENT_FILE_KEY, path);
@@ -197,7 +211,9 @@ export const useProject = defineStore('project', () => {
   }
 
   function reset () {
-    const defaultFiles = { [DEFAULT_FILE]: DEFAULT_SAMPLE_CONTENT };
+    const defaultFiles = {
+      [DEFAULT_FILE]: DEFAULT_SAMPLE_CONTENT,
+    };
     files.value = defaultFiles;
     folders.value = [];
     currentFile.value = DEFAULT_FILE;

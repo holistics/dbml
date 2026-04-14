@@ -16,8 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { ChevronRightIcon } from '@heroicons/vue/24/outline';
+import {
+  ref,
+} from 'vue';
+import {
+  ChevronRightIcon,
+} from '@heroicons/vue/24/outline';
 
 interface Props {
   label: string;

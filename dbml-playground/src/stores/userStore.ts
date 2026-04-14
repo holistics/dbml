@@ -1,7 +1,9 @@
 import {
   ref, watch,
 } from 'vue';
-import { defineStore } from 'pinia';
+import {
+  defineStore,
+} from 'pinia';
 import logger from '../utils/logger';
 
 export interface UserPreferences {
@@ -10,7 +12,9 @@ export interface UserPreferences {
 
 const STORAGE_KEY = 'USER_DATA';
 
-const defaults: UserPreferences = { isVim: false };
+const defaults: UserPreferences = {
+  isVim: false,
+};
 
 function load (): UserPreferences {
   try {
@@ -22,7 +26,9 @@ function load (): UserPreferences {
   } catch (err) {
     logger.warn('Failed to load user preferences:', err);
   }
-  return { ...defaults };
+  return {
+    ...defaults,
+  };
 }
 
 export const useUser = defineStore('user', () => {
@@ -34,7 +40,9 @@ export const useUser = defineStore('user', () => {
     } catch (err) {
       logger.warn('Failed to save user preferences:', err);
     }
-  }, { deep: true });
+  }, {
+    deep: true,
+  });
 
   function set<K extends keyof UserPreferences> (key: K, value: UserPreferences[K]) {
     prefs.value[key] = value;

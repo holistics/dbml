@@ -5,9 +5,25 @@ import type {
 export const dbmlLanguageConfig: languages.LanguageConfiguration = {
   comments: {
     lineComment: '//',
-    blockComment: ['/*', '*/'],
+    blockComment: [
+      '/*',
+      '*/',
+    ],
   },
-  brackets: [['{', '}'], ['[', ']'], ['(', ')']],
+  brackets: [
+    [
+      '{',
+      '}',
+    ],
+    [
+      '[',
+      ']',
+    ],
+    [
+      '(',
+      ')',
+    ],
+  ],
   autoClosingPairs: [
     {
       open: '{',

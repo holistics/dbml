@@ -60,7 +60,9 @@ interface Props {
   level?: number;
 }
 
-const props = withDefaults(defineProps<Props>(), { level: 0 });
+const props = withDefaults(defineProps<Props>(), {
+  level: 0,
+});
 const emit = defineEmits<{
   'declaration-click': [pos: DeclPos];
 }>();

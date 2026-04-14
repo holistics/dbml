@@ -173,7 +173,7 @@
 
 <script setup lang="ts">
 import {
-  ref, computed, onUnmounted,
+  ref, computed, onMounted, onUnmounted,
 } from 'vue';
 import {
   ChevronRightIcon,
@@ -183,8 +183,12 @@ import {
   DocumentPlusIcon,
   TrashIcon,
 } from '@heroicons/vue/24/outline';
-import { useProject } from '@/stores/projectStore';
-import type { TreeNode } from './FilesPane.vue';
+import {
+  useProject,
+} from '@/stores/projectStore';
+import type {
+  TreeNode,
+} from './FilesPane.vue';
 
 interface PendingNode {
   type: 'file' | 'folder';
@@ -267,6 +271,6 @@ function onClickOutside (e: MouseEvent) {
   }
 }
 
-document.addEventListener('click', onClickOutside);
+onMounted(() => document.addEventListener('click', onClickOutside));
 onUnmounted(() => document.removeEventListener('click', onClickOutside));
 </script>

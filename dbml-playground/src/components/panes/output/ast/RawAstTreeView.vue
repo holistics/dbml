@@ -24,9 +24,15 @@
 import {
   computed, ref, inject, watch, type Ref,
 } from 'vue';
-import type { NavigationPosition } from '@/types';
-import type { ProgramNode } from '@dbml/parse';
-import RawAstTreeNode, { type RawAstNode } from './RawAstTreeNode.vue';
+import type {
+  NavigationPosition,
+} from '@/types';
+import type {
+  ProgramNode,
+} from '@dbml/parse';
+import RawAstTreeNode, {
+  type RawAstNode,
+} from './RawAstTreeNode.vue';
 
 interface Props {
   readonly rawAst: ProgramNode;

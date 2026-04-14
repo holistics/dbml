@@ -73,12 +73,17 @@ import {
 import {
   CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon,
 } from '@heroicons/vue/24/outline';
-import { ChevronRightIcon } from '@heroicons/vue/24/outline';
-import type { ParserError } from '@/types';
+import {
+  ChevronRightIcon,
+} from '@heroicons/vue/24/outline';
+import type {
+  ParserError,
+} from '@/types';
 
 interface Props {
   errors: readonly ParserError[];
   warnings: readonly ParserError[];
+  currentFile: string;
 }
 
 const props = defineProps<Props>();
@@ -102,8 +107,8 @@ const groups = computed(() => {
     });
     return map.get(file)!;
   };
-  for (const e of props.errors) getOrCreate('main.dbml').errors.push(e as ParserError);
-  for (const w of props.warnings) getOrCreate('main.dbml').warnings.push(w as ParserError);
+  for (const e of props.errors) getOrCreate(props.currentFile).errors.push(e as ParserError);
+  for (const w of props.warnings) getOrCreate(props.currentFile).warnings.push(w as ParserError);
   return [...map.values()];
 });
 
@@ -112,7 +117,9 @@ const expanded = ref<Set<string>>(new Set());
 // Auto-expand all groups when they first appear
 watch(groups, (gs) => {
   for (const g of gs) expanded.value.add(g.file);
-}, { immediate: true });
+}, {
+  immediate: true,
+});
 
 function toggle (file: string) {
   if (expanded.value.has(file)) expanded.value.delete(file);

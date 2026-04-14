@@ -1,8 +1,12 @@
 import {
   ref, shallowRef, computed, watch, nextTick,
 } from 'vue';
-import { defineStore } from 'pinia';
-import { debounce } from 'lodash-es';
+import {
+  defineStore,
+} from 'pinia';
+import {
+  debounce,
+} from 'lodash-es';
 import * as monaco from 'monaco-editor';
 import {
   Compiler, DBMLDiagnosticsProvider, Filepath,
@@ -10,10 +14,16 @@ import {
 import type {
   SyntaxToken, ProgramNode, Database, NodeSymbol,
 } from '@dbml/parse';
-import { registerLanguageServices } from '@/services/language-services';
-import type { ParserError } from '../types';
+import {
+  registerLanguageServices,
+} from '@/services/language-services';
+import type {
+  ParserError,
+} from '../types';
 import logger from '../utils/logger';
-import { useProject } from './projectStore';
+import {
+  useProject,
+} from './projectStore';
 
 const DEBOUNCE_MS = 300;
 
@@ -103,8 +113,9 @@ export const useParser = defineStore('parser', () => {
 
   const hasDatabase = computed(() => database.value !== null);
 
-  const debouncedParse = debounce(() => {
+  const debouncedParse = debounce((targetFile?: string) => {
     isLoading.value = true;
+    const currentFilepath = new Filepath(targetFile ?? project.currentFile);
     try {
       // Load all project files into the compiler
       for (const [path, content] of Object.entries(project.files)) {
@@ -116,7 +127,6 @@ export const useParser = defineStore('parser', () => {
       compiler.bindProject();
 
       // Parse the current file for tokens and AST
-      const currentFilepath = new Filepath(project.currentFile);
       const parseResult = compiler.parseFile(currentFilepath);
 
       if (!parseResult.getErrors().some((e) => e)) {
@@ -173,16 +183,19 @@ export const useParser = defineStore('parser', () => {
 
   // Watch both files and currentFile to trigger reparse when project changes
   watch(() => project.files, () => {
-    debouncedParse();
-  }, { deep: true });
+    const file = project.currentFile;
+    debouncedParse(file);
+  }, {
+    deep: true,
+  });
 
-  watch(() => project.currentFile, () => {
-    debouncedParse();
+  watch(() => project.currentFile, (newFile) => {
+    debouncedParse(newFile);
   });
 
   // Defer the initial parse until after all components have mounted so the
   // store is not running heavy compilation work before the UI is ready.
-  nextTick(() => debouncedParse());
+  nextTick(() => debouncedParse(project.currentFile));
 
   async function setupMonacoServices (_editor: monaco.editor.IStandaloneCodeEditor) {
     try {

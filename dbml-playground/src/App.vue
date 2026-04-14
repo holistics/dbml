@@ -115,8 +115,12 @@ import 'splitpanes/dist/splitpanes.css';
 import {
   ClipboardDocumentCheckIcon, CheckIcon,
 } from '@heroicons/vue/24/outline';
-import { useParser } from '@/stores/parserStore';
-import { useProject } from '@/stores/projectStore';
+import {
+  useParser,
+} from '@/stores/parserStore';
+import {
+  useProject,
+} from '@/stores/projectStore';
 import FilesPane from '@/components/panes/files/FilesPane.vue';
 import EditorPane from '@/components/panes/editor/EditorPane.vue';
 import OutputPane from '@/components/panes/output/OutputPane.vue';

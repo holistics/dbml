@@ -6,14 +6,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import {
+  computed,
+} from 'vue';
 
 interface Props {
   label: string;
   color?: 'blue' | 'gray' | 'purple';
 }
 
-const props = withDefaults(defineProps<Props>(), { color: 'gray' });
+const props = withDefaults(defineProps<Props>(), {
+  color: 'gray',
+});
 
 const colorClass = computed(() => ({
   blue: 'bg-blue-100 text-blue-600',

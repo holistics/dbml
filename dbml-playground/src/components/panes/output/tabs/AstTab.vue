@@ -24,11 +24,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import {
+  computed,
+} from 'vue';
 import RawAstTreeView from '../ast/RawAstTreeView.vue';
-import type { RawAstNode } from '../ast/RawAstTreeNode.vue';
-import type { NavigationPosition } from '@/types';
-import type { ProgramNode } from '@dbml/parse';
+import type {
+  RawAstNode,
+} from '../ast/RawAstTreeNode.vue';
+import type {
+  NavigationPosition,
+} from '@/types';
+import type {
+  ProgramNode,
+} from '@dbml/parse';
 
 interface Props {
   ast: ProgramNode | null;

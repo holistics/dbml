@@ -1,5 +1,9 @@
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
+import {
+  createApp,
+} from 'vue';
+import {
+  createPinia,
+} from 'pinia';
 import FloatingVue from 'floating-vue';
 import App from './App.vue';
 import './styles/main.css';

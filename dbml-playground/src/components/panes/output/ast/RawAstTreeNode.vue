@@ -66,8 +66,12 @@
 import {
   computed, ref, watch,
 } from 'vue';
-import { ChevronRightIcon } from '@heroicons/vue/24/outline';
-import type { NavigationPosition } from '@/types';
+import {
+  ChevronRightIcon,
+} from '@heroicons/vue/24/outline';
+import type {
+  NavigationPosition,
+} from '@/types';
 
 export interface RawAstNode {
   id: string;

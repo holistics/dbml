@@ -139,13 +139,17 @@
 
 <script setup lang="ts">
 import {
-  ref, computed, nextTick, onUnmounted,
+  ref, computed, nextTick, onMounted, onUnmounted,
 } from 'vue';
 import {
   DocumentPlusIcon, FolderPlusIcon, FolderIcon, DocumentTextIcon, ArrowPathIcon,
 } from '@heroicons/vue/24/outline';
-import { useProject } from '@/stores/projectStore';
-import { Filepath } from '@dbml/parse';
+import {
+  useProject,
+} from '@/stores/projectStore';
+import {
+  Filepath,
+} from '@dbml/parse';
 import FileTreeNode from './FileTreeNode.vue';
 
 const project = useProject();
@@ -276,7 +280,7 @@ function onClickOutside (e: MouseEvent) {
   }
 }
 
-document.addEventListener('click', onClickOutside);
+onMounted(() => document.addEventListener('click', onClickOutside));
 onUnmounted(() => document.removeEventListener('click', onClickOutside));
 
 function findNode (nodes: TreeNode[], path: string): TreeNode | null {

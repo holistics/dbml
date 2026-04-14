@@ -1,6 +1,8 @@
 import logger from '@/utils/logger';
 import * as monaco from 'monaco-editor';
-import type { Compiler } from '@dbml/parse';
+import type {
+  Compiler,
+} from '@dbml/parse';
 import {
   dbmlMonarchTokensProvider, dbmlLanguageConfig,
 } from '@dbml/parse';
@@ -85,7 +87,9 @@ let isLanguageRegistered = false;
 export function registerDbmlLanguage (): void {
   if (isLanguageRegistered) return;
   try {
-    monaco.languages.register({ id: DBML_LANGUAGE_ID });
+    monaco.languages.register({
+      id: DBML_LANGUAGE_ID,
+    });
     monaco.languages.setMonarchTokensProvider(DBML_LANGUAGE_ID, dbmlMonarchTokensProvider as monaco.languages.IMonarchLanguage);
     monaco.languages.setLanguageConfiguration(DBML_LANGUAGE_ID, dbmlLanguageConfig);
     monaco.editor.defineTheme(DBML_THEME_NAME, DBML_THEME);
@@ -120,7 +124,9 @@ export async function registerLanguageServices (compiler: Compiler): Promise<voi
   });
   monaco.languages.registerCompletionItemProvider(DBML_LANGUAGE_ID, {
     triggerCharacters: ['.', ' '],
-    provideCompletionItems: (...args) => currentServices?.autocompletionProvider.provideCompletionItems(...args) ?? { suggestions: [] },
+    provideCompletionItems: (...args) => currentServices?.autocompletionProvider.provideCompletionItems(...args) ?? {
+      suggestions: [],
+    },
   });
 }
 

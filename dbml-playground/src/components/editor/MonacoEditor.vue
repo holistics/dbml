@@ -45,7 +45,9 @@ import {
   registerDbmlLanguage, DBML_THEME_NAME,
 } from '@/services/language-services';
 import logger from '@/utils/logger';
-import { useParser } from '@/stores/parserStore';
+import {
+  useParser,
+} from '@/stores/parserStore';
 
 interface Props {
   modelValue: string;
@@ -117,7 +119,9 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   language: props.language,
   theme: getThemeForLanguage(props.language),
   readOnly: props.readOnly,
-  minimap: { enabled: props.minimap },
+  minimap: {
+    enabled: props.minimap,
+  },
   wordWrap: props.wordWrap,
   scrollBeyondLastLine: false,
   fontSize: 14,
@@ -161,7 +165,9 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
     comments: false,
     strings: false,
   },
-  parameterHints: { enabled: false },
+  parameterHints: {
+    enabled: false,
+  },
   suggestOnTriggerCharacters: true,
   acceptSuggestionOnEnter: 'on',
   tabCompletion: 'off',
@@ -179,7 +185,9 @@ const setupVimMode = async (): Promise<void> => {
 
   try {
     // Dynamically import monaco-vim
-    const { initVimMode } = await import('monaco-vim' as any);
+    const {
+      initVimMode,
+    } = await import('monaco-vim') as any;
 
     // Initialize vim mode with status tracking
     vimMode = initVimMode(editor);
@@ -336,7 +344,9 @@ watch(() => props.modelValue, (newValue) => {
 
 watch(() => props.readOnly, (newReadOnly) => {
   if (editor) {
-    editor.updateOptions({ readOnly: newReadOnly });
+    editor.updateOptions({
+      readOnly: newReadOnly,
+    });
   }
 });
 
@@ -345,7 +355,9 @@ watch(() => props.language, (newLanguage) => {
     const model = editor.getModel();
     if (model) {
       monaco.editor.setModelLanguage(model, newLanguage);
-      editor.updateOptions({ theme: getThemeForLanguage(newLanguage) });
+      editor.updateOptions({
+        theme: getThemeForLanguage(newLanguage),
+      });
     }
   }
 });

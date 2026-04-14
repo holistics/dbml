@@ -70,6 +70,7 @@
         v-else-if="activeTab === 'diagnostics'"
         :errors="parser.errors"
         :warnings="parser.warnings"
+        :current-file="project.currentFile"
       />
     </div>
   </div>
@@ -93,14 +94,26 @@ import AstTab from './tabs/AstTab.vue';
 import SymbolsTab from './tabs/SymbolsTab.vue';
 import DatabaseTab from './tabs/DatabaseTab.vue';
 import DiagnosticsTab from './tabs/DiagnosticsTab.vue';
-import type { NavigationPosition } from '@/types';
-import type { RawAstNode } from './ast/RawAstTreeNode.vue';
-import type { DeclPos } from '@/stores/parserStore';
-import { useParser } from '@/stores/parserStore';
+import type {
+  NavigationPosition,
+} from '@/types';
+import type {
+  RawAstNode,
+} from './ast/RawAstTreeNode.vue';
+import type {
+  DeclPos,
+} from '@/stores/parserStore';
+import {
+  useParser,
+} from '@/stores/parserStore';
+import {
+  useProject,
+} from '@/stores/projectStore';
 import logger from '@/utils/logger';
 import * as monaco from 'monaco-editor';
 
 const parser = useParser();
+const project = useProject();
 
 type TabId = 'tokens' | 'nodes' | 'symbols' | 'database' | 'diagnostics';
 
@@ -238,5 +251,7 @@ function handleDeclarationClick (pos: DeclPos) {
   });
 }
 
-defineExpose({ scrollToToken: (i: number) => tokensTabRef.value?.scrollToToken(i) });
+defineExpose({
+  scrollToToken: (i: number) => tokensTabRef.value?.scrollToToken(i),
+});
 </script>

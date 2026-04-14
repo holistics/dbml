@@ -57,13 +57,21 @@
 import {
   ref, watch,
 } from 'vue';
-import { Cog6ToothIcon } from '@heroicons/vue/24/outline';
+import {
+  Cog6ToothIcon,
+} from '@heroicons/vue/24/outline';
 import MonacoEditor from '@/components/editor/MonacoEditor.vue';
-import { useUser } from '@/stores/userStore';
-import { useProject } from '@/stores/projectStore';
+import {
+  useUser,
+} from '@/stores/userStore';
+import {
+  useProject,
+} from '@/stores/projectStore';
 import type * as monaco from 'monaco-editor';
 
-const content = defineModel<string>({ required: true });
+const content = defineModel<string>({
+  required: true,
+});
 
 const emit = defineEmits<{
   'editor-mounted': [editor: monaco.editor.IStandaloneCodeEditor];

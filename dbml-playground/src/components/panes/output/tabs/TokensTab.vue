@@ -45,7 +45,9 @@ import {
   ref, watch, computed, inject, onUnmounted, type Ref,
 } from 'vue';
 import * as monaco from 'monaco-editor';
-import type { SyntaxToken } from '@dbml/parse';
+import type {
+  SyntaxToken,
+} from '@dbml/parse';
 
 interface Props {
   tokens: SyntaxToken[];
@@ -106,12 +108,16 @@ function updateDecorations () {
         t.startPos.line + 1, t.startPos.column + 1,
         t.endPos.line + 1, t.endPos.column + 2,
       ),
-      options: { inlineClassName: 'token-box-decoration' },
+      options: {
+        inlineClassName: 'token-box-decoration',
+      },
     })),
   );
 }
 
-watch(() => props.tokens, updateDecorations, { immediate: true });
+watch(() => props.tokens, updateDecorations, {
+  immediate: true,
+});
 watch(showDecorations, updateDecorations);
 onUnmounted(() => { decorations?.clear(); decorations = null; });
 
@@ -135,7 +141,9 @@ function scrollToToken (i: number) {
   });
 }
 
-defineExpose({ scrollToToken });
+defineExpose({
+  scrollToToken,
+});
 </script>
 
 <style>

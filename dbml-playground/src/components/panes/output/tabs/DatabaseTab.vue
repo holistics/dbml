@@ -176,9 +176,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { ChevronRightIcon } from '@heroicons/vue/24/outline';
-import type { Database } from '@dbml/parse';
+import {
+  ref,
+} from 'vue';
+import {
+  ChevronRightIcon,
+} from '@heroicons/vue/24/outline';
+import type {
+  Database,
+} from '@dbml/parse';
 
 type RefEndpoint = Database['refs'][number]['endpoints'][number];
 import DbSection from './DbSection.vue';
