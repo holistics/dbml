@@ -45,8 +45,10 @@ export default class DiagramViewValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[];
-    warnings: CompileWarning[]; } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     const errors: CompileError[] = [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -150,8 +152,10 @@ export default class DiagramViewValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): { errors: CompileError[];
-    warnings: CompileWarning[]; } {
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     if (!body) return {
       errors: [],
       warnings: [],
@@ -202,8 +206,10 @@ export default class DiagramViewValidator implements ElementValidator {
     });
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): { errors: CompileError[];
-    warnings: CompileWarning[]; } {
+  private validateSubElements (subs: ElementDeclarationNode[]): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 
@@ -241,8 +247,10 @@ export default class DiagramViewValidator implements ElementValidator {
     };
   }
 
-  private validateSubBlock (sub: ElementDeclarationNode): { errors: CompileError[];
-    warnings: CompileWarning[]; } {
+  private validateSubBlock (sub: ElementDeclarationNode): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 

@@ -3,6 +3,8 @@ import {
 } from '@/core/types/errors';
 
 export interface ElementValidator {
-  validate(): { errors: CompileError[];
-    warnings: CompileWarning[]; };
+  validate(): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  };
 }

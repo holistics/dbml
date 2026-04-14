@@ -51,8 +51,10 @@ export default class TableGroupValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[];
-    warnings: CompileWarning[]; } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -210,7 +212,10 @@ export default class TableGroupValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -242,7 +247,9 @@ export default class TableGroupValidator implements ElementValidator {
     });
 
     const notes = subs.filter((sub) => sub.isKind(ElementKind.Note));
-    if (notes.length > 1) errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
+    if (notes.length > 1) {
+      errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
+    }
     return errors;
   }
 
@@ -259,7 +266,10 @@ export default class TableGroupValidator implements ElementValidator {
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
       if (symbolTable.has(tableGroupFieldId)) {
         const symbol = symbolTable.get(tableGroupFieldId);
-        return [new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, field), new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, symbol!.declaration!)];
+        return [
+          new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, field),
+          new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_FIELD_NAME, `${tableGroupField} already exists in the group`, symbol!.declaration!),
+        ];
       }
       symbolTable.set(tableGroupFieldId, tableGroupSymbol);
     }

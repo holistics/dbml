@@ -75,8 +75,10 @@ export default class TableValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate (): { errors: CompileError[];
-    warnings: CompileWarning[]; } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -208,7 +210,10 @@ export default class TableValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -254,7 +259,10 @@ export default class TableValidator implements ElementValidator {
         const symbolTable = this.declarationNode.symbol!.symbolTable!;
         if (symbolTable.has(partialInjectionSymbolId)) {
           const symbol = symbolTable.get(partialInjectionSymbolId);
-          return [new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, field), new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, symbol!.declaration!)];
+          return [
+          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, field),
+          new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${injectedTablePartialName}'`, symbol!.declaration!),
+        ];
         }
         symbolTable.set(partialInjectionSymbolId, partialInjectionSymbol);
       }
@@ -284,7 +292,10 @@ export default class TableValidator implements ElementValidator {
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
       if (symbolTable.has(columnId)) {
         const symbol = symbolTable.get(columnId);
-        return [new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field), new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!)];
+        return [
+          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, field),
+          new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${columnName}`, symbol!.declaration!),
+        ];
       }
       symbolTable.set(columnId, columnSymbol);
     }
@@ -294,7 +305,9 @@ export default class TableValidator implements ElementValidator {
   // This is needed to support legacy inline settings
   validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
     if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
-      return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
+      return [
+        ...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part)),
+      ];
     }
 
     if (parts.length === 0) {

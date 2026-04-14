@@ -30,8 +30,10 @@ export default class ProjectValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[];
-    warnings: CompileWarning[]; } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -92,7 +94,10 @@ export default class ProjectValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {

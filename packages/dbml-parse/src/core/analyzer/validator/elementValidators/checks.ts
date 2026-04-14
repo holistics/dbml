@@ -43,8 +43,10 @@ export default class ChecksValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[];
-    warnings: CompileWarning[]; } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -107,7 +109,10 @@ export default class ChecksValidator implements ElementValidator {
     }
 
     const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
