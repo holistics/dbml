@@ -1,15 +1,14 @@
 <template>
   <div class="h-full flex flex-col">
     <div
-      ref="tabBarRef"
-      class="flex-shrink-0 border-b border-gray-200 bg-white flex items-center px-1 h-[33px] overflow-hidden"
+      class="flex-shrink-0 border-b border-gray-200 bg-white flex items-center px-1 h-[33px] overflow-hidden @container/tabbar"
     >
       <VTooltip
         v-for="tab in TABS"
         :key="tab.id"
         placement="bottom"
         :distance="6"
-        :disabled="!iconsOnly"
+        :disabled="true"
       >
         <button
           class="flex items-center gap-1.5 px-2 py-2 text-xs font-medium transition-colors cursor-pointer border-b-2 whitespace-nowrap flex-shrink-0"
@@ -37,65 +36,46 @@
               :class="parser.errors.length > 0 ? 'bg-red-500' : 'bg-yellow-500'"
             >{{ parser.errors.length + parser.warnings.length }}</span>
           </span>
-          <span v-if="!iconsOnly">{{ tab.label }}</span>
+          <span class="@[460px]/tabbar:inline hidden">{{ tab.label }}</span>
         </button>
         <template #popper>
           <span class="text-xs">{{ tab.label }}</span>
         </template>
       </VTooltip>
 
-      <VDropdown
-        :distance="6"
-        placement="bottom-end"
-        :arrow-padding="0"
-        no-auto-focus
-        class="ml-auto flex-shrink-0"
-      >
-        <VTooltip placement="bottom" :distance="6">
-          <button class="p-1.5 rounded transition-colors cursor-pointer text-gray-500 hover:text-gray-900">
-            <PhGear class="w-3.5 h-3.5" />
-          </button>
-          <template #popper>
-            <span class="text-xs">View settings</span>
-          </template>
-        </VTooltip>
-        <template #popper>
-          <div class="py-1 min-w-[10rem]">
-            <button
-              class="flex items-center gap-2 w-full px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer"
-              @click="showDecorations = !showDecorations"
-            >
-              <component :is="showDecorations ? PhEye : PhEyeSlash" class="w-3.5 h-3.5 flex-shrink-0" />
-              <span>{{ showDecorations ? 'Hide highlights' : 'Show highlights' }}</span>
-            </button>
-          </div>
-        </template>
-      </VDropdown>
     </div>
 
     <div class="flex-1 overflow-hidden">
       <TokensTab
-        v-show="activeTab === OutputTabId.Tokens"
+        v-if="activeTab === OutputTabId.Tokens"
         ref="tokensTabRef"
         :tokens="parser.tokens"
+        :show-decor="isDecorEnabled(activeTab)"
         class="h-full"
+        @toggle-decor="toggleDecor(activeTab)"
       />
       <AstTab
-        v-show="activeTab === OutputTabId.Nodes"
+        v-if="activeTab === OutputTabId.Nodes"
         :ast="parser.ast"
+        :show-decor="isDecorEnabled(activeTab)"
         class="h-full"
         @node-click="handleNodeClick"
         @position-click="handlePositionClick"
+        @toggle-decor="toggleDecor(activeTab)"
       />
       <SymbolsTab
-        v-show="activeTab === OutputTabId.Symbols"
+        v-if="activeTab === OutputTabId.Symbols"
         :symbols="parser.symbols"
+        :show-decor="isDecorEnabled(activeTab)"
         class="h-full"
         @declaration-click="handleDeclarationClick"
+        @toggle-decor="toggleDecor(activeTab)"
       />
       <DatabaseTab
         v-if="activeTab === OutputTabId.Database"
         :database="parser.database"
+        :show-decor="isDecorEnabled(activeTab)"
+        @toggle-decor="toggleDecor(activeTab)"
       />
       <DiagnosticsTab
         v-if="activeTab === OutputTabId.Diagnostics"
@@ -109,7 +89,7 @@
 
 <script setup lang="ts">
 import {
-  ref, computed, watch, inject, onMounted, onBeforeUnmount, nextTick, type Component, type Ref,
+  ref, shallowRef, computed, watch, inject, onBeforeUnmount, type Component, type Ref,
 } from 'vue';
 import {
   PhSquaresFour,
@@ -119,9 +99,6 @@ import {
   PhCheckCircle,
   PhWarning,
   PhWarningCircle,
-  PhGear,
-  PhEye,
-  PhEyeSlash,
 } from '@phosphor-icons/vue';
 import TokensTab from './tabs/TokensTab.vue';
 import AstTab from './tabs/AstTab.vue';
@@ -156,7 +133,6 @@ import * as monaco from 'monaco-editor';
 const parser = useParser();
 const project = useProject();
 const user = useUser();
-
 
 interface Tab {
   id: OutputTabId;
@@ -208,7 +184,22 @@ const activeTab = computed({
   get: () => user.prefs.activeOutputTab,
   set: (v: OutputTabId) => { user.set('activeOutputTab', v); },
 });
-const showDecorations = ref(true);
+const DECOR_STORAGE_KEY = 'playground:showDecorations';
+
+function loadDecorPrefs (): Record<string, boolean> {
+  try { return JSON.parse(localStorage.getItem(DECOR_STORAGE_KEY) ?? '{}'); } catch { return {}; }
+}
+
+const decorPrefs = shallowRef<Record<string, boolean>>(loadDecorPrefs());
+
+function isDecorEnabled (tabId: string): boolean {
+  return decorPrefs.value[tabId] ?? true;
+}
+
+function toggleDecor (tabId: string) {
+  decorPrefs.value = { ...decorPrefs.value, [tabId]: !isDecorEnabled(tabId) };
+  localStorage.setItem(DECOR_STORAGE_KEY, JSON.stringify(decorPrefs.value));
+}
 const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
 let editorDecorations: monaco.editor.IEditorDecorationsCollection | null = null;
 
@@ -216,10 +207,13 @@ let editorDecorations: monaco.editor.IEditorDecorationsCollection | null = null;
 
 const AST_SKIP_KEYS = new Set(['parentNode', 'parent', 'symbol', 'referee', 'source', 'filepath']);
 
+const AST_RANGE_LIMIT = 2000;
+
 function collectAstRanges (ast: unknown): monaco.IRange[] {
   const ranges: monaco.IRange[] = [];
   const visited = new WeakSet<object>();
   function walk (node: unknown) {
+    if (ranges.length >= AST_RANGE_LIMIT) return;
     if (!node || typeof node !== 'object') return;
     if (visited.has(node)) return;
     visited.add(node);
@@ -285,7 +279,7 @@ const TAB_DECOR_CLASS: Partial<Record<string, string>> = {
 function updateEditorDecorations () {
   const editor = dbmlEditorRef?.value;
   editorDecorations?.clear();
-  if (!editor || !showDecorations.value) return;
+  if (!editor || !isDecorEnabled(activeTab.value)) return;
   const cls = TAB_DECOR_CLASS[activeTab.value];
   if (!cls) return;
 
@@ -309,7 +303,7 @@ function updateEditorDecorations () {
 }
 
 watch(
-  [activeTab, showDecorations, () => parser.tokens, () => parser.ast, () => parser.symbols, () => parser.database, () => dbmlEditorRef?.value],
+  [activeTab, decorPrefs, () => parser.tokens, () => parser.ast, () => parser.symbols, () => parser.database, () => dbmlEditorRef?.value],
   updateEditorDecorations,
   { immediate: true },
 );
@@ -317,30 +311,9 @@ watch(
 onBeforeUnmount(() => { editorDecorations?.clear(); editorDecorations = null; });
 
 const tokensTabRef = ref<InstanceType<typeof TokensTab> | null>(null);
-const tabBarRef = ref<HTMLElement | null>(null);
-const iconsOnly = ref(false);
-
-let fullTextWidth = 0;
-let resizeObserver: ResizeObserver | null = null;
 let highlightTimer: ReturnType<typeof setTimeout> | null = null;
 
-function updateMode () {
-  if (!tabBarRef.value) return;
-  iconsOnly.value = tabBarRef.value.clientWidth < fullTextWidth;
-}
-
-onMounted(async () => {
-  await nextTick();
-  if (tabBarRef.value) {
-    fullTextWidth = tabBarRef.value.scrollWidth;
-    resizeObserver = new ResizeObserver(updateMode);
-    resizeObserver.observe(tabBarRef.value);
-    updateMode();
-  }
-});
-
 onBeforeUnmount(() => {
-  resizeObserver?.disconnect();
   if (highlightTimer !== null) clearTimeout(highlightTimer);
 });
 

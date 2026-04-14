@@ -14,13 +14,6 @@
 </template>
 
 <script setup lang="ts">
-/**
- * Raw AST Tree View Component
- *
- * Transforms the raw AST from the parser into a proper tree structure
- * that preserves the actual parser hierarchy and shows all properties
- * like body, callee, args, etc. for debugging purposes.
- */
 import {
   computed, ref, inject, watch, type Ref,
 } from 'vue';
@@ -98,8 +91,13 @@ const handleNodeExpand = (event: { id: string;
   }
 };
 
-// Transform any value into a RawAstNode
-function transformToRawAstNode (data: unknown, propertyName: string, accessPath: string): RawAstNode {
+// Transform any value into a RawAstNode (with cycle detection via seen WeakSet)
+function transformToRawAstNode (
+  data: unknown,
+  propertyName: string,
+  accessPath: string,
+  seen = new WeakSet<object>(),
+): RawAstNode {
   const nodeId = `${accessPath}_${propertyName}`;
 
   if (data === null || data === undefined) {
@@ -125,56 +123,47 @@ function transformToRawAstNode (data: unknown, propertyName: string, accessPath:
     };
   }
 
-  // Handle arrays
-  if (Array.isArray(data)) {
-    const children: RawAstNode[] = data.map((item, index) =>
-      transformToRawAstNode(item, `[${index}]`, `${accessPath}[${index}]`),
-    );
-
+  // Cycle / diamond detection: render already-visited objects as leaf stubs
+  if (seen.has(data)) {
     return {
       id: nodeId,
-      propertyName: `${propertyName} (${data.length})`,
+      propertyName,
+      rawData: data,
+      value: data,
+      children: [],
+      accessPath,
+    };
+  }
+  seen.add(data);
+
+  // Handle arrays — only keep syntax-node items
+  if (Array.isArray(data)) {
+    const nodeItems = data.filter(isSyntaxNode);
+    const children: RawAstNode[] = nodeItems.map((item, index) =>
+      transformToRawAstNode(item, `[${index}]`, `${accessPath}[${index}]`, seen),
+    );
+    return {
+      id: nodeId,
+      propertyName: children.length !== data.length
+        ? `${propertyName} (${children.length}/${data.length})`
+        : `${propertyName} (${data.length})`,
       rawData: data,
       children,
       accessPath,
     };
   }
 
-  // Handle objects - show all properties
+  // Handle objects — only recurse into properties that lead to syntax nodes
   const children: RawAstNode[] = [];
+  const SKIP = new Set(['parent', 'parentNode', 'symbol', 'referee', 'source', 'filepath', '__proto__']);
 
-  // Sort properties to show important ones first
-  const entries = Object.entries(data);
-  const sortedEntries = entries.sort(([keyA], [keyB]) => {
-    // Priority order for common AST properties
-    const priority = [
-      'kind', 'type', 'name', 'value', 'token',
-      'body', 'callee', 'args', 'leftExpression', 'rightExpression', 'op',
-      'startPos', 'endPos', 'start', 'end', 'position',
-      'id', 'fullStart', 'fullEnd',
-    ];
-
-    const priorityA = priority.indexOf(keyA);
-    const priorityB = priority.indexOf(keyB);
-
-    if (priorityA !== -1 && priorityB !== -1) {
-      return priorityA - priorityB;
+  for (const [key, value] of Object.entries(data)) {
+    if (SKIP.has(key) || value === undefined) continue;
+    if (isSyntaxNode(value)) {
+      children.push(transformToRawAstNode(value, key, `${accessPath}.${key}`, seen));
+    } else if (Array.isArray(value) && value.some(isSyntaxNode)) {
+      children.push(transformToRawAstNode(value, key, `${accessPath}.${key}`, seen));
     }
-    if (priorityA !== -1) return -1;
-    if (priorityB !== -1) return 1;
-
-    return keyA.localeCompare(keyB);
-  });
-
-  for (const [key, value] of sortedEntries) {
-    // Skip some internal properties that are not useful for debugging
-    if (shouldSkipProperty(key, value)) {
-      continue;
-    }
-
-    const childPath = `${accessPath}.${key}`;
-    const child = transformToRawAstNode(value, key, childPath);
-    children.push(child);
   }
 
   return {
@@ -186,20 +175,9 @@ function transformToRawAstNode (data: unknown, propertyName: string, accessPath:
   };
 }
 
-// Determine if a property should be skipped in the tree view
-function shouldSkipProperty (key: string, value: unknown): boolean {
-  // Skip undefined values
-  if (value === undefined) {
-    return true;
-  }
-
-  const skipProperties = [
-    'parent', 'parentNode', 'symbol', 'referee', '__proto__',
-    'startPos', 'endPos', 'start', 'end', 'fullStart', 'fullEnd', 'kind',
-    'source', // full source text on ProgramNode — bloats the tree
-  ];
-
-  return skipProperties.includes(key);
+function isSyntaxNode (data: unknown): boolean {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+  return typeof (data as Record<string, unknown>).kind === 'string';
 }
 
 // Auto-expand ancestors when cursorNodeId changes so the active node is visible

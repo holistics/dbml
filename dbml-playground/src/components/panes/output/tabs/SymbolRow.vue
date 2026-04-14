@@ -14,13 +14,17 @@
         v-else
         class="flex-shrink-0 w-3"
       />
-      <component
-        :is="icon"
-        class="flex-shrink-0 w-3.5 h-3.5"
-        :class="iconColor"
-      />
-      <span class="text-blue-500 min-w-[80px]">{{ sym.name }}</span>
-      <span class="text-gray-400 text-xs">{{ sym.kind }}</span>
+      <VTooltip placement="bottom" :distance="6" class="flex-shrink-0">
+        <component
+          :is="icon"
+          class="w-3.5 h-3.5"
+          :class="iconColor"
+        />
+        <template #popper>
+          <span class="text-xs font-mono">{{ sym.kind }}</span>
+        </template>
+      </VTooltip>
+      <span class="text-blue-500">{{ sym.name }}</span>
       <span
         v-if="sym.declPos"
         class="ml-auto text-[10px] text-blue-400 hover:underline hover:text-blue-600 cursor-pointer flex-shrink-0"
