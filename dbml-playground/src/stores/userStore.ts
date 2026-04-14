@@ -1,4 +1,6 @@
-import { ref, watch } from 'vue';
+import {
+  ref, watch,
+} from 'vue';
 import { defineStore } from 'pinia';
 import logger from '../utils/logger';
 
@@ -8,14 +10,15 @@ export interface UserPreferences {
 
 const STORAGE_KEY = 'USER_DATA';
 
-const defaults: UserPreferences = {
-  isVim: false,
-};
+const defaults: UserPreferences = { isVim: false };
 
 function load (): UserPreferences {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...defaults, ...JSON.parse(raw) };
+    if (raw) return {
+      ...defaults,
+      ...JSON.parse(raw),
+    };
   } catch (err) {
     logger.warn('Failed to load user preferences:', err);
   }
@@ -37,5 +40,8 @@ export const useUser = defineStore('user', () => {
     prefs.value[key] = value;
   }
 
-  return { prefs, set };
+  return {
+    prefs,
+    set,
+  };
 });

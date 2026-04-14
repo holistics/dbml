@@ -138,8 +138,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, onUnmounted } from 'vue';
-import { DocumentPlusIcon, FolderPlusIcon, FolderIcon, DocumentTextIcon, ArrowPathIcon } from '@heroicons/vue/24/outline';
+import {
+  ref, computed, nextTick, onUnmounted,
+} from 'vue';
+import {
+  DocumentPlusIcon, FolderPlusIcon, FolderIcon, DocumentTextIcon, ArrowPathIcon,
+} from '@heroicons/vue/24/outline';
 import { useProject } from '@/stores/projectStore';
 import { Filepath } from '@dbml/parse';
 import FileTreeNode from './FileTreeNode.vue';
@@ -166,7 +170,13 @@ function buildTree (filePaths: string[], explicitFolders: string[] = []): TreeNo
   function ensureFolder (fp: Filepath, siblings: TreeNode[]): TreeNode {
     const key = fp.absolute;
     if (!folderMap.has(key)) {
-      const node: TreeNode = { name: fp.basename, path: key, type: 'folder', children: [], depth: depthOf(fp) };
+      const node: TreeNode = {
+        name: fp.basename,
+        path: key,
+        type: 'folder',
+        children: [],
+        depth: depthOf(fp),
+      };
       folderMap.set(key, node);
       siblings.push(node);
     }
@@ -180,9 +190,16 @@ function buildTree (filePaths: string[], explicitFolders: string[] = []): TreeNo
     return ensureFolder(parentFp, getSiblings(parentFp)).children;
   }
 
-  const allEntries: { fp: Filepath; isFolder: boolean }[] = [
-    ...explicitFolders.map(p => ({ fp: Filepath.from(p), isFolder: true })),
-    ...filePaths.map(p => ({ fp: Filepath.from(p), isFolder: false })),
+  const allEntries: { fp: Filepath;
+    isFolder: boolean; }[] = [
+    ...explicitFolders.map((p) => ({
+      fp: Filepath.from(p),
+      isFolder: true,
+    })),
+    ...filePaths.map((p) => ({
+      fp: Filepath.from(p),
+      isFolder: false,
+    })),
   ];
 
   allEntries.sort((a, b) => {
@@ -194,12 +211,20 @@ function buildTree (filePaths: string[], explicitFolders: string[] = []): TreeNo
     return a.fp.basename.localeCompare(b.fp.basename);
   });
 
-  for (const { fp, isFolder } of allEntries) {
+  for (const {
+    fp, isFolder,
+  } of allEntries) {
     const siblings = getSiblings(fp);
     if (isFolder) {
       ensureFolder(fp, siblings);
     } else if (!folderSet.has(fp.absolute)) {
-      siblings.push({ name: fp.basename, path: fp.absolute, type: 'file', children: [], depth: depthOf(fp) });
+      siblings.push({
+        name: fp.basename,
+        path: fp.absolute,
+        type: 'file',
+        children: [],
+        depth: depthOf(fp),
+      });
     }
   }
 
@@ -223,7 +248,11 @@ const pendingInputEl = ref<HTMLInputElement | null>(null);
 
 const confirmingReset = ref(false);
 const resetButtonRef = ref<HTMLButtonElement | null>(null);
-const resetPopoverStyle = ref<{ top: string; left: string }>({ top: '0px', left: '0px' });
+const resetPopoverStyle = ref<{ top: string;
+  left: string; }>({
+  top: '0px',
+  left: '0px',
+});
 
 function toggleReset () {
   if (!confirmingReset.value && resetButtonRef.value) {
@@ -313,13 +342,19 @@ function createFile () {
 }
 
 function createFolder () {
-  pendingNode.value = { type: 'folder', parentPath: '' };
+  pendingNode.value = {
+    type: 'folder',
+    parentPath: '',
+  };
   pendingValue.value = '';
   nextTick(() => pendingInputEl.value?.focus());
 }
 
 function createFileInFolder (folderPath: string) {
-  pendingNode.value = { type: 'file', parentPath: folderPath };
+  pendingNode.value = {
+    type: 'file',
+    parentPath: folderPath,
+  };
   pendingValue.value = '';
   nextTick(() => pendingInputEl.value?.focus());
 }
@@ -328,7 +363,9 @@ function commitPending () {
   if (!pendingNode.value) return;
   const rawName = pendingValue.value.trim();
   if (rawName) {
-    const { type, parentPath } = pendingNode.value;
+    const {
+      type, parentPath,
+    } = pendingNode.value;
     const parentFp = parentPath ? Filepath.from(parentPath) : Filepath.from('/');
     const childFp = parentFp.join(rawName);
     if (type === 'folder') {

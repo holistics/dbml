@@ -41,7 +41,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, inject, onUnmounted, type Ref } from 'vue';
+import {
+  ref, watch, computed, inject, onUnmounted, type Ref,
+} from 'vue';
 import * as monaco from 'monaco-editor';
 import type { SyntaxToken } from '@dbml/parse';
 
@@ -52,7 +54,8 @@ interface Props {
 const props = defineProps<Props>();
 
 const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getDbmlEditor');
-const cursorPos = inject<Ref<{ line: number; column: number }>>('dbmlCursorPos');
+const cursorPos = inject<Ref<{ line: number;
+  column: number; }>>('dbmlCursorPos');
 
 const scrollEl = ref<HTMLElement | null>(null);
 const rowEls: HTMLElement[] = [];
@@ -68,7 +71,9 @@ watch(() => props.tokens.length, () => { rowEls.length = 0; });
 
 const activeIndex = computed(() => {
   if (!cursorPos?.value || props.tokens.length === 0) return -1;
-  const { line, column } = cursorPos.value;
+  const {
+    line, column,
+  } = cursorPos.value;
   let best = -1;
   for (let i = 0; i < props.tokens.length; i++) {
     const t = props.tokens[i];
@@ -84,7 +89,10 @@ const activeIndex = computed(() => {
 
 watch(activeIndex, (i) => {
   if (i < 0) return;
-  rowEls[i]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  rowEls[i]?.scrollIntoView({
+    block: 'nearest',
+    behavior: 'smooth',
+  });
 });
 
 function updateDecorations () {
@@ -121,7 +129,10 @@ function navigateTo (tok: SyntaxToken) {
 }
 
 function scrollToToken (i: number) {
-  rowEls[i]?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  rowEls[i]?.scrollIntoView({
+    block: 'center',
+    behavior: 'smooth',
+  });
 }
 
 defineExpose({ scrollToToken });

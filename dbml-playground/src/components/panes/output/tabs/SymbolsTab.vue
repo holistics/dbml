@@ -26,7 +26,9 @@
 
 <script setup lang="ts">
 import SymbolRow from './SymbolRow.vue';
-import type { SymbolInfo, DeclPos } from '@/stores/parserStore';
+import type {
+  SymbolInfo, DeclPos,
+} from '@/stores/parserStore';
 
 interface Props {
   symbols: SymbolInfo[];

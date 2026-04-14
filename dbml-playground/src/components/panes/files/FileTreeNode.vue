@@ -172,7 +172,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onUnmounted } from 'vue';
+import {
+  ref, computed, onUnmounted,
+} from 'vue';
 import {
   ChevronRightIcon,
   FolderIcon,
@@ -220,7 +222,11 @@ const project = useProject();
 const open = ref(true);
 const confirmingDelete = ref(false);
 const deleteButtonRef = ref<HTMLButtonElement | null>(null);
-const popoverStyle = ref<{ top: string; left: string }>({ top: '0px', left: '0px' });
+const popoverStyle = ref<{ top: string;
+  left: string; }>({
+  top: '0px',
+  left: '0px',
+});
 
 const isActive = computed(() =>
   props.node.type === 'file' && project.currentFile === props.node.path,

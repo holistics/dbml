@@ -63,7 +63,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import {
+  computed, ref, watch,
+} from 'vue';
 import { ChevronRightIcon } from '@heroicons/vue/24/outline';
 import type { NavigationPosition } from '@/types';
 
@@ -89,8 +91,10 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
-  'node-expand': [{ id: string; expanded: boolean }];
-  'position-click': [{ node: RawAstNode; position: NavigationPosition }];
+  'node-expand': [{ id: string;
+    expanded: boolean; }];
+  'position-click': [{ node: RawAstNode;
+    position: NavigationPosition; }];
   'scroll-to': [id: string];
 }>();
 
@@ -102,7 +106,10 @@ const isActive = computed(() => props.node.id === props.cursorNodeId || props.se
 // Scroll into view when this node becomes the active cursor node
 watch(isActive, (active) => {
   if (active && rowEl.value) {
-    rowEl.value.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    rowEl.value.scrollIntoView({
+      block: 'nearest',
+      behavior: 'smooth',
+    });
   }
 });
 
@@ -156,7 +163,12 @@ function formatPosition (): string {
 }
 
 function handleNodeClick () { emit('node-click', props.node); }
-function toggleExpanded () { emit('node-expand', { id: props.node.id, expanded: !isExpanded.value }); }
+function toggleExpanded () {
+  emit('node-expand', {
+    id: props.node.id,
+    expanded: !isExpanded.value,
+  });
+}
 
 function handlePositionClick () {
   const d = asObj(props.node.rawData);
@@ -166,15 +178,34 @@ function handlePositionClick () {
   let position: NavigationPosition | null = null;
   if (sp && typeof sp.line === 'number' && ep && typeof ep.line === 'number') {
     position = {
-      start: { line: sp.line + 1, column: typeof sp.column === 'number' ? sp.column + 1 : 1, offset: typeof d.start === 'number' ? d.start : 0 },
-      end: { line: ep.line + 1, column: typeof ep.column === 'number' ? ep.column + 1 : 1, offset: typeof d.end === 'number' ? d.end : 0 },
+      start: {
+        line: sp.line + 1,
+        column: typeof sp.column === 'number' ? sp.column + 1 : 1,
+        offset: typeof d.start === 'number' ? d.start : 0,
+      },
+      end: {
+        line: ep.line + 1,
+        column: typeof ep.column === 'number' ? ep.column + 1 : 1,
+        offset: typeof d.end === 'number' ? d.end : 0,
+      },
     };
   } else if (typeof d.start === 'number') {
     position = {
-      start: { line: 1, column: 1, offset: d.start },
-      end: { line: 1, column: 1, offset: typeof d.end === 'number' ? d.end : d.start },
+      start: {
+        line: 1,
+        column: 1,
+        offset: d.start,
+      },
+      end: {
+        line: 1,
+        column: 1,
+        offset: typeof d.end === 'number' ? d.end : d.start,
+      },
     };
   }
-  if (position) emit('position-click', { node: props.node, position });
+  if (position) emit('position-click', {
+    node: props.node,
+    position,
+  });
 }
 </script>

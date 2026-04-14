@@ -40,7 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, type Component } from 'vue';
+import {
+  ref, computed, type Component,
+} from 'vue';
 import {
   ChevronRightIcon,
   TableCellsIcon,
@@ -49,7 +51,9 @@ import {
   FolderIcon,
   AtSymbolIcon,
 } from '@heroicons/vue/24/outline';
-import type { SymbolInfo, DeclPos } from '@/stores/parserStore';
+import type {
+  SymbolInfo, DeclPos,
+} from '@/stores/parserStore';
 
 interface Props {
   sym: SymbolInfo;
@@ -67,23 +71,23 @@ function toggleOpen () { open.value = !open.value; }
 const hasMembers = computed(() => props.sym.members.length > 0);
 
 const KIND_ICONS: Record<string, Component> = {
-  Table: TableCellsIcon,
-  Column: ListBulletIcon,
-  Ref: ArrowsRightLeftIcon,
-  Enum: ListBulletIcon,
+  'Table': TableCellsIcon,
+  'Column': ListBulletIcon,
+  'Ref': ArrowsRightLeftIcon,
+  'Enum': ListBulletIcon,
   'Enum field': ListBulletIcon,
-  TableGroup: FolderIcon,
-  Schema: FolderIcon,
+  'TableGroup': FolderIcon,
+  'Schema': FolderIcon,
 };
 
 const KIND_COLORS: Record<string, string> = {
-  Table: 'text-blue-500',
-  Column: 'text-gray-500',
-  Ref: 'text-purple-500',
-  Enum: 'text-green-600',
+  'Table': 'text-blue-500',
+  'Column': 'text-gray-500',
+  'Ref': 'text-purple-500',
+  'Enum': 'text-green-600',
   'Enum field': 'text-green-500',
-  TableGroup: 'text-yellow-600',
-  Schema: 'text-orange-500',
+  'TableGroup': 'text-yellow-600',
+  'Schema': 'text-orange-500',
 };
 
 const icon = computed((): Component => KIND_ICONS[props.sym.kind] ?? AtSymbolIcon);

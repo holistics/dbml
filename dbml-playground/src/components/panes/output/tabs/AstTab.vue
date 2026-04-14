@@ -38,7 +38,8 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
-  'position-click': [{ node: RawAstNode; position: NavigationPosition }];
+  'position-click': [{ node: RawAstNode;
+    position: NavigationPosition; }];
 }>();
 
 // Count SyntaxNode-like objects (those with a 'kind' own property).

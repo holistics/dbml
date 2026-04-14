@@ -8,7 +8,9 @@
       class="flex flex-col items-center py-10 text-gray-400"
     >
       <CheckCircleIcon class="w-8 h-8 mb-2 text-blue-400" />
-      <p class="text-sm">No diagnostics</p>
+      <p class="text-sm">
+        No diagnostics
+      </p>
     </div>
 
     <div
@@ -65,8 +67,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline';
+import {
+  computed, ref, watch,
+} from 'vue';
+import {
+  CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon,
+} from '@heroicons/vue/24/outline';
 import { ChevronRightIcon } from '@heroicons/vue/24/outline';
 import type { ParserError } from '@/types';
 
@@ -89,7 +95,11 @@ interface DiagGroup {
 const groups = computed(() => {
   const map = new Map<string, DiagGroup>();
   const getOrCreate = (file: string) => {
-    if (!map.has(file)) map.set(file, { file, errors: [], warnings: [] });
+    if (!map.has(file)) map.set(file, {
+      file,
+      errors: [],
+      warnings: [],
+    });
     return map.get(file)!;
   };
   for (const e of props.errors) getOrCreate('main.dbml').errors.push(e as ParserError);

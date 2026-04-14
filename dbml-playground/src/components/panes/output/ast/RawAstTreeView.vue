@@ -21,7 +21,9 @@
  * that preserves the actual parser hierarchy and shows all properties
  * like body, callee, args, etc. for debugging purposes.
  */
-import { computed, ref, inject, watch, type Ref } from 'vue';
+import {
+  computed, ref, inject, watch, type Ref,
+} from 'vue';
 import type { NavigationPosition } from '@/types';
 import type { ProgramNode } from '@dbml/parse';
 import RawAstTreeNode, { type RawAstNode } from './RawAstTreeNode.vue';
@@ -34,7 +36,8 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
-  'position-click': [{ node: RawAstNode; position: NavigationPosition }];
+  'position-click': [{ node: RawAstNode;
+    position: NavigationPosition; }];
 }>();
 
 const selectedNode = ref<RawAstNode | null>(null);
@@ -44,12 +47,15 @@ const expandedNodes = ref<Set<string>>(new Set(['root']));
 watch(() => props.rawAst, () => {
   expandedNodes.value = new Set(['root']);
 });
-const cursorPos = inject<Ref<{ line: number; column: number }> | undefined>('dbmlCursorPos', undefined);
+const cursorPos = inject<Ref<{ line: number;
+  column: number; }> | undefined>('dbmlCursorPos', undefined);
 
 // Find AST node id that contains cursor position
 const cursorNodeId = computed(() => {
   if (!cursorPos?.value) return undefined;
-  const { line, column } = cursorPos.value;
+  const {
+    line, column,
+  } = cursorPos.value;
   return findNodeAtPosition(rootNode.value, line, column);
 });
 
@@ -77,7 +83,8 @@ const rootNode = computed(() => {
 });
 
 // Handle node expansion
-const handleNodeExpand = (event: { id: string; expanded: boolean }) => {
+const handleNodeExpand = (event: { id: string;
+  expanded: boolean; }) => {
   if (event.expanded) {
     expandedNodes.value.add(event.id);
   } else {
