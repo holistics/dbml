@@ -5,10 +5,12 @@ import exporter from './export';
 import {
   renameTable,
   syncDiagramView,
+  findDiagramViewBlocks,
 } from './transform';
 export {
   renameTable,
   syncDiagramView,
+  findDiagramViewBlocks,
   importer,
   exporter,
   ModelExporter,

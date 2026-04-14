@@ -1,5 +1,5 @@
 import {
-  Compiler, DEFAULT_ENTRY,
+  Compiler, DEFAULT_ENTRY, findDiagramViewBlocks,
 } from '@dbml/parse';
 import type { DiagramViewBlock, DiagramViewSyncOperation, TextEdit } from '@dbml/parse';
 
@@ -29,6 +29,8 @@ export function renameTable (
  * Applies create/update/delete operations to DiagramView blocks in a
  * single-file DBML document.
  */
+export { findDiagramViewBlocks };
+
 export function syncDiagramView (
   dbmlCode: string,
   operations: DiagramViewSyncOperation[],
