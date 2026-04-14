@@ -285,6 +285,18 @@ describe('[example] multifile binder', () => {
       expect(compiler.bindNode(xAst).getErrors()).toHaveLength(0);
       expect(compiler.bindNode(yAst).getErrors()).toHaveLength(0);
     });
+
+    test('circular reuse chain does not infinite loop or crash', () => {
+      const { compiler, fps } = makeCompiler({
+        '/a.dbml': "reuse * from './b.dbml'\nTable a_table { id int [pk] }",
+        '/b.dbml': "reuse * from './a.dbml'\nTable b_table { id int [pk] }",
+      });
+
+      const aAst = compiler.parseFile(fps['/a.dbml']).getValue().ast;
+      const bAst = compiler.parseFile(fps['/b.dbml']).getValue().ast;
+      expect(() => compiler.bindNode(aAst)).not.toThrow();
+      expect(() => compiler.bindNode(bAst)).not.toThrow();
+    });
   });
 
   describe('enum import', () => {
@@ -311,6 +323,25 @@ describe('[example] multifile binder', () => {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       const errors = compiler.bindNode(mainAst).getErrors();
       expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('schema-qualified enum import has no binding errors and UseSymbol points to the declaration', () => {
+      // `Enum auth.roles` is declared with an explicit schema prefix.
+      // `use { enum auth.roles }` must resolve the specifier without errors,
+      // and the resulting UseSymbol must point to the original enum declaration.
+      const { compiler, fps } = makeCompiler({
+        '/types.dbml': 'Enum auth.roles { admin member }',
+        '/main.dbml': "use { enum auth.roles } from './types.dbml'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+
+      const spec = mainAst.uses[0].specifiers as any;
+      const useSymbol = compiler.nodeSymbol(spec.specifiers[0]).getValue() as UseSymbol;
+      expect(useSymbol).toBeInstanceOf(UseSymbol);
+      expect(useSymbol.usedSymbol).toBeDefined();
+      expect(compiler.symbolName(useSymbol.usedSymbol!)).toBe('roles');
     });
   });
 
@@ -352,6 +383,67 @@ describe('[example] multifile binder', () => {
       expect(u2).toBeInstanceOf(UseSymbol);
       // Both point to the same original declaration (users in base.dbml)
       expect((u1 as UseSymbol).usedSymbol?.declaration).toBe((u2 as UseSymbol).usedSymbol?.declaration);
+    });
+  });
+
+  describe('alias shadows local name', () => {
+    test('importing a symbol under an alias that matches a locally-defined table produces DUPLICATE_NAME', () => {
+      // `use { table accounts as users }` creates a local name 'users'.
+      // The file also defines `Table users` — these two collide.
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table accounts { id int [pk] }',
+        '/main.dbml': [
+          "use { table accounts as users } from './base.dbml'",
+          'Table users { id int [pk] }',
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(mainAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+    });
+  });
+
+  describe('wildcard import from two files with overlapping names', () => {
+    test('use * from two files with the same table name produces DUPLICATE_NAME', () => {
+      const { compiler, fps } = makeCompiler({
+        '/a.dbml': 'Table users { id int [pk] }',
+        '/b.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': [
+          "use * from './a.dbml'",
+          "use * from './b.dbml'",
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(mainAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+    });
+  });
+
+  describe('file with both element declarations and reuse', () => {
+    test('file with elements AND reuse * still exposes all symbols correctly', () => {
+      // Regression for topLevelSchemaMembers: a file that declares elements
+      // AND has use/reuse declarations must not lose its own elements from
+      // the public schema when the reuse-only synthetic-schema path runs.
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table products { id int [pk] }',
+        '/hub.dbml': [
+          "reuse * from './base.dbml'",
+          'Table categories { id int [pk] }',
+        ].join('\n'),
+        '/main.dbml': "use * from './hub.dbml'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      // products comes through the reuse chain; categories is defined directly in hub
+      const products = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'products').getValue();
+      const categories = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'categories').getValue();
+      expect(products).toBeInstanceOf(UseSymbol);
+      expect(categories).toBeInstanceOf(UseSymbol);
     });
   });
 

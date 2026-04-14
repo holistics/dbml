@@ -87,16 +87,51 @@ export {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
 };
 
-// To detect cyclic queries
-// Indicating that a query is being computed, but we're trying to compute it again
+// Sentinel placed in the cache while a query is being computed.
+// If a re-entrant call hits the same cache slot it means we have a cycle.
 const COMPUTING = Symbol('COMPUTING');
 
 type QuerySubCache = Map<string, any>;
 
+/**
+ * ## Query system invariants
+ *
+ * Every public method on Compiler that begins with a lowercase noun (e.g.
+ * `parseFile`, `bindNode`, `symbolName`) is a **query**: a memoised,
+ * lazily-evaluated function with the following invariants:
+ *
+ * 1. **Purity** — queries must not mutate any shared state. They read from
+ *    `this.layout` and from other cached queries, and return a value.
+ *    Side-effecting logic belongs in `setSource` / `deleteSource`.
+ *
+ * 2. **Cache scope** — each query is registered with `this.query()` (global)
+ *    or `this.localQuery()` (per-file):
+ *    - `query()`: cached across all files. Invalidated entirely on any
+ *      `setSource` / `deleteSource` / `clearSource` call.
+ *    - `localQuery()`: cached per `Filepath.intern()` key. Only the changed
+ *      file's cache entry is deleted on `setSource(filepath, ...)`.
+ *    Use `localQuery` only when the function's output depends solely on the
+ *    content of a single file (e.g. `parseFile`, `topLevelSchemaMembers`).
+ *
+ * 3. **Single wrapping** — each query function must be passed to `query()` or
+ *    `localQuery()` exactly once. Each call allocates a unique `Symbol()` as
+ *    the cache key; double-wrapping creates a second key and defeats caching.
+ *
+ * 4. **Cycle detection** — if a query calls itself (directly or transitively)
+ *    before its result is stored, the COMPUTING sentinel is found in the cache
+ *    and an error is thrown. This surfaces infinite loops at development time.
+ *
+ * 5. **Error propagation** — query functions return `Report<T>` objects that
+ *    carry errors alongside values. A thrown exception is NOT caught by the
+ *    cache layer; it propagates to the caller and the cache slot is left as
+ *    COMPUTING (i.e., the entry is poisoned). Do not throw from queries.
+ */
 export default class Compiler {
   private globalCache = new Map<symbol, QuerySubCache>();
 
-  // Outer key: FilepathId; inner key: queryKey symbol; innermost key: serialized remaining args
+  // Outer key: Filepath.intern() string; inner key: queryKey symbol; innermost key: serialized remaining args.
+  // Invariant: Filepath.intern() must return a stable, unique string per logical filepath across the
+  // lifetime of this Compiler instance. If interning semantics change, per-file cache invalidation breaks.
   private localCache = new Map<string, Map<symbol, QuerySubCache>>();
 
   layout: DbmlProjectLayout = new MemoryProjectLayout();

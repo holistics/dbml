@@ -126,28 +126,39 @@ export class UseStatementMerger {
   }
 
   /**
-   * Extract symbol name from an expression node.
-   * Handles simple identifiers (VariableNode) and qualified names.
+   * Extract the symbol name string from a specifier's name expression node.
+   *
+   * The AST shape varies depending on how complete the parse is:
+   *   1. `VariableNode` with a `variable` token — the normal, fully-parsed case.
+   *   2. Node with a `.variable.value` string — produced by some parser recovery paths.
+   *   3. Node with a `.value` string — token-level nodes (e.g. SyntaxToken directly).
+   *   4. Node with a `.name` string — rare structural variant.
+   *   5. Source-text slice via `.source` + `.start`/`.end` — last resort when the
+   *      node carries no parsed text; used when the parser recovered with partial info.
+   *
+   * Branches are tried in order of specificity; the first match wins. The `any`
+   * parameter type is intentional — specifier name nodes may be any expression
+   * subtype and the concrete type is not narrowed at the call site.
    */
   private static extractSymbolName (node: any): string | null {
     if (!node) return null;
 
-    // Handle VariableNode: has a 'variable' token property
+    // 1. Canonical case: fully-parsed VariableNode
     if (node instanceof VariableNode && node.variable) {
       return node.variable.value ?? null;
     }
 
-    // Handle nodes with direct 'variable' property
+    // 2. Parser recovery: node has a `variable` sub-token
     if (node.variable && typeof node.variable.value === 'string') {
       return node.variable.value;
     }
 
-    // Handle nodes with 'value' property (for tokens)
+    // 3. Token-level node: carries its lexeme in `.value`
     if (typeof node.value === 'string') {
       return node.value;
     }
 
-    // Handle nodes with 'name' property
+    // 4. Structural variant: name stored directly as a string property
     if (typeof node.name === 'string') {
       return node.name;
     }

@@ -44,14 +44,22 @@ export interface DiagramViewBlock {
   endIndex: number;
 }
 
+/**
+ * Returns the start/end byte positions of every DiagramView block in `source`.
+ *
+ * Returns an empty array on any lex or parse error — callers cannot
+ * distinguish "no DiagramView blocks present" from "malformed DBML" based on
+ * the return value alone. If you need to detect malformed input, lex/parse
+ * the source separately and check for errors before calling this function.
+ */
 export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
   const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return blocks;
+  if (lexerResult.getErrors().length > 0) return blocks; // malformed — cannot tokenize
 
   const tokens = lexerResult.getValue();
   const ast = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
-  if (ast.getErrors().length > 0) return blocks;
+  if (ast.getErrors().length > 0) return blocks; // malformed — cannot parse
 
   const program = ast.getValue().ast;
 
