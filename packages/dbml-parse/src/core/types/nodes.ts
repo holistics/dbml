@@ -201,15 +201,10 @@ export class ProgramNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.PROGRAM,
-      filepath,
-      [
-        ...body,
-        eof,
-      ],
-    );
+    super(id, SyntaxNodeKind.PROGRAM, filepath, [
+      ...body,
+      eof,
+    ]);
     this.source = source;
     this.body = body;
     this.eof = eof;
@@ -514,16 +509,11 @@ export class AttributeNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.ATTRIBUTE,
-      filepath,
-      [
-        name,
-        colon,
-        value,
-      ],
-    );
+    super(id, SyntaxNodeKind.ATTRIBUTE, filepath, [
+      name,
+      colon,
+      value,
+    ]);
     this.name = name;
     this.value = value;
     this.colon = colon;
@@ -569,15 +559,10 @@ export class PrefixExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.PREFIX_EXPRESSION,
-      filepath,
-      [
-        op,
-        expression,
-      ],
-    );
+    super(id, SyntaxNodeKind.PREFIX_EXPRESSION, filepath, [
+      op,
+      expression,
+    ]);
     this.op = op;
     this.expression = expression;
   }
@@ -608,16 +593,11 @@ export class InfixExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.INFIX_EXPRESSION,
-      filepath,
-      [
-        leftExpression,
-        op,
-        rightExpression,
-      ],
-    );
+    super(id, SyntaxNodeKind.INFIX_EXPRESSION, filepath, [
+      leftExpression,
+      op,
+      rightExpression,
+    ]);
     this.op = op;
     this.leftExpression = leftExpression;
     this.rightExpression = rightExpression;
@@ -663,14 +643,9 @@ export class FunctionExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.FUNCTION_EXPRESSION,
-      filepath,
-      [
-        value,
-      ],
-    );
+    super(id, SyntaxNodeKind.FUNCTION_EXPRESSION, filepath, [
+      value,
+    ]);
     this.value = value;
   }
 }
@@ -693,15 +668,10 @@ export class FunctionApplicationNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.FUNCTION_APPLICATION,
-      filepath,
-      [
-        callee,
-        ...args,
-      ],
-    );
+    super(id, SyntaxNodeKind.FUNCTION_APPLICATION, filepath, [
+      callee,
+      ...args,
+    ]);
     this.callee = callee;
     this.args = args;
   }
@@ -731,16 +701,11 @@ export class BlockExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.BLOCK_EXPRESSION,
-      filepath,
-      [
-        blockOpenBrace,
-        ...body,
-        blockCloseBrace,
-      ],
-    );
+    super(id, SyntaxNodeKind.BLOCK_EXPRESSION, filepath, [
+      blockOpenBrace,
+      ...body,
+      blockCloseBrace,
+    ]);
     this.blockOpenBrace = blockOpenBrace;
     this.body = body;
     this.blockCloseBrace = blockCloseBrace;
@@ -913,15 +878,10 @@ export class CallExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.CALL_EXPRESSION,
-      filepath,
-      [
-        callee,
-        argumentList,
-      ],
-    );
+    super(id, SyntaxNodeKind.CALL_EXPRESSION, filepath, [
+      callee,
+      argumentList,
+    ]);
     this.callee = callee;
     this.argumentList = argumentList;
   }
@@ -942,14 +902,9 @@ export class LiteralNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.LITERAL,
-      filepath,
-      [
-        literal,
-      ],
-    );
+    super(id, SyntaxNodeKind.LITERAL, filepath, [
+      literal,
+    ]);
     this.literal = literal;
   }
 }
@@ -966,14 +921,9 @@ export class WildcardNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.WILDCARD,
-      filepath,
-      [
-        token,
-      ],
-    );
+    super(id, SyntaxNodeKind.WILDCARD, filepath, [
+      token,
+    ]);
     this.token = token;
   }
 }
@@ -992,14 +942,9 @@ export class VariableNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.VARIABLE,
-      filepath,
-      [
-        variable,
-      ],
-    );
+    super(id, SyntaxNodeKind.VARIABLE, filepath, [
+      variable,
+    ]);
     this.variable = variable;
   }
 }
@@ -1018,14 +963,9 @@ export class PrimaryExpressionNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(
-      id,
-      SyntaxNodeKind.PRIMARY_EXPRESSION,
-      filepath,
-      [
-        expression,
-      ],
-    );
+    super(id, SyntaxNodeKind.PRIMARY_EXPRESSION, filepath, [
+      expression,
+    ]);
     this.expression = expression;
   }
 }
@@ -1044,14 +984,9 @@ export class EmptyNode extends SyntaxNode {
     filepath: Filepath,
   ) {
     const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, filepath, prevToken.endPos, prevToken.endPos, ' ', false);
-    super(
-      id,
-      SyntaxNodeKind.EMPTY,
-      filepath,
-      [
-        nextToken,
-      ],
-    );
+    super(id, SyntaxNodeKind.EMPTY, filepath, [
+      nextToken,
+    ]);
   }
 }
 

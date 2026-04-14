@@ -6,6 +6,9 @@ import type {
   ImportFormat,
 } from '@dbml/core';
 import chalk from 'chalk';
+import {
+  Command,
+} from 'commander';
 import figures from 'figures';
 import {
   SyntaxError,
@@ -24,14 +27,9 @@ import {
   validateFilePlugin,
 } from './validatePlugins/validatePlugins';
 
-interface Program {
-  args: string[];
-  opts(): Record<string, unknown>;
-}
-
-export default async function importHandler (program: Program) {
+export default async function importHandler (program: Command) {
   try {
-    const inputPaths = resolvePaths(program.args) as string[];
+    const inputPaths = resolvePaths(program.args);
     validateInputFilePaths(inputPaths, validateFilePlugin);
     const opts = program.opts();
 
@@ -40,9 +38,9 @@ export default async function importHandler (program: Program) {
     if (!opts.outFile && !opts.outDir) {
       generate(inputPaths, (sql) => importer.import(sql, format), OutputConsolePlugin);
     } else if (opts.outFile) {
-      generate(inputPaths, (sql) => importer.import(sql, format), new OutputFilePlugin(resolvePaths(opts.outFile as string) as string));
+      generate(inputPaths, (sql) => importer.import(sql, format), new OutputFilePlugin(resolvePaths(opts.outFile)));
 
-      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile as string)}`);
+      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
     if (error instanceof CompilerError) {

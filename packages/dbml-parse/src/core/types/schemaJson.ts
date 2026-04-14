@@ -1,4 +1,4 @@
-import {
+import type {
   Filepath,
 } from './filepath';
 import type {
@@ -20,8 +20,10 @@ export interface TokenPosition {
 export interface ElementRef {
   name: string;
   schemaName: string | null;
-  visibleNames: { schemaName: string | null;
-    name: string; }[];
+  visibleNames: {
+    schemaName: string | null;
+    name: string;
+  }[];
 }
 
 export interface DatabaseExternals {
