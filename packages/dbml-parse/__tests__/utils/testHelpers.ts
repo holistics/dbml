@@ -49,7 +49,7 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
   const rawKind = nodeOrSymbol.kind;
-  // Normalize Program kind to Schema to hide module-system-3 structural difference
+  // Program symbols are displayed as Schema in snapshots for readability
   const kind = rawKind === SymbolKind.Program ? SymbolKind.Schema : rawKind;
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
