@@ -5,6 +5,41 @@ import tseslint from 'typescript-eslint';
 import tsparser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
 
+const IMPORT_ORDER_RULES = {
+  'import/order': ['error', {
+    groups: [
+      'builtin',
+      'external',
+      'internal',
+      'parent',
+      'sibling',
+      'index',
+    ],
+    'newlines-between': 'never',
+    alphabetize: {
+      order: 'asc',
+      caseInsensitive: false,
+    },
+  }],
+  'import/newline-after-import': ['error', { count: 1 }],
+  'sort-imports': ['error', {
+    ignoreDeclarationSort: true,
+    ignoreCase: false,
+    memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+  }],
+};
+
+const IMPORT_SETTINGS = {
+  'import/resolver': {
+    typescript: {
+      alwaysTryTypes: true,
+      project: './tsconfig.json',
+    },
+    node: true,
+  },
+  'import/internal-regex': '^@/',
+};
+
 export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
@@ -39,28 +74,9 @@ export default defineConfig(
         '@stylistic': stylistic,
         import: importPlugin,
       },
+      settings: IMPORT_SETTINGS,
       rules: {
-        'import/order': ['error', {
-          'groups': [
-            'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index',
-          ],
-          'newlines-between': 'never',
-          'alphabetize': {
-            order: 'asc',
-            caseInsensitive: false,
-          },
-        }],
-        'import/newline-after-import': ['error', { count: 1 }],
-        'sort-imports': ['error', {
-          ignoreDeclarationSort: true, // let import/order handle statement ordering
-          ignoreCase: false,
-          memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
-        }],
+        ...IMPORT_ORDER_RULES,
         '@typescript-eslint/no-explicit-any': 'off',
         'no-use-before-define': 'off',
         'no-continue': 'off',
@@ -77,7 +93,7 @@ export default defineConfig(
         '@typescript-eslint/consistent-return': [
           'error',
         ],
-        '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+        '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
         '@stylistic/max-statements-per-line': 'off',
         '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
         '@stylistic/object-curly-newline': ['error', {
@@ -90,16 +106,6 @@ export default defineConfig(
         '@stylistic/array-bracket-newline': ['error', { multiline: true, minItems: 4 }],
         '@stylistic/array-element-newline': ['error', { multiline: true, minItems: 4 }],
         '@stylistic/function-call-argument-newline': ['error', 'consistent'],
-      },
-      settings: {
-        'import/resolver': {
-          typescript: {
-            alwaysTryTypes: true,
-            project: './tsconfig.json',
-          },
-          node: true,
-        },
-        'import/internal-regex': '^@/',
       },
     },
   ],
