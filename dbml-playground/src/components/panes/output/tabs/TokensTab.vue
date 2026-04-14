@@ -1,15 +1,7 @@
 <template>
   <div class="h-full flex flex-col text-[13px]">
-    <div class="flex-shrink-0 flex items-center justify-between px-3 py-1 border-b border-gray-200 bg-white text-gray-500 text-xs">
+    <div class="flex-shrink-0 px-3 py-1 border-b border-gray-200 bg-white text-gray-500 text-xs">
       <span>{{ tokens.length }} tokens</span>
-      <label class="flex items-center gap-1.5 cursor-pointer select-none">
-        <input
-          v-model="showDecorations"
-          type="checkbox"
-          class="w-3 h-3 accent-blue-500"
-        >
-        Highlight in editor
-      </label>
     </div>
 
     <div
@@ -42,7 +34,7 @@
 
 <script setup lang="ts">
 import {
-  ref, watch, computed, inject, onUnmounted, type Ref,
+  ref, watch, onMounted, onUnmounted, inject, type Ref,
 } from 'vue';
 import * as monaco from 'monaco-editor';
 import type {
@@ -56,13 +48,12 @@ interface Props {
 const props = defineProps<Props>();
 
 const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getDbmlEditor');
-const cursorPos = inject<Ref<{ line: number;
-  column: number; }>>('dbmlCursorPos');
+const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
 
 const scrollEl = ref<HTMLElement | null>(null);
 const rowEls: HTMLElement[] = [];
-const showDecorations = ref(true);
 let decorations: monaco.editor.IEditorDecorationsCollection | null = null;
+const activeIndex = ref(-1);
 
 function setRowEl (i: number, el: HTMLElement | null) {
   if (el) rowEls[i] = el;
@@ -71,37 +62,58 @@ function setRowEl (i: number, el: HTMLElement | null) {
 // Clear stale refs when tokens array is replaced
 watch(() => props.tokens.length, () => { rowEls.length = 0; });
 
-const activeIndex = computed(() => {
-  if (!cursorPos?.value || props.tokens.length === 0) return -1;
-  const {
-    line, column,
-  } = cursorPos.value;
+function computeActiveIndex (line: number, column: number): number {
   let best = -1;
   for (let i = 0; i < props.tokens.length; i++) {
     const t = props.tokens[i];
-    const sl = t.startPos.line + 1, sc = t.startPos.column + 1;
-    const el = t.endPos.line + 1, ec = t.endPos.column + 1;
-    const afterStart = sl < line || (sl === line && sc <= column);
-    const beforeEnd = el > line || (el === line && ec >= column);
-    if (afterStart && beforeEnd) { best = i; break; }
-    if (afterStart) best = i;
+    const sl = t.startPos.line + 1;
+    const sc = t.startPos.column + 1;
+    if (sl > line || (sl === line && sc > column)) break;
+    best = i;
   }
   return best;
+}
+
+function updateActiveIndex () {
+  const editor = getEditor?.();
+  const pos = editor?.getPosition();
+  activeIndex.value = pos ? computeActiveIndex(pos.lineNumber, pos.column) : -1;
+  if (activeIndex.value >= 0) {
+    rowEls[activeIndex.value]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+// Also recompute when tokens change (parse finished while cursor hasn't moved)
+watch(() => props.tokens, updateActiveIndex);
+
+let cursorListener: monaco.IDisposable | null = null;
+
+function attachCursorListener (editor: monaco.editor.IStandaloneCodeEditor) {
+  cursorListener?.dispose();
+  updateActiveIndex();
+  cursorListener = editor.onDidChangeCursorPosition(() => updateActiveIndex());
+}
+
+onMounted(() => {
+  const editor = getEditor?.();
+  if (editor) attachCursorListener(editor);
 });
 
-watch(activeIndex, (i) => {
-  if (i < 0) return;
-  rowEls[i]?.scrollIntoView({
-    block: 'nearest',
-    behavior: 'smooth',
-  });
+// Handle race: editor may not be ready when TokensTab mounts
+watch(() => dbmlEditorRef?.value, (editor) => {
+  if (editor) attachCursorListener(editor);
+});
+
+onUnmounted(() => {
+  cursorListener?.dispose();
+  cursorListener = null;
 });
 
 function updateDecorations () {
   const editor = getEditor?.();
   if (!editor) return;
   decorations?.clear();
-  if (!showDecorations.value || props.tokens.length === 0) return;
+  if (props.tokens.length === 0) return;
   decorations = editor.createDecorationsCollection(
     props.tokens.map((t) => ({
       range: new monaco.Range(
@@ -118,7 +130,6 @@ function updateDecorations () {
 watch(() => props.tokens, updateDecorations, {
   immediate: true,
 });
-watch(showDecorations, updateDecorations);
 onUnmounted(() => { decorations?.clear(); decorations = null; });
 
 function navigateTo (tok: SyntaxToken) {

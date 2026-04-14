@@ -158,6 +158,7 @@ function onKeyDown (e: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', onKeyDown));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown));
 
+const dbmlEditorRef = ref<monaco.editor.IStandaloneCodeEditor | null>(null);
 let dbmlEditor: monaco.editor.IStandaloneCodeEditor | null = null;
 const dbmlCursorPos = ref({
   line: 1,
@@ -167,10 +168,12 @@ const outputPaneRef = ref<InstanceType<typeof OutputPane> | null>(null);
 
 const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   dbmlEditor = editor;
+  dbmlEditorRef.value = editor;
   parser.setupMonacoServices(editor);
 };
 
 provide('getDbmlEditor', () => dbmlEditor);
+provide('dbmlEditorRef', dbmlEditorRef);
 provide('dbmlCursorPos', dbmlCursorPos);
 
 const version = packageJson.version;
