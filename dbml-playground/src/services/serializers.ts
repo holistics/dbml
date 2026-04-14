@@ -5,10 +5,6 @@
 import { SyntaxToken, SyntaxNode } from '@dbml/parse';
 import type { SymbolInfo, DeclPos } from '@/stores/parserStore';
 
-// ---------------------------------------------------------------------------
-// Output types
-// ---------------------------------------------------------------------------
-
 export interface SerializedPosition {
   line: number;
   column: number;
@@ -42,10 +38,6 @@ export interface SerializedSymbol {
   };
   members?: SerializedSymbol[];
 }
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
 
 function tokenReadableId (token: SyntaxToken): string {
   const sl = token.startPos.line + 1, sc = token.startPos.column + 1;
@@ -89,10 +81,6 @@ const NODE_SKIP = new Set([
   'filepath', 'fullStart', 'fullEnd',
   'source', // ProgramNode.source — full source text
 ]);
-
-// ---------------------------------------------------------------------------
-// Serializers
-// ---------------------------------------------------------------------------
 
 export function serializeToken (token: SyntaxToken, source?: string): SerializedToken {
   const result: SerializedToken = {
@@ -141,15 +129,10 @@ export function serializeSymbol (sym: SymbolInfo): SerializedSymbol {
   return result;
 }
 
-// ---------------------------------------------------------------------------
-// Internal recursive value serializer
-// ---------------------------------------------------------------------------
-
 function serializeValue (val: unknown, source?: string): unknown {
   if (val === null || val === undefined) return val;
   if (typeof val !== 'object') return val;
   if (Array.isArray(val)) return val.map((v) => serializeValue(v, source));
-
   if (val instanceof SyntaxNode) return serializeNode(val, source);
   if (val instanceof SyntaxToken) return serializeToken(val, source);
 
