@@ -29,9 +29,9 @@ export {
   CompileErrorCode,
 } from '@/core/types/errors';
 
-export {
+export type {
   // Position interface
-  type Position,
+  Position,
 } from '@/core/types';
 
 export {
