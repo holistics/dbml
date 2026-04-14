@@ -1,26 +1,12 @@
 import fs from 'node:fs';
-import {
-  NodeSymbol, SchemaSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode,
-} from '@/core/types/nodes';
-import {
-  getElementNameString,
-} from '@/core/parser/utils';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
+import { NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
+import { SyntaxToken } from '@/core/types/tokens';
+import { ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
+import { getElementNameString } from '@/core/parser/utils';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
-import {
-  Filepath,
-} from '@/core/types';
-import {
-  isEmpty,
-} from 'lodash-es';
+import { Filepath } from '@/core/types';
+import { isEmpty } from 'lodash-es';
 
 export function scanTestNames (path: string) {
   const files = fs.readdirSync(path);
@@ -61,13 +47,11 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
-  const kind = (nodeOrSymbol instanceof SyntaxNode || nodeOrSymbol instanceof SyntaxToken)
-    ? nodeOrSymbol.kind
-    : nodeOrSymbol.kind;
+  const kind = nodeOrSymbol.kind;
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
-  const nameHint = node ? getNameHint(node) : (nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.name ?? '' : '');
+  const nameHint = node ? getNameHint(node) : nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.name ?? '' : '';
 
   return `${type}@${kind}@${nameHint}@[${start}, ${end}]`;
 }
@@ -128,7 +112,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof CompileError) return 6;
     if (s instanceof SyntaxNode) return 7;
     if (s instanceof SyntaxToken) return 8;
-    if (s instanceof NodeSymbol) return 9;
+    if ((s as any)?.token) return 9; // possibly a schema element
     return 1000;
   }
 
@@ -142,7 +126,9 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof CompileWarning || s instanceof CompileError) return (s as any).nodeOrToken?.start ?? 0;
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
-    if (s instanceof NodeSymbol) return getIntraKindRank(s.declaration);
+    if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
+    if ((s as any)?.token) return ((s as any).token as any)?.start?.offset ?? 0; // possibly a schema element
+    if ((s as any)?.id) return getIntraKindRank((s as any).id);
     if (typeof s === 'object') {
       const obj = s as Record<string, unknown>;
       const tokenOffset = (obj.token as any)?.start?.offset;
@@ -156,7 +142,7 @@ function sortArray (array: unknown[]): unknown[] {
   function getTiebreakerRank (s: unknown): number | string {
     if (s instanceof CompileWarning || s instanceof CompileError) return s.diagnostic;
     if (s instanceof SyntaxNode) return s.id;
-    if (s instanceof SyntaxToken) return s.start;
+    if (s instanceof SyntaxToken) return s.value ?? '';
     if ((s as any)?.id !== undefined) return (s as any).id;
     return 0;
   }
@@ -175,59 +161,40 @@ function sortArray (array: unknown[]): unknown[] {
 // Get a stable snapshot of the value
 export function toSnapshot (
   compiler: Compiler,
-  value: Readonly<Snappable | Readonly<Snappable>[] | Record<string, Readonly<Snappable> | Readonly<Snappable>[]>>,
-  {
-    simple = false, includeSymbols = true,
-  }: { simple?: boolean;
-    includeSymbols?: boolean; } = {},
+  value: Readonly<Snappable | readonly Readonly<Snappable>[] | Record<string, Readonly<Snappable> | readonly Readonly<Snappable>[]>>,
+  { simple = false, includeReferences = true, includeSymbols = true, includeReferee = true }: { simple?: boolean; includeReferences?: boolean; includeSymbols?: boolean; includeReferee?: boolean } = {},
 ): unknown {
   if (Array.isArray(value)) {
-    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, {
-      simple,
-      includeSymbols,
-    }));
+    return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple, includeReferences, includeSymbols, includeReferee }));
   }
   if (value instanceof CompileWarning) {
-    return warningToSnapshot(compiler, value, {
-      simple,
-    });
+    return warningToSnapshot(compiler, value, { simple });
   }
   if (value instanceof CompileError) {
-    return errorToSnapshot(compiler, value, {
-      simple,
-    });
+    return errorToSnapshot(compiler, value, { simple });
   }
   if (value instanceof SyntaxToken) {
-    return syntaxTokenToSnapshot(compiler, value, {
-      simple,
-    });
+    return syntaxTokenToSnapshot(compiler, value, { simple });
   }
   if (value instanceof SyntaxNode) {
-    return syntaxNodeToSnapshot(compiler, value, {
-      simple,
-      includeSymbols,
-    });
-  }
-  if (value instanceof Filepath) {
-    return value.absolute;
+    return syntaxNodeToSnapshot(compiler, value, { simple, includeReferences, includeSymbols, includeReferee });
   }
   if (value === null) {
     return null;
   }
+  // An adhoc check for NodeSymbol
+  // because it's just an interface
   if (value instanceof NodeSymbol) {
-    return symbolToSnapshot(compiler, value);
+    return symbolToSnapshot(compiler, value as NodeSymbol, { includeReferences });
+  }
+  if (value instanceof Filepath) {
+    return value.absolute;
   }
   if (typeof value === 'object') {
     return sortObject(Object.fromEntries(
       Object.entries(value)
         .map(
-          ([key, value]) => [
-            key,
-            toSnapshot(compiler, value as Snappable, {
-              simple,
-              includeSymbols,
-            }),
-          ],
+          ([key, value]) => [key, toSnapshot(compiler, value as Snappable, { simple, includeReferences, includeSymbols, includeReferee })],
         ),
     ));
   }
@@ -245,21 +212,21 @@ export function errorToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
+    filepath,
   } = error;
-  const filepath = nodeOrToken.filepath.absolute;
   if (simple) {
     return sortObject({
       level: 'error',
       code: CompileErrorCode[code],
       diagnostic,
-      filepath,
+      filepath: filepath.toString(),
     });
   }
   return sortObject({
     level: 'error',
     code: CompileErrorCode[code],
     diagnostic,
-    filepath,
+    filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
       ? {
           node: syntaxNodeToSnapshot(compiler, nodeOrToken, {
@@ -285,21 +252,21 @@ export function warningToSnapshot (
     code,
     diagnostic,
     nodeOrToken,
+    filepath,
   } = warning;
-  const filepath = nodeOrToken.filepath.absolute;
   if (simple) {
     return sortObject({
       level: 'warning',
       code: CompileErrorCode[code],
       diagnostic,
-      filepath,
+      filepath: filepath.toString(),
     });
   }
   return sortObject({
     level: 'warning',
     code: CompileErrorCode[code],
     diagnostic,
-    filepath,
+    filepath: filepath.toString(),
     ...(nodeOrToken instanceof SyntaxNode
       ? {
           node: syntaxNodeToSnapshot(compiler, nodeOrToken, {
@@ -364,10 +331,7 @@ export function syntaxTokenToSnapshot (
 export function syntaxNodeToSnapshot (
   compiler: Compiler,
   node: SyntaxNode,
-  {
-    simple = false, includeSymbols = true,
-  }: { simple?: boolean;
-    includeSymbols?: boolean; } = {},
+  { simple = false, includeReferences = true, includeSymbols = true, includeReferee = true }: { simple?: boolean; includeReferences?: boolean; includeSymbols?: boolean; includeReferee?: boolean } = {},
 ): unknown {
   const nodeReadableId = getReadableId(node);
   const snippet = getCodeSnippet(node, compiler);
@@ -406,22 +370,15 @@ export function syntaxNodeToSnapshot (
       snippet,
     },
     ...sortObject({
-      symbol: includeSymbols ? symbol && symbolToSnapshot(compiler, symbol) : undefined,
-      referee: referee && symbolToSnapshot(compiler, referee, {
-        simple: true,
-      }),
+      symbol: includeSymbols ? symbol && symbolToSnapshot(compiler, symbol, { includeReferences }) : undefined,
+      referee: includeReferee ? referee && symbolToSnapshot(compiler, referee, { simple: true }) : undefined,
       fullStart,
       fullEnd,
       children: sortObject(Object.fromEntries(
         Object.entries(props)
           .map(
             ([key, value]) =>
-              [
-                key,
-                toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>, {
-                  includeSymbols,
-                }),
-              ],
+              [key, toSnapshot(compiler, value as Snappable | Snappable[] | Record<string, Snappable>, { includeReferences, includeSymbols, includeReferee })],
           ),
       )),
     }),
@@ -454,10 +411,8 @@ export function collectNodesWithReferee (node: SyntaxNode): SyntaxNode[] {
 
 export function symbolToSnapshot (
   compiler: Compiler,
-  symbol?: NodeSymbol,
-  {
-    simple = false,
-  }: { simple?: boolean } = {},
+  symbol: NodeSymbol,
+  { simple = false, includeReferences = true }: { simple?: boolean; includeReferences?: boolean } = {},
 ): unknown {
   if (!symbol) return undefined;
   const symbolReadableId = getReadableId(symbol);
@@ -482,14 +437,15 @@ export function symbolToSnapshot (
       snippet,
     },
     ...sortObject({
-      members: symbolTable && sortArray([...symbolTable.entries()].map(([, value]) => symbolToSnapshot(compiler, value, {
-        simple: true,
-      }))),
+      members: symbolTable && (() => {
+        const filtered = [...symbolTable.entries()].filter(([, sym]) => !(sym instanceof SchemaSymbol && (!sym.name || sym.name === 'public')));
+        return filtered.length > 0 ? sortArray(filtered.map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))) : undefined;
+      })(),
       declaration: declaration && {
         id: getReadableId(declaration),
         snippet: getCodeSnippet(declaration, compiler),
       },
-      references: references && sortArray(references.map((r) => ({
+      references: includeReferences && references && sortArray(references.map((r) => ({
         id: getReadableId(r),
         snippet: getCodeSnippet(r, compiler),
       }))),

@@ -11,7 +11,7 @@ import type SymbolTable from '@/core/types/symbol/symbolTable';
 import type {
   SyntaxToken,
 } from '@/core/types/tokens';
-import type Compiler from '../index';
+import type Compiler from '../../index';
 
 export function ast (this: Compiler): Readonly<ProgramNode> {
   return this.parse._().getValue().ast;

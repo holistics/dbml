@@ -11,7 +11,7 @@ import {
 import {
   generatePossibleIndexes,
 } from '@/core/types/symbol/utils';
-import type Compiler from '../index';
+import type Compiler from '../../index';
 
 export function symbolMembers (this: Compiler, ownerSymbol: NodeSymbol) {
   if (!ownerSymbol.symbolTable) {
