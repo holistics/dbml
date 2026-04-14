@@ -18,6 +18,12 @@ export default defineConfig({
       formats: ['cjs', 'es'],
     },
     rollupOptions: {
+      // @dbml/parse is intentionally excluded from the bundle and declared as a
+      // peerDependency so that consumers who install both @dbml/core and
+      // @dbml/parse share a single instance of the package. Bundling it would
+      // create a second, isolated copy whose classes and symbols are distinct
+      // from the consumer's own copy, breaking instanceof checks and
+      // cross-package type compatibility.
       external: [
         '@dbml/parse',
       ],
