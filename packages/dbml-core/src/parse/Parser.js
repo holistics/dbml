@@ -1,12 +1,12 @@
 import { Compiler } from '@dbml/parse';
 import Database from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
-import { CompilerError } from './error';
+import dbmlParser from './deprecated/dbmlParser.cjs';
+import mssqlParser from './deprecated/mssqlParser.cjs';
 import mysqlParser from './deprecated/mysqlParser.cjs';
 import postgresParser from './deprecated/postgresParser.cjs';
-import dbmlParser from './deprecated/dbmlParser.cjs';
 import schemarbParser from './deprecated/schemarbParser.cjs';
-import mssqlParser from './deprecated/mssqlParser.cjs';
+import { CompilerError } from './error';
 
 class Parser {
   constructor (dbmlCompiler) {

@@ -1,28 +1,28 @@
+import path from 'path';
 import {
-  importer, CompilerError,
+  CompilerError, importer,
 } from '@dbml/core';
 import type {
   ImportFormat,
 } from '@dbml/core';
-import figures from 'figures';
 import chalk from 'chalk';
-import path from 'path';
-import config from './config';
+import figures from 'figures';
 import {
-  validateInputFilePaths,
-  resolvePaths,
-  getFormatOpt,
+  SyntaxError,
+} from '../errors';
+import logger from '../helpers/logger';
+import config from './config';
+import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
+import OutputFilePlugin from './outputPlugins/outputFilePlugin';
+import {
   generate,
+  getFormatOpt,
+  resolvePaths,
+  validateInputFilePaths,
 } from './utils';
 import {
   validateFilePlugin,
 } from './validatePlugins/validatePlugins';
-import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
-import OutputFilePlugin from './outputPlugins/outputFilePlugin';
-import logger from '../helpers/logger';
-import {
-  SyntaxError,
-} from '../errors';
 
 interface Program {
   args: string[];

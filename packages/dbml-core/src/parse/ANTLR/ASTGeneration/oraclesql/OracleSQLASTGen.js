@@ -1,19 +1,19 @@
-import { last, flatten } from 'lodash-es';
-import {
-  Field,
-  Index,
-  Table,
-  TableRecord,
-  Ref,
-  Endpoint,
-} from '../AST';
-import {
-  DATA_TYPE,
-  CONSTRAINT_TYPE,
-} from '../constants';
-import { getOriginalText } from '../helpers';
+import { flatten, last } from 'lodash-es';
 import { CompilerError } from '../../../error';
 import OracleSqlParserVisitor from '../../parsers/oraclesql/OracleSqlParserVisitor';
+import {
+  Endpoint,
+  Field,
+  Index,
+  Ref,
+  Table,
+  TableRecord,
+} from '../AST';
+import {
+  CONSTRAINT_TYPE,
+  DATA_TYPE,
+} from '../constants';
+import { getOriginalText } from '../helpers';
 
 // We cannot use TABLE_CONSTRAINT_KIND and COLUMN_CONSTRAINT_KIND from '../constants' as their values are indistinguishable from each other
 // For example: TABLE_CONSTRAINT_KIND.UNIQUE === COLUMN_CONSTRAINT_KIND.UNIQUE

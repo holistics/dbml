@@ -1,10 +1,10 @@
-import { last, flatten, flattenDepth } from 'lodash-es';
+import { flatten, flattenDepth, last } from 'lodash-es';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import {
-  Enum, Field, Index, TableRecord, Table,
+  Enum, Field, Index, Table, TableRecord,
 } from '../AST';
 import {
-  TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE,
+  COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND,
 } from '../constants';
 import { getOriginalText } from '../helpers';
 

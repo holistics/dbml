@@ -1,8 +1,8 @@
+import path from 'path';
+import chalk from 'chalk';
 import {
   createLogger, format, transports,
 } from 'winston';
-import chalk from 'chalk';
-import path from 'path';
 
 const {
   combine, timestamp, printf,

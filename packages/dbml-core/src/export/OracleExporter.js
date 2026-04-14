@@ -1,20 +1,20 @@
+import {
+  isBinaryType,
+  isBooleanType,
+  isDateTimeType,
+  isNumericType,
+  isStringType,
+} from '@dbml/parse';
 import { concat, flatten, forEach, isEmpty } from 'lodash-es';
 import {
   buildJunctionFields1,
   buildJunctionFields2,
   buildUniqueTableName,
   escapeObjectName,
-  shouldPrintSchema,
-  parseIsoDatetime,
   formatDatetimeForOracle,
+  parseIsoDatetime,
+  shouldPrintSchema,
 } from './utils';
-import {
-  isNumericType,
-  isStringType,
-  isBooleanType,
-  isDateTimeType,
-  isBinaryType,
-} from '@dbml/parse';
 
 class OracleExporter {
   static exportRecords (model) {

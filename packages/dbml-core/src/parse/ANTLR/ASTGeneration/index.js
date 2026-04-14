@@ -1,25 +1,20 @@
 import antlr4 from 'antlr4';
-import PostgreSQLLexer from '../parsers/postgresql/PostgreSQLLexer';
-import PostgreSQLParser from '../parsers/postgresql/PostgreSQLParser';
-import PostgresASTGen from './postgres/PostgresASTGen';
-
-import MySQLLexer from '../parsers/mysql/MySqlLexer';
-import MySQLParser from '../parsers/mysql/MySqlParser';
-import MySQLASTGen from './mysql/MySQLASTGen';
-
-import SnowflakeLexer from '../parsers/snowflake/SnowflakeLexer';
-import SnowflakeParser from '../parsers/snowflake/SnowflakeParser';
-import SnowflakeASTGen from './snowflake/SnowflakeASTGen';
-
-import ParserErrorListener from './ParserErrorListener';
-
 import TSqlLexer from '../parsers/mssql/TSqlLexer';
 import TSqlParser from '../parsers/mssql/TSqlParser';
-import MssqlASTGen from './mssql/MssqlASTGen';
-
+import MySQLLexer from '../parsers/mysql/MySqlLexer';
+import MySQLParser from '../parsers/mysql/MySqlParser';
 import OracleSQLLexer from '../parsers/oraclesql/OracleSqlLexer';
 import OracleSQLParser from '../parsers/oraclesql/OracleSqlParser';
+import PostgreSQLLexer from '../parsers/postgresql/PostgreSQLLexer';
+import PostgreSQLParser from '../parsers/postgresql/PostgreSQLParser';
+import SnowflakeLexer from '../parsers/snowflake/SnowflakeLexer';
+import SnowflakeParser from '../parsers/snowflake/SnowflakeParser';
+import ParserErrorListener from './ParserErrorListener';
+import MssqlASTGen from './mssql/MssqlASTGen';
+import MySQLASTGen from './mysql/MySQLASTGen';
 import OracleSqlASTGen from './oraclesql/OracleSQLASTGen';
+import PostgresASTGen from './postgres/PostgresASTGen';
+import SnowflakeASTGen from './snowflake/SnowflakeASTGen';
 
 function parse (input, format) {
   const chars = new antlr4.InputStream(input);

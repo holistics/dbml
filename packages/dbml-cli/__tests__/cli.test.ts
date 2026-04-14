@@ -1,7 +1,7 @@
-import path from 'path';
-import fs from 'fs';
-import util from 'util';
 import childProcess from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import util from 'util';
 import stripAnsi from 'strip-ansi';
 import {
   scanDirNames,
