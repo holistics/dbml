@@ -585,4 +585,429 @@ describe('[example] multifile binder', () => {
       expect(dvInMain).toBeUndefined();
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // One symbol, selective alias + no-alias from same file (1a)
+  // ---------------------------------------------------------------------------
+  describe('selective alias + no-alias for the same symbol from the same file', () => {
+    // Importing the same table once with an alias and once without produces two
+    // distinct local names — deduplication by (originalSymbol, name) keeps both.
+    test('both alias and original name are visible, no DUPLICATE_NAME', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': [
+          "use { table users as u } from './base.dbml'",
+          "use { table users } from './base.dbml'",
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(mainAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue()).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+    });
+
+    test('both aliases point to the same underlying declaration', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': [
+          "use { table users as u } from './base.dbml'",
+          "use { table users } from './base.dbml'",
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const uSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue() as UseSymbol;
+      const usersSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue() as UseSymbol;
+      // Both should wrap the same original table declaration
+      expect(uSym.originalSymbol).toBe(usersSym.originalSymbol);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Alias applied in an intermediate reuse hop (1b)
+  // ---------------------------------------------------------------------------
+  describe('alias applied in a reuse hop propagates to wildcard consumer', () => {
+    // middle.dbml: reuse { table users as u } from './base.dbml'
+    // consumer.dbml: use * from './middle.dbml'
+    // → consumer sees 'u', not 'users'
+    test('consumer via use * sees the alias name, not the original name', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/middle.dbml': "reuse { table users as u } from './base.dbml'",
+        '/consumer.dbml': "use * from './middle.dbml'",
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue()).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeUndefined();
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Consumer applies an alias when importing from a reuse chain (1c)
+  // ---------------------------------------------------------------------------
+  describe('consumer aliases a symbol from a reuse chain', () => {
+    // middle.dbml: reuse { table users } from './base.dbml'  (no alias)
+    // consumer.dbml: use { table users as member } from './middle.dbml'
+    // → consumer sees 'member', not 'users'
+    test('consumer alias overrides the reuse chain name', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/middle.dbml': "reuse { table users } from './base.dbml'",
+        '/consumer.dbml': "use { table users as member } from './middle.dbml'",
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'member').getValue()).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeUndefined();
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Same symbol from 3 simultaneous import paths with different aliases (2a)
+  // ---------------------------------------------------------------------------
+  describe('same symbol from 3 simultaneous import paths with different aliases', () => {
+    // base declares users; mid-a and mid-b both reuse from base.
+    // Consumer imports users from all three sources under three different aliases.
+    test('all three aliases resolve independently with no errors', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/mid-a.dbml': "reuse { table users } from './base.dbml'",
+        '/mid-b.dbml': "reuse { table users } from './base.dbml'",
+        '/consumer.dbml': [
+          "use { table users as u1 } from './base.dbml'",
+          "use { table users as u2 } from './mid-a.dbml'",
+          "use { table users as u3 } from './mid-b.dbml'",
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const u1 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u1').getValue() as UseSymbol;
+      const u2 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u2').getValue() as UseSymbol;
+      const u3 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u3').getValue() as UseSymbol;
+      expect(u1).toBeInstanceOf(UseSymbol);
+      expect(u2).toBeInstanceOf(UseSymbol);
+      expect(u3).toBeInstanceOf(UseSymbol);
+      // All three trace back to the same original table declaration in base.dbml
+      expect(u1.originalSymbol).toBe(u2.originalSymbol);
+      expect(u2.originalSymbol).toBe(u3.originalSymbol);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Wildcard from base + wildcard from mid (reuse chain) deduplicates (2b)
+  // ---------------------------------------------------------------------------
+  describe('wildcard from base + wildcard from mid that reuses base', () => {
+    // Two wildcards, but the same underlying symbol. UseSymbol.originalSymbol
+    // recursively unwraps through the chain, so both resolve to the same id →
+    // the dedup key is identical → collapsed to one entry → no DUPLICATE_NAME.
+    test('same symbol reached via two wildcard paths is deduplicated, no DUPLICATE_NAME', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/mid.dbml': "reuse * from './base.dbml'",
+        '/consumer.dbml': [
+          "use * from './base.dbml'",
+          "use * from './mid.dbml'",
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      const errors = compiler.bindNode(consumerAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Selective alias + wildcard from reuse chain, different local names (2c)
+  // ---------------------------------------------------------------------------
+  describe('selective alias + wildcard from a reuse chain', () => {
+    // Consumer imports users-as-local_u from base (selective) and uses * from
+    // mid (wildcard, which reuses base). The wildcard exposes 'users' under its
+    // original name. Two distinct local names → both survive, no conflict.
+    test('selective alias and wildcard produce two distinct local names, both visible', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/mid.dbml': "reuse * from './base.dbml'",
+        '/consumer.dbml': [
+          "use { table users as local_u } from './base.dbml'",
+          "use * from './mid.dbml'",
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      const errors = compiler.bindNode(consumerAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'local_u').getValue()).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Deep transitive reuse chain — 3 hops (2d)
+  // ---------------------------------------------------------------------------
+  describe('deep transitive reuse chain (3 hops)', () => {
+    test('symbol declared in A is visible in D via A → reuse → B → reuse → C → use D', () => {
+      const { compiler, fps } = makeCompiler({
+        '/a.dbml': 'Table a_table { id int [pk] }',
+        '/b.dbml': "reuse * from './a.dbml'",
+        '/c.dbml': "reuse * from './b.dbml'",
+        '/d.dbml': "use * from './c.dbml'",
+      });
+
+      const dAst = compiler.parseFile(fps['/d.dbml']).getValue().ast;
+      expect(compiler.bindNode(dAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(dAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'a_table').getValue()).toBeInstanceOf(UseSymbol);
+    });
+
+    test('4-hop selective reuse chain works and alias at any intermediate hop propagates', () => {
+      const { compiler, fps } = makeCompiler({
+        '/origin.dbml': 'Table root { id int [pk] }',
+        '/hop1.dbml': "reuse { table root } from './origin.dbml'",
+        '/hop2.dbml': "reuse { table root } from './hop1.dbml'",
+        '/hop3.dbml': "reuse { table root } from './hop2.dbml'",
+        '/leaf.dbml': "use { table root } from './hop3.dbml'",
+      });
+
+      const leafAst = compiler.parseFile(fps['/leaf.dbml']).getValue().ast;
+      expect(compiler.bindNode(leafAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(leafAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'root').getValue()).toBeInstanceOf(UseSymbol);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // External Ref in source is NOT pulled in when tables are imported (3c)
+  // ---------------------------------------------------------------------------
+  describe('external Ref in source is not importable', () => {
+    // source.dbml declares both tables and a standalone Ref between them.
+    // consumer imports both tables. The Ref is NOT in ImportKind and thus does
+    // NOT appear in the consumer's schema — refs must be redeclared locally.
+    test('consumer with both tables imported has zero binding errors', () => {
+      const { compiler, fps } = makeCompiler({
+        '/source.dbml': [
+          'Table users { id int [pk] }',
+          'Table orders { id int [pk]; user_id int }',
+          'Ref: orders.user_id > users.id',
+        ].join('\n'),
+        '/consumer.dbml': [
+          "use { table users } from './source.dbml'",
+          "use { table orders } from './source.dbml'",
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Records are not importable (4a / 4b)
+  // ---------------------------------------------------------------------------
+  describe('Records — not importable', () => {
+    test('"records" is not a valid use specifier kind and is rejected at validation', () => {
+      const { compiler, fps } = makeCompiler({
+        '/source.dbml': 'Table users { id int [pk]; name varchar }',
+        '/consumer.dbml': "use { records users } from './source.dbml'",
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      const errors = compiler.validateNode(consumerAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // TableGroup expansion pulls member tables into scope (5a / 5b)
+  // ---------------------------------------------------------------------------
+  describe('TableGroup import expands member tables into consumer scope', () => {
+    test('member tables are reachable after tablegroup import without explicit table imports', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': [
+          'Table users { id int [pk] }',
+          'Table posts { id int [pk]; user_id int }',
+          'TableGroup social { users\n  posts }',
+        ].join('\n'),
+        '/consumer.dbml': "use { tablegroup social } from './base.dbml'",
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      // both member tables should be auto-expanded into consumer scope
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts').getValue()).toBeInstanceOf(UseSymbol);
+    });
+
+    test('consumer can write a Ref between two member tables of an imported tablegroup', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': [
+          'Table users { id int [pk] }',
+          'Table posts { id int [pk]; user_id int }',
+          'TableGroup social { users\n  posts }',
+        ].join('\n'),
+        '/consumer.dbml': [
+          "use { tablegroup social } from './base.dbml'",
+          'Ref: posts.user_id > users.id',
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+    });
+
+    test('two TableGroups sharing a member table produce no DUPLICATE_NAME for the shared table', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': [
+          'Table users { id int [pk] }',
+          'Table posts { id int [pk] }',
+          'Table comments { id int [pk] }',
+          'TableGroup social { users\n  posts }',
+          'TableGroup community { users\n  comments }',
+        ].join('\n'),
+        '/consumer.dbml': [
+          "use { tablegroup social } from './base.dbml'",
+          "use { tablegroup community } from './base.dbml'",
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      const errors = compiler.bindNode(consumerAst).getErrors();
+      // 'users' is a member of both groups — expansion must deduplicate it
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts').getValue()).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'comments').getValue()).toBeInstanceOf(UseSymbol);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Schema merging: two files contribute to the same named schema (6a)
+  // ---------------------------------------------------------------------------
+  describe('schema merging across files', () => {
+    test('importing auth.users from one file and auth.posts from another has no binding errors', () => {
+      const { compiler, fps } = makeCompiler({
+        '/users.dbml': 'Table auth.users { id int [pk] }',
+        '/posts.dbml': 'Table auth.posts { id int [pk]; user_id int }',
+        '/consumer.dbml': [
+          "use { table auth.users } from './users.dbml'",
+          "use { table auth.posts } from './posts.dbml'",
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+    });
+
+    test('Ref between two tables from different files under the same schema resolves without errors', () => {
+      const { compiler, fps } = makeCompiler({
+        '/users.dbml': 'Table auth.users { id int [pk] }',
+        '/posts.dbml': 'Table auth.posts { id int [pk]; user_id int }',
+        '/consumer.dbml': [
+          "use { table auth.users } from './users.dbml'",
+          "use { table auth.posts } from './posts.dbml'",
+          'Ref: auth.posts.user_id > auth.users.id',
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
+    });
+
+    test('wildcard from two files each contributing to the same named schema has no collision if names differ', () => {
+      const { compiler, fps } = makeCompiler({
+        '/users.dbml': 'Table auth.users { id int [pk] }',
+        '/roles.dbml': 'Table auth.roles { id int [pk] }',
+        '/consumer.dbml': [
+          "use * from './users.dbml'",
+          "use * from './roles.dbml'",
+        ].join('\n'),
+      });
+
+      const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+      const errors = compiler.bindNode(consumerAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Import path without .dbml extension auto-resolves (8a)
+  // ---------------------------------------------------------------------------
+  describe('import path without .dbml extension', () => {
+    test('use from path without .dbml resolves correctly', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': "use { table users } from './base'",
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
+
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Self-import does not infinite loop (8d)
+  // ---------------------------------------------------------------------------
+  describe('self-import', () => {
+    test('use * from self does not throw or infinite loop', () => {
+      const { compiler, fps } = makeCompiler({
+        '/self.dbml': [
+          "use * from './self.dbml'",
+          'Table local { id int [pk] }',
+        ].join('\n'),
+      });
+
+      const selfAst = compiler.parseFile(fps['/self.dbml']).getValue().ast;
+      expect(() => compiler.bindNode(selfAst)).not.toThrow();
+      // local table is still accessible in its own scope
+      const schemaSymbol = compiler.lookupMembers(selfAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'local').getValue()).toBeDefined();
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Exact same import twice is DUPLICATE_NAME (9c)
+  // ---------------------------------------------------------------------------
+  describe('exact same import twice (no alias)', () => {
+    test('use { table users } twice from the same file produces DUPLICATE_NAME', () => {
+      const { compiler, fps } = makeCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': [
+          "use { table users } from './base.dbml'",
+          "use { table users } from './base.dbml'",
+        ].join('\n'),
+      });
+
+      const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(mainAst).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
+    });
+  });
 });
