@@ -7,30 +7,62 @@ export const dbmlLanguageConfig: languages.LanguageConfiguration = {
     lineComment: '//',
     blockComment: ['/*', '*/'],
   },
-  brackets: [
-    ['{', '}'],
-    ['[', ']'],
-    ['(', ')'],
-  ],
+  brackets: [['{', '}'], ['[', ']'], ['(', ')']],
   autoClosingPairs: [
-    { open: '{', close: '}' },
-    { open: '[', close: ']' },
-    { open: '(', close: ')' },
-    { open: '"', close: '"' },
-    { open: '\'', close: '\'' },
-    { open: '`', close: '`' },
+    {
+      open: '{',
+      close: '}',
+    },
+    {
+      open: '[',
+      close: ']',
+    },
+    {
+      open: '(',
+      close: ')',
+    },
+    {
+      open: '"',
+      close: '"',
+    },
+    {
+      open: '\'',
+      close: '\'',
+    },
+    {
+      open: '`',
+      close: '`',
+    },
   ],
   surroundingPairs: [
-    { open: '{', close: '}' },
-    { open: '[', close: ']' },
-    { open: '(', close: ')' },
-    { open: '"', close: '"' },
-    { open: '\'', close: '\'' },
-    { open: '`', close: '`' },
+    {
+      open: '{',
+      close: '}',
+    },
+    {
+      open: '[',
+      close: ']',
+    },
+    {
+      open: '(',
+      close: ')',
+    },
+    {
+      open: '"',
+      close: '"',
+    },
+    {
+      open: '\'',
+      close: '\'',
+    },
+    {
+      open: '`',
+      close: '`',
+    },
   ],
   indentationRules: {
-    increaseIndentPattern: /^(.*\{[^}]*|\s*[\{\[].*)$/,
-    decreaseIndentPattern: /^(.*\}.*|\s*[\}\]].*)$/,
+    increaseIndentPattern: /^(.*\{[^}]*|\s*[{[].*)$/,
+    decreaseIndentPattern: /^(.*\}.*|\s*[}\]].*)$/,
   },
 };
 
