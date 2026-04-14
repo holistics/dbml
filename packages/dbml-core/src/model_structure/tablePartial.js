@@ -1,45 +1,35 @@
 import { get } from 'lodash-es';
-import Element, { Token, RawNote } from './element';
-import DbState from './dbState';
-
-export interface RawTablePartial {
-  name: string;
-  note: RawNote;
-  fields?: any[];
-  indexes?: any[];
-  checks?: any[];
-  token: Token;
-  headerColor: string;
-  dbState: DbState;
-  noteToken?: Token | null;
-}
+import Element from './element';
 
 class TablePartial extends Element {
-  name: string;
-  note: string | null;
-  noteToken: Token | null;
-  headerColor: string;
-  fields: any[];
-  indexes: any[];
-  checks: any[];
-  dbState: DbState;
-
+  /**
+   * @param {import('../../types/model_structure/tablePartial').RawTablePartial} param0
+   */
   constructor ({
     name, note, fields = [], indexes = [], checks = [], token, headerColor, noteToken = null, dbState,
-  }: RawTablePartial) {
+  } = {}) {
     super(token);
+    /** @type {string} */
     this.name = name;
-    this.note = note ? get(note, 'value', note) as string : null;
-    this.noteToken = note ? get(note as RawNote, 'token', noteToken) : null;
+    /** @type {string} */
+    this.note = note ? get(note, 'value', note) : null;
+    /** @type {import('../../types/model_structure/element').Token} */
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
+    /** @type {string} */
     this.headerColor = headerColor;
+    /** @type {any[]} */
     this.fields = fields;
+    /** @type {any[]} */
     this.indexes = indexes;
+    /** @type {any[]} */
     this.checks = checks;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = dbState;
     this.generateId();
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('tablePartialId');
   }
 
@@ -59,7 +49,10 @@ class TablePartial extends Element {
     };
   }
 
-  normalize (model: any) {
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
+  normalize (model) {
     model.tablePartials[this.id] = {
       id: this.id,
       ...this.shallowExport(),

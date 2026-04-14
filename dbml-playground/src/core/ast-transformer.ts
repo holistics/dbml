@@ -57,12 +57,16 @@ export interface SemanticASTNode {
 
   // Source position using parser's Position interface
   sourcePosition?: {
-    start: { line: number;
+    start: {
+      line: number;
       column: number;
-      offset: number; };
-    end: { line: number;
+      offset: number;
+    };
+    end: {
+      line: number;
       column: number;
-      offset: number; };
+      offset: number;
+    };
     // Raw parser node information - use raw.id for debugging display
     raw?: {
       startPos: Position;

@@ -1,51 +1,38 @@
 import { get } from 'lodash-es';
-import Table from './table';
-import Element, { Token, RawNote } from './element';
+import Element from './element';
 import Enum from './enum';
-import { shouldPrintSchema } from './utils';
-import TableGroup from './tableGroup';
 import Ref from './ref';
-import Database from './database';
-import DbState from './dbState';
-
-export interface RawSchema {
-  name: string;
-  alias?: string;
-  note?: RawNote;
-  tables?: any[];
-  refs?: any[];
-  enums?: any[];
-  tableGroups?: any[];
-  token?: Token;
-  database: Database;
-  noteToken?: Token | null;
-}
+import Table from './table';
+import TableGroup from './tableGroup';
+import { shouldPrintSchema } from './utils';
 
 class Schema extends Element {
-  tables: Table[];
-  enums: Enum[];
-  tableGroups: TableGroup[];
-  refs: Ref[];
-  name: string;
-  note: string | null;
-  noteToken: Token | null;
-  alias: string;
-  database: Database;
-  dbState: DbState;
-
+  /**
+   * @param {import('../../types/model_structure/schema').RawSchema} param0
+   */
   constructor ({
-    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {} as Database, noteToken = null,
-  }: RawSchema) {
-    super(token!);
+    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
+  } = {}) {
+    super(token);
+    /** @type {import('../../types/model_structure/table').default[]} */
     this.tables = [];
+    /** @type {import('../../types/model_structure/enum').default[]} */
     this.enums = [];
+    /** @type {import('../../types/model_structure/tableGroup').default[]} */
     this.tableGroups = [];
+    /** @type {import('../../types/model_structure/ref').default[]} */
     this.refs = [];
+    /** @type {string} */
     this.name = name;
-    this.note = note ? get(note, 'value', note) as string : null;
-    this.noteToken = note ? get(note as RawNote, 'token', noteToken) : null;
-    this.alias = alias!;
+    /** @type {string} */
+    this.note = note ? get(note, 'value', note) : null;
+    /** @type {import('../../types/model_structure/element').Token} */
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
+    /** @type {string} */
+    this.alias = alias;
+    /** @type {import('../../types/model_structure/database').default} */
     this.database = database;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.database.dbState;
     this.generateId();
 
@@ -56,42 +43,65 @@ class Schema extends Element {
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('schemaId');
   }
 
-  processTables (rawTables: any[]) {
+  /**
+   * @param {any[]} rawTables
+   */
+  processTables (rawTables) {
     rawTables.forEach((table) => {
       this.pushTable(new Table({ ...table, schema: this }));
     });
   }
 
-  pushTable (table: Table) {
+  /**
+   * @param {import('../../types/model_structure/table').default} table
+   */
+  pushTable (table) {
     this.checkTable(table);
     this.tables.push(table);
   }
 
-  checkTable (table: Table) {
+  /**
+   * @param {import('../../types/model_structure/table').default} table
+   */
+  checkTable (table) {
     if (this.tables.some((t) => t.name === table.name)) {
       table.error(`Table ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${table.name}" existed`);
     }
   }
 
-  findTable (tableName: string): Table | undefined {
+  /**
+   * @param {string} tableName
+   * @returns {import('../../types/model_structure/table').default}
+   */
+  findTable (tableName) {
     return this.tables.find((t) => t.name === tableName);
   }
 
-  processEnums (rawEnums: any[]) {
+  /**
+   * @param {any[]} rawEnums
+   */
+  processEnums (rawEnums) {
     rawEnums.forEach((_enum) => {
       this.pushEnum(new Enum({ ..._enum, schema: this }));
     });
   }
 
-  pushEnum (_enum: Enum) {
+  /**
+   * @param {import('../../types/model_structure/enum').default} _enum
+   */
+  pushEnum (_enum) {
     this.checkEnum(_enum);
     this.enums.push(_enum);
   }
 
-  checkEnum (_enum: Enum) {
+  /**
+   * @param {import('../../types/model_structure/enum').default} _enum
+   */
+  checkEnum (_enum) {
     if (this.enums.some((e) => e.name === _enum.name)) {
       _enum.error(`Enum ${shouldPrintSchema(this)
         ? `"${this.name}".`
@@ -99,51 +109,73 @@ class Schema extends Element {
     }
   }
 
-  processRefs (rawRefs: any[]) {
+  /**
+   * @param {any[]} rawRefs
+   */
+  processRefs (rawRefs) {
     rawRefs.forEach((ref) => {
       this.pushRef(new Ref({ ...ref, schema: this }));
     });
   }
 
-  pushRef (ref: Ref) {
+  /**
+   * @param {import('../../types/model_structure/ref').default} ref
+   */
+  pushRef (ref) {
     this.checkRef(ref);
     this.refs.push(ref);
   }
 
-  checkRef (ref: Ref) {
+  /**
+   * @param {import('../../types/model_structure/ref').default} ref
+   */
+  checkRef (ref) {
     if (this.refs.some((r) => r.equals(ref))) {
       const endpoint1 = ref.endpoints[0];
-      const fieldList1 = endpoint1.fieldNames.map((f: string) => JSON.stringify(f)).join(', ');
+      const fieldList1 = endpoint1.fieldNames.map(JSON.stringify).join(', ');
       const endpoint2 = ref.endpoints[1];
-      const fieldList2 = endpoint2.fieldNames.map((f: string) => JSON.stringify(f)).join(', ');
+      const fieldList2 = endpoint2.fieldNames.map(JSON.stringify).join(', ');
       const ref1 = `"${endpoint1.schemaName ? `${endpoint1.schemaName}"."` : ''}${endpoint1.tableName}"(${fieldList1})`;
       const ref2 = `"${endpoint2.schemaName ? `${endpoint2.schemaName}"."` : ''}${endpoint2.tableName}"(${fieldList2})`;
       ref.error(`Reference with the same endpoints already exists: ${ref1} references ${ref2}`);
     }
   }
 
-  processTableGroups (rawTableGroups: any[]) {
+  /**
+   * @param {any[]} rawTableGroups
+   */
+  processTableGroups (rawTableGroups) {
     rawTableGroups.forEach((tableGroup) => {
       this.pushTableGroup(new TableGroup({ ...tableGroup, schema: this }));
     });
   }
 
-  pushTableGroup (tableGroup: TableGroup) {
+  /**
+   * @param {import('../../types/model_structure/tableGroup').default} tableGroup
+   */
+  pushTableGroup (tableGroup) {
     this.checkTableGroup(tableGroup);
     this.tableGroups.push(tableGroup);
   }
 
-  checkTableGroup (tableGroup: TableGroup) {
+  /**
+   * @param {import('../../types/model_structure/tableGroup').default} tableGroup
+   */
+  checkTableGroup (tableGroup) {
     if (this.tableGroups.some((tg) => tg.name === tableGroup.name)) {
       tableGroup.error(`Table Group ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${tableGroup.name}" existed`);
     }
   }
 
-  checkSameId (schema: any): boolean {
+  /**
+   * @param {any} schema
+   * @returns {boolean}
+   */
+  checkSameId (schema) {
     return this.name === schema.name
       || this.alias === schema.name
       || this.name === schema.alias
-      || !!(this.alias && this.alias === schema.alias);
+      || (this.alias && this.alias === schema.alias);
   }
 
   export () {
@@ -185,7 +217,10 @@ class Schema extends Element {
     };
   }
 
-  normalize (model: any) {
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
+  normalize (model) {
     model.schemas[this.id] = {
       id: this.id,
       ...this.shallowExport(),

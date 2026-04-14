@@ -1,39 +1,32 @@
 import { get } from 'lodash-es';
-import Element, { Token, RawNote } from './element';
-import Enum from './enum';
-import DbState from './dbState';
-
-export interface RawEnumValue {
-  name: string;
-  token: Token;
-  note: RawNote;
-  _enum: Enum;
-  noteToken?: Token | null;
-}
+import Element from './element';
 
 class EnumValue extends Element {
-  name: string;
-  note: string | null;
-  noteToken: Token | null;
-  _enum: Enum;
-  dbState: DbState;
-
+  /**
+   * @param {import('../../types/model_structure/enumValue').RawEnumValue} param0
+   */
   constructor ({
     name, token, note, _enum, noteToken = null,
-  }: RawEnumValue) {
+  } = {}) {
     super(token);
     if (!name) {
       this.error('Enum value must have a name');
     }
+    /** @type {string} */
     this.name = name;
-    this.note = note ? get(note, 'value', note) as string : null;
-    this.noteToken = note ? get(note as RawNote, 'token', noteToken) : null;
+    /** @type {string} */
+    this.note = note ? get(note, 'value', note) : null;
+    /** @type {import('../../types/model_structure/element').Token} */
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
+    /** @type {import('../../types/model_structure/enum').default} */
     this._enum = _enum;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this._enum.dbState;
     this.generateId();
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('enumValueId');
   }
 
@@ -56,7 +49,10 @@ class EnumValue extends Element {
     };
   }
 
-  normalize (model: any) {
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
+  normalize (model) {
     model.enumValues[this.id] = {
       id: this.id,
       ...this.shallowExport(),

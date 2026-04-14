@@ -1,39 +1,29 @@
-import Element, { Token } from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
+import Element from './element';
 import { shouldPrintSchema, shouldPrintSchemaName } from './utils';
-import Field from './field';
-import Ref from './ref';
-import DbState from './dbState';
-import Table from './table';
-
-export interface RawEndpoint {
-  schemaName: string | null;
-  tableName: string;
-  fieldNames: string[];
-  relation: '1' | '*';
-  token: Token;
-}
 
 class Endpoint extends Element {
-  relation: any;
-  schemaName: string;
-  tableName: string;
-  fieldNames: string[];
-  fields: Field[];
-  ref: Ref;
-  dbState: DbState;
-
+  /**
+   * @param {{ tableName: string, schemaName: string, fieldNames: string[], relation: any, token: import('../../types/model_structure/element').Token, ref: import('../../types/model_structure/ref').default }} param0
+   */
   constructor ({
     tableName, schemaName, fieldNames, relation, token, ref,
-  }: { tableName: string; schemaName: string; fieldNames: string[]; relation: any; token: Token; ref: Ref }) {
+  }) {
     super(token);
+    /** @type {any} */
     this.relation = relation;
 
+    /** @type {string} */
     this.schemaName = schemaName;
+    /** @type {string} */
     this.tableName = tableName;
+    /** @type {string[]} */
     this.fieldNames = fieldNames;
+    /** @type {import('../../types/model_structure/field').default[]} */
     this.fields = [];
+    /** @type {import('../../types/model_structure/ref').default} */
     this.ref = ref;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.ref.dbState;
     this.generateId();
     // Use name of schema,table and field object
@@ -46,19 +36,28 @@ class Endpoint extends Element {
         ? `"${schemaName}".`
         : ''}"${tableName}"`);
     }
-    this.setFields(fieldNames, table!);
+    this.setFields(fieldNames, table);
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('endpointId');
   }
 
-  equals (endpoint: Endpoint): boolean {
+  /**
+   * @param {import('../../types/model_structure/endpoint').default} endpoint
+   * @returns {boolean}
+   */
+  equals (endpoint) {
     if (this.fields.length !== endpoint.fields.length) return false;
     return this.compareFields(endpoint);
   }
 
-  compareFields (endpoint: Endpoint): boolean {
+  /**
+   * @param {import('../../types/model_structure/endpoint').default} endpoint
+   * @returns {boolean}
+   */
+  compareFields (endpoint) {
     const sortedThisFieldIds = this.fields.map((field) => field.id).sort();
     const sortedEndpointFieldIds = endpoint.fields.map((field) => field.id).sort();
     for (let i = 0; i < sortedThisFieldIds.length; i += 1) {
@@ -89,7 +88,11 @@ class Endpoint extends Element {
     };
   }
 
-  setFields (fieldNames: string[], table: Table) {
+  /**
+   * @param {string[]} fieldNames
+   * @param {import('../../types/model_structure/table').default} table
+   */
+  setFields (fieldNames, table) {
     let newFieldNames = (fieldNames && fieldNames.length) ? [...fieldNames] : [];
     if (!newFieldNames.length) {
       const fieldHasPK = table.fields.find((field) => field.pk);
@@ -111,12 +114,15 @@ class Endpoint extends Element {
           ? `"${table.schema.name}".`
           : ''}"${fieldName}" in table "${table.name}"`);
       }
-      this.fields.push(field!);
-      field!.pushEndpoint(this);
+      this.fields.push(field);
+      field.pushEndpoint(this);
     });
   }
 
-  normalize (model: any) {
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
+  normalize (model) {
     model.endpoints[this.id] = {
       id: this.id,
       ...this.shallowExport(),
