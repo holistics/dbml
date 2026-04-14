@@ -34,7 +34,7 @@ export default async function connectionHandler (program: Command) {
       (new OutputFilePlugin(resolvePaths(opts.outFile))).write(res);
 
       // bearer:disable javascript_lang_logger
-      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection: ${path.basename(opts.outFile as string)}`);
+      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection: ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
     logger.error(error);

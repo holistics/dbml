@@ -38,9 +38,9 @@ export default async function importHandler (program: Command) {
     if (!opts.outFile && !opts.outDir) {
       generate(inputPaths, (sql) => importer.import(sql, format), OutputConsolePlugin);
     } else if (opts.outFile) {
-      generate(inputPaths, (sql) => importer.import(sql, format), new OutputFilePlugin(resolvePaths(opts.outFile as string) as string));
+      generate(inputPaths, (sql) => importer.import(sql, format), new OutputFilePlugin(resolvePaths(opts.outFile)));
 
-      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile as string)}`);
+      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
     if (error instanceof CompilerError) {

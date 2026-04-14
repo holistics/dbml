@@ -47,10 +47,10 @@ export default async function exportHandler (program: Command) {
       generate(
         inputPaths,
         (dbml) => exporter.export(dbml, format),
-        new OutputFilePlugin(resolvePaths(opts.outFile as string) as string, header),
+        new OutputFilePlugin(resolvePaths(opts.outFile), header),
       );
 
-      console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile as string)}`);
+      console.log(`  ${chalk.green(figures.main.tick)} Generated SQL dump file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
     const e = error as CompilerError;
