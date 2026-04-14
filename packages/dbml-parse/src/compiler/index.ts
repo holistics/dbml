@@ -29,13 +29,13 @@ import {
 } from './queries/container';
 import {
   ast, errors, publicSymbolTable, rawDb, tokens, warnings,
-} from './queries/parse';
+} from './queries/legacy/parse';
 import {
   symbolMembers, symbolOfName, symbolOfNameToKey,
-} from './queries/symbol';
+} from './queries/legacy/symbol';
 import {
   flatStream, invalidStream,
-} from './queries/token';
+} from './queries/legacy/token';
 import {
   type DiagramViewBlock,
   type DiagramViewSyncOperation,
