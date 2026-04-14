@@ -3,41 +3,6 @@ import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import tsparser from '@typescript-eslint/parser';
 import stylistic from '@stylistic/eslint-plugin';
-import importPlugin from 'eslint-plugin-import';
-
-const IMPORT_ORDER_RULES = {
-  'import/order': ['error', {
-    groups: [
-      'builtin',
-      'external',
-      'internal',
-      'parent',
-      'sibling',
-      'index',
-    ],
-    'newlines-between': 'never',
-    alphabetize: {
-      order: 'asc',
-      caseInsensitive: false,
-    },
-  }],
-  'import/newline-after-import': ['error', { count: 1 }],
-  'sort-imports': ['error', {
-    ignoreDeclarationSort: true,
-    ignoreCase: false,
-    memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
-  }],
-};
-
-const IMPORT_SETTINGS = {
-  'import/resolver': {
-    typescript: {
-      alwaysTryTypes: true,
-      project: './tsconfig.json',
-    },
-    node: true,
-  },
-};
 
 export default defineConfig(
   eslint.configs.recommended,
@@ -72,11 +37,8 @@ export default defineConfig(
       },
       plugins: {
         '@stylistic': stylistic,
-        import: importPlugin,
       },
-      settings: IMPORT_SETTINGS,
       rules: {
-        ...IMPORT_ORDER_RULES,
         '@typescript-eslint/no-explicit-any': 'off',
         'no-use-before-define': 'off',
         'no-continue': 'off',
