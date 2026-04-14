@@ -21,11 +21,11 @@
               : 'text-gray-600 border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'"
             @click="copyShareUrl"
           >
-            <CheckIcon
+            <PhCheck
               v-if="copySuccess"
               class="w-3.5 h-3.5 flex-shrink-0"
             />
-            <ClipboardDocumentCheckIcon
+            <PhClipboardText
               v-else
               class="w-3.5 h-3.5 flex-shrink-0"
             />
@@ -106,15 +106,15 @@
 
 <script setup lang="ts">
 import {
-  ref, provide, onMounted, onBeforeUnmount,
+  ref, shallowRef, provide, onMounted, onBeforeUnmount,
 } from 'vue';
 import {
   Splitpanes, Pane,
 } from 'splitpanes';
 import 'splitpanes/dist/splitpanes.css';
 import {
-  ClipboardDocumentCheckIcon, CheckIcon,
-} from '@heroicons/vue/24/outline';
+  PhClipboardText, PhCheck,
+} from '@phosphor-icons/vue';
 import {
   useParser,
 } from '@/stores/parserStore';
@@ -158,7 +158,7 @@ function onKeyDown (e: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', onKeyDown));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown));
 
-const dbmlEditorRef = ref<monaco.editor.IStandaloneCodeEditor | null>(null);
+const dbmlEditorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 let dbmlEditor: monaco.editor.IStandaloneCodeEditor | null = null;
 const dbmlCursorPos = ref({
   line: 1,

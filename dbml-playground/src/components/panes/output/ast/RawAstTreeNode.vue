@@ -13,7 +13,7 @@
         class="flex-shrink-0 w-3.5 h-3.5 mr-1 flex items-center justify-center text-gray-400 hover:text-gray-600"
         @click.stop="toggleExpanded"
       >
-        <ChevronRightIcon
+        <PhCaretRight
           class="w-3 h-3 transition-transform duration-100"
           :class="isExpanded ? 'rotate-90' : ''"
         />
@@ -67,8 +67,8 @@ import {
   computed, ref, watch,
 } from 'vue';
 import {
-  ChevronRightIcon,
-} from '@heroicons/vue/24/outline';
+  PhCaretRight,
+} from '@phosphor-icons/vue';
 import type {
   NavigationPosition,
 } from '@/types';

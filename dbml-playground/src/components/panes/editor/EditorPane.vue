@@ -19,7 +19,7 @@
             class="p-1.5 rounded transition-colors cursor-pointer flex-shrink-0"
             :class="settingsOpen ? 'text-blue-600 bg-blue-50' : 'text-gray-500 hover:text-gray-900'"
           >
-            <Cog6ToothIcon class="w-3.5 h-3.5" />
+            <PhGear class="w-3.5 h-3.5" />
           </button>
           <template #popper>
             <span class="text-xs">Settings</span>
@@ -59,8 +59,8 @@ import {
   ref, watch,
 } from 'vue';
 import {
-  Cog6ToothIcon,
-} from '@heroicons/vue/24/outline';
+  PhGear,
+} from '@phosphor-icons/vue';
 import MonacoEditor from '@/components/editor/MonacoEditor.vue';
 import {
   useUser,

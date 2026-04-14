@@ -4,7 +4,7 @@
       class="flex items-center gap-2 px-3 py-1 bg-gray-100 border-b border-gray-200 cursor-pointer hover:bg-gray-200 select-none sticky top-0 z-10"
       @click="open = !open"
     >
-      <ChevronRightIcon
+      <PhCaretRight
         class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
         :class="open ? 'rotate-90' : ''"
       />
@@ -20,8 +20,8 @@ import {
   ref,
 } from 'vue';
 import {
-  ChevronRightIcon,
-} from '@heroicons/vue/24/outline';
+  PhCaretRight,
+} from '@phosphor-icons/vue';
 
 interface Props {
   label: string;

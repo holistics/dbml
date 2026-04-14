@@ -24,8 +24,40 @@
         @click="navigateTo(tok)"
       >
         <span class="text-gray-400 w-7 text-right flex-shrink-0 text-xs">{{ i }}</span>
-        <span class="text-blue-500 min-w-[80px] flex-shrink-0 hover:underline">{{ tok.kind }}</span>
-        <span class="text-green-700 truncate flex-1">{{ rawTexts[i] !== '' ? rawTexts[i] : '·' }}</span>
+
+        <!-- Kind icon with tooltip -->
+        <VTooltip placement="bottom" :distance="6" class="flex-shrink-0">
+          <component
+            :is="tokenIcon(tok.kind).icon"
+            class="w-3.5 h-3.5"
+            :class="tokenIcon(tok.kind).color"
+          />
+          <template #popper>
+            <span class="text-xs font-mono">{{ tok.kind }}</span>
+          </template>
+        </VTooltip>
+
+        <!-- Truncated value; dropdown shows full content -->
+        <div class="flex-1 min-w-0 flex items-center">
+          <VDropdown
+            :disabled="!rawTexts[i]"
+            placement="bottom-start"
+            :distance="6"
+            :arrow-padding="0"
+            no-auto-focus
+            class="min-w-0 max-w-full"
+            @click.stop
+          >
+            <span class="text-green-700 truncate block">{{ truncateText(rawTexts[i]) }}</span>
+            <template #popper>
+              <pre
+                class="text-xs font-mono whitespace-pre-wrap break-all max-w-[320px] p-3 m-0"
+                :class="(rawTexts[i] ?? '').split('\n').length >= 5 ? 'max-h-[120px] overflow-y-auto' : ''"
+              >{{ rawTexts[i] }}</pre>
+            </template>
+          </VDropdown>
+        </div>
+
         <span class="text-gray-400 text-xs flex-shrink-0">{{ tok.startPos.line + 1 }}:{{ tok.startPos.column + 1 }}</span>
       </div>
     </div>
@@ -34,9 +66,29 @@
 
 <script setup lang="ts">
 import {
-  ref, watch, onMounted, onUnmounted, inject, type Ref,
+  ref, watch, onMounted, onUnmounted, inject, type Ref, type Component,
 } from 'vue';
 import * as monaco from 'monaco-editor';
+import {
+  PhTextT,
+  PhAt,
+  PhQuotes,
+  PhHash,
+  PhPalette,
+  PhLightning,
+  PhBracketsCurly,
+  PhBracketsRound,
+  PhBracketsSquare,
+  PhBracketsAngle,
+  PhStar,
+  PhFlag,
+  PhKeyReturn,
+  PhArrowsHorizontal,
+  PhMathOperations,
+  PhArticle,
+  PhAsterisk,
+  PhQuestion,
+} from '@phosphor-icons/vue';
 import type {
   SyntaxToken,
 } from '@dbml/parse';
@@ -47,13 +99,59 @@ interface Props {
 
 const props = defineProps<Props>();
 
+// --- Token kind → icon + color ---
+interface TokenIconInfo { icon: Component; color: string }
+
+const TOKEN_ICON_MAP: Record<string, TokenIconInfo> = {
+  '<identifier>':           { icon: PhTextT,           color: 'text-blue-500' },
+  '<variable>':             { icon: PhAt,              color: 'text-violet-500' },
+  '<string>':               { icon: PhQuotes,          color: 'text-green-600' },
+  '<number>':               { icon: PhHash,            color: 'text-amber-500' },
+  '<color>':                { icon: PhPalette,         color: 'text-pink-500' },
+  '<function-expression>':  { icon: PhLightning,       color: 'text-orange-500' },
+  '<op>':                   { icon: PhMathOperations,  color: 'text-red-500' },
+  '<lparen>':               { icon: PhBracketsRound,   color: 'text-cyan-500' },
+  '<rparen>':               { icon: PhBracketsRound,   color: 'text-cyan-500' },
+  '<lbrace>':               { icon: PhBracketsCurly,   color: 'text-cyan-500' },
+  '<rbrace>':               { icon: PhBracketsCurly,   color: 'text-cyan-500' },
+  '<lbracket>':             { icon: PhBracketsSquare,  color: 'text-cyan-500' },
+  '<rbracket>':             { icon: PhBracketsSquare,  color: 'text-cyan-500' },
+  '<langle>':               { icon: PhBracketsAngle,   color: 'text-cyan-500' },
+  '<rangle>':               { icon: PhBracketsAngle,   color: 'text-cyan-500' },
+  '<comma>':                { icon: PhAsterisk,        color: 'text-gray-400' },
+  '<semicolon>':            { icon: PhAsterisk,        color: 'text-gray-400' },
+  '<colon>':                { icon: PhAsterisk,        color: 'text-gray-400' },
+  '<space>':                { icon: PhArrowsHorizontal, color: 'text-gray-300' },
+  '<tab>':                  { icon: PhArrowsHorizontal, color: 'text-gray-300' },
+  '<newline>':              { icon: PhKeyReturn,       color: 'text-gray-300' },
+  '<single-line-comment>':  { icon: PhArticle,         color: 'text-gray-400' },
+  '<multiline-comment>':    { icon: PhArticle,         color: 'text-gray-400' },
+  '<wildcard>':             { icon: PhStar,            color: 'text-yellow-500' },
+  '<eof>':                  { icon: PhFlag,            color: 'text-red-400' },
+};
+const FALLBACK_ICON: TokenIconInfo = { icon: PhQuestion, color: 'text-gray-400' };
+
+function tokenIcon (kind: string): TokenIconInfo {
+  return TOKEN_ICON_MAP[kind] ?? FALLBACK_ICON;
+}
+
+// --- Truncation ---
+const PREVIEW_CHARS = 8;
+
+function truncateText (text: string | undefined): string {
+  if (!text) return '·';
+  const flat = text.replace(/\r?\n/g, '↵');
+  if (flat.length <= PREVIEW_CHARS * 2 + 1) return flat;
+  return `${flat.slice(0, PREVIEW_CHARS)}…${flat.slice(-PREVIEW_CHARS)}`;
+}
+
+// --- Editor integration ---
 const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getDbmlEditor');
 const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
 
 const scrollEl = ref<HTMLElement | null>(null);
 const rowEls: HTMLElement[] = [];
 
-// Raw text from the editor model (not tok.value which is normalized)
 const rawTexts = ref<string[]>([]);
 
 function updateRawTexts () {
@@ -73,7 +171,6 @@ function setRowEl (i: number, el: HTMLElement | null) {
   if (el) rowEls[i] = el;
 }
 
-// Clear stale refs when tokens array is replaced
 watch(() => props.tokens.length, () => { rowEls.length = 0; });
 
 function computeActiveIndex (line: number, column: number): number {
@@ -97,7 +194,6 @@ function updateActiveIndex () {
   }
 }
 
-// Also recompute when tokens change (parse finished while cursor hasn't moved)
 watch(() => props.tokens, updateActiveIndex);
 
 let cursorListener: monaco.IDisposable | null = null;
@@ -114,7 +210,6 @@ onMounted(() => {
   if (editor) attachCursorListener(editor);
 });
 
-// Handle race: editor may not be ready when TokensTab mounts
 watch(() => dbmlEditorRef?.value, (editor) => {
   if (editor) attachCursorListener(editor);
 });
@@ -133,7 +228,6 @@ function navigateTo (tok: SyntaxToken) {
     endLineNumber: tok.endPos.line + 1,
     endColumn: tok.endPos.column + 1,
   };
-  // Reverse anchor so cursor lands at token start — activeIndex uses cursor pos
   editor.setSelection({
     selectionStartLineNumber: tok.endPos.line + 1,
     selectionStartColumn: tok.endPos.column + 1,

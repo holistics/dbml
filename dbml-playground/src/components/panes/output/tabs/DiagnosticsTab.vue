@@ -7,7 +7,7 @@
       v-if="groups.length === 0"
       class="flex flex-col items-center py-10 text-gray-400"
     >
-      <CheckCircleIcon class="w-8 h-8 mb-2 text-blue-400" />
+      <PhCheckCircle class="w-8 h-8 mb-2 text-blue-400" />
       <p class="text-sm">
         No diagnostics
       </p>
@@ -22,7 +22,7 @@
         class="flex items-center gap-2 px-3 py-1 bg-gray-100 border-b border-gray-200 cursor-pointer hover:bg-gray-200 select-none sticky top-0 z-10"
         @click="toggle(group.file)"
       >
-        <ChevronRightIcon
+        <PhCaretRight
           class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
           :class="expanded.has(group.file) ? 'rotate-90' : ''"
         />
@@ -46,7 +46,7 @@
           :style="{ paddingLeft: '28px' }"
           @click="emit('position-click', d)"
         >
-          <ExclamationCircleIcon class="w-3.5 h-3.5 flex-shrink-0 text-red-500 mt-[1px]" />
+          <PhWarningCircle class="w-3.5 h-3.5 flex-shrink-0 text-red-500 mt-[1px]" />
           <span class="text-red-700 flex-1">{{ d.message }}</span>
           <span class="text-gray-400 flex-shrink-0">{{ d.location.line }}:{{ d.location.column }}</span>
         </div>
@@ -57,7 +57,7 @@
           :style="{ paddingLeft: '28px' }"
           @click="emit('position-click', d)"
         >
-          <ExclamationTriangleIcon class="w-3.5 h-3.5 flex-shrink-0 text-yellow-500 mt-[1px]" />
+          <PhWarning class="w-3.5 h-3.5 flex-shrink-0 text-yellow-500 mt-[1px]" />
           <span class="text-yellow-700 flex-1">{{ d.message }}</span>
           <span class="text-gray-400 flex-shrink-0">{{ d.location.line }}:{{ d.location.column }}</span>
         </div>
@@ -71,11 +71,8 @@ import {
   computed, ref, watch,
 } from 'vue';
 import {
-  CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon,
-} from '@heroicons/vue/24/outline';
-import {
-  ChevronRightIcon,
-} from '@heroicons/vue/24/outline';
+  PhCheckCircle, PhWarningCircle, PhWarning, PhCaretRight,
+} from '@phosphor-icons/vue';
 import type {
   ParserError,
 } from '@/types';

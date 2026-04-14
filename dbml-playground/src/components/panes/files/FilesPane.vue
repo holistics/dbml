@@ -11,7 +11,7 @@
             class="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer"
             @click="createFile"
           >
-            <DocumentPlusIcon class="w-3.5 h-3.5" />
+            <PhFilePlus class="w-3.5 h-3.5" />
           </button>
           <template #popper>
             <span class="text-xs">New file</span>
@@ -25,7 +25,7 @@
             class="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer"
             @click="createFolder"
           >
-            <FolderPlusIcon class="w-3.5 h-3.5" />
+            <PhFolderPlus class="w-3.5 h-3.5" />
           </button>
           <template #popper>
             <span class="text-xs">New folder</span>
@@ -43,7 +43,7 @@
               :class="confirmingReset ? 'text-red-600 bg-red-50' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'"
               @click="toggleReset"
             >
-              <ArrowPathIcon class="w-3.5 h-3.5" />
+              <PhArrowClockwise class="w-3.5 h-3.5" />
             </button>
             <template #popper>
               <span class="text-xs">Reset to default</span>
@@ -114,11 +114,11 @@
         style="padding-left: 4px"
       >
         <span class="w-2.5 h-2.5 flex-shrink-0" />
-        <FolderIcon
+        <PhFolder
           v-if="pendingNode.type === 'folder'"
           class="w-3.5 h-3.5 flex-shrink-0 opacity-70"
         />
-        <DocumentTextIcon
+        <PhFileText
           v-else
           class="w-3.5 h-3.5 flex-shrink-0 opacity-60"
         />
@@ -142,8 +142,8 @@ import {
   ref, computed, nextTick, onMounted, onUnmounted,
 } from 'vue';
 import {
-  DocumentPlusIcon, FolderPlusIcon, FolderIcon, DocumentTextIcon, ArrowPathIcon,
-} from '@heroicons/vue/24/outline';
+  PhFilePlus, PhFolderPlus, PhFolder, PhFileText, PhArrowClockwise,
+} from '@phosphor-icons/vue';
 import {
   useProject,
 } from '@/stores/projectStore';

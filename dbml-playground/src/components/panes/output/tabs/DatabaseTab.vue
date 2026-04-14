@@ -28,7 +28,7 @@
               :style="{ paddingLeft: '20px' }"
               @click="toggleTable(ti)"
             >
-              <ChevronRightIcon
+              <PhCaretRight
                 class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
                 :class="expandedTables.has(ti) ? 'rotate-90' : ''"
               />
@@ -117,7 +117,7 @@
               :style="{ paddingLeft: '20px' }"
               @click="toggleEnum(ei)"
             >
-              <ChevronRightIcon
+              <PhCaretRight
                 class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
                 :class="expandedEnums.has(ei) ? 'rotate-90' : ''"
               />
@@ -180,8 +180,8 @@ import {
   ref,
 } from 'vue';
 import {
-  ChevronRightIcon,
-} from '@heroicons/vue/24/outline';
+  PhCaretRight,
+} from '@phosphor-icons/vue';
 import type {
   Database,
 } from '@dbml/parse';

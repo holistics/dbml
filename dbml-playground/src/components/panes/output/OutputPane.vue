@@ -53,7 +53,7 @@
       >
         <VTooltip placement="bottom" :distance="6">
           <button class="p-1.5 rounded transition-colors cursor-pointer text-gray-500 hover:text-gray-900">
-            <Cog6ToothIcon class="w-3.5 h-3.5" />
+            <PhGear class="w-3.5 h-3.5" />
           </button>
           <template #popper>
             <span class="text-xs">View settings</span>
@@ -65,7 +65,7 @@
               class="flex items-center gap-2 w-full px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer"
               @click="showDecorations = !showDecorations"
             >
-              <component :is="showDecorations ? EyeIcon : EyeSlashIcon" class="w-3.5 h-3.5 flex-shrink-0" />
+              <component :is="showDecorations ? PhEye : PhEyeSlash" class="w-3.5 h-3.5 flex-shrink-0" />
               <span>{{ showDecorations ? 'Hide highlights' : 'Show highlights' }}</span>
             </button>
           </div>
@@ -112,17 +112,17 @@ import {
   ref, computed, watch, inject, onMounted, onBeforeUnmount, nextTick, type Component, type Ref,
 } from 'vue';
 import {
-  RectangleGroupIcon,
-  ShareIcon,
-  AtSymbolIcon,
-  CircleStackIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  ExclamationCircleIcon,
-  Cog6ToothIcon,
-  EyeIcon,
-  EyeSlashIcon,
-} from '@heroicons/vue/24/outline';
+  PhSquaresFour,
+  PhTreeStructure,
+  PhAt,
+  PhDatabase,
+  PhCheckCircle,
+  PhWarning,
+  PhWarningCircle,
+  PhGear,
+  PhEye,
+  PhEyeSlash,
+} from '@phosphor-icons/vue';
 import TokensTab from './tabs/TokensTab.vue';
 import AstTab from './tabs/AstTab.vue';
 import SymbolsTab from './tabs/SymbolsTab.vue';
@@ -165,9 +165,9 @@ interface Tab {
 }
 
 const diagnosticsIcon = computed(() => {
-  if (parser.errors.length > 0) return ExclamationCircleIcon;
-  if (parser.warnings.length > 0) return ExclamationTriangleIcon;
-  return CheckCircleIcon;
+  if (parser.errors.length > 0) return PhWarningCircle;
+  if (parser.warnings.length > 0) return PhWarning;
+  return PhCheckCircle;
 });
 
 const diagnosticsColor = computed(() => {
@@ -180,27 +180,27 @@ const TABS: Tab[] = [
   {
     id: OutputTabId.Tokens,
     label: 'Tokens',
-    icon: RectangleGroupIcon,
+    icon: PhSquaresFour,
   },
   {
     id: OutputTabId.Nodes,
     label: 'Nodes',
-    icon: ShareIcon,
+    icon: PhTreeStructure,
   },
   {
     id: OutputTabId.Symbols,
     label: 'Symbols',
-    icon: AtSymbolIcon,
+    icon: PhAt,
   },
   {
     id: OutputTabId.Database,
     label: 'Database',
-    icon: CircleStackIcon,
+    icon: PhDatabase,
   },
   {
     id: OutputTabId.Diagnostics,
     label: 'Diagnostics',
-    icon: ExclamationCircleIcon,
+    icon: PhWarningCircle,
   },
 ];
 

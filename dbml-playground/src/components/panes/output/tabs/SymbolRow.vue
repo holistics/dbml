@@ -5,7 +5,7 @@
       :style="{ paddingLeft: `${8 + level * 14}px`, paddingRight: '12px' }"
       @click="hasMembers && toggleOpen()"
     >
-      <ChevronRightIcon
+      <PhCaretRight
         v-if="hasMembers"
         class="flex-shrink-0 w-3 h-3 text-gray-400 transition-transform duration-100"
         :class="open ? 'rotate-90' : ''"
@@ -44,13 +44,13 @@ import {
   ref, computed, type Component,
 } from 'vue';
 import {
-  ChevronRightIcon,
-  TableCellsIcon,
-  ListBulletIcon,
-  ArrowsRightLeftIcon,
-  FolderIcon,
-  AtSymbolIcon,
-} from '@heroicons/vue/24/outline';
+  PhCaretRight,
+  PhTable,
+  PhListBullets,
+  PhArrowsLeftRight,
+  PhFolder,
+  PhAt,
+} from '@phosphor-icons/vue';
 import type {
   SymbolInfo, DeclPos,
 } from '@/stores/parserStore';
@@ -73,13 +73,13 @@ function toggleOpen () { open.value = !open.value; }
 const hasMembers = computed(() => props.sym.members.length > 0);
 
 const KIND_ICONS: Record<string, Component> = {
-  'Table': TableCellsIcon,
-  'Column': ListBulletIcon,
-  'Ref': ArrowsRightLeftIcon,
-  'Enum': ListBulletIcon,
-  'Enum field': ListBulletIcon,
-  'TableGroup': FolderIcon,
-  'Schema': FolderIcon,
+  'Table': PhTable,
+  'Column': PhListBullets,
+  'Ref': PhArrowsLeftRight,
+  'Enum': PhListBullets,
+  'Enum field': PhListBullets,
+  'TableGroup': PhFolder,
+  'Schema': PhFolder,
 };
 
 const KIND_COLORS: Record<string, string> = {
@@ -92,6 +92,6 @@ const KIND_COLORS: Record<string, string> = {
   'Schema': 'text-orange-500',
 };
 
-const icon = computed((): Component => KIND_ICONS[props.sym.kind] ?? AtSymbolIcon);
+const icon = computed((): Component => KIND_ICONS[props.sym.kind] ?? PhAt);
 const iconColor = computed(() => KIND_COLORS[props.sym.kind] ?? 'text-gray-400');
 </script>

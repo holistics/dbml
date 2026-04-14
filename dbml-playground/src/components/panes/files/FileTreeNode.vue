@@ -9,7 +9,7 @@
       @dblclick="emit('start-rename', node.path)"
     >
       <!-- Folder chevron / file spacer -->
-      <ChevronRightIcon
+      <PhCaretRight
         v-if="node.type === 'folder'"
         class="w-2.5 h-2.5 flex-shrink-0 transition-transform"
         :class="open ? 'rotate-90' : ''"
@@ -20,15 +20,15 @@
       />
 
       <!-- Icon -->
-      <FolderOpenIcon
+      <PhFolderOpen
         v-if="node.type === 'folder' && open"
         class="w-3.5 h-3.5 flex-shrink-0 opacity-70"
       />
-      <FolderIcon
+      <PhFolder
         v-else-if="node.type === 'folder'"
         class="w-3.5 h-3.5 flex-shrink-0 opacity-70"
       />
-      <DocumentTextIcon
+      <PhFileText
         v-else
         class="w-3.5 h-3.5 flex-shrink-0 opacity-60"
       />
@@ -61,7 +61,7 @@
           title="New file in folder"
           @click.stop="emit('add-file-in-folder', node.path)"
         >
-          <DocumentPlusIcon class="w-3 h-3" />
+          <PhFilePlus class="w-3 h-3" />
         </button>
 
         <!-- Delete with teleported confirm -->
@@ -76,7 +76,7 @@
             :title="node.type === 'folder' ? 'Delete folder' : 'Delete file'"
             @click.stop="toggleConfirm"
           >
-            <TrashIcon class="w-3 h-3" />
+            <PhTrash class="w-3 h-3" />
           </button>
         </div>
       </div>
@@ -147,11 +147,11 @@
         @click.stop
       >
         <span class="w-2.5 h-2.5 flex-shrink-0" />
-        <DocumentTextIcon
+        <PhFileText
           v-if="pendingNode.type === 'file'"
           class="w-3.5 h-3.5 flex-shrink-0 opacity-60"
         />
-        <FolderIcon
+        <PhFolder
           v-else
           class="w-3.5 h-3.5 flex-shrink-0 opacity-70"
         />
@@ -176,13 +176,13 @@ import {
   ref, computed, onMounted, onUnmounted,
 } from 'vue';
 import {
-  ChevronRightIcon,
-  FolderIcon,
-  FolderOpenIcon,
-  DocumentTextIcon,
-  DocumentPlusIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/outline';
+  PhCaretRight,
+  PhFolder,
+  PhFolderOpen,
+  PhFileText,
+  PhFilePlus,
+  PhTrash,
+} from '@phosphor-icons/vue';
 import {
   useProject,
 } from '@/stores/projectStore';
