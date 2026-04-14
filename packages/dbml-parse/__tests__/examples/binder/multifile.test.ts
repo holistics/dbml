@@ -808,7 +808,7 @@ describe('[example] multifile binder', () => {
       const { compiler, fps } = makeCompiler({
         '/source.dbml': [
           'Table users { id int [pk] }',
-          'Table orders { id int [pk]; user_id int }',
+          'Table orders {\n  id int [pk]\n  user_id int\n}',
           'Ref: orders.user_id > users.id',
         ].join('\n'),
         '/consumer.dbml': [
@@ -846,7 +846,7 @@ describe('[example] multifile binder', () => {
       const { compiler, fps } = makeCompiler({
         '/base.dbml': [
           'Table users { id int [pk] }',
-          'Table posts { id int [pk]; user_id int }',
+          'Table posts {\n  id int [pk]\n  user_id int\n}',
           'TableGroup social { users\n  posts }',
         ].join('\n'),
         '/consumer.dbml': "use { tablegroup social } from './base.dbml'",
@@ -865,7 +865,7 @@ describe('[example] multifile binder', () => {
       const { compiler, fps } = makeCompiler({
         '/base.dbml': [
           'Table users { id int [pk] }',
-          'Table posts { id int [pk]; user_id int }',
+          'Table posts {\n  id int [pk]\n  user_id int\n}',
           'TableGroup social { users\n  posts }',
         ].join('\n'),
         '/consumer.dbml': [
@@ -912,7 +912,7 @@ describe('[example] multifile binder', () => {
     test('importing auth.users from one file and auth.posts from another has no binding errors', () => {
       const { compiler, fps } = makeCompiler({
         '/users.dbml': 'Table auth.users { id int [pk] }',
-        '/posts.dbml': 'Table auth.posts { id int [pk]; user_id int }',
+        '/posts.dbml': 'Table auth.posts {\n  id int [pk]\n  user_id int\n}',
         '/consumer.dbml': [
           "use { table auth.users } from './users.dbml'",
           "use { table auth.posts } from './posts.dbml'",
@@ -926,7 +926,7 @@ describe('[example] multifile binder', () => {
     test('Ref between two tables from different files under the same schema resolves without errors', () => {
       const { compiler, fps } = makeCompiler({
         '/users.dbml': 'Table auth.users { id int [pk] }',
-        '/posts.dbml': 'Table auth.posts { id int [pk]; user_id int }',
+        '/posts.dbml': 'Table auth.posts {\n  id int [pk]\n  user_id int\n}',
         '/consumer.dbml': [
           "use { table auth.users } from './users.dbml'",
           "use { table auth.posts } from './posts.dbml'",

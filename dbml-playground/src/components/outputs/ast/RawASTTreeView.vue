@@ -1,11 +1,12 @@
 <template>
   <div class="raw-ast-tree">
-    <RawASTTreeNode
+    <RawAstTreeNode
       :node="rootNode"
       :selected-node="selectedNode"
       :expanded-nodes="expandedNodes"
       :level="0"
-      @node-click="$emit('node-click', $event)"
+      :cursor-node-id="cursorNodeId"
+      @node-click="handleNodeClick"
       @node-expand="handleNodeExpand"
       @position-click="$emit('position-click', $event)"
     />
@@ -21,30 +22,69 @@
  * like body, callee, args, etc. for debugging purposes.
  */
 import {
-  computed, ref,
+  computed, ref, inject, watch, type Ref,
 } from 'vue';
-import RawASTTreeNode, {
-  type RawASTNode,
-} from './RawASTTreeNode.vue';
+import type {
+  NavigationPosition,
+} from '@/types';
+import { SyntaxNode, type ProgramNode } from '@dbml/parse';
+import { nodeReadableId } from '@/services/serializers';
+import RawAstTreeNode, {
+  type RawAstNode,
+} from './RawAstTreeNode.vue';
 
 interface Props {
-  readonly rawAST: any;
+  readonly rawAst: ProgramNode;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  'node-click': [node: RawASTNode];
-  'position-click': [{ node: RawASTNode;
-    position: any; }];
+  'node-click': [node: RawAstNode];
+  'position-click': [{ node: RawAstNode;
+    position: NavigationPosition; }];
 }>();
 
-const selectedNode = ref<RawASTNode | null>(null);
+const selectedNode = ref<RawAstNode | null>(null);
 const expandedNodes = ref<Set<string>>(new Set(['root']));
+
+// Reset expanded state when AST changes to avoid stale node IDs accumulating
+watch(() => props.rawAst, () => {
+  expandedNodes.value = new Set(['root']);
+});
+const cursorPos = inject<Ref<{ line: number;
+  column: number; }> | undefined>('dbmlCursorPos', undefined);
+
+// Find AST node id that contains cursor position
+const cursorNodeId = computed(() => {
+  if (!cursorPos?.value) return undefined;
+  const {
+    line, column,
+  } = cursorPos.value;
+  return findNodeAtPosition(rootNode.value, line, column);
+});
+
+function findNodeAtPosition (node: RawAstNode, line: number, col: number): string | undefined {
+  const d = node.rawData as Record<string, unknown> | null | undefined;
+  const sp = d?.startPos as Record<string, unknown> | null | undefined;
+  const ep = d?.endPos as Record<string, unknown> | null | undefined;
+  if (sp && ep && typeof sp.line === 'number' && !Number.isNaN(sp.line)) {
+    const sl = (sp.line as number) + 1, sc = (sp.column as number) + 1;
+    const el = (ep.line as number) + 1, ec = (ep.column as number) + 1;
+    const inside = (line > sl || (line === sl && col >= sc)) && (line < el || (line === el && col <= ec));
+    if (!inside) return undefined;
+  }
+  // Check children for more specific match
+  for (const child of node.children) {
+    const found = findNodeAtPosition(child, line, col);
+    if (found) return found;
+  }
+  return node.id;
+}
 
 // Transform raw AST into tree structure
 const rootNode = computed(() => {
-  return transformToRawASTNode(props.rawAST, 'ast', 'ast');
+  return transformToRawAstNode(props.rawAst, 'ast', 'ast');
 });
 
 // Handle node expansion
@@ -57,8 +97,8 @@ const handleNodeExpand = (event: { id: string;
   }
 };
 
-// Transform any value into a RawASTNode
-function transformToRawASTNode (data: any, propertyName: string, accessPath: string): RawASTNode {
+// Transform any value into a RawAstNode
+function transformToRawAstNode (data: unknown, propertyName: string, accessPath: string): RawAstNode {
   const nodeId = `${accessPath}_${propertyName}`;
 
   if (data === null || data === undefined) {
@@ -86,8 +126,8 @@ function transformToRawASTNode (data: any, propertyName: string, accessPath: str
 
   // Handle arrays
   if (Array.isArray(data)) {
-    const children: RawASTNode[] = data.map((item, index) =>
-      transformToRawASTNode(item, `[${index}]`, `${accessPath}[${index}]`),
+    const children: RawAstNode[] = data.map((item, index) =>
+      transformToRawAstNode(item, `[${index}]`, `${accessPath}[${index}]`),
     );
 
     return {
@@ -100,7 +140,7 @@ function transformToRawASTNode (data: any, propertyName: string, accessPath: str
   }
 
   // Handle objects - show all properties
-  const children: RawASTNode[] = [];
+  const children: RawAstNode[] = [];
 
   // Sort properties to show important ones first
   const entries = Object.entries(data);
@@ -132,7 +172,7 @@ function transformToRawASTNode (data: any, propertyName: string, accessPath: str
     }
 
     const childPath = `${accessPath}.${key}`;
-    const child = transformToRawASTNode(value, key, childPath);
+    const child = transformToRawAstNode(value, key, childPath);
     children.push(child);
   }
 
@@ -142,29 +182,46 @@ function transformToRawASTNode (data: any, propertyName: string, accessPath: str
     rawData: data,
     children,
     accessPath,
+    readableId: data instanceof SyntaxNode ? nodeReadableId(data) : undefined,
   };
 }
 
 // Determine if a property should be skipped in the tree view
-function shouldSkipProperty (key: string, value: any): boolean {
+function shouldSkipProperty (key: string, value: unknown): boolean {
   // Skip undefined values
   if (value === undefined) {
     return true;
   }
 
-  // Skip some internal parser properties that aren't useful for debugging
   const skipProperties = [
-    'parent', // Circular reference
-    'symbol', // Internal symbol reference
-    'referee', // Internal reference
-    '__proto__', // JavaScript internal
+    'parent', 'parentNode', 'symbol', 'referee', '__proto__',
+    'startPos', 'endPos', 'start', 'end', 'fullStart', 'fullEnd', 'kind',
+    'source', // full source text on ProgramNode — bloats the tree
   ];
 
   return skipProperties.includes(key);
 }
 
+// Auto-expand ancestors when cursorNodeId changes so the active node is visible
+watch(cursorNodeId, (targetId) => {
+  if (!targetId) return;
+  const path = findPathToNode(rootNode.value, targetId);
+  if (path) {
+    for (const id of path) expandedNodes.value.add(id);
+  }
+});
+
+function findPathToNode (node: RawAstNode, targetId: string): string[] | null {
+  if (node.id === targetId) return [node.id];
+  for (const child of node.children) {
+    const found = findPathToNode(child, targetId);
+    if (found) return [node.id, ...found];
+  }
+  return null;
+}
+
 // Watch for node clicks to update selection
-const handleNodeClick = (node: RawASTNode) => {
+const handleNodeClick = (node: RawAstNode) => {
   selectedNode.value = node;
   emit('node-click', node);
 };
@@ -175,7 +232,7 @@ defineExpose({
     // Find all node IDs and expand them
     const allNodeIds = new Set<string>();
 
-    function collectNodeIds (node: RawASTNode) {
+    function collectNodeIds (node: RawAstNode) {
       allNodeIds.add(node.id);
       node.children.forEach(collectNodeIds);
     }
@@ -191,7 +248,7 @@ defineExpose({
   expandToLevel: (level: number) => {
     const expandToLevel = new Set<string>();
 
-    function collectNodeIdsToLevel (node: RawASTNode, currentLevel: number) {
+    function collectNodeIdsToLevel (node: RawAstNode, currentLevel: number) {
       if (currentLevel <= level) {
         expandToLevel.add(node.id);
         node.children.forEach((child) => collectNodeIdsToLevel(child, currentLevel + 1));

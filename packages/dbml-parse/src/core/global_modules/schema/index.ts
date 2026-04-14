@@ -18,7 +18,7 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  ElementDeclarationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode,
+  ElementDeclarationNode, FunctionApplicationNode, UseDeclarationNode, UseSpecifierListNode, WildcardNode,
 } from '@/core/types/nodes';
 import {
   SyntaxNode, UseSpecifierNode,
@@ -27,6 +27,9 @@ import Report from '@/core/types/report';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
 import {
   enumUtils,
 } from '../enum';
@@ -93,18 +96,28 @@ export const schemaModule: GlobalModule = {
       }
     }
 
-    // Filter out duplicate symbols (same real symbol). UseSymbols dedupe by
-    // (originalSymbol, locally-visible name) so that:
-    //   - `use { table users }` plus `use *` from the same source collapse to
-    //     one entry (same original, same name) instead of colliding;
-    //   - `use { table users as u }` and `use { table users }` stay distinct
-    //     because their local names differ (`u` vs. `users`).
-    const uniqueExpandedMembers = uniqBy(membersWithExpansions, (m) => {
-      if (m instanceof UseSymbol) {
-        return `use:${m.originalSymbol.id}:${compiler.symbolName(m) ?? ''}`;
-      }
-      return m.originalSymbol;
-    });
+    // Filter out duplicate symbols while preserving these semantics:
+    //   - `use { table users }` plus `use *` bringing the same symbol → collapse to one (selective wins)
+    //   - Two wildcard paths to the same symbol → collapse to one
+    //   - Two explicit `use { table users }` specifiers → keep both (duplicate check will fire below)
+    const selectiveUseSymbols = membersWithExpansions.filter(
+      (m): m is UseSymbol => m instanceof UseSymbol && m.useSpecifierDeclaration instanceof UseSpecifierNode,
+    );
+    const wildcardUseSymbols = membersWithExpansions.filter(
+      (m): m is UseSymbol => m instanceof UseSymbol && !(m.useSpecifierDeclaration instanceof UseSpecifierNode),
+    );
+    const nonUseSymbols = membersWithExpansions.filter((m): m is NodeSymbol => !(m instanceof UseSymbol));
+
+    const dedupedWildcards = uniqBy(wildcardUseSymbols, (m) => `use:${m.originalSymbol.id}:${compiler.symbolName(m) ?? ''}`);
+    const selectiveKeys = new Set(selectiveUseSymbols.map((m) => `${m.originalSymbol.id}:${compiler.symbolName(m) ?? ''}`));
+    const filteredWildcards = dedupedWildcards.filter((m) => !selectiveKeys.has(`${m.originalSymbol.id}:${compiler.symbolName(m) ?? ''}`));
+
+    const uniqueNonUse = uniqBy(nonUseSymbols, (m) => m.originalSymbol);
+    const uniqueExpandedMembers: NodeSymbol[] = [
+      ...uniqueNonUse,
+      ...selectiveUseSymbols,
+      ...filteredWildcards,
+    ];
 
     const errors: CompileError[] = [];
 
@@ -289,24 +302,54 @@ function expandTableGroup (compiler: Compiler, tableGroupSymbol: NodeSymbol): No
 
   const extraSymbols: NodeSymbol[] = [];
   for (const field of members) {
-    if (field.isKind(SymbolKind.TableGroupField) && field.declaration) {
-      const originalTable = compiler.nodeReferee(field.declaration).getFiltered(UNHANDLED);
-      if (originalTable && originalTable.isKind(SymbolKind.Table)) {
-        if (tableGroupSymbol instanceof UseSymbol) {
-          extraSymbols.push(compiler.symbolFactory.create(UseSymbol, {
-            kind: SymbolKind.Table,
-            declaration: originalTable.declaration,
-            usedSymbol: originalTable,
-            useSpecifierDeclaration: tableGroupSymbol.useSpecifierDeclaration,
-          }, tableGroupSymbol.filepath));
-        } else {
-          // Local TableGroup: tables are already direct schema members; expose via originalSymbol
-          // so deduplication in symbolMembers collapses them correctly.
-          extraSymbols.push(originalTable.originalSymbol);
-        }
-      }
+    if (!field.isKind(SymbolKind.TableGroupField) || !field.declaration) continue;
+
+    const callee = (field.declaration as FunctionApplicationNode).callee;
+    if (!callee) continue;
+
+    // Look up the table directly from the source file's usable members to avoid
+    // triggering a symbolMembers cycle (nodeReferee → symbolMembers → expandTableGroup).
+    const nameParts = destructureComplexVariable(callee);
+    if (!nameParts || nameParts.length === 0) continue;
+
+    const sourceFilepath = field.declaration.filepath;
+    const originalTable = lookupTableInFile(compiler, sourceFilepath, nameParts);
+    if (!originalTable) continue;
+
+    if (tableGroupSymbol instanceof UseSymbol) {
+      extraSymbols.push(compiler.symbolFactory.create(UseSymbol, {
+        kind: SymbolKind.Table,
+        declaration: originalTable.declaration,
+        usedSymbol: originalTable,
+        useSpecifierDeclaration: undefined,
+      }, tableGroupSymbol.filepath));
+    } else {
+      // Local TableGroup: tables are already direct schema members; expose via originalSymbol
+      // so deduplication in symbolMembers collapses them correctly.
+      extraSymbols.push(originalTable.originalSymbol);
     }
   }
 
   return extraSymbols;
+}
+
+// Look up a table by qualified name parts directly from a file's usable members,
+// without going through symbolMembers (avoids expansion cycles).
+function lookupTableInFile (compiler: Compiler, filepath: Filepath, nameParts: string[]): NodeSymbol | undefined {
+  if (nameParts.length === 1) {
+    // Simple name — search in the public schema's direct members
+    const usable = compiler.fileUsableMembers(filepath).getFiltered(UNHANDLED);
+    if (!usable) return undefined;
+    return usable.nonSchemaMembers.find((m) => m.isKind(SymbolKind.Table) && compiler.symbolName(m) === nameParts[0]);
+  }
+
+  // Qualified name (schema.table) — find the schema first, then the table
+  const [schemaName, tableName] = [nameParts[0], nameParts[nameParts.length - 1]];
+  const usable = compiler.fileUsableMembers(filepath).getFiltered(UNHANDLED);
+  if (!usable) return undefined;
+  const schema = usable.schemaMembers.find((s) => s.name === schemaName);
+  if (!schema) return undefined;
+  const schemaUsable = compiler.fileUsableMembers(schema).getFiltered(UNHANDLED);
+  if (!schemaUsable) return undefined;
+  return schemaUsable.nonSchemaMembers.find((m) => m.isKind(SymbolKind.Table) && compiler.symbolName(m) === tableName);
 }

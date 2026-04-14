@@ -124,14 +124,18 @@ export default class Binder {
       return ids.sort();
     }
 
-    // Single column ref: the last fragment is the column
-    const result = this.compiler.nodeReferee(lastFragment);
-    if (result.hasValue(UNHANDLED)) return undefined;
-    const sym = result.getValue();
-    if (!sym) return undefined;
-    return [
-      sym.id,
-    ];
+    // Single column ref: include all path fragment IDs so that refs through
+    // different aliases (e.g. `users.id` vs `u.id`) are treated as distinct
+    const allIds: number[] = [];
+    for (const fragment of fragments) {
+      if (fragment instanceof TupleExpressionNode) continue;
+      const result = this.compiler.nodeReferee(fragment);
+      if (result.hasValue(UNHANDLED)) return undefined;
+      const sym = result.getValue();
+      if (!sym) return undefined;
+      allIds.push(sym.id);
+    }
+    return allIds;
   }
 
   private isSameEndpoint (left: number[], right: number[]): boolean {
@@ -208,6 +212,10 @@ export default class Binder {
             const colSym = colResult.getValue();
             if (!colSym) continue;
 
+            // Get the table's symbol to build a [tableId, colId] path (consistent with standalone refs)
+            const tableResult = this.compiler.nodeSymbol(decl);
+            const tableSym = tableResult.hasValue(UNHANDLED) ? undefined : tableResult.getValue();
+
             // Get settings for this field
             const settingsResult = this.compiler.nodeSettings(field);
             if (settingsResult.hasValue(UNHANDLED)) continue;
@@ -223,7 +231,10 @@ export default class Binder {
 
               const rightIds = this.getColumnSymbolIds(refValue.expression);
               if (!rightIds) continue;
-              const leftIds = [
+              const leftIds = tableSym ? [
+                tableSym.id,
+                colSym.id,
+              ] : [
                 colSym.id,
               ];
 

@@ -6,7 +6,7 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  ProgramNode, type SyntaxNode,
+  ProgramNode, UseDeclarationNode, UseSpecifierListNode, type SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
@@ -66,7 +66,22 @@ export const programModule: GlobalModule = {
 
     for (const element of ast.body) {
       const fullname = compiler.nodeFullname(element).getValue();
-      if (!Array.isArray(fullname)) continue; // No schema here
+      if (!Array.isArray(fullname)) {
+        // Discover schemas from schema-qualified use specifiers (e.g. `use { table auth.users }`)
+        if (element instanceof UseDeclarationNode && element.specifiers instanceof UseSpecifierListNode) {
+          for (const specifier of element.specifiers.specifiers) {
+            const specFullname = compiler.nodeFullname(specifier).getValue();
+            if (!Array.isArray(specFullname) || specFullname.length <= 1) continue;
+            const schemaName = specFullname[0];
+            if (schemaName !== DEFAULT_SCHEMA_NAME && !schemaMembers.has(schemaName)) {
+              schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, {
+                name: schemaName,
+              }, symbol.filepath));
+            }
+          }
+        }
+        continue;
+      }
 
       const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0]; // When fullname doesn't have a schema name, `public` is assumed
       if (!schemaMembers.has(schemaName)) {
