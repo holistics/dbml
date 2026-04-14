@@ -81,10 +81,14 @@ export interface TokenMetadata {
   tokenIndex: number;
   kind: string;
   value: string;
-  startPosition: { line: number;
-    column: number; };
-  endPosition: { line: number;
-    column: number; };
+  startPosition: {
+    line: number;
+    column: number;
+  };
+  endPosition: {
+    line: number;
+    column: number;
+  };
   monacoRange: any; // monaco.Range
 }
 
