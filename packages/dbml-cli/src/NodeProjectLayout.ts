@@ -85,4 +85,12 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   getEntryPoints (): Filepath[] {
     return this.entryPoints.filter((fp) => this.exists(fp));
   }
+
+  clone (): NodeProjectLayout {
+    const copy = new NodeProjectLayout([...this.entryPoints]);
+    for (const [abs, content] of this.overlay) {
+      copy.overlay.set(abs, content);
+    }
+    return copy;
+  }
 }

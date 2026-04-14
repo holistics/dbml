@@ -224,8 +224,8 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
       const found = findItem(allItems, kind, ext.name, ext.schemaName);
       if (!found) continue;
 
-      // Add with primary name; strip schema if renamed
-      const isRenamed = primaryName !== ext.name || ext.schemaName !== null;
+      // Add with primary name; strip schema only when an alias was used
+      const isRenamed = primaryName !== ext.name;
       pushItem(reconciled, kind, isRenamed
         ? {
             ...found,
