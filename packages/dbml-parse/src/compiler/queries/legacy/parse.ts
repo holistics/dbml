@@ -9,6 +9,9 @@ import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
 import {
+  type Filepath,
+} from '@/core/types/filepath';
+import {
   UNHANDLED,
 } from '@/core/types/module';
 import type {
@@ -21,8 +24,8 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export function ast (this: Compiler): Readonly<ProgramNode> {
-  return this.parseFile(DEFAULT_ENTRY).getValue().ast;
+export function ast (this: Compiler, filepath: Filepath): Readonly<ProgramNode> {
+  return this.parseFile(filepath).getValue().ast;
 }
 
 export function errors (this: Compiler): readonly Readonly<CompileError>[] {
@@ -33,8 +36,8 @@ export function warnings (this: Compiler): readonly Readonly<CompileWarning>[] {
   return this.interpretFile(DEFAULT_ENTRY).getWarnings();
 }
 
-export function tokens (this: Compiler): readonly Readonly<SyntaxToken>[] {
-  return this.parseFile(DEFAULT_ENTRY).getValue().tokens;
+export function tokens (this: Compiler, filepath: Filepath): readonly Readonly<SyntaxToken>[] {
+  return this.parseFile(filepath).getValue().tokens;
 }
 
 export function rawDb (this: Compiler): Readonly<Database> | undefined {

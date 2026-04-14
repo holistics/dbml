@@ -16,5 +16,5 @@ export function scope (
     current = current.parent;
   }
 
-  return this.parse.ast();
+  return this.parse.ast(node.filepath);
 }

@@ -3,6 +3,7 @@ import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { DEFAULT_ENTRY } from '@/constants';
+import { Filepath } from '@/core/types/filepath';
 
 describe('[example] CompletionItemProvider', () => {
   describe('should suggest element types when at top level', () => {
@@ -992,6 +993,46 @@ describe('[example] CompletionItemProvider', () => {
         'users',
 
       ]);
+    });
+
+    it('- should suggest columns after dot on right-hand side of relationship operator', () => {
+      const program = 'Table T { id int\n  name varchar\n}\nRef: T.id > T.';
+      const compiler = new Compiler();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      // Line 4: 'Ref: T.id > T.' — cursor after the trailing dot
+      const position = createPosition(4, 'Ref: T.id > T.'.length + 1);
+      const result = provider.provideCompletionItems(model, position);
+
+      const labels = result.suggestions.map((s) => s.label);
+      expect(labels).toContain('id');
+      expect(labels).toContain('name');
+      expect(labels).not.toContain('Table');
+      expect(labels).not.toContain('Ref');
+      expect(labels).not.toContain('Enum');
+    });
+
+    it.todo('- should suggest columns after dot on rhs of relationship operator when table is imported via use (broken: provider hardcodes DEFAULT_ENTRY, ignores model.uri)', () => {
+      const baseContent = 'Table T {\n  id int [pk]\n  name varchar\n}';
+      const consumerContent = "use { table T } from '/base.dbml'\nRef: T.id > T.";
+      const compiler = new Compiler();
+      const baseFp = Filepath.from('/base.dbml');
+      const consumerFp = Filepath.from('/consumer.dbml');
+      compiler.setSource(baseFp, baseContent);
+      compiler.setSource(consumerFp, consumerContent);
+      compiler.bindProject();
+      const model = createMockTextModel(consumerContent, consumerFp.toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(2, 'Ref: T.id > T.'.length + 1);
+      const result = provider.provideCompletionItems(model, position);
+
+      const labels = result.suggestions.map((s) => s.label);
+      expect(labels).toContain('id');
+      expect(labels).toContain('name');
+      expect(labels).not.toContain('Table');
+      expect(labels).not.toContain('Ref');
+      expect(labels).not.toContain('Enum');
     });
 
     it('- should suggest ref settings in brackets', () => {

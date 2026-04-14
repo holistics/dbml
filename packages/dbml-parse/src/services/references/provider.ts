@@ -1,5 +1,8 @@
 import Compiler from '@/compiler';
 import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
   Filepath,
 } from '@/core/types/filepath';
 import {
@@ -27,12 +30,13 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
       uri,
     } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
+    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
 
     // Ensure binding is done before resolving references
     this.compiler.bindProject();
 
     const containers = [
-      ...this.compiler.container.stack(offset),
+      ...this.compiler.container.stack(filepath, offset),
     ];
     while (containers.length !== 0) {
       const node = containers.pop();

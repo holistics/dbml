@@ -1,4 +1,7 @@
 import {
+  type Filepath,
+} from '@/core/types/filepath';
+import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
@@ -7,8 +10,8 @@ import {
 import type Compiler from '../../index';
 
 // @deprecated - returns the members of the element at offset
-export function containerScope (this: Compiler, offset: number): NodeSymbol[] | undefined {
-  const element = this.container.element(offset);
+export function containerScope (this: Compiler, filepath: Filepath, offset: number): NodeSymbol[] | undefined {
+  const element = this.container.element(filepath, offset);
   if (!element) return undefined;
   const sym = this.nodeSymbol(element);
   if (sym.hasValue(UNHANDLED)) return undefined;

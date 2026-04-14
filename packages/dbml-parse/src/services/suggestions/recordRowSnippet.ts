@@ -1,5 +1,8 @@
 import Compiler from '@/compiler';
 import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
@@ -41,9 +44,10 @@ export function suggestRecordRowSnippet (
   compiler: Compiler,
   model: TextModel,
   position: Position,
+  filepath: Filepath,
   offset: number,
 ): CompletionList | null {
-  const element = compiler.container.element(offset);
+  const element = compiler.container.element(filepath, offset);
 
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;

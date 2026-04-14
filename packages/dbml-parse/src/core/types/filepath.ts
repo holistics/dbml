@@ -45,6 +45,14 @@ export class Filepath implements Internable<FilepathId> {
       if (/^\/[a-zA-Z]:[\\/]/.test(p)) p = p.slice(1);
       return new Filepath(normalize(p));
     }
+    // For custom URIs (e.g. inmemory://model/1), map to a synthetic absolute path
+    // using /<scheme>/<host><pathname> so they remain valid and stable.
+    try {
+      const url = new URL(uri);
+      return new Filepath(normalize(`/${url.protocol.replace(':', '')}/${url.host}${url.pathname}`));
+    } catch {
+      // Not a valid URL — fall through to treat as plain path
+    }
     return new Filepath(normalize(uri));
   }
 

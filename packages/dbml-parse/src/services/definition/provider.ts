@@ -1,5 +1,8 @@
 import Compiler from '@/compiler';
 import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
   Filepath,
 } from '@/core/types/filepath';
 import {
@@ -27,8 +30,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       uri,
     } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
+    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
     const containers = [
-      ...this.compiler.container.stack(offset),
+      ...this.compiler.container.stack(filepath, offset),
     ];
     while (containers.length !== 0) {
       const node = containers.pop();
