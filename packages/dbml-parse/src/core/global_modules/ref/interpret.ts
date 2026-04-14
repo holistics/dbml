@@ -123,12 +123,12 @@ export class RefInterpreter {
       const deleteSetting = settingMap.delete?.at(0)?.value;
       this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
         ? extractStringFromIdentifierStream(deleteSetting) ?? undefined
-        : extractVariableFromExpression(deleteSetting) as string;
+        : extractVariableFromExpression(deleteSetting) ?? undefined;
 
       const updateSetting = settingMap.update?.at(0)?.value;
       this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
         ? extractStringFromIdentifierStream(updateSetting) ?? undefined
-        : extractVariableFromExpression(updateSetting) as string;
+        : extractVariableFromExpression(updateSetting) ?? undefined;
 
       this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value as any) : undefined;
     }
