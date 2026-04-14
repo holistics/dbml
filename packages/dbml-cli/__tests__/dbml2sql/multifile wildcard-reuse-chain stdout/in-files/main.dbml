@@ -1,8 +1,0 @@
-// consumer: imports from b (which re-exports everything from a via reuse *)
-// verifies wildcard reuse propagates tables, enums transitively
-use * from './b.dbml'
-
-Table payments {
-  id int [pk]
-  order_id int
-}

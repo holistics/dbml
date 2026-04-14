@@ -1,7 +1,0 @@
-// alias strips schemaName; inline ref binds against the alias 'u'
-use { table auth.users as u } from './auth-tables.dbml'
-
-Table orders {
-  id int [pk]
-  user_id int [ref: > u.id]
-}
