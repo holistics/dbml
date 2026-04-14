@@ -1,15 +1,31 @@
-import { last, partition } from 'lodash-es';
+import {
+  last, partition,
+} from 'lodash-es';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementBinder } from '../types';
-import { CompileError } from '../../../errors';
-import { aggregateSettingList } from '../../validator/utils';
-import { destructureComplexVariableTuple } from '../../utils';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+} from '../../../types/nodes';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  destructureComplexVariableTuple,
+} from '../../utils';
+import {
+  aggregateSettingList,
+} from '../../validator/utils';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class TablePartialBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -35,12 +51,20 @@ export default class TablePartialBinder implements ElementBinder {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.bindFields([body]);
+      return this.bindFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
-    return [...this.bindFields(fields as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.bindFields(fields as FunctionApplicationNode[]),
+      ...this.bindSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -51,7 +75,10 @@ export default class TablePartialBinder implements ElementBinder {
 
       const errors: CompileError[] = [];
 
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         const listExpression = last(args) as ListExpressionNode;
         const settingsMap = aggregateSettingList(listExpression).getValue();
@@ -70,7 +97,7 @@ export default class TablePartialBinder implements ElementBinder {
   }
 
   private tryToBindColumnType (typeNode: SyntaxNode) {
-    const fragments = destructureComplexVariableTuple(typeNode).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(typeNode);
     if (!fragments) {
       return;
     }
@@ -83,8 +110,14 @@ export default class TablePartialBinder implements ElementBinder {
     }
 
     lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: enumBindee, kind: SymbolKind.Enum },
+      ...schemaBindees.map((b) => ({
+        node: b,
+        kind: SymbolKind.Schema,
+      })),
+      {
+        node: enumBindee,
+        kind: SymbolKind.Enum,
+      },
     ]);
   }
 
@@ -101,12 +134,24 @@ export default class TablePartialBinder implements ElementBinder {
 
       return tableBindee
         ? lookupAndBindInScope(this.ast, [
-            ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-            { node: tableBindee, kind: SymbolKind.Table },
-            { node: columnBindee, kind: SymbolKind.Column },
+            ...schemaBindees.map((b) => ({
+              node: b,
+              kind: SymbolKind.Schema,
+            })),
+            {
+              node: tableBindee,
+              kind: SymbolKind.Table,
+            },
+            {
+              node: columnBindee,
+              kind: SymbolKind.Column,
+            },
           ])
         : lookupAndBindInScope(this.declarationNode, [
-            { node: columnBindee, kind: SymbolKind.Column },
+            {
+              node: columnBindee,
+              kind: SymbolKind.Column,
+            },
           ]);
     });
   }

@@ -1,13 +1,15 @@
 import {
   isBooleanType,
-  isNumericType,
   isDateTimeType,
+  isNumericType,
   tryExtractBoolean,
+  tryExtractDateTime,
   tryExtractNumeric,
   tryExtractString,
-  tryExtractDateTime,
 } from '@/core/interpreter/records/utils';
-import { isAlphaOrUnderscore, isDigit } from '@/core/utils';
+import {
+  isAlphaOrUnderscore, isDigit,
+} from '@/core/utils/chars';
 
 /**
  * Checks if an identifier is valid (can be used without quotes in DBML).
@@ -189,7 +191,8 @@ export function escapeString (str: string): string {
  * formatRecordValue(42) => '42'
  * formatRecordValue(true) => 'true'
  */
-export function formatRecordValue (recordValue: { value: any; type: string } | string | number | boolean | null | undefined): string {
+export function formatRecordValue (recordValue: { value: any;
+  type: string; } | string | number | boolean | null | undefined): string {
   // Handle undefined and null primitives
   if (recordValue === undefined || recordValue === null) {
     return 'null';
@@ -209,7 +212,9 @@ export function formatRecordValue (recordValue: { value: any; type: string } | s
   }
 
   // Handle object format { value, type }
-  const { value, type } = recordValue;
+  const {
+    value, type,
+  } = recordValue;
 
   // Handle null/undefined values
   if (value === null || value === undefined || (isBooleanType(type) && typeof value === 'string' && value.toLowerCase() === 'null')) {

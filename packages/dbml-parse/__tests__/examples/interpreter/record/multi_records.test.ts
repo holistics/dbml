@@ -1,5 +1,9 @@
-import { CompileErrorCode } from '@/index';
-import { interpret } from '@tests/utils';
+import {
+  CompileErrorCode,
+} from '@/index';
+import {
+  interpret,
+} from '@tests/utils';
 
 describe('[example - record] multiple records blocks', () => {
   // NOTE: Multiple records blocks for the same table are currently disallowed.

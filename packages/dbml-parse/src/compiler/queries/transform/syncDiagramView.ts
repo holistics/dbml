@@ -1,18 +1,31 @@
+import {
+  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import { ElementKind } from '@/core/analyzer/types';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import { destructureComplexVariable } from '@/core/analyzer/utils';
-import { applyTextEdits, TextEdit } from './applyTextEdits';
-import { addDoubleQuoteIfNeeded } from '../utils';
+import {
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
+import {
+  addDoubleQuoteIfNeeded,
+} from '../utils';
+import {
+  TextEdit, applyTextEdits,
+} from './applyTextEdits';
 
 export interface DiagramViewSyncOperation {
   operation: 'create' | 'update' | 'delete';
   name: string;
   newName?: string;
   visibleEntities?: {
-    tables?: Array<{ name: string; schemaName: string }> | null;
+    tables?: Array<{ name: string;
+      schemaName: string; }> | null;
     stickyNotes?: Array<{ name: string }> | null;
     tableGroups?: Array<{ name: string }> | null;
     schemas?: Array<{ name: string }> | null;
@@ -27,19 +40,19 @@ export interface DiagramViewBlock {
 
 export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
-  const lexerResult = new Lexer(source).lex();
+  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
   if (lexerResult.getErrors().length > 0) return blocks;
 
   const tokens = lexerResult.getValue();
-  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse();
+  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
   if (ast.getErrors().length > 0) return blocks;
 
   const program = ast.getValue().ast;
 
   for (const element of program.body) {
-    if (element.type?.value.toLowerCase() === ElementKind.DiagramView) {
+    if (element.isKind(ElementKind.DiagramView)) {
       const fragments = element.name
-        ? destructureComplexVariable(element.name).unwrap_or([])
+        ? (destructureComplexVariable(element.name) ?? [])
         : [];
       const name = fragments.length > 0 ? fragments[fragments.length - 1] : '';
       blocks.push({
@@ -57,7 +70,9 @@ function generateDiagramViewBlock (
   name: string,
   visibleEntities: DiagramViewSyncOperation['visibleEntities'],
 ): string {
-  const lines: string[] = [`DiagramView ${addDoubleQuoteIfNeeded(name)} {`];
+  const lines: string[] = [
+    `DiagramView ${addDoubleQuoteIfNeeded(name)} {`,
+  ];
 
   // Tables
   if (visibleEntities?.tables !== undefined) {
@@ -130,7 +145,8 @@ export function syncDiagramView (
   dbml: string,
   operations: DiagramViewSyncOperation[],
   blocks?: DiagramViewBlock[],
-): { newDbml: string; edits: TextEdit[] } {
+): { newDbml: string;
+  edits: TextEdit[]; } {
   const originalBlocks = blocks ?? findDiagramViewBlocks(dbml);
   const allEdits: TextEdit[] = [];
 
@@ -142,7 +158,10 @@ export function syncDiagramView (
   // Sort edits descending by start position for tail-first application
   allEdits.sort((a, b) => b.start - a.start);
   const newDbml = applyTextEdits(dbml, allEdits, true);
-  return { newDbml, edits: allEdits };
+  return {
+    newDbml,
+    edits: allEdits,
+  };
 }
 
 function applyOperation (
@@ -175,11 +194,13 @@ function computeCreateEdit (
 
   const newBlock = generateDiagramViewBlock(operation.name, operation.visibleEntities);
   const appendText = '\n\n' + newBlock + '\n';
-  return [{
-    start: dbml.length,
-    end: dbml.length,
-    newText: appendText,
-  }];
+  return [
+    {
+      start: dbml.length,
+      end: dbml.length,
+      newText: appendText,
+    },
+  ];
 }
 
 function computeUpdateEdit (
@@ -246,5 +267,11 @@ function computeDeleteEdit (
   if (end < dbml.length && dbml[end] === '\r') end++;
   if (end < dbml.length && dbml[end] === '\n') end++;
 
-  return [{ start, end, newText: '' }];
+  return [
+    {
+      start,
+      end,
+      newText: '',
+    },
+  ];
 }

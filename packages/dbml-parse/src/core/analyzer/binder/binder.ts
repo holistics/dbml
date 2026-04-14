@@ -1,11 +1,20 @@
-import { CompileError } from '@/core/errors';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { pickBinder } from '@/core/analyzer/binder/utils';
-import Report from '@/core/report';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  pickBinder,
+} from '@/core/analyzer/binder/utils';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  ElementDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import TableBinder from './elementBinder/table';
 
 export default class Binder {
@@ -19,7 +28,7 @@ export default class Binder {
   }
 
   private resolvePartialInjections (): CompileError[] {
-    return this.ast.body.filter((e) => getElementKind(e).unwrap_or('') === ElementKind.Table).flatMap((t) => {
+    return this.ast.body.filter((e) => e.isKind(ElementKind.Table)).flatMap((t) => {
       const binder = new TableBinder(t as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
       return binder.resolvePartialInjections();
     });

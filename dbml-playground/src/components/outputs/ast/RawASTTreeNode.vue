@@ -99,7 +99,9 @@
  * Shows real parser properties like body, callee, args, kind, etc.
  * Preserves the original AST hierarchy without artificial semantic grouping.
  */
-import { computed } from 'vue';
+import {
+  computed,
+} from 'vue';
 
 export interface RawASTNode {
   id: string;
@@ -121,8 +123,10 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'node-click': [node: RawASTNode];
-  'node-expand': [{ id: string; expanded: boolean }];
-  'position-click': [{ node: RawASTNode; position: any }];
+  'node-expand': [{ id: string;
+    expanded: boolean; }];
+  'position-click': [{ node: RawASTNode;
+    position: any; }];
 }>();
 
 const isSelected = computed(() => props.selectedNode?.id === props.node.id);
@@ -186,13 +190,24 @@ const handlePositionClick = () => {
       // For nodes with just offset info, we can't navigate directly
       // but we can still emit the event for debugging
       position = {
-        start: { line: 1, column: 1, offset: data.start },
-        end: { line: 1, column: 1, offset: data.end },
+        start: {
+          line: 1,
+          column: 1,
+          offset: data.start,
+        },
+        end: {
+          line: 1,
+          column: 1,
+          offset: data.end,
+        },
       };
     }
 
     if (position) {
-      emit('position-click', { node: props.node, position });
+      emit('position-click', {
+        node: props.node,
+        position,
+      });
     }
   }
 };

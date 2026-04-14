@@ -1,21 +1,38 @@
-import { SyntaxToken } from '../../../lexer/tokens';
-import { ElementBinder } from '../types';
+import {
+  getElementNameString,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SymbolKind, createColumnSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { CompileError, CompileErrorCode } from '../../../errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import SymbolFactory from '../../symbol/factory';
+} from '../../../types/nodes';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  ElementKind,
+} from '../../types';
 import {
   destructureCallExpression,
   extractVarNameFromPrimaryVariable,
-  getElementKind,
 } from '../../utils';
-import { createColumnSymbolIndex, SymbolKind } from '../../symbol/symbolIndex';
-import { ElementKind } from '../../types';
-import { isTupleOfVariables } from '../../validator/utils';
-import { NodeSymbol } from '../../symbol/symbols';
-import { getElementNameString } from '@/core/parser/utils';
+import {
+  isTupleOfVariables,
+} from '../../validator/utils';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class RecordsBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -59,7 +76,7 @@ export default class RecordsBinder implements ElementBinder {
   //   records users(id, name) { }           // binds: Table[users], Column[id], Column[name]
   //   records myschema.users(id, name) { }  // binds: Schema[myschema], Table[users], Column[id], Column[name]
   private bindTopLevelName (nameNode: SyntaxNode): CompileError[] {
-    const fragments = destructureCallExpression(nameNode).unwrap_or(undefined);
+    const fragments = destructureCallExpression(nameNode);
     if (!fragments) {
       return [];
     }
@@ -72,8 +89,14 @@ export default class RecordsBinder implements ElementBinder {
     }
 
     const tableErrors = lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: tableBindee, kind: SymbolKind.Table },
+      ...schemaBindees.map((b) => ({
+        node: b,
+        kind: SymbolKind.Schema,
+      })),
+      {
+        node: tableBindee,
+        kind: SymbolKind.Table,
+      },
     ]);
 
     if (tableErrors.length > 0) {
@@ -85,11 +108,11 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableName = getElementNameString(tableBindee.referee?.declaration).unwrap_or('<invalid name>');
+    const tableName = getElementNameString(tableBindee.referee?.declaration as ElementDeclarationNode | undefined) ?? '<invalid name>';
 
     const errors: CompileError[] = [];
     for (const columnBindee of fragments.args) {
-      const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
+      const columnName = extractVarNameFromPrimaryVariable(columnBindee) ?? '<unnamed>';
       const columnIndex = createColumnSymbolIndex(columnName);
       const columnSymbol = tableSymbol.symbolTable.get(columnIndex);
 
@@ -132,8 +155,7 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const elementKind = getElementKind(parent).unwrap_or(undefined);
-    if (elementKind !== ElementKind.Table) {
+    if (!parent.isKind(ElementKind.Table)) {
       return [];
     }
 
@@ -146,11 +168,11 @@ export default class RecordsBinder implements ElementBinder {
       return [];
     }
 
-    const tableName = getElementNameString(parent).unwrap_or('<invalid name>');
+    const tableName = getElementNameString(parent) ?? '<invalid name>';
 
     const errors: CompileError[] = [];
     for (const columnBindee of nameNode.elementList) {
-      const columnName = extractVarNameFromPrimaryVariable(columnBindee).unwrap_or('<unnamed>');
+      const columnName = extractVarNameFromPrimaryVariable(columnBindee) ?? '<unnamed>';
       const columnIndex = createColumnSymbolIndex(columnName);
       const columnSymbol = tableSymbolTable.get(columnIndex);
 
@@ -205,7 +227,9 @@ export default class RecordsBinder implements ElementBinder {
 
     const values = row.callee instanceof CommaExpressionNode
       ? row.callee.elementList
-      : [row.callee];
+      : [
+          row.callee,
+        ];
 
     const bindees = values.flatMap(scanNonListNodeForBinding);
 
@@ -220,9 +244,18 @@ export default class RecordsBinder implements ElementBinder {
       const schemaBindees = bindee.variables;
 
       return lookupAndBindInScope(this.ast, [
-        ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-        { node: enumBindee, kind: SymbolKind.Enum },
-        { node: enumFieldBindee, kind: SymbolKind.EnumField },
+        ...schemaBindees.map((b) => ({
+          node: b,
+          kind: SymbolKind.Schema,
+        })),
+        {
+          node: enumBindee,
+          kind: SymbolKind.Enum,
+        },
+        {
+          node: enumFieldBindee,
+          kind: SymbolKind.EnumField,
+        },
       ]);
     });
   }

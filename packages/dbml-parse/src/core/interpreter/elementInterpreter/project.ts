@@ -1,15 +1,36 @@
-import { extractQuotedStringToken } from '@/core/analyzer/utils';
-import { CompileError } from '@/core/errors';
+import {
+  extractQuotedStringToken,
+} from '@/core/analyzer/utils';
+import {
+  extractElementName, getTokenPosition, normalizeNoteContent,
+} from '@/core/interpreter/utils';
+import {
+  CompileError,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
-} from '@/core/parser/nodes';
-import { ElementInterpreter, InterpreterDatabase, Project } from '@/core/interpreter/types';
-import { extractElementName, getTokenPosition, normalizeNoteContent } from '@/core/interpreter/utils';
-import { EnumInterpreter } from './enum';
-import { RefInterpreter } from './ref';
-import { TableInterpreter } from './table';
-import { TableGroupInterpreter } from './tableGroup';
-import { TablePartialInterpreter } from './tablePartial';
+} from '@/core/types/nodes';
+import {
+  Project,
+} from '@/core/types/schemaJson';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
+import {
+  EnumInterpreter,
+} from './enum';
+import {
+  RefInterpreter,
+} from './ref';
+import {
+  TableInterpreter,
+} from './table';
+import {
+  TableGroupInterpreter,
+} from './tableGroup';
+import {
+  TablePartialInterpreter,
+} from './tablePartial';
 
 export class ProjectInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -20,14 +41,21 @@ export class ProjectInterpreter implements ElementInterpreter {
     this.declarationNode = declarationNode;
     this.env = env;
     this.project = {
-      enums: [], refs: [], tableGroups: [], tables: [], tablePartials: [],
+      enums: [],
+      refs: [],
+      tableGroups: [],
+      tables: [],
+      tablePartials: [],
     };
   }
 
   interpret (): CompileError[] {
     this.env.project.set(this.declarationNode, this.project as Project);
     this.project.token = getTokenPosition(this.declarationNode);
-    const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name),
+      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
+    ];
 
     return errors;
   }
@@ -39,7 +67,9 @@ export class ProjectInterpreter implements ElementInterpreter {
       return [];
     }
 
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
     this.project.name = name;
 
     return [];
@@ -75,11 +105,11 @@ export class ProjectInterpreter implements ElementInterpreter {
         }
         case 'note': {
           this.project.note = {
-            value: extractQuotedStringToken(
+            value: normalizeNoteContent(extractQuotedStringToken(
               sub.body instanceof BlockExpressionNode
                 ? (sub.body.body[0] as FunctionApplicationNode).callee
                 : sub.body!.callee,
-            ).map(normalizeNoteContent).unwrap(),
+            )!),
             token: getTokenPosition(sub),
           };
           return [];
@@ -90,7 +120,7 @@ export class ProjectInterpreter implements ElementInterpreter {
           return errors;
         }
         default: {
-          (this.project as any)[sub.type!.value.toLowerCase()] = extractQuotedStringToken((sub.body as FunctionApplicationNode).callee).unwrap();
+          (this.project as any)[sub.type!.value.toLowerCase()] = extractQuotedStringToken((sub.body as FunctionApplicationNode).callee)!;
 
           return [];
         }

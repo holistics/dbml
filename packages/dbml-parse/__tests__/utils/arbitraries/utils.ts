@@ -27,7 +27,9 @@ export function zeroOrManyRegex (regex: RegExp): RegExp {
  *   caseVariant('table') => 'Table' | 'tAble' | 'taBle'
  */
 export const caseVariant = (str: string) => fc.oneof(
-  fc.nat({ max: str.length - 1 }).map((pos) => str.slice(0, pos) + str[pos].toUpperCase() + str.slice(pos + 1)),
+  fc.nat({
+    max: str.length - 1,
+  }).map((pos) => str.slice(0, pos) + str[pos].toUpperCase() + str.slice(pos + 1)),
   fc.constant(str),
   fc.constant(str.toUpperCase()),
   fc.constant(str.toLowerCase()),
@@ -54,11 +56,23 @@ export const settingKeyValue = (key: string, valueArb: fc.Arbitrary<string>) =>
  */
 export const randomSpaceArbitrary = fc.array(
   fc.oneof(
-    { weight: 10, arbitrary: fc.constant(' ') },
-    { weight: 3, arbitrary: fc.constant('\t') },
-    { weight: 1, arbitrary: fc.constant('\n') },
+    {
+      weight: 10,
+      arbitrary: fc.constant(' '),
+    },
+    {
+      weight: 3,
+      arbitrary: fc.constant('\t'),
+    },
+    {
+      weight: 1,
+      arbitrary: fc.constant('\n'),
+    },
   ),
-  { minLength: 1, maxLength: 3 },
+  {
+    minLength: 1,
+    maxLength: 3,
+  },
 ).map((arr) => arr.join(''));
 
 /**
@@ -68,10 +82,19 @@ export const randomSpaceArbitrary = fc.array(
  */
 export const randomInlineSpaceArbitrary = fc.array(
   fc.oneof(
-    { weight: 10, arbitrary: fc.constant(' ') },
-    { weight: 3, arbitrary: fc.constant('\t') },
+    {
+      weight: 10,
+      arbitrary: fc.constant(' '),
+    },
+    {
+      weight: 3,
+      arbitrary: fc.constant('\t'),
+    },
   ),
-  { minLength: 1, maxLength: 3 },
+  {
+    minLength: 1,
+    maxLength: 3,
+  },
 ).map((arr) => arr.join(''));
 
 /**

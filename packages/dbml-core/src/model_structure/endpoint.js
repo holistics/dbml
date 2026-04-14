@@ -1,5 +1,5 @@
-import Element from './element';
 import { DEFAULT_SCHEMA_NAME } from './config';
+import Element from './element';
 import { shouldPrintSchema, shouldPrintSchemaName } from './utils';
 
 class Endpoint extends Element {

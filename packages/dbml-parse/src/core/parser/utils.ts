@@ -1,7 +1,9 @@
-import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { None, Option, Some } from '@/core/option';
-import { alternateLists } from '@/core/utils';
+import {
+  last,
+} from 'lodash-es';
+import {
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -9,8 +11,8 @@ import {
   BlockExpressionNode,
   CallExpressionNode,
   CommaExpressionNode,
-  EmptyNode,
   ElementDeclarationNode,
+  EmptyNode,
   ExpressionNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
@@ -28,15 +30,20 @@ import {
   TupleExpressionNode,
   VariableNode,
   WildcardNode,
-} from '@/core/parser/nodes';
-import { destructureComplexVariable } from '@/core/analyzer/utils';
+} from '@/core/types/nodes';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  alternateLists,
+} from '@/core/utils/array';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
   _callee: ExpressionNode | CommaExpressionNode | undefined,
   _args: (NormalExpressionNode | CommaExpressionNode)[],
   factory: NodeFactory,
-): Option<ElementDeclarationNode> {
+): ElementDeclarationNode | undefined {
   let args = _args;
   let callee = _callee;
   // Handle the case:
@@ -44,19 +51,24 @@ export function convertFuncAppToElem (
   //   records () // --> call expression here
   // }
   if (callee instanceof CallExpressionNode && callee.argumentList) {
-    args = [callee.argumentList, ...args];
+    args = [
+      callee.argumentList,
+      ...args,
+    ];
     callee = callee.callee;
   }
   if (!callee || !isExpressionAnIdentifierNode(callee) || args.length === 0) {
-    return new None();
+    return undefined;
   }
-  const cpArgs = [...args];
+  const cpArgs = [
+    ...args,
+  ];
 
-  const type = extractVariableNode(callee).unwrap();
+  const type = extractVariableNode(callee)!;
 
   const body = cpArgs.pop();
   if (!(body instanceof BlockExpressionNode)) {
-    return new None();
+    return undefined;
   }
 
   const attributeList = last(cpArgs) instanceof ListExpressionNode
@@ -64,50 +76,45 @@ export function convertFuncAppToElem (
     : undefined;
 
   if (cpArgs.length === 3) {
-    const asKeywordNode = extractVariableNode(cpArgs[1]).value;
+    const asKeywordNode = extractVariableNode(cpArgs[1]);
     // If cpArgs = [sth, 'as', sth] then it's a valid element declaration
     return (!asKeywordNode || !isAsKeyword(asKeywordNode))
-      ? new None()
-      : new Some(
-          factory.create(ElementDeclarationNode, {
-            type,
-            name: cpArgs[0],
-            as: asKeywordNode,
-            alias: cpArgs[2],
-            attributeList,
-            body,
-          }),
-        );
+      ? undefined
+      : factory.create(ElementDeclarationNode, {
+          type,
+          name: cpArgs[0],
+          as: asKeywordNode,
+          alias: cpArgs[2],
+          attributeList,
+          body,
+        });
   }
 
   if (cpArgs.length === 1) {
-    return new Some(
-      factory.create(ElementDeclarationNode, {
-        type,
-        name: cpArgs[0],
-        attributeList,
-        body,
-      }),
-    );
+    return factory.create(ElementDeclarationNode, {
+      type,
+      name: cpArgs[0],
+      attributeList,
+      body,
+    });
   }
 
   if (cpArgs.length === 0) {
-    return new Some(
-      factory.create(ElementDeclarationNode, {
-        type,
-        attributeList,
-        body,
-      }),
-    );
+    return factory.create(ElementDeclarationNode, {
+      type,
+      attributeList,
+      body,
+    });
   }
 
-  return new None();
+  return undefined;
 }
 
 // Check if a token is an `as` keyword
 export function isAsKeyword (
   token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER; value: 'as' } {
+): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER;
+  value: 'as'; } {
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 
@@ -197,6 +204,8 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.eof);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
+  } else if (node instanceof WildcardNode) {
+    markInvalid(node.token);
   } else {
     throw new Error('Unreachable case in markInvalidNode');
   }
@@ -238,7 +247,11 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   }
 
   if (node instanceof LiteralNode) {
-    return node.literal ? [node.literal] : [];
+    return node.literal
+      ? [
+          node.literal,
+        ]
+      : [];
   }
 
   if (node instanceof VariableNode) {
@@ -318,12 +331,12 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 }
 
 // Return a variable node if it's nested inside a primary expression
-export function extractVariableNode (value?: unknown): Option<SyntaxToken> {
+export function extractVariableNode (value?: unknown): SyntaxToken | undefined {
   if (isExpressionAVariableNode(value)) {
-    return new Some(value.expression.variable);
+    return value.expression.variable;
   }
 
-  return new None();
+  return undefined;
 }
 
 // Return true if an expression node is a primary expression
@@ -407,18 +420,19 @@ export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimit
   return isAccessExpression(node) && isExpressionAVariableNode(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
 }
 
-export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): Option<string> {
+export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): string | undefined {
   if (stream === undefined) {
-    return new None();
+    return undefined;
   }
   const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
   if (name === '') {
-    return new None();
+    return undefined;
   }
 
-  return new Some(name);
+  return name;
 }
 
-export function getElementNameString (element?: ElementDeclarationNode): Option<string> {
-  return destructureComplexVariable(element?.name).map((ss) => ss.join('.'));
+export function getElementNameString (element?: ElementDeclarationNode): string | undefined {
+  const res = destructureComplexVariable(element?.name);
+  return res !== undefined ? res.join('.') : undefined;
 }

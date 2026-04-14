@@ -15,19 +15,19 @@ export {
   ProgramNode,
   SyntaxNodeKind,
   type SyntaxNodeId,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 
 export {
   // Token types
   SyntaxToken,
   SyntaxTokenKind,
-} from '@/core/lexer/tokens';
+} from '@/core/types/tokens';
 
 export {
   // Error types
   CompileError,
   CompileErrorCode,
-} from '@/core/errors';
+} from '@/core/types/errors';
 
 export type {
   // Position interface
@@ -49,21 +49,49 @@ export {
 // Export interpreted types for structured data
 export {
   type Database,
+  type MasterDatabase,
   type Table,
+  type Note,
   type Column,
-  type Enum,
+  type ColumnType,
+  type Index,
+  type Check,
+  type InlineRef,
   type Ref,
-  type Project,
+  type RefEndpointPair,
+  type RefEndpoint,
+  type RelationCardinality,
+  type Enum,
+  type EnumField,
   type TableGroup,
+  type TableGroupField,
+  type Alias,
+  type AliasKind,
   type TablePartial,
-  type DiagramView,
+  type TablePartialInjection,
+  type RecordValue,
+  type RecordValueType,
+  type TableRecord,
+  type Project,
+  type SchemaElement,
+  type TokenPosition,
+  type ElementRef,
   type FilterConfig,
-} from '@/core/interpreter/types';
+  type DiagramView,
+} from '@/core/types/schemaJson';
 
 // DiagramView types (methods exposed via Compiler)
-export type { DiagramViewSyncOperation, DiagramViewBlock } from '@/compiler/queries/transform/syncDiagramView';
-export type { TextEdit } from '@/compiler/queries/transform/applyTextEdits';
+export type {
+  DiagramViewSyncOperation, DiagramViewBlock,
+} from '@/compiler/queries/transform/syncDiagramView';
+export type {
+  TextEdit,
+} from '@/compiler/queries/transform/applyTextEdits';
 
-export { dbmlMonarchTokensProvider } from '@/services/monarch';
+export {
+  dbmlMonarchTokensProvider,
+} from '@/services/monarch';
 
-export { Compiler, services };
+export {
+  Compiler, services,
+};

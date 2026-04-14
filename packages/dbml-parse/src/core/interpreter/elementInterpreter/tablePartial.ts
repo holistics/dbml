@@ -1,25 +1,41 @@
-import { last, head, partition } from 'lodash-es';
 import {
-  Column, Check, ElementInterpreter, Index, InlineRef,
-  InterpreterDatabase, TablePartial,
-} from '@/core/interpreter/types';
+  head, last, partition,
+} from 'lodash-es';
 import {
-  BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
-  FunctionExpressionNode,
-  ListExpressionNode, PrefixExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
+} from '@/core/analyzer/utils';
+import {
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
   isSameEndpoint, normalizeNoteContent, processColumnType, processDefaultValue,
 } from '@/core/interpreter/utils';
 import {
-  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
-  extractVariableFromExpression,
-} from '@/core/analyzer/utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
-import { ElementKind, SettingName } from '@/core/analyzer/types';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
+  FunctionExpressionNode,
+  ListExpressionNode, PrefixExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  Check, Column, Index, InlineRef,
+  TablePartial,
+} from '@/core/types/schemaJson';
+import {
+  ColumnSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class TablePartialInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -31,7 +47,11 @@ export class TablePartialInterpreter implements ElementInterpreter {
     this.declarationNode = declarationNode;
     this.env = env;
     this.tablePartial = {
-      name: undefined, fields: [], token: undefined, indexes: [], checks: [],
+      name: undefined,
+      fields: [],
+      token: undefined,
+      indexes: [],
+      checks: [],
     };
     this.pkColumns = [];
   }
@@ -51,10 +71,25 @@ export class TablePartialInterpreter implements ElementInterpreter {
     // and a new pk composite index is added
     if (this.pkColumns.length >= 2) {
       this.tablePartial.indexes!.push({
-        columns: this.pkColumns.map(({ name, token }) => ({ value: name, type: 'column', token })),
+        columns: this.pkColumns.map(({
+          name, token,
+        }) => ({
+          value: name,
+          type: 'column',
+          token,
+        })),
         token: {
-          start: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful start (?)
-          end: { offset: -1, line: -1, column: -1 }, // do not make sense to have a meaningful end (?)
+          start: {
+            offset: -1,
+            line: -1,
+            column: -1,
+          }, // do not make sense to have a meaningful start (?)
+          end: {
+            offset: -1,
+            line: -1,
+            column: -1,
+          }, // do not make sense to have a meaningful end (?)
+          filepath: this.declarationNode.filepath,
         },
         pk: true,
       });
@@ -67,7 +102,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
 
     this.tablePartial.name = name;
 
@@ -82,9 +119,11 @@ export class TablePartialInterpreter implements ElementInterpreter {
       ? extractColor(firstHeaderColor.value as any)
       : undefined;
 
-    const [noteNode] = settingMap[SettingName.Note] || [];
+    const [
+      noteNode,
+    ] = settingMap[SettingName.Note] || [];
     this.tablePartial.note = noteNode && {
-      value: extractQuotedStringToken(noteNode?.value).map(normalizeNoteContent).unwrap(),
+      value: normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
 
@@ -92,7 +131,10 @@ export class TablePartialInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.interpretFields(fields as FunctionApplicationNode[]),
       ...this.interpretSubElements(subs as ElementDeclarationNode[]),
@@ -104,11 +146,11 @@ export class TablePartialInterpreter implements ElementInterpreter {
       switch (sub.type?.value.toLowerCase()) {
         case ElementKind.Note:
           this.tablePartial.note = {
-            value: extractQuotedStringToken(
+            value: normalizeNoteContent(extractQuotedStringToken(
               sub.body instanceof BlockExpressionNode
                 ? (sub.body.body[0] as FunctionApplicationNode).callee
                 : sub.body!.callee,
-            ).map(normalizeNoteContent).unwrap(),
+            )!),
             token: getTokenPosition(sub),
           };
           return [];
@@ -134,7 +176,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
     const column: Partial<Column> = {};
 
-    column.name = extractVarNameFromPrimaryVariable(field.callee as any).unwrap();
+    column.name = extractVarNameFromPrimaryVariable(field.callee as any)!;
 
     const typeReport = processColumnType(field.args[0], this.env);
     column.type = typeReport.getValue();
@@ -162,13 +204,15 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
       const noteNode = settingMap[SettingName.Note]?.at(0);
       column.note = noteNode && {
-        value: extractQuotedStringToken(noteNode.value).map(normalizeNoteContent).unwrap(),
+        value: normalizeNoteContent(extractQuotedStringToken(noteNode.value)!),
         token: getTokenPosition(noteNode),
       };
 
       const refs = settingMap[SettingName.Ref] || [];
       column.inline_refs = refs.flatMap((ref) => {
-        const [referredSymbol] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
+        const [
+          referredSymbol,
+        ] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
 
         if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
           errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
@@ -176,24 +220,35 @@ export class TablePartialInterpreter implements ElementInterpreter {
         }
 
         const op = (ref.value as PrefixExpressionNode).op!;
-        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression).unwrap();
+        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression)!;
 
         let inlineRef: InlineRef | undefined;
         if (fragments.length === 2) {
-          const [table, columnName] = fragments;
+          const [
+            table,
+            columnName,
+          ] = fragments;
           inlineRef = {
             schemaName: null,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
         } else if (fragments.length === 3) {
-          const [schema, table, columnName] = fragments;
+          const [
+            schema,
+            table,
+            columnName,
+          ] = fragments;
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
@@ -205,7 +260,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
           inlineRef = {
             schemaName: schema,
             tableName: table,
-            fieldNames: [columnName],
+            fieldNames: [
+              columnName,
+            ],
             relation: op.value as any,
             token: getTokenPosition(ref),
           };
@@ -225,8 +282,8 @@ export class TablePartialInterpreter implements ElementInterpreter {
       });
     }
 
-    column.pk ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'pk');
-    column.unique ||= settings.some((setting) => extractVariableFromExpression(setting).unwrap().toLowerCase() === 'unique');
+    column.pk ||= settings.some((setting) => convertStringToEnum(SettingName, extractVariableFromExpression(setting)!) === SettingName.PK);
+    column.unique ||= settings.some((setting) => convertStringToEnum(SettingName, extractVariableFromExpression(setting)!) === SettingName.Unique);
 
     this.tablePartial.fields!.push(column as Column);
     if (column.pk) {
@@ -237,22 +294,27 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
     this.tablePartial.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = { columns: [] };
+      const index: Partial<Index> = {
+        columns: [],
+      };
 
       const indexField = _indexField as FunctionApplicationNode;
       index.token = getTokenPosition(indexField);
-      const args = [indexField.callee!, ...indexField.args];
+      const args = [
+        indexField.callee!,
+        ...indexField.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
         index.pk = !!settingMap[SettingName.PK]?.length;
         index.unique = !!settingMap[SettingName.Unique]?.length;
-        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value);
         const noteNode = settingMap[SettingName.Note]?.at(0);
         index.note = noteNode && {
-          value: extractQuotedStringToken(noteNode.value).unwrap(),
+          value: extractQuotedStringToken(noteNode.value)!,
           token: getTokenPosition(noteNode),
         };
-        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value).unwrap_or(undefined);
+        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value);
       }
 
       args.flatMap((arg) => {
@@ -271,7 +333,9 @@ export class TablePartialInterpreter implements ElementInterpreter {
         fragments.push(argPtr);
         return fragments;
       }).forEach((arg) => {
-        const { functional, nonFunctional } = destructureIndexNode(arg).unwrap();
+        const {
+          functional, nonFunctional,
+        } = destructureIndexNode(arg)!;
         index.columns!.push(
           ...functional.map((s) => ({
             value: s.value!.value,
@@ -279,7 +343,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
             token: getTokenPosition(s),
           })),
           ...nonFunctional.map((s) => ({
-            value: extractVarNameFromPrimaryVariable(s).unwrap(),
+            value: extractVarNameFromPrimaryVariable(s)!,
             type: 'column',
             token: getTokenPosition(s),
           })),
@@ -300,7 +364,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
 
       if (checkField.args[0] instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();
-        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value).unwrap_or(undefined);
+        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value);
       }
 
       check.expression = (checkField.callee as FunctionExpressionNode).value!.value!;

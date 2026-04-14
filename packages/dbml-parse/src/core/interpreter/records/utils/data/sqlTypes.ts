@@ -1,64 +1,228 @@
 import {
+  extractNumericLiteral,
+} from '@/core/analyzer/utils';
+import {
   CallExpressionNode,
   FunctionApplicationNode,
-} from '@/core/parser/nodes';
-import { extractNumericLiteral } from '@/core/analyzer/utils';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
+} from '@/core/types/nodes';
+import {
+  ColumnSymbol,
+} from '@/core/types/symbol/symbols';
 
 export type SqlDialect = 'mysql' | 'postgres' | 'mssql' | 'oracle' | 'snowflake';
 
 // Dialect-specific type mappings
 const DIALECT_INTEGER_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint', 'mediumint']),
-  postgres: new Set(['int', 'integer', 'smallint', 'bigint', 'serial', 'bigserial', 'smallserial']),
-  mssql: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint']),
-  oracle: new Set(['int', 'integer', 'smallint']),
-  snowflake: new Set(['int', 'integer', 'smallint', 'bigint', 'tinyint']),
+  mysql: new Set([
+    'int',
+    'integer',
+    'smallint',
+    'bigint',
+    'tinyint',
+    'mediumint',
+  ]),
+  postgres: new Set([
+    'int',
+    'integer',
+    'smallint',
+    'bigint',
+    'serial',
+    'bigserial',
+    'smallserial',
+  ]),
+  mssql: new Set([
+    'int',
+    'integer',
+    'smallint',
+    'bigint',
+    'tinyint',
+  ]),
+  oracle: new Set([
+    'int',
+    'integer',
+    'smallint',
+  ]),
+  snowflake: new Set([
+    'int',
+    'integer',
+    'smallint',
+    'bigint',
+    'tinyint',
+  ]),
 };
 
 const DIALECT_FLOAT_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['decimal', 'numeric', 'float', 'double', 'real']),
-  postgres: new Set(['decimal', 'numeric', 'real', 'float', 'double precision']),
-  mssql: new Set(['decimal', 'numeric', 'real', 'float']),
-  oracle: new Set(['number', 'decimal', 'numeric', 'float', 'real']),
-  snowflake: new Set(['number', 'decimal', 'numeric', 'float', 'double', 'real']),
+  mysql: new Set([
+    'decimal',
+    'numeric',
+    'float',
+    'double',
+    'real',
+  ]),
+  postgres: new Set([
+    'decimal',
+    'numeric',
+    'real',
+    'float',
+    'double precision',
+  ]),
+  mssql: new Set([
+    'decimal',
+    'numeric',
+    'real',
+    'float',
+  ]),
+  oracle: new Set([
+    'number',
+    'decimal',
+    'numeric',
+    'float',
+    'real',
+  ]),
+  snowflake: new Set([
+    'number',
+    'decimal',
+    'numeric',
+    'float',
+    'double',
+    'real',
+  ]),
 };
 
 const DIALECT_BOOL_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['bool', 'boolean', 'bit']),
-  postgres: new Set(['bool', 'boolean']),
-  mssql: new Set(['bit']),
+  mysql: new Set([
+    'bool',
+    'boolean',
+    'bit',
+  ]),
+  postgres: new Set([
+    'bool',
+    'boolean',
+  ]),
+  mssql: new Set([
+    'bit',
+  ]),
   oracle: new Set([]), // Oracle typically uses number(1)
-  snowflake: new Set(['boolean']),
+  snowflake: new Set([
+    'boolean',
+  ]),
 };
 
 const DIALECT_STRING_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['varchar', 'char', 'text', 'tinytext', 'mediumtext', 'longtext', 'string']),
-  postgres: new Set(['varchar', 'char', 'character', 'character varying', 'text', 'string']),
-  mssql: new Set(['varchar', 'char', 'nvarchar', 'nchar', 'text', 'ntext', 'string']),
-  oracle: new Set(['varchar', 'varchar2', 'char', 'nvarchar2', 'nchar', 'string']),
-  snowflake: new Set(['varchar', 'char', 'text', 'string']),
+  mysql: new Set([
+    'varchar',
+    'char',
+    'text',
+    'tinytext',
+    'mediumtext',
+    'longtext',
+    'string',
+  ]),
+  postgres: new Set([
+    'varchar',
+    'char',
+    'character',
+    'character varying',
+    'text',
+    'string',
+  ]),
+  mssql: new Set([
+    'varchar',
+    'char',
+    'nvarchar',
+    'nchar',
+    'text',
+    'ntext',
+    'string',
+  ]),
+  oracle: new Set([
+    'varchar',
+    'varchar2',
+    'char',
+    'nvarchar2',
+    'nchar',
+    'string',
+  ]),
+  snowflake: new Set([
+    'varchar',
+    'char',
+    'text',
+    'string',
+  ]),
 };
 
 const DIALECT_BINARY_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['binary', 'varbinary', 'blob', 'tinyblob', 'mediumblob', 'longblob']),
-  postgres: new Set(['bytea']),
-  mssql: new Set(['binary', 'varbinary']),
-  oracle: new Set(['blob', 'raw']),
-  snowflake: new Set(['binary', 'varbinary']),
+  mysql: new Set([
+    'binary',
+    'varbinary',
+    'blob',
+    'tinyblob',
+    'mediumblob',
+    'longblob',
+  ]),
+  postgres: new Set([
+    'bytea',
+  ]),
+  mssql: new Set([
+    'binary',
+    'varbinary',
+  ]),
+  oracle: new Set([
+    'blob',
+    'raw',
+  ]),
+  snowflake: new Set([
+    'binary',
+    'varbinary',
+  ]),
 };
 
 const DIALECT_DATETIME_TYPES: Record<SqlDialect, Set<string>> = {
-  mysql: new Set(['date', 'datetime', 'timestamp', 'time']),
-  postgres: new Set(['date', 'timestamp', 'timestamptz', 'timestamp with time zone', 'timestamp without time zone', 'time', 'timetz', 'time with time zone', 'time without time zone']),
-  mssql: new Set(['date', 'datetime', 'datetime2', 'smalldatetime', 'time']),
-  oracle: new Set(['date', 'timestamp', 'timestamp with time zone', 'timestamp with local time zone']),
-  snowflake: new Set(['date', 'datetime', 'timestamp', 'time']),
+  mysql: new Set([
+    'date',
+    'datetime',
+    'timestamp',
+    'time',
+  ]),
+  postgres: new Set([
+    'date',
+    'timestamp',
+    'timestamptz',
+    'timestamp with time zone',
+    'timestamp without time zone',
+    'time',
+    'timetz',
+    'time with time zone',
+    'time without time zone',
+  ]),
+  mssql: new Set([
+    'date',
+    'datetime',
+    'datetime2',
+    'smalldatetime',
+    'time',
+  ]),
+  oracle: new Set([
+    'date',
+    'timestamp',
+    'timestamp with time zone',
+    'timestamp with local time zone',
+  ]),
+  snowflake: new Set([
+    'date',
+    'datetime',
+    'timestamp',
+    'time',
+  ]),
 };
 
 const DIALECT_SERIAL_TYPES: Record<SqlDialect, Set<string>> = {
   mysql: new Set([]),
-  postgres: new Set(['serial', 'smallserial', 'bigserial']),
+  postgres: new Set([
+    'serial',
+    'smallserial',
+    'bigserial',
+  ]),
   mssql: new Set([]),
   oracle: new Set([]),
   snowflake: new Set([]),
@@ -146,7 +310,8 @@ function getTypeNode (columnSymbol: ColumnSymbol) {
 }
 
 // Get numeric type parameters (precision, scale) from a column (e.g., decimal(10, 2))
-export function getNumericTypeParams (columnSymbol: ColumnSymbol): { precision?: number; scale?: number } {
+export function getNumericTypeParams (columnSymbol: ColumnSymbol): { precision?: number;
+  scale?: number; } {
   const typeNode = getTypeNode(columnSymbol);
   if (!(typeNode instanceof CallExpressionNode)) return {};
   if (!typeNode.argumentList || typeNode.argumentList.elementList.length !== 2) return {};
@@ -155,7 +320,10 @@ export function getNumericTypeParams (columnSymbol: ColumnSymbol): { precision?:
   const scale = extractNumericLiteral(typeNode.argumentList.elementList[1]);
   if (precision === null || scale === null) return {};
 
-  return { precision: Math.trunc(precision), scale: Math.trunc(scale) };
+  return {
+    precision: Math.trunc(precision),
+    scale: Math.trunc(scale),
+  };
 }
 
 // Get length type parameter from a column (e.g., varchar(255))
@@ -167,7 +335,9 @@ export function getLengthTypeParam (columnSymbol: ColumnSymbol): { length?: numb
   const length = extractNumericLiteral(typeNode.argumentList.elementList[0]);
   if (length === null) return {};
 
-  return { length: Math.trunc(length) };
+  return {
+    length: Math.trunc(length),
+  };
 }
 
 // Get the record value type based on SQL type

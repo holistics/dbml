@@ -1,13 +1,24 @@
-import { partition, get } from 'lodash-es';
-import { ElementInterpreter, InterpreterDatabase, Note } from '@/core/interpreter/types';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+  get, partition,
+} from 'lodash-es';
+import {
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
 } from '@/core/interpreter/utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  Note,
+} from '@/core/types/schemaJson';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class StickyNoteInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -17,7 +28,11 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
     this.declarationNode = declarationNode;
     this.env = env;
-    this.note = { name: undefined, content: undefined, token: undefined };
+    this.note = {
+      name: undefined,
+      content: undefined,
+      token: undefined,
+    };
   }
 
   interpret (): CompileError[] {
@@ -34,7 +49,9 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const { name } = extractElementName(nameNode);
+    const {
+      name,
+    } = extractElementName(nameNode);
 
     this.note.name = name;
 
@@ -50,7 +67,10 @@ export class StickyNoteInterpreter implements ElementInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     if (fields.length !== 1 || subs.length > 0) {
       return [
@@ -58,7 +78,9 @@ export class StickyNoteInterpreter implements ElementInterpreter {
       ];
     }
 
-    return [...this.interpretNote(fields[0] as FunctionApplicationNode)];
+    return [
+      ...this.interpretNote(fields[0] as FunctionApplicationNode),
+    ];
   }
 
   private interpretNote (note: FunctionApplicationNode): CompileError[] {

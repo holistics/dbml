@@ -1,20 +1,36 @@
-import { CompileError } from '@/core/errors';
-import { InterpreterDatabase, Table, Column, TableRecordRow } from '@/core/interpreter/types';
 import {
+  compact, filter, flatMap, groupBy, isEmpty, keyBy,
+} from 'lodash-es';
+import {
+  InterpreterDatabase, TableRecordRow,
+} from '@/core/interpreter/types';
+import {
+  mergeTableAndPartials,
+} from '@/core/interpreter/utils';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  Column, Table,
+} from '@/core/types/schemaJson';
+import {
+  createConstraintErrors,
   extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
   formatFullColumnNames,
   formatValues,
-  createConstraintErrors,
+  hasNullWithoutDefaultInKey,
 } from './helper';
-import { mergeTableAndPartials } from '@/core/interpreter/utils';
-import { keyBy, groupBy, compact, isEmpty, filter, flatMap } from 'lodash-es';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';
 
 export function validateUnique (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([table, { rows }]) => {
+  return flatMap(Array.from(env.records), ([
+    table,
+    {
+      rows,
+    },
+  ]) => {
     if (!env.cachedMergedTables.has(table)) {
       env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
     }
@@ -34,7 +50,9 @@ export function validateUnique (env: InterpreterDatabase): CompileError[] {
 
 function collectUniqueConstraints (mergedTable: Table): string[][] {
   return [
-    ...mergedTable.fields.filter((field) => field.unique).map((field) => [field.name]),
+    ...mergedTable.fields.filter((field) => field.unique).map((field) => [
+      field.name,
+    ]),
     ...mergedTable.indexes.filter((index) => index.unique).map((index) => index.columns.map((c) => c.value)),
   ];
 }

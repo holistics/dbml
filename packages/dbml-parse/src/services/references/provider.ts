@@ -1,9 +1,13 @@
-import { getOffsetFromMonacoPosition } from '@/services/utils';
 import Compiler from '@/compiler';
-import { SyntaxNodeKind } from '@/core/parser/nodes';
 import {
-  Location, ReferenceProvider, TextModel, Position,
+  SyntaxNodeKind,
+} from '@/core/types/nodes';
+import {
+  Location, Position, ReferenceProvider, TextModel,
 } from '@/services/types';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;
@@ -13,10 +17,14 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
   }
 
   provideReferences (model: TextModel, position: Position): Location[] {
-    const { uri } = model;
+    const {
+      uri,
+    } = model;
     const offset = getOffsetFromMonacoPosition(model, position);
 
-    const containers = [...this.compiler.container.stack(offset)];
+    const containers = [
+      ...this.compiler.container.stack(offset),
+    ];
     while (containers.length !== 0) {
       const node = containers.pop();
       if (
@@ -27,9 +35,13 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
           SyntaxNodeKind.PRIMARY_EXPRESSION,
         ].includes(node?.kind)
       ) {
-        const { symbol } = node;
+        const {
+          symbol,
+        } = node;
         if (symbol?.references.length) {
-          return symbol.references.map(({ startPos, endPos }) => ({
+          return symbol.references.map(({
+            startPos, endPos,
+          }) => ({
             range: {
               startColumn: startPos.column + 1,
               startLineNumber: startPos.line + 1,

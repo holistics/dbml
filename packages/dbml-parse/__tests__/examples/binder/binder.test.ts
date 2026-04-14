@@ -1,7 +1,15 @@
-import { describe, expect } from 'vitest';
-import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode } from '@/core/parser/nodes';
-import { TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol } from '@/core/analyzer/symbol/symbols';
-import { analyze } from '@tests/utils';
+import {
+  describe, expect,
+} from 'vitest';
+import {
+  SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode,
+} from '@/core/types/nodes';
+import {
+  TableSymbol, EnumSymbol, TableGroupSymbol, TablePartialSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  analyze,
+} from '@tests/utils';
 
 describe('[example] binder', () => {
   describe('Table', () => {
@@ -93,7 +101,7 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'public'");
     });
 
     test('should allow same table name in different schemas', () => {
@@ -836,7 +844,12 @@ describe('[example] binder', () => {
       expect(countryColumn.references.length).toBe(1);
 
       // Verify all references have correct referee
-      [idColumn, countryCodeColumn, merchantIdColumn, countryColumn].forEach((col) => {
+      [
+        idColumn,
+        countryCodeColumn,
+        merchantIdColumn,
+        countryColumn,
+      ].forEach((col) => {
         expect(col.references[0].referee).toBe(col);
       });
     });

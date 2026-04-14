@@ -134,10 +134,14 @@
  * - Single Responsibility: Only handles AST visualization and navigation
  * - Maintainable: Generic structure that adapts to parser evolution
  */
-import { computed, ref, inject } from 'vue';
+import {
+  computed, ref, inject,
+} from 'vue';
 import RawASTTreeView from './ast/RawASTTreeView.vue';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
-import type { TokenNavigationEventBus } from '@/core/token-navigation';
+import type {
+  TokenNavigationEventBus,
+} from '@/core/token-navigation';
 import consoleLogger from '@/utils/logger';
 
 interface Props {
@@ -148,7 +152,12 @@ const props = defineProps<Props>();
 
 // Define emits for parent component communication
 const emit = defineEmits<{
-  'navigate-to-source': [position: { start: { line: number; column: number; offset: number }; end: { line: number; column: number; offset: number } }];
+  'navigate-to-source': [position: { start: { line: number;
+    column: number;
+    offset: number; };
+  end: { line: number;
+    column: number;
+    offset: number; }; }];
 }>();
 
 // Inject services
@@ -252,7 +261,8 @@ const handleRawNodeClick = (node: any) => {
   }
 };
 
-const handleRawPositionClick = (event: { node: any; position: any }) => {
+const handleRawPositionClick = (event: { node: any;
+  position: any; }) => {
   navigateToSourcePosition(event.position);
 };
 

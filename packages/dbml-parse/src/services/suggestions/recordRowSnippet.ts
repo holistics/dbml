@@ -1,7 +1,10 @@
+import Compiler from '@/compiler';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
 import {
   extractReferee,
   extractVariableFromExpression,
-  getElementKind,
 } from '@/core/analyzer/utils';
 import {
   BlockExpressionNode,
@@ -9,23 +12,25 @@ import {
   ElementDeclarationNode,
   ProgramNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
-  type CompletionList,
-  type TextModel,
-  type Position,
-  CompletionItemKind,
-  CompletionItemInsertTextRule,
-} from '@/services/types';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { ElementKind } from '@/core/analyzer/types';
-import Compiler from '@/compiler';
+  ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
 import {
-  noSuggestions,
-  getColumnsFromTableSymbol,
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import {
   extractNameAndTypeOfColumnSymbol,
+  getColumnsFromTableSymbol,
+  noSuggestions,
 } from '@/services/suggestions/utils';
-import { isOffsetWithinSpan } from '@/core/utils';
+import {
+  CompletionItemInsertTextRule,
+  CompletionItemKind,
+  type CompletionList,
+  type Position,
+  type TextModel,
+} from '@/services/types';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,
@@ -38,9 +43,8 @@ export function suggestRecordRowSnippet (
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;
 
-  const elementKind = getElementKind(element).unwrap_or(undefined);
   // If not in a Records element, fallthrough
-  if (elementKind !== ElementKind.Records || !(element.body instanceof BlockExpressionNode)) return null;
+  if (!element.isKind(ElementKind.Records) || !(element.body instanceof BlockExpressionNode)) return null;
 
   // If we're not within the body, fallthrough
   if (!element.body || !isOffsetWithinSpan(offset, element.body)) return null;
@@ -74,12 +78,13 @@ function suggestRecordRowInTopLevelRecords (
       if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
         return null;
       }
-      const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+      const columnName = extractVariableFromExpression(element);
       if (!columnName) return null;
       const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
     })
-    .filter((col) => col !== null) as Array<{ name: string; type: string }>;
+    .filter((col) => col !== null) as Array<{ name: string;
+    type: string; }>;
 
   if (columns.length === 0) return noSuggestions();
 
@@ -114,7 +119,8 @@ function suggestRecordRowInNestedRecords (
     return noSuggestions();
   }
 
-  let columns: Array<{ name: string; type: string }>;
+  let columns: Array<{ name: string;
+    type: string; }>;
 
   if (recordsElement.name instanceof TupleExpressionNode) {
     // Explicit columns from tuple: records (col1, col2)
@@ -129,11 +135,12 @@ function suggestRecordRowInNestedRecords (
         if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
           return null;
         }
-        const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+        const columnName = extractVariableFromExpression(element);
         if (columnName === undefined) return null;
         return extractNameAndTypeOfColumnSymbol(symbol, columnName);
       })
-      .filter((col) => col !== null) as Array<{ name: string; type: string }>;
+      .filter((col) => col !== null) as Array<{ name: string;
+      type: string; }>;
   } else {
     // Implicit columns - use all columns from parent table
     const result = getColumnsFromTableSymbol(tableSymbol);

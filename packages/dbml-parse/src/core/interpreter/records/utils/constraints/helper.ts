@@ -1,6 +1,15 @@
-import { RecordValue, Column, TableRecordRow } from '@/core/interpreter/types';
-import { isSerialType } from '../data';
-import { CompileError, CompileErrorCode } from '@/core/errors';
+import {
+  TableRecordRow,
+} from '@/core/interpreter/types';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  Column, RecordValue,
+} from '@/core/types/schemaJson';
+import {
+  isSerialType,
+} from '../data';
 
 export function extractKeyValueWithDefault (
   row: Record<string, RecordValue>,
@@ -105,9 +114,11 @@ export function createConstraintErrors (
     ));
   }
 
-  return [new CompileError(
-    CompileErrorCode.INVALID_RECORDS_FIELD,
-    message,
-    row.node,
-  )];
+  return [
+    new CompileError(
+      CompileErrorCode.INVALID_RECORDS_FIELD,
+      message,
+      row.node,
+    ),
+  ];
 }

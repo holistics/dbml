@@ -1,8 +1,26 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
 import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  NUMERIC_LITERAL_PREFIX,
+} from '@/constants';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable, destructureMemberAccessExpression,
+} from '@/core/analyzer/utils';
+import {
+  extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
+  CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
   ListExpressionNode,
@@ -12,37 +30,40 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
-  CallExpressionNode,
-  ArrayNode,
-} from '@/core/parser/nodes';
-import { isHexChar } from '@/core/utils';
-import { destructureComplexVariable, destructureMemberAccessExpression } from '@/core/analyzer/utils';
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  createSchemaSymbolIndex,
+} from '@/core/types/symbol';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SchemaSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  isHexChar,
+} from '@/core/utils/chars';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
+import ChecksValidator from './elementValidators/checks';
 import CustomValidator from './elementValidators/custom';
+import DiagramViewValidator from './elementValidators/diagramView';
 import EnumValidator from './elementValidators/enum';
 import IndexesValidator from './elementValidators/indexes';
 import NoteValidator from './elementValidators/note';
 import ProjectValidator from './elementValidators/project';
+import RecordsValidator from './elementValidators/records';
 import RefValidator from './elementValidators/ref';
 import TableValidator from './elementValidators/table';
 import TableGroupValidator from './elementValidators/tableGroup';
-import { createSchemaSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import {
-  extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
-import { NUMERIC_LITERAL_PREFIX } from '@/constants';
-import Report from '@/core/report';
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { ElementKind } from '@/core/analyzer/types';
 import TablePartialValidator from './elementValidators/tablePartial';
-import ChecksValidator from './elementValidators/checks';
-import RecordsValidator from './elementValidators/records';
-import DiagramViewValidator from './elementValidators/diagramView';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
-  switch (element.type.value.toLowerCase() as ElementKind) {
+  switch (convertStringToEnum(ElementKind, element.type.value)) {
     case ElementKind.Enum:
       return EnumValidator;
     case ElementKind.Table:
@@ -72,7 +93,8 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
 
 // Is the name valid (either simple or complex)
 export function isValidName (nameNode: SyntaxNode): boolean {
-  return !!destructureComplexVariable(nameNode).unwrap_or(false);
+  const res = destructureComplexVariable(nameNode);
+  return res !== undefined && res.length > 0;
 }
 
 // Is the alias valid (only simple name is allowed)
@@ -99,7 +121,8 @@ export function isValidSettingList (
 // Does the element has complex body
 export function hasComplexBody (
   node: ElementDeclarationNode,
-): node is ElementDeclarationNode & { body: BlockExpressionNode; bodyColon: undefined } {
+): node is ElementDeclarationNode & { body: BlockExpressionNode;
+  bodyColon: undefined; } {
   return node.body instanceof BlockExpressionNode && !node.bodyColon;
 }
 
@@ -134,7 +157,10 @@ export function registerSchemaStack (
 
     if (!prevSchema.has(curId)) {
       curSchema = new SymbolTable();
-      const curSymbol = symbolFactory.create(SchemaSymbol, { symbolTable: curSchema });
+      const curSymbol = symbolFactory.create(SchemaSymbol, {
+        symbolTable: curSchema,
+        name: curName,
+      });
       prevSchema.set(curId, curSymbol);
     } else {
       curSchema = prevSchema.get(curId)?.symbolTable;
@@ -181,11 +207,6 @@ export function isValidColor (value?: SyntaxNode): boolean {
   return true;
 }
 
-// Is the value non-existent
-export function isVoid (value?: SyntaxNode): boolean {
-  return value === undefined;
-}
-
 // Is the `value` a valid value for a column's `default` setting
 // It's a valid only if it's a literal or a complex variable (potentially an enum member)
 export function isValidDefaultValue (value?: SyntaxNode): boolean {
@@ -197,7 +218,11 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
     return true;
   }
 
-  if (isExpressionAnIdentifierNode(value) && ['true', 'false', 'null'].includes(value.expression.variable.value.toLowerCase())) {
+  if (isExpressionAnIdentifierNode(value) && [
+    'true',
+    'false',
+    'null',
+  ].includes(value.expression.variable.value.toLowerCase())) {
     return true;
   }
 
@@ -215,13 +240,14 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
 
   if (!value) return false;
   if (!isDotDelimitedIdentifier(value)) return false;
-  const fragments = destructureMemberAccessExpression(value).unwrap();
+  const fragments = destructureMemberAccessExpression(value)!;
   return fragments.length === 2 || fragments.length === 3;
 }
 
 export type SignedNumberExpression =
   (PrimaryExpressionNode & { expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } } })
-  | (PrefixExpressionNode & { op: '-' | '+'; expression: SignedNumberExpression });
+  | (PrefixExpressionNode & { op: '-' | '+';
+    expression: SignedNumberExpression; });
 export function isExpressionASignedNumberExpression (value?: SyntaxNode): value is SignedNumberExpression {
   if (value instanceof PrefixExpressionNode) {
     if (!NUMERIC_LITERAL_PREFIX.includes(value.op!.value)) return false;
@@ -243,7 +269,7 @@ export function isUnaryRelationship (value?: SyntaxNode): value is PrefixExpress
     return false;
   }
 
-  const variables = destructureComplexVariable(value.expression).unwrap_or(undefined);
+  const variables = destructureComplexVariable(value.expression);
 
   return variables !== undefined && variables.length > 0;
 }
@@ -290,7 +316,7 @@ export function isValidColumnType (type: SyntaxNode): boolean {
     }
   }
 
-  const variables = destructureComplexVariable(type).unwrap_or(undefined);
+  const variables = destructureComplexVariable(type);
 
   return variables !== undefined && variables.length > 0;
 }
@@ -309,11 +335,13 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
       return;
     }
 
-    const name = extractStringFromIdentifierStream(attribute.name).unwrap_or(undefined)?.toLowerCase();
+    const name = extractStringFromIdentifierStream(attribute.name)?.toLowerCase();
     if (!name) return;
 
     if (map[name] === undefined) {
-      map[name] = [attribute];
+      map[name] = [
+        attribute,
+      ];
     } else {
       map[name].push(attribute);
     }

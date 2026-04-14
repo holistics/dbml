@@ -1,7 +1,39 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { last, forIn, partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import {
+  forIn, last, partition,
+} from 'lodash-es';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  ElementKind, SettingName,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable, extractVariableFromExpression,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList,
+  isSimpleName,
+  isUnaryRelationship,
+  isValidAlias,
+  isValidColor,
+  isValidColumnType,
+  isValidDefaultValue,
+  isValidName,
+  isValidPartialInjection,
+  pickValidator,
+  registerSchemaStack,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
+  isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   ArrayNode,
   AttributeNode,
@@ -15,33 +47,18 @@ import {
   PrimaryExpressionNode,
   SyntaxNode,
   WildcardNode,
-} from '@/core/parser/nodes';
-import { destructureComplexVariable, extractVariableFromExpression, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
-  aggregateSettingList,
-  isSimpleName,
-  isUnaryRelationship,
-  isValidAlias,
-  isValidColor,
-  isValidColumnType,
-  isValidDefaultValue,
-  isValidName,
-  isValidPartialInjection,
-  isVoid,
-  pickValidator,
-  registerSchemaStack,
-} from '@/core/analyzer/validator/utils';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { ColumnSymbol, PartialInjectionSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
+  createColumnSymbolIndex, createPartialInjectionSymbolIndex, createTableSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import SymbolTable from '@/core/types/symbol/symbolTable';
 import {
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-  isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { SettingName } from '@/core/analyzer/types';
+  ColumnSymbol, PartialInjectionSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class TableValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -58,7 +75,10 @@ export default class TableValidator implements ElementValidator {
     this.publicSymbolTable = publicSymbolTable;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -74,23 +94,33 @@ export default class TableValidator implements ElementValidator {
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode),
+      ];
     }
     return [];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode),
+      ];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Table name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Table name', nameNode),
+      ];
     }
     if (nameNode instanceof ArrayNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid array as Table name, maybe you forget to add a space between the name and the setting list?', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid array as Table name, maybe you forget to add a space between the name and the setting list?', nameNode),
+      ];
     }
     if (!isValidName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Table name must be of the form <table> or <schema>.<table>', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'A Table name must be of the form <table> or <schema>.<table>', nameNode),
+      ];
     }
 
     return [];
@@ -102,7 +132,9 @@ export default class TableValidator implements ElementValidator {
     }
 
     if (!isValidAlias(aliasNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contains alphanumeric and underscore unless surrounded by double quotes', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contains alphanumeric and underscore unless surrounded by double quotes', aliasNode),
+      ];
     }
 
     return [];
@@ -144,18 +176,25 @@ export default class TableValidator implements ElementValidator {
 
   registerElement (): CompileError[] {
     const errors: CompileError[] = [];
-    this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, {
+      declaration: this.declarationNode,
+      symbolTable: new SymbolTable(),
+    });
 
-    const { name, alias } = this.declarationNode;
+    const {
+      name, alias,
+    } = this.declarationNode;
 
     const maybeNameFragments = destructureComplexVariable(name);
-    if (maybeNameFragments.isOk()) {
-      const nameFragments = [...maybeNameFragments.unwrap()];
+    if (maybeNameFragments !== undefined) {
+      const nameFragments = [
+        ...maybeNameFragments,
+      ];
       const tableName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const tableId = createTableSymbolIndex(tableName);
       if (symbolTable.has(tableId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${tableName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table '${tableName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
       }
       symbolTable.set(tableId, this.declarationNode.symbol!);
     }
@@ -163,12 +202,12 @@ export default class TableValidator implements ElementValidator {
     if (
       alias && isSimpleName(alias)
 
-      && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments.unwrap_or([]))
+      && !isAliasSameAsName(alias.expression.variable!.value, maybeNameFragments ?? [])
     ) {
-      const aliasName = extractVarNameFromPrimaryVariable(alias as any).unwrap();
+      const aliasName = extractVarNameFromPrimaryVariable(alias as any)!;
       const aliasId = createTableSymbolIndex(aliasName);
       if (this.publicSymbolTable.has(aliasId)) {
-        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table name '${aliasName}' already exists`, name!));
+        errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table '${aliasName}' already exists in schema '${DEFAULT_SCHEMA_NAME}'`, name!));
       }
       this.publicSymbolTable.set(aliasId, this.declarationNode.symbol!);
     }
@@ -181,10 +220,15 @@ export default class TableValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Table\'s body must be a block', body),
+      ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -224,8 +268,12 @@ export default class TableValidator implements ElementValidator {
       if (!isValidPartialInjection(field.callee)) {
         errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_INJECTION, 'A partial injection should be of the form ~<table-partial>', field.callee));
       } else {
-        const injectedTablePartialName = extractVariableFromExpression(field.callee.expression).unwrap_or('');
-        const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, { symbolTable: new SymbolTable(), declaration: field });
+        const injectedTablePartialName = extractVariableFromExpression(field.callee.expression) ?? '';
+        const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, {
+          symbolTable: new SymbolTable(),
+          declaration: field,
+        });
+        field.symbol = partialInjectionSymbol;
         const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
         const symbolTable = this.declarationNode.symbol!.symbolTable!;
         if (symbolTable.has(partialInjectionSymbolId)) {
@@ -252,10 +300,12 @@ export default class TableValidator implements ElementValidator {
 
   registerField (field: FunctionApplicationNode): CompileError[] {
     if (field.callee && isExpressionAVariableNode(field.callee)) {
-      const columnName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+      const columnName = extractVarNameFromPrimaryVariable(field.callee)!;
       const columnId = createColumnSymbolIndex(columnName);
 
-      const columnSymbol = this.symbolFactory.create(ColumnSymbol, { declaration: field });
+      const columnSymbol = this.symbolFactory.create(ColumnSymbol, {
+        declaration: field,
+      });
       field.symbol = columnSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;
@@ -274,7 +324,9 @@ export default class TableValidator implements ElementValidator {
   // This is needed to support legacy inline settings
   validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
     if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
-      return [...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part))];
+      return [
+        ...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part)),
+      ];
     }
 
     if (parts.length === 0) {
@@ -296,13 +348,15 @@ export default class TableValidator implements ElementValidator {
     } = aggReport.getValue();
 
     parts.forEach((part) => {
-      const name = extractVarNameFromPrimaryVariable(part as any).unwrap_or('').toLowerCase();
+      const name = (extractVarNameFromPrimaryVariable(part as any) ?? '').toLowerCase();
       if (name !== 'pk' && name !== 'unique') {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;
       }
       if (settingMap[name] === undefined) {
-        settingMap[name] = [part as PrimaryExpressionNode];
+        settingMap[name] = [
+          part as PrimaryExpressionNode,
+        ];
       } else {
         settingMap[name]!.push(part as PrimaryExpressionNode);
       }
@@ -312,7 +366,10 @@ export default class TableValidator implements ElementValidator {
     const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
     if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
       errors.push(
-        ...[...pkAttrs, ...pkeyAttrs]
+        ...[
+          ...pkAttrs,
+          ...pkeyAttrs,
+        ]
           .map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'Either one of \'primary key\' and \'pk\' can appear', attr)),
       );
     }
@@ -341,7 +398,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'primary key\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -351,7 +408,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'pk\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'pk\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -363,12 +420,15 @@ export default class TableValidator implements ElementValidator {
           const nullAttrs = settingMap[SettingName.Null] || [];
           if (attrs.length >= 1 && nullAttrs.length >= 1) {
             errors.push(
-              ...[...attrs, ...nullAttrs]
+              ...[
+                ...attrs,
+                ...nullAttrs,
+              ]
                 .map((attr) => new CompileError(CompileErrorCode.CONFLICTING_SETTING, '\'not null\' and \'null\' can not be set at the same time', attr)),
             );
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'not null\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -379,7 +439,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'null\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'null\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -389,7 +449,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'unique\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'unique\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -399,7 +459,7 @@ export default class TableValidator implements ElementValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'increment\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && !isVoid(attr.value)) {
+            if (attr instanceof AttributeNode && attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'increment\' must not have a value', attr.value || attr.name!));
             }
           });
@@ -444,7 +504,7 @@ export default class TableValidator implements ElementValidator {
       return validator.validate().errors;
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    const notes = subs.filter((sub) => sub.isKind(ElementKind.Note));
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     }

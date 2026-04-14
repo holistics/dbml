@@ -1,20 +1,52 @@
-import { ProgramNode } from '@/core/parser/nodes';
-import { Database, InterpreterDatabase, Table, TablePartial, TableRecord } from '@/core/interpreter/types';
-import { TableInterpreter } from '@/core/interpreter/elementInterpreter/table';
-import { StickyNoteInterpreter } from '@/core/interpreter/elementInterpreter/sticky_note';
-import { RefInterpreter } from '@/core/interpreter/elementInterpreter/ref';
-import { TableGroupInterpreter } from '@/core/interpreter/elementInterpreter/tableGroup';
-import { EnumInterpreter } from '@/core/interpreter/elementInterpreter/enum';
-import { ProjectInterpreter } from '@/core/interpreter/elementInterpreter/project';
-import { TablePartialInterpreter } from '@/core/interpreter/elementInterpreter/tablePartial';
-import { DiagramViewInterpreter } from '@/core/interpreter/elementInterpreter/diagramView';
-import { RecordsInterpreter } from '@/core/interpreter/records';
-import Report from '@/core/report';
-import { getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
-import { CompileWarning } from '../errors';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { getTokenPosition } from './utils';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  DiagramViewInterpreter,
+} from '@/core/interpreter/elementInterpreter/diagramView';
+import {
+  EnumInterpreter,
+} from '@/core/interpreter/elementInterpreter/enum';
+import {
+  ProjectInterpreter,
+} from '@/core/interpreter/elementInterpreter/project';
+import {
+  RefInterpreter,
+} from '@/core/interpreter/elementInterpreter/ref';
+import {
+  StickyNoteInterpreter,
+} from '@/core/interpreter/elementInterpreter/sticky_note';
+import {
+  TableInterpreter,
+} from '@/core/interpreter/elementInterpreter/table';
+import {
+  TableGroupInterpreter,
+} from '@/core/interpreter/elementInterpreter/tableGroup';
+import {
+  TablePartialInterpreter,
+} from '@/core/interpreter/elementInterpreter/tablePartial';
+import {
+  RecordsInterpreter,
+} from '@/core/interpreter/records';
+import {
+  CompileWarning,
+} from '@/core/types/errors';
+import {
+  ProgramNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  Database, Table, TablePartial, TableRecord,
+} from '@/core/types/schemaJson';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
+import {
+  InterpreterDatabase,
+} from './types';
+import {
+  getTokenPosition,
+} from './utils';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {
@@ -59,10 +91,15 @@ function expandDiagramViewWildcards (env: InterpreterDatabase): void {
   }
 }
 
-function convertEnvToDb (env: InterpreterDatabase): Database {
+function convertEnvToDb (env: InterpreterDatabase, ast: ProgramNode): Database {
   // Convert records Map to array of TableRecord
   const records: TableRecord[] = [];
-  for (const [table, { element, rows }] of env.records) {
+  for (const [
+    table,
+    {
+      element, rows,
+    },
+  ] of env.records) {
     if (!rows.length) continue;
     const columns = Object.keys(rows[0].columnNodes);
     records.push({
@@ -75,9 +112,15 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
         return columns.map((col) => {
           const val = r.values[col];
           if (val) {
-            return { value: val.value, type: val.type };
+            return {
+              value: val.value,
+              type: val.type,
+            };
           }
-          return { value: null, type: 'expression' };
+          return {
+            value: null,
+            type: 'expression',
+          };
         });
       }),
     });
@@ -95,6 +138,7 @@ function convertEnvToDb (env: InterpreterDatabase): Database {
     tablePartials: Array.from(env.tablePartials.values()).map(processColumnInDb),
     records,
     diagramViews: Array.from(env.diagramViews.values()),
+    token: getTokenPosition(ast),
   };
 }
 
@@ -130,7 +174,7 @@ export default class Interpreter {
   interpret (): Report<Database> {
     // First pass: interpret all non-records elements
     const errors = this.ast.body.flatMap((element) => {
-      switch (getElementKind(element).unwrap_or(undefined)) {
+      switch (convertStringToEnum(ElementKind, element.type?.value ?? '')) {
         case ElementKind.Table:
           return (new TableInterpreter(element, this.env)).interpret();
         case ElementKind.Note:
@@ -169,6 +213,6 @@ export default class Interpreter {
     // At this point all tables, tableGroups, notes are fully interpreted
     expandDiagramViewWildcards(this.env);
 
-    return new Report(convertEnvToDb(this.env), errors, warnings);
+    return new Report(convertEnvToDb(this.env, this.ast), errors, warnings);
   }
 }

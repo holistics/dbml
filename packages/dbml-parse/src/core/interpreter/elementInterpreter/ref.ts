@@ -1,16 +1,27 @@
-import { destructureComplexVariable, extractVariableFromExpression } from '@/core/analyzer/utils';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
-} from '@/core/parser/nodes';
+  destructureComplexVariable, extractVariableFromExpression,
+} from '@/core/analyzer/utils';
 import {
-  ElementInterpreter, InterpreterDatabase, Ref, Table,
-} from '@/core/interpreter/types';
+  aggregateSettingList,
+} from '@/core/analyzer/validator/utils';
 import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
 } from '@/core/interpreter/utils';
-import { extractStringFromIdentifierStream } from '@/core/parser/utils';
+import {
+  extractStringFromIdentifierStream,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
+import {
+  Ref, Table,
+} from '@/core/types/schemaJson';
+import {
+  ElementInterpreter, InterpreterDatabase,
+} from '../types';
 
 export class RefInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -38,7 +49,7 @@ export class RefInterpreter implements ElementInterpreter {
   private interpretName (_nameNode: SyntaxNode): CompileError[] {
     const errors: CompileError[] = [];
 
-    const fragments = destructureComplexVariable(this.declarationNode.name!).unwrap_or([]);
+    const fragments = destructureComplexVariable(this.declarationNode.name!) ?? [];
     this.ref.name = fragments.pop() || null;
     if (fragments.length > 1) {
       errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', this.declarationNode.name!));
@@ -58,13 +69,17 @@ export class RefInterpreter implements ElementInterpreter {
 
   private interpretField (field: FunctionApplicationNode): CompileError[] {
     const op = (field.callee as InfixExpressionNode).op!.value;
-    const { leftExpression, rightExpression } = field.callee as InfixExpressionNode;
+    const {
+      leftExpression, rightExpression,
+    } = field.callee as InfixExpressionNode;
 
     const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!);
     const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!);
 
     if (isSameEndpoint(leftSymbols, rightSymbols)) {
-      return [new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field)];
+      return [
+        new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field),
+      ];
     }
 
     const refId = getRefId(leftSymbols, rightSymbols);
@@ -80,13 +95,13 @@ export class RefInterpreter implements ElementInterpreter {
 
       const deleteSetting = settingMap.delete?.at(0)?.value;
       this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
-        ? extractStringFromIdentifierStream(deleteSetting).unwrap_or(undefined)
-        : extractVariableFromExpression(deleteSetting).unwrap_or(undefined) as string;
+        ? extractStringFromIdentifierStream(deleteSetting)
+        : extractVariableFromExpression(deleteSetting) as string;
 
       const updateSetting = settingMap.update?.at(0)?.value;
       this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
-        ? extractStringFromIdentifierStream(updateSetting).unwrap_or(undefined)
-        : extractVariableFromExpression(updateSetting).unwrap_or(undefined) as string;
+        ? extractStringFromIdentifierStream(updateSetting)
+        : extractVariableFromExpression(updateSetting) as string;
 
       this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value as any) : undefined;
     }

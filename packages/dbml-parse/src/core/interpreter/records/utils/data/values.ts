@@ -1,16 +1,28 @@
 import {
+  last,
+} from 'lodash-es';
+import {
+  DateTime,
+} from 'luxon';
+import {
+  destructureComplexVariable, extractNumericLiteral, extractQuotedStringToken,
+} from '@/core/analyzer/utils';
+import {
+  isExpressionASignedNumberExpression,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
+import {
   EmptyNode,
   FunctionExpressionNode,
   PrefixExpressionNode,
   SyntaxNode,
-} from '@/core/parser/nodes';
-import { isExpressionAnIdentifierNode } from '@/core/parser/utils';
-import { isExpressionASignedNumberExpression } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, extractQuotedStringToken, extractNumericLiteral } from '@/core/analyzer/utils';
-import { last } from 'lodash-es';
-import { DateTime } from 'luxon';
+} from '@/core/types/nodes';
 
-export { extractNumericLiteral } from '@/core/analyzer/utils';
+export {
+  extractNumericLiteral,
+} from '@/core/analyzer/utils';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {
@@ -22,7 +34,7 @@ export function isNullish (value: SyntaxNode): boolean {
 }
 
 export function isEmptyStringLiteral (value: SyntaxNode): boolean {
-  return extractQuotedStringToken(value).unwrap_or(undefined) === '';
+  return extractQuotedStringToken(value) === '';
 }
 
 export function isFunctionExpression (value: SyntaxNode): value is FunctionExpressionNode {
@@ -69,7 +81,7 @@ export function tryExtractNumeric (value: SyntaxNode | number | string | boolean
   if (num !== null) return num;
 
   // Quoted string containing number: "42", '3.14'
-  const strValue = extractQuotedStringToken(value).unwrap_or(undefined);
+  const strValue = extractQuotedStringToken(value);
   if (strValue !== undefined) {
     const parsed = Number(strValue);
     if (!isNaN(parsed)) {
@@ -111,7 +123,7 @@ export function tryExtractInteger (value: SyntaxNode | number | string | boolean
   }
 
   // Quoted string containing number: "42", '3.14'
-  const strValue = extractQuotedStringToken(value).unwrap_or(undefined);
+  const strValue = extractQuotedStringToken(value);
   if (strValue !== undefined) {
     const parsed = Number(strValue);
     if (!isNaN(parsed) && Number.isInteger(parsed)) {
@@ -122,8 +134,20 @@ export function tryExtractInteger (value: SyntaxNode | number | string | boolean
   return null;
 }
 
-export const TRUTHY_VALUES = ['true', 'yes', 'y', 't', '1'];
-export const FALSY_VALUES = ['false', 'no', 'n', 'f', '0'];
+export const TRUTHY_VALUES = [
+  'true',
+  'yes',
+  'y',
+  't',
+  '1',
+];
+export const FALSY_VALUES = [
+  'false',
+  'no',
+  'n',
+  'f',
+  '0',
+];
 
 // Try to extract a boolean value from a syntax node or primitive
 // Example: 't', 'f', 'y', 'n', 'true', 'false', true, false, 'yes', 'no', 1, 0, '1', '0'
@@ -158,7 +182,7 @@ export function tryExtractBoolean (value: SyntaxNode | number | string | boolean
   if (numVal === 1) return true;
 
   // Quoted string: 'true', 'false', 'yes', 'no', 'y', 'n', 't', 'f', '0', '1'
-  const strValue = extractQuotedStringToken(value)?.unwrap_or('').toLowerCase();
+  const strValue = extractQuotedStringToken(value)?.toLowerCase();
   if (strValue) {
     if (TRUTHY_VALUES.includes(strValue)) return true;
     if (FALSY_VALUES.includes(strValue)) return false;
@@ -177,13 +201,13 @@ export function tryExtractEnum (value: SyntaxNode | string | undefined | null): 
   if (typeof value === 'string') return value;
 
   // Enum field reference: gender.male
-  const fragments = destructureComplexVariable(value).unwrap_or(undefined);
+  const fragments = destructureComplexVariable(value);
   if (fragments) {
     return last(fragments)!;
   }
 
   // Quoted string: 'male'
-  return extractQuotedStringToken(value).unwrap_or(null);
+  return extractQuotedStringToken(value) ?? null;
 }
 
 // Try to extract a string value from a syntax node or primitive
@@ -198,7 +222,7 @@ export function tryExtractString (value: SyntaxNode | string | boolean | number 
   if (typeof value === 'boolean') return value.toString();
 
   // Quoted string: 'hello', "world"
-  const res = extractQuotedStringToken(value).unwrap_or(null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
+  const res = (extractQuotedStringToken(value) ?? null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
   return res === null ? null : res.toString();
 }
 
@@ -236,21 +260,28 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   // Handle null/undefined
   if (value === null || value === undefined) return null;
 
-  const extractedValue = typeof value === 'string' ? value : extractQuotedStringToken(value).unwrap_or(null);
+  const extractedValue = typeof value === 'string' ? value : (extractQuotedStringToken(value) ?? null);
 
   if (extractedValue === null) return null;
 
   // We prioritize more specific formats, like time-only & date-only before ISO-8601, which includes both date and time
   for (const format of SUPPORTED_TIME_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       // https://moment.github.io/luxon/api-docs/index.html#datetimetoisotime
-      return dt.toISOTime({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
+      return dt.toISOTime({
+        suppressMilliseconds: true,
+        includeOffset: hasExplicitTimeZone(dt),
+      });
     }
   }
 
   for (const format of SUPPORTED_DATE_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       // https://moment.github.io/luxon/api-docs/index.html#datetimetoisodate
       return dt.toISODate();
@@ -258,17 +289,27 @@ export function tryExtractDateTime (value: SyntaxNode | string | undefined | nul
   }
 
   for (const format of SUPPORTED_DATETIME_FORMATS) {
-    const dt = DateTime.fromFormat(extractedValue, format, { setZone: true });
+    const dt = DateTime.fromFormat(extractedValue, format, {
+      setZone: true,
+    });
     if (dt.isValid) {
       // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
-      return dt.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(dt) });
+      return dt.toISO({
+        suppressMilliseconds: true,
+        includeOffset: hasExplicitTimeZone(dt),
+      });
     }
   }
 
-  const isoDate = DateTime.fromISO(extractedValue, { setZone: true });
+  const isoDate = DateTime.fromISO(extractedValue, {
+    setZone: true,
+  });
   if (isoDate.isValid) {
     // https://moment.github.io/luxon/api-docs/index.html#datetimetoiso
-    return isoDate.toISO({ suppressMilliseconds: true, includeOffset: hasExplicitTimeZone(isoDate) });
+    return isoDate.toISO({
+      suppressMilliseconds: true,
+      includeOffset: hasExplicitTimeZone(isoDate),
+    });
   }
 
   return null;

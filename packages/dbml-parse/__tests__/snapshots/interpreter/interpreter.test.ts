@@ -1,54 +1,42 @@
-import { readFileSync } from 'fs';
-import path from 'path';
-import { describe, expect, it } from 'vitest';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import { SyntaxNodeIdGenerator } from '@/core/parser/nodes';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
-import { scanTestNames } from '@tests/utils';
+import {
+  readFileSync,
+} from 'node:fs';
+import path from 'node:path';
+import {
+  describe, expect, it,
+} from 'vitest';
+import {
+  scanTestNames, Snappable, toSnapshot,
+} from '@tests/utils';
+import Compiler from '@/compiler';
+import type {
+  Database,
+} from '@/index';
+import type Report from '@/core/types/report';
+
+function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
+  const errors = report.getErrors();
+  const warnings = report.getWarnings();
+  const value = errors.length > 0 ? undefined : report.getValue();
+  return JSON.stringify(toSnapshot(compiler, {
+    database: value as any,
+    errors,
+    warnings,
+  }), null, 2);
+}
 
 describe('[snapshot] interpreter', () => {
   const testNames = scanTestNames(path.resolve(__dirname, './input/'));
 
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
-    const symbolIdGenerator = new NodeSymbolIdGenerator();
-    const nodeIdGenerator = new SyntaxNodeIdGenerator();
-    let output: any;
-    const report = new Lexer(program)
-      .lex()
-      .chain((tokens) => {
-        return new Parser(program, tokens, nodeIdGenerator).parse();
-      })
-      .chain(({ ast }) => {
-        return new Analyzer(ast, symbolIdGenerator).analyze();
-      });
 
-    if (report.getErrors().length !== 0) {
-      output = JSON.stringify(
-        report.getErrors(),
-        (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
-        2,
-      );
-    } else {
-      const res = new Interpreter(report.getValue()).interpret();
-      if (res.getErrors().length > 0) {
-        output = JSON.stringify(
-          res.getErrors(),
-          (key, value) => (['symbol', 'references', 'referee', 'parent'].includes(key) ? undefined : value),
-          2,
-        );
-      } else {
-        output = JSON.stringify(
-          res.getValue(),
-          (key, value) => (['symbol', 'references', 'referee'].includes(key) ? undefined : value),
-          2,
-        );
-      }
-    }
+    const compiler = new Compiler();
+    compiler.setSource(program);
+    const report = compiler.parse._().map(({
+      rawDb,
+    }) => rawDb);
 
-    it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
+    it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });
 });

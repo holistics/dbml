@@ -1,13 +1,23 @@
-import { partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import {
+  partition,
+} from 'lodash-es';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  isSimpleName, pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isSimpleName, pickValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class ProjectValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -20,16 +30,27 @@ export default class ProjectValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
-      errors: [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)],
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.validateBody(this.declarationNode.body),
+      ],
       warnings: [],
     };
   }
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'A Project can only appear top-level', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'A Project can only appear top-level', this.declarationNode),
+      ];
     }
 
     return [];
@@ -40,11 +61,15 @@ export default class ProjectValidator implements ElementValidator {
       return [];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Project name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Project name', nameNode),
+      ];
     }
 
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Project\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'A Project\'s name is optional or must be an identifier or a quoted identifer', nameNode),
+      ];
     }
 
     return [];
@@ -52,7 +77,9 @@ export default class ProjectValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -60,7 +87,9 @@ export default class ProjectValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -71,10 +100,15 @@ export default class ProjectValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Project\'s body must be a block', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Project\'s body must be a block', body),
+      ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...fields.map((field) => new CompileError(CompileErrorCode.INVALID_PROJECT_FIELD, 'A Project can not have inline fields', field)),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),

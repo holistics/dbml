@@ -1,10 +1,10 @@
 import { get } from 'lodash-es';
-import Table from './table';
 import Element from './element';
 import Enum from './enum';
-import { shouldPrintSchema } from './utils';
-import TableGroup from './tableGroup';
 import Ref from './ref';
+import Table from './table';
+import TableGroup from './tableGroup';
+import { shouldPrintSchema } from './utils';
 
 class Schema extends Element {
   /**

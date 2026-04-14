@@ -1,4 +1,6 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
 import {
   SyntaxNodeKind,
   ElementDeclarationNode,
@@ -14,9 +16,13 @@ import {
   VariableNode,
   CommaExpressionNode,
   LiteralNode,
-} from '@/core/parser/nodes';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
-import { parse } from '@tests/utils';
+} from '@/core/types/nodes';
+import {
+  SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  parse,
+} from '@tests/utils';
 
 // Helper to extract a value from a PrimaryExpressionNode
 function getPrimaryValue (node: PrimaryExpressionNode | undefined): string | undefined {

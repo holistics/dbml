@@ -1,14 +1,23 @@
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
-} from '@/core/parser/nodes';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  isExpressionAQuotedString,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class CustomValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -21,7 +30,10 @@ export default class CustomValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -35,18 +47,24 @@ export default class CustomValidator implements ElementValidator {
   }
 
   private validateContext (): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Project) {
-      return [new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A Custom element can only appear in a Project', this.declarationNode)];
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode && this.declarationNode.parent.isKind(ElementKind.Project))) {
+      return [
+        new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A Custom element can only appear in a Project', this.declarationNode),
+      ];
     }
     return [];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Custom element name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Custom element name', nameNode),
+      ];
     }
     if (nameNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element shouldn\'t have a name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element shouldn\'t have a name', nameNode),
+      ];
     }
 
     return [];
@@ -54,7 +72,9 @@ export default class CustomValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Custom element shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -62,7 +82,9 @@ export default class CustomValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Custom element shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Custom element shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -74,7 +96,9 @@ export default class CustomValidator implements ElementValidator {
     }
 
     if (body instanceof BlockExpressionNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_COMPLEX_BODY, 'A Custom element can only have an inline field', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_COMPLEX_BODY, 'A Custom element can only have an inline field', body),
+      ];
     }
 
     const errors: CompileError[] = [];

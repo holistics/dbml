@@ -1,13 +1,27 @@
-import Report from '@/core/report';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
-import { SchemaSymbol } from '@/core/analyzer/symbol/symbols';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { pickValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  ElementDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SchemaSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class Validator {
   private ast: ProgramNode;
@@ -21,6 +35,7 @@ export default class Validator {
     this.symbolFactory = symbolFactory;
     this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
       symbolTable: new SymbolTable(),
+      name: DEFAULT_SCHEMA_NAME,
     });
 
     this.ast.symbol = this.publicSchemaSymbol;
@@ -48,7 +63,7 @@ export default class Validator {
       warnings.push(...result.warnings);
     });
 
-    const projects = this.ast.body.filter((e) => getElementKind(e).unwrap_or(undefined) === ElementKind.Project);
+    const projects = this.ast.body.filter((e) => e.isKind(ElementKind.Project));
     if (projects.length > 1) {
       projects.forEach((project) => errors.push(new CompileError(CompileErrorCode.PROJECT_REDEFINED, 'Only one project can exist', project)));
     }

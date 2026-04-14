@@ -1,18 +1,30 @@
-import { partition, last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
-} from '@/core/parser/nodes';
+  last, partition,
+} from 'lodash-es';
+import {
+  destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList, isSimpleName, isValidColor, pickValidator,
+} from '@/core/analyzer/validator/utils';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
 } from '@/core/parser/utils';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isSimpleName, isValidColor, pickValidator, aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { destructureComplexVariable, destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands } from '@/core/analyzer/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 export default class RefValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -25,7 +37,10 @@ export default class RefValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -42,7 +57,9 @@ export default class RefValidator implements ElementValidator {
     if (this.declarationNode.parent instanceof ProgramNode) {
       return [];
     }
-    return [new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level', this.declarationNode)];
+    return [
+      new CompileError(CompileErrorCode.INVALID_REF_CONTEXT, 'A Ref must appear top-level', this.declarationNode),
+    ];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
@@ -50,11 +67,15 @@ export default class RefValidator implements ElementValidator {
       return [];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Ref name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Ref name', nameNode),
+      ];
     }
 
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode),
+      ];
     }
 
     return [];
@@ -62,7 +83,9 @@ export default class RefValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -70,7 +93,9 @@ export default class RefValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Ref shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -81,16 +106,26 @@ export default class RefValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.validateFields([body]);
+      return this.validateFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.EMPTY_REF, 'A Ref must have at least one field', this.declarationNode),
+      ];
     }
 
     const errors: CompileError[] = [];
@@ -104,9 +139,15 @@ export default class RefValidator implements ElementValidator {
       }
 
       if (field.callee && isBinaryRelationship(field.callee)) {
-        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression).unwrap_or({ variables: [], tupleElements: [] });
+        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) ?? {
+          variables: [],
+          tupleElements: [],
+        };
         const leftFragmentCount = leftFragment.variables.length + Math.min(leftFragment.tupleElements.length, 1);
-        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression).unwrap_or({ variables: [], tupleElements: [] });
+        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) ?? {
+          variables: [],
+          tupleElements: [],
+        };
         const rightFragmentCount = rightFragment.variables.length + Math.min(rightFragment.tupleElements.length, 1);
         if (leftFragmentCount < 2) {
           errors.push(new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'Invalid column reference', field.callee.leftExpression || field.callee));
@@ -120,7 +161,9 @@ export default class RefValidator implements ElementValidator {
         errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee));
       }
 
-      const args = [...field.args];
+      const args = [
+        ...field.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         const errs = this.validateFieldSettings(last(args) as ListExpressionNode);
         errors.push(...errs);
@@ -199,7 +242,7 @@ function isValidPolicy (value?: SyntaxNode): boolean {
 
   let extractedString: string | undefined;
   if (value instanceof IdentiferStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value).unwrap_or('');
+    extractedString = extractStringFromIdentifierStream(value) ?? '';
   } else {
     extractedString = value.expression.variable.value;
   }

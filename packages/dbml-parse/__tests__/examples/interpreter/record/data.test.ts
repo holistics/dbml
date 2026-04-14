@@ -1,7 +1,15 @@
-import { describe, expect, test } from 'vitest';
-import { CompileErrorCode } from '@/index';
-import { interpret } from '@tests/utils';
-import { DateTime } from 'luxon';
+import {
+  describe, expect, test,
+} from 'vitest';
+import {
+  CompileErrorCode,
+} from '@/index';
+import {
+  interpret,
+} from '@tests/utils';
+import {
+  DateTime,
+} from 'luxon';
 
 describe('[example - record] data type interpretation', () => {
   test('should interpret integer values correctly', () => {
@@ -23,11 +31,26 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 42 });
-    expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: -100 });
-    expect(db.records[0].values[0][3]).toEqual({ type: 'integer', value: 9999999999 });
-    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 0 });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(db.records[0].values[0][1]).toEqual({
+      type: 'integer',
+      value: 42,
+    });
+    expect(db.records[0].values[0][2]).toEqual({
+      type: 'integer',
+      value: -100,
+    });
+    expect(db.records[0].values[0][3]).toEqual({
+      type: 'integer',
+      value: 9999999999,
+    });
+    expect(db.records[0].values[1][0]).toEqual({
+      type: 'integer',
+      value: 0,
+    });
   });
 
   test('should interpret float and decimal values correctly', () => {
@@ -49,12 +72,30 @@ describe('[example - record] data type interpretation', () => {
 
     const db = result.getValue()!;
     // Note: float/numeric/decimal types are normalized to 'real'
-    expect(db.records[0].values[0][0]).toEqual({ type: 'real', value: 99.99 });
-    expect(db.records[0].values[0][1]).toEqual({ type: 'real', value: 3.14159 });
-    expect(db.records[0].values[0][2]).toEqual({ type: 'real', value: 0.001 });
-    expect(db.records[0].values[1][0]).toEqual({ type: 'real', value: 50.5 });
-    expect(db.records[0].values[1][1]).toEqual({ type: 'real', value: 0.5 });
-    expect(db.records[0].values[1][2]).toEqual({ type: 'real', value: 100 });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'real',
+      value: 99.99,
+    });
+    expect(db.records[0].values[0][1]).toEqual({
+      type: 'real',
+      value: 3.14159,
+    });
+    expect(db.records[0].values[0][2]).toEqual({
+      type: 'real',
+      value: 0.001,
+    });
+    expect(db.records[0].values[1][0]).toEqual({
+      type: 'real',
+      value: 50.5,
+    });
+    expect(db.records[0].values[1][1]).toEqual({
+      type: 'real',
+      value: 0.5,
+    });
+    expect(db.records[0].values[1][2]).toEqual({
+      type: 'real',
+      value: 100,
+    });
   });
 
   test('should interpret boolean values correctly', () => {
@@ -75,10 +116,22 @@ describe('[example - record] data type interpretation', () => {
 
     const db = result.getValue()!;
     // Note: boolean types are normalized to 'bool'
-    expect(db.records[0].values[0][0]).toEqual({ type: 'bool', value: true });
-    expect(db.records[0].values[0][1]).toEqual({ type: 'bool', value: false });
-    expect(db.records[0].values[1][0]).toEqual({ type: 'bool', value: false });
-    expect(db.records[0].values[1][1]).toEqual({ type: 'bool', value: true });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'bool',
+      value: true,
+    });
+    expect(db.records[0].values[0][1]).toEqual({
+      type: 'bool',
+      value: false,
+    });
+    expect(db.records[0].values[1][0]).toEqual({
+      type: 'bool',
+      value: false,
+    });
+    expect(db.records[0].values[1][1]).toEqual({
+      type: 'bool',
+      value: true,
+    });
   });
 
   test('should interpret string values correctly', () => {
@@ -99,10 +152,22 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0][0]).toEqual({ type: 'string', value: 'Alice' });
-    expect(db.records[0].values[0][1]).toEqual({ type: 'string', value: 'A short description' });
-    expect(db.records[0].values[0][2]).toEqual({ type: 'string', value: 'ABC123' });
-    expect(db.records[0].values[1][0]).toEqual({ type: 'string', value: 'Bob' });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'string',
+      value: 'Alice',
+    });
+    expect(db.records[0].values[0][1]).toEqual({
+      type: 'string',
+      value: 'A short description',
+    });
+    expect(db.records[0].values[0][2]).toEqual({
+      type: 'string',
+      value: 'ABC123',
+    });
+    expect(db.records[0].values[1][0]).toEqual({
+      type: 'string',
+      value: 'Bob',
+    });
   });
 
   test('should interpret datetime values correctly', () => {

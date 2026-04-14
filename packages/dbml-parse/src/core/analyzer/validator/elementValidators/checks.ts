@@ -1,6 +1,21 @@
-import { last, partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import {
+  last, partition,
+} from 'lodash-es';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList, pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -10,14 +25,12 @@ import {
   ProgramNode,
   SyntaxNode,
   WildcardNode,
-} from '@/core/parser/nodes';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { aggregateSettingList, pickValidator } from '@/core/analyzer/validator/utils';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { getElementKind } from '@/core/analyzer/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { ElementKind } from '@/core/analyzer/types';
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class ChecksValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -30,7 +43,10 @@ export default class ChecksValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -49,20 +65,28 @@ export default class ChecksValidator implements ElementValidator {
       'A Checks can only appear inside a Table or a TablePartial',
       this.declarationNode,
     );
-    if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
+    if (this.declarationNode.parent instanceof ProgramNode) return [
+      invalidContextError,
+    ];
 
-    const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
-    return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
+    const parent = this.declarationNode.parent;
+    return (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table, ElementKind.TablePartial))
       ? []
-      : [invalidContextError];
+      : [
+          invalidContextError,
+        ];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Checks name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Checks name', nameNode),
+      ];
     }
     if (nameNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Checks shouldn\'t have a name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Checks shouldn\'t have a name', nameNode),
+      ];
     }
 
     return [];
@@ -70,7 +94,9 @@ export default class ChecksValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Checks shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Checks shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -78,7 +104,9 @@ export default class ChecksValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Checks shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Checks shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -89,11 +117,19 @@ export default class ChecksValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Checks must have a complex body', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'A Checks must have a complex body', body),
+      ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -103,7 +139,10 @@ export default class ChecksValidator implements ElementValidator {
       }
 
       const errors: CompileError[] = [];
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSetting(args.pop() as ListExpressionNode));
       }

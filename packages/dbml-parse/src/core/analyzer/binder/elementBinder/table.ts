@@ -1,18 +1,40 @@
-import { last, partition } from 'lodash-es';
+import {
+  last, partition,
+} from 'lodash-es';
+import {
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SymbolKind, createColumnSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  TablePartialInjectedColumnSymbol, TablePartialSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  isExpressionAQuotedString, isExpressionAVariableNode,
+} from '../../../parser/utils';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
-} from '../../../parser/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError } from '../../../errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { aggregateSettingList, isValidPartialInjection } from '../../validator/utils';
-import { SymbolKind, createColumnSymbolIndex } from '../../symbol/symbolIndex';
-import { destructureComplexVariableTuple, extractVariableFromExpression } from '../../utils';
-import { TablePartialInjectedColumnSymbol, TablePartialSymbol } from '../../symbol/symbols';
-import SymbolFactory from '../../symbol/factory';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '../../../parser/utils';
-import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+} from '../../../types/nodes';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  destructureComplexVariableTuple, extractVariableFromExpression,
+} from '../../utils';
+import {
+  aggregateSettingList, isValidPartialInjection,
+} from '../../validator/utils';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class TableBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -35,18 +57,22 @@ export default class TableBinder implements ElementBinder {
 
   // Must call this before any bind methods of any binder classes
   resolvePartialInjections (): CompileError[] {
-    const { body } = this.declarationNode;
+    const {
+      body,
+    } = this.declarationNode;
     const members = !body
       ? []
       : body instanceof BlockExpressionNode
         ? body.body
-        : [body];
+        : [
+            body,
+          ];
     // Prioritize the later injections
     return members
       .filter((i) => i instanceof FunctionApplicationNode && isValidPartialInjection(i.callee))
       .reverse() // Warning: `reverse` mutates, but it's safe because we're working on a filtered array
       .flatMap((i) => {
-        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression).unwrap_or(undefined);
+        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression);
         if (!fragments) return [];
         const tablePartialBindee = fragments.variables.pop();
         const schemaBindees = fragments.variables;
@@ -56,16 +82,25 @@ export default class TableBinder implements ElementBinder {
         }
 
         const errors = lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-          { node: tablePartialBindee, kind: SymbolKind.TablePartial },
+          ...schemaBindees.map((b) => ({
+            node: b,
+            kind: SymbolKind.Schema,
+          })),
+          {
+            node: tablePartialBindee,
+            kind: SymbolKind.TablePartial,
+          },
         ]);
         if (errors.length) return errors;
         tablePartialBindee.referee?.symbolTable?.forEach((value) => {
-          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee).unwrap_or(undefined);
+          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee);
           if (columnName === undefined) return;
           const injectedColumnSymbol = this.symbolFactory.create(
             TablePartialInjectedColumnSymbol,
-            { declaration: i, tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol },
+            {
+              declaration: i,
+              tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol,
+            },
           );
           const columnSymbolId = createColumnSymbolIndex(columnName);
           const symbolTable = this.declarationNode.symbol?.symbolTable;
@@ -81,10 +116,15 @@ export default class TableBinder implements ElementBinder {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.bindFields([body]);
+      return this.bindFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return [
       ...this.bindFields(fields as FunctionApplicationNode[]),
@@ -103,7 +143,10 @@ export default class TableBinder implements ElementBinder {
 
         const errors: CompileError[] = [];
 
-        const args = [c.callee, ...c.args];
+        const args = [
+          c.callee,
+          ...c.args,
+        ];
         if (last(args) instanceof ListExpressionNode) {
           const listExpression = last(args) as ListExpressionNode;
           const settingsMap = aggregateSettingList(listExpression).getValue();
@@ -125,7 +168,7 @@ export default class TableBinder implements ElementBinder {
   }
 
   private tryToBindColumnType (typeNode: SyntaxNode) {
-    const fragments = destructureComplexVariableTuple(typeNode).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(typeNode);
     if (!fragments) {
       return;
     }
@@ -138,8 +181,14 @@ export default class TableBinder implements ElementBinder {
     }
 
     lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: enumBindee, kind: SymbolKind.Enum },
+      ...schemaBindees.map((b) => ({
+        node: b,
+        kind: SymbolKind.Schema,
+      })),
+      {
+        node: enumBindee,
+        kind: SymbolKind.Enum,
+      },
     ]);
   }
 
@@ -158,7 +207,7 @@ export default class TableBinder implements ElementBinder {
       }
     }
 
-    const fragments = destructureComplexVariableTuple(defaultValue).unwrap_or(undefined);
+    const fragments = destructureComplexVariableTuple(defaultValue);
     if (!fragments) {
       return [];
     }
@@ -173,9 +222,18 @@ export default class TableBinder implements ElementBinder {
     const schemaBindees = fragments.variables;
 
     return lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-      { node: enumBindee, kind: SymbolKind.Enum },
-      { node: enumFieldBindee, kind: SymbolKind.EnumField },
+      ...schemaBindees.map((b) => ({
+        node: b,
+        kind: SymbolKind.Schema,
+      })),
+      {
+        node: enumBindee,
+        kind: SymbolKind.Enum,
+      },
+      {
+        node: enumFieldBindee,
+        kind: SymbolKind.EnumField,
+      },
     ]);
   }
 
@@ -192,12 +250,24 @@ export default class TableBinder implements ElementBinder {
 
       return tableBindee
         ? lookupAndBindInScope(this.ast, [
-            ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-            { node: tableBindee, kind: SymbolKind.Table },
-            { node: columnBindee, kind: SymbolKind.Column },
+            ...schemaBindees.map((b) => ({
+              node: b,
+              kind: SymbolKind.Schema,
+            })),
+            {
+              node: tableBindee,
+              kind: SymbolKind.Table,
+            },
+            {
+              node: columnBindee,
+              kind: SymbolKind.Column,
+            },
           ])
         : lookupAndBindInScope(this.declarationNode, [
-            { node: columnBindee, kind: SymbolKind.Column },
+            {
+              node: columnBindee,
+              kind: SymbolKind.Column,
+            },
           ]);
     });
   }

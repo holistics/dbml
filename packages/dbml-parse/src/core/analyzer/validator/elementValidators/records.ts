@@ -1,17 +1,35 @@
-import { partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import {
+  partition,
+} from 'lodash-es';
+import {
+  KEYWORDS_OF_DEFAULT_SETTING,
+} from '@/constants';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
-import { ElementKind } from '@/core/analyzer/types';
-import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
-import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class RecordsValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -24,9 +42,18 @@ export default class RecordsValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
-      errors: [...this.validateContext(), ...this.validateName(this.declarationNode.name), ...this.validateAlias(this.declarationNode.alias), ...this.validateSettingList(this.declarationNode.attributeList), ...this.validateBody(this.declarationNode.body)],
+      errors: [
+        ...this.validateContext(),
+        ...this.validateName(this.declarationNode.name),
+        ...this.validateAlias(this.declarationNode.alias),
+        ...this.validateSettingList(this.declarationNode.attributeList),
+        ...this.validateBody(this.declarationNode.body),
+      ],
       warnings: [],
     };
   }
@@ -48,22 +75,25 @@ export default class RecordsValidator implements ElementValidator {
 
     // Check if parent is a table
     if (parent instanceof ElementDeclarationNode) {
-      const elementKind = getElementKind(parent).unwrap_or(undefined);
-      if (elementKind === ElementKind.Table) {
+      if (parent.isKind(ElementKind.Table)) {
         return [];
       }
     }
 
-    return [new CompileError(
-      CompileErrorCode.INVALID_RECORDS_CONTEXT,
-      'Records can only appear at top-level or inside a Table',
-      this.declarationNode,
-    )];
+    return [
+      new CompileError(
+        CompileErrorCode.INVALID_RECORDS_CONTEXT,
+        'Records can only appear at top-level or inside a Table',
+        this.declarationNode,
+      ),
+    ];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', nameNode),
+      ];
     }
     const parent = this.declarationNode.parent;
     const isTopLevel = parent instanceof ProgramNode;
@@ -80,11 +110,13 @@ export default class RecordsValidator implements ElementValidator {
   //   Invalid: records { }                    // missing table reference
   private validateTopLevelName (nameNode?: SyntaxNode): CompileError[] {
     if (!(nameNode instanceof CallExpressionNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_NAME,
-        'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
-        nameNode || this.declarationNode.type,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_RECORDS_NAME,
+          'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
+          nameNode || this.declarationNode.type,
+        ),
+      ];
     }
 
     const errors: CompileError[] = [];
@@ -116,11 +148,13 @@ export default class RecordsValidator implements ElementValidator {
   //   Invalid: records other_table(id) { }   // can't reference another table
   private validateInsideTableName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode && !isTupleOfVariables(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_RECORDS_NAME,
-        'Records inside a Table can only have a column list like (col1, col2, ...)',
-        nameNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_RECORDS_NAME,
+          'Records inside a Table can only have a column list like (col1, col2, ...)',
+          nameNode,
+        ),
+      ];
     }
 
     return [];
@@ -128,14 +162,18 @@ export default class RecordsValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', aliasNode),
+      ];
     }
     return [];
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList),
+      ];
     }
     return [];
   }
@@ -163,7 +201,10 @@ export default class RecordsValidator implements ElementValidator {
       return this.validateDataRow(body);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateDataRows(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -246,7 +287,7 @@ export default class RecordsValidator implements ElementValidator {
 
     // Member access for enum field references: status.active, myschema.status.pending
     if (isAccessExpression(value)) {
-      const fragments = destructureComplexVariable(value).unwrap_or(undefined);
+      const fragments = destructureComplexVariable(value);
       return fragments !== undefined && fragments.length > 0;
     }
 

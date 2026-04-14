@@ -174,9 +174,13 @@
  * - Information Hiding: Token navigation complexity is encapsulated
  * - Deep Module: Rich functionality with simple interface
  */
-import { computed, ref, inject } from 'vue';
+import {
+  computed, ref, inject,
+} from 'vue';
 import MonacoEditor from '@/components/editors/MonacoEditor.vue';
-import type { TokenNavigationEventBus } from '@/core/token-navigation';
+import type {
+  TokenNavigationEventBus,
+} from '@/core/token-navigation';
 import consoleLogger from '@/utils/logger';
 
 interface Props {

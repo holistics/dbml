@@ -1,30 +1,51 @@
-import { last, zip, uniqBy } from 'lodash-es';
-import { ColumnSymbol } from '@/core/analyzer/symbol/symbols';
 import {
-  destructureComplexVariableTuple, destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
-  extractVariableFromExpression,
+  last, uniqBy, zip,
+} from 'lodash-es';
+import {
+  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken,
   extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
 } from '@/core/analyzer/utils';
 import {
-  ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionExpressionNode, FunctionApplicationNode, LiteralNode,
-  PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
-} from '@/core/parser/nodes';
+  isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode,
+} from '@/core/parser/utils';
 import {
-  ColumnType, RelationCardinality, Table, TokenPosition, InterpreterDatabase, Ref,
-  Column,
-} from '@/core/interpreter/types';
-import { SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isDotDelimitedIdentifier, isExpressionAnIdentifierNode, isExpressionAQuotedString } from '@/core/parser/utils';
-import Report from '@/core/report';
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { getNumberTextFromExpression, parseNumber } from '@/core/utils';
-import { isExpressionASignedNumberExpression, isValidPartialInjection } from '../analyzer/validator/utils';
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ArrayNode, BlockExpressionNode, CallExpressionNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode,
+  PrimaryExpressionNode, SyntaxNode, TupleExpressionNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  Column, ColumnType, Ref, RelationCardinality, Table,
+  TokenPosition,
+} from '@/core/types/schemaJson';
+import {
+  ColumnSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  getNumberTextFromExpression, parseNumber,
+} from '@/core/utils/numbers';
+import {
+  isExpressionASignedNumberExpression, isValidPartialInjection,
+} from '../analyzer/validator/utils';
+import {
+  InterpreterDatabase,
+} from './types';
 
-export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null; tableName: string; fieldNames: string[] } {
-  const { variables, tupleElements } = destructureComplexVariableTuple(operand).unwrap();
+export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null;
+  tableName: string;
+  fieldNames: string[]; } {
+  const {
+    variables, tupleElements,
+  } = destructureComplexVariableTuple(operand)!;
 
-  const tupleNames = tupleElements.map((e) => extractVarNameFromPrimaryVariable(e).unwrap());
-  const variableNames = variables.map((e) => extractVarNameFromPrimaryVariable(e).unwrap());
+  const tupleNames = tupleElements.map((e) => extractVarNameFromPrimaryVariable(e)!);
+  const variableNames = variables.map((e) => extractVarNameFromPrimaryVariable(e)!);
 
   if (tupleElements.length) {
     if (variables.length === 0) {
@@ -46,12 +67,16 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table):
     return {
       schemaName: owner!.schemaName,
       tableName: owner!.name,
-      fieldNames: [variableNames[0]],
+      fieldNames: [
+        variableNames[0],
+      ],
     };
   }
 
   return {
-    fieldNames: [variableNames.pop()!],
+    fieldNames: [
+      variableNames.pop()!,
+    ],
     tableName: variableNames.pop()!,
     schemaName: variableNames.pop() || null,
   };
@@ -62,13 +87,25 @@ export function getMultiplicities (
 ): [RelationCardinality, RelationCardinality] {
   switch (op) {
     case '<':
-      return ['1', '*'];
+      return [
+        '1',
+        '*',
+      ];
     case '<>':
-      return ['*', '*'];
+      return [
+        '*',
+        '*',
+      ];
     case '>':
-      return ['*', '1'];
+      return [
+        '*',
+        '1',
+      ];
     case '-':
-      return ['1', '1'];
+      return [
+        '1',
+        '1',
+      ];
     default:
       throw new Error('Invalid relation op');
   }
@@ -86,19 +123,23 @@ export function getTokenPosition (node: SyntaxNode): TokenPosition {
       line: node.endPos.line + 1,
       column: node.endPos.column + 1,
     },
+    filepath: node.filepath,
   };
 }
 
 export function getColumnSymbolsOfRefOperand (ref: SyntaxNode): ColumnSymbol[] {
-  const colNode = destructureMemberAccessExpression(ref).unwrap_or(undefined)?.pop();
+  const colNode = destructureMemberAccessExpression(ref)?.pop();
   if (colNode instanceof TupleExpressionNode) {
     return colNode.elementList.map((e) => e.referee as ColumnSymbol);
   }
-  return [colNode!.referee as ColumnSymbol];
+  return [
+    colNode!.referee as ColumnSymbol,
+  ];
 }
 
-export function extractElementName (nameNode: SyntaxNode): { schemaName: string[]; name: string } {
-  const fragments = destructureComplexVariable(nameNode).unwrap();
+export function extractElementName (nameNode: SyntaxNode): { schemaName: string[];
+  name: string; } {
+  const fragments = destructureComplexVariable(nameNode)!;
   const name = fragments.pop()!;
 
   return {
@@ -115,8 +156,12 @@ export function getRefId (sym1: ColumnSymbol, sym2: ColumnSymbol): string;
 export function getRefId (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): string;
 export function getRefId (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): string {
   if (Array.isArray(sym1)) {
-    const firstIds = sym1.map(({ id }) => id).sort().join(',');
-    const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort().join(',');
+    const firstIds = sym1.map(({
+      id,
+    }) => id).sort().join(',');
+    const secondIds = (sym2 as ColumnSymbol[]).map(({
+      id,
+    }) => id).sort().join(',');
     return firstIds < secondIds ? `${firstIds}-${secondIds}` : `${secondIds}-${firstIds}`;
   }
 
@@ -129,9 +174,16 @@ export function isSameEndpoint (sym1: ColumnSymbol, sym2: ColumnSymbol): boolean
 export function isSameEndpoint (sym1: ColumnSymbol[], sym2: ColumnSymbol[]): boolean;
 export function isSameEndpoint (sym1: ColumnSymbol | ColumnSymbol[], sym2: ColumnSymbol | ColumnSymbol[]): boolean {
   if (Array.isArray(sym1)) {
-    const firstIds = sym1.map(({ id }) => id).sort();
-    const secondIds = (sym2 as ColumnSymbol[]).map(({ id }) => id).sort();
-    return zip(firstIds, secondIds).every(([first, second]) => first === second);
+    const firstIds = sym1.map(({
+      id,
+    }) => id).sort();
+    const secondIds = (sym2 as ColumnSymbol[]).map(({
+      id,
+    }) => id).sort();
+    return zip(firstIds, secondIds).every(([
+      first,
+      second,
+    ]) => first === second);
   }
 
   const firstId = sym1.id;
@@ -163,7 +215,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
 
   if (isExpressionAQuotedString(valueNode)) {
     return {
-      value: extractQuotedStringToken(valueNode).unwrap(),
+      value: extractQuotedStringToken(valueNode)!,
       type: 'string',
     };
   }
@@ -192,7 +244,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
 
   if (isDotDelimitedIdentifier(valueNode)) {
     return {
-      value: destructureMemberAccessExpression(valueNode).map(last).and_then(extractVariableFromExpression).unwrap(),
+      value: extractVariableFromExpression(last(destructureMemberAccessExpression(valueNode)))!,
       type: 'string',
     };
   }
@@ -203,7 +255,8 @@ export function processDefaultValue (valueNode?: SyntaxNode):
 export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabase): Report<ColumnType> {
   let typeSuffix: string = '';
   let typeArgs: string | null = null;
-  let numericParams: { precision: number; scale: number } | undefined;
+  let numericParams: { precision: number;
+    scale: number; } | undefined;
   let lengthParam: { length: number } | undefined;
 
   if (typeNode instanceof CallExpressionNode) {
@@ -213,10 +266,10 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
         return getNumberTextFromExpression(e);
       }
       if (isExpressionAQuotedString(e)) {
-        return extractQuotedStringToken(e).unwrap();
+        return extractQuotedStringToken(e)!;
       }
       // e can only be an identifier here
-      return extractVariableFromExpression(e).unwrap();
+      return extractVariableFromExpression(e)!;
     }).join(',');
     typeSuffix = `(${typeArgs})`;
 
@@ -227,12 +280,17 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
       const precision = parseNumber(argElements[0]);
       const scale = parseNumber(argElements[1]);
       if (!isNaN(precision) && !isNaN(scale)) {
-        numericParams = { precision: Math.trunc(precision), scale: Math.trunc(scale) };
+        numericParams = {
+          precision: Math.trunc(precision),
+          scale: Math.trunc(scale),
+        };
       }
     } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
       const length = parseNumber(argElements[0]);
       if (!isNaN(length)) {
-        lengthParam = { length: Math.trunc(length) };
+        lengthParam = {
+          length: Math.trunc(length),
+        };
       }
     }
 
@@ -246,10 +304,10 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
           return getNumberTextFromExpression(e);
         }
         if (isExpressionAQuotedString(e)) {
-          return extractQuotedStringToken(e).unwrap();
+          return extractQuotedStringToken(e)!;
         }
         // e can only be an identifier here
-        return extractVariableFromExpression(e).unwrap();
+        return extractVariableFromExpression(e)!;
       })
         .join(',');
       typeSuffix = `(${args})${typeSuffix}`;
@@ -265,12 +323,16 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
     }
   }
 
-  const { name: typeName, schemaName: typeSchemaName } = extractElementName(typeNode);
+  const {
+    name: typeName, schemaName: typeSchemaName,
+  } = extractElementName(typeNode);
 
   // Check if this type references an enum
   const schema = typeSchemaName.length === 0 ? null : typeSchemaName[0];
 
-  const isEnum = !![...env.enums.values()].find((e) => e.name === typeName && e.schemaName === schema);
+  const isEnum = !![
+    ...env.enums.values(),
+  ].find((e) => e.name === typeName && e.schemaName === schema);
 
   if (typeSchemaName.length > 1) {
     return new Report(
@@ -282,7 +344,9 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
         lengthParam,
         isEnum,
       },
-      [new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode)],
+      [
+        new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode),
+      ],
     );
   }
 
@@ -298,7 +362,11 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
 
 // The returned table respects (injected) column definition order
 export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): Table {
-  const tableElement = [...env.tables.entries()].find(([, t]) => t === table)?.[0];
+  const tableElement = [
+    ...env.tables.entries(),
+  ].find(([
+    , t,
+  ]) => t === table)?.[0];
   if (!tableElement) {
     throw new Error('mergeTableAndPartials should be called after all tables are interpreted');
   }
@@ -306,15 +374,25 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
     throw new Error('Table element should have a block body');
   }
 
-  const indexes = [...table.indexes];
-  const checks = [...table.checks];
+  const indexes = [
+    ...table.indexes,
+  ];
+  const checks = [
+    ...table.checks,
+  ];
   let headerColor = table.headerColor;
   let note = table.note;
 
-  const tablePartials = [...env.tablePartials.values()];
+  const tablePartials = [
+    ...env.tablePartials.values(),
+  ];
   // Prioritize later table partials
-  for (const tablePartial of [...table.partials].reverse()) {
-    const { name } = tablePartial;
+  for (const tablePartial of [
+    ...table.partials,
+  ].reverse()) {
+    const {
+      name,
+    } = tablePartial;
     const partial = tablePartials.find((p) => p.name === name);
     if (!partial) continue;
 
@@ -333,9 +411,15 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
     }
   }
 
-  const directFieldMap = new Map(table.fields.map((f) => [f.name, f]));
+  const directFieldMap = new Map(table.fields.map((f) => [
+    f.name,
+    f,
+  ]));
   const directFieldNames = new Set(directFieldMap.keys());
-  const partialMap = new Map(tablePartials.map((p) => [p.name, p]));
+  const partialMap = new Map(tablePartials.map((p) => [
+    p.name,
+    p,
+  ]));
 
   // Collect all fields in declaration order
   const allFields: Column[] = [];
@@ -345,7 +429,7 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
 
     if (isValidPartialInjection(subfield.callee)) {
       // Inject partial fields
-      const partialName = extractVariableFromExpression(subfield.callee.expression).unwrap_or(undefined);
+      const partialName = extractVariableFromExpression(subfield.callee.expression);
       const partial = partialMap.get(partialName!);
       if (!partial) continue;
 
@@ -356,7 +440,7 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
       }
     } else {
       // Add direct field definition
-      const columnName = extractVariableFromExpression(subfield.callee).unwrap();
+      const columnName = extractVariableFromExpression(subfield.callee)!;
       const column = directFieldMap.get(columnName);
       if (!column) continue;
       allFields.push(column);
@@ -365,7 +449,9 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
 
   // Use uniqBy to keep last occurrence of each field (later partials win)
   // Process from end to start, then reverse to maintain declaration order
-  const fields = uniqBy([...allFields].reverse(), 'name').reverse();
+  const fields = uniqBy([
+    ...allFields,
+  ].reverse(), 'name').reverse();
 
   return {
     ...table,
@@ -379,12 +465,18 @@ export function mergeTableAndPartials (table: Table, env: InterpreterDatabase): 
 
 export function extractInlineRefsFromTablePartials (table: Table, env: InterpreterDatabase): Ref[] {
   const refs: Ref[] = [];
-  const tablePartials = [...env.tablePartials.values()];
+  const tablePartials = [
+    ...env.tablePartials.values(),
+  ];
   const originalFieldNames = new Set(table.fields.map((f) => f.name));
 
   // Process partials in the same order as mergeTableAndPartials
-  for (const tablePartial of [...table.partials].reverse()) {
-    const { name } = tablePartial;
+  for (const tablePartial of [
+    ...table.partials,
+  ].reverse()) {
+    const {
+      name,
+    } = tablePartial;
     const partial = tablePartials.find((p) => p.name === name);
     if (!partial) continue;
 
@@ -410,7 +502,9 @@ export function extractInlineRefsFromTablePartials (table: Table, env: Interpret
             {
               schemaName: table.schemaName,
               tableName: table.name,
-              fieldNames: [field.name],
+              fieldNames: [
+                field.name,
+              ],
               token: field.token,
               relation: multiplicities[0],
             },

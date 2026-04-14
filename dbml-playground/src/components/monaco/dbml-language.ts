@@ -28,20 +28,56 @@ const DBML_LANGUAGE_CONFIG: monaco.languages.LanguageConfiguration = {
     ['(', ')'],
   ],
   autoClosingPairs: [
-    { open: '{', close: '}' },
-    { open: '[', close: ']' },
-    { open: '(', close: ')' },
-    { open: '"', close: '"' },
-    { open: '\'', close: '\'' },
-    { open: '`', close: '`' },
+    {
+      open: '{',
+      close: '}',
+    },
+    {
+      open: '[',
+      close: ']',
+    },
+    {
+      open: '(',
+      close: ')',
+    },
+    {
+      open: '"',
+      close: '"',
+    },
+    {
+      open: '\'',
+      close: '\'',
+    },
+    {
+      open: '`',
+      close: '`',
+    },
   ],
   surroundingPairs: [
-    { open: '{', close: '}' },
-    { open: '[', close: ']' },
-    { open: '(', close: ')' },
-    { open: '"', close: '"' },
-    { open: '\'', close: '\'' },
-    { open: '`', close: '`' },
+    {
+      open: '{',
+      close: '}',
+    },
+    {
+      open: '[',
+      close: ']',
+    },
+    {
+      open: '(',
+      close: ')',
+    },
+    {
+      open: '"',
+      close: '"',
+    },
+    {
+      open: '\'',
+      close: '\'',
+    },
+    {
+      open: '`',
+      close: '`',
+    },
   ],
   indentationRules: {
     increaseIndentPattern: /^(.*\{[^}]*|\s*[\{\[].*)$/,
@@ -85,7 +121,9 @@ const DBML_TOKEN_PROVIDER: monaco.languages.IMonarchLanguage = {
           '@default': 'identifier',
         },
       }],
-      { include: '@whitespace' },
+      {
+        include: '@whitespace',
+      },
       [/[{}()\[\]]/, '@brackets'],
       [/[<>](?!@symbols)/, '@brackets'],
       [/@symbols/, {
@@ -157,23 +195,72 @@ const DBML_THEME: monaco.editor.IStandaloneThemeData = {
   inherit: true,
   rules: [
     // Override default rules to add DBML-specific styling
-    { token: 'keyword', foreground: '0000ff', fontStyle: 'bold' },
-    { token: 'type', foreground: '008000', fontStyle: 'bold' },
-    { token: 'string', foreground: 'a31515' },
-    { token: 'string.backtick', foreground: 'a31515', fontStyle: 'italic' },
-    { token: 'comment', foreground: '008000', fontStyle: 'italic' },
-    { token: 'number', foreground: '098658' },
-    { token: 'number.hex', foreground: '3030c0' },
-    { token: 'operator', foreground: '000000' },
-    { token: 'delimiter', foreground: '000000' },
-    { token: 'annotation', foreground: '808080' },
-    { token: 'identifier', foreground: '000000' },
+    {
+      token: 'keyword',
+      foreground: '0000ff',
+      fontStyle: 'bold',
+    },
+    {
+      token: 'type',
+      foreground: '008000',
+      fontStyle: 'bold',
+    },
+    {
+      token: 'string',
+      foreground: 'a31515',
+    },
+    {
+      token: 'string.backtick',
+      foreground: 'a31515',
+      fontStyle: 'italic',
+    },
+    {
+      token: 'comment',
+      foreground: '008000',
+      fontStyle: 'italic',
+    },
+    {
+      token: 'number',
+      foreground: '098658',
+    },
+    {
+      token: 'number.hex',
+      foreground: '3030c0',
+    },
+    {
+      token: 'operator',
+      foreground: '000000',
+    },
+    {
+      token: 'delimiter',
+      foreground: '000000',
+    },
+    {
+      token: 'annotation',
+      foreground: '808080',
+    },
+    {
+      token: 'identifier',
+      foreground: '000000',
+    },
 
     // Ensure JSON tokens also use consistent styling
-    { token: 'string.key.json', foreground: '0451a5' },
-    { token: 'string.value.json', foreground: 'a31515' },
-    { token: 'number.json', foreground: '098658' },
-    { token: 'keyword.json', foreground: '0000ff' },
+    {
+      token: 'string.key.json',
+      foreground: '0451a5',
+    },
+    {
+      token: 'string.value.json',
+      foreground: 'a31515',
+    },
+    {
+      token: 'number.json',
+      foreground: '098658',
+    },
+    {
+      token: 'keyword.json',
+      foreground: '0000ff',
+    },
   ],
   colors: {},
 };
@@ -201,7 +288,9 @@ export class DBMLLanguageService {
 
     try {
       // Register the language
-      monaco.languages.register({ id: this.LANGUAGE_ID });
+      monaco.languages.register({
+        id: this.LANGUAGE_ID,
+      });
 
       // Set token provider for syntax highlighting
       monaco.languages.setMonarchTokensProvider(this.LANGUAGE_ID, DBML_TOKEN_PROVIDER);

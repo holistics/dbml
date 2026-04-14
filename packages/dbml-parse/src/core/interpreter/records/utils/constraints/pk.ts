@@ -1,22 +1,40 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { InterpreterDatabase, Table, Column, TableRecordRow } from '@/core/interpreter/types';
 import {
+  compact, difference, filter, flatMap, groupBy, isEmpty, keyBy, partition,
+} from 'lodash-es';
+import {
+  InterpreterDatabase, TableRecordRow,
+} from '@/core/interpreter/types';
+import {
+  mergeTableAndPartials,
+} from '@/core/interpreter/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  Column, Table,
+} from '@/core/types/schemaJson';
+import {
+  isSerialType,
+} from '../data';
+import {
+  createConstraintErrors,
   extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
-  isAutoIncrementColumn,
   formatFullColumnNames,
   formatValues,
-  createConstraintErrors,
+  hasNullWithoutDefaultInKey,
+  isAutoIncrementColumn,
 } from './helper';
-import { mergeTableAndPartials } from '@/core/interpreter/utils';
-import { isSerialType } from '../data';
-import { keyBy, groupBy, partition, compact, isEmpty, difference, filter, flatMap } from 'lodash-es';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';
 
 export function validatePrimaryKey (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([table, { rows }]) => {
+  return flatMap(Array.from(env.records), ([
+    table,
+    {
+      rows,
+    },
+  ]) => {
     if (isEmpty(rows)) return [];
 
     if (!env.cachedMergedTables.has(table)) {
@@ -58,7 +76,10 @@ function validatePkConstraint (
   );
 
   // Partition rows into those with NULL and those without
-  const [rowsWithNull, rowsWithoutNull] = partition(rows, (row) =>
+  const [
+    rowsWithNull,
+    rowsWithoutNull,
+  ] = partition(rows, (row) =>
     hasNullWithoutDefaultInKey(row.values, pkColumns, pkColumnFields),
   );
 
@@ -75,7 +96,10 @@ function validatePkConstraint (
     mergedTable,
   );
 
-  return [...nullErrors, ...duplicateErrors];
+  return [
+    ...nullErrors,
+    ...duplicateErrors,
+  ];
 }
 
 function createNullErrors (
@@ -132,7 +156,9 @@ function findDuplicateErrors (
 
 function collectPkConstraints (mergedTable: Table): string[][] {
   return [
-    ...mergedTable.fields.filter((field) => field.pk).map((field) => [field.name]),
+    ...mergedTable.fields.filter((field) => field.pk).map((field) => [
+      field.name,
+    ]),
     ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value)),
   ];
 }

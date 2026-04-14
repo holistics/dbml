@@ -1,17 +1,17 @@
+import {
+  isBinaryType,
+  isBooleanType,
+  isDateTimeType,
+  isNumericType,
+  isStringType,
+} from '@dbml/parse';
 import { concat, flatten, isEmpty } from 'lodash-es';
 import {
-  shouldPrintSchema,
   buildJunctionFields1,
   buildJunctionFields2,
   buildNewTableName,
+  shouldPrintSchema,
 } from './utils';
-import {
-  isNumericType,
-  isStringType,
-  isBooleanType,
-  isDateTimeType,
-  isBinaryType,
-} from '@dbml/parse';
 
 class MySQLExporter {
   static exportRecords (model) {

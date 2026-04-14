@@ -1,13 +1,25 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../../parser/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError } from '../../../errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+} from '../../../types/nodes';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class TableGroupBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -33,12 +45,20 @@ export default class TableGroupBinder implements ElementBinder {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.bindFields([body]);
+      return this.bindFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
-    return [...this.bindFields(fields as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.bindFields(fields as FunctionApplicationNode[]),
+      ...this.bindSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -47,7 +67,10 @@ export default class TableGroupBinder implements ElementBinder {
         return [];
       }
 
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       const bindees = args.flatMap(scanNonListNodeForBinding);
 
       return bindees.flatMap((bindee) => {
@@ -58,8 +81,14 @@ export default class TableGroupBinder implements ElementBinder {
         const schemaBindees = bindee.variables;
 
         return lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-          { node: tableBindee, kind: SymbolKind.Table },
+          ...schemaBindees.map((b) => ({
+            node: b,
+            kind: SymbolKind.Schema,
+          })),
+          {
+            node: tableBindee,
+            kind: SymbolKind.Table,
+          },
         ]);
       });
     });

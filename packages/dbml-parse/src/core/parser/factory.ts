@@ -1,13 +1,20 @@
-import { SyntaxNode, SyntaxNodeId, SyntaxNodeIdGenerator } from '@/core/parser/nodes';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  SyntaxNode, SyntaxNodeId, SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
 
 export default class NodeFactory {
   private generator: SyntaxNodeIdGenerator;
+  private filepath: Filepath;
 
-  constructor (generator: SyntaxNodeIdGenerator) {
+  constructor (generator: SyntaxNodeIdGenerator, filepath: Filepath) {
     this.generator = generator;
+    this.filepath = filepath;
   }
 
-  create<T extends SyntaxNode, A>(Type: { new (args: A, id: SyntaxNodeId): T }, args: A): T {
-    return new Type(args, this.generator.nextId());
+  create<T extends SyntaxNode, A>(Type: { new (args: A, id: SyntaxNodeId, filepath: Filepath): T }, args: A): T {
+    return new Type(args, this.generator.nextId(), this.filepath);
   }
 }

@@ -1,5 +1,7 @@
+import {
+  ElementDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
 import type Compiler from '../../index';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
 
 export function containerElement (
   this: Compiler,

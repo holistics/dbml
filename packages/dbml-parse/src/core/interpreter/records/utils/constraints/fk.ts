@@ -1,15 +1,28 @@
-import { CompileError } from '@/core/errors';
-import { InterpreterDatabase, Ref, RefEndpoint, Table, TableRecordRow } from '@/core/interpreter/types';
 import {
+  flatMap, isEmpty,
+} from 'lodash-es';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  InterpreterDatabase, TableRecordRow,
+} from '@/core/interpreter/types';
+import {
+  extractInlineRefsFromTablePartials, mergeTableAndPartials,
+} from '@/core/interpreter/utils';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  Ref, RefEndpoint, Table,
+} from '@/core/types/schemaJson';
+import {
+  createConstraintErrors,
   extractKeyValueWithDefault,
-  hasNullWithoutDefaultInKey,
   formatFullColumnNames,
   formatValues,
-  createConstraintErrors,
+  hasNullWithoutDefaultInKey,
 } from './helper';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { mergeTableAndPartials, extractInlineRefsFromTablePartials } from '@/core/interpreter/utils';
-import { isEmpty, flatMap } from 'lodash-es';
 
 type TableInfo = {
   rows: TableRecordRow[];
@@ -41,7 +54,10 @@ function buildTableInfoMap (env: InterpreterDatabase): Map<string, TableInfo> {
     }
     const mergedTable = env.cachedMergedTables.get(table)!;
 
-    tableInfoMap.set(key, { mergedTable, rows });
+    tableInfoMap.set(key, {
+      mergedTable,
+      rows,
+    });
   }
 
   return tableInfoMap;
@@ -98,7 +114,10 @@ function validateFkSourceToTarget (
 function validateRef (ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileError[] {
   if (!ref.endpoints) return [];
 
-  const [endpoint1, endpoint2] = ref.endpoints;
+  const [
+    endpoint1,
+    endpoint2,
+  ] = ref.endpoints;
   const table1 = tableInfoMap.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
   const table2 = tableInfoMap.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
 

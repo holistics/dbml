@@ -1,18 +1,34 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  createColumnSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   ProgramNode,
-} from '../../../parser/nodes';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError, CompileErrorCode } from '../../../errors';
-import { pickBinder, scanNonListNodeForBinding } from '../utils';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable, getElementKind } from '../../utils';
-import { ElementKind } from '../../types';
-import { createColumnSymbolIndex } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+} from '../../../types/nodes';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  ElementKind,
+} from '../../types';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '../../utils';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class IndexesBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -26,7 +42,7 @@ export default class IndexesBinder implements ElementBinder {
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || getElementKind(this.declarationNode.parent).unwrap_or(undefined) !== ElementKind.Table) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || !this.declarationNode.parent.isKind(ElementKind.Table)) {
       return [];
     }
 
@@ -42,12 +58,20 @@ export default class IndexesBinder implements ElementBinder {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.bindFields([body]);
+      return this.bindFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
-    return [...this.bindFields(fields as FunctionApplicationNode[]), ...this.bindSubElements(subs as ElementDeclarationNode[])];
+    return [
+      ...this.bindFields(fields as FunctionApplicationNode[]),
+      ...this.bindSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -55,14 +79,16 @@ export default class IndexesBinder implements ElementBinder {
       if (!field.callee) {
         return [];
       }
-      const ownerTableName = destructureComplexVariable(
-        (this.declarationNode.parent! as ElementDeclarationNode).name,
-      ).map(
-        (fragments) => fragments.join('.'),
-      ).unwrap_or('<unnamed>');
+      const ownerTableName = (() => {
+        const frags = destructureComplexVariable((this.declarationNode.parent! as ElementDeclarationNode).name);
+        return frags !== undefined ? frags.join('.') : '<unnamed>';
+      })();
       const ownerTableSymbolTable = this.declarationNode.parent!.symbol!.symbolTable!;
 
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       const bindees = args.flatMap(scanNonListNodeForBinding)
         .flatMap((bindee) => {
           if (bindee.variables.length + bindee.tupleElements.length > 1) {
@@ -76,7 +102,7 @@ export default class IndexesBinder implements ElementBinder {
         });
 
       return bindees.flatMap((bindee) => {
-        const columnName = extractVarNameFromPrimaryVariable(bindee).unwrap_or(undefined);
+        const columnName = extractVarNameFromPrimaryVariable(bindee);
         if (columnName === undefined) return [];
         const columnIndex = createColumnSymbolIndex(columnName);
         const column = ownerTableSymbolTable.get(columnIndex);

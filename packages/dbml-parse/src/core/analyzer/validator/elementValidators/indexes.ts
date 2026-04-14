@@ -1,6 +1,24 @@
-import { last, partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import {
+  last, partition,
+} from 'lodash-es';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  destructureIndexNode,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  aggregateSettingList, pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -12,15 +30,12 @@ import {
   SyntaxNode,
   VariableNode,
   WildcardNode,
-} from '@/core/parser/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/parser/utils';
-import { aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { isVoid, pickValidator } from '@/core/analyzer/validator/utils';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { destructureIndexNode, getElementKind } from '@/core/analyzer/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { ElementKind } from '@/core/analyzer/types';
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class IndexesValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -33,7 +48,10 @@ export default class IndexesValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -52,20 +70,28 @@ export default class IndexesValidator implements ElementValidator {
       'An Indexes can only appear inside a Table or a TablePartial',
       this.declarationNode,
     );
-    if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
+    if (this.declarationNode.parent instanceof ProgramNode) return [
+      invalidContextError,
+    ];
 
-    const elementKind = getElementKind(this.declarationNode.parent).unwrap_or(undefined);
-    return (elementKind && [ElementKind.Table, ElementKind.TablePartial].includes(elementKind))
+    const parent = this.declarationNode.parent;
+    return (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table, ElementKind.TablePartial))
       ? []
-      : [invalidContextError];
+      : [
+          invalidContextError,
+        ];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as an Indexes name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as an Indexes name', nameNode),
+      ];
     }
     if (nameNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode),
+      ];
     }
 
     return [];
@@ -73,7 +99,9 @@ export default class IndexesValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -81,7 +109,9 @@ export default class IndexesValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -92,11 +122,19 @@ export default class IndexesValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body),
+      ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -106,7 +144,10 @@ export default class IndexesValidator implements ElementValidator {
       }
 
       const errors: CompileError[] = [];
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSetting(args.pop() as ListExpressionNode));
       }
@@ -116,13 +157,13 @@ export default class IndexesValidator implements ElementValidator {
         // (id, name) (age, weight)
         // which is parsed as a call expression
         while (sub instanceof CallExpressionNode) {
-          if (sub.argumentList && !destructureIndexNode(sub.argumentList).isOk()) {
+          if (sub.argumentList && destructureIndexNode(sub.argumentList) === undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
           }
           sub = sub.callee!;
         }
 
-        if (!destructureIndexNode(sub).isOk()) {
+        if (destructureIndexNode(sub) === undefined) {
           errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
         }
       });
@@ -156,7 +197,7 @@ export default class IndexesValidator implements ElementValidator {
             attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isVoid(attr.value)) {
+            if (attr.value !== undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
             }
           });

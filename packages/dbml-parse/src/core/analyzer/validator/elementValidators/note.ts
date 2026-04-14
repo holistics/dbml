@@ -1,18 +1,41 @@
-import { partition } from 'lodash-es';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
+import {
+  partition,
+} from 'lodash-es';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  ElementKind,
+} from '@/core/analyzer/types';
+import {
+  destructureComplexVariable,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  pickValidator,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAQuotedString,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import { isExpressionAQuotedString } from '@/core/parser/utils';
-import { pickValidator } from '@/core/analyzer/validator/utils';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { ElementKind } from '@/core/analyzer/types';
-import { destructureComplexVariable, getElementKind } from '@/core/analyzer/utils';
-import { createStickyNoteSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { StickyNoteSymbol } from '@/core/analyzer/symbol/symbols';
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  createStickyNoteSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  StickyNoteSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class NoteValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -25,7 +48,10 @@ export default class NoteValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     return {
       errors: [
         ...this.validateContext(),
@@ -39,23 +65,18 @@ export default class NoteValidator implements ElementValidator {
   }
 
   private validateContext (): CompileError[] {
+    const parent = this.declarationNode.parent;
     if (
-      !(this.declarationNode.parent instanceof ProgramNode)
-      && !(
-        [
-          ElementKind.Table,
-          ElementKind.TableGroup,
-          ElementKind.TablePartial,
-          ElementKind.Project,
-        ] as (ElementKind | undefined)[]
-      )
-        .includes(getElementKind(this.declarationNode.parent).unwrap_or(undefined))
+      !(parent instanceof ProgramNode)
+      && !(parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table, ElementKind.TableGroup, ElementKind.TablePartial, ElementKind.Project))
     ) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NOTE_CONTEXT,
-        'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NOTE_CONTEXT,
+          'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
+          this.declarationNode,
+        ),
+      ];
     }
 
     return [];
@@ -64,32 +85,44 @@ export default class NoteValidator implements ElementValidator {
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!(this.declarationNode.parent instanceof ProgramNode)) {
       if (nameNode) {
-        return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode)];
+        return [
+          new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode),
+        ];
       }
       return [];
     }
 
     if (!nameNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode),
+      ];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Note name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Note name', nameNode),
+      ];
     }
 
     const nameFragments = destructureComplexVariable(nameNode);
-    if (!nameFragments.isOk()) return [new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode)];
+    if (nameFragments === undefined) return [
+      new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode),
+    ];
 
-    const names = nameFragments.unwrap();
+    const names = nameFragments;
 
     const trueName = names.join('.');
 
     const noteId = createStickyNoteSymbolIndex(trueName);
 
     if (this.publicSymbolTable.has(noteId)) {
-      return [new CompileError(CompileErrorCode.DUPLICATE_NAME, `Sticky note "${trueName}" has already been defined`, nameNode)];
+      return [
+        new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate Note '${trueName}' in schema '${DEFAULT_SCHEMA_NAME}'`, nameNode),
+      ];
     }
 
-    this.declarationNode.symbol = this.symbolFactory.create(StickyNoteSymbol, { declaration: this.declarationNode });
+    this.declarationNode.symbol = this.symbolFactory.create(StickyNoteSymbol, {
+      declaration: this.declarationNode,
+    });
     this.publicSymbolTable.set(noteId, this.declarationNode.symbol);
 
     return [];
@@ -97,7 +130,9 @@ export default class NoteValidator implements ElementValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -105,7 +140,9 @@ export default class NoteValidator implements ElementValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -116,17 +153,27 @@ export default class NoteValidator implements ElementValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.validateFields([body]);
+      return this.validateFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.EMPTY_NOTE, 'A Note must have a content', this.declarationNode),
+      ];
     }
     if (fields.length > 1) {
       fields.slice(1).forEach((field) => errors.push(new CompileError(CompileErrorCode.NOTE_CONTENT_REDEFINED, 'A Note can only contain one string', field)));

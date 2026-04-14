@@ -1,14 +1,28 @@
-import { partition } from 'lodash-es';
+import {
+  partition,
+} from 'lodash-es';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
+import {
+  isWildcardExpression,
+} from '../../../parser/utils';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../../parser/nodes';
-import { isWildcardExpression } from '../../../parser/utils';
-import { ElementBinder } from '../types';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { CompileError } from '../../../errors';
-import { lookupAndBindInScope, pickBinder, scanNonListNodeForBinding } from '../utils';
-import { SymbolKind } from '../../symbol/symbolIndex';
-import SymbolFactory from '../../symbol/factory';
+} from '../../../types/nodes';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+} from '../utils';
 
 export default class DiagramViewBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -30,7 +44,9 @@ export default class DiagramViewBinder implements ElementBinder {
   }
 
   private bindBody (body: BlockExpressionNode): CompileError[] {
-    const [, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      , subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return this.bindSubElements(subs as ElementDeclarationNode[]);
   }
@@ -74,7 +90,9 @@ export default class DiagramViewBinder implements ElementBinder {
   }
 
   private bindTableReferences (body: BlockExpressionNode): CompileError[] {
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee) {
@@ -86,7 +104,10 @@ export default class DiagramViewBinder implements ElementBinder {
         return [];
       }
 
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       const bindees = args.flatMap(scanNonListNodeForBinding);
 
       return bindees.flatMap((bindee) => {
@@ -97,15 +118,23 @@ export default class DiagramViewBinder implements ElementBinder {
         const schemaBindees = bindee.variables;
 
         return lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-          { node: tableBindee, kind: SymbolKind.Table },
+          ...schemaBindees.map((b) => ({
+            node: b,
+            kind: SymbolKind.Schema,
+          })),
+          {
+            node: tableBindee,
+            kind: SymbolKind.Table,
+          },
         ]);
       });
     });
   }
 
   private bindNoteReferences (body: BlockExpressionNode): CompileError[] {
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee) {
@@ -126,14 +155,19 @@ export default class DiagramViewBinder implements ElementBinder {
         }
 
         return lookupAndBindInScope(this.ast, [
-          { node: noteBindee, kind: SymbolKind.Note },
+          {
+            node: noteBindee,
+            kind: SymbolKind.StickyNote,
+          },
         ]);
       });
     });
   }
 
   private bindTableGroupReferences (body: BlockExpressionNode): CompileError[] {
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee) {
@@ -155,15 +189,23 @@ export default class DiagramViewBinder implements ElementBinder {
         const schemaBindees = bindee.variables;
 
         return lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({ node: b, kind: SymbolKind.Schema })),
-          { node: tableGroupBindee, kind: SymbolKind.TableGroup },
+          ...schemaBindees.map((b) => ({
+            node: b,
+            kind: SymbolKind.Schema,
+          })),
+          {
+            node: tableGroupBindee,
+            kind: SymbolKind.TableGroup,
+          },
         ]);
       });
     });
   }
 
   private bindSchemaReferences (body: BlockExpressionNode): CompileError[] {
-    const [fields] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
       if (!field.callee) {
@@ -178,7 +220,10 @@ export default class DiagramViewBinder implements ElementBinder {
       const bindees = scanNonListNodeForBinding(field.callee);
 
       return bindees.flatMap((bindee) => {
-        return lookupAndBindInScope(this.ast, bindee.variables.map((b) => ({ node: b, kind: SymbolKind.Schema })));
+        return lookupAndBindInScope(this.ast, bindee.variables.map((b) => ({
+          node: b,
+          kind: SymbolKind.Schema,
+        })));
       });
     });
   }

@@ -1,10 +1,10 @@
 import { get, isNil } from 'lodash-es';
+import Check from './check';
+import { DEFAULT_SCHEMA_NAME } from './config';
 import Element from './element';
 import Field from './field';
 import Index from './indexes';
-import { DEFAULT_SCHEMA_NAME } from './config';
 import { shouldPrintSchema } from './utils';
-import Check from './check';
 
 class Table extends Element {
   /**

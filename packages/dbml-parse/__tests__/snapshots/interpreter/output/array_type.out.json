@@ -1,156 +1,143 @@
 {
-  "schemas": [],
-  "tables": [
-    {
-      "name": "sal_emp",
-      "schemaName": null,
-      "alias": null,
-      "fields": [
-        {
-          "name": "name",
-          "type": {
-            "schemaName": null,
-            "type_name": "text",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 18,
-              "line": 2,
-              "column": 3
+  "database": {
+    "tables": [
+      {
+        "fields": [
+          {
+            "name": "name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 12,
+                "line": 2,
+                "offset": 27
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 18
+              }
             },
-            "end": {
-              "offset": 27,
-              "line": 2,
-              "column": 12
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "unique": false
-        },
-        {
-          "name": "pay_by_quarter",
-          "type": {
-            "schemaName": null,
-            "type_name": "int[]",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 30,
-              "line": 3,
-              "column": 3
+            "type": {
+              "type_name": "text"
             },
-            "end": {
-              "offset": 61,
-              "line": 3,
-              "column": 34
-            }
+            "unique": false
           },
-          "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
-          "not_null": true,
-          "checks": []
-        },
-        {
-          "name": "schedule",
-          "type": {
-            "schemaName": null,
-            "type_name": "text[][]",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 64,
-              "line": 4,
-              "column": 3
+          {
+            "increment": false,
+            "name": "pay_by_quarter",
+            "not_null": true,
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 34,
+                "line": 3,
+                "offset": 61
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 30
+              }
             },
-            "end": {
-              "offset": 88,
-              "line": 4,
-              "column": 27
-            }
+            "type": {
+              "type_name": "int[]"
+            },
+            "unique": false
           },
-          "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
-          "not_null": false,
-          "checks": []
-        }
-      ],
-      "token": {
-        "start": {
-          "offset": 0,
-          "line": 1,
-          "column": 1
-        },
-        "end": {
-          "offset": 90,
-          "line": 5,
-          "column": 2
+          {
+            "increment": false,
+            "name": "schedule",
+            "not_null": false,
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 4,
+                "offset": 88
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 64
+              }
+            },
+            "type": {
+              "type_name": "text[][]"
+            },
+            "unique": false
+          }
+        ],
+        "name": "sal_emp",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 5,
+            "offset": 90
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
         }
       },
-      "indexes": [],
-      "partials": [],
-      "checks": []
-    },
-    {
-      "name": "tictactoe",
-      "schemaName": null,
-      "alias": null,
-      "fields": [
-        {
-          "name": "squares",
-          "type": {
-            "schemaName": null,
-            "type_name": "integer[3][3]",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 112,
-              "line": 8,
-              "column": 3
+      {
+        "fields": [
+          {
+            "name": "squares",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 24,
+                "line": 8,
+                "offset": 133
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 112
+              }
             },
-            "end": {
-              "offset": 133,
-              "line": 8,
-              "column": 24
-            }
+            "type": {
+              "type_name": "integer[3][3]"
+            },
+            "unique": false
+          }
+        ],
+        "name": "tictactoe",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 9,
+            "offset": 135
           },
-          "inline_refs": [],
-          "pk": false,
-          "unique": false
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 7,
+            "offset": 92
+          }
         }
-      ],
-      "token": {
-        "start": {
-          "offset": 92,
-          "line": 7,
-          "column": 1
-        },
-        "end": {
-          "offset": 135,
-          "line": 9,
-          "column": 2
-        }
+      }
+    ],
+    "token": {
+      "end": {
+        "column": 2,
+        "line": 9,
+        "offset": 135
       },
-      "indexes": [],
-      "partials": [],
-      "checks": []
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
     }
-  ],
-  "notes": [],
-  "refs": [],
-  "enums": [],
-  "tableGroups": [],
-  "aliases": [],
-  "project": {},
-  "tablePartials": [],
-  "records": [],
-  "diagramViews": []
+  }
 }

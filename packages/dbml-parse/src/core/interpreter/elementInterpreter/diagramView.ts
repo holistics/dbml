@@ -1,11 +1,27 @@
-import { partition } from 'lodash-es';
-import { destructureComplexVariable, extractReferee } from '@/core/analyzer/utils';
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode } from '@/core/parser/nodes';
-import { isWildcardExpression } from '@/core/parser/utils';
-import { ElementInterpreter, InterpreterDatabase, DiagramView } from '@/core/interpreter/types';
-import { getTokenPosition } from '@/core/interpreter/utils';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import {
+  partition,
+} from 'lodash-es';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  destructureComplexVariable, extractReferee,
+} from '@/core/analyzer/utils';
+import {
+  DiagramView, ElementInterpreter, InterpreterDatabase,
+} from '@/core/interpreter/types';
+import {
+  getTokenPosition,
+} from '@/core/interpreter/utils';
+import {
+  isWildcardExpression,
+} from '@/core/parser/utils';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
+} from '@/core/types/nodes';
 
 export class DiagramViewInterpreter implements ElementInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -47,7 +63,7 @@ export class DiagramViewInterpreter implements ElementInterpreter {
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const fragments = destructureComplexVariable(nameNode).unwrap_or([]);
+    const fragments = destructureComplexVariable(nameNode) ?? [];
     if (fragments.length > 0) {
       this.diagramView.name = fragments[fragments.length - 1];
       if (fragments.length > 1) {
@@ -62,14 +78,31 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     if (body.body.length === 1) {
       const first = body.body[0];
       if (first instanceof FunctionApplicationNode && isWildcardExpression(first.callee)) {
-        this.diagramView.visibleEntities = { tables: [], stickyNotes: [], tableGroups: [], schemas: [] };
-        this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']));
-        this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set(['tables', 'stickyNotes', 'tableGroups', 'schemas']));
+        this.diagramView.visibleEntities = {
+          tables: [],
+          stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+        };
+        this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set([
+          'tables',
+          'stickyNotes',
+          'tableGroups',
+          'schemas',
+        ]));
+        this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set([
+          'tables',
+          'stickyNotes',
+          'tableGroups',
+          'schemas',
+        ]));
         return [];
       }
     }
 
-    const [subs] = partition(body.body, (e) => e instanceof ElementDeclarationNode);
+    const [
+      subs,
+    ] = partition(body.body, (e) => e instanceof ElementDeclarationNode);
     const explicitlySet = new Set<string>();
 
     for (const sub of subs as ElementDeclarationNode[]) {
@@ -142,7 +175,8 @@ export class DiagramViewInterpreter implements ElementInterpreter {
     }
 
     // Specific items
-    const items: Array<{ name: string; schemaName: string }> = [];
+    const items: Array<{ name: string;
+      schemaName: string; }> = [];
     for (const field of body.body) {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
@@ -150,23 +184,29 @@ export class DiagramViewInterpreter implements ElementInterpreter {
       // resolve the real name from the referee's declaration
       const referee = extractReferee(field.callee);
       if (referee?.declaration instanceof ElementDeclarationNode) {
-        const realFragments = destructureComplexVariable(referee.declaration.name).unwrap_or([]);
+        const realFragments = destructureComplexVariable(referee.declaration.name) ?? [];
         if (realFragments.length > 0) {
           const name = realFragments[realFragments.length - 1];
           const schemaName = realFragments.length > 1 ? realFragments.slice(0, -1).join('.') : DEFAULT_SCHEMA_NAME;
-          items.push({ name, schemaName });
+          items.push({
+            name,
+            schemaName,
+          });
           continue;
         }
       }
 
       // Fallback: use the literal text (for unbound references or non-table blocks)
-      const fragments = destructureComplexVariable(field.callee).unwrap_or([]);
+      const fragments = destructureComplexVariable(field.callee) ?? [];
       if (fragments.length === 0) continue;
 
       const name = fragments[fragments.length - 1];
       const schemaName = fragments.length > 1 ? fragments[0] : DEFAULT_SCHEMA_NAME;
 
-      items.push({ name, schemaName });
+      items.push({
+        name,
+        schemaName,
+      });
     }
 
     switch (blockType) {
@@ -174,13 +214,25 @@ export class DiagramViewInterpreter implements ElementInterpreter {
         this.diagramView.visibleEntities!.tables = items.length > 0 ? items : null;
         break;
       case 'notes':
-        this.diagramView.visibleEntities!.stickyNotes = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        this.diagramView.visibleEntities!.stickyNotes = items.length > 0
+          ? items.map((i) => ({
+              name: i.name,
+            }))
+          : null;
         break;
       case 'tablegroups':
-        this.diagramView.visibleEntities!.tableGroups = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        this.diagramView.visibleEntities!.tableGroups = items.length > 0
+          ? items.map((i) => ({
+              name: i.name,
+            }))
+          : null;
         break;
       case 'schemas':
-        this.diagramView.visibleEntities!.schemas = items.length > 0 ? items.map((i) => ({ name: i.name })) : null;
+        this.diagramView.visibleEntities!.schemas = items.length > 0
+          ? items.map((i) => ({
+              name: i.name,
+            }))
+          : null;
         break;
     }
   }

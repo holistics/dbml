@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
+import {
+  createMockTextModel, createPosition, extractTextFromRange,
+} from '../../../utils';
 
 describe('[example] DefinitionProvider', () => {
   describe('should find definition for tables', () => {

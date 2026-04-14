@@ -1,15 +1,15 @@
 import { capitalize, get } from 'lodash-es';
-import Schema from './schema';
-import Ref from './ref';
-import Enum from './enum';
-import TableGroup from './tableGroup';
-import Table from './table';
-import StickyNote from './stickyNote';
-import Element from './element';
 import {
-  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
+  DEFAULT_SCHEMA_NAME, ENUM, NOTE, REF, TABLE, TABLE_GROUP,
 } from './config';
 import DbState from './dbState';
+import Element from './element';
+import Enum from './enum';
+import Ref from './ref';
+import Schema from './schema';
+import StickyNote from './stickyNote';
+import Table from './table';
+import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
 
 class Database extends Element {

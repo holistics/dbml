@@ -1,35 +1,67 @@
-import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { Database } from '@/core/interpreter/types';
-import Report from '@/core/report';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
 import Analyzer from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/interpreter/interpreter';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queries/parse';
-import { invalidStream, flatStream } from './queries/token';
-import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
+import Lexer from '@/core/lexer/lexer';
+import Parser from '@/core/parser/parser';
 import {
-  renameTable,
-  applyTextEdits,
-  syncDiagramView,
-  findDiagramViewBlocks,
-  type TextEdit,
-  type TableNameInput,
-  type DiagramViewSyncOperation,
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  ProgramNode, SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  Database,
+} from '@/core/types/schemaJson';
+import {
+  NodeSymbolIdGenerator,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
+} from '@/services/index';
+import {
+  containerElement, containerScope, containerScopeKind, containerStack, containerToken,
+} from './queries/container';
+import {
+  ast, errors, publicSymbolTable, rawDb, tokens, warnings,
+} from './queries/legacy/parse';
+import {
+  symbolMembers, symbolOfName, symbolOfNameToKey,
+} from './queries/legacy/symbol';
+import {
+  flatStream, invalidStream,
+} from './queries/legacy/token';
+import {
   type DiagramViewBlock,
+  type DiagramViewSyncOperation,
+  type TableNameInput,
+  type TextEdit,
+  applyTextEdits,
+  findDiagramViewBlocks,
+  renameTable,
+  syncDiagramView,
 } from './queries/transform';
-import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
+import {
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+} from './queries/utils';
 
 // Re-export types
-export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock };
+export {
+  ScopeKind,
+} from './types';
+export type {
+  TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock,
+};
 
 // Re-export utilities
-export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
+export {
+  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+};
 
 export default class Compiler {
   private source = '';
@@ -71,18 +103,35 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
-    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source)
+  private interpret (): Report<{ ast: ProgramNode;
+    tokens: SyntaxToken[];
+    rawDb?: Database; }> {
+    const filepath = DEFAULT_ENTRY;
+    const parseRes: Report<{ ast: ProgramNode;
+      tokens: SyntaxToken[]; }> = new Lexer(this.source, filepath)
       .lex()
-      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
-      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
+      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator, filepath).parse())
+      .chain(({
+        ast, tokens,
+      }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({
+        ast,
+        tokens,
+      })));
 
     if (parseRes.getErrors().length > 0) {
-      return parseRes as Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>;
+      return parseRes as Report<{ ast: ProgramNode;
+        tokens: SyntaxToken[];
+        rawDb?: Database; }>;
     }
 
-    return parseRes.chain(({ ast, tokens }) =>
-      new Interpreter(ast).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
+    return parseRes.chain(({
+      ast, tokens,
+    }) =>
+      new Interpreter(ast).interpret().map((rawDb) => ({
+        ast,
+        tokens,
+        rawDb,
+      })),
     );
   }
 
@@ -96,7 +145,8 @@ export default class Compiler {
   syncDiagramView (
     operations: DiagramViewSyncOperation[],
     blocks?: DiagramViewBlock[],
-  ): { newDbml: string; edits: TextEdit[] } {
+  ): { newDbml: string;
+    edits: TextEdit[]; } {
     return syncDiagramView(this.parse.source(), operations, blocks);
   }
 

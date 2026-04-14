@@ -1,9 +1,13 @@
-import Validator from '@/core/analyzer/validator/validator';
 import Binder from '@/core/analyzer/binder/binder';
-import { ProgramNode } from '@/core/parser/nodes';
-import Report from '@/core/report';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
+import Validator from '@/core/analyzer/validator/validator';
+import {
+  ProgramNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  NodeSymbolIdGenerator,
+} from '@/core/types/symbol/symbols';
 
 export default class Analyzer {
   private ast: ProgramNode;

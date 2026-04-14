@@ -1,6 +1,12 @@
-import { describe, expect, test } from 'vitest';
-import { interpret } from '@tests/utils';
-import { CompileErrorCode } from '@/index';
+import {
+  describe, expect, test,
+} from 'vitest';
+import {
+  interpret,
+} from '@tests/utils';
+import {
+  CompileErrorCode,
+} from '@/index';
 
 describe('[example - record] composite primary key constraints', () => {
   test('should accept valid unique composite primary key values', () => {
@@ -32,19 +38,46 @@ describe('[example - record] composite primary key constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: order_id=1, product_id=100, quantity=2
-    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[0][1]).toEqual({ type: 'integer', value: 100 });
-    expect(db.records[0].values[0][2]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(db.records[0].values[0][1]).toEqual({
+      type: 'integer',
+      value: 100,
+    });
+    expect(db.records[0].values[0][2]).toEqual({
+      type: 'integer',
+      value: 2,
+    });
 
     // Row 2: order_id=1, product_id=101, quantity=1
-    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[1][1]).toEqual({ type: 'integer', value: 101 });
-    expect(db.records[0].values[1][2]).toEqual({ type: 'integer', value: 1 });
+    expect(db.records[0].values[1][0]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(db.records[0].values[1][1]).toEqual({
+      type: 'integer',
+      value: 101,
+    });
+    expect(db.records[0].values[1][2]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
 
     // Row 3: order_id=2, product_id=100, quantity=3
-    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[2][1]).toEqual({ type: 'integer', value: 100 });
-    expect(db.records[0].values[2][2]).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[2][0]).toEqual({
+      type: 'integer',
+      value: 2,
+    });
+    expect(db.records[0].values[2][1]).toEqual({
+      type: 'integer',
+      value: 100,
+    });
+    expect(db.records[0].values[2][2]).toEqual({
+      type: 'integer',
+      value: 3,
+    });
   });
 
   test('should reject duplicate composite primary key values', () => {
@@ -146,25 +179,52 @@ describe('[example - record] simple primary key constraints', () => {
     const usersRecord = db.records.find((r) => r.tableName === 'users');
     expect(usersRecord).toBeDefined();
     expect(usersRecord!.values.length).toBe(2);
-    expect(usersRecord!.values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(usersRecord!.values[0][1]).toEqual({ type: 'string', value: 'Alice' });
-    expect(usersRecord!.values[1][0]).toEqual({ type: 'integer', value: 2 });
-    expect(usersRecord!.values[1][1]).toEqual({ type: 'string', value: 'Bob' });
+    expect(usersRecord!.values[0][0]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(usersRecord!.values[0][1]).toEqual({
+      type: 'string',
+      value: 'Alice',
+    });
+    expect(usersRecord!.values[1][0]).toEqual({
+      type: 'integer',
+      value: 2,
+    });
+    expect(usersRecord!.values[1][1]).toEqual({
+      type: 'string',
+      value: 'Bob',
+    });
 
     // Verify countries table with string PK
     const countriesRecord = db.records.find((r) => r.tableName === 'countries');
     expect(countriesRecord).toBeDefined();
     expect(countriesRecord!.values.length).toBe(2);
-    expect(countriesRecord!.values[0][0]).toEqual({ type: 'string', value: 'US' });
-    expect(countriesRecord!.values[1][0]).toEqual({ type: 'string', value: 'UK' });
+    expect(countriesRecord!.values[0][0]).toEqual({
+      type: 'string',
+      value: 'US',
+    });
+    expect(countriesRecord!.values[1][0]).toEqual({
+      type: 'string',
+      value: 'UK',
+    });
 
     // Verify accounts table with zero PK
     const accountsRecord = db.records.find((r) => r.tableName === 'accounts');
     expect(accountsRecord).toBeDefined();
     expect(accountsRecord!.values.length).toBe(3);
-    expect(accountsRecord!.values[0][0]).toEqual({ type: 'integer', value: 0 });
-    expect(accountsRecord!.values[1][0]).toEqual({ type: 'integer', value: 1 });
-    expect(accountsRecord!.values[2][0]).toEqual({ type: 'integer', value: 2 });
+    expect(accountsRecord!.values[0][0]).toEqual({
+      type: 'integer',
+      value: 0,
+    });
+    expect(accountsRecord!.values[1][0]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(accountsRecord!.values[2][0]).toEqual({
+      type: 'integer',
+      value: 2,
+    });
   });
 
   test('should reject duplicate PK values', () => {
@@ -239,8 +299,14 @@ describe('[example - record] simple primary key constraints', () => {
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(2);
-    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(db.records[0].values[1][0]).toEqual({
+      type: 'integer',
+      value: 2,
+    });
   });
 
   test('should validate auto-increment PK values', () => {
@@ -262,9 +328,18 @@ describe('[example - record] simple primary key constraints', () => {
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(3);
-    expect(db.records[0].values[0][0]).toEqual({ type: 'integer', value: 1 });
-    expect(db.records[0].values[1][0]).toEqual({ type: 'integer', value: 2 });
-    expect(db.records[0].values[2][0]).toEqual({ type: 'integer', value: 3 });
+    expect(db.records[0].values[0][0]).toEqual({
+      type: 'integer',
+      value: 1,
+    });
+    expect(db.records[0].values[1][0]).toEqual({
+      type: 'integer',
+      value: 2,
+    });
+    expect(db.records[0].values[2][0]).toEqual({
+      type: 'integer',
+      value: 3,
+    });
   });
 
   test('should report error for duplicate records blocks', () => {

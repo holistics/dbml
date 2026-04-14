@@ -1,5 +1,9 @@
-import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import {
+  last,
+} from 'lodash-es';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 export const enum ParsingContext {
   ListExpression,
@@ -92,9 +96,14 @@ export class ParsingContextStack {
       switch (token.kind) {
         case SyntaxTokenKind.COMMA:
           if (this.isWithinGroupExpressionContext() || this.isWithinListExpressionContext()) {
-            return [...this.stack]
+            return [
+              ...this.stack,
+            ]
               .reverse()
-              .find((c) => [ParsingContext.GroupExpression, ParsingContext.ListExpression].includes(c))!;
+              .find((c) => [
+                ParsingContext.GroupExpression,
+                ParsingContext.ListExpression,
+              ].includes(c))!;
           }
           break;
         case SyntaxTokenKind.RPAREN:

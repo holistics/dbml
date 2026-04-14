@@ -1,7 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import { createMockTextModel, createPosition } from '@tests/utils';
+import {
+  createMockTextModel, createPosition,
+} from '@tests/utils';
 
 describe('[example] CompletionItemProvider', () => {
   describe('should suggest element types when at top level', () => {
@@ -160,19 +164,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'headercolor',
-        'note',
-
-      ]);
+      expect(labels).toEqual(['headercolor', 'note']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'headercolor: ',
-        'note: ',
-
-      ]);
+      expect(insertTexts).toEqual(['headercolor: ', 'note: ']);
     });
 
     it('- work when there is a comma preceding', () => {
@@ -186,19 +182,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'headercolor',
-        'note',
-
-      ]);
+      expect(labels).toEqual(['headercolor', 'note']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'headercolor: ',
-        'note: ',
-
-      ]);
+      expect(insertTexts).toEqual(['headercolor: ', 'note: ']);
     });
   });
 
@@ -796,17 +784,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'status',
-
-      ]);
+      expect(labels).toEqual(['status']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'status',
-
-      ]);
+      expect(insertTexts).toEqual(['status']);
     });
 
     it('- should suggest schemas in default context', () => {
@@ -820,17 +802,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'myschema',
-
-      ]);
+      expect(labels).toEqual(['myschema']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'myschema',
-
-      ]);
+      expect(insertTexts).toEqual(['myschema']);
     });
   });
 
@@ -846,21 +822,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'order_id',
-        'orders',
-        'users',
-
-      ]);
+      expect(labels).toEqual(['order_id', 'orders', 'users']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'order_id',
-        'orders',
-        'users',
-
-      ]);
+      expect(insertTexts).toEqual(['order_id', 'orders', 'users']);
     });
 
     it('- should suggest columns after table name in ref', () => {
@@ -874,17 +840,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'id',
-
-      ]);
+      expect(labels).toEqual(['id']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'id',
-
-      ]);
+      expect(insertTexts).toEqual(['id']);
     });
 
     it('- should suggest schemas in ref context', () => {
@@ -898,21 +858,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'order_id',
-        'myschema',
-        'users',
-
-      ]);
+      expect(labels).toEqual(['order_id', 'myschema', 'users']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'order_id',
-        'myschema',
-        'users',
-
-      ]);
+      expect(insertTexts).toEqual(['order_id', 'myschema', 'users']);
     });
   });
 
@@ -928,19 +878,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'orders',
-        'users',
-
-      ]);
+      expect(labels).toEqual(['orders', 'users']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'orders',
-        'users',
-
-      ]);
+      expect(insertTexts).toEqual(['orders', 'users']);
     });
 
     it('- should suggest columns in Ref after dot', () => {
@@ -954,17 +896,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'id',
-
-      ]);
+      expect(labels).toEqual(['id']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'id',
-
-      ]);
+      expect(insertTexts).toEqual(['id']);
     });
 
     it('- should suggest after relationship operators', () => {
@@ -978,19 +914,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'orders',
-        'users',
-
-      ]);
+      expect(labels).toEqual(['orders', 'users']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'orders',
-        'users',
-
-      ]);
+      expect(insertTexts).toEqual(['orders', 'users']);
     });
 
     it('- should suggest ref settings in brackets', () => {
@@ -1004,21 +932,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'update',
-        'delete',
-        'color',
-
-      ]);
+      expect(labels).toEqual(['update', 'delete', 'color']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'update: ',
-        'delete: ',
-        'color: ',
-
-      ]);
+      expect(insertTexts).toEqual(['update: ', 'delete: ', 'color: ']);
     });
 
     it('- should suggest action values for update/delete settings', () => {
@@ -1064,19 +982,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'id',
-        'email',
-
-      ]);
+      expect(labels).toEqual(['id', 'email']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'id',
-        'email',
-
-      ]);
+      expect(insertTexts).toEqual(['id', 'email']);
     });
 
     it('- should suggest in composite index', () => {
@@ -1090,19 +1000,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'id',
-        'email',
-
-      ]);
+      expect(labels).toEqual(['id', 'email']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'id',
-        'email',
-
-      ]);
+      expect(insertTexts).toEqual(['id', 'email']);
     });
   });
 
@@ -1150,19 +1052,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'btree',
-        'hash',
-
-      ]);
+      expect(labels).toEqual(['btree', 'hash']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'btree',
-        'hash',
-
-      ]);
+      expect(insertTexts).toEqual(['btree', 'hash']);
     });
   });
 
@@ -1178,17 +1072,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'name',
-
-      ]);
+      expect(labels).toEqual(['name']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'name: ',
-
-      ]);
+      expect(insertTexts).toEqual(['name: ']);
     });
   });
 
@@ -1204,21 +1092,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'users',
-        'orders',
-        'Note',
-
-      ]);
+      expect(labels).toEqual(['users', 'orders', 'Note']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'users',
-        'orders',
-        'Note',
-
-      ]);
+      expect(insertTexts).toEqual(['users', 'orders', 'Note']);
     });
 
     it('- should suggest schema-qualified tables', () => {
@@ -1232,19 +1110,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'myschema',
-        'Note',
-
-      ]);
+      expect(labels).toEqual(['myschema', 'Note']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'myschema',
-        'Note',
-
-      ]);
+      expect(insertTexts).toEqual(['myschema', 'Note']);
     });
   });
 
@@ -1282,15 +1152,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'mypartial',
-      ]);
+      expect(labels).toEqual(['mypartial']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'mypartial',
-      ]);
+      expect(insertTexts).toEqual(['mypartial']);
     });
   });
 
@@ -1324,15 +1190,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'id',
-      ]);
+      expect(labels).toEqual(['id']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'id',
-      ]);
+      expect(insertTexts).toEqual(['id']);
     });
   });
 
@@ -1415,15 +1277,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'user-table',
-      ]);
+      expect(labels).toEqual(['user-table']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        '"user-table"',
-      ]);
+      expect(insertTexts).toEqual(['"user-table"']);
     });
 
     it('- should handle enum field settings', () => {
@@ -1437,17 +1295,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'note',
-
-      ]);
+      expect(labels).toEqual(['note']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'note: ',
-
-      ]);
+      expect(insertTexts).toEqual(['note: ']);
     });
 
     it('- should handle project scope', () => {

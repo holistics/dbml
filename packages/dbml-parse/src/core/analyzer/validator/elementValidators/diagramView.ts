@@ -1,20 +1,38 @@
-import { partition } from 'lodash-es';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/errors';
 import {
-  isSimpleName, pickValidator,
+  partition,
+} from 'lodash-es';
+import {
+  destructureComplexVariable, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  ElementValidator,
+} from '@/core/analyzer/validator/types';
+import {
+  isSimpleName,
 } from '@/core/analyzer/validator/utils';
-import { registerSchemaStack, aggregateSettingList } from '@/core/analyzer/validator/utils';
-import { ElementValidator } from '@/core/analyzer/validator/types';
-import SymbolTable from '@/core/analyzer/symbol/symbolTable';
-import { SyntaxToken } from '@/core/lexer/tokens';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrimaryExpressionNode, SyntaxNode, VariableNode,
-} from '@/core/parser/nodes';
-import SymbolFactory from '@/core/analyzer/symbol/factory';
-import { createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '@/core/analyzer/utils';
-import { DiagramViewFieldSymbol, DiagramViewSymbol } from '@/core/analyzer/symbol/symbols';
-import { isExpressionAVariableNode, isWildcardExpression } from '@/core/parser/utils';
+  aggregateSettingList, registerSchemaStack,
+} from '@/core/analyzer/validator/utils';
+import {
+  isExpressionAVariableNode, isWildcardExpression,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode, CompileWarning,
+} from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+} from '@/core/types/nodes';
+import SymbolFactory from '@/core/types/symbol/factory';
+import {
+  createDiagramViewFieldSymbolIndex, createDiagramViewSymbolIndex,
+} from '@/core/types/symbol/symbolIndex';
+import SymbolTable from '@/core/types/symbol/symbolTable';
+import {
+  DiagramViewFieldSymbol, DiagramViewSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 
 export default class DiagramViewValidator implements ElementValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
@@ -27,7 +45,10 @@ export default class DiagramViewValidator implements ElementValidator {
     this.symbolFactory = symbolFactory;
   }
 
-  validate (): { errors: CompileError[]; warnings: CompileWarning[] } {
+  validate (): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     const errors: CompileError[] = [
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
@@ -37,61 +58,79 @@ export default class DiagramViewValidator implements ElementValidator {
     ];
     const bodyResult = this.validateBody(this.declarationNode.body);
     errors.push(...bodyResult.errors);
-    return { errors, warnings: bodyResult.warnings };
+    return {
+      errors,
+      warnings: bodyResult.warnings,
+    };
   }
 
   private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_DIAGRAMVIEW_CONTEXT,
-        'DiagramView must appear top-level',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_DIAGRAMVIEW_CONTEXT,
+          'DiagramView must appear top-level',
+          this.declarationNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(
-        CompileErrorCode.NAME_NOT_FOUND,
-        'A DiagramView must have a name',
-        this.declarationNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.NAME_NOT_FOUND,
+          'A DiagramView must have a name',
+          this.declarationNode,
+        ),
+      ];
     }
     if (!isSimpleName(nameNode)) {
-      return [new CompileError(
-        CompileErrorCode.INVALID_NAME,
-        'A DiagramView name must be a single identifier',
-        nameNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.INVALID_NAME,
+          'A DiagramView name must be a single identifier',
+          nameNode,
+        ),
+      ];
     }
     return [];
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(
-        CompileErrorCode.UNEXPECTED_ALIAS,
-        'A DiagramView shouldn\'t have an alias',
-        aliasNode,
-      )];
+      return [
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_ALIAS,
+          'A DiagramView shouldn\'t have an alias',
+          aliasNode,
+        ),
+      ];
     }
 
     return [];
   }
 
   registerElement (): CompileError[] {
-    const { name } = this.declarationNode;
-    this.declarationNode.symbol = this.symbolFactory.create(DiagramViewSymbol, { declaration: this.declarationNode, symbolTable: new SymbolTable() });
+    const {
+      name,
+    } = this.declarationNode;
+    this.declarationNode.symbol = this.symbolFactory.create(DiagramViewSymbol, {
+      declaration: this.declarationNode,
+      symbolTable: new SymbolTable(),
+    });
     const maybeNameFragments = destructureComplexVariable(name);
-    if (maybeNameFragments.isOk()) {
-      const nameFragments = maybeNameFragments.unwrap();
+    if (maybeNameFragments !== undefined) {
+      const nameFragments = maybeNameFragments;
       const diagramViewName = nameFragments.pop()!;
       const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
       const diagramViewId = createDiagramViewSymbolIndex(diagramViewName);
       if (symbolTable.has(diagramViewId)) {
-        return [new CompileError(CompileErrorCode.DUPLICATE_DIAGRAMVIEW_NAME, `DiagramView name '${diagramViewName}' already exists`, name!)];
+        return [
+          new CompileError(CompileErrorCode.DUPLICATE_DIAGRAMVIEW_NAME, `DiagramView '${diagramViewName}' already exists`, name!),
+        ];
       }
       symbolTable.set(diagramViewId, this.declarationNode.symbol!);
     }
@@ -115,24 +154,38 @@ export default class DiagramViewValidator implements ElementValidator {
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): { errors: CompileError[]; warnings: CompileWarning[] } {
-    if (!body) return { errors: [], warnings: [] };
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
+    if (!body) return {
+      errors: [],
+      warnings: [],
+    };
 
     if (body instanceof FunctionApplicationNode) {
       return {
-        errors: [new CompileError(
-          CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
-          'A DiagramView\'s body must be a block',
-          body,
-        )],
+        errors: [
+          new CompileError(
+            CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
+            'A DiagramView\'s body must be a block',
+            body,
+          ),
+        ],
         warnings: [],
       };
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     const subResult = this.validateSubElements(subs as ElementDeclarationNode[]);
     return {
-      errors: [...this.validateFields(fields as FunctionApplicationNode[]), ...subResult.errors],
+      errors: [
+        ...this.validateFields(fields as FunctionApplicationNode[]),
+        ...subResult.errors,
+      ],
       warnings: subResult.warnings,
     };
   }
@@ -161,11 +214,19 @@ export default class DiagramViewValidator implements ElementValidator {
     });
   }
 
-  private validateSubElements (subs: ElementDeclarationNode[]): { errors: CompileError[]; warnings: CompileWarning[] } {
+  private validateSubElements (subs: ElementDeclarationNode[]): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 
-    const allowedBlocks = ['tables', 'notes', 'tablegroups', 'schemas'];
+    const allowedBlocks = [
+      'tables',
+      'notes',
+      'tablegroups',
+      'schemas',
+    ];
 
     for (const sub of subs) {
       sub.parent = this.declarationNode;
@@ -188,15 +249,24 @@ export default class DiagramViewValidator implements ElementValidator {
       warnings.push(...subBlockResult.warnings);
     }
 
-    return { errors, warnings };
+    return {
+      errors,
+      warnings,
+    };
   }
 
-  private validateSubBlock (sub: ElementDeclarationNode): { errors: CompileError[]; warnings: CompileWarning[] } {
+  private validateSubBlock (sub: ElementDeclarationNode): {
+    errors: CompileError[];
+    warnings: CompileWarning[];
+  } {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
 
     if (!sub.body || !(sub.body instanceof BlockExpressionNode)) {
-      return { errors, warnings };
+      return {
+        errors,
+        warnings,
+      };
     }
 
     const body = sub.body as BlockExpressionNode;
@@ -218,7 +288,10 @@ export default class DiagramViewValidator implements ElementValidator {
 
     errors.push(...this.registerSubBlockFields(sub));
 
-    return { errors, warnings };
+    return {
+      errors,
+      warnings,
+    };
   }
 
   registerSubBlockFields (sub: ElementDeclarationNode): CompileError[] {
@@ -236,10 +309,12 @@ export default class DiagramViewValidator implements ElementValidator {
         // Wildcards are per-sub-block and don't need uniqueness tracking
         if (isWildcardExpression(field.callee)) continue;
 
-        const fieldName = extractVarNameFromPrimaryVariable(field.callee).unwrap();
+        const fieldName = extractVarNameFromPrimaryVariable(field.callee)!;
         const fieldId = createDiagramViewFieldSymbolIndex(fieldName);
 
-        const fieldSymbol = this.symbolFactory.create(DiagramViewFieldSymbol, { declaration: field });
+        const fieldSymbol = this.symbolFactory.create(DiagramViewFieldSymbol, {
+          declaration: field,
+        });
         field.symbol = fieldSymbol;
 
         const symbolTable = this.declarationNode.symbol!.symbolTable!;

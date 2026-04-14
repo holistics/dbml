@@ -1,23 +1,37 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import * as fc from 'fast-check';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import { dbmlSchemaArbitrary, tableArbitrary } from '../utils/arbitraries';
-import { MockTextModel, createPosition } from '../utils';
+import {
+  dbmlSchemaArbitrary, tableArbitrary,
+} from '../utils/arbitraries';
+import {
+  MockTextModel, createPosition,
+} from '../utils';
 
-const FUZZ_CONFIG = { numRuns: 50 };
-const ROBUSTNESS_CONFIG = { numRuns: 25 };
+const FUZZ_CONFIG = {
+  numRuns: 50,
+};
+const ROBUSTNESS_CONFIG = {
+  numRuns: 25,
+};
 
 // Helper to create valid position within source bounds
-function clampPosition (line: number, col: number, source: string): { line: number; col: number } {
+function clampPosition (line: number, col: number, source: string): { line: number;
+  col: number; } {
   const lines = source.split('\n');
   const maxLine = Math.max(0, lines.length - 1);
   const clampedLine = Math.min(Math.max(0, line), maxLine);
   const maxCol = lines[clampedLine]?.length || 0;
   const clampedCol = Math.min(Math.max(0, col), maxCol);
-  return { line: clampedLine, col: clampedCol };
+  return {
+    line: clampedLine,
+    col: clampedCol,
+  };
 }
 
 describe('[fuzz] DefinitionProvider - robustness', () => {
@@ -85,7 +99,9 @@ describe('[fuzz] DefinitionProvider - robustness', () => {
         const model = new MockTextModel(source) as any;
 
         // Use clamped position to increase chance of valid results
-        const { line: clampedLine, col: clampedCol } = clampPosition(line, col, source);
+        const {
+          line: clampedLine, col: clampedCol,
+        } = clampPosition(line, col, source);
         const position = createPosition(clampedLine + 1, clampedCol + 1);
 
         const result = definitionProvider.provideDefinition(model, position);
@@ -172,7 +188,9 @@ describe('[fuzz] ReferencesProvider - robustness', () => {
         const referencesProvider = new DBMLReferencesProvider(compiler);
         const model = new MockTextModel(source) as any;
 
-        const { line: clampedLine, col: clampedCol } = clampPosition(line, col, source);
+        const {
+          line: clampedLine, col: clampedCol,
+        } = clampPosition(line, col, source);
         const position = createPosition(clampedLine + 1, clampedCol + 1);
 
         const result = referencesProvider.provideReferences(model, position);
@@ -256,7 +274,9 @@ describe('[fuzz] CompletionItemProvider - robustness', () => {
         const completionProvider = new DBMLCompletionItemProvider(compiler);
         const model = new MockTextModel(source) as any;
 
-        const { line: clampedLine, col: clampedCol } = clampPosition(line, col, source);
+        const {
+          line: clampedLine, col: clampedCol,
+        } = clampPosition(line, col, source);
         const position = createPosition(clampedLine + 1, clampedCol + 1);
 
         const result = completionProvider.provideCompletionItems(model, position);
@@ -331,7 +351,9 @@ describe('[fuzz] services - consistency', () => {
           expect(didThrow).toBe(false);
         },
       ),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });
@@ -378,7 +400,9 @@ describe('[fuzz] services - edge cases', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -403,7 +427,9 @@ describe('[fuzz] services - edge cases', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 
@@ -418,7 +444,12 @@ describe('[fuzz] services - edge cases', () => {
     const completionProvider = new DBMLCompletionItemProvider(compiler);
 
     // Test at various positions
-    [1, 100, 500, 1000].forEach((col) => {
+    [
+      1,
+      100,
+      500,
+      1000,
+    ].forEach((col) => {
       expect(() => {
         definitionProvider.provideDefinition(model, createPosition(1, col));
         completionProvider.provideCompletionItems(model, createPosition(1, col));
@@ -427,7 +458,9 @@ describe('[fuzz] services - edge cases', () => {
   });
 
   it('should handle source with many lines', () => {
-    const manyLines = Array.from({ length: 500 }, (_, i) => `Table t${i} { id int }`).join('\n');
+    const manyLines = Array.from({
+      length: 500,
+    }, (_, i) => `Table t${i} { id int }`).join('\n');
     const compiler = new Compiler();
     compiler.setSource(manyLines);
 
@@ -435,7 +468,12 @@ describe('[fuzz] services - edge cases', () => {
     const definitionProvider = new DBMLDefinitionProvider(compiler);
 
     // Test at various line positions
-    [1, 100, 250, 500].forEach((line) => {
+    [
+      1,
+      100,
+      250,
+      500,
+    ].forEach((line) => {
       expect(() => {
         definitionProvider.provideDefinition(model, createPosition(line, 1));
       }).not.toThrow();
@@ -446,7 +484,10 @@ describe('[fuzz] services - edge cases', () => {
 describe('[fuzz] services - unicode handling', () => {
   it('should handle unicode identifiers', () => {
     fc.assert(
-      fc.property(fc.string({ minLength: 1, maxLength: 20 }), (name: string) => {
+      fc.property(fc.string({
+        minLength: 1,
+        maxLength: 20,
+      }), (name: string) => {
         // Escape special characters for valid DBML
         const safeName = name.replace(/["\n\r\\\0]/g, '');
         if (safeName.length === 0) return;
@@ -466,7 +507,9 @@ describe('[fuzz] services - unicode handling', () => {
         }
         expect(didThrow).toBe(false);
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });

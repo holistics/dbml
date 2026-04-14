@@ -1,4 +1,6 @@
-import { type Position, type TextModel } from '@/services';
+import {
+  type Position, type TextModel,
+} from '@/services';
 
 export function createPosition (lineNumber: number, column: number): Position {
   return {
@@ -21,7 +23,8 @@ export class MockTextModel {
     // Split on all line ending types while preserving them for accurate offset calculation
     const lineEndingRegex = /\r\n|\r|\n/g;
     let lastIndex = 0;
-    const lines: Array<{ text: string; ending: string }> = [];
+    const lines: Array<{ text: string;
+      ending: string; }> = [];
 
     let match;
     while ((match = lineEndingRegex.exec(this.content)) !== null) {
@@ -32,7 +35,10 @@ export class MockTextModel {
       lastIndex = match.index + match[0].length;
     }
     // Add remaining content after last line ending
-    lines.push({ text: this.content.slice(lastIndex), ending: '' });
+    lines.push({
+      text: this.content.slice(lastIndex),
+      ending: '',
+    });
 
     let offset = 0;
     for (let i = 0; i < position.lineNumber - 1 && i < lines.length; i++) {
@@ -61,7 +67,10 @@ export function createMockTextModel (content: string, uri: string = ''): TextMod
 }
 
 // Extract source text from a range in the program
-export function extractTextFromRange (program: string, range: { startLineNumber: number; startColumn: number; endLineNumber: number; endColumn: number }): string {
+export function extractTextFromRange (program: string, range: { startLineNumber: number;
+  startColumn: number;
+  endLineNumber: number;
+  endColumn: number; }): string {
   const mockModel = new MockTextModel(program);
 
   const startOffset = mockModel.getOffsetAt({

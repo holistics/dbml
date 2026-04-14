@@ -1,560 +1,563 @@
 {
-  "schemas": [],
-  "tables": [
-    {
-      "name": "users",
-      "schemaName": null,
-      "alias": null,
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "schemaName": null,
-            "type_name": "int",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 437,
-              "line": 22,
-              "column": 3
-            },
-            "end": {
-              "offset": 448,
-              "line": 22,
-              "column": 14
-            }
-          },
-          "inline_refs": [],
-          "pk": true,
-          "increment": false,
-          "unique": false,
-          "checks": []
-        }
-      ],
-      "token": {
-        "start": {
-          "offset": 421,
-          "line": 21,
-          "column": 1
-        },
-        "end": {
-          "offset": 466,
-          "line": 24,
-          "column": 2
-        }
-      },
-      "indexes": [],
-      "partials": [
-        {
-          "order": 1,
-          "token": {
-            "start": {
-              "offset": 451,
-              "line": 23,
-              "column": 3
-            },
-            "end": {
-              "offset": 464,
-              "line": 23,
-              "column": 16
-            }
-          },
-          "name": "user_partial"
-        }
-      ],
-      "checks": []
-    }
-  ],
-  "notes": [],
-  "refs": [],
-  "enums": [],
-  "tableGroups": [],
-  "aliases": [],
-  "project": {},
-  "tablePartials": [
-    {
-      "name": "user_partial",
-      "fields": [
-        {
-          "name": "full_name",
-          "type": {
-            "schemaName": null,
-            "type_name": "varchar",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 30,
-              "line": 2,
-              "column": 3
-            },
-            "end": {
-              "offset": 47,
-              "line": 2,
-              "column": 20
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "unique": false
-        },
-        {
-          "name": "email",
-          "type": {
-            "schemaName": null,
-            "type_name": "varchar",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 50,
-              "line": 3,
-              "column": 3
-            },
-            "end": {
-              "offset": 72,
-              "line": 3,
-              "column": 25
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": true,
-          "checks": []
-        },
-        {
-          "name": "gender",
-          "type": {
-            "schemaName": null,
-            "type_name": "varchar",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 75,
-              "line": 4,
-              "column": 3
-            },
-            "end": {
-              "offset": 89,
-              "line": 4,
-              "column": 17
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "unique": false
-        },
-        {
-          "name": "date_of_birth",
-          "type": {
-            "schemaName": null,
-            "type_name": "varchar",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 92,
-              "line": 5,
-              "column": 3
-            },
-            "end": {
-              "offset": 113,
-              "line": 5,
-              "column": 24
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "unique": false
-        },
-        {
-          "name": "created_at",
-          "type": {
-            "schemaName": null,
-            "type_name": "varchar",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 116,
-              "line": 6,
-              "column": 3
-            },
-            "end": {
-              "offset": 134,
-              "line": 6,
-              "column": 21
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "unique": false
-        },
-        {
-          "name": "country_code",
-          "type": {
-            "schemaName": null,
-            "type_name": "int",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 137,
-              "line": 7,
-              "column": 3
-            },
-            "end": {
-              "offset": 153,
-              "line": 7,
-              "column": 19
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "unique": false
-        },
-        {
-          "name": "active",
-          "type": {
-            "schemaName": null,
-            "type_name": "boolean",
-            "args": null
-          },
-          "token": {
-            "start": {
-              "offset": 157,
-              "line": 8,
-              "column": 3
-            },
-            "end": {
-              "offset": 182,
-              "line": 8,
-              "column": 28
-            }
-          },
-          "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
-          "not_null": true,
-          "checks": []
-        }
-      ],
-      "token": {
-        "start": {
-          "offset": 0,
-          "line": 1,
-          "column": 1
-        },
-        "end": {
-          "offset": 419,
-          "line": 19,
-          "column": 2
-        }
-      },
-      "indexes": [
-        {
-          "columns": [
-            {
-              "value": "id",
-              "type": "column",
-              "token": {
-                "start": {
-                  "offset": 201,
-                  "line": 11,
-                  "column": 6
-                },
-                "end": {
-                  "offset": 203,
-                  "line": 11,
-                  "column": 8
-                }
-              }
-            }
-          ],
-          "token": {
-            "start": {
-              "offset": 200,
-              "line": 11,
-              "column": 5
-            },
-            "end": {
-              "offset": 233,
-              "line": 11,
-              "column": 38
-            }
-          },
-          "pk": false,
-          "unique": true,
-          "note": {
-            "value": "index note",
+  "database": {
+    "tablePartials": [
+      {
+        "fields": [
+          {
+            "name": "full_name",
+            "pk": false,
             "token": {
-              "start": {
-                "offset": 214,
-                "line": 11,
-                "column": 19
-              },
               "end": {
-                "offset": 232,
+                "column": 20,
+                "line": 2,
+                "offset": 47
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 30
+              }
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "increment": false,
+            "name": "email",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 25,
+                "line": 3,
+                "offset": 72
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 50
+              }
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": true
+          },
+          {
+            "name": "gender",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 17,
+                "line": 4,
+                "offset": 89
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 4,
+                "offset": 75
+              }
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "name": "date_of_birth",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 24,
+                "line": 5,
+                "offset": 113
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 5,
+                "offset": 92
+              }
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "name": "created_at",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 21,
+                "line": 6,
+                "offset": 134
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 6,
+                "offset": 116
+              }
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
+          },
+          {
+            "name": "country_code",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 19,
+                "line": 7,
+                "offset": 153
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 7,
+                "offset": 137
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "increment": false,
+            "name": "active",
+            "not_null": true,
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 28,
+                "line": 8,
+                "offset": 182
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 157
+              }
+            },
+            "type": {
+              "type_name": "boolean"
+            },
+            "unique": false
+          }
+        ],
+        "indexes": [
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 8,
+                    "line": 11,
+                    "offset": 203
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 6,
+                    "line": 11,
+                    "offset": 201
+                  }
+                },
+                "type": "column",
+                "value": "id"
+              }
+            ],
+            "note": {
+              "token": {
+                "end": {
+                  "column": 37,
+                  "line": 11,
+                  "offset": 232
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 19,
+                  "line": 11,
+                  "offset": 214
+                }
+              },
+              "value": "index note"
+            },
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 38,
                 "line": 11,
-                "column": 37
+                "offset": 233
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 11,
+                "offset": 200
               }
-            }
-          }
-        },
-        {
-          "columns": [
-            {
-              "value": "full_name",
-              "type": "column",
-              "token": {
-                "start": {
-                  "offset": 238,
-                  "line": 12,
-                  "column": 5
-                },
-                "end": {
-                  "offset": 247,
-                  "line": 12,
-                  "column": 14
-                }
-              }
-            }
-          ],
-          "token": {
-            "start": {
-              "offset": 238,
-              "line": 12,
-              "column": 5
             },
-            "end": {
-              "offset": 267,
-              "line": 12,
-              "column": 34
+            "unique": true
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 14,
+                    "line": 12,
+                    "offset": 247
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 5,
+                    "line": 12,
+                    "offset": 238
+                  }
+                },
+                "type": "column",
+                "value": "full_name"
+              }
+            ],
+            "name": "User Name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 34,
+                "line": 12,
+                "offset": 267
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 12,
+                "offset": 238
+              }
+            },
+            "unique": false
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 11,
+                    "line": 13,
+                    "offset": 278
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 6,
+                    "line": 13,
+                    "offset": 273
+                  }
+                },
+                "type": "column",
+                "value": "email"
+              },
+              {
+                "token": {
+                  "end": {
+                    "column": 22,
+                    "line": 13,
+                    "offset": 289
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 12,
+                    "line": 13,
+                    "offset": 279
+                  }
+                },
+                "type": "column",
+                "value": "created_at"
+              }
+            ],
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 36,
+                "line": 13,
+                "offset": 303
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 13,
+                "offset": 272
+              }
+            },
+            "type": "hash",
+            "unique": false
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 12,
+                    "line": 14,
+                    "offset": 315
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 5,
+                    "line": 14,
+                    "offset": 308
+                  }
+                },
+                "type": "expression",
+                "value": "now()"
+              }
+            ],
+            "token": {
+              "end": {
+                "column": 12,
+                "line": 14,
+                "offset": 315
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 14,
+                "offset": 308
+              }
             }
           },
-          "pk": false,
-          "unique": false,
-          "name": "User Name"
-        },
-        {
-          "columns": [
-            {
-              "value": "email",
-              "type": "column",
-              "token": {
-                "start": {
-                  "offset": 273,
-                  "line": 13,
-                  "column": 6
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 12,
+                    "line": 15,
+                    "offset": 327
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 6,
+                    "line": 15,
+                    "offset": 321
+                  }
                 },
-                "end": {
-                  "offset": 278,
-                  "line": 13,
-                  "column": 11
-                }
-              }
-            },
-            {
-              "value": "created_at",
-              "type": "column",
-              "token": {
-                "start": {
-                  "offset": 279,
-                  "line": 13,
-                  "column": 12
+                "type": "column",
+                "value": "active"
+              },
+              {
+                "token": {
+                  "end": {
+                    "column": 32,
+                    "line": 15,
+                    "offset": 347
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 14,
+                    "line": 15,
+                    "offset": 329
+                  }
                 },
-                "end": {
-                  "offset": 289,
-                  "line": 13,
-                  "column": 22
-                }
+                "type": "expression",
+                "value": "lower(full_name)"
               }
-            }
-          ],
-          "token": {
-            "start": {
-              "offset": 272,
-              "line": 13,
-              "column": 5
-            },
-            "end": {
-              "offset": 303,
-              "line": 13,
-              "column": 36
+            ],
+            "token": {
+              "end": {
+                "column": 33,
+                "line": 15,
+                "offset": 348
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 15,
+                "offset": 320
+              }
             }
           },
-          "pk": false,
-          "unique": false,
-          "type": "hash"
-        },
-        {
-          "columns": [
-            {
-              "value": "now()",
-              "type": "expression",
-              "token": {
-                "start": {
-                  "offset": 308,
-                  "line": 14,
-                  "column": 5
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 17,
+                    "line": 16,
+                    "offset": 365
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 6,
+                    "line": 16,
+                    "offset": 354
+                  }
                 },
-                "end": {
-                  "offset": 315,
-                  "line": 14,
-                  "column": 12
-                }
+                "type": "expression",
+                "value": "getdate()"
+              },
+              {
+                "token": {
+                  "end": {
+                    "column": 34,
+                    "line": 16,
+                    "offset": 382
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 19,
+                    "line": 16,
+                    "offset": 367
+                  }
+                },
+                "type": "expression",
+                "value": "upper(gender)"
+              }
+            ],
+            "token": {
+              "end": {
+                "column": 35,
+                "line": 16,
+                "offset": 383
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 16,
+                "offset": 353
               }
             }
-          ],
-          "token": {
-            "start": {
-              "offset": 308,
-              "line": 14,
-              "column": 5
-            },
-            "end": {
-              "offset": 315,
-              "line": 14,
-              "column": 12
+          },
+          {
+            "columns": [
+              {
+                "token": {
+                  "end": {
+                    "column": 29,
+                    "line": 17,
+                    "offset": 412
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 6,
+                    "line": 17,
+                    "offset": 389
+                  }
+                },
+                "type": "expression",
+                "value": "reverse(country_code)"
+              }
+            ],
+            "token": {
+              "end": {
+                "column": 30,
+                "line": 17,
+                "offset": 413
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 17,
+                "offset": 388
+              }
             }
           }
-        },
-        {
-          "columns": [
-            {
-              "value": "lower(full_name)",
-              "type": "expression",
-              "token": {
-                "start": {
-                  "offset": 329,
-                  "line": 15,
-                  "column": 14
-                },
-                "end": {
-                  "offset": 347,
-                  "line": 15,
-                  "column": 32
-                }
-              }
-            },
-            {
-              "value": "active",
-              "type": "column",
-              "token": {
-                "start": {
-                  "offset": 321,
-                  "line": 15,
-                  "column": 6
-                },
-                "end": {
-                  "offset": 327,
-                  "line": 15,
-                  "column": 12
-                }
-              }
-            }
-          ],
-          "token": {
-            "start": {
-              "offset": 320,
-              "line": 15,
-              "column": 5
-            },
-            "end": {
-              "offset": 348,
-              "line": 15,
-              "column": 33
-            }
-          }
-        },
-        {
-          "columns": [
-            {
-              "value": "getdate()",
-              "type": "expression",
-              "token": {
-                "start": {
-                  "offset": 354,
-                  "line": 16,
-                  "column": 6
-                },
-                "end": {
-                  "offset": 365,
-                  "line": 16,
-                  "column": 17
-                }
-              }
-            },
-            {
-              "value": "upper(gender)",
-              "type": "expression",
-              "token": {
-                "start": {
-                  "offset": 367,
-                  "line": 16,
-                  "column": 19
-                },
-                "end": {
-                  "offset": 382,
-                  "line": 16,
-                  "column": 34
-                }
-              }
-            }
-          ],
-          "token": {
-            "start": {
-              "offset": 353,
-              "line": 16,
-              "column": 5
-            },
-            "end": {
-              "offset": 383,
-              "line": 16,
-              "column": 35
-            }
-          }
-        },
-        {
-          "columns": [
-            {
-              "value": "reverse(country_code)",
-              "type": "expression",
-              "token": {
-                "start": {
-                  "offset": 389,
-                  "line": 17,
-                  "column": 6
-                },
-                "end": {
-                  "offset": 412,
-                  "line": 17,
-                  "column": 29
-                }
-              }
-            }
-          ],
-          "token": {
-            "start": {
-              "offset": 388,
-              "line": 17,
-              "column": 5
-            },
-            "end": {
-              "offset": 413,
-              "line": 17,
-              "column": 30
-            }
+        ],
+        "name": "user_partial",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 19,
+            "offset": 419
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
           }
         }
-      ],
-      "checks": []
+      }
+    ],
+    "tables": [
+      {
+        "fields": [
+          {
+            "increment": false,
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 22,
+                "offset": 448
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 22,
+                "offset": 437
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "users",
+        "partials": [
+          {
+            "name": "user_partial",
+            "order": 1,
+            "token": {
+              "end": {
+                "column": 16,
+                "line": 23,
+                "offset": 464
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 23,
+                "offset": 451
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 24,
+            "offset": 466
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 21,
+            "offset": 421
+          }
+        }
+      }
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 25,
+        "offset": 467
+      },
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
     }
-  ],
-  "records": [],
-  "diagramViews": []
+  }
 }

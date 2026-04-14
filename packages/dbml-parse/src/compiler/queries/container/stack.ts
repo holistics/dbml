@@ -1,36 +1,50 @@
-import type Compiler from '../../index';
-import { findLastIndex, last } from 'lodash-es';
 import {
-  SyntaxNode,
+  findLastIndex, last,
+} from 'lodash-es';
+import {
+  getMemberChain,
+} from '@/core/parser/utils';
+import {
+  BlockExpressionNode,
+  CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  PrefixExpressionNode,
+  IdentiferStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
+  PrefixExpressionNode,
+  SyntaxNode,
   TupleExpressionNode,
-  CommaExpressionNode,
-  BlockExpressionNode,
-  IdentiferStreamNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
-import { getMemberChain } from '@/core/parser/utils';
+} from '@/core/types/nodes';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import type Compiler from '../../index';
 
 export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
   const tokens = this.token.flatStream();
-  const { index: startIndex, token } = this.container.token(offset);
+  const {
+    index: startIndex, token,
+  } = this.container.token(offset);
   const validIndex = startIndex === undefined
     ? -1
     : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);
 
   if (validIndex === -1) {
-    return [this.parse.ast()];
+    return [
+      this.parse.ast(),
+    ];
   }
 
   const searchOffset = tokens[validIndex].start;
 
   let curNode: Readonly<SyntaxNode> = this.parse.ast();
-  const res: SyntaxNode[] = [curNode];
+  const res: SyntaxNode[] = [
+    curNode,
+  ];
 
   while (true) {
     const memberChain = getMemberChain(curNode);

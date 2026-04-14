@@ -1,7 +1,6 @@
-import { bench, describe } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-
+import { bench, describe } from 'vitest';
 import importer from '../src/import';
 
 const mySQL = fs.readFileSync(path.join(process.cwd(), './__benchmarks__/mysql.sql'), 'utf-8');

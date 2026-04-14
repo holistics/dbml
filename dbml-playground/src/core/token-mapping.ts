@@ -10,7 +10,9 @@
  * - Single Responsibility: Only handles token-position mapping
  */
 import * as monaco from 'monaco-editor';
-import type { Token, TokenMetadata } from '@/types';
+import type {
+  Token, TokenMetadata,
+} from '@/types';
 
 // Implementation-specific map interfaces (different from the centralized types)
 interface LexerToDbmlMapInternal {
@@ -106,7 +108,12 @@ export class TokenMappingService {
 
       // Check if token overlaps with the selected range
       if (this.rangesOverlap(
-        { startLine, startColumn, endLine, endColumn },
+        {
+          startLine,
+          startColumn,
+          endLine,
+          endColumn,
+        },
         {
           startLine: tokenStart.line,
           startColumn: tokenStart.column,
@@ -253,8 +260,14 @@ export class TokenMappingService {
    * Check if two ranges overlap
    */
   private rangesOverlap (
-    range1: { startLine: number; startColumn: number; endLine: number; endColumn: number },
-    range2: { startLine: number; startColumn: number; endLine: number; endColumn: number },
+    range1: { startLine: number;
+      startColumn: number;
+      endLine: number;
+      endColumn: number; },
+    range2: { startLine: number;
+      startColumn: number;
+      endLine: number;
+      endColumn: number; },
   ): boolean {
     // Handle single line case
     if (range1.startLine === range1.endLine && range2.startLine === range2.endLine) {

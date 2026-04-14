@@ -1,4 +1,6 @@
-import { isValidIdentifier, addDoubleQuoteIfNeeded } from '@/compiler/index';
+import {
+  isValidIdentifier, addDoubleQuoteIfNeeded,
+} from '@/compiler/index';
 
 describe('isValidIdentifier', () => {
   test('should return true for simple alphanumeric identifier', () => {

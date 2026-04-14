@@ -1,11 +1,19 @@
-import { CompileError } from '../../../errors';
-import { ElementBinder } from '../types';
+import {
+  CompileError,
+} from '@/core/types/errors';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
-} from '../../../parser/nodes';
-import { SyntaxToken } from '../../../lexer/tokens';
-import { pickBinder } from '../utils';
-import SymbolFactory from '../../symbol/factory';
+} from '../../../types/nodes';
+import {
+  SyntaxToken,
+} from '../../../types/tokens';
+import {
+  ElementBinder,
+} from '../types';
+import {
+  pickBinder,
+} from '../utils';
 
 export default class EnumBinder implements ElementBinder {
   private symbolFactory: SymbolFactory;
@@ -34,7 +42,7 @@ export default class EnumBinder implements ElementBinder {
       return [];
     }
 
-    const subs = body.body.filter((e) => e instanceof FunctionApplicationNode);
+    const subs = body.body.filter((e) => e instanceof ElementDeclarationNode);
 
     return this.bindSubElements(subs as ElementDeclarationNode[]);
   }
