@@ -6,6 +6,7 @@ import exporter from './export';
 import {
   renameTable,
   syncDiagramView,
+  findDiagramViewBlocks,
 } from './transform';
 import { VERSION } from './utils/version';
 
@@ -14,6 +15,7 @@ export {
   exporter,
   renameTable,
   syncDiagramView,
+  findDiagramViewBlocks,
   ModelExporter,
   CompilerError,
   Parser,

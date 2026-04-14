@@ -8,6 +8,8 @@ export function renameTable(
   dbmlCode: string,
 ): string;
 
+export function findDiagramViewBlocks(dbmlCode: string): DiagramViewBlock[];
+
 export function syncDiagramView(
   dbmlCode: string,
   operations: DiagramViewSyncOperation[],
