@@ -328,7 +328,9 @@ function renameRealDeclaration (
     if (ref === declNameNode) continue; // already handled above
     const fp = ref.filepath;
     const src = compiler.layout.getSource(fp) ?? '';
-    for (const e of findReplacements([ref], oldSchema, oldTable, newFormatted, src)) {
+    for (const e of findReplacements([
+      ref,
+    ], oldSchema, oldTable, newFormatted, src)) {
       addEdit(fp, e);
     }
   }
@@ -345,7 +347,9 @@ function renameRealDeclaration (
       const useRefs = compiler.symbolReferences(useSym).getValue();
       for (const ref of useRefs) {
         if (ref.filepath.absolute !== fp.absolute) continue;
-        for (const e of findReplacements([ref], oldSchema, oldTable, newFormatted, src)) {
+        for (const e of findReplacements([
+          ref,
+        ], oldSchema, oldTable, newFormatted, src)) {
           addEdit(fp, e);
         }
       }

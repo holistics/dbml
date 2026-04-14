@@ -83,7 +83,9 @@ export const useModule: GlobalModule = {
 
     if (!compiler.layout.exists(importPath)) return Report.create(
       undefined,
-      [new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toString()}. Does the file exist?`, node)],
+      [
+        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toString()}. Does the file exist?`, node),
+      ],
     );
 
     const leftNode = node.parentOfKind(InfixExpressionNode)?.leftExpression;
@@ -92,7 +94,9 @@ export const useModule: GlobalModule = {
       if (!parentSymbol) return Report.create(undefined);
 
       return lookupMember(compiler, parentSymbol, name, {
-        kinds: [symbolKind],
+        kinds: [
+          symbolKind,
+        ],
         errorNode: node,
       });
     }
@@ -102,7 +106,9 @@ export const useModule: GlobalModule = {
 
     return Report.create(
       undefined,
-      [new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toString()}`, node)],
+      [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toString()}`, node),
+      ],
     );
   },
 

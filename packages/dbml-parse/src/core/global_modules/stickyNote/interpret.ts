@@ -42,7 +42,11 @@ export class StickyNoteInterpreter {
 
   interpret (): Report<Note> {
     this.note.token = getTokenPosition(this.declarationNode);
-    const errors = [...this.interpretName(this.declarationNode.name), ...this.interpretSettingList(this.declarationNode.attributeList), ...this.interpretBody(this.declarationNode.body as BlockExpressionNode)];
+    const errors = [
+      ...this.interpretName(this.declarationNode.name),
+      ...this.interpretSettingList(this.declarationNode.attributeList),
+      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
+    ];
 
     return new Report(this.note as Note, errors);
   }
@@ -69,13 +73,20 @@ export class StickyNoteInterpreter {
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     if (fields.length !== 1 || subs.length > 0) {
-      return [new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NOTE, 'Invalid note syntax', body),
+      ];
     }
 
-    return [...this.interpretNote(fields[0] as FunctionApplicationNode)];
+    return [
+      ...this.interpretNote(fields[0] as FunctionApplicationNode),
+    ];
   }
 
   private interpretNote (note: FunctionApplicationNode): CompileError[] {

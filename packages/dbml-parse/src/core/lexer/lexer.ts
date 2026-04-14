@@ -264,7 +264,10 @@ export default class Lexer {
     }
 
     let prevValidToken = this.tokens[i];
-    prevValidToken.leadingInvalid = [...leadingInvalidList, ...prevValidToken.leadingInvalid];
+    prevValidToken.leadingInvalid = [
+      ...leadingInvalidList,
+      ...prevValidToken.leadingInvalid,
+    ];
 
     for (; i < this.tokens.length; i += 1) {
       const token = this.tokens[i];
@@ -393,7 +396,10 @@ export default class Lexer {
   operator (c: string) {
     switch (c) {
       case '<':
-        if (['>', '='].includes(this.peek()!)) this.advance(); // <, >, <=
+        if ([
+          '>',
+          '=',
+        ].includes(this.peek()!)) this.advance(); // <, >, <=
         break;
       case '>':
         if (this.peek() === '=') this.advance(); // >, >=

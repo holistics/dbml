@@ -22,7 +22,10 @@ export function isAtStartOfLine (previous: SyntaxToken, token: SyntaxToken): boo
 export function hasTrailingSpaces (token: SyntaxToken): boolean {
   return token.trailingTrivia.find(({
     kind,
-  }) => [SyntaxTokenKind.SPACE, SyntaxTokenKind.TAB].includes(kind)) !== undefined;
+  }) => [
+    SyntaxTokenKind.SPACE,
+    SyntaxTokenKind.TAB,
+  ].includes(kind)) !== undefined;
 }
 
 export function getTokenFullEnd (token: SyntaxToken): number {
@@ -36,7 +39,10 @@ export function getTokenFullStart (token: SyntaxToken): number {
 }
 
 export function isComment (token: SyntaxToken): boolean {
-  return [SyntaxTokenKind.SINGLE_LINE_COMMENT, SyntaxTokenKind.MULTILINE_COMMENT].includes(
+  return [
+    SyntaxTokenKind.SINGLE_LINE_COMMENT,
+    SyntaxTokenKind.MULTILINE_COMMENT,
+  ].includes(
     token.kind,
   );
 }

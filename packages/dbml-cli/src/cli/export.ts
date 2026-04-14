@@ -6,7 +6,7 @@ import {
   Compiler, Filepath,
 } from '@dbml/parse';
 import chalk from 'chalk';
-import {
+import type {
   Command,
 } from 'commander';
 import figures from 'figures';

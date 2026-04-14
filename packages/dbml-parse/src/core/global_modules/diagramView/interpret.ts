@@ -177,7 +177,9 @@ export class DiagramViewInterpreter {
 
       if (schema) {
         const sym = lookupMember(this.compiler, schema, tableName, {
-          kinds: [SymbolKind.Table],
+          kinds: [
+            SymbolKind.Table,
+          ],
           ignoreNotFound: true,
         }).getValue();
         if (sym) {
@@ -206,7 +208,9 @@ export class DiagramViewInterpreter {
     // and resolves through imported symbols.
     const rawName = varNames[0];
     const sym = lookupInDefaultSchema(this.compiler, programSymbol, rawName, {
-      kinds: [SymbolKind.Table],
+      kinds: [
+        SymbolKind.Table,
+      ],
       ignoreNotFound: true,
     }).getValue();
 

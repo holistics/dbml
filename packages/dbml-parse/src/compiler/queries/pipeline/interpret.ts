@@ -107,7 +107,10 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
 
   const files: Record<string, Database> = {};
 
-  for (const [fileId, db] of perFile) {
+  for (const [
+    fileId,
+    db,
+  ] of perFile) {
     files[fileId] = db;
 
     // Merge into flat items (only local elements, not externals)
@@ -153,31 +156,68 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
   // Start with local items (identity mapping in rename map)
   const reconciled: Database = {
     ...fileDb,
-    tables: [...fileDb.tables],
-    notes: [...fileDb.notes],
-    refs: [...fileDb.refs],
-    enums: [...fileDb.enums],
-    tableGroups: [...fileDb.tableGroups],
-    aliases: [...fileDb.aliases],
-    tablePartials: [...fileDb.tablePartials],
-    records: [...fileDb.records],
+    tables: [
+      ...fileDb.tables,
+    ],
+    notes: [
+      ...fileDb.notes,
+    ],
+    refs: [
+      ...fileDb.refs,
+    ],
+    enums: [
+      ...fileDb.enums,
+    ],
+    tableGroups: [
+      ...fileDb.tableGroups,
+    ],
+    aliases: [
+      ...fileDb.aliases,
+    ],
+    tablePartials: [
+      ...fileDb.tablePartials,
+    ],
+    records: [
+      ...fileDb.records,
+    ],
   };
 
   for (const t of fileDb.tables) renameMap.set(canonicalElementKey(t.schemaName, t.name), t.name);
 
   // Reconcile externals: visibleNames[0] is the primary name, the rest become aliases.
   const externalKinds: Array<[ElementRef[], AliasKind]> = [
-    [fileDb.externals.tables, AliasKind.Table],
-    [fileDb.externals.enums, AliasKind.Enum],
-    [fileDb.externals.tableGroups, AliasKind.TableGroup],
-    [fileDb.externals.tablePartials, AliasKind.TablePartial],
-    [fileDb.externals.notes, AliasKind.Note],
+    [
+      fileDb.externals.tables,
+      AliasKind.Table,
+    ],
+    [
+      fileDb.externals.enums,
+      AliasKind.Enum,
+    ],
+    [
+      fileDb.externals.tableGroups,
+      AliasKind.TableGroup,
+    ],
+    [
+      fileDb.externals.tablePartials,
+      AliasKind.TablePartial,
+    ],
+    [
+      fileDb.externals.notes,
+      AliasKind.Note,
+    ],
   ];
 
-  for (const [refs, kind] of externalKinds) {
+  for (const [
+    refs,
+    kind,
+  ] of externalKinds) {
     for (const ext of refs) {
       if (ext.visibleNames.length === 0) continue;
-      const [primaryVisible, ...restVisible] = ext.visibleNames;
+      const [
+        primaryVisible,
+        ...restVisible
+      ] = ext.visibleNames;
       const primaryName = primaryVisible.name;
 
       // Find canonical item from merged items

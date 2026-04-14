@@ -133,7 +133,13 @@ function nodeRefereeOfDiagramViewTableRef (
       if (left.isKind(SymbolKind.Schema)) {
         const isTerminal = isTerminalAccessFragment(node);
         return lookupMember(compiler, left, name, {
-          kinds: isTerminal ? [SymbolKind.Table] : [SymbolKind.Schema],
+          kinds: isTerminal
+            ? [
+                SymbolKind.Table,
+              ]
+            : [
+                SymbolKind.Schema,
+              ],
           errorNode: node,
         });
       }
@@ -141,7 +147,9 @@ function nodeRefereeOfDiagramViewTableRef (
     }
     // Left side of access: always a Schema
     return lookupMember(compiler, globalSymbol, name, {
-      kinds: [SymbolKind.Schema],
+      kinds: [
+        SymbolKind.Schema,
+      ],
       errorNode: node,
     });
   }
@@ -152,7 +160,9 @@ function nodeRefereeOfDiagramViewTableRef (
     for (const schema of schemas.getValue()) {
       if (!(schema instanceof SchemaSymbol)) continue;
       const result = lookupMember(compiler, schema, name, {
-        kinds: [SymbolKind.Table],
+        kinds: [
+          SymbolKind.Table,
+        ],
         ignoreNotFound: true,
         errorNode: node,
       });
@@ -171,7 +181,9 @@ function nodeRefereeOfDiagramViewTableRef (
   }
 
   return lookupMember(compiler, globalSymbol, name, {
-    kinds: [SymbolKind.Table],
+    kinds: [
+      SymbolKind.Table,
+    ],
     ignoreNotFound: false,
     errorNode: node,
   });
@@ -188,7 +200,9 @@ function nodeRefereeOfDiagramViewSimpleRef (
 ): Report<NodeSymbol | undefined> {
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
   return lookupInDefaultSchema(compiler, globalSymbol, name, {
-    kinds: [kind],
+    kinds: [
+      kind,
+    ],
     errorNode: node,
   });
 }
@@ -203,7 +217,9 @@ function nodeRefereeOfDiagramViewSchemaRef (
 ): Report<NodeSymbol | undefined> {
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
   return lookupMember(compiler, globalSymbol, name, {
-    kinds: [SymbolKind.Schema],
+    kinds: [
+      SymbolKind.Schema,
+    ],
     errorNode: node,
   });
 }

@@ -75,11 +75,15 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
       entries.add(prefix + (slash === -1 ? rest : rest.slice(0, slash)));
     }
 
-    return [...entries].sort().map(Filepath.from);
+    return [
+      ...entries,
+    ].sort().map(Filepath.from);
   }
 
   getEntryPoints (): Filepath[] {
-    return [...this.files.keys()]
+    return [
+      ...this.files.keys(),
+    ]
       .map(Filepath.from)
       .sort((a, b) => a.absolute.localeCompare(b.absolute));
   }

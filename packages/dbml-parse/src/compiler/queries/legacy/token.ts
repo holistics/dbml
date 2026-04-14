@@ -11,7 +11,11 @@ import type Compiler from '../../index';
 
 export function flatStream (this: Compiler): readonly SyntaxToken[] {
   return (this.parseFile(DEFAULT_ENTRY).getValue().tokens)
-    .flatMap((token: SyntaxToken) => [...token.leadingInvalid, token, ...token.trailingInvalid]);
+    .flatMap((token: SyntaxToken) => [
+      ...token.leadingInvalid,
+      token,
+      ...token.trailingInvalid,
+    ]);
 }
 
 export function invalidStream (this: Compiler): readonly SyntaxToken[] {

@@ -196,7 +196,11 @@ export function isRelationshipOp (op?: string): op is '>' | '<' | '-' | '<>' {
 
 export function getBody (node?: ElementDeclarationNode): (FunctionApplicationNode | ElementDeclarationNode)[] {
   if (!node?.body) return [];
-  return node.body instanceof BlockExpressionNode ? node.body.body : [node.body];
+  return node.body instanceof BlockExpressionNode
+    ? node.body.body
+    : [
+        node.body,
+      ];
 }
 
 // Return whether `node` is an ElementDeclarationNode of kind `kind`
@@ -280,7 +284,9 @@ export function destructureMemberAccessExpression (node?: SyntaxNode): SyntaxNod
   if (!node) return undefined;
 
   if (!isAccessExpression(node)) {
-    return [node];
+    return [
+      node,
+    ];
   }
 
   const fragments = destructureMemberAccessExpression(node.leftExpression);
@@ -353,12 +359,16 @@ export function destructureIndexNode (node?: SyntaxNode): {
   if (isValidIndexName(node)) {
     return node instanceof FunctionExpressionNode
       ? {
-          functional: [node],
+          functional: [
+            node,
+          ],
           nonFunctional: [],
         }
       : {
           functional: [],
-          nonFunctional: [node],
+          nonFunctional: [
+            node,
+          ],
         };
   }
 
@@ -448,7 +458,9 @@ export function destructureCallExpression (
 
   let args: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
   if (isTupleOfVariables(node.argumentList)) {
-    args = [...node.argumentList.elementList];
+    args = [
+      ...node.argumentList.elementList,
+    ];
   }
 
   return {

@@ -142,14 +142,18 @@ export default class RecordsValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', aliasNode),
+      ];
     }
     return [];
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList),
+      ];
     }
     return [];
   }
@@ -177,8 +181,14 @@ export default class RecordsValidator {
       return this.validateDataRow(body);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateDataRows(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateDataRows(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private validateDataRows (rows: FunctionApplicationNode[]): CompileError[] {

@@ -34,7 +34,9 @@ export default class EnumValidator {
       errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_NAME, 'An enum field must be an identifier or a quoted identifier', node.callee));
     }
 
-    const args = [...node.args];
+    const args = [
+      ...node.args,
+    ];
     if (last(args) instanceof ListExpressionNode) {
       const aggReport = aggregateSettingList(last(args) as ListExpressionNode);
       errors.push(...aggReport.getErrors());
@@ -65,7 +67,9 @@ export default class EnumValidator {
   private validateContext (): CompileError[] {
     const parent = this.declarationNode.parent;
     if (parent instanceof ElementDeclarationNode) {
-      return [new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'An Enum can only appear top-level', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_PROJECT_CONTEXT, 'An Enum can only appear top-level', this.declarationNode),
+      ];
     }
 
     return [];
@@ -73,13 +77,19 @@ export default class EnumValidator {
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
-      return [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', this.declarationNode),
+      ];
     }
     if (nameNode instanceof WildcardNode) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as an Enum name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as an Enum name', nameNode),
+      ];
     }
     if (!isValidName(nameNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_NAME, 'An Enum name must be of the form <enum> or <schema>.<enum>', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'An Enum name must be of the form <enum> or <schema>.<enum>', nameNode),
+      ];
     }
 
     return [];
@@ -87,7 +97,9 @@ export default class EnumValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Enum shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Enum shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -95,7 +107,9 @@ export default class EnumValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Enum shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Enum shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -106,16 +120,26 @@ export default class EnumValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return this.validateFields([body]);
+      return this.validateFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     if (fields.length === 0) {
-      return [new CompileError(CompileErrorCode.EMPTY_ENUM, 'An Enum must have at least one element', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.EMPTY_ENUM, 'An Enum must have at least one element', this.declarationNode),
+      ];
     }
 
     const errors: CompileError[] = [];
@@ -126,7 +150,9 @@ export default class EnumValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_NAME, 'An enum field must be an identifier or a quoted identifier', field.callee));
       }
 
-      const args = [...field.args];
+      const args = [
+        ...field.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSettings(last(args) as ListExpressionNode));
         args.pop();

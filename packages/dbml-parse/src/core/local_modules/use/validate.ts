@@ -25,12 +25,17 @@ export default class UseDeclarationValidator {
   }
 
   validate (): CompileError[] {
-    return [...this.validateContext(), ...this.validateBody()];
+    return [
+      ...this.validateContext(),
+      ...this.validateBody(),
+    ];
   }
 
   private validateContext (): CompileError[] {
     if (!(this.declarationNode.parent instanceof ProgramNode)) {
-      return [new CompileError(CompileErrorCode.INVALID_USE_CONTEXT, '\'use\' must appear at the top level', this.declarationNode)];
+      return [
+        new CompileError(CompileErrorCode.INVALID_USE_CONTEXT, '\'use\' must appear at the top level', this.declarationNode),
+      ];
     }
     return [];
   }
@@ -62,6 +67,10 @@ export default class UseDeclarationValidator {
       errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, `'${specifier.importKind.value}' is not a valid specifier type`, specifier.importKind));
     }
 
-    return [...errors, ...this.compiler.nodeFullname(specifier).getErrors(), ...this.compiler.nodeAlias(specifier).getErrors()];
+    return [
+      ...errors,
+      ...this.compiler.nodeFullname(specifier).getErrors(),
+      ...this.compiler.nodeAlias(specifier).getErrors(),
+    ];
   }
 }

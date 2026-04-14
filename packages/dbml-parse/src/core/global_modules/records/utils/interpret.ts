@@ -40,8 +40,12 @@ export function buildMergedTableFromElement (tableNode: ElementDeclarationNode, 
   const tableMembers = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED);
   if (!tableMembers) return undefined;
 
-  const indexes = [...baseTable.indexes];
-  const checks = [...baseTable.checks];
+  const indexes = [
+    ...baseTable.indexes,
+  ];
+  const checks = [
+    ...baseTable.checks,
+  ];
   let headerColor = baseTable.headerColor;
   let note = baseTable.note;
 
@@ -73,7 +77,10 @@ export function buildMergedTableFromElement (tableNode: ElementDeclarationNode, 
     }
   }
 
-  const directFieldMap = new Map(baseTable.fields.map((f) => [f.name, f]));
+  const directFieldMap = new Map(baseTable.fields.map((f) => [
+    f.name,
+    f,
+  ]));
   const directFieldNames = new Set(directFieldMap.keys());
 
   // Collect all fields in declaration order
@@ -104,7 +111,9 @@ export function buildMergedTableFromElement (tableNode: ElementDeclarationNode, 
 
   // Use uniqBy to keep last occurrence of each field (later partials win)
   // Process from end to start, then reverse to maintain declaration order
-  const fields = uniqBy([...allFields].reverse(), 'name').reverse();
+  const fields = uniqBy([
+    ...allFields,
+  ].reverse(), 'name').reverse();
 
   return {
     ...baseTable,
@@ -128,12 +137,16 @@ export function getEnumMembers (column: Column, compiler: Compiler): string[] {
   let enumSymbol: NodeSymbol | undefined;
   if (column.type.schemaName) {
     const schemaResult = lookupMember(compiler, programSymbol, column.type.schemaName, {
-      kinds: [SymbolKind.Schema],
+      kinds: [
+        SymbolKind.Schema,
+      ],
       ignoreNotFound: true,
     });
     if (schemaResult.getValue()) {
       enumSymbol = lookupMember(compiler, schemaResult.getValue()!, column.type.type_name, {
-        kinds: [SymbolKind.Enum],
+        kinds: [
+          SymbolKind.Enum,
+        ],
         ignoreNotFound: true,
       }).getValue();
     }
@@ -141,7 +154,9 @@ export function getEnumMembers (column: Column, compiler: Compiler): string[] {
 
   if (!enumSymbol) {
     enumSymbol = lookupInDefaultSchema(compiler, programSymbol, column.type.type_name, {
-      kinds: [SymbolKind.Enum],
+      kinds: [
+        SymbolKind.Enum,
+      ],
       ignoreNotFound: true,
     }).getValue();
   }
@@ -196,7 +211,9 @@ export function extractInlineRefsFromTablePartials (table: Table, tablePartials:
   const originalFieldNames = new Set(table.fields.map((f) => f.name));
 
   // Process partials in the same order as mergeTableAndPartials
-  for (const tablePartial of [...table.partials].reverse()) {
+  for (const tablePartial of [
+    ...table.partials,
+  ].reverse()) {
     const {
       name,
     } = tablePartial;
@@ -226,7 +243,9 @@ export function extractInlineRefsFromTablePartials (table: Table, tablePartials:
             {
               schemaName: table.schemaName,
               tableName: table.name,
-              fieldNames: [field.name],
+              fieldNames: [
+                field.name,
+              ],
               token: field.token,
               relation: multiplicities[0],
             },

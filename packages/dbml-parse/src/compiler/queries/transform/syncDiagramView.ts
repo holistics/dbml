@@ -82,7 +82,9 @@ function generateDiagramViewBlock (
   name: string,
   visibleEntities: DiagramViewSyncOperation['visibleEntities'],
 ): string {
-  const lines: string[] = [`DiagramView ${addDoubleQuoteIfNeeded(name)} {`];
+  const lines: string[] = [
+    `DiagramView ${addDoubleQuoteIfNeeded(name)} {`,
+  ];
 
   // Tables
   if (visibleEntities?.tables !== undefined) {

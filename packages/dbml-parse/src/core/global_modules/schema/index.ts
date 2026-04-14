@@ -51,8 +51,13 @@ export const schemaModule: GlobalModule = {
     const usableMembers = compiler.fileUsableMembers(symbol).getFiltered(UNHANDLED);
     if (!usableMembers) return Report.create([]);
 
-    const members = [...usableMembers.nonSchemaMembers];
-    const childSchemas = new Map(usableMembers.schemaMembers.map((m) => [m.name, m]));
+    const members = [
+      ...usableMembers.nonSchemaMembers,
+    ];
+    const childSchemas = new Map(usableMembers.schemaMembers.map((m) => [
+      m.name,
+      m,
+    ]));
 
     // Process reuses (transitive - re-exported to importers)
     for (const specifier of usableMembers.reuses.selective) {
@@ -79,7 +84,9 @@ export const schemaModule: GlobalModule = {
     members.push(...childSchemas.values());
 
     // Expand TableGroups to bring their tables into scope
-    const membersWithExpansions: NodeSymbol[] = [...members];
+    const membersWithExpansions: NodeSymbol[] = [
+      ...members,
+    ];
     for (const member of members) {
       if (member.isKind(SymbolKind.TableGroup)) {
         membersWithExpansions.push(...expandTableGroup(compiler, member));
@@ -121,7 +128,12 @@ export const schemaModule: GlobalModule = {
         ? compiler.nodeAlias(member.declaration).getFiltered(UNHANDLED)
         : undefined;
 
-      const names = [...new Set([canonicalName, alias].filter(Boolean))];
+      const names = [
+        ...new Set([
+          canonicalName,
+          alias,
+        ].filter(Boolean)),
+      ];
       for (const name of names) {
         const key = `${member.kind}:${name}`;
         const existing = seen.get(key);
@@ -251,7 +263,9 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
   } = usableSymbols;
   let currentSchema: SchemaSymbol | undefined;
 
-  const fullname = [...schemaFullname];
+  const fullname = [
+    ...schemaFullname,
+  ];
   while (fullname.length > 0) {
     const currentSchemaName = fullname.shift();
     currentSchema = schemaMembers.find((member) => member.name === currentSchemaName);

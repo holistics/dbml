@@ -37,7 +37,10 @@ export default class DBMLDiagnosticsProvider {
    * Get all diagnostics (errors and warnings) from the current compilation
    */
   provideDiagnostics (filepath?: Filepath): Diagnostic[] {
-    return [...this.provideErrors(filepath), ...this.provideWarnings(filepath)];
+    return [
+      ...this.provideErrors(filepath),
+      ...this.provideWarnings(filepath),
+    ];
   }
 
   /**

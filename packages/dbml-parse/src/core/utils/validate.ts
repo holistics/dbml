@@ -126,7 +126,11 @@ export function isValidDefaultValue (value?: SyntaxNode): boolean {
     return true;
   }
 
-  if (isExpressionAnIdentifierNode(value) && ['true', 'false', 'null'].includes(value.expression.variable.value.toLowerCase())) {
+  if (isExpressionAnIdentifierNode(value) && [
+    'true',
+    'false',
+    'null',
+  ].includes(value.expression.variable.value.toLowerCase())) {
     return true;
   }
 
@@ -251,7 +255,9 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
     if (existing) {
       existing.push(attribute);
     } else {
-      map[name] = [attribute];
+      map[name] = [
+        attribute,
+      ];
     }
   });
 

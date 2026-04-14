@@ -40,5 +40,7 @@ export function topLevelSchemaMembers (this: Compiler, filepath: Filepath): Sche
     }, filepath));
   }
 
-  return [...schemaMembers.values()];
+  return [
+    ...schemaMembers.values(),
+  ];
 }

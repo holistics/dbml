@@ -59,6 +59,7 @@ export interface RawDatabase {
     records: RawTableRecord[];
     tablePartials: TablePartial[];
 }
+
 declare class Database extends Element {
     dbState: DbState;
     hasDefaultSchema: boolean;

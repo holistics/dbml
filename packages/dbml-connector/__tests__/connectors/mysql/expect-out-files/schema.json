@@ -1293,11 +1293,11 @@
         "type": "BTREE",
         "columns": [
           {
-            "value": "city",
+            "value": "age",
             "type": "column"
           },
           {
-            "value": "age",
+            "value": "city",
             "type": "column"
           }
         ],

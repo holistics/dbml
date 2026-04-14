@@ -6,6 +6,9 @@ import {
   importer,
 } from '@dbml/core';
 import chalk from 'chalk';
+import {
+  Command,
+} from 'commander';
 import figures from 'figures';
 import logger from '../helpers/logger';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
@@ -15,12 +18,7 @@ import {
   resolvePaths,
 } from './utils';
 
-interface Program {
-  args: string[];
-  opts(): Record<string, unknown>;
-}
-
-export default async function connectionHandler (program: Program) {
+export default async function connectionHandler (program: Command) {
   try {
     const {
       connection, databaseType,
@@ -33,10 +31,10 @@ export default async function connectionHandler (program: Program) {
       OutputConsolePlugin.write(res);
     } else if (opts.outFile) {
       const res = importer.generateDbml(schemaJson);
-      (new OutputFilePlugin(resolvePaths(opts.outFile as string) as string)).write(res);
+      (new OutputFilePlugin(resolvePaths(opts.outFile))).write(res);
 
       // bearer:disable javascript_lang_logger
-      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection: ${path.basename(opts.outFile as string)}`);
+      console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection: ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
     logger.error(error);

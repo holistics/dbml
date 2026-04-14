@@ -31,12 +31,18 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     // Ensure binding is done before resolving references
     this.compiler.bindProject();
 
-    const containers = [...this.compiler.container.stack(offset)];
+    const containers = [
+      ...this.compiler.container.stack(offset),
+    ];
     while (containers.length !== 0) {
       const node = containers.pop();
       if (
         node
-        && [SyntaxNodeKind.ELEMENT_DECLARATION, SyntaxNodeKind.FUNCTION_APPLICATION, SyntaxNodeKind.PRIMARY_EXPRESSION].includes(node?.kind)
+        && [
+          SyntaxNodeKind.ELEMENT_DECLARATION,
+          SyntaxNodeKind.FUNCTION_APPLICATION,
+          SyntaxNodeKind.PRIMARY_EXPRESSION,
+        ].includes(node?.kind)
       ) {
         // Try nodeSymbol first (for declarations), then nodeReferee (for reference positions)
         const symbol = this.compiler.nodeSymbol(node).getFiltered(UNHANDLED) ?? extractReferee(this.compiler, node);

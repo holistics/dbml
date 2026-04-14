@@ -79,10 +79,14 @@ export interface TokenMetadata {
   tokenIndex: number;
   kind: string;
   value: string;
-  startPosition: { line: number;
-    column: number; };
-  endPosition: { line: number;
-    column: number; };
+  startPosition: {
+    line: number;
+    column: number;
+  };
+  endPosition: {
+    line: number;
+    column: number;
+  };
   monacoRange: any; // monaco.Range
 }
 
@@ -95,15 +99,21 @@ export interface DbmlToLexerMap {
 }
 
 export interface TokenNavigationEvents {
-  'navigate:token-to-dbml': { tokenIndex: number;
-    modifier: 'cmd' | 'ctrl' | 'button'; };
-  'navigate:dbml-to-token': { line: number;
+  'navigate:token-to-dbml': {
+    tokenIndex: number;
+    modifier: 'cmd' | 'ctrl' | 'button';
+  };
+  'navigate:dbml-to-token': {
+    line: number;
     column: number;
-    modifier: 'cmd' | 'ctrl'; };
-  'navigate:range-to-tokens': { startLine: number;
+    modifier: 'cmd' | 'ctrl';
+  };
+  'navigate:range-to-tokens': {
+    startLine: number;
     startCol: number;
     endLine: number;
-    endCol: number; };
+    endCol: number;
+  };
 }
 
 // ===== AST & SEMANTIC TYPES =====
@@ -122,12 +132,16 @@ export interface SemanticASTNode {
 
   // Source position using parser's Position interface
   sourcePosition?: {
-    start: { line: number;
+    start: {
+      line: number;
       column: number;
-      offset: number; };
-    end: { line: number;
+      offset: number;
+    };
+    end: {
+      line: number;
       column: number;
-      offset: number; };
+      offset: number;
+    };
     raw?: {
       startPos: any;
       endPos: any;
@@ -212,12 +226,16 @@ export interface InterpreterTreeNodeProps {
 // ===== EVENT TYPES =====
 
 export interface NavigationPosition {
-  start: { line: number;
+  start: {
+    line: number;
     column: number;
-    offset: number; };
-  end: { line: number;
+    offset: number;
+  };
+  end: {
+    line: number;
     column: number;
-    offset: number; };
+    offset: number;
+  };
 }
 
 export interface NodeClickEvent {

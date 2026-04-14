@@ -6,7 +6,9 @@ import {
 export function reachableFiles (this: Compiler, entry: Filepath): Set<Filepath> {
   const visited = new Set<FilepathId>();
   const results = new Set<Filepath>();
-  const queue = [entry];
+  const queue = [
+    entry,
+  ];
 
   while (queue.length > 0) {
     const current = queue.shift()!;

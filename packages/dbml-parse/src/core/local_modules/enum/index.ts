@@ -49,16 +49,24 @@ export const enumModule: LocalModule = {
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
       if (!node.name) {
-        return new Report(undefined, [new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', node)]);
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'An Enum must have a name', node),
+        ]);
       }
       if (!isValidName(node.name)) {
-        return new Report(undefined, [new CompileError(CompileErrorCode.INVALID_NAME, 'An Enum name must be of the form <enum> or <schema>.<enum>', node.name)]);
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.INVALID_NAME, 'An Enum name must be of the form <enum> or <schema>.<enum>', node.name),
+        ]);
       }
       return new Report(destructureComplexVariable(node.name));
     }
     if (isElementFieldNode(node, ElementKind.Enum)) {
       const name = extractVariableFromExpression(node.callee);
-      return new Report(name ? [name] : undefined);
+      return new Report(name
+        ? [
+            name,
+          ]
+        : undefined);
     }
     return Report.create(PASS_THROUGH);
   },
@@ -66,7 +74,9 @@ export const enumModule: LocalModule = {
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
       if (node.alias) {
-        return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Enum shouldn\'t have an alias', node.alias)]);
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Enum shouldn\'t have an alias', node.alias),
+        ]);
       }
       return new Report(undefined);
     }
@@ -79,12 +89,16 @@ export const enumModule: LocalModule = {
   nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
       if (node.attributeList) {
-        return new Report({}, [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Enum shouldn\'t have a setting list', node.attributeList)]);
+        return new Report({}, [
+          new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Enum shouldn\'t have a setting list', node.attributeList),
+        ]);
       }
       return new Report({});
     }
     if (isElementFieldNode(node, ElementKind.Enum)) {
-      const args = [...node.args];
+      const args = [
+        ...node.args,
+      ];
       let settingsList: ListExpressionNode | undefined;
       if (last(args) instanceof ListExpressionNode) {
         settingsList = last(args) as ListExpressionNode;
@@ -99,7 +113,10 @@ export const enumModule: LocalModule = {
       const settingMap = settingsReport.getValue();
       const clean: Settings = {};
 
-      for (const [name, attrs] of Object.entries(settingMap)) {
+      for (const [
+        name,
+        attrs,
+      ] of Object.entries(settingMap)) {
         switch (name) {
           case SettingName.Note:
             if (attrs.length > 1) {

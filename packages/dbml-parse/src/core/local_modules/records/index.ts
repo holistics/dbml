@@ -99,7 +99,9 @@ export const recordsModule: LocalModule = {
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
       if (node.alias) {
-        return new Report(undefined, [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', node.alias)]);
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', node.alias),
+        ]);
       }
       return new Report(undefined);
     }
@@ -112,7 +114,9 @@ export const recordsModule: LocalModule = {
   nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
       if (node.attributeList) {
-        return new Report({}, [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', node.attributeList)]);
+        return new Report({}, [
+          new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', node.attributeList),
+        ]);
       }
       return new Report({});
     }

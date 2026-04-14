@@ -1,42 +1,32 @@
 import { get } from 'lodash-es';
-import Element, { Token, RawNote } from './element';
+import Element from './element';
 import EnumValue from './enumValue';
 import { shouldPrintSchema } from './utils';
-import Schema from './schema';
-import Field from './field';
-import DbState from './dbState';
-
-export interface RawEnum {
-  name: string;
-  token: Token;
-  values: any[];
-  note: RawNote;
-  schema: Schema;
-  noteToken?: Token | null;
-}
 
 class Enum extends Element {
-  name: string;
-  note: string | null;
-  noteToken: Token | null;
-  values: EnumValue[];
-  fields: Field[];
-  schema: Schema;
-  dbState: DbState;
-
+  /**
+   * @param {import('../../types/model_structure/enum').RawEnum} param0
+   */
   constructor ({
     name, token, values, note, schema, noteToken = null,
-  }: RawEnum) {
+  } = {}) {
     super(token);
     if (!name) {
       this.error('Enum must have a name');
     }
+    /** @type {string} */
     this.name = name;
-    this.note = note ? get(note, 'value', note) as string : null;
-    this.noteToken = note ? get(note as RawNote, 'token', noteToken) : null;
+    /** @type {string} */
+    this.note = note ? get(note, 'value', note) : null;
+    /** @type {import('../../types/model_structure/element').Token} */
+    this.noteToken = note ? get(note, 'token', noteToken) : null;
+    /** @type {import('../../types/model_structure/enumValue').default[]} */
     this.values = [];
+    /** @type {import('../../types/model_structure/field').default[]} */
     this.fields = [];
+    /** @type {import('../../types/model_structure/schema').default} */
     this.schema = schema;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.schema.dbState;
     this.generateId();
 
@@ -44,21 +34,31 @@ class Enum extends Element {
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('enumId');
   }
 
-  processValues (rawValues: any[]) {
+  /**
+   * @param {any[]} rawValues
+   */
+  processValues (rawValues) {
     rawValues.forEach((value) => {
       this.pushValue(new EnumValue({ ...value, _enum: this }));
     });
   }
 
-  pushValue (value: EnumValue) {
+  /**
+   * @param {import('../../types/model_structure/enumValue').default} value
+   */
+  pushValue (value) {
     this.checkValue(value);
     this.values.push(value);
   }
 
-  checkValue (value: EnumValue) {
+  /**
+   * @param {import('../../types/model_structure/enumValue').default} value
+   */
+  checkValue (value) {
     if (this.values.some((v) => v.name === value.name)) {
       value.error(`Enum value "${value.name}" existed in enum ${shouldPrintSchema(this.schema)
         ? `"${this.schema.name}".`
@@ -66,12 +66,18 @@ class Enum extends Element {
     }
   }
 
-  pushField (field: Field) {
+  /**
+   * @param {import('../../types/model_structure/field').default} field
+   */
+  pushField (field) {
     this.checkField(field);
     this.fields.push(field);
   }
 
-  checkField (field: Field) {
+  /**
+   * @param {import('../../types/model_structure/field').default} field
+   */
+  checkField (field) {
     if (this.fields.some((f) => f.id === field.id)) {
       this.error(`Field ${shouldPrintSchema(field.table.schema)
         ? `"${field.table.schema.name}".`
@@ -114,7 +120,10 @@ class Enum extends Element {
     };
   }
 
-  normalize (model: any) {
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
+  normalize (model) {
     model.enums[this.id] = {
       id: this.id,
       ...this.shallowExport(),

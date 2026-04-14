@@ -379,3 +379,297 @@ Table memberships {
     expect(names).toEqual(['memberships', 'roles', 'users']);
   });
 });
+
+
+describe('[example] multifile interpreter — inline ref on imported table carried to consumer', () => {
+  // source.dbml: Table accounts { id int [pk] }
+  //              Table users { id int [pk]; account_id int [ref: > accounts.id] }
+  // consumer.dbml: use { table accounts } + use { table users }
+  // Inline refs on an imported table's columns must survive in the consumer's
+  // exported schema (the inline ref is part of the table definition, not a
+  // standalone Ref, so it travels with the table).
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table accounts {
+  id int [pk]
+}
+
+Table users {
+  id int [pk]
+  account_id int [ref: > accounts.id]
+}
+`,
+    '/consumer.dbml': `
+use { table accounts } from './source.dbml'
+use { table users } from './source.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('inline ref on users.account_id appears in exported schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    const accountIdField = users.fields.find((f) => f.name === 'account_id')!;
+    expect(accountIdField.inline_refs).toHaveLength(1);
+    expect(accountIdField.inline_refs[0].tableName).toBe('accounts');
+    expect(accountIdField.inline_refs[0].fieldNames).toContain('id');
+    expect(accountIdField.inline_refs[0].relation).toBe('>');
+  });
+});
+
+
+describe('[example] multifile interpreter — standalone Ref between two imported tables', () => {
+  // Consumer imports both tables and declares a standalone Ref between them.
+  // The Ref must appear in the consumer's exported schema.
+  const { compiler, fps } = makeCompiler({
+    '/base.dbml': `
+Table users {
+  id int [pk]
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './base.dbml'
+use { table orders } from './base.dbml'
+
+Ref: orders.user_id > users.id
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('standalone Ref appears in exported schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+  });
+
+  test('Ref endpoints point to the correct tables and columns', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const ref = db.refs[0];
+    const ep = ref.endpoints;
+    const ordersEp = ep.find((e) => e.tableName === 'orders')!;
+    const usersEp = ep.find((e) => e.tableName === 'users')!;
+    expect(ordersEp).toBeDefined();
+    expect(usersEp).toBeDefined();
+    expect(ordersEp.fieldNames).toContain('user_id');
+    expect(usersEp.fieldNames).toContain('id');
+  });
+});
+
+
+describe('[example] multifile interpreter — Ref cardinality preserved across file boundary', () => {
+  // Verifies that the many-to-one cardinality (< and >) is faithfully preserved
+  // when the ref endpoints reference imported tables.
+  const { compiler, fps } = makeCompiler({
+    '/tables.dbml': `
+Table teams {
+  id int [pk]
+}
+
+Table players {
+  id int [pk]
+  team_id int
+}
+`,
+    '/consumer.dbml': `
+use { table teams } from './tables.dbml'
+use { table players } from './tables.dbml'
+
+Ref many_to_one: players.team_id > teams.id
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('Ref cardinality: players endpoint is many (*), teams endpoint is one (1)', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const ref = db.refs[0];
+    const playersEp = ref.endpoints.find((e) => e.tableName === 'players')!;
+    const teamsEp = ref.endpoints.find((e) => e.tableName === 'teams')!;
+    // '>' at players side means many (players side = '*', teams side = '1')
+    expect(playersEp.relation).toBe('*');
+    expect(teamsEp.relation).toBe('1');
+  });
+
+  test('Ref name is preserved', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs[0].name).toBe('many_to_one');
+  });
+});
+
+
+describe('[example] multifile interpreter — schema merging: tables under same named schema', () => {
+  // File A contributes auth.users; File B contributes auth.posts.
+  // Consumer imports from both and both should appear under the auth schema.
+  const { compiler, fps } = makeCompiler({
+    '/users-db.dbml': `
+Table auth.users {
+  id int [pk]
+  email varchar
+}
+`,
+    '/posts-db.dbml': `
+Table auth.posts {
+  id int [pk]
+  user_id int
+}
+`,
+    '/consumer.dbml': `
+use { table auth.users } from './users-db.dbml'
+use { table auth.posts } from './posts-db.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('both auth.users and auth.posts appear in exported tables', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const names = db.tables.map((t) => t.name);
+    expect(names).toContain('users');
+    expect(names).toContain('posts');
+  });
+
+  test('both tables carry schemaName "auth"', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    const posts = db.tables.find((t) => t.name === 'posts')!;
+    expect(users.schemaName).toBe('auth');
+    expect(posts.schemaName).toBe('auth');
+  });
+});
+
+
+describe('[example] multifile interpreter — TableGroup: member table data preserved', () => {
+  // Importing a tablegroup auto-expands member tables. Those tables must appear
+  // in the exported schema with their full field and index definitions intact.
+  const { compiler, fps } = makeCompiler({
+    '/base.dbml': `
+Table users {
+  id int [pk]
+  email varchar
+  indexes {
+    email [unique]
+  }
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+}
+
+TableGroup social {
+  users
+  posts
+}
+`,
+    '/consumer.dbml': `
+use { tablegroup social } from './base.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('both member tables appear in exported schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const names = db.tables.map((t) => t.name);
+    expect(names).toContain('users');
+    expect(names).toContain('posts');
+  });
+
+  test('users table retains its fields', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    const fieldNames = users.fields.map((f) => f.name);
+    expect(fieldNames).toContain('id');
+    expect(fieldNames).toContain('email');
+  });
+
+  test('users table retains its unique index on email', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    const emailIdx = users.indexes.find((i) => i.columns.some((c) => c.value === 'email'))!;
+    expect(emailIdx).toBeDefined();
+    expect(emailIdx.unique).toBe(true);
+  });
+
+  test('imported tablegroup appears in db.tableGroups', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tableGroups.find((g) => g.name === 'social')).toBeDefined();
+  });
+});
+
+
+describe('[example] multifile interpreter — refs with same logical endpoints via different aliases across files', () => {
+  // Two Ref declarations target the same pair of columns, but one uses the
+  // original table name and the other uses an alias. They are two distinct
+  // textual Refs — the system should include both in the exported schema.
+  //
+  // Scenario:
+  //   base.dbml:     Table users { id int [pk] }
+  //                  Table orders { id int; user_id int }
+  //   consumer.dbml: use { table users } from './base.dbml'
+  //                  use { table users as u } from './base.dbml'   ← both names visible
+  //                  use { table orders } from './base.dbml'
+  //                  Ref r1: orders.user_id > users.id
+  //                  Ref r2: orders.user_id > u.id                 ← alias endpoint
+  const { compiler, fps } = makeCompiler({
+    '/base.dbml': `
+Table users {
+  id int [pk]
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './base.dbml'
+use { table users as u } from './base.dbml'
+use { table orders } from './base.dbml'
+
+Ref r1: orders.user_id > users.id
+Ref r2: orders.user_id > u.id
+`,
+  });
+
+  test('no binding errors — both endpoint names resolve', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('both Refs appear in exported schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(2);
+  });
+
+  test('r1 targets the original table name; r2 targets the alias', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const r1 = db.refs.find((r) => r.name === 'r1')!;
+    const r2 = db.refs.find((r) => r.name === 'r2')!;
+    expect(r1).toBeDefined();
+    expect(r2).toBeDefined();
+    expect(r1.endpoints.find((e) => e.tableName === 'users')).toBeDefined();
+    expect(r2.endpoints.find((e) => e.tableName === 'u')).toBeDefined();
+  });
+});

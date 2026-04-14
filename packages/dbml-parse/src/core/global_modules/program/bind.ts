@@ -51,9 +51,11 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
+      const parseResult = this.compiler.parseFile(filepath);
+      if (parseResult.hasValue(UNHANDLED)) continue;
       const {
         ast,
-      } = this.compiler.parseFile(filepath).getValue();
+      } = parseResult.getValue();
       // Program-level checks (duplicate projects) - only if it's the entry file or we want to check all?
       // Usually project is only one per whole project.
       const projects = ast.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode && e.isKind(ElementKind.Project));
@@ -127,7 +129,9 @@ export default class Binder {
     if (result.hasValue(UNHANDLED)) return undefined;
     const sym = result.getValue();
     if (!sym) return undefined;
-    return [sym.id];
+    return [
+      sym.id,
+    ];
   }
 
   private isSameEndpoint (left: number[], right: number[]): boolean {
@@ -151,9 +155,11 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
+      const parseResult = this.compiler.parseFile(filepath);
+      if (parseResult.hasValue(UNHANDLED)) continue;
       const {
         ast,
-      } = this.compiler.parseFile(filepath).getValue();
+      } = parseResult.getValue();
       for (const element of ast.body) {
         if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
         const decl = element as ElementDeclarationNode & { type: SyntaxToken };
@@ -217,7 +223,9 @@ export default class Binder {
 
               const rightIds = this.getColumnSymbolIds(refValue.expression);
               if (!rightIds) continue;
-              const leftIds = [colSym.id];
+              const leftIds = [
+                colSym.id,
+              ];
 
               if (this.isSameEndpoint(leftIds, rightIds)) {
                 errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));
@@ -286,9 +294,11 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
+      const parseResult = this.compiler.parseFile(filepath);
+      if (parseResult.hasValue(UNHANDLED)) continue;
       const {
         ast,
-      } = this.compiler.parseFile(filepath).getValue();
+      } = parseResult.getValue();
       for (const element of ast.body) {
         if (!(element instanceof ElementDeclarationNode) || !element.type) continue;
         const decl = element as ElementDeclarationNode & { type: SyntaxToken };

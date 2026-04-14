@@ -54,16 +54,22 @@ export default class IndexesValidator {
       'An Indexes can only appear inside a Table or a TablePartial',
       this.declarationNode,
     );
-    if (this.declarationNode.parent instanceof ProgramNode) return [invalidContextError];
+    if (this.declarationNode.parent instanceof ProgramNode) return [
+      invalidContextError,
+    ];
 
     return (this.declarationNode.parent?.isKind(ElementKind.Table, ElementKind.TablePartial))
       ? []
-      : [invalidContextError];
+      : [
+          invalidContextError,
+        ];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode),
+      ];
     }
 
     return [];
@@ -71,7 +77,9 @@ export default class IndexesValidator {
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode),
+      ];
     }
 
     return [];
@@ -79,7 +87,9 @@ export default class IndexesValidator {
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (settingList) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList),
+      ];
     }
 
     return [];
@@ -90,11 +100,19 @@ export default class IndexesValidator {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
-      return [new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body)];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body),
+      ];
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
-    return [...this.validateFields(fields as FunctionApplicationNode[]), ...this.validateSubElements(subs as ElementDeclarationNode[])];
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
@@ -104,7 +122,10 @@ export default class IndexesValidator {
       }
 
       const errors: CompileError[] = [];
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       if (last(args) instanceof ListExpressionNode) {
         errors.push(...this.validateFieldSetting(args.pop() as ListExpressionNode));
       }
@@ -134,7 +155,10 @@ export default class IndexesValidator {
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
-    for (const [name, attrs] of Object.entries(settingMap)) {
+    for (const [
+      name,
+      attrs,
+    ] of Object.entries(settingMap)) {
       switch (name) {
         case 'note':
         case 'name':
