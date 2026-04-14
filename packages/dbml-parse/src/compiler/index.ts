@@ -339,29 +339,29 @@ export default class Compiler {
 
   // @deprecated - legacy APIs for services compatibility
   readonly token = {
-    invalidStream: this.query(invalidStream),
-    flatStream: this.query(flatStream),
+    invalidStream: this.localQuery(invalidStream),
+    flatStream: this.localQuery(flatStream),
   };
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: () => this.layout.getSource(DEFAULT_ENTRY) as Readonly<string>,
+    source: (filepath: Filepath) => this.layout.getSource(filepath) as Readonly<string>,
     _: () => this.exportSchemaJson(DEFAULT_ENTRY),
-    ast: this.query(ast),
+    ast: this.localQuery(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),
-    tokens: this.query(tokens),
+    tokens: this.localQuery(tokens),
     rawDb: this.query(rawDb),
     publicSymbolTable: this.query(publicSymbolTable),
   };
 
   // @deprecated - legacy APIs for services compatibility
   readonly container = {
-    stack: this.query(containerStack),
-    token: this.query(containerToken),
-    element: this.query(containerElement),
-    scope: this.query(containerScope),
-    scopeKind: this.query(containerScopeKind),
+    stack: this.localQuery(containerStack),
+    token: this.localQuery(containerToken),
+    element: this.localQuery(containerElement),
+    scope: this.localQuery(containerScope),
+    scopeKind: this.localQuery(containerScopeKind),
   };
 
   async initMonacoServices () {

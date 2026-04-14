@@ -223,7 +223,7 @@ describe('[example] applyTextEdits', () => {
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, 'Table users { id int }');
 
-      const result = applyTextEdits(compiler.parse.source(), [
+      const result = applyTextEdits(compiler.parse.source(DEFAULT_ENTRY), [
         { start: 6, end: 11, newText: 'customers' },
       ]);
 
@@ -237,7 +237,7 @@ describe('[example] applyTextEdits', () => {
   email varchar
 }`);
 
-      const result = applyTextEdits(compiler.parse.source(), [
+      const result = applyTextEdits(compiler.parse.source(DEFAULT_ENTRY), [
         { start: 6, end: 11, newText: 'customers' },
         { start: 30, end: 35, newText: 'name' },
       ]);
@@ -251,12 +251,12 @@ describe('[example] applyTextEdits', () => {
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, originalSource);
 
-      applyTextEdits(compiler.parse.source(), [
+      applyTextEdits(compiler.parse.source(DEFAULT_ENTRY), [
         { start: 6, end: 11, newText: 'customers' },
       ]);
 
       // Original source should be unchanged
-      expect(compiler.parse.source()).toBe(originalSource);
+      expect(compiler.parse.source(DEFAULT_ENTRY)).toBe(originalSource);
     });
   });
 });

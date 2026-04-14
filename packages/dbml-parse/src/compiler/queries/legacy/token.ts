@@ -1,6 +1,6 @@
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
+  type Filepath,
+} from '@/core/types/filepath';
 import type {
   SyntaxToken,
 } from '@/core/types/tokens';
@@ -9,8 +9,8 @@ import {
 } from '@/core/utils/expression';
 import type Compiler from '../../index';
 
-export function flatStream (this: Compiler): readonly SyntaxToken[] {
-  return (this.parseFile(DEFAULT_ENTRY).getValue().tokens)
+export function flatStream (this: Compiler, filepath: Filepath): readonly SyntaxToken[] {
+  return (this.parseFile(filepath).getValue().tokens)
     .flatMap((token: SyntaxToken) => [
       ...token.leadingInvalid,
       token,
@@ -18,6 +18,6 @@ export function flatStream (this: Compiler): readonly SyntaxToken[] {
     ]);
 }
 
-export function invalidStream (this: Compiler): readonly SyntaxToken[] {
-  return (this.parseFile(DEFAULT_ENTRY).getValue().tokens).filter(isInvalidToken);
+export function invalidStream (this: Compiler, filepath: Filepath): readonly SyntaxToken[] {
+  return (this.parseFile(filepath).getValue().tokens).filter(isInvalidToken);
 }
