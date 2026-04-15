@@ -66,69 +66,113 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   return blocks;
 }
 
+function emitTablesBlock (lines: string[], tables: Array<{ name: string; schemaName: string }>): void {
+  const tableNames = tables.map((t) =>
+    t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`,
+  );
+  lines.push('  Tables {');
+  tableNames.forEach((n) => lines.push(`    ${n}`));
+  lines.push('  }');
+}
+
+function emitTableGroupsBlock (lines: string[], tableGroups: Array<{ name: string }>): void {
+  lines.push('  TableGroups {');
+  tableGroups.forEach((n) => lines.push(`    ${n.name}`));
+  lines.push('  }');
+}
+
+function emitSchemasBlock (lines: string[], schemas: Array<{ name: string }>): void {
+  lines.push('  Schemas {');
+  schemas.forEach((n) => lines.push(`    ${n.name}`));
+  lines.push('  }');
+}
+
+function emitNotesBlock (lines: string[], notes: Array<{ name: string }>): void {
+  lines.push('  Notes {');
+  notes.forEach((n) => lines.push(`    ${n.name}`));
+  lines.push('  }');
+}
+
 function generateDiagramViewBlock (
   name: string,
   visibleEntities: DiagramViewSyncOperation['visibleEntities'],
 ): string {
-  const lines: string[] = [
-    `DiagramView ${addDoubleQuoteIfNeeded(name)} {`,
-  ];
+  const blockName = addDoubleQuoteIfNeeded(name);
+  const header = `DiagramView ${blockName} {`;
 
-  // Tables
-  if (visibleEntities?.tables !== undefined) {
-    if (visibleEntities.tables === null) {
-      // Hide all - don't add block
-    } else if (visibleEntities.tables.length === 0) {
-      lines.push('  Tables { * }');
-    } else {
-      const tableNames = visibleEntities.tables.map((t) =>
-        t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`,
-      );
-      lines.push('  Tables {');
-      tableNames.forEach((n) => lines.push(`    ${n}`));
-      lines.push('  }');
-    }
+  if (!visibleEntities) {
+    return `${header}\n}`;
   }
 
-  // Notes
-  if (visibleEntities?.stickyNotes !== undefined) {
-    if (visibleEntities.stickyNotes === null) {
-      // Hide all - don't add block
-    } else if (visibleEntities.stickyNotes.length === 0) {
-      lines.push('  Notes { * }');
-    } else {
-      lines.push('  Notes {');
-      visibleEntities.stickyNotes.forEach((n) => lines.push(`    ${n.name}`));
-      lines.push('  }');
-    }
+  const { tables, tableGroups, schemas, stickyNotes } = visibleEntities;
+
+  const tablesIsNull = tables === null;
+  const tableGroupsIsNull = tableGroups === null;
+  const schemasIsNull = schemas === null;
+  const notesIsNull = stickyNotes === null;
+
+  // A1: All null → empty block
+  if (tablesIsNull && tableGroupsIsNull && schemasIsNull && notesIsNull) {
+    return `${header}\n}`;
   }
 
-  // TableGroups
-  if (visibleEntities?.tableGroups !== undefined) {
-    if (visibleEntities.tableGroups === null) {
-      // Hide all - don't add block
-    } else if (visibleEntities.tableGroups.length === 0) {
-      lines.push('  TableGroups { * }');
-    } else {
-      lines.push('  TableGroups {');
-      visibleEntities.tableGroups.forEach((n) => lines.push(`    ${n.name}`));
-      lines.push('  }');
+  // Any Trinity dim null?
+  const anyTrinityNull = tablesIsNull || tableGroupsIsNull || schemasIsNull;
+
+  if (anyTrinityNull) {
+    const tablesHasItems = !tablesIsNull && tables!.length > 0;
+    const tableGroupsHasItems = !tableGroupsIsNull && tableGroups!.length > 0;
+    const schemasHasItems = !schemasIsNull && schemas!.length > 0;
+    const anyTrinityHasItems = tablesHasItems || tableGroupsHasItems || schemasHasItems;
+
+    if (!anyTrinityHasItems) {
+      // No Trinity dims have items
+      if (stickyNotes && stickyNotes.length > 0) {
+        // Specific notes but no Trinity items → Notes { items }
+        const lines: string[] = [header];
+        emitNotesBlock(lines, stickyNotes);
+        lines.push('}');
+        return lines.join('\n');
+      }
+      // Rule 2: all Trinity null/empty + no notes → Notes { * }
+      return `${header}\n  Notes { * }\n}`;
     }
+
+    // Rule 3: null dims + items exist → union rule, omit null dims
+    const lines: string[] = [header];
+    if (tablesHasItems) emitTablesBlock(lines, tables!);
+    if (tableGroupsHasItems) emitTableGroupsBlock(lines, tableGroups!);
+    if (schemasHasItems) emitSchemasBlock(lines, schemas!);
+    if (stickyNotes && stickyNotes.length > 0) emitNotesBlock(lines, stickyNotes);
+    lines.push('}');
+    return lines.join('\n');
   }
 
-  // Schemas
-  if (visibleEntities?.schemas !== undefined) {
-    if (visibleEntities.schemas === null) {
-      // Hide all - don't add block
-    } else if (visibleEntities.schemas.length === 0) {
-      lines.push('  Schemas { * }');
-    } else {
-      lines.push('  Schemas {');
-      visibleEntities.schemas.forEach((n) => lines.push(`    ${n.name}`));
-      lines.push('  }');
+  // All Trinity dims are non-null arrays
+  const tablesArr = tables as Array<{ name: string; schemaName: string }>;
+  const tableGroupsArr = tableGroups as Array<{ name: string }>;
+  const schemasArr = schemas as Array<{ name: string }>;
+
+  const allTrinityEmpty = tablesArr.length === 0 && tableGroupsArr.length === 0 && schemasArr.length === 0;
+  const hasNotesItems = stickyNotes != null && stickyNotes.length > 0;
+
+  if (allTrinityEmpty) {
+    // Rule 4: body-level { * }, or Tables { * } + Notes if notes have items
+    if (hasNotesItems) {
+      const lines: string[] = [header, '  Tables { * }'];
+      emitNotesBlock(lines, stickyNotes!);
+      lines.push('}');
+      return lines.join('\n');
     }
+    return `${header}\n  *\n}`;
   }
 
+  // Rules 5 & 6: emit only dims with items, omit empty arrays
+  const lines: string[] = [header];
+  if (tablesArr.length > 0) emitTablesBlock(lines, tablesArr);
+  if (tableGroupsArr.length > 0) emitTableGroupsBlock(lines, tableGroupsArr);
+  if (schemasArr.length > 0) emitSchemasBlock(lines, schemasArr);
+  if (hasNotesItems) emitNotesBlock(lines, stickyNotes!);
   lines.push('}');
   return lines.join('\n');
 }

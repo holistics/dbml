@@ -1294,7 +1294,7 @@ describe('[example] interpreter', () => {
       expect(ve.schemas).toEqual([]);
     });
 
-    test('should NOT expand TableGroups {*} when Tables is also explicitly set', () => {
+    test('should ALWAYS expand TableGroups {*} even when Tables is also explicitly set', () => {
       const source = `
         Table users { id int }
         TableGroup auth_tables { users }
@@ -1306,8 +1306,12 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       const ve = db.diagramViews[0].visibleEntities;
-      // Tables is explicitly set, so TableGroups wildcard stays as []
-      expect(ve.tableGroups).toEqual([]);
+      // TableGroups {*} is now always expanded to concrete names regardless of sibling dims
+      expect(ve.tableGroups).toEqual([
+        {
+          name: 'auth_tables',
+        },
+      ]);
       expect(ve.tables).toEqual([
         {
           name: 'users',
@@ -1328,6 +1332,123 @@ describe('[example] interpreter', () => {
 
       const ve = db.diagramViews[0].visibleEntities;
       expect(ve.tableGroups).toEqual([]);
+    });
+  });
+
+  describe('DiagramView union semantics (TableGroups {*} always expands)', () => {
+    test('should expand TableGroups {*} alongside Tables with items', () => {
+      const source = `
+        Table users { id int }
+        Table orders { id int }
+        TableGroup Inventory { users }
+        TableGroup Reporting { orders }
+        DiagramView myView {
+          Tables {
+            users
+            orders
+          }
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.diagramViews).toHaveLength(1);
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toEqual([
+        { name: 'users', schemaName: 'public' },
+        { name: 'orders', schemaName: 'public' },
+      ]);
+      expect(ve.tableGroups).toEqual([
+        { name: 'Inventory' },
+        { name: 'Reporting' },
+      ]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should expand TableGroups {*} alongside Schemas', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView {
+          TableGroups { * }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([{ name: 'Inventory' }]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should expand TableGroups {*} with Notes', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        Note MyNote { 'hello' }
+        DiagramView myView {
+          TableGroups { * }
+          Notes { MyNote }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tableGroups).toEqual([{ name: 'Inventory' }]);
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([{ name: 'MyNote' }]);
+    });
+
+    test('body-level {*} should NOT expand tableGroups (uses body-level wildcard set)', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('empty Tables {} should produce all null (same as empty body)', () => {
+      const source = `
+        DiagramView myView {
+          Tables { }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('only Notes set → no Trinity omit (Trinity dims stay null)', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Notes { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Notes is set (to [] = show all), but no Trinity dims set → Trinity omit doesn't apply
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toEqual([]);
     });
   });
 
