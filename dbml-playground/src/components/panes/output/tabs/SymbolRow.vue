@@ -25,11 +25,6 @@
         </template>
       </VTooltip>
       <span class="text-blue-500">{{ sym.name }}</span>
-      <span
-        v-if="sym.declPos"
-        class="ml-auto text-[10px] text-blue-400 hover:underline hover:text-blue-600 cursor-pointer flex-shrink-0"
-        @click.stop="emit('declaration-click', sym.declPos)"
-      >{{ sym.declPos.startLine }}:{{ sym.declPos.startCol }}</span>
     </div>
     <template v-if="open && hasMembers">
       <SymbolRow
@@ -37,7 +32,6 @@
         :key="child.id"
         :sym="child"
         :level="level + 1"
-        @declaration-click="emit('declaration-click', $event)"
       />
     </template>
   </div>
@@ -56,7 +50,7 @@ import {
   PhAt,
 } from '@phosphor-icons/vue';
 import type {
-  SymbolInfo, DeclPos,
+  SymbolInfo,
 } from '@/stores/parserStore';
 
 interface Props {
@@ -67,9 +61,6 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   level: 0,
 });
-const emit = defineEmits<{
-  'declaration-click': [pos: DeclPos];
-}>();
 
 const open = ref(false);
 function toggleOpen () { open.value = !open.value; }

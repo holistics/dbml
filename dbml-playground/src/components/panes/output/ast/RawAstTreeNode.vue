@@ -32,7 +32,6 @@
       </VTooltip>
 
       <span class="text-gray-700 mr-1">{{ node.propertyName }}</span>
-      <span v-if="nodeId !== ''" class="text-gray-300 text-[10px] font-mono mr-1.5">#{{ nodeId }}</span>
 
       <span
         v-if="leafValue !== ''"
@@ -43,17 +42,6 @@
         class="text-gray-400"
       >{{ sizeHint }}</span>
 
-      <span
-        v-if="nodeFilepath"
-        class="ml-auto flex-shrink-0 text-[10px] text-gray-400 font-mono px-1 truncate max-w-[120px]"
-        :title="nodeFilepath"
-      >{{ nodeFilepathBasename }}</span>
-      <span
-        v-if="hasPosition"
-        class="flex-shrink-0 text-[10px] text-blue-400 hover:text-blue-600 hover:underline px-1"
-        :class="!nodeFilepath ? 'ml-auto' : ''"
-        @click.stop="handlePositionClick"
-      >{{ formatPosition() }}</span>
     </div>
 
     <div v-if="isExpanded && hasChildren">
@@ -67,7 +55,6 @@
         :cursor-node-id="cursorNodeId"
         @node-click="$emit('node-click', $event)"
         @node-expand="$emit('node-expand', $event)"
-        @position-click="$emit('position-click', $event)"
         @scroll-to="$emit('scroll-to', $event)"
       />
     </div>
@@ -97,9 +84,10 @@ import {
   PhNote,
   type Icon,
 } from '@phosphor-icons/vue';
-import type {
-  NavigationPosition,
-} from '@/types';
+import {
+  SyntaxToken,
+  SyntaxTokenKind,
+} from '@dbml/parse';
 
 export interface RawAstNode {
   id: string;
@@ -125,8 +113,6 @@ const emit = defineEmits<{
   'node-click': [node: RawAstNode];
   'node-expand': [{ id: string;
     expanded: boolean; }];
-  'position-click': [{ node: RawAstNode;
-    position: NavigationPosition; }];
   'scroll-to': [id: string];
 }>();
 
@@ -193,32 +179,16 @@ const typeIcon = computed((): IconInfo => {
   return { icon: PhBracketsCurly, color: 'text-gray-400', label: 'object' };
 });
 
-const nodeId = computed(() => {
-  const d = asObj(props.node.rawData);
-  if (!d) return '';
-  const id = d.id;
-  return typeof id === 'number' || typeof id === 'string' ? String(id) : '';
-});
-
-const nodeFilepath = computed((): string => {
-  const d = asObj(props.node.rawData);
-  if (!d || !d.filepath || typeof d.filepath !== 'object') return '';
-  const fp = d.filepath as { absolute?: string };
-  return typeof fp.absolute === 'string' ? fp.absolute : '';
-});
-
-const nodeFilepathBasename = computed(() => {
-  if (!nodeFilepath.value) return '';
-  return nodeFilepath.value.split('/').pop() ?? nodeFilepath.value;
-});
-
 const leafValue = computed(() => {
   const d = props.node.rawData;
   if (d === null) return 'null';
   if (d === undefined) return '';
   if (typeof d !== 'object') return typeof d === 'string' ? `"${d}"` : String(d);
   const obj = asObj(d);
-  if (obj && 'value' in obj && typeof obj.value === 'string' && !hasChildren.value) return `"${obj.value}"`;
+  if (obj && 'value' in obj && typeof obj.value === 'string' && !hasChildren.value) {
+    if (obj.value === '') return d instanceof SyntaxToken && d.kind === SyntaxTokenKind.EOF ? '<EOF>' : '';
+    return `"${obj.value}"`;
+  }
   return '';
 });
 
@@ -228,74 +198,11 @@ const sizeHint = computed(() => {
   return d.length === 0 ? '[ ]' : `[ ${d.length} ]`;
 });
 
-const hasPosition = computed(() => {
-  const d = asObj(props.node.rawData);
-  if (!d) return false;
-  const sp = asObj(d.startPos);
-  if (sp && typeof sp.line === 'number') return true;
-  return typeof d.start === 'number';
-});
-
-function formatPosition (): string {
-  const d = asObj(props.node.rawData);
-  if (!d) return '';
-  const sp = asObj(d.startPos);
-  if (sp && typeof sp.line === 'number') {
-    const sl = sp.line + 1, sc = typeof sp.column === 'number' ? sp.column + 1 : 1;
-    const ep = asObj(d.endPos);
-    if (ep && typeof ep.line === 'number') {
-      const el = ep.line + 1, ec = typeof ep.column === 'number' ? ep.column + 1 : 1;
-      return sl === el ? `${sl}:${sc}` : `${sl}:${sc}–${el}:${ec}`;
-    }
-    return `${sl}:${sc}`;
-  }
-  return typeof d.start === 'number' ? `@${d.start}` : '';
-}
-
 function handleNodeClick () { emit('node-click', props.node); }
 function toggleExpanded () {
   emit('node-expand', {
     id: props.node.id,
     expanded: !isExpanded.value,
-  });
-}
-
-function handlePositionClick () {
-  const d = asObj(props.node.rawData);
-  if (!d) return;
-  const sp = asObj(d.startPos);
-  const ep = asObj(d.endPos);
-  let position: NavigationPosition | null = null;
-  if (sp && typeof sp.line === 'number' && ep && typeof ep.line === 'number') {
-    position = {
-      start: {
-        line: sp.line + 1,
-        column: typeof sp.column === 'number' ? sp.column + 1 : 1,
-        offset: typeof d.start === 'number' ? d.start : 0,
-      },
-      end: {
-        line: ep.line + 1,
-        column: typeof ep.column === 'number' ? ep.column + 1 : 1,
-        offset: typeof d.end === 'number' ? d.end : 0,
-      },
-    };
-  } else if (typeof d.start === 'number') {
-    position = {
-      start: {
-        line: 1,
-        column: 1,
-        offset: d.start,
-      },
-      end: {
-        line: 1,
-        column: 1,
-        offset: typeof d.end === 'number' ? d.end : d.start,
-      },
-    };
-  }
-  if (position) emit('position-click', {
-    node: props.node,
-    position,
   });
 }
 </script>

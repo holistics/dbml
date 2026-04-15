@@ -60,7 +60,6 @@
         :show-decor="isDecorEnabled(activeTab)"
         class="h-full"
         @node-click="handleNodeClick"
-        @position-click="handlePositionClick"
         @toggle-decor="toggleDecor(activeTab)"
       />
       <SymbolsTab
@@ -68,7 +67,6 @@
         :symbols="parser.symbols"
         :show-decor="isDecorEnabled(activeTab)"
         class="h-full"
-        @declaration-click="handleDeclarationClick"
         @toggle-decor="toggleDecor(activeTab)"
       />
       <DatabaseTab
@@ -106,13 +104,9 @@ import SymbolsTab from './tabs/SymbolsTab.vue';
 import DatabaseTab from './tabs/DatabaseTab.vue';
 import DiagnosticsTab from './tabs/DiagnosticsTab.vue';
 import type {
-  NavigationPosition,
-} from '@/types';
-import type {
   RawAstNode,
 } from './ast/RawAstTreeNode.vue';
 import type {
-  DeclPos,
   SymbolInfo,
 } from '@/stores/parserStore';
 import {
@@ -356,25 +350,6 @@ function handleNodeClick (node: RawAstNode) {
   });
 }
 
-function handlePositionClick (event: { node: RawAstNode;
-  position: NavigationPosition; }) {
-  navigateTo({
-    startLineNumber: event.position.start.line,
-    startColumn: event.position.start.column,
-    endLineNumber: event.position.end.line,
-    endColumn: event.position.end.column,
-  });
-}
-
-function handleDeclarationClick (pos: DeclPos) {
-  activeTab.value = OutputTabId.Nodes;
-  navigateTo({
-    startLineNumber: pos.startLine,
-    startColumn: pos.startCol,
-    endLineNumber: pos.endLine,
-    endColumn: pos.endCol,
-  });
-}
 
 defineExpose({
   scrollToToken: (i: number) => tokensTabRef.value?.scrollToToken(i),

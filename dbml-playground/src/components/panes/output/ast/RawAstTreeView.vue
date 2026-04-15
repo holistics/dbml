@@ -8,7 +8,6 @@
       :cursor-node-id="cursorNodeId"
       @node-click="handleNodeClick"
       @node-expand="handleNodeExpand"
-      @position-click="$emit('position-click', $event)"
     />
   </div>
 </template>
@@ -17,9 +16,6 @@
 import {
   computed, ref, inject, watch, type Ref,
 } from 'vue';
-import type {
-  NavigationPosition,
-} from '@/types';
 import type {
   ProgramNode,
 } from '@dbml/parse';
@@ -35,8 +31,6 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
-  'position-click': [{ node: RawAstNode;
-    position: NavigationPosition; }];
 }>();
 
 const selectedNode = ref<RawAstNode | null>(null);
@@ -144,9 +138,7 @@ function transformToRawAstNode (
     );
     return {
       id: nodeId,
-      propertyName: children.length !== data.length
-        ? `${propertyName} (${children.length}/${data.length})`
-        : `${propertyName} (${data.length})`,
+      propertyName,
       rawData: data,
       children,
       accessPath,

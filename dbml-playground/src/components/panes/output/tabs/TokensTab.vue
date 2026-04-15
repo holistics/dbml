@@ -2,7 +2,7 @@
   <div class="h-full flex flex-col text-[13px]">
     <div class="flex-shrink-0 px-3 py-1 border-b border-gray-200 bg-white text-gray-500 text-xs flex items-center justify-between">
       <span>{{ tokens.length }} tokens</span>
-      <DecorToggleButton :show-decor="showDecor" @toggle-decor="emit('toggle-decor')" />
+      <TabSettingsButton :show-decor="showDecor" @toggle-decor="emit('toggle-decor')" />
     </div>
 
     <div
@@ -68,7 +68,6 @@
             </VDropdown>
           </div>
 
-          <span class="text-gray-400 text-xs flex-shrink-0">{{ tok.startPos.line + 1 }}:{{ tok.startPos.column + 1 }}</span>
         </div>
 
         <div
@@ -81,14 +80,6 @@
             <span class="text-blue-600 font-mono break-all">{{ tok.kind }}</span>
             <span class="text-gray-400 text-[10px] font-medium">value</span>
             <span class="text-green-700 font-mono break-all">{{ (rawTexts[i] ?? tok.value) || '·' }}</span>
-            <span class="col-span-2 text-gray-400 text-[10px] font-medium">start</span>
-            <span class="text-gray-400 text-[10px] pl-4">offset</span><span class="text-gray-600 font-mono">{{ tok.startPos.offset }}</span>
-            <span class="text-gray-400 text-[10px] pl-4">row</span><span class="text-gray-600 font-mono">{{ tok.startPos.line + 1 }}</span>
-            <span class="text-gray-400 text-[10px] pl-4">column</span><span class="text-gray-600 font-mono">{{ tok.startPos.column + 1 }}</span>
-            <span class="col-span-2 text-gray-400 text-[10px] font-medium">end</span>
-            <span class="text-gray-400 text-[10px] pl-4">offset</span><span class="text-gray-600 font-mono">{{ tok.endPos.offset }}</span>
-            <span class="text-gray-400 text-[10px] pl-4">row</span><span class="text-gray-600 font-mono">{{ tok.endPos.line + 1 }}</span>
-            <span class="text-gray-400 text-[10px] pl-4">column</span><span class="text-gray-600 font-mono">{{ tok.endPos.column + 1 }}</span>
             <template v-for="section in detailSections(tok)" :key="section.label">
               <template v-if="section.tokens.length > 0">
                 <span class="text-[10px] font-medium" :class="section.error ? 'text-red-400' : 'text-gray-400'">{{ section.label }}</span>
@@ -137,7 +128,7 @@ import {
   PhAsterisk,
   PhQuestion,
 } from '@phosphor-icons/vue';
-import DecorToggleButton from './DecorToggleButton.vue';
+import TabSettingsButton from './TabSettingsButton.vue';
 import type {
   SyntaxToken,
 } from '@dbml/parse';

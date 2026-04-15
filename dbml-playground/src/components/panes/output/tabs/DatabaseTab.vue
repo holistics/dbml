@@ -12,7 +12,7 @@
     <template v-else>
       <div class="flex-shrink-0 px-3 py-1 border-b border-gray-200 text-xs text-gray-400 flex items-center justify-between">
         <span>{{ database.tables.length }} tables · {{ database.refs.length }} refs · {{ database.enums.length }} enums</span>
-        <DecorToggleButton :show-decor="showDecor" @toggle-decor="emit('toggle-decor')" />
+        <TabSettingsButton :show-decor="showDecor" @toggle-decor="emit('toggle-decor')" />
       </div>
       <div class="flex-1 overflow-auto">
         <!-- Tables -->
@@ -183,7 +183,7 @@ import {
 import {
   PhCaretRight,
 } from '@phosphor-icons/vue';
-import DecorToggleButton from './DecorToggleButton.vue';
+import TabSettingsButton from './TabSettingsButton.vue';
 import type {
   Database,
 } from '@dbml/parse';

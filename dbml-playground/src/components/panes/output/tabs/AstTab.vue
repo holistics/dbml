@@ -5,14 +5,13 @@
       class="flex-shrink-0 px-3 py-1 border-b border-gray-200 text-xs text-gray-400 flex items-center justify-between"
     >
       <span>{{ nodeCount }} nodes</span>
-      <DecorToggleButton :show-decor="showDecor" @toggle-decor="emit('toggle-decor')" />
+      <TabSettingsButton :show-decor="showDecor" @toggle-decor="emit('toggle-decor')" />
     </div>
     <div class="flex-1 overflow-auto">
       <RawAstTreeView
         v-if="ast != null"
         :raw-ast="ast"
         @node-click="emit('node-click', $event)"
-        @position-click="emit('position-click', $event)"
       />
       <div
         v-else
@@ -28,14 +27,11 @@
 import {
   computed,
 } from 'vue';
-import DecorToggleButton from './DecorToggleButton.vue';
+import TabSettingsButton from './TabSettingsButton.vue';
 import RawAstTreeView from '../ast/RawAstTreeView.vue';
 import type {
   RawAstNode,
 } from '../ast/RawAstTreeNode.vue';
-import type {
-  NavigationPosition,
-} from '@/types';
 import type {
   ProgramNode,
 } from '@dbml/parse';
@@ -49,8 +45,6 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
-  'position-click': [{ node: RawAstNode;
-    position: NavigationPosition; }];
   'toggle-decor': [];
 }>();
 
