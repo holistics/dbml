@@ -85,11 +85,15 @@ function expandDiagramViewWildcards (env: InterpreterDatabase): void {
     const wildcards = env.diagramViewWildcards.get(view);
     if (!wildcards) continue;
 
-    // Skip body-level {*} — when all 4 dims are wildcards, it's body-level
-    if (wildcards.has('tables') && wildcards.has('stickyNotes') && wildcards.has('schemas')) {
+    // Tables * or Schemas * → union covers everything → all Trinity dims become [] (show all)
+    if (wildcards.has('tables') || wildcards.has('schemas')) {
+      ve.tables = [];
+      ve.tableGroups = [];
+      ve.schemas = [];
       continue;
     }
 
+    // TableGroups * → expand to concrete group names (not all tables belong to groups)
     if (wildcards.has('tableGroups') && ve.tableGroups && ve.tableGroups.length === 0) {
       ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({
         name: tg.name!,

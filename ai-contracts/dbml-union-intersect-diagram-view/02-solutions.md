@@ -114,27 +114,31 @@ Tests: does parsing DBML produce a FilterConfig that generates back to the same 
 
 ## Sub-Problems
 
-### Sub-Problem 1: `expandDiagramViewWildcards` — TableGroups wildcard not expanded when sibling dims are set
+### Sub-Problem 1: `expandDiagramViewWildcards` — wildcard expansion rules
 
 ```mermaid
 flowchart TD
-    A["TableGroups: * parsed"] --> B["wildcards.add('tableGroups')"]
-    B --> C["expandDiagramViewWildcards runs"]
-    C --> D{"wildcards.has('tableGroups')?"}
-    D -->|yes| E{"Body-level * ? (all 4 wildcards)"}
-    E -->|no| F["ALWAYS expand to concrete names"]
-    E -->|yes| G["Skip — body-level * stays []"]
-    F --> H["ve.tableGroups = all defined group names"]
-    H --> I["filterNormalizedModel receives concrete list"]
-    I --> J["Union: tables + group members + schema tables"]
+    A["Wildcard parsed"] --> B["expandDiagramViewWildcards runs"]
+    B --> C{"wildcards.has('tables') OR wildcards.has('schemas')?"}
+    C -->|yes| D["All Trinity dims → [] (show all)"]
+    D --> E["Union covers everything — specific items overridden"]
+    C -->|no| F{"wildcards.has('tableGroups')?"}
+    F -->|yes| G["Expand to concrete group names"]
+    G --> H["filterNormalizedModel receives concrete list"]
+    H --> I["Union: tables + group members"]
+    F -->|no| J["No expansion needed"]
 ```
 
-**Change:** Remove the `otherTrinitySet` condition. Always expand when `wildcards.has('tableGroups')`, except body-level `{ * }` (detected by checking if all 4 dims are in wildcards set).
+**Two wildcard rules:**
 
-**Why only TableGroups needs expansion:**
-- `Tables: *` → `[]` = "show all tables" — every table is a table, no indirection
-- `Schemas: *` → `[]` = "show all schemas" — every table belongs to a schema
-- `TableGroups: *` needs concrete names because some tables DON'T belong to any group. The frontend does name-based lookup; `[]` would produce an empty name map → no groups matched.
+1. **Tables `*` or Schemas `*`** → all Trinity dims become `[]` (show all). Union with "show all tables" or "show all schemas" = show everything. Specific items in other dims are overridden.
+
+2. **TableGroups `*`** → expand to concrete group names. Does NOT collapse other dims because not all tables belong to groups — specific items in Tables/Schemas are still meaningful.
+
+**Why the difference:**
+- `Tables: *` = show all tables → union with anything = everything
+- `Schemas: *` = show all schemas → union with anything = everything
+- `TableGroups: *` needs concrete names because some tables DON'T belong to any group. Specific tables/schemas alongside group wildcard still filter meaningfully.
 
 ### Sub-Problem 2: `syncDiagramView` — rewrite generation rules
 

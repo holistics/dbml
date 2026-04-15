@@ -2,6 +2,7 @@
 
 > How the parser interprets DBML DiagramView blocks to produce FilterConfig.
 > TableGroups `*` is always expanded to concrete group names.
+> Tables `*` or Schemas `*` triggers union: all Trinity dims become `[]` (show all).
 
 ## Rules
 
@@ -9,8 +10,9 @@
 2. **`{ * }`** → `[]` for Tables/Schemas/Notes, concrete names for TableGroups
 3. **Omitted** → `null` (don't interpret)
 4. **`{ }` empty** → `null` (hide all)
-5. **Body-level `{ * }`** → all dims `[]` (TableGroups expanded to concrete)
+5. **Body-level `{ * }`** → all dims `[]` (TableGroups NOT expanded — body-level)
 6. **Trinity omit rule**: if any Trinity dim is explicitly set with non-null value, omitted Trinity dims get `[]` (show all)
+7. **Tables/Schemas wildcard union**: if Tables has `*` or Schemas has `*`, all Trinity dims become `[]` (show all). Union with "show all" = show everything. Specific items in other dims are overridden.
 
 ---
 
@@ -265,3 +267,104 @@ DiagramView "V" {
   schemas: null,
   stickyNotes: [{name:'Note1'}, {name:'Note2'}] }
 ```
+
+---
+
+## Group I: Tables/Schemas wildcard union — * in Tables or Schemas collapses all Trinity to []
+
+> When Tables has `*` or Schemas has `*`, the union covers everything regardless of specific items in other dims.
+> Specific items in sibling dims are overridden — `*` in one dim = show all via union.
+> TableGroups `*` does NOT trigger this rule — it expands to concrete names instead.
+
+### I1: Tables { items } + Schemas { * }
+
+```dbml
+DiagramView "V" {
+  Tables { users, orders }
+  Schemas { * }
+}
+```
+```typescript
+{ tables: [],            // Schemas * → union covers all → all Trinity []
+  tableGroups: [],       // overridden by Schemas *
+  schemas: [],           // * → [], but also overridden
+  stickyNotes: null }
+```
+
+### I2: Tables { * } + Schemas { items }
+
+```dbml
+DiagramView "V" {
+  Tables { * }
+  Schemas { sales }
+}
+```
+```typescript
+{ tables: [],            // * → [], union covers all
+  tableGroups: [],       // overridden by Tables *
+  schemas: [],           // overridden by Tables *
+  stickyNotes: null }
+```
+
+### I3: TableGroups { items } + Tables { * }
+
+```dbml
+DiagramView "V" {
+  TableGroups { Inventory }
+  Tables { * }
+}
+```
+```typescript
+{ tables: [],            // * → [], union covers all
+  tableGroups: [],       // overridden by Tables *
+  schemas: [],           // overridden by Tables *
+  stickyNotes: null }
+```
+
+### I4: TableGroups { items } + Schemas { * }
+
+```dbml
+DiagramView "V" {
+  TableGroups { Inventory }
+  Schemas { * }
+}
+```
+```typescript
+{ tables: [],            // overridden by Schemas *
+  tableGroups: [],       // overridden by Schemas *
+  schemas: [],           // * → [], union covers all
+  stickyNotes: null }
+```
+
+### I5: Tables { * } + Schemas { * }
+
+```dbml
+DiagramView "V" {
+  Tables { * }
+  Schemas { * }
+}
+```
+```typescript
+{ tables: [],            // both * → all Trinity []
+  tableGroups: [],
+  schemas: [],
+  stickyNotes: null }
+```
+
+### I6: Tables { items } + TableGroups { * } — TableGroups * does NOT collapse
+
+```dbml
+DiagramView "V" {
+  Tables { users }
+  TableGroups { * }
+}
+```
+```typescript
+{ tables: [{name:'users', schemaName:'public'}],  // preserved — TableGroups * doesn't collapse
+  tableGroups: [{name:'Inventory'}, {name:'Reporting'}],  // expanded from *
+  schemas: [],            // Trinity omit: tables and tableGroups non-null
+  stickyNotes: null }
+```
+
+> I6 shows the key difference: TableGroups `*` expands to concrete names but does NOT trigger the union collapse.
+> Only Tables `*` and Schemas `*` trigger the collapse because they mean "show all tables/schemas" = show everything.
