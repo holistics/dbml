@@ -87,39 +87,13 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     this.triggerCharacters = triggerCharacters;
   }
 
-  /**
-   * Search compiler.layout for symbols matching the given name.
-   * Returns results with file hints for disambiguation.
-   */
-  private searchLayoutForSymbol (symbolName: string): Array<{
-    symbol: NodeSymbol;
-    fileHint: string;
-    filepath: Filepath;
-  }> {
-    const results: Array<{ symbol: NodeSymbol;
-      fileHint: string;
-      filepath: Filepath; }> = [];
-
-    if (!this.compiler.layout) return results;
-
-    // Search all files in the layout
-    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
-    for (const fileInfo of allFiles) {
-      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
-
-      for (const sym of symbols) {
-        if ((sym as any).name === symbolName) {
-          const fileHint = `from ${fileInfo.filepath.basename}`;
-          results.push({
-            symbol: sym,
-            fileHint,
-            filepath: fileInfo.filepath,
-          });
-        }
-      }
-    }
-
-    return results;
+  private collectFileSymbols (fp: Filepath): Array<{ sym: NodeSymbol; filepath: Filepath }> {
+    const usable = this.compiler.fileUsableMembers(fp).getFiltered(UNHANDLED);
+    if (!usable) return [];
+    return [
+      ...usable.nonSchemaMembers,
+      ...usable.schemaMembers,
+    ].map((sym) => ({ sym, filepath: fp }));
   }
 
   /**
@@ -171,49 +145,29 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     };
   }
 
-  /**
-   * Search for cross-file symbols that match the context and return them
-   * with additionalTextEdits for use statement insertion
-   */
   suggestCrossFileSymbols (
     acceptedKinds: SymbolKind[],
     currentFilepath: Filepath,
     currentFileContent: string,
   ): CompletionList {
-    const results: CompletionList = {
-      suggestions: [],
-    };
-
-    if (!this.compiler.layout) return results;
-
-    // Get all symbols from all files
-    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
+    const results: CompletionList = { suggestions: [] };
     const seenNames = new Set<string>();
 
-    for (const fileInfo of allFiles) {
-      // Skip current file - we already suggest local symbols
-      if (fileInfo.filepath.equals(currentFilepath)) continue;
-
-      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
-
-      for (const sym of symbols) {
-        const symbolName = this.compiler.symbolName(sym);
-        if (!symbolName || seenNames.has(symbolName)) continue;
+    for (const fp of this.compiler.layout.getEntryPoints()) {
+      if (fp.equals(currentFilepath)) continue;
+      for (const { sym, filepath } of this.collectFileSymbols(fp)) {
         if (!acceptedKinds.includes(sym.kind)) continue;
-
-        seenNames.add(symbolName);
-
-        const fileHint = `from ${fileInfo.filepath.basename}`;
-        const item = this.createCrossFileCompletionItem(
-          symbolName,
+        const name = this.compiler.symbolName(sym);
+        if (!name || seenNames.has(name)) continue;
+        seenNames.add(name);
+        results.suggestions.push(this.createCrossFileCompletionItem(
+          name,
           sym.kind,
-          fileHint,
-          fileInfo.filepath,
+          `from ${filepath.basename}`,
+          filepath,
           currentFilepath,
           currentFileContent,
-        );
-
-        results.suggestions.push(item);
+        ));
       }
     }
 

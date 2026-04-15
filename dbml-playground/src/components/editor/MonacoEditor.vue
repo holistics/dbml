@@ -6,10 +6,10 @@
     />
     <div class="status-bar bg-gray-50 border-t border-gray-200 px-3 py-1 text-xs text-gray-600 flex justify-between items-center">
       <div class="flex items-center space-x-4">
-        <span>{{ props.language.toUpperCase() }}</span>
-        <span v-if="!props.readOnly">UTF-8</span>
+        <span>{{ language.toUpperCase() }}</span>
+        <span v-if="!readOnly">UTF-8</span>
         <span
-          v-if="props.vimMode"
+          v-if="vimMode"
           class="vim-mode-indicator bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-medium"
         >
           -- {{ vimModeStatus }} --
@@ -24,6 +24,11 @@
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { DBMLLanguageService } from '@/components/monaco/dbml-language';
+export const DBML_LANGUAGE_ID = DBMLLanguageService.getLanguageId();
+</script>
 
 <script setup lang="ts">
 /**
@@ -49,6 +54,8 @@ import {
   useParser,
 } from '@/stores/parserStore';
 
+const DBML_LANGUAGE_ID = DBMLLanguageService.getLanguageId();
+
 interface Props {
   modelValue: string;
   language?: string;
@@ -66,13 +73,15 @@ interface Emits {
     column: number; }): void;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  language: 'dbml',
-  readOnly: false,
-  minimap: true,
-  wordWrap: 'on',
-  vimMode: false,
-});
+const {
+  modelValue,
+  language = 'dbml',
+  readOnly = false,
+  minimap = true,
+  wordWrap = 'on' as const,
+  vimMode = false,
+  filepath,
+} = defineProps<Props>();
 
 const emit = defineEmits<Emits>();
 
@@ -99,9 +108,8 @@ const selectionInfo = ref({
 /**
  * Vim mode state
  */
-// eslint-disable-next-line vue/no-dupe-keys
-let vimMode: { on?: (event: string, handler: (mode: { mode?: string }) => void) => void;
-  dispose?: () => void; } | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let vimController: any = null;
 const vimModeStatus = ref('NORMAL');
 
 /**
@@ -116,28 +124,28 @@ const getThemeForLanguage = (_language: string): string => {
  * Create a Monaco model with the correct URI so language services can key on filepath.
  */
 const createModel = (): monaco.editor.ITextModel => {
-  const uri = props.filepath
-    ? monaco.Uri.file(props.filepath)
+  const uri = filepath
+    ? monaco.Uri.file(filepath)
     : undefined;
   // Reuse existing model with that URI if already created (e.g. on hot-reload).
   const existing = uri ? monaco.editor.getModel(uri) : undefined;
   if (existing) {
-    existing.setValue(props.modelValue);
+    existing.setValue(modelValue);
     return existing;
   }
-  return monaco.editor.createModel(props.modelValue, props.language ?? 'dbml', uri);
+  return monaco.editor.createModel(modelValue, language, uri);
 };
 
 /**
  * Create Monaco Editor configuration
  */
 const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOptions => ({
-  theme: getThemeForLanguage(props.language),
-  readOnly: props.readOnly,
+  theme: getThemeForLanguage(language),
+  readOnly,
   minimap: {
-    enabled: props.minimap,
+    enabled: minimap,
   },
-  wordWrap: props.wordWrap,
+  wordWrap,
   scrollBeyondLastLine: false,
   fontSize: 14,
   lineHeight: 20,
@@ -174,11 +182,12 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   // Performance optimizations for vim mode
   disableLayerHinting: true, // Disable GPU acceleration that can interfere with vim
   selectOnLineNumbers: false, // Disable line number selection for vim compatibility
-  cursorWidth: props.vimMode ? 2 : 1, // Slightly wider cursor for vim visibility
-  quickSuggestions: {
-    other: true,
-    comments: false,
-    strings: false,
+  cursorWidth: vimMode ? 2 : 1, // Slightly wider cursor for vim visibility
+  // Disable auto-trigger while typing - we retrigger manually after each parse
+  // so suggestions are always backed by a fully-synced compiler.
+  quickSuggestions: false,
+  suggest: {
+    showWords: false,
   },
   parameterHints: {
     enabled: false,
@@ -196,7 +205,7 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
  * Setup vim mode using monaco-vim
  */
 const setupVimMode = async (): Promise<void> => {
-  if (!editor || !props.vimMode) return;
+  if (!editor || !vimMode) return;
 
   try {
     // Dynamically import monaco-vim
@@ -205,11 +214,11 @@ const setupVimMode = async (): Promise<void> => {
     } = await import('monaco-vim') as any;
 
     // Initialize vim mode with status tracking
-    vimMode = initVimMode(editor);
+    vimController = initVimMode(editor);
 
     // Track vim mode status changes
-    if (vimMode && vimMode.on) {
-      vimMode.on('vim-mode-change', (mode) => {
+    if (vimController && vimController.on) {
+      vimController.on('vim-mode-change', (mode) => {
         vimModeStatus.value = mode.mode?.toUpperCase() || 'NORMAL';
       });
     }
@@ -222,9 +231,9 @@ const setupVimMode = async (): Promise<void> => {
  * Clear vim mode
  */
 const clearVimMode = (): void => {
-  if (vimMode && typeof vimMode.dispose === 'function') {
-    vimMode.dispose();
-    vimMode = null;
+  if (vimController && typeof vimController.dispose === 'function') {
+    vimController.dispose();
+    vimController = null;
   }
 };
 
@@ -305,7 +314,7 @@ const setupEventListeners = (): void => {
   if (!editor) return;
 
   // Content change listener (only for non-readonly editors)
-  if (!props.readOnly) {
+  if (!readOnly) {
     editor.onDidChangeModelContent(() => {
       const value = editor?.getValue() || '';
       emit('update:modelValue', value);
@@ -355,13 +364,13 @@ onBeforeUnmount(() => {
 });
 
 // Watch for prop changes
-watch(() => props.modelValue, (newValue) => {
+watch(() => modelValue, (newValue) => {
   if (editor && editor.getValue() !== newValue) {
     editor.setValue(newValue);
   }
 });
 
-watch(() => props.readOnly, (newReadOnly) => {
+watch(() => readOnly, (newReadOnly) => {
   if (editor) {
     editor.updateOptions({
       readOnly: newReadOnly,
@@ -369,7 +378,7 @@ watch(() => props.readOnly, (newReadOnly) => {
   }
 });
 
-watch(() => props.language, (newLanguage) => {
+watch(() => language, (newLanguage) => {
   if (editor) {
     const model = editor.getModel();
     if (model) {
@@ -381,7 +390,7 @@ watch(() => props.language, (newLanguage) => {
   }
 });
 
-watch(() => props.filepath, () => {
+watch(() => filepath, () => {
   if (!editor) return;
   const newModel = createModel();
   editor.setModel(newModel);
@@ -389,16 +398,29 @@ watch(() => props.filepath, () => {
 
 // Update Monaco markers whenever parser errors/warnings change.
 // errors/warnings are replaced wholesale on each parse (ref<readonly ParserError[]>),
-// so a shallow watch on the array reference is sufficient — no deep traversal needed.
+// so a shallow watch on the array reference is sufficient - no deep traversal needed.
 watch([() => parser.errors, () => parser.warnings], () => {
-  if (!editor || props.language !== 'dbml') return;
+  if (!editor || language !== DBML_LANGUAGE_ID) return;
   const model = editor.getModel();
   if (!model) return;
   parser.updateDiagnostics(model);
 });
 
+// After each completed parse the compiler is fully synced - retrigger the
+// suggestion widget so completions reflect the latest state.
+watch(() => parser.tokens, () => {
+  if (!editor || language !== DBML_LANGUAGE_ID) return;
+  const suggestController = editor.getContribution('editor.contrib.suggestController') as any;
+  if (!suggestController) return;
+  // Don't retrigger if the user is already navigating through suggestions.
+  if (suggestController.widget?.value?.getFocusedItem()) return;
+  suggestController.model?.trigger({
+    auto: true,
+  });
+});
+
 // Watch for vim mode changes
-watch(() => props.vimMode, (newVimMode) => {
+watch(() => vimMode, (newVimMode) => {
   if (editor) {
     if (newVimMode) {
       setupVimMode();

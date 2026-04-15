@@ -79,7 +79,7 @@ const NODE_SKIP = new Set([
   'id', 'parent', 'parentNode', 'kind',
   'startPos', 'endPos', 'start', 'end',
   'filepath', 'fullStart', 'fullEnd',
-  'source', // ProgramNode.source — full source text
+  'source', // ProgramNode.source - full source text
 ]);
 
 export function serializeToken (token: SyntaxToken, source?: string): SerializedToken {
