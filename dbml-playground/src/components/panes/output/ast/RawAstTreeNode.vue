@@ -9,7 +9,7 @@
     >
       <!-- chevron -->
       <button
-        v-if="hasChildren"
+        v-if="isExpandable"
         class="flex-shrink-0 w-3.5 h-3.5 mr-1 flex items-center justify-center text-gray-400 hover:text-gray-600"
         @click.stop="toggleExpanded"
       >
@@ -44,7 +44,67 @@
 
     </div>
 
-    <div v-if="isExpanded && hasChildren">
+    <div v-if="isExpanded && isExpandable">
+      <!-- Token entries: SyntaxToken properties rendered as key-value rows -->
+      <div
+        v-if="node.tokenEntries.length > 0"
+        class="border-b border-gray-100 border-l-2 border-l-blue-100 bg-blue-50/20"
+        :style="{ paddingLeft: `${8 + (level + 1) * 14}px`, paddingRight: '8px' }"
+      >
+        <div
+          class="grid py-1 gap-y-0.5 items-start text-[11px]"
+          style="grid-template-columns: max-content 1fr; column-gap: 10px;"
+        >
+          <template v-for="entry in node.tokenEntries" :key="entry.key">
+            <span class="text-gray-400 text-[10px] font-medium pt-[2px] select-none shrink-0">{{ entry.key }}</span>
+
+            <!-- Single SyntaxToken -->
+            <div v-if="!Array.isArray(entry.data)" class="min-w-0">
+              <span class="inline-flex items-center gap-1 font-mono">
+                <component :is="tokenIconFor(entry.data.kind).icon" class="w-3 h-3 flex-shrink-0" :class="tokenIconFor(entry.data.kind).color" />
+                <span :class="entry.data.kind === SyntaxTokenKind.EOF ? 'text-red-400' : 'text-green-700'">
+                  {{ entry.data.kind === SyntaxTokenKind.EOF ? '<EOF>' : (entry.data.value || '·') }}
+                </span>
+              </span>
+              <!-- Trivia/errors inline -->
+              <span
+                v-if="entry.data.leadingTrivia.length || entry.data.trailingTrivia.length || entry.data.leadingInvalid.length || entry.data.trailingInvalid.length"
+                class="ml-2 inline-flex flex-wrap items-center gap-x-0.5"
+              >
+                <span class="text-gray-300 select-none">|</span>
+                <template v-for="t in [...entry.data.leadingTrivia, ...entry.data.trailingTrivia]" :key="t.start">
+                  <span v-if="t.kind === SyntaxTokenKind.SPACE" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[9px]"><PhArrowsHorizontal class="w-2 h-2" />{{ t.value.length }}</span>
+                  <PhKeyReturn v-else-if="t.kind === SyntaxTokenKind.NEWLINE" class="w-2.5 h-2.5 text-gray-400 flex-shrink-0" />
+                  <span v-else-if="t.kind === SyntaxTokenKind.TAB" class="text-gray-400 bg-gray-100 rounded px-1 text-[9px]">→</span>
+                  <span v-else class="font-mono text-[9px] text-gray-500">{{ t.value }}</span>
+                </template>
+                <template v-if="entry.data.leadingInvalid.length || entry.data.trailingInvalid.length">
+                  <span class="text-red-400 select-none ml-0.5">!</span>
+                  <template v-for="t in [...entry.data.leadingInvalid, ...entry.data.trailingInvalid]" :key="t.start">
+                    <span class="font-mono text-[9px] text-red-500">{{ t.value }}</span>
+                  </template>
+                </template>
+              </span>
+            </div>
+
+            <!-- SyntaxToken[] (trivia arrays, identifier arrays, etc.) -->
+            <span v-else class="inline-flex flex-wrap items-center gap-x-1 font-mono">
+              <template v-for="(tok, ti) in entry.data" :key="ti">
+                <span v-if="tok.kind === SyntaxTokenKind.SPACE" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ tok.value.length }}</span>
+                <PhKeyReturn v-else-if="tok.kind === SyntaxTokenKind.NEWLINE" class="w-3 h-3 text-gray-400 flex-shrink-0" />
+                <span v-else-if="tok.kind === SyntaxTokenKind.TAB" class="text-gray-400 bg-gray-100 rounded px-1 text-[10px]">→</span>
+                <span v-else-if="tok.kind === SyntaxTokenKind.SINGLE_LINE_COMMENT || tok.kind === SyntaxTokenKind.MULTILINE_COMMENT" class="text-gray-400 italic text-[10px]">{{ tok.value }}</span>
+                <span v-else class="inline-flex items-center gap-0.5">
+                  <component :is="tokenIconFor(tok.kind).icon" class="w-3 h-3 flex-shrink-0" :class="tokenIconFor(tok.kind).color" />
+                  <span class="text-green-700">{{ tok.value }}</span>
+                </span>
+              </template>
+            </span>
+          </template>
+        </div>
+      </div>
+
+      <!-- SyntaxNode children -->
       <RawAstTreeNode
         v-for="child in node.children"
         :key="child.id"
@@ -70,7 +130,6 @@ import {
   PhDiamond,
   PhFile,
   PhTag,
-  PhTable,
   PhListBullets,
   PhArrowsLeftRight,
   PhBracketsSquare,
@@ -81,13 +140,22 @@ import {
   PhMinus,
   PhLightning,
   PhMathOperations,
-  PhNote,
+  PhArrowsHorizontal,
+  PhKeyReturn,
   type Icon,
 } from '@phosphor-icons/vue';
 import {
   SyntaxToken,
   SyntaxTokenKind,
 } from '@dbml/parse';
+import {
+  tokenIconFor,
+} from '@/utils/tokenIcons';
+
+export interface TokenEntry {
+  key: string;
+  data: SyntaxToken | SyntaxToken[];
+}
 
 export interface RawAstNode {
   id: string;
@@ -95,6 +163,7 @@ export interface RawAstNode {
   rawData: unknown;
   value?: unknown;
   children: RawAstNode[];
+  tokenEntries: TokenEntry[];
   accessPath: string;
 }
 
@@ -118,7 +187,7 @@ const emit = defineEmits<{
 
 const rowEl = ref<HTMLElement | null>(null);
 const isExpanded = computed(() => props.expandedNodes.has(props.node.id));
-const hasChildren = computed(() => props.node.children.length > 0);
+const isExpandable = computed(() => props.node.children.length > 0 || props.node.tokenEntries.length > 0);
 const isActive = computed(() => props.node.id === props.cursorNodeId || props.selectedNode?.id === props.node.id);
 
 // Scroll into view when this node becomes the active cursor node
@@ -185,7 +254,7 @@ const leafValue = computed(() => {
   if (d === undefined) return '';
   if (typeof d !== 'object') return typeof d === 'string' ? `"${d}"` : String(d);
   const obj = asObj(d);
-  if (obj && 'value' in obj && typeof obj.value === 'string' && !hasChildren.value) {
+  if (obj && 'value' in obj && typeof obj.value === 'string' && !isExpandable.value) {
     if (obj.value === '') return d instanceof SyntaxToken && d.kind === SyntaxTokenKind.EOF ? '<EOF>' : '';
     return `"${obj.value}"`;
   }

@@ -3,12 +3,13 @@
     <div
       class="flex items-center gap-2 py-[3px] cursor-pointer border-b border-gray-50 hover:bg-blue-50"
       :style="{ paddingLeft: `${8 + level * 14}px`, paddingRight: '12px' }"
-      @click="hasMembers && toggleOpen()"
+      @click="emit('symbol-click', sym)"
     >
       <PhCaretRight
         v-if="hasMembers"
         class="flex-shrink-0 w-3 h-3 text-gray-400 transition-transform duration-100"
         :class="open ? 'rotate-90' : ''"
+        @click.stop="toggleOpen()"
       />
       <span
         v-else
@@ -32,6 +33,7 @@
         :key="child.id"
         :sym="child"
         :level="level + 1"
+        @symbol-click="emit('symbol-click', $event)"
       />
     </template>
   </div>
@@ -61,6 +63,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   level: 0,
 });
+
+const emit = defineEmits<{ 'symbol-click': [sym: SymbolInfo] }>();
 
 const open = ref(false);
 function toggleOpen () { open.value = !open.value; }

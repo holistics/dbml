@@ -19,8 +19,13 @@ import {
 import type {
   ProgramNode,
 } from '@dbml/parse';
+import {
+  SyntaxNode,
+  SyntaxToken,
+} from '@dbml/parse';
 import RawAstTreeNode, {
   type RawAstNode,
+  type TokenEntry,
 } from './RawAstTreeNode.vue';
 
 interface Props {
@@ -101,6 +106,7 @@ function transformToRawAstNode (
       rawData: data,
       value: data,
       children: [],
+      tokenEntries: [],
       accessPath,
     };
   }
@@ -113,6 +119,7 @@ function transformToRawAstNode (
       rawData: data,
       value: data,
       children: [],
+      tokenEntries: [],
       accessPath,
     };
   }
@@ -125,14 +132,15 @@ function transformToRawAstNode (
       rawData: data,
       value: data,
       children: [],
+      tokenEntries: [],
       accessPath,
     };
   }
   seen.add(data);
 
-  // Handle arrays — only keep syntax-node items
+  // Handle arrays — only keep SyntaxNode items as tree children
   if (Array.isArray(data)) {
-    const nodeItems = data.filter(isSyntaxNode);
+    const nodeItems = data.filter((item): item is SyntaxNode => item instanceof SyntaxNode);
     const children: RawAstNode[] = nodeItems.map((item, index) =>
       transformToRawAstNode(item, `[${index}]`, `${accessPath}[${index}]`, seen),
     );
@@ -141,20 +149,30 @@ function transformToRawAstNode (
       propertyName,
       rawData: data,
       children,
+      tokenEntries: [],
       accessPath,
     };
   }
 
-  // Handle objects — only recurse into properties that lead to syntax nodes
+  // Handle objects — recurse into SyntaxNode properties, collect SyntaxToken properties as token entries
   const children: RawAstNode[] = [];
+  const tokenEntries: TokenEntry[] = [];
   const SKIP = new Set(['parent', 'parentNode', 'symbol', 'referee', 'source', 'filepath', '__proto__']);
 
   for (const [key, value] of Object.entries(data)) {
     if (SKIP.has(key) || value === undefined) continue;
-    if (isSyntaxNode(value)) {
+    if (value instanceof SyntaxNode) {
       children.push(transformToRawAstNode(value, key, `${accessPath}.${key}`, seen));
-    } else if (Array.isArray(value) && value.some(isSyntaxNode)) {
-      children.push(transformToRawAstNode(value, key, `${accessPath}.${key}`, seen));
+    } else if (value instanceof SyntaxToken) {
+      tokenEntries.push({ key, data: value });
+    } else if (Array.isArray(value)) {
+      const nodeItems = value.filter((v): v is SyntaxNode => v instanceof SyntaxNode);
+      const tokenItems = value.filter((v): v is SyntaxToken => v instanceof SyntaxToken);
+      if (nodeItems.length > 0) {
+        children.push(transformToRawAstNode(nodeItems, key, `${accessPath}.${key}`, seen));
+      } else if (tokenItems.length > 0) {
+        tokenEntries.push({ key, data: tokenItems });
+      }
     }
   }
 
@@ -163,13 +181,9 @@ function transformToRawAstNode (
     propertyName,
     rawData: data,
     children,
+    tokenEntries,
     accessPath,
   };
-}
-
-function isSyntaxNode (data: unknown): boolean {
-  if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
-  return typeof (data as Record<string, unknown>).kind === 'string';
 }
 
 // Auto-expand ancestors when cursorNodeId changes so the active node is visible

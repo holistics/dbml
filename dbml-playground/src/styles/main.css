@@ -26,3 +26,35 @@ code, pre {
 .token-navigation-highlight-inline {
   background-color: rgba(0, 122, 204, 0.15) !important;
 }
+
+/* editor decoration color tokens */
+:root {
+  --hl-tokens-rgb:       99, 102, 241;   /* indigo-500 */
+  --hl-nodes-rgb:        59, 130, 246;   /* blue-500 */
+  --hl-database-rgb:     16, 185, 129;   /* emerald-500 */
+  --sym-table-rgb:       59, 130, 246;   /* blue-500 */
+  --sym-column-rgb:     107, 114, 128;   /* gray-500 */
+  --sym-ref-rgb:        168,  85, 247;   /* purple-500 */
+  --sym-enum-rgb:        22, 163,  74;   /* green-600 */
+  --sym-enum-field-rgb:  34, 197,  94;   /* green-500 */
+  --sym-tablegroup-rgb: 202, 138,   4;   /* yellow-600 */
+  --sym-schema-rgb:     249, 115,  22;   /* orange-500 */
+}
+
+.hl-tokens, .hl-nodes, .hl-database,
+.hl-sym-table, .hl-sym-column, .hl-sym-ref, .hl-sym-enum,
+.hl-sym-enum-field, .hl-sym-tablegroup, .hl-sym-schema {
+  outline-offset: -1px;
+  border-radius: 2px;
+}
+
+.hl-tokens       { outline: 1px solid rgba(var(--hl-tokens-rgb),       0.35); background: rgba(var(--hl-tokens-rgb),       0.06); }
+.hl-nodes        { outline: 1px solid rgba(var(--hl-nodes-rgb),        0.35); background: rgba(var(--hl-nodes-rgb),        0.06); }
+.hl-database     { outline: 1px solid rgba(var(--hl-database-rgb),     0.40); background: rgba(var(--hl-database-rgb),     0.07); }
+.hl-sym-table    { outline: 1px solid rgba(var(--sym-table-rgb),       0.40); background: rgba(var(--sym-table-rgb),       0.07); }
+.hl-sym-column   { outline: 1px solid rgba(var(--sym-column-rgb),      0.40); background: rgba(var(--sym-column-rgb),      0.07); }
+.hl-sym-ref      { outline: 1px solid rgba(var(--sym-ref-rgb),         0.40); background: rgba(var(--sym-ref-rgb),         0.07); }
+.hl-sym-enum     { outline: 1px solid rgba(var(--sym-enum-rgb),        0.40); background: rgba(var(--sym-enum-rgb),        0.07); }
+.hl-sym-enum-field  { outline: 1px solid rgba(var(--sym-enum-field-rgb),  0.40); background: rgba(var(--sym-enum-field-rgb),  0.07); }
+.hl-sym-tablegroup  { outline: 1px solid rgba(var(--sym-tablegroup-rgb),  0.40); background: rgba(var(--sym-tablegroup-rgb),  0.07); }
+.hl-sym-schema   { outline: 1px solid rgba(var(--sym-schema-rgb),      0.40); background: rgba(var(--sym-schema-rgb),      0.07); }

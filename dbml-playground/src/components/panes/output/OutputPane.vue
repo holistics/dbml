@@ -68,6 +68,7 @@
         :show-decor="isDecorEnabled(activeTab)"
         class="h-full"
         @toggle-decor="toggleDecor(activeTab)"
+        @symbol-click="handleSymbolClick"
       />
       <DatabaseTab
         v-if="activeTab === OutputTabId.Database"
@@ -231,19 +232,29 @@ function collectAstRanges (ast: unknown): monaco.IRange[] {
   return ranges;
 }
 
-function collectSymbolRanges (symbols: SymbolInfo[]): monaco.IRange[] {
-  const ranges: monaco.IRange[] = [];
+const SYM_KIND_CLASS: Record<string, string> = {
+  'Table':      'hl-sym-table',
+  'Column':     'hl-sym-column',
+  'Ref':        'hl-sym-ref',
+  'Enum':       'hl-sym-enum',
+  'Enum field': 'hl-sym-enum-field',
+  'TableGroup': 'hl-sym-tablegroup',
+  'Schema':     'hl-sym-schema',
+};
+
+function collectSymbolEntries (symbols: SymbolInfo[]): Array<{ range: monaco.IRange; cls: string }> {
+  const result: Array<{ range: monaco.IRange; cls: string }> = [];
   function walk (sym: SymbolInfo) {
     if (sym.declPos) {
-      ranges.push(new monaco.Range(
-        sym.declPos.startLine, sym.declPos.startCol,
-        sym.declPos.endLine, sym.declPos.endCol,
-      ));
+      result.push({
+        range: new monaco.Range(sym.declPos.startLine, sym.declPos.startCol, sym.declPos.endLine, sym.declPos.endCol),
+        cls: SYM_KIND_CLASS[sym.kind] ?? 'hl-sym-table',
+      });
     }
     sym.members.forEach(walk);
   }
   symbols.forEach(walk);
-  return ranges;
+  return result;
 }
 
 function collectDatabaseRanges (): monaco.IRange[] {
@@ -263,37 +274,39 @@ function collectDatabaseRanges (): monaco.IRange[] {
   return ranges;
 }
 
-const TAB_DECOR_CLASS: Partial<Record<string, string>> = {
-  [OutputTabId.Tokens]: 'hl-tokens',
-  [OutputTabId.Nodes]: 'hl-nodes',
-  [OutputTabId.Symbols]: 'hl-symbols',
-  [OutputTabId.Database]: 'hl-database',
-};
-
 function updateEditorDecorations () {
   const editor = dbmlEditorRef?.value;
   editorDecorations?.clear();
   if (!editor || !isDecorEnabled(activeTab.value)) return;
-  const cls = TAB_DECOR_CLASS[activeTab.value];
-  if (!cls) return;
 
-  let ranges: monaco.IRange[] = [];
   if (activeTab.value === OutputTabId.Tokens) {
-    ranges = parser.tokens.map((t) => new monaco.Range(
+    const ranges = parser.tokens.map((t) => new monaco.Range(
       t.startPos.line + 1, t.startPos.column + 1,
       t.endPos.line + 1, t.endPos.column + 1,
     ));
+    if (ranges.length === 0) return;
+    editorDecorations = editor.createDecorationsCollection(
+      ranges.map((range) => ({ range, options: { inlineClassName: 'hl-tokens' } })),
+    );
   } else if (activeTab.value === OutputTabId.Nodes) {
-    ranges = collectAstRanges(parser.ast);
+    const ranges = collectAstRanges(parser.ast);
+    if (ranges.length === 0) return;
+    editorDecorations = editor.createDecorationsCollection(
+      ranges.map((range) => ({ range, options: { inlineClassName: 'hl-nodes' } })),
+    );
   } else if (activeTab.value === OutputTabId.Symbols) {
-    ranges = collectSymbolRanges(parser.symbols);
+    const entries = collectSymbolEntries(parser.symbols);
+    if (entries.length === 0) return;
+    editorDecorations = editor.createDecorationsCollection(
+      entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
+    );
   } else if (activeTab.value === OutputTabId.Database) {
-    ranges = collectDatabaseRanges();
+    const ranges = collectDatabaseRanges();
+    if (ranges.length === 0) return;
+    editorDecorations = editor.createDecorationsCollection(
+      ranges.map((range) => ({ range, options: { inlineClassName: 'hl-database' } })),
+    );
   }
-  if (ranges.length === 0) return;
-  editorDecorations = editor.createDecorationsCollection(
-    ranges.map((range) => ({ range, options: { inlineClassName: cls } })),
-  );
 }
 
 watch(
@@ -351,34 +364,17 @@ function handleNodeClick (node: RawAstNode) {
 }
 
 
+function handleSymbolClick (sym: SymbolInfo) {
+  if (!sym.declPos) return;
+  navigateTo({
+    startLineNumber: sym.declPos.startLine,
+    startColumn: sym.declPos.startCol,
+    endLineNumber: sym.declPos.endLine,
+    endColumn: sym.declPos.endCol,
+  });
+}
+
 defineExpose({
   scrollToToken: (i: number) => tokensTabRef.value?.scrollToToken(i),
 });
 </script>
-
-<style>
-.hl-tokens {
-  outline: 1px solid rgba(99, 102, 241, 0.35);
-  outline-offset: -1px;
-  border-radius: 2px;
-  background: rgba(99, 102, 241, 0.06);
-}
-.hl-nodes {
-  outline: 1px solid rgba(59, 130, 246, 0.35);
-  outline-offset: -1px;
-  border-radius: 2px;
-  background: rgba(59, 130, 246, 0.06);
-}
-.hl-symbols {
-  outline: 1px solid rgba(245, 158, 11, 0.4);
-  outline-offset: -1px;
-  border-radius: 2px;
-  background: rgba(245, 158, 11, 0.07);
-}
-.hl-database {
-  outline: 1px solid rgba(16, 185, 129, 0.4);
-  outline-offset: -1px;
-  border-radius: 2px;
-  background: rgba(16, 185, 129, 0.07);
-}
-</style>

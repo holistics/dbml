@@ -19,6 +19,7 @@
         :key="sym.id"
         :sym="sym"
         :level="0"
+        @symbol-click="emit('symbol-click', $event)"
       />
     </div>
   </div>
@@ -39,5 +40,6 @@ interface Props {
 defineProps<Props>();
 const emit = defineEmits<{
   'toggle-decor': [];
+  'symbol-click': [sym: SymbolInfo];
 }>();
 </script>
