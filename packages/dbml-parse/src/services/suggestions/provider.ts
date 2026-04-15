@@ -32,7 +32,10 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  type NodeSymbol, SymbolKind,
+  type NodeSymbol,
+} from '@/core/types/symbol';
+import {
+  SymbolKind,
 } from '@/core/types/symbol';
 import {
   SyntaxToken, SyntaxTokenKind,
@@ -49,11 +52,11 @@ import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
 import {
+  UseStatementMerger,
+} from '@/services/completion/utils/useMerger';
+import {
   suggestRecordRowSnippet,
 } from '@/services/suggestions/recordRowSnippet';
-import {
-  isOffsetInUseDeclaration, suggestInUseDeclaration,
-} from '@/services/suggestions/use';
 import {
   addQuoteToSuggestionIfNeeded,
   addSuggestAllSuggestion,
@@ -75,7 +78,6 @@ import {
 } from '@/services/types';
 import {
   getOffsetFromMonacoPosition,
-  mergeSymbolIntoUses,
 } from '@/services/utils';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
@@ -88,17 +90,13 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     this.triggerCharacters = triggerCharacters;
   }
 
-  private collectFileSymbols (fp: Filepath): Array<{ sym: NodeSymbol;
-    filepath: Filepath; }> {
+  private collectFileSymbols (fp: Filepath): Array<{ sym: NodeSymbol; filepath: Filepath }> {
     const usable = this.compiler.fileUsableMembers(fp).getFiltered(UNHANDLED);
     if (!usable) return [];
     return [
       ...usable.nonSchemaMembers,
       ...usable.schemaMembers,
-    ].map((sym) => ({
-      sym,
-      filepath: fp,
-    }));
+    ].map((sym) => ({ sym, filepath: fp }));
   }
 
   /**
@@ -114,11 +112,10 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     currentFileContent: string,
   ): CompletionItem {
     // Calculate the use statement that should be inserted
-    const mergeResult = mergeSymbolIntoUses(
+    const mergeResult = UseStatementMerger.mergeSymbolIntoUses(
       this.compiler,
       currentFilepath,
       currentFileContent,
-      symbolKind,
       symbolName,
       sourceFilepath,
     );
@@ -156,16 +153,12 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     currentFilepath: Filepath,
     currentFileContent: string,
   ): CompletionList {
-    const results: CompletionList = {
-      suggestions: [],
-    };
+    const results: CompletionList = { suggestions: [] };
     const seenNames = new Set<string>();
 
     for (const fp of this.compiler.layout.getEntryPoints()) {
       if (fp.equals(currentFilepath)) continue;
-      for (const {
-        sym, filepath,
-      } of this.collectFileSymbols(fp)) {
+      for (const { sym, filepath } of this.collectFileSymbols(fp)) {
         if (!acceptedKinds.includes(sym.kind)) continue;
         const name = this.compiler.symbolName(sym);
         if (!name || seenNames.has(name)) continue;
@@ -215,19 +208,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     if (bOcTokenId === undefined) {
       return suggestTopLevelElementType();
-    }
-
-    // Check if cursor is inside a use/reuse declaration.
-    // Must run before the string guard so import-path completions work inside string tokens.
-    {
-      const programAst = this.compiler.parseFile(filepath).getValue()?.ast;
-      if (programAst) {
-        for (const useDecl of programAst.uses) {
-          if (isOffsetInUseDeclaration(offset, useDecl, bOcToken)) {
-            return suggestInUseDeclaration(this.compiler, filepath, offset, useDecl, model, bOcToken);
-          }
-        }
-      }
     }
 
     // Check if we're inside a string

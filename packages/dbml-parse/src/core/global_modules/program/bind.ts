@@ -125,9 +125,7 @@ export default class Binder {
     }
 
     // Single column ref: include all path fragment IDs so that refs through
-    // different aliases (e.g. `users.id` vs `u.id`) are treated as distinct.
-    // Use sym.intern() (not originalSymbol) so aliased UseSymbols keep their
-    // own identity and are not collapsed onto the same underlying symbol.
+    // different aliases (e.g. `users.id` vs `u.id`) are treated as distinct
     const allIds: string[] = [];
     for (const fragment of fragments) {
       if (fragment instanceof TupleExpressionNode) continue;
@@ -135,7 +133,7 @@ export default class Binder {
       if (result.hasValue(UNHANDLED)) return undefined;
       const sym = result.getValue();
       if (!sym) return undefined;
-      allIds.push(sym.intern());
+      allIds.push(sym.originalSymbol.intern());
     }
     return allIds;
   }
@@ -233,14 +231,12 @@ export default class Binder {
 
               const rightIds = this.getColumnSymbolIds(refValue.expression);
               if (!rightIds) continue;
-              const leftIds = tableSym
-                ? [
-                    tableSym.originalSymbol.intern(),
-                    colSym.originalSymbol.intern(),
-                  ]
-                : [
-                    colSym.originalSymbol.intern(),
-                  ];
+              const leftIds = tableSym ? [
+                tableSym.originalSymbol.intern(),
+                colSym.originalSymbol.intern(),
+              ] : [
+                colSym.originalSymbol.intern(),
+              ];
 
               if (this.isSameEndpoint(leftIds, rightIds)) {
                 errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));
