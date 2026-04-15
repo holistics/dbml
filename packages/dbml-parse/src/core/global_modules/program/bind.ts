@@ -125,7 +125,9 @@ export default class Binder {
     }
 
     // Single column ref: include all path fragment IDs so that refs through
-    // different aliases (e.g. `users.id` vs `u.id`) are treated as distinct
+    // different aliases (e.g. `users.id` vs `u.id`) are treated as distinct.
+    // Use sym.intern() (not originalSymbol) so aliased UseSymbols keep their
+    // own identity and are not collapsed onto the same underlying symbol.
     const allIds: string[] = [];
     for (const fragment of fragments) {
       if (fragment instanceof TupleExpressionNode) continue;
@@ -133,7 +135,7 @@ export default class Binder {
       if (result.hasValue(UNHANDLED)) return undefined;
       const sym = result.getValue();
       if (!sym) return undefined;
-      allIds.push(sym.originalSymbol.intern());
+      allIds.push(sym.intern());
     }
     return allIds;
   }

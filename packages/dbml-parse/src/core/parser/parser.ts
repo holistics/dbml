@@ -347,6 +347,10 @@ export default class Parser {
         }
         throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
       }
+      if (this.check(SyntaxTokenKind.COMMA)) {
+        this.advance();
+        args.commaList.push(this.previous());
+      }
     }
 
     try {
@@ -381,24 +385,20 @@ export default class Parser {
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
     }
 
-    try {
-      if (
-        this.peek().kind !== SyntaxTokenKind.IDENTIFIER
-        && this.peek().kind !== SyntaxTokenKind.QUOTED_STRING
-      ) {
-        this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an element name');
-        throw new PartialParsingError(
-          this.peek(),
-          buildNode(),
-          this.contextStack.findHandlerContext(this.tokens, this.current),
-        );
+    if (
+      this.peek().kind === SyntaxTokenKind.IDENTIFIER
+      || this.peek().kind === SyntaxTokenKind.QUOTED_STRING
+    ) {
+      try {
+        args.name = this.normalExpression();
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
+        }
+        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
       }
-      args.name = this.normalExpression();
-    } catch (e) {
-      if (!(e instanceof PartialParsingError)) {
-        throw e;
-      }
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+    } else {
+      this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an element name');
     }
 
     // Optional: as <alias>

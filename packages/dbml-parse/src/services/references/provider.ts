@@ -1,3 +1,6 @@
+import {
+  Uri,
+} from 'monaco-editor-core';
 import Compiler from '@/compiler';
 import {
   DEFAULT_ENTRY,
@@ -56,9 +59,9 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
           if (references && references.length > 0) {
             return references.map((refNode) => {
               // Use filepath from reference node if available and in multi-file mode (uri is set)
-              let refUri = uri;
+              let refUri: any = uri;
               if (uri && refNode.filepath) {
-                refUri = refNode.filepath.toUri() as any;
+                refUri = Uri.parse(refNode.filepath.toUri());
               }
 
               return {

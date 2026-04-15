@@ -1,3 +1,6 @@
+import {
+  Uri,
+} from 'monaco-editor-core';
 import Compiler from '@/compiler';
 import {
   DEFAULT_ENTRY,
@@ -61,9 +64,9 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
           startPos, endPos,
         } = declaration;
         // Use filepath from declaration if available and in multi-file mode (uri is set)
-        let definitionUri = uri;
+        let definitionUri: any = uri;
         if (uri && declaration.filepath) {
-          definitionUri = declaration.filepath.toUri() as any;
+          definitionUri = Uri.parse(declaration.filepath.toUri());
         }
 
         return [

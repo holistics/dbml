@@ -55,6 +55,9 @@ import {
   suggestRecordRowSnippet,
 } from '@/services/suggestions/recordRowSnippet';
 import {
+  isOffsetInUseDeclaration, suggestInUseDeclaration,
+} from '@/services/suggestions/useDeclarationSuggestions';
+import {
   addQuoteToSuggestionIfNeeded,
   addSuggestAllSuggestion,
   isOffsetWithinElementHeader,
@@ -205,6 +208,19 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     if (bOcTokenId === undefined) {
       return suggestTopLevelElementType();
+    }
+
+    // Check if cursor is inside a use/reuse declaration.
+    // Must run before the string guard so import-path completions work inside string tokens.
+    {
+      const programAst = this.compiler.parseFile(filepath).getValue()?.ast;
+      if (programAst) {
+        for (const useDecl of programAst.uses) {
+          if (isOffsetInUseDeclaration(offset, useDecl, bOcToken)) {
+            return suggestInUseDeclaration(this.compiler, filepath, offset, useDecl, model, bOcToken);
+          }
+        }
+      }
     }
 
     // Check if we're inside a string

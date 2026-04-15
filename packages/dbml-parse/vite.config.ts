@@ -33,6 +33,9 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    alias: {
+      'monaco-editor-core': path.resolve(__dirname, '__tests__/utils/monaco-editor-core-mock.ts'),
+    },
     coverage: {
       provider: 'v8',
       reporter: ['json-summary', 'text'],
