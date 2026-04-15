@@ -705,22 +705,18 @@ TableGroup mixed {
 `,
   });
 
+  const errors = compiler.bindNode(compiler.parseFile(fps['/main.dbml']).getValue().ast).getErrors();
+
   test('binding produces BINDING_ERROR for the imported table reference', () => {
-    const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
-    const errors = compiler.bindNode(ast).getErrors();
     expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
   });
 
   test('error message names the imported table', () => {
-    const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
-    const errors = compiler.bindNode(ast).getErrors();
     const err = errors.find((e) => e.code === CompileErrorCode.BINDING_ERROR && e.message.includes('users'));
     expect(err).toBeDefined();
   });
 
   test('local table in the same tablegroup does not produce an error', () => {
-    const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
-    const errors = compiler.bindNode(ast).getErrors();
     const localErr = errors.find((e) => e.code === CompileErrorCode.BINDING_ERROR && e.message.includes('local'));
     expect(localErr).toBeUndefined();
   });

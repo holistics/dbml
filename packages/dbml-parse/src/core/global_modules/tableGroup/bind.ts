@@ -76,19 +76,16 @@ export default class TableGroupBinder {
         if (!tableBindee) {
           return [];
         }
-        const schemaBindees = bindee.variables;
-
         const result = this.compiler.nodeReferee(tableBindee);
-        const errors = [...result.getErrors()];
         const sym = result.getFiltered(UNHANDLED);
         if (sym instanceof UseSymbol) {
-          errors.push(new CompileError(
+          return [...result.getErrors(), new CompileError(
             CompileErrorCode.BINDING_ERROR,
             `TableGroup cannot reference imported table '${this.compiler.symbolName(sym)}'`,
             tableBindee,
-          ));
+          )];
         }
-        return errors;
+        return result.getErrors();
       });
     });
   }
