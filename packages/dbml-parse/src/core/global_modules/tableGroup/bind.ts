@@ -3,14 +3,20 @@ import {
 } from 'lodash-es';
 import Compiler from '@/compiler';
 import {
-  CompileError,
+  CompileError, CompileErrorCode,
 } from '@/core/types/errors';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '@/core/types/nodes';
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
+import {
+  UseSymbol,
+} from '@/core/types/symbol';
 import {
   scanNonListNodeForBinding,
 } from '../utils';
@@ -72,7 +78,17 @@ export default class TableGroupBinder {
         }
         const schemaBindees = bindee.variables;
 
-        return this.compiler.nodeReferee(tableBindee).getErrors();
+        const result = this.compiler.nodeReferee(tableBindee);
+        const errors = [...result.getErrors()];
+        const sym = result.getFiltered(UNHANDLED);
+        if (sym instanceof UseSymbol) {
+          errors.push(new CompileError(
+            CompileErrorCode.BINDING_ERROR,
+            `TableGroup cannot reference imported table '${this.compiler.symbolName(sym)}'`,
+            tableBindee,
+          ));
+        }
+        return errors;
       });
     });
   }

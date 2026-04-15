@@ -3,6 +3,7 @@ import {
 } from 'vitest';
 import { Compiler } from '@/index';
 import { Filepath } from '@/core/types/filepath';
+import { CompileErrorCode } from '@/core/types/errors';
 import type { Database } from '@/core/types/schemaJson';
 
 // Build a multi-file compiler from a record of absolute filepath -> source.
@@ -671,5 +672,88 @@ Ref r2: orders.user_id > u.id
     expect(r2).toBeDefined();
     expect(r1.endpoints.find((e) => e.tableName === 'users')).toBeDefined();
     expect(r2.endpoints.find((e) => e.tableName === 'u')).toBeDefined();
+  });
+});
+
+
+describe('[example] multifile binder — TableGroup cannot reference imported table', () => {
+  // base.dbml:   Table users { id int [pk] }
+  //              Table posts { id int [pk] }
+  // main.dbml:   use { table users } from './base.dbml'
+  //              Table local { id int [pk] }
+  //              TableGroup mixed { local; users }   ← users is imported → error
+  const { compiler, fps } = makeCompiler({
+    '/base.dbml': `
+Table users {
+  id int [pk]
+}
+Table posts {
+  id int [pk]
+}
+`,
+    '/main.dbml': `
+use { table users } from './base.dbml'
+
+Table local {
+  id int [pk]
+}
+
+TableGroup mixed {
+  local
+  users
+}
+`,
+  });
+
+  test('binding produces BINDING_ERROR for the imported table reference', () => {
+    const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+    const errors = compiler.bindNode(ast).getErrors();
+    expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+  });
+
+  test('error message names the imported table', () => {
+    const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+    const errors = compiler.bindNode(ast).getErrors();
+    const err = errors.find((e) => e.code === CompileErrorCode.BINDING_ERROR && e.message.includes('users'));
+    expect(err).toBeDefined();
+  });
+
+  test('local table in the same tablegroup does not produce an error', () => {
+    const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+    const errors = compiler.bindNode(ast).getErrors();
+    const localErr = errors.find((e) => e.code === CompileErrorCode.BINDING_ERROR && e.message.includes('local'));
+    expect(localErr).toBeUndefined();
+  });
+});
+
+
+describe('[example] multifile binder — TableGroup with all-imported tables emits one error per entry', () => {
+  // base.dbml:   Table a { id int } / Table b { id int }
+  // main.dbml:   use { table a } + use { table b } from './base.dbml'
+  //              TableGroup all_imported { a; b }   ← both imported → 2 errors
+  const { compiler, fps } = makeCompiler({
+    '/base.dbml': `
+Table a {
+  id int
+}
+Table b {
+  id int
+}
+`,
+    '/main.dbml': `
+use { table a } from './base.dbml'
+use { table b } from './base.dbml'
+
+TableGroup all_imported {
+  a
+  b
+}
+`,
+  });
+
+  test('binding produces one BINDING_ERROR per imported table reference', () => {
+    const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+    const errors = compiler.bindNode(ast).getErrors().filter((e) => e.code === CompileErrorCode.BINDING_ERROR);
+    expect(errors).toHaveLength(2);
   });
 });
