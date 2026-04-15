@@ -50,6 +50,8 @@ import {
   PhArrowsLeftRight,
   PhFolder,
   PhAt,
+  PhTextAa,
+  PhNumberSquareOne,
 } from '@phosphor-icons/vue';
 import type {
   SymbolInfo,
@@ -75,8 +77,8 @@ const KIND_ICONS: Record<string, Component> = {
   'Table': PhTable,
   'Column': PhListBullets,
   'Ref': PhArrowsLeftRight,
-  'Enum': PhListBullets,
-  'Enum field': PhListBullets,
+  'Enum': PhTextAa,
+  'Enum field': PhNumberSquareOne,
   'TableGroup': PhFolder,
   'Schema': PhFolder,
 };

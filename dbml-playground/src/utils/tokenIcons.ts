@@ -55,3 +55,32 @@ const FALLBACK: TokenIconInfo = { icon: PhQuestion, color: 'text-gray-400' };
 export function tokenIconFor (kind: string): TokenIconInfo {
   return TOKEN_ICON_MAP[kind] ?? FALLBACK;
 }
+
+export const TOKEN_KIND_CLASS: Record<string, string> = {
+  '<identifier>':          'hl-tok-identifier',
+  '<variable>':            'hl-tok-variable',
+  '<string>':              'hl-tok-string',
+  '<number>':              'hl-tok-number',
+  '<color>':               'hl-tok-color',
+  '<function-expression>': 'hl-tok-function',
+  '<op>':                  'hl-tok-op',
+  '<lparen>':              'hl-tok-bracket',
+  '<rparen>':              'hl-tok-bracket',
+  '<lbrace>':              'hl-tok-bracket',
+  '<rbrace>':              'hl-tok-bracket',
+  '<lbracket>':            'hl-tok-bracket',
+  '<rbracket>':            'hl-tok-bracket',
+  '<langle>':              'hl-tok-bracket',
+  '<rangle>':              'hl-tok-bracket',
+  '<comma>':               'hl-tok-punct',
+  '<semicolon>':           'hl-tok-punct',
+  '<colon>':               'hl-tok-punct',
+  '<single-line-comment>': 'hl-tok-comment',
+  '<multiline-comment>':   'hl-tok-comment',
+  '<wildcard>':            'hl-tok-wildcard',
+  '<eof>':                 'hl-tok-eof',
+};
+
+export function tokenKindClass (kind: string): string {
+  return TOKEN_KIND_CLASS[kind] ?? 'hl-tok-identifier';
+}

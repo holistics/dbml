@@ -72,6 +72,7 @@
 
         <div
           v-if="activeIndex === i && !detailCollapsed"
+          :ref="(el) => setDetailEl(i, el as HTMLElement | null)"
           class="border-b border-gray-100 border-l-2 border-l-yellow-300 bg-yellow-50/40 px-3 py-1.5"
           style="font-family: 'SF Mono', Monaco, Consolas, monospace;"
         >
@@ -119,6 +120,9 @@ import type {
 import {
   tokenIconFor,
 } from '@/utils/tokenIcons';
+import {
+  scrollRowIntoView,
+} from '@/utils/scroll';
 
 interface Props {
   tokens: SyntaxToken[];
@@ -160,7 +164,8 @@ const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getD
 const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
 
 const scrollEl = ref<HTMLElement | null>(null);
-const rowEls: HTMLElement[] = [];
+const rowEls: (HTMLElement | null)[] = [];
+const detailEls: (HTMLElement | null)[] = [];
 
 const rawTexts = ref<string[]>([]);
 
@@ -176,11 +181,12 @@ function updateRawTexts () {
 const activeIndex = ref(-1);
 const detailCollapsed = ref(false);
 
-function setRowEl (i: number, el: HTMLElement | null) {
-  if (el) rowEls[i] = el;
-}
+function setRowEl (i: number, el: HTMLElement | null) { rowEls[i] = el; }
+function setDetailEl (i: number, el: HTMLElement | null) { detailEls[i] = el; }
 
-watch(() => props.tokens.length, () => { rowEls.length = 0; });
+watch(() => props.tokens.length, () => { rowEls.length = 0; detailEls.length = 0; });
+
+function scrollToVisible (i: number) { scrollRowIntoView(i, rowEls, detailEls, scrollEl); }
 
 function computeActiveIndex (line: number, column: number): number {
   let best = -1;
@@ -202,9 +208,7 @@ function updateActiveIndex () {
     detailCollapsed.value = false;
   }
   activeIndex.value = next;
-  if (activeIndex.value >= 0) {
-    rowEls[activeIndex.value]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  }
+  if (activeIndex.value >= 0) scrollToVisible(activeIndex.value);
 }
 
 watch(() => props.tokens, () => {
@@ -238,6 +242,7 @@ onUnmounted(() => {
 function onTokenClick (i: number, tok: SyntaxToken) {
   if (activeIndex.value === i) {
     detailCollapsed.value = !detailCollapsed.value;
+    if (!detailCollapsed.value) scrollToVisible(i);
   } else {
     detailCollapsed.value = false;
     navigateTo(tok);
@@ -263,10 +268,7 @@ function navigateTo (tok: SyntaxToken) {
 }
 
 function scrollToToken (i: number) {
-  rowEls[i]?.scrollIntoView({
-    block: 'center',
-    behavior: 'smooth',
-  });
+  scrollToVisible(i);
 }
 
 defineExpose({

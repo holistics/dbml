@@ -122,6 +122,9 @@ import {
 import {
   OutputTabId,
 } from '@/stores/userStore';
+import {
+  tokenKindClass,
+} from '@/utils/tokenIcons';
 import logger from '@/utils/logger';
 import * as monaco from 'monaco-editor';
 
@@ -204,11 +207,36 @@ const AST_SKIP_KEYS = new Set(['parentNode', 'parent', 'symbol', 'referee', 'sou
 
 const AST_RANGE_LIMIT = 2000;
 
-function collectAstRanges (ast: unknown): monaco.IRange[] {
-  const ranges: monaco.IRange[] = [];
+const NODE_KIND_CLASS: Record<string, string> = {
+  '<element-declaration>':  'hl-node-element',
+  '<use-declaration>':      'hl-node-use',
+  '<use-specifier>':        'hl-node-use',
+  '<use-specifier-list>':   'hl-node-use',
+  '<attribute>':            'hl-node-attribute',
+  '<identifer-stream>':     'hl-node-id-stream',
+  '<literal>':              'hl-node-literal',
+  '<variable>':             'hl-node-variable',
+  '<prefix-expression>':    'hl-node-arith',
+  '<infix-expression>':     'hl-node-arith',
+  '<postfix-expression>':   'hl-node-arith',
+  '<function-expression>':  'hl-node-function',
+  '<function-application>': 'hl-node-fn-app',
+  '<block-expression>':     'hl-node-block',
+  '<list-expression>':      'hl-node-list',
+  '<tuple-expression>':     'hl-node-list',
+  '<comma-expression>':     'hl-node-list',
+  '<array>':                'hl-node-list',
+  '<call-expression>':      'hl-node-call',
+  '<group-expression>':     'hl-node-call',
+  '<primary-expression>':   'hl-node-primary',
+  '<wildcard>':             'hl-node-wildcard',
+};
+
+function collectAstEntries (ast: unknown): Array<{ range: monaco.IRange; cls: string }> {
+  const entries: Array<{ range: monaco.IRange; cls: string }> = [];
   const visited = new WeakSet<object>();
   function walk (node: unknown) {
-    if (ranges.length >= AST_RANGE_LIMIT) return;
+    if (entries.length >= AST_RANGE_LIMIT) return;
     if (!node || typeof node !== 'object') return;
     if (visited.has(node)) return;
     visited.add(node);
@@ -218,10 +246,13 @@ function collectAstRanges (ast: unknown): monaco.IRange[] {
     const ep = obj.endPos as { line?: number; column?: number } | null | undefined;
     if (sp && ep && typeof sp.line === 'number' && !Number.isNaN(sp.line)
       && typeof ep.line === 'number' && !Number.isNaN(ep.line)) {
-      ranges.push(new monaco.Range(
-        sp.line + 1, (sp.column ?? 0) + 1,
-        ep.line + 1, (ep.column ?? 0) + 1,
-      ));
+      const cls = NODE_KIND_CLASS[obj.kind as string] ?? null;
+      if (cls) {
+        entries.push({
+          range: new monaco.Range(sp.line + 1, (sp.column ?? 0) + 1, ep.line + 1, (ep.column ?? 0) + 1),
+          cls,
+        });
+      }
     }
     for (const [key, val] of Object.entries(obj)) {
       if (AST_SKIP_KEYS.has(key)) continue;
@@ -229,7 +260,7 @@ function collectAstRanges (ast: unknown): monaco.IRange[] {
     }
   }
   walk(ast);
-  return ranges;
+  return entries;
 }
 
 const SYM_KIND_CLASS: Record<string, string> = {
@@ -257,21 +288,23 @@ function collectSymbolEntries (symbols: SymbolInfo[]): Array<{ range: monaco.IRa
   return result;
 }
 
-function collectDatabaseRanges (): monaco.IRange[] {
+type DbToken = { start: { line: number; column: number }; end: { line: number; column: number } } | undefined;
+
+function collectDatabaseEntries (): Array<{ range: monaco.IRange; cls: string }> {
   const db = parser.database;
   if (!db) return [];
-  const ranges: monaco.IRange[] = [];
-  function addToken (tp: { start: { line: number; column: number }; end: { line: number; column: number } } | undefined) {
+  const result: Array<{ range: monaco.IRange; cls: string }> = [];
+  function add (tp: DbToken, cls: string) {
     if (!tp) return;
-    ranges.push(new monaco.Range(tp.start.line, tp.start.column, tp.end.line, tp.end.column));
+    result.push({ range: new monaco.Range(tp.start.line, tp.start.column, tp.end.line, tp.end.column), cls });
   }
-  for (const t of db.tables) { addToken(t.token); }
-  for (const r of db.refs) { addToken(r.token); }
-  for (const e of db.enums) { addToken(e.token); }
-  for (const n of db.notes) { addToken(n.token); }
-  for (const tg of db.tableGroups) { addToken(tg.token); }
-  for (const tp of db.tablePartials ?? []) { addToken((tp as { token?: { start: { line: number; column: number }; end: { line: number; column: number } } }).token); }
-  return ranges;
+  for (const t of db.tables) { add(t.token, 'hl-sym-table'); }
+  for (const r of db.refs) { add(r.token, 'hl-sym-ref'); }
+  for (const e of db.enums) { add(e.token, 'hl-sym-enum'); }
+  for (const n of db.notes) { add(n.token, 'hl-sym-column'); }
+  for (const tg of db.tableGroups) { add(tg.token, 'hl-sym-tablegroup'); }
+  for (const tp of db.tablePartials ?? []) { add((tp as { token?: DbToken }).token as DbToken, 'hl-sym-table'); }
+  return result;
 }
 
 function updateEditorDecorations () {
@@ -280,19 +313,19 @@ function updateEditorDecorations () {
   if (!editor || !isDecorEnabled(activeTab.value)) return;
 
   if (activeTab.value === OutputTabId.Tokens) {
-    const ranges = parser.tokens.map((t) => new monaco.Range(
-      t.startPos.line + 1, t.startPos.column + 1,
-      t.endPos.line + 1, t.endPos.column + 1,
-    ));
-    if (ranges.length === 0) return;
+    const entries = parser.tokens.map((t) => ({
+      range: new monaco.Range(t.startPos.line + 1, t.startPos.column + 1, t.endPos.line + 1, t.endPos.column + 1),
+      cls: tokenKindClass(t.kind),
+    }));
+    if (entries.length === 0) return;
     editorDecorations = editor.createDecorationsCollection(
-      ranges.map((range) => ({ range, options: { inlineClassName: 'hl-tokens' } })),
+      entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
     );
   } else if (activeTab.value === OutputTabId.Nodes) {
-    const ranges = collectAstRanges(parser.ast);
-    if (ranges.length === 0) return;
+    const entries = collectAstEntries(parser.ast);
+    if (entries.length === 0) return;
     editorDecorations = editor.createDecorationsCollection(
-      ranges.map((range) => ({ range, options: { inlineClassName: 'hl-nodes' } })),
+      entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
     );
   } else if (activeTab.value === OutputTabId.Symbols) {
     const entries = collectSymbolEntries(parser.symbols);
@@ -301,10 +334,10 @@ function updateEditorDecorations () {
       entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
     );
   } else if (activeTab.value === OutputTabId.Database) {
-    const ranges = collectDatabaseRanges();
-    if (ranges.length === 0) return;
+    const entries = collectDatabaseEntries();
+    if (entries.length === 0) return;
     editorDecorations = editor.createDecorationsCollection(
-      ranges.map((range) => ({ range, options: { inlineClassName: 'hl-database' } })),
+      entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
     );
   }
 }
@@ -319,9 +352,11 @@ onBeforeUnmount(() => { editorDecorations?.clear(); editorDecorations = null; })
 
 const tokensTabRef = ref<InstanceType<typeof TokensTab> | null>(null);
 let highlightTimer: ReturnType<typeof setTimeout> | null = null;
+let navDecorations: monaco.editor.IEditorDecorationsCollection | null = null;
 
 onBeforeUnmount(() => {
   if (highlightTimer !== null) clearTimeout(highlightTimer);
+  navDecorations?.clear();
 });
 
 const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getDbmlEditor');
@@ -335,15 +370,16 @@ function navigateTo (range: { startLineNumber: number;
   try {
     editor.setSelection(range);
     editor.revealRangeInCenter(range);
-    const decorations = editor.createDecorationsCollection([{
+    if (highlightTimer !== null) clearTimeout(highlightTimer);
+    navDecorations?.clear();
+    navDecorations = editor.createDecorationsCollection([{
       range,
       options: {
         className: 'token-navigation-highlight',
         inlineClassName: 'token-navigation-highlight-inline',
       },
     }]);
-    if (highlightTimer !== null) clearTimeout(highlightTimer);
-    highlightTimer = setTimeout(() => { decorations.clear(); highlightTimer = null; }, 2000);
+    highlightTimer = setTimeout(() => { navDecorations?.clear(); navDecorations = null; highlightTimer = null; }, 2000);
   } catch (err) {
     logger.warn('Navigation failed:', err);
   }

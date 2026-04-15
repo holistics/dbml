@@ -92,10 +92,10 @@
           />
         </Pane>
         <Pane
-          :min-size="20"
+          :min-size="25"
           :max-size="70"
         >
-          <div class="flex flex-col h-full bg-white rounded border border-gray-200 overflow-hidden">
+          <div class="flex flex-col h-full bg-white rounded border border-gray-200 overflow-hidden" style="min-width: 260px;">
             <OutputPane ref="outputPaneRef" />
           </div>
         </Pane>

@@ -39,11 +39,26 @@ code, pre {
   --sym-enum-field-rgb:  34, 197,  94;   /* green-500 */
   --sym-tablegroup-rgb: 202, 138,   4;   /* yellow-600 */
   --sym-schema-rgb:     249, 115,  22;   /* orange-500 */
+  --violet-rgb:         139,  92, 246;   /* violet-500 */
+  --amber-rgb:          245, 158,  11;   /* amber-500 */
+  --pink-rgb:           236,  72, 153;   /* pink-500 */
+  --red-rgb:            239,  68,  68;   /* red-500 */
+  --cyan-rgb:             6, 182, 212;   /* cyan-500 */
+  --yellow-rgb:         234, 179,   8;   /* yellow-500 */
+  --teal-rgb:            20, 184, 166;   /* teal-500 */
+  --sky-rgb:             14, 165, 233;   /* sky-500 */
 }
 
 .hl-tokens, .hl-nodes, .hl-database,
 .hl-sym-table, .hl-sym-column, .hl-sym-ref, .hl-sym-enum,
-.hl-sym-enum-field, .hl-sym-tablegroup, .hl-sym-schema {
+.hl-sym-enum-field, .hl-sym-tablegroup, .hl-sym-schema,
+.hl-tok-identifier, .hl-tok-variable, .hl-tok-string, .hl-tok-number,
+.hl-tok-color, .hl-tok-function, .hl-tok-op, .hl-tok-bracket,
+.hl-tok-punct, .hl-tok-comment, .hl-tok-wildcard, .hl-tok-eof,
+.hl-node-element, .hl-node-use, .hl-node-attribute, .hl-node-id-stream,
+.hl-node-literal, .hl-node-variable, .hl-node-arith, .hl-node-function,
+.hl-node-fn-app, .hl-node-block, .hl-node-list, .hl-node-call,
+.hl-node-primary, .hl-node-wildcard {
   outline-offset: -1px;
   border-radius: 2px;
 }
@@ -58,3 +73,33 @@ code, pre {
 .hl-sym-enum-field  { outline: 1px solid rgba(var(--sym-enum-field-rgb),  0.40); background: rgba(var(--sym-enum-field-rgb),  0.07); }
 .hl-sym-tablegroup  { outline: 1px solid rgba(var(--sym-tablegroup-rgb),  0.40); background: rgba(var(--sym-tablegroup-rgb),  0.07); }
 .hl-sym-schema   { outline: 1px solid rgba(var(--sym-schema-rgb),      0.40); background: rgba(var(--sym-schema-rgb),      0.07); }
+
+/* token kind decorations */
+.hl-tok-identifier { outline: 1px solid rgba(var(--hl-nodes-rgb),    0.35); background: rgba(var(--hl-nodes-rgb),    0.06); }
+.hl-tok-variable   { outline: 1px solid rgba(var(--violet-rgb),      0.35); background: rgba(var(--violet-rgb),      0.06); }
+.hl-tok-string     { outline: 1px solid rgba(var(--sym-enum-rgb),    0.35); background: rgba(var(--sym-enum-rgb),    0.06); }
+.hl-tok-number     { outline: 1px solid rgba(var(--amber-rgb),       0.35); background: rgba(var(--amber-rgb),       0.06); }
+.hl-tok-color      { outline: 1px solid rgba(var(--pink-rgb),        0.35); background: rgba(var(--pink-rgb),        0.06); }
+.hl-tok-function   { outline: 1px solid rgba(var(--sym-schema-rgb),  0.35); background: rgba(var(--sym-schema-rgb),  0.06); }
+.hl-tok-op         { outline: 1px solid rgba(var(--red-rgb),         0.35); background: rgba(var(--red-rgb),         0.06); }
+.hl-tok-bracket    { outline: 1px solid rgba(var(--cyan-rgb),        0.35); background: rgba(var(--cyan-rgb),        0.06); }
+.hl-tok-punct      { outline: 1px solid rgba(var(--sym-column-rgb),  0.35); background: rgba(var(--sym-column-rgb),  0.06); }
+.hl-tok-comment    { outline: 1px solid rgba(var(--sym-column-rgb),  0.35); background: rgba(var(--sym-column-rgb),  0.06); }
+.hl-tok-wildcard   { outline: 1px solid rgba(var(--yellow-rgb),      0.35); background: rgba(var(--yellow-rgb),      0.06); }
+.hl-tok-eof        { outline: 1px solid rgba(var(--red-rgb),         0.35); background: rgba(var(--red-rgb),         0.06); }
+
+/* node kind decorations */
+.hl-node-element   { outline: 1px solid rgba(var(--hl-nodes-rgb),       0.35); background: rgba(var(--hl-nodes-rgb),       0.06); }
+.hl-node-use       { outline: 1px solid rgba(var(--violet-rgb),         0.35); background: rgba(var(--violet-rgb),         0.06); }
+.hl-node-attribute { outline: 1px solid rgba(var(--sym-schema-rgb),     0.35); background: rgba(var(--sym-schema-rgb),     0.06); }
+.hl-node-id-stream { outline: 1px solid rgba(var(--sym-column-rgb),     0.35); background: rgba(var(--sym-column-rgb),     0.06); }
+.hl-node-literal   { outline: 1px solid rgba(var(--sym-enum-rgb),       0.35); background: rgba(var(--sym-enum-rgb),       0.06); }
+.hl-node-variable  { outline: 1px solid rgba(var(--cyan-rgb),           0.35); background: rgba(var(--cyan-rgb),           0.06); }
+.hl-node-arith     { outline: 1px solid rgba(var(--red-rgb),            0.35); background: rgba(var(--red-rgb),            0.06); }
+.hl-node-function  { outline: 1px solid rgba(var(--amber-rgb),          0.35); background: rgba(var(--amber-rgb),          0.06); }
+.hl-node-fn-app    { outline: 1px solid rgba(var(--sym-tablegroup-rgb), 0.35); background: rgba(var(--sym-tablegroup-rgb), 0.06); }
+.hl-node-block     { outline: 1px solid rgba(var(--hl-tokens-rgb),      0.35); background: rgba(var(--hl-tokens-rgb),      0.06); }
+.hl-node-list      { outline: 1px solid rgba(var(--teal-rgb),           0.35); background: rgba(var(--teal-rgb),           0.06); }
+.hl-node-call      { outline: 1px solid rgba(var(--pink-rgb),           0.35); background: rgba(var(--pink-rgb),           0.06); }
+.hl-node-primary   { outline: 1px solid rgba(var(--sky-rgb),            0.35); background: rgba(var(--sky-rgb),            0.06); }
+.hl-node-wildcard  { outline: 1px solid rgba(var(--yellow-rgb),         0.35); background: rgba(var(--yellow-rgb),         0.06); }

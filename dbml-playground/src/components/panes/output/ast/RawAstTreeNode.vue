@@ -59,47 +59,44 @@
             <span class="text-gray-400 text-[10px] font-medium pt-[2px] select-none shrink-0">{{ entry.key }}</span>
 
             <!-- Single SyntaxToken -->
-            <div v-if="!Array.isArray(entry.data)" class="min-w-0">
-              <span class="inline-flex items-center gap-1 font-mono">
-                <component :is="tokenIconFor(entry.data.kind).icon" class="w-3 h-3 flex-shrink-0" :class="tokenIconFor(entry.data.kind).color" />
-                <span :class="entry.data.kind === SyntaxTokenKind.EOF ? 'text-red-400' : 'text-green-700'">
-                  {{ entry.data.kind === SyntaxTokenKind.EOF ? '<EOF>' : (entry.data.value || '·') }}
-                </span>
+            <span v-if="!Array.isArray(entry.data)" class="inline-flex items-center gap-1 font-mono">
+              <component :is="tokenIconFor(entry.data.kind).icon" class="w-3 h-3 flex-shrink-0" :class="tokenIconFor(entry.data.kind).color" />
+              <span :class="entry.data.kind === SyntaxTokenKind.EOF ? 'text-red-400' : 'text-green-700'">
+                {{ entry.data.kind === SyntaxTokenKind.EOF ? '<EOF>' : (entry.data.value || '·') }}
               </span>
-              <!-- Trivia/errors inline -->
-              <span
-                v-if="entry.data.leadingTrivia.length || entry.data.trailingTrivia.length || entry.data.leadingInvalid.length || entry.data.trailingInvalid.length"
-                class="ml-2 inline-flex flex-wrap items-center gap-x-0.5"
-              >
-                <span class="text-gray-300 select-none">|</span>
-                <template v-for="t in [...entry.data.leadingTrivia, ...entry.data.trailingTrivia]" :key="t.start">
-                  <span v-if="t.kind === SyntaxTokenKind.SPACE" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[9px]"><PhArrowsHorizontal class="w-2 h-2" />{{ t.value.length }}</span>
-                  <PhKeyReturn v-else-if="t.kind === SyntaxTokenKind.NEWLINE" class="w-2.5 h-2.5 text-gray-400 flex-shrink-0" />
-                  <span v-else-if="t.kind === SyntaxTokenKind.TAB" class="text-gray-400 bg-gray-100 rounded px-1 text-[9px]">→</span>
-                  <span v-else class="font-mono text-[9px] text-gray-500">{{ t.value }}</span>
-                </template>
-                <template v-if="entry.data.leadingInvalid.length || entry.data.trailingInvalid.length">
-                  <span class="text-red-400 select-none ml-0.5">!</span>
-                  <template v-for="t in [...entry.data.leadingInvalid, ...entry.data.trailingInvalid]" :key="t.start">
-                    <span class="font-mono text-[9px] text-red-500">{{ t.value }}</span>
-                  </template>
-                </template>
-              </span>
-            </div>
+            </span>
 
-            <!-- SyntaxToken[] (trivia arrays, identifier arrays, etc.) -->
-            <span v-else class="inline-flex flex-wrap items-center gap-x-1 font-mono">
+            <!-- SyntaxToken[] -->
+            <span v-else class="inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 font-mono">
               <template v-for="(tok, ti) in entry.data" :key="ti">
-                <span v-if="tok.kind === SyntaxTokenKind.SPACE" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ tok.value.length }}</span>
-                <PhKeyReturn v-else-if="tok.kind === SyntaxTokenKind.NEWLINE" class="w-3 h-3 text-gray-400 flex-shrink-0" />
-                <span v-else-if="tok.kind === SyntaxTokenKind.TAB" class="text-gray-400 bg-gray-100 rounded px-1 text-[10px]">→</span>
-                <span v-else-if="tok.kind === SyntaxTokenKind.SINGLE_LINE_COMMENT || tok.kind === SyntaxTokenKind.MULTILINE_COMMENT" class="text-gray-400 italic text-[10px]">{{ tok.value }}</span>
+                <span v-if="tok.kind === '<space>'" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ tok.value.length }}</span>
+                <PhKeyReturn v-else-if="tok.kind === '<newline>'" class="w-3 h-3 text-gray-400 flex-shrink-0" />
+                <span v-else-if="tok.kind === '<tab>'" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]">→</span>
+                <span v-else-if="tok.kind === '<single-line-comment>' || tok.kind === '<multiline-comment>'" class="text-gray-400 italic text-[10px] break-all">{{ tok.value }}</span>
                 <span v-else class="inline-flex items-center gap-0.5">
                   <component :is="tokenIconFor(tok.kind).icon" class="w-3 h-3 flex-shrink-0" :class="tokenIconFor(tok.kind).color" />
                   <span class="text-green-700">{{ tok.value }}</span>
                 </span>
               </template>
             </span>
+
+            <!-- Trivia/error rows for single token -->
+            <template v-if="!Array.isArray(entry.data)">
+              <template v-for="section in triviaRows(entry.data)" :key="section.label">
+                <template v-if="section.tokens.length > 0">
+                  <span class="text-[10px] font-medium select-none" :class="section.error ? 'text-red-400' : 'text-gray-400'">{{ section.label }}</span>
+                  <span class="inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 font-mono" :class="section.error ? 'text-red-600' : 'text-gray-600'">
+                    <template v-for="(t, ti) in section.tokens" :key="ti">
+                      <span v-if="t.kind === '<space>'" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ t.value.length }}</span>
+                      <PhKeyReturn v-else-if="t.kind === '<newline>'" class="w-3 h-3 text-gray-400 flex-shrink-0" />
+                      <span v-else-if="t.kind === '<tab>'" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]">→</span>
+                      <span v-else-if="t.kind === '<single-line-comment>' || t.kind === '<multiline-comment>'" class="italic break-all">{{ t.value }}</span>
+                      <span v-else class="break-all">{{ t.value }}</span>
+                    </template>
+                  </span>
+                </template>
+              </template>
+            </template>
           </template>
         </div>
       </div>
@@ -266,6 +263,15 @@ const sizeHint = computed(() => {
   if (!Array.isArray(d)) return '';
   return d.length === 0 ? '[ ]' : `[ ${d.length} ]`;
 });
+
+function triviaRows (tok: SyntaxToken) {
+  return [
+    { label: 'leading trivia',  tokens: tok.leadingTrivia,   error: false },
+    { label: 'trailing trivia', tokens: tok.trailingTrivia,  error: false },
+    { label: 'leading errors',  tokens: tok.leadingInvalid,  error: true },
+    { label: 'trailing errors', tokens: tok.trailingInvalid, error: true },
+  ];
+}
 
 function handleNodeClick () { emit('node-click', props.node); }
 function toggleExpanded () {

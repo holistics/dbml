@@ -142,9 +142,7 @@ export const useParser = defineStore('parser', () => {
       // highlight positions that exist in the editor being shown.
       errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Array<Record<string, unknown>>).map(diagnosticToParserError);
 
-      database.value = errors.value.length === 0
-        ? (compiler.parse.rawDb() as Database | undefined ?? null)
-        : null;
+      database.value = compiler.parse.rawDb() as Database | undefined ?? null;
 
       const rawSymbols = compiler.parse.publicSymbolTable();
       symbols.value = rawSymbols
