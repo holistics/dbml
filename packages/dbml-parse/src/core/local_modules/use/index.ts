@@ -23,6 +23,9 @@ import type {
   LocalModule, Settings,
 } from '../types';
 import UseDeclarationValidator from './validate';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 
 // Handle use declaration, use specifier name, use specifier list
 export const useModule: LocalModule = {
@@ -55,6 +58,15 @@ export const useModule: LocalModule = {
       );
     }
 
+    if (node.isKind(ImportKind.TablePartial) && name.length > 1) {
+      return Report.create(
+        name,
+        [
+          new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_NAME, 'A TablePartial name must be a simple name', node),
+        ],
+      );
+    }
+
     if (node.isKind(ImportKind.Note) && name.length > 1) {
       return Report.create(
         name,
@@ -64,6 +76,9 @@ export const useModule: LocalModule = {
       );
     }
 
+    if (name.length === 1) {
+      name.unshift(DEFAULT_SCHEMA_NAME);
+    }
     return new Report(name);
   },
 

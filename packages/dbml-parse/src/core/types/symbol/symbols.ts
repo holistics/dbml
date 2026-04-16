@@ -35,6 +35,11 @@ export enum SymbolKind {
   IndexesField = 'Indexes field',
 
   DiagramView = 'DiagramView',
+  DiagramViewTopLevelWildcard = 'DiagramView top-level wildcard',
+  DiagramViewTable = 'DiagramView table',
+  DiagramViewTableGroup = 'DiagramView tablegroup',
+  DiagramViewNote = 'DiagramView note',
+  DiagramViewSchema = 'DiagramView schema',
 
   Program = 'Program',
 }

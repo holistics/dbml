@@ -129,8 +129,10 @@ export const tableModule: GlobalModule = {
     }
     // Detect partial injections (~partial_name) and insert their columns at the injection position
     // Process in reverse so that insertion indices remain valid
-    const injections: { index: number;
-      partialMembers: NodeSymbol[]; }[] = [];
+    const injections: {
+      index: number;
+      partialMembers: NodeSymbol[];
+    }[] = [];
     for (let i = 0; i < members.length; i++) {
       const member = members[i];
       if (!(member.declaration instanceof FunctionApplicationNode)) continue;

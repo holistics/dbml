@@ -31,7 +31,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  getNodeMemberSymbols, shouldInterpretNode,
+  shouldInterpretNode,
 } from '../utils';
 import EnumBinder from './bind';
 import EnumInterpreter from './interpret';
@@ -79,6 +79,25 @@ export const enumModule: GlobalModule = {
       if (res.hasValue(UNHANDLED)) continue;
       members.push(res.getValue());
       errors.push(...res.getErrors());
+    }
+
+    // Duplicate checking
+    const seen = new Map<string, SyntaxNode>();
+    for (const member of members) {
+      if (!member.isKind(SymbolKind.EnumField) || !member.declaration) continue; // Ignore non-enum-field members
+
+      const name = compiler.symbolName(member);
+      if (name !== undefined) {
+        const errorNode = member.declaration;
+
+        const firstNode = seen.get(name);
+        if (firstNode) {
+          errors.push(enumUtils.getFieldDuplicateError(name, firstNode));
+          errors.push(enumUtils.getFieldDuplicateError(name, errorNode));
+        } else {
+          seen.set(name, errorNode);
+        }
+      }
     }
 
     return new Report(members, errors);

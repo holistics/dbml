@@ -6,7 +6,7 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  PASS_THROUGH, type PassThrough,
+  PASS_THROUGH, UNHANDLED, type PassThrough,
 } from '@/core/types/module';
 import {
   CallExpressionNode, ProgramNode, SyntaxNode,
@@ -27,6 +27,9 @@ import {
   type LocalModule, type Settings,
 } from '../types';
 import RecordsValidator from './validate';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 
 export const recordsModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -76,11 +79,14 @@ export const recordsModule: LocalModule = {
 
         // Fullname: destructure the callee (table name) of the call expression
         // e.g. records auth.users(id, name) → ['auth', 'users']
-        return new Report(destructureComplexVariable(node.name.callee), errs);
+        const names = destructureComplexVariable(node.name.callee);
+        if (names?.length === 1) names.unshift(DEFAULT_SCHEMA_NAME);
+        return new Report(names, errs);
       } else {
         // Inside a table: optional column list only
+        const ownerTableName = node.parent && compiler.nodeFullname(node.parent).getFiltered(UNHANDLED);
         if (node.name && !isTupleOfVariables(node.name)) {
-          return new Report(undefined, [
+          return new Report(ownerTableName, [
             new CompileError(
               CompileErrorCode.INVALID_RECORDS_NAME,
               'Records inside a Table can only have a column list like (col1, col2, ...)',
@@ -88,7 +94,7 @@ export const recordsModule: LocalModule = {
             ),
           ]);
         }
-        return new Report(destructureComplexVariable(node.name));
+        return new Report(ownerTableName);
       }
     }
     if (isElementFieldNode(node, ElementKind.Records)) {

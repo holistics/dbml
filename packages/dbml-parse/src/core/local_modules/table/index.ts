@@ -25,6 +25,9 @@ import type {
 import TableValidator, {
   validateFieldSetting, validateTableSettings,
 } from './validate';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 
 export const tableModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -46,7 +49,9 @@ export const tableModule: LocalModule = {
           new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid array as Table name, maybe you forget to add a space between the name and the setting list?', node.name),
         ]);
       }
-      return new Report(destructureComplexVariable(node.name));
+      const names = destructureComplexVariable(node.name);
+      if (names?.length === 1) names.unshift(DEFAULT_SCHEMA_NAME);
+      return new Report(names);
     }
     if (isElementFieldNode(node, ElementKind.Table)) {
       const name = extractVariableFromExpression(node.callee);
