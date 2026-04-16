@@ -373,7 +373,7 @@ export default class Parser {
     const buildNode = () => this.nodeFactory.create(UseSpecifierNode, args);
 
     try {
-      this.consume('Expect an element kind (e.g. table, enum)', SyntaxTokenKind.IDENTIFIER);
+      this.consume('Expect an import kind specifier (e.g. table, enum)', SyntaxTokenKind.IDENTIFIER);
       args.importKind = this.previous();
     } catch (e) {
       if (!(e instanceof PartialParsingError)) {
@@ -383,8 +383,7 @@ export default class Parser {
     }
 
     if (
-      this.peek().kind === SyntaxTokenKind.IDENTIFIER
-      || this.peek().kind === SyntaxTokenKind.QUOTED_STRING
+      this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)
     ) {
       try {
         args.name = this.normalExpression();
@@ -403,8 +402,7 @@ export default class Parser {
       args.asKeyword = this.advance();
       try {
         if (
-          this.peek().kind !== SyntaxTokenKind.IDENTIFIER
-          && this.peek().kind !== SyntaxTokenKind.QUOTED_STRING
+          !this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)
         ) {
           this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, "Expect an alias name after 'as'");
           throw new PartialParsingError(
