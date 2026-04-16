@@ -95,7 +95,6 @@ export const diagramViewModule: GlobalModule = {
   },
 
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
-    if (!isExpressionAVariableNode(node)) return Report.create(PASS_THROUGH);
     if (node.parent && isInsideSettingList(node)) return Report.create(PASS_THROUGH);
 
     const subBlock = getContainingDiagramViewSubBlock(node);
