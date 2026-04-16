@@ -53,7 +53,7 @@ import {
 } from '@/services/suggestions/recordRowSnippet';
 import {
   isOffsetInUseDeclaration, suggestInUseDeclaration,
-} from '@/services/suggestions/useDeclarationSuggestions';
+} from '@/services/suggestions/use';
 import {
   addQuoteToSuggestionIfNeeded,
   addSuggestAllSuggestion,
