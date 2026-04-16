@@ -49,7 +49,7 @@ export const diagramViewUtils = {
     return new CompileError(CompileErrorCode.DUPLICATE_NAME, `DiagramView '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
   getFieldDuplicateError (name: string, elementKind: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate ${elementKind} ${name}`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_DIAGRAMVIEW_FIELD, `Duplicate ${elementKind} ${name}`, errorNode);
   },
 };
 
