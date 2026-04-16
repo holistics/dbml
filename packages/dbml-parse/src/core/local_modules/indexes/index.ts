@@ -64,7 +64,7 @@ export const indexesModule: LocalModule = {
       return new Report(undefined);
     }
     if (isElementFieldNode(node, ElementKind.Indexes)) {
-      return new Report(undefined);
+      return new Report(undefined); // An indexes field can contain multiple columns, so we do not support extracting its name yet
     }
     return Report.create(PASS_THROUGH);
   },

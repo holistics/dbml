@@ -64,7 +64,7 @@ export default class NoteValidator {
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [
-        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode),
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Note shouldn\'t have an alias', aliasNode),
       ];
     }
 

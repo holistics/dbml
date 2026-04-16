@@ -65,7 +65,7 @@ export const noteModule: LocalModule = {
     if (!isElementNode(node, ElementKind.Note)) return Report.create(PASS_THROUGH);
     if (node.alias) {
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', node.alias),
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Note shouldn\'t have an alias', node.alias),
       ]);
     }
     return new Report(undefined);
