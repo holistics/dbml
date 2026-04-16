@@ -18,7 +18,7 @@ import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
+  NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type {
   SyntaxToken,
