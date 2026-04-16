@@ -13,6 +13,7 @@ import {
 } from '@/core/types/keywords';
 import {
   BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import {
   destructureComplexVariable,
@@ -75,6 +76,11 @@ export default class RecordsValidator {
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (nameNode instanceof WildcardNode) {
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', nameNode),
+      ];
+    }
     const parent = this.declarationNode.parent;
     const isTopLevel = parent instanceof ProgramNode;
 

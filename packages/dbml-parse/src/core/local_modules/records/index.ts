@@ -10,6 +10,7 @@ import {
 } from '@/core/types/module';
 import {
   CallExpressionNode, ProgramNode, SyntaxNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
@@ -37,6 +38,11 @@ export const recordsModule: LocalModule = {
 
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
+      if (node.name instanceof WildcardNode) {
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', node.name),
+        ]);
+      }
       const parent = node.parent;
       const isTopLevel = parent instanceof ProgramNode;
 

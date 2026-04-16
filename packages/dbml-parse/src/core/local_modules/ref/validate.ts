@@ -127,12 +127,12 @@ export default class RefValidator {
       }
 
       if (field.callee && isBinaryRelationship(field.callee)) {
-        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) || {
+        const leftFragment = destructureComplexVariableTuple(field.callee.leftExpression) ?? {
           variables: [],
           tupleElements: [],
         };
         const leftFragmentCount = leftFragment.variables.length + Math.min(leftFragment.tupleElements.length, 1);
-        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) || {
+        const rightFragment = destructureComplexVariableTuple(field.callee.rightExpression) ?? {
           variables: [],
           tupleElements: [],
         };
