@@ -53,7 +53,7 @@ export default class TablePartialValidator {
     ];
   }
 
-  validateContext (): CompileError[] {
+  private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [
         new CompileError(
@@ -66,7 +66,7 @@ export default class TablePartialValidator {
     return [];
   }
 
-  validateName (nameNode?: SyntaxNode): CompileError[] {
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [
         new CompileError(
@@ -89,7 +89,7 @@ export default class TablePartialValidator {
     return [];
   }
 
-  validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [
         new CompileError(
@@ -103,7 +103,7 @@ export default class TablePartialValidator {
     return [];
   }
 
-  validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -112,9 +112,9 @@ export default class TablePartialValidator {
       switch (name) {
         case SettingName.HeaderColor:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr: AttributeNode) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
           }
-          attrs.forEach((attr: AttributeNode) => {
+          attrs.forEach((attr) => {
             if (!isValidColor(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attr.value || attr.name!));
             }
@@ -122,22 +122,22 @@ export default class TablePartialValidator {
           break;
         case SettingName.Note:
           if (attrs.length > 1) {
-            errors.push(...attrs.map((attr: AttributeNode) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
           }
-          attrs.forEach((attr: AttributeNode) => {
+          attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a string literal`, attr.value || attr.name!));
             }
           });
           break;
         default:
-          errors.push(...attrs.map((attr: AttributeNode) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attr)));
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attr)));
       }
     });
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  private validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) return [];
 
     if (body instanceof FunctionApplicationNode) {
@@ -156,7 +156,7 @@ export default class TablePartialValidator {
     ];
   }
 
-  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) return [];
 
@@ -183,15 +183,13 @@ export default class TablePartialValidator {
   }
 
   // This is needed to support legacy inline settings
-  validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
+  private validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
     const lastPart = last(parts);
     if (
       !parts.slice(0, -1).every(isExpressionAnIdentifierNode)
       || !(isExpressionAnIdentifierNode(lastPart) || lastPart instanceof ListExpressionNode)
     ) {
-      return [
-        ...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part)),
-      ];
+      return parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part));
     }
 
     if (parts.length === 0) return [];
@@ -367,7 +365,7 @@ export default class TablePartialValidator {
     return errors;
   }
 
-  validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       if (!sub.type) {
         return [];
@@ -375,7 +373,7 @@ export default class TablePartialValidator {
       return this.compiler.validateNode(sub).getErrors();
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === ElementKind.Note);
+    const notes = subs.filter((sub) => sub.isKind(ElementKind.Note));
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     }
@@ -393,9 +391,9 @@ export function validateTablePartialSettings (settingList?: ListExpressionNode):
     switch (name) {
       case SettingName.HeaderColor:
         if (attrs.length > 1) {
-          errors.push(...attrs.map((attr: AttributeNode) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
         }
-        attrs.forEach((attr: AttributeNode) => {
+        attrs.forEach((attr) => {
           if (!isValidColor(attr.value)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attr.value || attr.name!));
           }
@@ -403,16 +401,16 @@ export function validateTablePartialSettings (settingList?: ListExpressionNode):
         break;
       case SettingName.Note:
         if (attrs.length > 1) {
-          errors.push(...attrs.map((attr: AttributeNode) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
         }
-        attrs.forEach((attr: AttributeNode) => {
+        attrs.forEach((attr) => {
           if (!isExpressionAQuotedString(attr.value)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a string literal`, attr.value || attr.name!));
           }
         });
         break;
       default:
-        errors.push(...attrs.map((attr: AttributeNode) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attr)));
+        errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_PARTIAL_SETTING, `Unknown '${name}' setting`, attr)));
     }
   });
   return new Report(settingMap, errors);
@@ -425,9 +423,9 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
     && (!parts.slice(0, -1).every(isExpressionAnIdentifierNode)
       || !(isExpressionAnIdentifierNode(lastPart) || lastPart instanceof ListExpressionNode))
   ) {
-    return new Report({}, [
-      ...parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part)),
-    ]);
+    return new Report({},
+      parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part)),
+    );
   }
 
   if (parts.length === 0) return new Report({});
