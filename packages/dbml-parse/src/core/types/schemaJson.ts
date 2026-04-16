@@ -14,12 +14,13 @@ export interface TokenPosition {
 // A reference to an element imported via `use` or `reuse`.
 // `name` + `schemaName` identify the original element in the source file.
 // `visibleNames` lists every local name under which the element is reachable in this file.
-// The first entry wins (primary name).
-// Direct imports and explicit `as` aliases both appear here.
-// Aliases have `schemaName: null`; direct imports retain the original `schemaName`.
 export interface ElementRef {
+  // Original name
   name: string;
   schemaName: string | null;
+
+  // Names visible in this database
+  // The first name is prioritized when exporting into json
   visibleNames: {
     schemaName: string | null;
     name: string;
