@@ -30,6 +30,8 @@ import {
   CompletionItemInsertTextRule, CompletionItemKind, type CompletionList,
 } from '@/services/types';
 
+export * from './useMerger';
+
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
     case SymbolKind.Schema:

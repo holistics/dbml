@@ -1,5 +1,7 @@
 import type Compiler from '@/compiler';
-import { SymbolKind } from '@/core/types';
+import {
+  SymbolKind,
+} from '@/core/types';
 import {
   Filepath,
 } from '@/core/types/filepath';

@@ -52,9 +52,6 @@ import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
 import {
-  UseStatementMerger,
-} from '@/services/completion/utils/useMerger';
-import {
   suggestRecordRowSnippet,
 } from '@/services/suggestions/recordRowSnippet';
 import {
@@ -62,6 +59,7 @@ import {
   addSuggestAllSuggestion,
   isOffsetWithinElementHeader,
   isTupleEmpty,
+  mergeSymbolIntoUses,
   noSuggestions,
   pickCompletionItemKind,
   prependSpace,
@@ -90,13 +88,17 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     this.triggerCharacters = triggerCharacters;
   }
 
-  private collectFileSymbols (fp: Filepath): Array<{ sym: NodeSymbol; filepath: Filepath }> {
+  private collectFileSymbols (fp: Filepath): Array<{ sym: NodeSymbol;
+    filepath: Filepath; }> {
     const usable = this.compiler.fileUsableMembers(fp).getFiltered(UNHANDLED);
     if (!usable) return [];
     return [
       ...usable.nonSchemaMembers,
       ...usable.schemaMembers,
-    ].map((sym) => ({ sym, filepath: fp }));
+    ].map((sym) => ({
+      sym,
+      filepath: fp,
+    }));
   }
 
   /**
@@ -112,10 +114,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     currentFileContent: string,
   ): CompletionItem {
     // Calculate the use statement that should be inserted
-    const mergeResult = UseStatementMerger.mergeSymbolIntoUses(
+    const mergeResult = mergeSymbolIntoUses(
       this.compiler,
       currentFilepath,
       currentFileContent,
+      symbolKind,
       symbolName,
       sourceFilepath,
     );
@@ -153,12 +156,16 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     currentFilepath: Filepath,
     currentFileContent: string,
   ): CompletionList {
-    const results: CompletionList = { suggestions: [] };
+    const results: CompletionList = {
+      suggestions: [],
+    };
     const seenNames = new Set<string>();
 
     for (const fp of this.compiler.layout.getEntryPoints()) {
       if (fp.equals(currentFilepath)) continue;
-      for (const { sym, filepath } of this.collectFileSymbols(fp)) {
+      for (const {
+        sym, filepath,
+      } of this.collectFileSymbols(fp)) {
         if (!acceptedKinds.includes(sym.kind)) continue;
         const name = this.compiler.symbolName(sym);
         if (!name || seenNames.has(name)) continue;
