@@ -12,6 +12,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
+  destructureComplexVariable,
   extractVarNameFromPrimaryVariable,
   isExpressionAVariableNode, isWildcardExpression,
 } from '@/core/utils/expression';
@@ -100,6 +101,7 @@ export default class DiagramViewValidator {
     const errors: CompileError[] = aggReport.getErrors();
     const settingMap = aggReport.getValue();
 
+    // DiagramView doesn't have any supported settings yet
     for (const name of Object.keys(settingMap)) {
       errors.push(...settingMap[name].map((attr) => new CompileError(
         CompileErrorCode.UNEXPECTED_SETTINGS,
@@ -148,6 +150,7 @@ export default class DiagramViewValidator {
 
   validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
+      // Body-level {*} is valid shorthand for "show all entities"
       if (isWildcardExpression(field.callee)) {
         if (field.args.length > 0) {
           return field.args.map((arg) => new CompileError(
@@ -158,6 +161,7 @@ export default class DiagramViewValidator {
         }
         return [];
       }
+      // Fields at the top level of DiagramView are not allowed
       return [
         new CompileError(
           CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
@@ -256,25 +260,11 @@ export default class DiagramViewValidator {
 
     const body = sub.body as BlockExpressionNode;
     const fields = body.body.filter((e) => e instanceof FunctionApplicationNode) as FunctionApplicationNode[];
-    const seen = new Set<string>();
 
     for (const field of fields) {
-      if (field.callee && isExpressionAVariableNode(field.callee)) {
-        if (isWildcardExpression(field.callee)) continue;
+      if (isWildcardExpression(field.callee)) continue;
 
-        const fieldName = extractVarNameFromPrimaryVariable(field.callee)!;
-        if (seen.has(fieldName)) {
-          errors.push(new CompileError(
-            CompileErrorCode.DUPLICATE_DIAGRAMVIEW_FIELD,
-            `${fieldName} already exists in DiagramView`,
-            field,
-          ));
-        } else {
-          seen.add(fieldName);
-        }
-      }
-
-      if (field.args.length > 0) {
+      if (field.args.length > 0 || !destructureComplexVariable(field.callee)) {
         errors.push(...field.args.map((arg) => new CompileError(
           CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD,
           'DiagramView field should only have a single name',
