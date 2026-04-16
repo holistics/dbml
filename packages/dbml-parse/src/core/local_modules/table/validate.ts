@@ -211,21 +211,6 @@ export default class TableValidator {
       return validateColumn(field);
     });
 
-    // Detect duplicate partial injections
-    const partialInjections = fields.filter((f) => f.callee instanceof PrefixExpressionNode && f.callee.op?.value === '~' && isValidPartialInjection(f.callee));
-    const seenPartials = new Map<string, FunctionApplicationNode>();
-    for (const injection of partialInjections) {
-      const name = extractVariableFromExpression((injection.callee as PrefixExpressionNode).expression);
-      if (!name) continue;
-      const existing = seenPartials.get(name);
-      if (existing) {
-        fieldErrors.push(new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${name}'`, existing.callee!));
-        fieldErrors.push(new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${name}'`, injection.callee!));
-      } else {
-        seenPartials.set(name, injection);
-      }
-    }
-
     return fieldErrors;
   }
 
