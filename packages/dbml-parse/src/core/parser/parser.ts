@@ -317,11 +317,9 @@ export default class Parser {
     const args: {
       openBrace?: SyntaxToken;
       specifiers: UseSpecifierNode[];
-      commaList: SyntaxToken[];
       closeBrace?: SyntaxToken;
     } = {
       specifiers: [],
-      commaList: [],
     };
     const buildNode = () => this.nodeFactory.create(UseSpecifierListNode, args);
 
@@ -347,9 +345,8 @@ export default class Parser {
         }
         throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
       }
-      if (this.check(SyntaxTokenKind.COMMA)) {
-        this.advance();
-        args.commaList.push(this.previous());
+      if (!hasTrailingNewLines(this.previous()) && !this.check(SyntaxTokenKind.RBRACE)) {
+        this.logError(this.peek(), CompileErrorCode.MISSING_SPACES, 'Expect a newline between use specifiers');
       }
     }
 
