@@ -1,17 +1,21 @@
 import {
   DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import {
-  ElementKind,
-} from '@/core/analyzer/types';
-import {
-  destructureComplexVariable,
-} from '@/core/analyzer/utils';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
+import type {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   SyntaxNodeIdGenerator,
 } from '@/core/types/nodes';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
+import type Compiler from '../../index';
 import {
   addDoubleQuoteIfNeeded,
 } from '../utils';
@@ -24,8 +28,10 @@ export interface DiagramViewSyncOperation {
   name: string;
   newName?: string;
   visibleEntities?: {
-    tables?: Array<{ name: string;
-      schemaName: string; }> | null;
+    tables?: Array<{
+      name: string;
+      schemaName: string;
+    }> | null;
     stickyNotes?: Array<{ name: string }> | null;
     tableGroups?: Array<{ name: string }> | null;
     schemas?: Array<{ name: string }> | null;
@@ -38,22 +44,28 @@ export interface DiagramViewBlock {
   endIndex: number;
 }
 
+/**
+ * Returns the start/end byte positions of every DiagramView block in `source`.
+ *
+ * Returns an empty array on any lex or parse error — callers cannot
+ * distinguish "no DiagramView blocks present" from "malformed DBML" based on
+ * the return value alone. If you need to detect malformed input, lex/parse
+ * the source separately and check for errors before calling this function.
+ */
 export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
   const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return blocks;
+  if (lexerResult.getErrors().length > 0) return blocks; // malformed — cannot tokenize
 
   const tokens = lexerResult.getValue();
-  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
-  if (ast.getErrors().length > 0) return blocks;
+  const ast = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
+  if (ast.getErrors().length > 0) return blocks; // malformed — cannot parse
 
   const program = ast.getValue().ast;
 
-  for (const element of program.body) {
+  for (const element of program.declarations) {
     if (element.isKind(ElementKind.DiagramView)) {
-      const fragments = element.name
-        ? (destructureComplexVariable(element.name) ?? [])
-        : [];
+      const fragments = element.name ? (destructureComplexVariable(element.name) ?? []) : [];
       const name = fragments.length > 0 ? fragments[fragments.length - 1] : '';
       blocks.push({
         name,
@@ -81,9 +93,7 @@ function generateDiagramViewBlock (
     } else if (visibleEntities.tables.length === 0) {
       lines.push('  Tables { * }');
     } else {
-      const tableNames = visibleEntities.tables.map((t) =>
-        t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`,
-      );
+      const tableNames = visibleEntities.tables.map((t) => (t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`));
       lines.push('  Tables {');
       tableNames.forEach((n) => lines.push(`    ${n}`));
       lines.push('  }');
@@ -134,19 +144,26 @@ function generateDiagramViewBlock (
 }
 
 /**
- * Synchronizes DiagramView blocks in DBML source code.
+ * Synchronizes DiagramView blocks in the DBML source at `filepath`.
  *
- * @param dbml - The original DBML source code
- * @param operations - Array of operations to apply (create, update, delete)
- * @param blocks - Optional pre-parsed blocks from findDiagramViewBlocks. If not provided, parses internally.
- * @returns Object containing the new DBML source code and the text edits applied
+ * @param filepath   The file whose source should be rewritten. Source is
+ *                   read from the compiler's project layout, which makes the
+ *                   query multifile-aware.
+ * @param operations Array of operations to apply (create, update, delete).
+ * @param blocks     Optional pre-parsed blocks from findDiagramViewBlocks. If
+ *                   not provided, parses internally.
+ * @returns Object containing the new DBML source code and the text edits applied.
  */
 export function syncDiagramView (
-  dbml: string,
+  this: Compiler,
+  filepath: Filepath,
   operations: DiagramViewSyncOperation[],
   blocks?: DiagramViewBlock[],
-): { newDbml: string;
-  edits: TextEdit[]; } {
+): {
+  newDbml: string;
+  edits: TextEdit[];
+} {
+  const dbml = this.layout.getSource(filepath) ?? '';
   const originalBlocks = blocks ?? findDiagramViewBlocks(dbml);
   const allEdits: TextEdit[] = [];
 

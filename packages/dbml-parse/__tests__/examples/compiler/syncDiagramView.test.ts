@@ -1,18 +1,22 @@
 import {
   describe, expect, it,
 } from 'vitest';
-import {
-  syncDiagramView,
-} from '@/compiler/queries/transform/syncDiagramView';
 import Compiler from '@/compiler/index';
 import Lexer from '@/core/lexer/lexer';
-import {
-  DEFAULT_ENTRY,
-} from '@/constants';
+import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Parser from '@/core/parser/parser';
 import {
   SyntaxNodeIdGenerator,
 } from '@/core/types/nodes';
+import type {
+  DiagramViewSyncOperation,
+} from '@/compiler/queries/transform/syncDiagramView';
+
+function syncDiagramView (dbml: string, operations: DiagramViewSyncOperation[]) {
+  const compiler = new Compiler();
+  compiler.setSource(DEFAULT_ENTRY, dbml);
+  return compiler.syncDiagramView(DEFAULT_ENTRY, operations);
+}
 
 // update operation
 
@@ -68,7 +72,7 @@ describe('Parser - * wildcard in DiagramView', () => {
   it('parses DiagramView with { * } without errors', () => {
     const source = 'DiagramView v { * }';
     const tokens = new Lexer(source, DEFAULT_ENTRY).lex().getValue();
-    const result = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+    const result = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
     expect(result.getErrors()).toHaveLength(0);
   });
 
@@ -81,7 +85,7 @@ DiagramView v {
 }
 `;
     const tokens = new Lexer(source, DEFAULT_ENTRY).lex().getValue();
-    const result = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+    const result = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
     expect(result.getErrors()).toHaveLength(0);
   });
 
@@ -95,7 +99,7 @@ DiagramView "New View" {
 }
 `;
     const compiler = new Compiler();
-    compiler.setSource(source);
+    compiler.setSource(DEFAULT_ENTRY, source);
     expect(compiler.parse.errors()).toHaveLength(0);
   });
 });
@@ -211,5 +215,107 @@ DiagramView my_view {
     expect(matches).toHaveLength(1);
     // Should have updated content with posts
     expect(newDbml).toContain('posts');
+  });
+});
+
+// syncDiagramView across multifile content
+
+describe('syncDiagramView - multifile scenarios', () => {
+  it('appends a new view to a file that imports tables from another file', () => {
+    const dbml = `use { table users } from './base.dbml'
+
+Table orders {
+  id int [pk]
+}
+`;
+    const { newDbml } = syncDiagramView(dbml, [
+      {
+        operation: 'create',
+        name: 'overview',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: DEFAULT_SCHEMA_NAME }, { name: 'orders', schemaName: DEFAULT_SCHEMA_NAME }],
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
+      },
+    ]);
+    expect(newDbml).toContain('DiagramView overview');
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('orders');
+    expect(newDbml).toContain("use { table users } from './base.dbml'");
+  });
+
+  it('deletes a view without touching import statements', () => {
+    const dbml = `use { table users } from './base.dbml'
+
+DiagramView old_view {
+  Tables { users }
+}
+`;
+    const { newDbml } = syncDiagramView(dbml, [
+      { operation: 'delete', name: 'old_view' },
+    ]);
+    expect(newDbml).not.toContain('DiagramView old_view');
+    expect(newDbml).toContain("use { table users } from './base.dbml'");
+  });
+
+  it('renames a view in a file that has both imports and local tables', () => {
+    const dbml = `use { table users } from './base.dbml'
+
+Table orders { id int [pk] }
+
+DiagramView main {
+  Tables { users }
+}
+`;
+    const { newDbml } = syncDiagramView(dbml, [
+      { operation: 'update', name: 'main', newName: 'dashboard' },
+    ]);
+    expect(newDbml).toContain('DiagramView dashboard');
+    expect(newDbml).not.toContain('DiagramView main');
+    expect(newDbml).toContain("use { table users }");
+    expect(newDbml).toContain('Table orders');
+  });
+
+  it('create with tables subblock serialises table names correctly', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'overview',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: DEFAULT_SCHEMA_NAME }, { name: 'orders', schemaName: DEFAULT_SCHEMA_NAME }],
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('orders');
+  });
+
+  it('serialises schema-qualified table names preserving the schema prefix', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'overview',
+        visibleEntities: {
+          tables: [
+            { name: 'users', schemaName: 'auth' },
+            { name: 'orders', schemaName: DEFAULT_SCHEMA_NAME },
+          ],
+          stickyNotes: null,
+          tableGroups: null,
+          schemas: null,
+        },
+      },
+    ]);
+    // non-default schema is always prefixed
+    expect(newDbml).toContain('auth.users');
+    // default-schema table is output without schema prefix (DBML convention)
+    expect(newDbml).toContain('orders');
+    expect(newDbml).not.toContain(`${DEFAULT_SCHEMA_NAME}.orders`);
   });
 });

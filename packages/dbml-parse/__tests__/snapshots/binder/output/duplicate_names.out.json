@@ -77,6 +77,24 @@
     "publicSchema": [
       {
         "context": {
+          "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+          "snippet": "Table User...integer\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
+          "snippet": "Table User...integer\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C2, L1:C12]",
+              "snippet": "id integer"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
           "id": "symbol@Table@Users@[L4:C0, L6:C1]",
           "snippet": "Table User...ar(255)\r\n}"
         },
@@ -105,6 +123,26 @@
       },
       {
         "context": {
+          "id": "symbol@TableGroup@Users@[L12:C0, L14:C1]",
+          "snippet": "TableGroup...ers {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L12:C0, L14:C1]",
+          "snippet": "TableGroup...ers {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Enum@Users@[L16:C0, L18:C1]",
+          "snippet": "Enum Users {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L16:C0, L18:C1]",
+          "snippet": "Enum Users {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
           "id": "symbol@Enum@Users@[L20:C0, L22:C1]",
           "snippet": "Enum Users {\r\n\r\n}"
         },
@@ -120,6 +158,16 @@
         },
         "declaration": {
           "id": "node@<element-declaration>@Users@[L24:C0, L26:C1]",
+          "snippet": "TableParti...ers {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@TablePartial@Users@[L28:C0, L30:C1]",
+          "snippet": "TableParti...ers {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L28:C0, L30:C1]",
           "snippet": "TableParti...ers {\r\n\r\n}"
         }
       }

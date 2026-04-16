@@ -305,12 +305,12 @@ describe('[example] validator', () => {
 
     test('should accept all ref relationship types', () => {
       const source = `
-        Table a { id int }
-        Table b { a_id int }
+        Table a { id int\n name varchar }
+        Table b { a_id int\n a_name varchar\n a_id2 int\n a_name2 varchar }
         Ref: b.a_id > a.id
-        Ref: b.a_id < a.id
-        Ref: b.a_id - a.id
-        Ref: b.a_id <> a.id
+        Ref: b.a_name < a.name
+        Ref: b.a_id2 - a.id
+        Ref: b.a_name2 <> a.name
       `;
       const errors = analyze(source).getErrors();
 

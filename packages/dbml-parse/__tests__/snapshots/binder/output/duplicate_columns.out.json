@@ -114,6 +114,18 @@
               "id": "symbol@Column@id@[L1:C4, L1:C14]",
               "snippet": "id integer"
             }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@id@[L2:C4, L2:C14]",
+              "snippet": "id integer"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@id@[L3:C4, L3:C14]",
+              "snippet": "id integer"
+            }
           }
         ]
       },
@@ -130,6 +142,18 @@
           {
             "context": {
               "id": "symbol@Column@id@[L7:C4, L7:C10]",
+              "snippet": "id int"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@id@[L8:C4, L8:C10]",
+              "snippet": "id int"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@id@[L9:C4, L9:C10]",
               "snippet": "id int"
             }
           }

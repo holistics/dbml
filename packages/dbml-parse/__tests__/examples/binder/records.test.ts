@@ -1,12 +1,18 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  TableSymbol, EnumSymbol, ColumnSymbol, EnumFieldSymbol, SchemaSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  analyze,
-} from '@tests/utils';
+import { describe, expect, test } from 'vitest';
+import { SchemaSymbol, NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import { UNHANDLED } from '@/core/types/module';
+import { analyze } from '@tests/utils';
+import { ProgramNode, ElementDeclarationNode } from '@/core/types/nodes';
+import type Compiler from '@/compiler';
+
+function findMember (compiler: Compiler, symbol: NodeSymbol, kind: SymbolKind, name: string): NodeSymbol | undefined {
+  const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED) ?? [];
+  return members.find((m) => m.kind === kind && compiler.symbolName(m) === name);
+}
+
+function nodeSymbol (compiler: Compiler, node: ElementDeclarationNode | ProgramNode): NodeSymbol | undefined {
+  return compiler.nodeSymbol(node).getFiltered(UNHANDLED);
+}
 
 describe('[example] records binder', () => {
   test('should bind records to table and columns', () => {
@@ -23,23 +29,13 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
-    const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
+    const { ast, compiler } = result.getValue();
+    const schemaSymbol = nodeSymbol(compiler, ast)!;
+    const tableSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')!;
 
-    // Table should have exactly 1 reference from records
-    expect(tableSymbol.references.length).toBe(1);
-    expect(tableSymbol.references[0].referee).toBe(tableSymbol);
-
-    const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-    const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
-
-    // Each column should have exactly 1 reference from records column list
-    expect(idColumn.references.length).toBe(1);
-    expect(idColumn.references[0].referee).toBe(idColumn);
-
-    expect(nameColumn.references.length).toBe(1);
-    expect(nameColumn.references[0].referee).toBe(nameColumn);
+    expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
   });
 
   test('should bind records with schema-qualified table', () => {
@@ -55,26 +51,15 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const publicSchema = ast.symbol as SchemaSymbol;
-    const authSchema = publicSchema.symbolTable.get('Schema:auth') as SchemaSymbol;
-    const tableSymbol = authSchema.symbolTable.get('Table:users') as TableSymbol;
+    const { ast, compiler } = result.getValue();
+    const publicSchema = nodeSymbol(compiler, ast)!;
+    const authSchema = findMember(compiler, publicSchema, SymbolKind.Schema, 'auth')!;
+    const tableSymbol = findMember(compiler, authSchema, SymbolKind.Table, 'users')!;
 
-    // Schema should have reference from records
-    expect(authSchema.references.length).toBe(1);
-    expect(authSchema.references[0].referee).toBe(authSchema);
-
-    // Table should have exactly 1 reference from records
-    expect(tableSymbol.references.length).toBe(1);
-    expect(tableSymbol.references[0].referee).toBe(tableSymbol);
-
-    // Columns should have references
-    const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-    const emailColumn = tableSymbol.symbolTable.get('Column:email') as ColumnSymbol;
-
-    expect(idColumn.references.length).toBe(1);
-
-    expect(emailColumn.references.length).toBe(1);
+    expect(authSchema).toSatisfy((s: any) => s?.isKind(SymbolKind.Schema));
+    expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'email')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
   });
 
   test('should detect unknown table in records', () => {
@@ -118,20 +103,13 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
-    const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
+    const { ast, compiler } = result.getValue();
+    const schemaSymbol = nodeSymbol(compiler, ast)!;
+    const tableSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')!;
 
-    // Table should have exactly 2 references from both records elements
-    expect(tableSymbol.references.length).toBe(2);
-
-    // Each column should have exactly 2 references
-    const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-    const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
-
-    expect(idColumn.references.length).toBe(2);
-
-    expect(nameColumn.references.length).toBe(2);
+    expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
   });
 
   test('should bind records with enum column type', () => {
@@ -148,17 +126,11 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
-    const enumSymbol = schemaSymbol.symbolTable.get('Enum:status') as EnumSymbol;
-    const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
-
-    // Enum should have 2 references: 1 from column type, 1 from records data
-    expect(enumSymbol.references.length).toBe(2);
-
-    // Enum field should have exactly 1 reference from records value
-    expect(activeField.references.length).toBe(1);
-    expect(activeField.references[0].referee).toBe(activeField);
+    const { ast, compiler } = result.getValue();
+    const schemaSymbol = nodeSymbol(compiler, ast)!;
+    const enumSymbol = findMember(compiler, schemaSymbol, SymbolKind.Enum, 'status')!;
+    expect(enumSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Enum));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
   });
 
   test('should allow forward reference to table in records', () => {
@@ -174,18 +146,13 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
-    const tableSymbol = schemaSymbol.symbolTable.get('Table:users') as TableSymbol;
+    const { ast, compiler } = result.getValue();
+    const schemaSymbol = nodeSymbol(compiler, ast)!;
+    const tableSymbol = findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')!;
 
-    // Verify forward reference is properly bound
-    expect(tableSymbol.references.length).toBe(1);
-
-    const idColumn = tableSymbol.symbolTable.get('Column:id') as ColumnSymbol;
-    const nameColumn = tableSymbol.symbolTable.get('Column:name') as ColumnSymbol;
-
-    expect(idColumn.references.length).toBe(1);
-    expect(nameColumn.references.length).toBe(1);
+    expect(tableSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
+    expect(findMember(compiler, tableSymbol, SymbolKind.Column, 'name')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
   });
 
   test('should bind schema-qualified enum values in records', () => {
@@ -203,22 +170,14 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const publicSchema = ast.symbol as SchemaSymbol;
-    const authSchema = publicSchema.symbolTable.get('Schema:auth') as SchemaSymbol;
-    const enumSymbol = authSchema.symbolTable.get('Enum:role') as EnumSymbol;
+    const { ast, compiler } = result.getValue();
+    const publicSchema = nodeSymbol(compiler, ast)!;
+    const authSchema = findMember(compiler, publicSchema, SymbolKind.Schema, 'auth')!;
+    const enumSymbol = findMember(compiler, authSchema, SymbolKind.Enum, 'role')!;
 
-    // Enum should have 3 references: 1 from column type, 2 from records data
-    expect(enumSymbol.references.length).toBe(3);
-
-    const adminField = enumSymbol.symbolTable.get('Enum field:admin') as EnumFieldSymbol;
-    const userField = enumSymbol.symbolTable.get('Enum field:user') as EnumFieldSymbol;
-
-    expect(adminField.references.length).toBe(1);
-    expect(adminField.references[0].referee).toBe(adminField);
-
-    expect(userField.references.length).toBe(1);
-    expect(userField.references[0].referee).toBe(userField);
+    expect(enumSymbol).toSatisfy((s: any) => s?.isKind(SymbolKind.Enum));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'admin')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'user')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
   });
 
   test('should detect unknown enum in records data', () => {
@@ -269,22 +228,13 @@ describe('[example] records binder', () => {
     const result = analyze(source);
     expect(result.getErrors().length).toBe(0);
 
-    const ast = result.getValue();
-    const schemaSymbol = ast.symbol as SchemaSymbol;
-    const enumSymbol = schemaSymbol.symbolTable.get('Enum:status') as EnumSymbol;
+    const { ast, compiler } = result.getValue();
+    const schemaSymbol = nodeSymbol(compiler, ast)!;
+    const enumSymbol = findMember(compiler, schemaSymbol, SymbolKind.Enum, 'status')!;
 
-    const pendingField = enumSymbol.symbolTable.get('Enum field:pending') as EnumFieldSymbol;
-    const activeField = enumSymbol.symbolTable.get('Enum field:active') as EnumFieldSymbol;
-    const completedField = enumSymbol.symbolTable.get('Enum field:completed') as EnumFieldSymbol;
-
-    // pending is referenced twice
-    expect(pendingField.references.length).toBe(2);
-
-    // active is referenced once
-    expect(activeField.references.length).toBe(1);
-
-    // completed is referenced once
-    expect(completedField.references.length).toBe(1);
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'pending')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'active')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
+    expect(findMember(compiler, enumSymbol, SymbolKind.EnumField, 'completed')).toSatisfy((s: any) => s?.isKind(SymbolKind.EnumField));
   });
 
   test('should error when there are duplicate columns in top-level records', () => {

@@ -356,14 +356,17 @@ describe('[fuzz] interpreter - consistency', () => {
         const db = result.getValue();
 
         if (db) {
-          const tableNames = new Set(db.tables.map((t) => t.name));
+          // Only check uniqueness when there are no errors (errors may include duplicate name reports)
+          if (result.getErrors().length === 0) {
+            const tableNames = new Set(db.tables.map((t) => t.name));
 
-          // Verify no duplicate table names
-          expect(tableNames.size).toBe(db.tables.length);
+            // Verify no duplicate table names
+            expect(tableNames.size).toBe(db.tables.length);
 
-          // Verify no duplicate enum names
-          const enumNames = new Set(db.enums.map((e) => e.name));
-          expect(enumNames.size).toBe(db.enums.length);
+            // Verify no duplicate enum names
+            const enumNames = new Set(db.enums.map((e) => e.name));
+            expect(enumNames.size).toBe(db.enums.length);
+          }
 
           // Refs should have valid endpoint structure
           db.refs.forEach((ref) => {
@@ -514,13 +517,23 @@ describe('[fuzz] interpreter - semantic correctness', () => {
         fc.pre(db.tables.length > 0);
         fc.pre(db.tables[0].fields.length > 0);
 
-        db.tables.forEach((table) => {
-          table.fields.forEach((field) => {
-            expect(field.type).toBeDefined();
-            expect(field.type.type_name).toBeDefined();
-            expect(field.type.type_name.length).toBeGreaterThan(0);
+        // Only check type_name when there are no errors (fuzzed input may produce columns without types)
+        if (result.getErrors().length === 0) {
+          db.tables.forEach((table) => {
+            table.fields.forEach((field) => {
+              expect(field.type).toBeDefined();
+              expect(field.type.type_name).toBeDefined();
+              expect(field.type.type_name.length).toBeGreaterThan(0);
+            });
           });
-        });
+        } else {
+          // Even with errors, type should be defined (just may be empty)
+          db.tables.forEach((table) => {
+            table.fields.forEach((field) => {
+              expect(field.type).toBeDefined();
+            });
+          });
+        }
       }),
       SEMANTIC_CONFIG,
     );

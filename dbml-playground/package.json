@@ -26,9 +26,14 @@
   },
   "dependencies": {
     "@dbml/parse": "^7.0.0",
+    "@phosphor-icons/vue": "^2.2.0",
+    "floating-vue": "^5.2.2",
+    "lzbase62": "^2.0.0",
+    "pinia": "^2.3.1",
     "lodash-es": "^4.17.21",
     "monaco-editor": "^0.52.2",
-    "monaco-vim": "^0.4.2",
+    "monaco-vim": "^0.4.4",
+    "splitpanes": "^4.0.4",
     "vue": "^3.4.0"
   },
   "devDependencies": {

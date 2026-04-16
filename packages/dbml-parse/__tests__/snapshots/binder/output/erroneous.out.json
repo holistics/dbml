@@ -379,30 +379,6 @@
       },
       {
         "context": {
-          "id": "symbol@Table@users@[L0:C0, L2:C1]",
-          "snippet": "Table user...crement]\n}"
-        },
-        "declaration": {
-          "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
-          "snippet": "Table user...crement]\n}"
-        },
-        "members": [
-          {
-            "context": {
-              "id": "symbol@Column@id@[L1:C2, L1:C24]",
-              "snippet": "id int [pk...increment]"
-            }
-          }
-        ],
-        "references": [
-          {
-            "id": "node@<primary-expression>@users@[L22:C5, L22:C12]",
-            "snippet": "\"users\""
-          }
-        ]
-      },
-      {
-        "context": {
           "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
           "snippet": "Table user...) [pk]\n  }"
         },

@@ -9,9 +9,7 @@ import {
   scanTestNames, toSnapshot,
 } from '@tests/utils';
 import Compiler from '@/compiler';
-import type {
-  Database,
-} from '@/index';
+import type { Database } from '@/core/types/schemaJson';
 import type Report from '@/core/types/report';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
@@ -33,9 +31,7 @@ describe('[snapshot] nan', () => {
 
     const compiler = new Compiler();
     compiler.setSource(program);
-    const report = compiler.parse._().map(({
-      rawDb,
-    }) => rawDb);
+    const report = compiler.parse._();
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

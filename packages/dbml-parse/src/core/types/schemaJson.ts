@@ -15,12 +15,24 @@ export interface TokenPosition {
 // `name` + `schemaName` identify the original element in the source file.
 // `visibleNames` lists every local name under which the element is reachable in this file.
 export interface ElementRef {
+  // Original name
   name: string;
   schemaName: string | null;
+
+  // Names visible in this database
+  // The first name is prioritized when exporting into json
   visibleNames: {
     schemaName: string | null;
     name: string;
   }[];
+}
+
+export interface DatabaseExternals {
+  tables: ElementRef[];
+  enums: ElementRef[];
+  tableGroups: ElementRef[];
+  tablePartials: ElementRef[];
+  notes: ElementRef[];
 }
 
 /**
@@ -32,7 +44,7 @@ export interface ElementRef {
 export interface FilterConfig {
   tables: Array<{
     name: string;
-    schemaName: string;
+    schemaName: string | null;
   }> | null;
   stickyNotes: Array<{ name: string }> | null;
   tableGroups: Array<{ name: string }> | null;
@@ -57,6 +69,7 @@ export interface Database {
   project?: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
+  externals: DatabaseExternals;
   diagramViews: DiagramView[];
   token?: TokenPosition;
 }
@@ -205,7 +218,13 @@ export interface TableGroupField {
   schemaName: string | null;
 }
 
-export type AliasKind = 'table' | 'enum' | 'tablegroup' | 'tablepartial' | 'note';
+export enum AliasKind {
+  Table = 'table',
+  Enum = 'enum',
+  TableGroup = 'tablegroup',
+  TablePartial = 'tablepartial',
+  Note = 'note',
+}
 
 export interface Alias {
   name: string;
