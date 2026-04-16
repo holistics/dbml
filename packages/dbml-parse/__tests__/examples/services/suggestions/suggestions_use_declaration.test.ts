@@ -150,7 +150,7 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 26));
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels.some((l) => l.includes('schema'))).toBe(true);
+      expect(labels.some((l) => l.toString().includes('schema'))).toBe(true);
     });
 
     it('suggests filepaths with quote-wrapped insertText', () => {
