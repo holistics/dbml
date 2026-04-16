@@ -82,7 +82,7 @@ export const useModule: LocalModule = {
     if (!node.alias) return new Report(undefined);
     if (!isValidAlias(node.alias)) {
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.INVALID_ALIAS, 'Use aliases can only contains alphanumeric and underscore unless surrounded by double quotes', node.alias),
+        new CompileError(CompileErrorCode.INVALID_ALIAS, 'Use aliases can only contain alphanumeric and underscore unless surrounded by double quotes', node.alias),
       ]);
     }
     return new Report(extractVariableFromExpression(node.alias));

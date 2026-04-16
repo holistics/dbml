@@ -107,7 +107,7 @@ export default class TableValidator {
 
     if (!isValidAlias(aliasNode)) {
       return [
-        new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contains alphanumeric and underscore unless surrounded by double quotes', aliasNode),
+        new CompileError(CompileErrorCode.INVALID_ALIAS, 'Table aliases can only contain alphanumeric and underscore unless surrounded by double quotes', aliasNode),
       ];
     }
 
