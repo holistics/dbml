@@ -32,9 +32,6 @@ export const recordsModule: LocalModule = {
     if (isElementNode(node, ElementKind.Records)) {
       return Report.create(undefined, new RecordsValidator(compiler, node).validate());
     }
-    if (isElementFieldNode(node, ElementKind.Records)) {
-      return Report.create(undefined);
-    }
     return Report.create(PASS_THROUGH);
   },
 

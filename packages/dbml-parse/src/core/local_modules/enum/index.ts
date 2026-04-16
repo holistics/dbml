@@ -12,7 +12,7 @@ import {
   PASS_THROUGH, type PassThrough,
 } from '@/core/types/module';
 import {
-  AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode,
+  AttributeNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
@@ -39,9 +39,6 @@ export const enumModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
       return Report.create(undefined, new EnumValidator(compiler, node).validate());
-    }
-    if (isElementFieldNode(node, ElementKind.Enum)) {
-      return Report.create(undefined, EnumValidator.validateField(compiler, node));
     }
     return Report.create(PASS_THROUGH);
   },

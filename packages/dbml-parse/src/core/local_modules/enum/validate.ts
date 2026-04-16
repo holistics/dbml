@@ -6,13 +6,13 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  ElementKind, SettingName,
+  SettingName,
 } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import {
-  extractVariableFromExpression, isElementFieldNode, isExpressionAQuotedString, isExpressionAVariableNode,
+  isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
   aggregateSettingList, isValidName,
@@ -25,33 +25,6 @@ export default class EnumValidator {
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
-  }
-
-  static validateField (compiler: Compiler, node: FunctionApplicationNode): CompileError[] {
-    const errors: CompileError[] = [];
-
-    if (node.callee && !isExpressionAVariableNode(node.callee)) {
-      errors.push(new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT_NAME, 'An enum field must be an identifier or a quoted identifier', node.callee));
-    }
-
-    const args = [
-      ...node.args,
-    ];
-    if (last(args) instanceof ListExpressionNode) {
-      const aggReport = aggregateSettingList(last(args) as ListExpressionNode);
-      errors.push(...aggReport.getErrors());
-      args.pop();
-    } else if (args[0] instanceof ListExpressionNode) {
-      const aggReport = aggregateSettingList(args[0]);
-      errors.push(...aggReport.getErrors());
-      args.shift();
-    }
-
-    if (args.length > 0) {
-      errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT, 'An Enum must have only a field and optionally a setting list', arg)));
-    }
-
-    return errors;
   }
 
   validate (): CompileError[] {
@@ -143,7 +116,6 @@ export default class EnumValidator {
     }
 
     const errors: CompileError[] = [];
-    const seen = new Map<string, SyntaxNode>();
 
     for (const field of fields) {
       if (field.callee && !isExpressionAVariableNode(field.callee)) {
@@ -163,17 +135,6 @@ export default class EnumValidator {
 
       if (args.length > 0) {
         errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_ENUM_ELEMENT, 'An Enum must have only a field and optionally a setting list', arg)));
-      }
-
-      const name = field.callee ? extractVariableFromExpression(field.callee) : undefined;
-      if (name !== undefined) {
-        const firstNode = seen.get(name);
-        if (firstNode) {
-          errors.push(new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${name}`, firstNode));
-          errors.push(new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${name}`, field));
-        } else {
-          seen.set(name, field);
-        }
       }
     }
 
