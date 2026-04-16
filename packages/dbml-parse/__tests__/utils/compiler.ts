@@ -282,7 +282,6 @@ export function print (source: string, ast: SyntaxNode): string {
         const list = node as UseSpecifierListNode;
         if (list.openBrace) collectTokens(list.openBrace);
         list.specifiers.forEach(collectTokens);
-        list.commaList.forEach(collectTokens);
         if (list.closeBrace) collectTokens(list.closeBrace);
         break;
       }

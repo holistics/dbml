@@ -39,7 +39,6 @@ function isTokenInUseDecl (token: SyntaxToken, useDecl: UseDeclarationNode): boo
   if (specs instanceof WildcardNode) return token === specs.token;
   if (specs instanceof UseSpecifierListNode) {
     if (token === specs.openBrace || token === specs.closeBrace) return true;
-    if (specs.commaList.includes(token)) return true;
     for (const spec of specs.specifiers) {
       if (token === spec.importKind || token === spec.asKeyword) return true;
     }

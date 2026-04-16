@@ -341,15 +341,16 @@ export class UseSpecifierNode extends SyntaxNode {
   }
 }
 
-// Form: { <specifier> [, <specifier>]* }
+// Form: { <specifier> [\n+ <specifier>]* }
 // The braced list of specifiers in a use statement
-// e.g. { table users, enum status }
+// e.g. {
+//   table users
+//   enum status
+// }
 export class UseSpecifierListNode extends SyntaxNode {
   openBrace?: SyntaxToken;
 
   specifiers: UseSpecifierNode[];
-
-  commaList: SyntaxToken[];
 
   closeBrace?: SyntaxToken;
 
@@ -357,12 +358,10 @@ export class UseSpecifierListNode extends SyntaxNode {
     {
       openBrace,
       specifiers = [],
-      commaList = [],
       closeBrace,
     }: {
       openBrace?: SyntaxToken;
       specifiers?: UseSpecifierNode[];
-      commaList?: SyntaxToken[];
       closeBrace?: SyntaxToken;
     },
     id: SyntaxNodeId,
@@ -374,13 +373,12 @@ export class UseSpecifierListNode extends SyntaxNode {
       filepath,
       [
         openBrace,
-        ...interleave(specifiers, commaList),
+        ...specifiers,
         closeBrace,
       ],
     );
     this.openBrace = openBrace;
     this.specifiers = specifiers;
-    this.commaList = commaList;
     this.closeBrace = closeBrace;
   }
 }

@@ -205,7 +205,6 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof UseSpecifierListNode) {
     markInvalid(node.openBrace);
     node.specifiers.forEach(markInvalid);
-    node.commaList.forEach(markInvalid);
     markInvalid(node.closeBrace);
   } else if (node instanceof UseSpecifierNode) {
     markInvalid(node.importKind);
@@ -332,7 +331,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   }
 
   if (node instanceof UseSpecifierListNode) {
-    return filterUndefined(node.openBrace, ...alternateLists(node.specifiers, node.commaList), node.closeBrace);
+    return filterUndefined(node.openBrace, ...node.specifiers, node.closeBrace);
   }
 
   if (node instanceof UseSpecifierNode) {
