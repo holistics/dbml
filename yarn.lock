@@ -7429,10 +7429,10 @@ monaco-editor@^0.52.2:
   resolved "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.52.2.tgz"
   integrity sha512-GEQWEZmfkOGLdd3XK8ryrfWz3AIP8YymVXiPHEdewrUq7mh0qrKrfHLNCXcbB6sTnMLnOZ3ztSiKcciFUkIJwQ==
 
-monaco-vim@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.npmjs.org/monaco-vim/-/monaco-vim-0.4.2.tgz"
-  integrity sha512-rdbQC3O2rmpwX2Orzig/6gZjZfH7q7TIeB+uEl49sa+QyNm3jCKJOw5mwxBdFzTqbrPD+URfg6A2lEkuL5kymw==
+monaco-vim@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/monaco-vim/-/monaco-vim-0.4.4.tgz#a63e8d8582d8df33a49b8071a8dbf0b80c817518"
+  integrity sha512-LNChAb//WEm/W+eyeHG/0+pdVEHotk2hLTN+M3sQZx5E8cAlSWSgqcxpcRuQnxDybSln7pfHF9i63HmbIQvrWw==
 
 ms@2.1.2, ms@^2.0.0, ms@^2.1.1:
   version "2.1.2"

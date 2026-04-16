@@ -238,5 +238,7 @@ function suggestUseFilepath (
     });
   }
 
-  return { suggestions };
+  return {
+    suggestions,
+  };
 }

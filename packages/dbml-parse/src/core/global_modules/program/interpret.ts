@@ -137,12 +137,20 @@ export default class ProgramInterpreter {
                 const canonicalKey = `${kindKey(schemaMember)}:${canonicalSchemaName ?? ''}.${memberName}`;
                 const visibleSchemaName = localSchemaName ?? canonicalSchemaName ?? null;
                 if (extMap.has(canonicalKey)) {
-                  extMap.get(canonicalKey)!.visibleNames.push({ schemaName: visibleSchemaName, name: memberName });
+                  extMap.get(canonicalKey)!.visibleNames.push({
+                    schemaName: visibleSchemaName,
+                    name: memberName,
+                  });
                 } else {
                   const ref: ElementRef = {
                     name: memberName,
                     schemaName: canonicalSchemaName ?? null,
-                    visibleNames: [{ schemaName: visibleSchemaName, name: memberName }],
+                    visibleNames: [
+                      {
+                        schemaName: visibleSchemaName,
+                        name: memberName,
+                      },
+                    ],
                   };
                   extMap.set(canonicalKey, ref);
                   memberList.push(ref);

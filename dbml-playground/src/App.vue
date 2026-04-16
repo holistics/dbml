@@ -95,7 +95,10 @@
           :min-size="25"
           :max-size="70"
         >
-          <div class="flex flex-col h-full bg-white rounded border border-gray-200 overflow-hidden" style="min-width: 260px;">
+          <div
+            class="flex flex-col h-full bg-white rounded border border-gray-200 overflow-hidden"
+            style="min-width: 260px;"
+          >
             <OutputPane ref="outputPaneRef" />
           </div>
         </Pane>
@@ -106,7 +109,7 @@
 
 <script setup lang="ts">
 import {
-  ref, shallowRef, provide, onMounted, onBeforeUnmount,
+  ref, shallowRef, provide, onMounted, onBeforeUnmount, nextTick,
 } from 'vue';
 import {
   Splitpanes, Pane,
@@ -121,6 +124,9 @@ import {
 import {
   useProject,
 } from '@/stores/projectStore';
+import {
+  Filepath,
+} from '@dbml/parse';
 import FilesPane from '@/components/panes/files/FilesPane.vue';
 import EditorPane from '@/components/panes/editor/EditorPane.vue';
 import OutputPane from '@/components/panes/output/OutputPane.vue';
@@ -170,6 +176,49 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   dbmlEditor = editor;
   dbmlEditorRef.value = editor;
   parser.setupMonacoServices(editor);
+
+  // Monaco's StandaloneCodeEditorService.findModel returns null when the target URI
+  // doesn't match the current model → cross-file navigation silently fails.
+  // registerCodeEditorOpenHandler prepends a handler that runs before the built-in one.
+  // We handle cross-file navigation by switching the active project file first.
+  const svc = (editor as any)._codeEditorService;
+  svc?.registerCodeEditorOpenHandler?.(async (input: { resource?: monaco.Uri;
+    options?: { selection?: monaco.IRange }; }) => {
+    const resource = input?.resource;
+    if (!resource) return null;
+
+    const targetFilepath = Filepath.fromUri(resource.toString());
+    // Let the default handler deal with same-file navigation.
+    if (project.files[targetFilepath.absolute] === undefined) return null;
+    if (targetFilepath.intern() === new Filepath(project.currentFile).intern()) return null;
+
+    project.setCurrentFile(targetFilepath.absolute);
+    // Wait for the filepath watcher → createModel → setModel chain.
+    // onDidChangeModel fires synchronously when setModel is called, which is
+    // more reliable than nextTick because it doesn't depend on Vue flush timing.
+    await new Promise<void>((resolve) => {
+      const d = editor.onDidChangeModel(() => { d.dispose(); resolve(); });
+      setTimeout(resolve, 500);
+    });
+
+    const sel = input.options?.selection;
+    if (sel) {
+      if (typeof sel.endLineNumber === 'number' && typeof sel.endColumn === 'number') {
+        editor.setSelection(sel);
+        editor.revealRangeInCenter(sel);
+      } else {
+        const pos = {
+          lineNumber: sel.startLineNumber,
+          column: sel.startColumn,
+        };
+        editor.setPosition(pos);
+        editor.revealPositionInCenter(pos);
+      }
+    }
+
+    editor.focus();
+    return editor;
+  });
 };
 
 provide('getDbmlEditor', () => dbmlEditor);

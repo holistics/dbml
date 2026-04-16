@@ -25,11 +25,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { DBMLLanguageService } from '@/components/monaco/dbml-language';
-export const DBML_LANGUAGE_ID = DBMLLanguageService.getLanguageId();
-</script>
-
 <script setup lang="ts">
 /**
  * Monaco Editor Component
@@ -42,6 +37,9 @@ export const DBML_LANGUAGE_ID = DBMLLanguageService.getLanguageId();
  * - Information Hiding: Language setup complexity is hidden in services
  * - Shallow Module: Simple interface that delegates to deep modules
  */
+import {
+  initVimMode, type VimAdapterInstance,
+} from 'monaco-vim';
 import {
   ref, onMounted, onBeforeUnmount, watch, nextTick,
 } from 'vue';
@@ -108,8 +106,8 @@ const selectionInfo = ref({
 /**
  * Vim mode state
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let vimController: any = null;
+let vimController: VimAdapterInstance | null = null;
+let pendingRetrigger = false;
 const vimModeStatus = ref('NORMAL');
 
 /**
@@ -208,17 +206,12 @@ const setupVimMode = async (): Promise<void> => {
   if (!editor || !vimMode) return;
 
   try {
-    // Dynamically import monaco-vim
-    const {
-      initVimMode,
-    } = await import('monaco-vim') as any;
-
     // Initialize vim mode with status tracking
     vimController = initVimMode(editor);
 
     // Track vim mode status changes
     if (vimController && vimController.on) {
-      vimController.on('vim-mode-change', (mode) => {
+      vimController.on('vim-mode-change', (mode: any) => {
         vimModeStatus.value = mode.mode?.toUpperCase() || 'NORMAL';
       });
     }
@@ -318,6 +311,7 @@ const setupEventListeners = (): void => {
     editor.onDidChangeModelContent(() => {
       const value = editor?.getValue() || '';
       emit('update:modelValue', value);
+      pendingRetrigger = true;
     });
   }
 
@@ -392,6 +386,7 @@ watch(() => language, (newLanguage) => {
 
 watch(() => filepath, () => {
   if (!editor) return;
+  pendingRetrigger = false;
   const newModel = createModel();
   editor.setModel(newModel);
 });
@@ -408,8 +403,11 @@ watch([() => parser.errors, () => parser.warnings], () => {
 
 // After each completed parse the compiler is fully synced - retrigger the
 // suggestion widget so completions reflect the latest state.
+// Guard with pendingRetrigger so file switches don't pop up suggestions.
 watch(() => parser.tokens, () => {
   if (!editor || language !== DBML_LANGUAGE_ID) return;
+  if (!pendingRetrigger) return;
+  pendingRetrigger = false;
   const suggestController = editor.getContribution('editor.contrib.suggestController') as any;
   if (!suggestController) return;
   // Don't retrigger if the user is already navigating through suggestions.

@@ -344,7 +344,13 @@ function lookupTableInFile (compiler: Compiler, filepath: Filepath, nameParts: s
   }
 
   // Qualified name (schema.table) — find the schema first, then the table
-  const [schemaName, tableName] = [nameParts[0], nameParts[nameParts.length - 1]];
+  const [
+    schemaName,
+    tableName,
+  ] = [
+    nameParts[0],
+    nameParts[nameParts.length - 1],
+  ];
   const usable = compiler.fileUsableMembers(filepath).getFiltered(UNHANDLED);
   if (!usable) return undefined;
   const schema = usable.schemaMembers.find((s) => s.name === schemaName);

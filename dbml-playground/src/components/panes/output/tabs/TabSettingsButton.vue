@@ -1,5 +1,10 @@
 <template>
-  <VDropdown placement="bottom-end" :distance="6" :arrow-padding="0" no-auto-focus>
+  <VDropdown
+    placement="bottom-end"
+    :distance="6"
+    :arrow-padding="0"
+    no-auto-focus
+  >
     <button class="flex items-center gap-1 text-gray-400 hover:text-gray-700 cursor-pointer transition-colors">
       <PhGear class="w-3.5 h-3.5" />
     </button>
@@ -9,8 +14,14 @@
           class="flex items-center gap-2 w-full px-2 py-1.5 text-xs rounded hover:bg-gray-100 transition-colors text-gray-700"
           @click="emit('toggle-decor')"
         >
-          <PhEye v-if="showDecor" class="w-3.5 h-3.5 text-blue-500" />
-          <PhEyeSlash v-else class="w-3.5 h-3.5 text-gray-400" />
+          <PhEye
+            v-if="showDecor"
+            class="w-3.5 h-3.5 text-blue-500"
+          />
+          <PhEyeSlash
+            v-else
+            class="w-3.5 h-3.5 text-gray-400"
+          />
           <span>Decorations</span>
           <span class="ml-auto text-[10px] text-gray-400">{{ showDecor ? 'on' : 'off' }}</span>
         </button>

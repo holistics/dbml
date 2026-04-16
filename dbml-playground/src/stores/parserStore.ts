@@ -41,6 +41,7 @@ export interface SymbolInfo {
   kind: string; // SymbolKind value, e.g. 'Table', 'Column', 'Enum'
   name: string;
   declPos: DeclPos | null;
+  declFilepath: string | null;
   members: SymbolInfo[];
 }
 
@@ -77,6 +78,7 @@ function buildSymbolInfo (compiler: Compiler, sym: NodeSymbol, depth = 0): Symbo
     kind: sym.kind,
     name,
     declPos,
+    declFilepath: decl?.filepath?.absolute ?? null,
     members,
   };
 }
@@ -216,7 +218,9 @@ export const useParser = defineStore('parser', () => {
       });
       monaco.languages.registerCompletionItemProvider(languageId, {
         triggerCharacters: ['.', ' '],
-        provideCompletionItems: (...args) => currentServices?.autocompletionProvider.provideCompletionItems(...args) ?? { suggestions: [] },
+        provideCompletionItems: (...args) => currentServices?.autocompletionProvider.provideCompletionItems(...args) ?? {
+          suggestions: [],
+        },
       });
     } catch (err) {
       logger.warn('Failed to register Monaco language services:', err);
@@ -225,7 +229,8 @@ export const useParser = defineStore('parser', () => {
 
   function updateDiagnostics (model: monaco.editor.ITextModel): void {
     if (!currentServices) return;
-    const markers = (currentServices.diagnosticsProvider as { provideMarkers(): monaco.editor.IMarkerData[] }).provideMarkers();
+    const fp = model.uri ? Filepath.fromUri(String(model.uri)) : undefined;
+    const markers = (currentServices.diagnosticsProvider as { provideMarkers(f?: Filepath): monaco.editor.IMarkerData[] }).provideMarkers(fp);
     monaco.editor.setModelMarkers(model, languageId, markers);
   }
 

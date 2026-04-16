@@ -30,4 +30,3 @@ export function containerToken (this: Compiler, filepath: Filepath, offset: numb
     index: id - 1,
   };
 }
-

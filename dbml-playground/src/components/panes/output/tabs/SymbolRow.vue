@@ -15,7 +15,11 @@
         v-else
         class="flex-shrink-0 w-3"
       />
-      <VTooltip placement="bottom" :distance="6" class="flex-shrink-0">
+      <VTooltip
+        placement="bottom"
+        :distance="6"
+        class="flex-shrink-0"
+      >
         <component
           :is="icon"
           class="w-3.5 h-3.5"

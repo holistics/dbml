@@ -233,12 +233,14 @@ export default class Binder {
 
               const rightIds = this.getColumnSymbolIds(refValue.expression);
               if (!rightIds) continue;
-              const leftIds = tableSym ? [
-                tableSym.originalSymbol.intern(),
-                colSym.originalSymbol.intern(),
-              ] : [
-                colSym.originalSymbol.intern(),
-              ];
+              const leftIds = tableSym
+                ? [
+                    tableSym.originalSymbol.intern(),
+                    colSym.originalSymbol.intern(),
+                  ]
+                : [
+                    colSym.originalSymbol.intern(),
+                  ];
 
               if (this.isSameEndpoint(leftIds, rightIds)) {
                 errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));

@@ -42,7 +42,6 @@
           <span class="text-xs">{{ tab.label }}</span>
         </template>
       </VTooltip>
-
     </div>
 
     <div class="flex-1 overflow-hidden">
@@ -116,6 +115,9 @@ import {
 import {
   useProject,
 } from '@/stores/projectStore';
+import {
+  Filepath,
+} from '@dbml/parse';
 import {
   useUser,
 } from '@/stores/userStore';
@@ -195,7 +197,10 @@ function isDecorEnabled (tabId: string): boolean {
 }
 
 function toggleDecor (tabId: string) {
-  decorPrefs.value = { ...decorPrefs.value, [tabId]: !isDecorEnabled(tabId) };
+  decorPrefs.value = {
+    ...decorPrefs.value,
+    [tabId]: !isDecorEnabled(tabId),
+  };
   localStorage.setItem(DECOR_STORAGE_KEY, JSON.stringify(decorPrefs.value));
 }
 const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
@@ -208,32 +213,34 @@ const AST_SKIP_KEYS = new Set(['parentNode', 'parent', 'symbol', 'referee', 'sou
 const AST_RANGE_LIMIT = 2000;
 
 const NODE_KIND_CLASS: Record<string, string> = {
-  '<element-declaration>':  'hl-node-element',
-  '<use-declaration>':      'hl-node-use',
-  '<use-specifier>':        'hl-node-use',
-  '<use-specifier-list>':   'hl-node-use',
-  '<attribute>':            'hl-node-attribute',
-  '<identifer-stream>':     'hl-node-id-stream',
-  '<literal>':              'hl-node-literal',
-  '<variable>':             'hl-node-variable',
-  '<prefix-expression>':    'hl-node-arith',
-  '<infix-expression>':     'hl-node-arith',
-  '<postfix-expression>':   'hl-node-arith',
-  '<function-expression>':  'hl-node-function',
+  '<element-declaration>': 'hl-node-element',
+  '<use-declaration>': 'hl-node-use',
+  '<use-specifier>': 'hl-node-use',
+  '<use-specifier-list>': 'hl-node-use',
+  '<attribute>': 'hl-node-attribute',
+  '<identifer-stream>': 'hl-node-id-stream',
+  '<literal>': 'hl-node-literal',
+  '<variable>': 'hl-node-variable',
+  '<prefix-expression>': 'hl-node-arith',
+  '<infix-expression>': 'hl-node-arith',
+  '<postfix-expression>': 'hl-node-arith',
+  '<function-expression>': 'hl-node-function',
   '<function-application>': 'hl-node-fn-app',
-  '<block-expression>':     'hl-node-block',
-  '<list-expression>':      'hl-node-list',
-  '<tuple-expression>':     'hl-node-list',
-  '<comma-expression>':     'hl-node-list',
-  '<array>':                'hl-node-list',
-  '<call-expression>':      'hl-node-call',
-  '<group-expression>':     'hl-node-call',
-  '<primary-expression>':   'hl-node-primary',
-  '<wildcard>':             'hl-node-wildcard',
+  '<block-expression>': 'hl-node-block',
+  '<list-expression>': 'hl-node-list',
+  '<tuple-expression>': 'hl-node-list',
+  '<comma-expression>': 'hl-node-list',
+  '<array>': 'hl-node-list',
+  '<call-expression>': 'hl-node-call',
+  '<group-expression>': 'hl-node-call',
+  '<primary-expression>': 'hl-node-primary',
+  '<wildcard>': 'hl-node-wildcard',
 };
 
-function collectAstEntries (ast: unknown): Array<{ range: monaco.IRange; cls: string }> {
-  const entries: Array<{ range: monaco.IRange; cls: string }> = [];
+function collectAstEntries (ast: unknown): Array<{ range: monaco.IRange;
+  cls: string; }> {
+  const entries: Array<{ range: monaco.IRange;
+    cls: string; }> = [];
   const visited = new WeakSet<object>();
   function walk (node: unknown) {
     if (entries.length >= AST_RANGE_LIMIT) return;
@@ -242,8 +249,10 @@ function collectAstEntries (ast: unknown): Array<{ range: monaco.IRange; cls: st
     visited.add(node);
     if (Array.isArray(node)) { node.forEach(walk); return; }
     const obj = node as Record<string, unknown>;
-    const sp = obj.startPos as { line?: number; column?: number } | null | undefined;
-    const ep = obj.endPos as { line?: number; column?: number } | null | undefined;
+    const sp = obj.startPos as { line?: number;
+      column?: number; } | null | undefined;
+    const ep = obj.endPos as { line?: number;
+      column?: number; } | null | undefined;
     if (sp && ep && typeof sp.line === 'number' && !Number.isNaN(sp.line)
       && typeof ep.line === 'number' && !Number.isNaN(ep.line)) {
       const cls = NODE_KIND_CLASS[obj.kind as string] ?? null;
@@ -264,17 +273,19 @@ function collectAstEntries (ast: unknown): Array<{ range: monaco.IRange; cls: st
 }
 
 const SYM_KIND_CLASS: Record<string, string> = {
-  'Table':      'hl-sym-table',
-  'Column':     'hl-sym-column',
-  'Ref':        'hl-sym-ref',
-  'Enum':       'hl-sym-enum',
+  'Table': 'hl-sym-table',
+  'Column': 'hl-sym-column',
+  'Ref': 'hl-sym-ref',
+  'Enum': 'hl-sym-enum',
   'Enum field': 'hl-sym-enum-field',
   'TableGroup': 'hl-sym-tablegroup',
-  'Schema':     'hl-sym-schema',
+  'Schema': 'hl-sym-schema',
 };
 
-function collectSymbolEntries (symbols: SymbolInfo[]): Array<{ range: monaco.IRange; cls: string }> {
-  const result: Array<{ range: monaco.IRange; cls: string }> = [];
+function collectSymbolEntries (symbols: SymbolInfo[]): Array<{ range: monaco.IRange;
+  cls: string; }> {
+  const result: Array<{ range: monaco.IRange;
+    cls: string; }> = [];
   function walk (sym: SymbolInfo) {
     if (sym.declPos) {
       result.push({
@@ -288,15 +299,23 @@ function collectSymbolEntries (symbols: SymbolInfo[]): Array<{ range: monaco.IRa
   return result;
 }
 
-type DbToken = { start: { line: number; column: number }; end: { line: number; column: number } } | undefined;
+type DbToken = { start: { line: number;
+  column: number; };
+end: { line: number;
+  column: number; }; } | undefined;
 
-function collectDatabaseEntries (): Array<{ range: monaco.IRange; cls: string }> {
+function collectDatabaseEntries (): Array<{ range: monaco.IRange;
+  cls: string; }> {
   const db = parser.database;
   if (!db) return [];
-  const result: Array<{ range: monaco.IRange; cls: string }> = [];
+  const result: Array<{ range: monaco.IRange;
+    cls: string; }> = [];
   function add (tp: DbToken, cls: string) {
     if (!tp) return;
-    result.push({ range: new monaco.Range(tp.start.line, tp.start.column, tp.end.line, tp.end.column), cls });
+    result.push({
+      range: new monaco.Range(tp.start.line, tp.start.column, tp.end.line, tp.end.column),
+      cls,
+    });
   }
   for (const t of db.tables) { add(t.token, 'hl-sym-table'); }
   for (const r of db.refs) { add(r.token, 'hl-sym-ref'); }
@@ -319,25 +338,53 @@ function updateEditorDecorations () {
     }));
     if (entries.length === 0) return;
     editorDecorations = editor.createDecorationsCollection(
-      entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
+      entries.map(({
+        range, cls,
+      }) => ({
+        range,
+        options: {
+          inlineClassName: cls,
+        },
+      })),
     );
   } else if (activeTab.value === OutputTabId.Nodes) {
     const entries = collectAstEntries(parser.ast);
     if (entries.length === 0) return;
     editorDecorations = editor.createDecorationsCollection(
-      entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
+      entries.map(({
+        range, cls,
+      }) => ({
+        range,
+        options: {
+          inlineClassName: cls,
+        },
+      })),
     );
   } else if (activeTab.value === OutputTabId.Symbols) {
     const entries = collectSymbolEntries(parser.symbols);
     if (entries.length === 0) return;
     editorDecorations = editor.createDecorationsCollection(
-      entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
+      entries.map(({
+        range, cls,
+      }) => ({
+        range,
+        options: {
+          inlineClassName: cls,
+        },
+      })),
     );
   } else if (activeTab.value === OutputTabId.Database) {
     const entries = collectDatabaseEntries();
     if (entries.length === 0) return;
     editorDecorations = editor.createDecorationsCollection(
-      entries.map(({ range, cls }) => ({ range, options: { inlineClassName: cls } })),
+      entries.map(({
+        range, cls,
+      }) => ({
+        range,
+        options: {
+          inlineClassName: cls,
+        },
+      })),
     );
   }
 }
@@ -345,7 +392,9 @@ function updateEditorDecorations () {
 watch(
   [activeTab, decorPrefs, () => parser.tokens, () => parser.ast, () => parser.symbols, () => parser.database, () => dbmlEditorRef?.value],
   updateEditorDecorations,
-  { immediate: true },
+  {
+    immediate: true,
+  },
 );
 
 onBeforeUnmount(() => { editorDecorations?.clear(); editorDecorations = null; });
@@ -385,24 +434,57 @@ function navigateTo (range: { startLineNumber: number;
   }
 }
 
-function handleNodeClick (node: RawAstNode) {
-  const d = node.rawData as Record<string, unknown> | null | undefined;
-  if (!d) return;
-  const sp = d.startPos as Record<string, unknown> | null | undefined;
-  if (!sp || typeof sp.line !== 'number' || Number.isNaN(sp.line)) return;
-  const ep = d.endPos as Record<string, unknown> | null | undefined;
-  navigateTo({
+// Navigate to a declaration that may be in a different file.
+async function navigateToDeclaration (targetFilepath: string | null, range: { startLineNumber: number;
+  startColumn: number;
+  endLineNumber: number;
+  endColumn: number; }) {
+  const editor = getEditor?.();
+  if (!editor) return;
+  if (targetFilepath && new Filepath(targetFilepath).intern() !== new Filepath(project.currentFile).intern()) {
+    if (project.files[targetFilepath] === undefined) return;
+    project.setCurrentFile(targetFilepath);
+    await new Promise<void>((resolve) => {
+      const d = editor.onDidChangeModel(() => { d.dispose(); resolve(); });
+      setTimeout(resolve, 500);
+    });
+  }
+  navigateTo(range);
+}
+
+function posToRange (sp: Record<string, unknown>, ep?: Record<string, unknown> | null) {
+  return {
     startLineNumber: (sp.line as number) + 1,
     startColumn: typeof sp.column === 'number' ? (sp.column as number) + 1 : 1,
     endLineNumber: ep && typeof ep.line === 'number' && !Number.isNaN(ep.line) ? (ep.line as number) + 1 : (sp.line as number) + 1,
     endColumn: ep && typeof ep.column === 'number' ? (ep.column as number) + 1 : 1,
-  });
+  };
 }
 
+function handleNodeClick (node: RawAstNode) {
+  const d = node.rawData as Record<string, unknown> | null | undefined;
+  if (!d) return;
+
+  // If the node declares a symbol, navigate to the symbol's declaration (may be cross-file).
+  const sym = d.symbol as { declaration?: Record<string, unknown> } | null | undefined;
+  const symDecl = sym?.declaration;
+  if (symDecl) {
+    const sp = symDecl.startPos as Record<string, unknown> | null | undefined;
+    if (sp && typeof sp.line === 'number' && !Number.isNaN(sp.line)) {
+      const fp = (symDecl.filepath as { absolute?: string } | null | undefined)?.absolute ?? null;
+      navigateToDeclaration(fp, posToRange(sp, symDecl.endPos as Record<string, unknown> | null));
+      return;
+    }
+  }
+
+  const sp = d.startPos as Record<string, unknown> | null | undefined;
+  if (!sp || typeof sp.line !== 'number' || Number.isNaN(sp.line)) return;
+  navigateTo(posToRange(sp, d.endPos as Record<string, unknown> | null));
+}
 
 function handleSymbolClick (sym: SymbolInfo) {
   if (!sym.declPos) return;
-  navigateTo({
+  navigateToDeclaration(sym.declFilepath, {
     startLineNumber: sym.declPos.startLine,
     startColumn: sym.declPos.startCol,
     endLineNumber: sym.declPos.endLine,

@@ -2,7 +2,10 @@
   <div class="h-full flex flex-col text-[13px]">
     <div class="flex-shrink-0 px-3 py-1 border-b border-gray-200 bg-white text-gray-500 text-xs flex items-center justify-between">
       <span>{{ tokens.length }} tokens</span>
-      <TabSettingsButton :show-decor="showDecor" @toggle-decor="emit('toggle-decor')" />
+      <TabSettingsButton
+        :show-decor="showDecor"
+        @toggle-decor="emit('toggle-decor')"
+      />
     </div>
 
     <div
@@ -34,7 +37,11 @@
         >
           <span class="text-gray-400 w-6 text-right flex-shrink-0 text-xs">{{ i }}</span>
 
-          <VTooltip placement="bottom" :distance="6" class="flex-shrink-0">
+          <VTooltip
+            placement="bottom"
+            :distance="6"
+            class="flex-shrink-0"
+          >
             <component
               :is="tokenIconFor(tok.kind).icon"
               class="w-3.5 h-3.5"
@@ -67,7 +74,6 @@
               </template>
             </VDropdown>
           </div>
-
         </div>
 
         <div
@@ -76,23 +82,50 @@
           class="border-b border-gray-100 border-l-2 border-l-yellow-300 bg-yellow-50/40 px-3 py-1.5"
           style="font-family: 'SF Mono', Monaco, Consolas, monospace;"
         >
-          <div class="grid gap-y-0.5 text-xs items-baseline" style="grid-template-columns: max-content 1fr; column-gap: 1.5rem;">
+          <div
+            class="grid gap-y-0.5 text-xs items-baseline"
+            style="grid-template-columns: max-content 1fr; column-gap: 1.5rem;"
+          >
             <span class="text-gray-400 text-[10px] font-medium">kind</span>
             <span class="text-blue-600 font-mono break-all">{{ tok.kind }}</span>
             <span class="text-gray-400 text-[10px] font-medium">value</span>
             <span class="text-green-700 font-mono break-all">{{ (rawTexts[i] ?? tok.value) || '·' }}</span>
-            <template v-for="section in detailSections(tok)" :key="section.label">
+            <template
+              v-for="section in detailSections(tok)"
+              :key="section.label"
+            >
               <template v-if="section.tokens.length > 0">
-                <span class="text-[10px] font-medium" :class="section.error ? 'text-red-400' : 'text-gray-400'">{{ section.label }}</span>
-                <span class="inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 font-mono" :class="section.error ? 'text-red-600' : 'text-gray-600'">
-                  <template v-for="(trivTok, si) in section.tokens" :key="si">
+                <span
+                  class="text-[10px] font-medium"
+                  :class="section.error ? 'text-red-400' : 'text-gray-400'"
+                >{{ section.label }}</span>
+                <span
+                  class="inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 font-mono"
+                  :class="section.error ? 'text-red-600' : 'text-gray-600'"
+                >
+                  <template
+                    v-for="(trivTok, si) in section.tokens"
+                    :key="si"
+                  >
                     <template v-if="trivTok.kind === '<space>'">
                       <span class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ trivTok.value.length }}</span>
                     </template>
-                    <PhKeyReturn v-else-if="trivTok.kind === '<newline>'" class="w-3 h-3 text-gray-400 flex-shrink-0" />
-                    <span v-else-if="trivTok.kind === '<tab>'" class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]">→</span>
-                    <span v-else-if="trivTok.kind === '<single-line-comment>' || trivTok.kind === '<multiline-comment>'" class="text-gray-400 italic break-all">{{ trivTok.value }}</span>
-                    <span v-else class="break-all">{{ trivTok.value }}</span>
+                    <PhKeyReturn
+                      v-else-if="trivTok.kind === '<newline>'"
+                      class="w-3 h-3 text-gray-400 flex-shrink-0"
+                    />
+                    <span
+                      v-else-if="trivTok.kind === '<tab>'"
+                      class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
+                    >→</span>
+                    <span
+                      v-else-if="trivTok.kind === '<single-line-comment>' || trivTok.kind === '<multiline-comment>'"
+                      class="text-gray-400 italic break-all"
+                    >{{ trivTok.value }}</span>
+                    <span
+                      v-else
+                      class="break-all"
+                    >{{ trivTok.value }}</span>
                   </template>
                 </span>
               </template>
@@ -133,13 +166,28 @@ const emit = defineEmits<{ 'toggle-decor': [] }>();
 
 const props = defineProps<Props>();
 
-
 function detailSections (tok: SyntaxToken) {
   return [
-    { label: 'leading trivia',  tokens: tok.leadingTrivia,   error: false },
-    { label: 'trailing trivia', tokens: tok.trailingTrivia,  error: false },
-    { label: 'leading errors',  tokens: tok.leadingInvalid,  error: true },
-    { label: 'trailing errors', tokens: tok.trailingInvalid, error: true },
+    {
+      label: 'leading trivia',
+      tokens: tok.leadingTrivia,
+      error: false,
+    },
+    {
+      label: 'trailing trivia',
+      tokens: tok.trailingTrivia,
+      error: false,
+    },
+    {
+      label: 'leading errors',
+      tokens: tok.leadingInvalid,
+      error: true,
+    },
+    {
+      label: 'trailing errors',
+      tokens: tok.trailingInvalid,
+      error: true,
+    },
   ];
 }
 

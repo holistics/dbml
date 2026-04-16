@@ -79,11 +79,14 @@ export default class TableGroupBinder {
         const result = this.compiler.nodeReferee(tableBindee);
         const sym = result.getFiltered(UNHANDLED);
         if (sym instanceof UseSymbol) {
-          return [...result.getErrors(), new CompileError(
-            CompileErrorCode.BINDING_ERROR,
-            `TableGroup cannot reference imported table '${this.compiler.symbolName(sym)}'`,
-            tableBindee,
-          )];
+          return [
+            ...result.getErrors(),
+            new CompileError(
+              CompileErrorCode.BINDING_ERROR,
+              `TableGroup cannot reference imported table '${this.compiler.symbolName(sym)}'`,
+              tableBindee,
+            ),
+          ];
         }
         return result.getErrors();
       });

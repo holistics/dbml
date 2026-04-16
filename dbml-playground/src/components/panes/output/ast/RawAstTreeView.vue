@@ -164,17 +164,35 @@ function transformToRawAstNode (
     if (value instanceof SyntaxNode) {
       children.push(transformToRawAstNode(value, key, `${accessPath}.${key}`, seen));
     } else if (value instanceof SyntaxToken) {
-      tokenEntries.push({ key, data: value });
+      tokenEntries.push({
+        key,
+        data: value,
+      });
     } else if (Array.isArray(value)) {
       const nodeItems = value.filter((v): v is SyntaxNode => v instanceof SyntaxNode);
       const tokenItems = value.filter((v): v is SyntaxToken => v instanceof SyntaxToken);
       if (nodeItems.length > 0) {
         children.push(transformToRawAstNode(nodeItems, key, `${accessPath}.${key}`, seen));
       } else if (tokenItems.length > 0) {
-        tokenEntries.push({ key, data: tokenItems });
+        tokenEntries.push({
+          key,
+          data: tokenItems,
+        });
       }
     }
   }
+
+  // Sort children by source position so the tree mirrors document order.
+  children.sort((a, b) => {
+    const aPos = (a.rawData as Record<string, unknown> | null)?.startPos as { line?: number;
+      column?: number; } | null | undefined;
+    const bPos = (b.rawData as Record<string, unknown> | null)?.startPos as { line?: number;
+      column?: number; } | null | undefined;
+    const aLine = aPos?.line ?? Infinity;
+    const bLine = bPos?.line ?? Infinity;
+    if (aLine !== bLine) return aLine - bLine;
+    return (aPos?.column ?? 0) - (bPos?.column ?? 0);
+  });
 
   return {
     id: nodeId,
