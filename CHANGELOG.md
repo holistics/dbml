@@ -1,3 +1,27 @@
+## v7.1.0 (2026-04-16)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#873](https://github.com/holistics/dbml/pull/873) DBX-6689 Fix wrong union in DiagramView ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :memo: Documentation
+* [#858](https://github.com/holistics/dbml/pull/858) Docs: DiagramView block ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#856](https://github.com/holistics/dbml/pull/856) Test/make snapshot more robust ([@huydo862003](https://github.com/huydo862003))
+* `dbml-connector`
+  * [#867](https://github.com/holistics/dbml/pull/867) DBX-6748 Bump fast-xml-parser to 5.5.7 ([@huydo862003](https://github.com/huydo862003))
+* `dbml-parse`
+  * [#787](https://github.com/holistics/dbml/pull/787) DBX-6749 chore(deps): bump node-forge from 1.3.1 to 1.3.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* Other
+  * [#813](https://github.com/holistics/dbml/pull/813) DBX-6751 chore(deps): bump @isaacs/brace-expansion from 5.0.0 to 5.0.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
 ## v7.0.0 (2026-04-10)
 
 #### :rocket: New Feature
