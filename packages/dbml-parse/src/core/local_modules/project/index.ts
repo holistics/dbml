@@ -58,7 +58,11 @@ export const projectModule: LocalModule = {
 
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Project)) {
-      return new ProjectValidator(compiler, node).validateAlias(node.alias);
+      if (node.alias) {
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project shouldn\'t have an alias', node.alias),
+        ]);
+      }
     }
     if (isElementFieldNode(node, ElementKind.Project)) {
       return new Report(undefined);
@@ -68,7 +72,13 @@ export const projectModule: LocalModule = {
 
   nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Project)) {
-      return new ProjectValidator(compiler, node).validateSettingList(node.attributeList);
+      if (node.attributeList) {
+        return new Report({}, [
+          new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project shouldn\'t have a setting list', node.attributeList),
+        ]);
+      }
+
+      return new Report({});
     }
     if (isElementFieldNode(node, ElementKind.Project)) {
       return new Report({});

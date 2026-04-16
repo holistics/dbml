@@ -59,7 +59,7 @@ export default class ProjectValidator {
     return new Report(destructureComplexVariable(nameNode));
   }
 
-  validateAlias (aliasNode?: SyntaxNode): Report<string | undefined> {
+  private validateAlias (aliasNode?: SyntaxNode): Report<string | undefined> {
     if (aliasNode) {
       return new Report(undefined, [
         new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Project shouldn\'t have an alias', aliasNode),
@@ -69,7 +69,7 @@ export default class ProjectValidator {
     return new Report(undefined);
   }
 
-  validateSettingList (settingList?: ListExpressionNode): Report<Settings> {
+  private validateSettingList (settingList?: ListExpressionNode): Report<Settings> {
     if (settingList) {
       return new Report({}, [
         new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Project shouldn\'t have a setting list', settingList),
@@ -79,7 +79,7 @@ export default class ProjectValidator {
     return new Report({});
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  private validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
