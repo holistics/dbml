@@ -84,7 +84,7 @@ describe('[example] use declaration parsing', () => {
     test('missing closing brace: 2 errors, partial specifier list', () => {
       const r = parse(`use { table users from './schema'`);
       expect(r.getErrors()).toHaveLength(2);
-      expect(r.getErrors()[0].diagnostic).toBe('Expect an element name');
+      expect(r.getErrors()[0].diagnostic).toBe('Expect a closing brace');
       expect(r.getValue().ast.uses).toHaveLength(1);
     });
 

@@ -18,6 +18,7 @@ import {
 } from '@/core/utils/expression';
 import {
   Settings, isValidAlias,
+  isValidPartialInjection,
 } from '@/core/utils/validate';
 import type {
   LocalModule,
@@ -54,6 +55,14 @@ export const tableModule: LocalModule = {
       return new Report(names);
     }
     if (isElementFieldNode(node, ElementKind.Table)) {
+      if (isValidPartialInjection(node.callee)) {
+        const name = extractVariableFromExpression(node.callee.expression);
+        return new Report(name
+          ? [
+              name,
+            ]
+          : undefined);
+      }
       const name = extractVariableFromExpression(node.callee);
       return new Report(name
         ? [

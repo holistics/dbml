@@ -53,6 +53,9 @@ import TableBinder from './bind';
 import {
   TableInterpreter,
 } from './interpret';
+import {
+  addDoubleQuoteIfNeeded,
+} from '@/compiler/index';
 
 // Public utils that other modules can use
 export const tableUtils = {
@@ -60,7 +63,10 @@ export const tableUtils = {
     return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
   getColumnDuplicateError (name: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column ${name}`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column '${name}'`, errorNode);
+  },
+  getPartialInjectionDuplicateError (name: string, errorNode: SyntaxNode): CompileError {
+    return new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate partial injection '${name}'`, errorNode);
   },
 };
 
@@ -108,9 +114,10 @@ export const tableModule: GlobalModule = {
     // Duplicate checking
     const seen = new Map<string, SyntaxNode>();
     for (const member of members) {
-      if (!member.isKind(SymbolKind.Column) || !member.declaration) continue; // Ignore non-column members
+      if (!member.isKind(SymbolKind.Column, SymbolKind.PartialInjection) || !member.declaration) continue; // Ignore non-column members
+      const name = compiler.nodeFullname(member.declaration).getFiltered(UNHANDLED)?.map(addDoubleQuoteIfNeeded).join('.');
+      const key = `${member.kind}:${name}`;
 
-      const name = compiler.symbolName(member);
       if (name !== undefined) {
         const errorNode = (
           member.declaration instanceof ElementDeclarationNode && member.declaration.name
@@ -118,15 +125,21 @@ export const tableModule: GlobalModule = {
           ? member.declaration.name
           : member.declaration;
 
-        const firstNode = seen.get(name);
+        const firstNode = seen.get(key);
         if (firstNode) {
-          errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
-          errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
+          if (member.isKind(SymbolKind.Column)) {
+            errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
+            errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
+          } else {
+            errors.push(tableUtils.getPartialInjectionDuplicateError(name, firstNode));
+            errors.push(tableUtils.getPartialInjectionDuplicateError(name, errorNode));
+          }
         } else {
-          seen.set(name, errorNode);
+          seen.set(key, errorNode);
         }
       }
     }
+
     // Detect partial injections (~partial_name) and insert their columns at the injection position
     // Process in reverse so that insertion indices remain valid
     const injections: {

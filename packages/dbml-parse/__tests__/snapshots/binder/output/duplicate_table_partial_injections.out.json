@@ -1,4 +1,54 @@
 {
+  "errors": [
+    {
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "diagnostic": "Duplicate partial injection 'common'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L6:C2, L6:C9]",
+          "snippet": "~common"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "diagnostic": "Duplicate partial injection 'common'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L6:C2, L6:C9]",
+          "snippet": "~common"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "diagnostic": "Duplicate partial injection 'common'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L7:C2, L7:C9]",
+          "snippet": "~common"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_TABLE_PARTIAL_INJECTION_NAME",
+      "diagnostic": "Duplicate partial injection 'common'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L8:C2, L8:C9]",
+          "snippet": "~common"
+        }
+      }
+    }
+  ],
   "nodeReferees": [
     {
       "context": {
