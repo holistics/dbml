@@ -44,7 +44,7 @@ export interface DatabaseExternals {
 export interface FilterConfig {
   tables: Array<{
     name: string;
-    schemaName?: string | null;
+    schemaName: string | null;
   }> | null;
   stickyNotes: Array<{ name: string }> | null;
   tableGroups: Array<{ name: string }> | null;
