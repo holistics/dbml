@@ -213,3 +213,574 @@ DiagramView my_view {
     expect(newDbml).toContain('posts');
   });
 });
+
+// Generation rules from filter-dbml-examples.md
+
+describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
+  // Group A: Legacy/Tricky Cases
+
+  it('A1: all null → empty block', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: null, schemas: null, stickyNotes: null,
+        },
+      },
+    ]);
+    expect(newDbml.trim()).toBe('DiagramView V {\n}');
+  });
+
+  it('A2: tableGroups null, tables has items (frontend backfills) → emit tables only', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }, { name: 'standalone1', schemaName: 'public' }],
+          tableGroups: null,
+          schemas: [],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('standalone1');
+    expect(newDbml).not.toContain('TableGroups');
+    expect(newDbml).not.toContain('Schemas');
+    expect(newDbml).not.toContain('Notes');
+  });
+
+  it('A3: tableGroups null, tables + schemas have items → emit both', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }],
+          tableGroups: null,
+          schemas: [{ name: 'sales' }],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('Schemas {');
+    expect(newDbml).toContain('sales');
+    expect(newDbml).not.toContain('TableGroups');
+    expect(newDbml).not.toContain('Notes');
+  });
+
+  it('A5: tables null, rest empty → Notes { * }', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Notes { * }');
+    expect(newDbml).not.toContain('Tables');
+    expect(newDbml).not.toContain('TableGroups');
+    expect(newDbml).not.toContain('Schemas');
+  });
+
+  it('A6: schemas null, rest empty → Notes { * }', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [], schemas: null, stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Notes { * }');
+  });
+
+  it('A7: tables null + schemas null, tableGroups empty → Notes { * }', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: [], schemas: null, stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Notes { * }');
+  });
+
+  it('A8: tables null with other dims having items → union rule', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: [{ name: 'Inv' }], schemas: [{ name: 'sales' }], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('TableGroups {');
+    expect(newDbml).toContain('Inv');
+    expect(newDbml).toContain('Schemas {');
+    expect(newDbml).toContain('sales');
+    expect(newDbml).not.toContain('Tables {');
+  });
+
+  it('A9: schemas null with other dims having items → union rule', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }],
+          tableGroups: [{ name: 'Inv' }],
+          schemas: null,
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('TableGroups {');
+    expect(newDbml).toContain('Inv');
+    expect(newDbml).not.toContain('Schemas {');
+  });
+
+  it('A10: all Trinity null, stickyNotes empty → Notes { * }', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: null, schemas: null, stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Notes { * }');
+  });
+
+  // Group B: Normal Cases (all Trinity dims non-null)
+
+  it('B1: all empty → body-level { * }', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml.trim()).toBe('DiagramView V {\n  *\n}');
+  });
+
+  it('B2: only tables filtered → emit Tables only', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }, { name: 'orders', schemaName: 'public' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('orders');
+    expect(newDbml).not.toContain('TableGroups');
+    expect(newDbml).not.toContain('Schemas');
+    expect(newDbml).not.toContain('Notes');
+  });
+
+  it('B3: only tableGroups filtered', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [{ name: 'Inventory' }, { name: 'Reporting' }], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('TableGroups {');
+    expect(newDbml).toContain('Inventory');
+    expect(newDbml).toContain('Reporting');
+    expect(newDbml).not.toContain('Tables');
+    expect(newDbml).not.toContain('Schemas');
+  });
+
+  it('B4: only schemas filtered', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [], schemas: [{ name: 'sales' }, { name: 'analytics' }], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Schemas {');
+    expect(newDbml).toContain('sales');
+    expect(newDbml).not.toContain('Tables');
+    expect(newDbml).not.toContain('TableGroups');
+  });
+
+  it('B5: tables + schemas', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }],
+          tableGroups: [],
+          schemas: [{ name: 'sales' }],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('Schemas {');
+    expect(newDbml).not.toContain('TableGroups');
+  });
+
+  it('B6: tables + tableGroups', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }],
+          tableGroups: [{ name: 'Inventory' }],
+          schemas: [],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('TableGroups {');
+    expect(newDbml).not.toContain('Schemas');
+  });
+
+  it('B7: tableGroups + schemas', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [],
+          tableGroups: [{ name: 'Inventory' }],
+          schemas: [{ name: 'sales' }],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('TableGroups {');
+    expect(newDbml).toContain('Schemas {');
+    expect(newDbml).not.toContain('Tables');
+  });
+
+  it('B8: all three have items', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }],
+          tableGroups: [{ name: 'Inventory' }],
+          schemas: [{ name: 'sales' }],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('TableGroups {');
+    expect(newDbml).toContain('Schemas {');
+  });
+
+  // Group C: StickyNotes combinations
+
+  it('C1: only stickyNotes filtered → Tables { * } + Notes', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [], schemas: [], stickyNotes: [{ name: 'Note1' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables { * }');
+    expect(newDbml).toContain('Notes {');
+    expect(newDbml).toContain('Note1');
+    expect(newDbml).not.toContain('TableGroups');
+    expect(newDbml).not.toContain('Schemas');
+  });
+
+  it('C2: tables + stickyNotes', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [{ name: 'Note1' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables {');
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('Notes {');
+    expect(newDbml).toContain('Note1');
+    expect(newDbml).not.toContain('TableGroups');
+    expect(newDbml).not.toContain('Schemas');
+  });
+});
+
+// Additional coverage from filter-dbml-examples.md + edge cases
+
+describe('syncDiagramView — additional coverage', () => {
+  // Edge cases from truth tables (02-solutions.md)
+
+  it('all Trinity null + stickyNotes has items → Notes { items }', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: null, schemas: null, stickyNotes: [{ name: 'Note1' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Notes {');
+    expect(newDbml).toContain('Note1');
+    expect(newDbml).not.toContain('Tables');
+    expect(newDbml).not.toContain('TableGroups');
+    expect(newDbml).not.toContain('Schemas');
+  });
+
+  it('tables null + notes has items → Notes { items }', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: [], schemas: [], stickyNotes: [{ name: 'Note1' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Notes {');
+    expect(newDbml).toContain('Note1');
+    expect(newDbml).not.toContain('Tables {');
+    expect(newDbml).not.toContain('TableGroups');
+    expect(newDbml).not.toContain('Schemas');
+  });
+
+  // Schema-qualified table names
+
+  it('emits schema-qualified table names for non-public schemas', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'myschema' }],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('myschema.users');
+    expect(newDbml).not.toContain('public.');
+  });
+
+  it('omits public schema prefix for default schema tables', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('users');
+    expect(newDbml).not.toContain('public.users');
+  });
+
+  // Round-trip stability: FilterConfig → DBML → FilterConfig
+
+  it('round-trip: B1 all empty → { *} → re-parse → same FC', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml.trim()).toBe('DiagramView V {\n  *\n}');
+  });
+
+  it('round-trip: A1 all null → { } → re-parse → same FC', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: null, schemas: null, stickyNotes: null,
+        },
+      },
+    ]);
+    expect(newDbml.trim()).toBe('DiagramView V {\n}');
+  });
+
+  it('round-trip: C1 notes only → Tables{*} Notes{items} → re-parse → same FC', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [], schemas: [], stickyNotes: [{ name: 'N1' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Tables { * }');
+    expect(newDbml).toContain('Notes {');
+    expect(newDbml).toContain('N1');
+  });
+
+  it('round-trip: A10 all Trinity null + notes empty → Notes { * }', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null, tableGroups: null, schemas: null, stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml.trim()).toBe('DiagramView V {\n  Notes { * }\n}');
+  });
+
+  // Multiple items in sub-blocks
+
+  it('emits multiple tables in Tables block', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [
+            { name: 'users', schemaName: 'public' },
+            { name: 'orders', schemaName: 'public' },
+            { name: 'products', schemaName: 'public' },
+          ],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('users');
+    expect(newDbml).toContain('orders');
+    expect(newDbml).toContain('products');
+  });
+
+  it('emits multiple tableGroups in TableGroups block', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [],
+          tableGroups: [{ name: 'Inv' }, { name: 'Rep' }, { name: 'Auth' }],
+          schemas: [],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('Inv');
+    expect(newDbml).toContain('Rep');
+    expect(newDbml).toContain('Auth');
+  });
+
+  // Union rule with notes
+
+  it('A8 union rule: tables null + tableGroups + schemas + notes → emit all three', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: null,
+          tableGroups: [{ name: 'Inv' }],
+          schemas: [{ name: 'sales' }],
+          stickyNotes: [{ name: 'Note1' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('TableGroups {');
+    expect(newDbml).toContain('Inv');
+    expect(newDbml).toContain('Schemas {');
+    expect(newDbml).toContain('sales');
+    expect(newDbml).toContain('Notes {');
+    expect(newDbml).toContain('Note1');
+    expect(newDbml).not.toContain('Tables {');
+  });
+
+  // Delete operation still works after changes
+
+  it('delete operation removes the block', () => {
+    const dbml = `
+Table users { id int }
+
+DiagramView my_view {
+  Tables { users }
+}
+`;
+    const { newDbml } = syncDiagramView(dbml, [
+      { operation: 'delete', name: 'my_view' },
+    ]);
+    expect(newDbml).not.toContain('DiagramView');
+    expect(newDbml).toContain('Table users');
+  });
+
+  // Update operation replaces block content
+
+  it('update operation replaces visibleEntities', () => {
+    const dbml = `
+DiagramView my_view {
+  Tables { users }
+}
+`;
+    const { newDbml } = syncDiagramView(dbml, [
+      {
+        operation: 'update',
+        name: 'my_view',
+        visibleEntities: {
+          tables: [],
+          tableGroups: [{ name: 'Inv' }],
+          schemas: [],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).not.toContain('users');
+    expect(newDbml).toContain('TableGroups {');
+    expect(newDbml).toContain('Inv');
+  });
+});

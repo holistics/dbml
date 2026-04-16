@@ -67,26 +67,37 @@ function processColumnInDb<T extends Table | TablePartial> (table: T): T {
  * Expand explicit wildcard ([]) for tableGroups in DiagramView visibleEntities
  * to the concrete list of table group names.
  *
- * Only expands when:
+ * Expands when:
  * 1. The user wrote `TableGroups { * }` (tracked via diagramViewWildcards)
- * 2. No other Trinity dim (Tables, Schemas) is explicitly set —
- *    i.e. tableGroups is the only Trinity dim declared.
- *    When other Trinity dims are also declared, [] keeps its "show all" meaning.
+ * 2. NOT a body-level `{ * }` — body-level wildcard sets ALL dims to [] simultaneously,
+ *    which is a different semantic (show everything) that doesn't need expansion.
+ *    We detect body-level by checking if all four dims are in the wildcards set.
+ *
+ * Why only TableGroups needs expansion:
+ * - Tables: * → [] means "show all tables" (every table is a table, no indirection)
+ * - Schemas: * → [] means "show all schemas" (every table belongs to a schema)
+ * - TableGroups: * needs concrete names because some tables DON'T belong to any group.
+ *   The frontend does name-based lookup; [] would produce an empty name map → no groups matched.
  */
 function expandDiagramViewWildcards (env: InterpreterDatabase): void {
   for (const view of env.diagramViews.values()) {
     const ve = view.visibleEntities;
     const wildcards = env.diagramViewWildcards.get(view);
-    const explicitlySet = env.diagramViewExplicitlySet.get(view);
-    if (!wildcards || !explicitlySet) continue;
+    if (!wildcards) continue;
 
+    // Tables * or Schemas * → union covers everything → all Trinity dims become [] (show all)
+    if (wildcards.has('tables') || wildcards.has('schemas')) {
+      ve.tables = [];
+      ve.tableGroups = [];
+      ve.schemas = [];
+      continue;
+    }
+
+    // TableGroups * → expand to concrete group names (not all tables belong to groups)
     if (wildcards.has('tableGroups') && ve.tableGroups && ve.tableGroups.length === 0) {
-      const otherTrinitySet = explicitlySet.has('tables') || explicitlySet.has('schemas');
-      if (!otherTrinitySet) {
-        ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({
-          name: tg.name!,
-        }));
-      }
+      ve.tableGroups = Array.from(env.tableGroups.values()).map((tg) => ({
+        name: tg.name!,
+      }));
     }
   }
 }
