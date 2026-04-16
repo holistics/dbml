@@ -1,11 +1,11 @@
 ## v7.1.0 (2026-04-16)
 
+#### :memo: Documentation
+* [#858](https://github.com/holistics/dbml/pull/858) Docs: DiagramView block ([@NQPhuc](https://github.com/NQPhuc))
+
 #### :bug: Bug Fix
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
   * [#873](https://github.com/holistics/dbml/pull/873) DBX-6689 Fix wrong union in DiagramView ([@huyphung1602](https://github.com/huyphung1602))
-
-#### :memo: Documentation
-* [#858](https://github.com/holistics/dbml/pull/858) Docs: DiagramView block ([@NQPhuc](https://github.com/NQPhuc))
 
 #### :house_with_garden: Internal
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
