@@ -1013,9 +1013,9 @@ describe('[example] CompletionItemProvider', () => {
       expect(labels).not.toContain('Enum');
     });
 
-    it.todo('- should suggest columns after dot on rhs of relationship operator when table is imported via use (broken: provider hardcodes DEFAULT_ENTRY, ignores model.uri)', () => {
+    it('- should suggest columns after dot on rhs of relationship operator when table is imported via use', () => {
       const baseContent = 'Table T {\n  id int [pk]\n  name varchar\n}';
-      const consumerContent = "use { table T } from '/base.dbml'\nRef: T.id > T.";
+      const consumerContent = "use { table T } from './base.dbml'\nRef: T.id > T.";
       const compiler = new Compiler();
       const baseFp = Filepath.from('/base.dbml');
       const consumerFp = Filepath.from('/consumer.dbml');

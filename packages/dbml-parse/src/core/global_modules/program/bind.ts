@@ -105,7 +105,7 @@ export default class Binder {
    * Get resolved column symbol IDs from a ref operand.
    * Returns sorted array of symbol IDs, or undefined if resolution fails.
    */
-  private getColumnSymbolIds (node: SyntaxNode): number[] | undefined {
+  private getColumnSymbolIds (node: SyntaxNode): string[] | undefined {
     const fragments = destructureMemberAccessExpression(node);
     if (!fragments || fragments.length === 0) return undefined;
 
@@ -113,37 +113,39 @@ export default class Binder {
 
     // Composite ref: table.(col1, col2)
     if (lastFragment instanceof TupleExpressionNode) {
-      const ids: number[] = [];
+      const ids: string[] = [];
       for (const elem of lastFragment.elementList) {
         const result = this.compiler.nodeReferee(elem);
         if (result.hasValue(UNHANDLED)) return undefined;
         const sym = result.getValue();
         if (!sym) return undefined;
-        ids.push(sym.id);
+        ids.push(sym.originalSymbol.intern());
       }
       return ids.sort();
     }
 
     // Single column ref: include all path fragment IDs so that refs through
-    // different aliases (e.g. `users.id` vs `u.id`) are treated as distinct
-    const allIds: number[] = [];
+    // different aliases (e.g. `users.id` vs `u.id`) are treated as distinct.
+    // Use sym.intern() (not originalSymbol) so aliased UseSymbols keep their
+    // own identity and are not collapsed onto the same underlying symbol.
+    const allIds: string[] = [];
     for (const fragment of fragments) {
       if (fragment instanceof TupleExpressionNode) continue;
       const result = this.compiler.nodeReferee(fragment);
       if (result.hasValue(UNHANDLED)) return undefined;
       const sym = result.getValue();
       if (!sym) return undefined;
-      allIds.push(sym.id);
+      allIds.push(sym.intern());
     }
     return allIds;
   }
 
-  private isSameEndpoint (left: number[], right: number[]): boolean {
+  private isSameEndpoint (left: string[], right: string[]): boolean {
     if (left.length !== right.length) return false;
     return left.every((id, i) => id === right[i]);
   }
 
-  private getRefId (left: number[], right: number[]): string {
+  private getRefId (left: string[], right: string[]): string {
     const leftStr = left.join(',');
     const rightStr = right.join(',');
     return leftStr < rightStr ? `${leftStr}-${rightStr}` : `${rightStr}-${leftStr}`;
@@ -231,12 +233,14 @@ export default class Binder {
 
               const rightIds = this.getColumnSymbolIds(refValue.expression);
               if (!rightIds) continue;
-              const leftIds = tableSym ? [
-                tableSym.id,
-                colSym.id,
-              ] : [
-                colSym.id,
-              ];
+              const leftIds = tableSym
+                ? [
+                    tableSym.originalSymbol.intern(),
+                    colSym.originalSymbol.intern(),
+                  ]
+                : [
+                    colSym.originalSymbol.intern(),
+                  ];
 
               if (this.isSameEndpoint(leftIds, rightIds)) {
                 errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', attr));

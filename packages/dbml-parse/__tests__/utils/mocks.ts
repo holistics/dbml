@@ -56,6 +56,15 @@ export class MockTextModel {
     return this.content;
   }
 
+  getPositionAt (offset: number): Position {
+    const text = this.content.slice(0, Math.min(offset, this.content.length));
+    const lines = text.split('\n');
+    return {
+      lineNumber: lines.length,
+      column: lines[lines.length - 1].length + 1,
+    } as Position;
+  }
+
   getLineContent (lineNumber: number): string {
     const lines = this.content.split(/\r\n|\r|\n/);
     return lines[lineNumber - 1] || '';

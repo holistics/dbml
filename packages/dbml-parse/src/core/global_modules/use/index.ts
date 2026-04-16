@@ -60,7 +60,7 @@ export const useModule: GlobalModule = {
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
     if (!(symbol instanceof UseSymbol)) return Report.create(PASS_THROUGH);
     const members = compiler.symbolMembers(symbol.originalSymbol).getFiltered(UNHANDLED);
-    return new Report(members ?? []);
+    return Report.create(members ?? []);
   },
 
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {

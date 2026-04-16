@@ -9,11 +9,11 @@
     >
       <!-- chevron -->
       <button
-        v-if="hasChildren"
+        v-if="isExpandable"
         class="flex-shrink-0 w-3.5 h-3.5 mr-1 flex items-center justify-center text-gray-400 hover:text-gray-600"
         @click.stop="toggleExpanded"
       >
-        <ChevronRightIcon
+        <PhCaretRight
           class="w-3 h-3 transition-transform duration-100"
           :class="isExpanded ? 'rotate-90' : ''"
         />
@@ -23,15 +23,24 @@
         class="flex-shrink-0 w-3.5 h-3.5 mr-1"
       />
 
-      <span class="text-gray-700 mr-1.5">{{ node.propertyName }}</span>
-      <span
-        v-if="node.readableId"
-        class="text-blue-500 mr-1.5 hover:underline text-[11px]"
-      >{{ node.readableId }}</span>
-      <span
-        v-else-if="nodeKind"
-        class="text-blue-500 mr-1.5 hover:underline"
-      >{{ nodeKind }}</span>
+      <!-- type icon -->
+      <VTooltip
+        placement="bottom"
+        :distance="6"
+        class="flex-shrink-0 mr-1.5"
+      >
+        <component
+          :is="typeIcon.icon"
+          class="w-3 h-3"
+          :class="typeIcon.color"
+        />
+        <template #popper>
+          <span class="text-xs font-mono">{{ typeIcon.label }}</span>
+        </template>
+      </VTooltip>
+
+      <span class="text-gray-700 mr-1">{{ node.propertyName }}</span>
+
       <span
         v-if="leafValue !== ''"
         class="text-green-700"
@@ -40,15 +49,116 @@
         v-if="sizeHint"
         class="text-gray-400"
       >{{ sizeHint }}</span>
-
-      <span
-        v-if="hasPosition"
-        class="ml-auto flex-shrink-0 text-[10px] text-blue-400 hover:text-blue-600 hover:underline px-1"
-        @click.stop="handlePositionClick"
-      >{{ formatPosition() }}</span>
     </div>
 
-    <div v-if="isExpanded && hasChildren">
+    <div v-if="isExpanded && isExpandable">
+      <!-- Token entries: SyntaxToken properties rendered as key-value rows -->
+      <div
+        v-if="node.tokenEntries.length > 0"
+        class="border-b border-gray-100 border-l-2 border-l-blue-100 bg-blue-50/20"
+        :style="{ paddingLeft: `${8 + (level + 1) * 14}px`, paddingRight: '8px' }"
+      >
+        <div
+          class="grid py-1 gap-y-0.5 items-start text-[11px]"
+          style="grid-template-columns: max-content 1fr; column-gap: 10px;"
+        >
+          <template
+            v-for="entry in node.tokenEntries"
+            :key="entry.key"
+          >
+            <span class="text-gray-400 text-[10px] font-medium pt-[2px] select-none shrink-0">{{ entry.key }}</span>
+
+            <!-- Single SyntaxToken -->
+            <span
+              v-if="!Array.isArray(entry.data)"
+              class="inline-flex items-center gap-1 font-mono"
+            >
+              <span :class="entry.data.kind === SyntaxTokenKind.EOF ? 'text-red-400' : 'text-green-700'">
+                {{ entry.data.kind === SyntaxTokenKind.EOF ? '<EOF>' : (entry.data.value || '·') }}
+              </span>
+            </span>
+
+            <!-- SyntaxToken[] -->
+            <span
+              v-else
+              class="inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 font-mono"
+            >
+              <template
+                v-for="(tok, ti) in entry.data"
+                :key="ti"
+              >
+                <span
+                  v-if="tok.kind === '<space>'"
+                  class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
+                ><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ tok.value.length }}</span>
+                <PhKeyReturn
+                  v-else-if="tok.kind === '<newline>'"
+                  class="w-3 h-3 text-gray-400 flex-shrink-0"
+                />
+                <span
+                  v-else-if="tok.kind === '<tab>'"
+                  class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
+                >→</span>
+                <span
+                  v-else-if="tok.kind === '<single-line-comment>' || tok.kind === '<multiline-comment>'"
+                  class="text-gray-400 italic text-[10px] break-all"
+                >{{ tok.value }}</span>
+                <span
+                  v-else
+                  class="text-green-700 font-mono"
+                >{{ tok.value }}</span>
+              </template>
+            </span>
+
+            <!-- Trivia/error rows for single token -->
+            <template v-if="!Array.isArray(entry.data)">
+              <template
+                v-for="section in triviaRows(entry.data)"
+                :key="section.label"
+              >
+                <template v-if="section.tokens.length > 0">
+                  <span
+                    class="text-[10px] font-medium select-none"
+                    :class="section.error ? 'text-red-400' : 'text-gray-400'"
+                  >{{ section.label }}</span>
+                  <span
+                    class="inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 font-mono"
+                    :class="section.error ? 'text-red-600' : 'text-gray-600'"
+                  >
+                    <template
+                      v-for="(t, ti) in section.tokens"
+                      :key="ti"
+                    >
+                      <span
+                        v-if="t.kind === '<space>'"
+                        class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
+                      ><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ t.value.length }}</span>
+                      <PhKeyReturn
+                        v-else-if="t.kind === '<newline>'"
+                        class="w-3 h-3 text-gray-400 flex-shrink-0"
+                      />
+                      <span
+                        v-else-if="t.kind === '<tab>'"
+                        class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
+                      >→</span>
+                      <span
+                        v-else-if="t.kind === '<single-line-comment>' || t.kind === '<multiline-comment>'"
+                        class="italic break-all"
+                      >{{ t.value }}</span>
+                      <span
+                        v-else
+                        class="break-all"
+                      >{{ t.value }}</span>
+                    </template>
+                  </span>
+                </template>
+              </template>
+            </template>
+          </template>
+        </div>
+      </div>
+
+      <!-- SyntaxNode children -->
       <RawAstTreeNode
         v-for="child in node.children"
         :key="child.id"
@@ -59,7 +169,6 @@
         :cursor-node-id="cursorNodeId"
         @node-click="$emit('node-click', $event)"
         @node-expand="$emit('node-expand', $event)"
-        @position-click="$emit('position-click', $event)"
         @scroll-to="$emit('scroll-to', $event)"
       />
     </div>
@@ -71,11 +180,33 @@ import {
   computed, ref, watch,
 } from 'vue';
 import {
-  ChevronRightIcon,
-} from '@heroicons/vue/24/outline';
-import type {
-  NavigationPosition,
-} from '@/types';
+  PhCaretRight,
+  PhDiamond,
+  PhFile,
+  PhTag,
+  PhListBullets,
+  PhArrowsLeftRight,
+  PhBracketsSquare,
+  PhBracketsCurly,
+  PhTextAa,
+  PhHash,
+  PhToggleLeft,
+  PhMinus,
+  PhLightning,
+  PhMathOperations,
+  PhArrowsHorizontal,
+  PhKeyReturn,
+  type Icon,
+} from '@phosphor-icons/vue';
+import {
+  SyntaxToken,
+  SyntaxTokenKind,
+} from '@dbml/parse';
+
+export interface TokenEntry {
+  key: string;
+  data: SyntaxToken | SyntaxToken[];
+}
 
 export interface RawAstNode {
   id: string;
@@ -83,8 +214,8 @@ export interface RawAstNode {
   rawData: unknown;
   value?: unknown;
   children: RawAstNode[];
+  tokenEntries: TokenEntry[];
   accessPath: string;
-  readableId?: string; // set when rawData is a SyntaxNode
 }
 
 type RawObj = Record<string, unknown>;
@@ -102,14 +233,12 @@ const emit = defineEmits<{
   'node-click': [node: RawAstNode];
   'node-expand': [{ id: string;
     expanded: boolean; }];
-  'position-click': [{ node: RawAstNode;
-    position: NavigationPosition; }];
   'scroll-to': [id: string];
 }>();
 
 const rowEl = ref<HTMLElement | null>(null);
 const isExpanded = computed(() => props.expandedNodes.has(props.node.id));
-const hasChildren = computed(() => props.node.children.length > 0);
+const isExpandable = computed(() => props.node.children.length > 0 || props.node.tokenEntries.length > 0);
 const isActive = computed(() => props.node.id === props.cursorNodeId || props.selectedNode?.id === props.node.id);
 
 // Scroll into view when this node becomes the active cursor node
@@ -131,13 +260,177 @@ const nodeKind = computed(() => {
   return d && typeof d.kind === 'string' ? d.kind : '';
 });
 
+interface IconInfo { icon: typeof PhDiamond;
+  color: string;
+  label: string; }
+
+const NODE_KIND_ICONS: Record<string, IconInfo> = {
+  '<program>': {
+    icon: PhFile,
+    color: 'text-blue-500',
+    label: '<program>',
+  },
+  '<element-declaration>': {
+    icon: PhTag,
+    color: 'text-indigo-500',
+    label: '<element-declaration>',
+  },
+  '<use-declaration>': {
+    icon: PhArrowsLeftRight,
+    color: 'text-purple-500',
+    label: '<use-declaration>',
+  },
+  '<use-specifier>': {
+    icon: PhArrowsLeftRight,
+    color: 'text-purple-400',
+    label: '<use-specifier>',
+  },
+  '<use-specifier-list>': {
+    icon: PhArrowsLeftRight,
+    color: 'text-purple-400',
+    label: '<use-specifier-list>',
+  },
+  '<attribute>': {
+    icon: PhTag,
+    color: 'text-amber-500',
+    label: '<attribute>',
+  },
+  '<block-expression>': {
+    icon: PhBracketsCurly,
+    color: 'text-cyan-500',
+    label: '<block-expression>',
+  },
+  '<list-expression>': {
+    icon: PhBracketsSquare,
+    color: 'text-cyan-500',
+    label: '<list-expression>',
+  },
+  '<tuple-expression>': {
+    icon: PhBracketsSquare,
+    color: 'text-cyan-400',
+    label: '<tuple-expression>',
+  },
+  '<function-expression>': {
+    icon: PhLightning,
+    color: 'text-orange-500',
+    label: '<function-expression>',
+  },
+  '<function-application>': {
+    icon: PhLightning,
+    color: 'text-orange-400',
+    label: '<function-application>',
+  },
+  '<prefix-expression>': {
+    icon: PhMathOperations,
+    color: 'text-red-400',
+    label: '<prefix-expression>',
+  },
+  '<infix-expression>': {
+    icon: PhMathOperations,
+    color: 'text-red-400',
+    label: '<infix-expression>',
+  },
+  '<postfix-expression>': {
+    icon: PhMathOperations,
+    color: 'text-red-400',
+    label: '<postfix-expression>',
+  },
+  '<literal>': {
+    icon: PhTextAa,
+    color: 'text-green-600',
+    label: '<literal>',
+  },
+  '<variable>': {
+    icon: PhTextAa,
+    color: 'text-violet-500',
+    label: '<variable>',
+  },
+  '<identifer-stream>': {
+    icon: PhListBullets,
+    color: 'text-blue-400',
+    label: '<identifier-stream>',
+  },
+  '<primary-expression>': {
+    icon: PhDiamond,
+    color: 'text-gray-400',
+    label: '<primary-expression>',
+  },
+  '<group-expression>': {
+    icon: PhDiamond,
+    color: 'text-gray-400',
+    label: '<group-expression>',
+  },
+  '<comma-expression>': {
+    icon: PhDiamond,
+    color: 'text-gray-400',
+    label: '<comma-expression>',
+  },
+  '<call-expression>': {
+    icon: PhLightning,
+    color: 'text-orange-400',
+    label: '<call-expression>',
+  },
+  '<array>': {
+    icon: PhBracketsSquare,
+    color: 'text-cyan-500',
+    label: '<array>',
+  },
+  '<dummy>': {
+    icon: PhMinus,
+    color: 'text-gray-300',
+    label: '<dummy>',
+  },
+};
+
+const typeIcon = computed((): IconInfo => {
+  const d = props.node.rawData;
+  if (nodeKind.value) return NODE_KIND_ICONS[nodeKind.value] ?? {
+    icon: PhDiamond,
+    color: 'text-blue-400',
+    label: nodeKind.value,
+  };
+  if (Array.isArray(d)) return {
+    icon: PhBracketsSquare,
+    color: 'text-cyan-500',
+    label: 'array',
+  };
+  if (d === null || d === undefined) return {
+    icon: PhMinus,
+    color: 'text-gray-300',
+    label: 'null',
+  };
+  if (typeof d === 'string') return {
+    icon: PhTextAa,
+    color: 'text-green-600',
+    label: 'string',
+  };
+  if (typeof d === 'number') return {
+    icon: PhHash,
+    color: 'text-amber-500',
+    label: 'number',
+  };
+  if (typeof d === 'boolean') return {
+    icon: PhToggleLeft,
+    color: 'text-blue-400',
+    label: 'boolean',
+  };
+  return {
+    icon: PhBracketsCurly,
+    color: 'text-gray-400',
+    label: 'object',
+  };
+});
+
 const leafValue = computed(() => {
   const d = props.node.rawData;
   if (d === null) return 'null';
   if (d === undefined) return '';
   if (typeof d !== 'object') return typeof d === 'string' ? `"${d}"` : String(d);
   const obj = asObj(d);
-  if (obj && 'value' in obj && typeof obj.value === 'string' && !hasChildren.value) return `"${obj.value}"`;
+  if (obj && 'value' in obj && typeof obj.value === 'string' && !isExpandable.value) {
+    if (obj.value === '') return d instanceof SyntaxToken && d.kind === SyntaxTokenKind.EOF ? '<EOF>' : '';
+    return `"${obj.value}"`;
+  }
   return '';
 });
 
@@ -147,28 +440,29 @@ const sizeHint = computed(() => {
   return d.length === 0 ? '[ ]' : `[ ${d.length} ]`;
 });
 
-const hasPosition = computed(() => {
-  const d = asObj(props.node.rawData);
-  if (!d) return false;
-  const sp = asObj(d.startPos);
-  if (sp && typeof sp.line === 'number') return true;
-  return typeof d.start === 'number';
-});
-
-function formatPosition (): string {
-  const d = asObj(props.node.rawData);
-  if (!d) return '';
-  const sp = asObj(d.startPos);
-  if (sp && typeof sp.line === 'number') {
-    const sl = sp.line + 1, sc = typeof sp.column === 'number' ? sp.column + 1 : 1;
-    const ep = asObj(d.endPos);
-    if (ep && typeof ep.line === 'number') {
-      const el = ep.line + 1, ec = typeof ep.column === 'number' ? ep.column + 1 : 1;
-      return sl === el ? `${sl}:${sc}` : `${sl}:${sc}–${el}:${ec}`;
-    }
-    return `${sl}:${sc}`;
-  }
-  return typeof d.start === 'number' ? `@${d.start}` : '';
+function triviaRows (tok: SyntaxToken) {
+  return [
+    {
+      label: 'leading trivia',
+      tokens: tok.leadingTrivia,
+      error: false,
+    },
+    {
+      label: 'trailing trivia',
+      tokens: tok.trailingTrivia,
+      error: false,
+    },
+    {
+      label: 'leading errors',
+      tokens: tok.leadingInvalid,
+      error: true,
+    },
+    {
+      label: 'trailing errors',
+      tokens: tok.trailingInvalid,
+      error: true,
+    },
+  ];
 }
 
 function handleNodeClick () { emit('node-click', props.node); }
@@ -176,45 +470,6 @@ function toggleExpanded () {
   emit('node-expand', {
     id: props.node.id,
     expanded: !isExpanded.value,
-  });
-}
-
-function handlePositionClick () {
-  const d = asObj(props.node.rawData);
-  if (!d) return;
-  const sp = asObj(d.startPos);
-  const ep = asObj(d.endPos);
-  let position: NavigationPosition | null = null;
-  if (sp && typeof sp.line === 'number' && ep && typeof ep.line === 'number') {
-    position = {
-      start: {
-        line: sp.line + 1,
-        column: typeof sp.column === 'number' ? sp.column + 1 : 1,
-        offset: typeof d.start === 'number' ? d.start : 0,
-      },
-      end: {
-        line: ep.line + 1,
-        column: typeof ep.column === 'number' ? ep.column + 1 : 1,
-        offset: typeof d.end === 'number' ? d.end : 0,
-      },
-    };
-  } else if (typeof d.start === 'number') {
-    position = {
-      start: {
-        line: 1,
-        column: 1,
-        offset: d.start,
-      },
-      end: {
-        line: 1,
-        column: 1,
-        offset: typeof d.end === 'number' ? d.end : d.start,
-      },
-    };
-  }
-  if (position) emit('position-click', {
-    node: props.node,
-    position,
   });
 }
 </script>

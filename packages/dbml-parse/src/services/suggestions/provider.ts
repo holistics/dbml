@@ -32,10 +32,7 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  type NodeSymbol,
-} from '@/core/types/symbol';
-import {
-  SymbolKind,
+  type NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
   SyntaxToken, SyntaxTokenKind,
@@ -52,11 +49,11 @@ import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
 import {
-  UseStatementMerger,
-} from '@/services/completion/utils/useMerger';
-import {
   suggestRecordRowSnippet,
 } from '@/services/suggestions/recordRowSnippet';
+import {
+  isOffsetInUseDeclaration, suggestInUseDeclaration,
+} from '@/services/suggestions/use';
 import {
   addQuoteToSuggestionIfNeeded,
   addSuggestAllSuggestion,
@@ -78,6 +75,7 @@ import {
 } from '@/services/types';
 import {
   getOffsetFromMonacoPosition,
+  mergeSymbolIntoUses,
 } from '@/services/utils';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
@@ -90,39 +88,17 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     this.triggerCharacters = triggerCharacters;
   }
 
-  /**
-   * Search compiler.layout for symbols matching the given name.
-   * Returns results with file hints for disambiguation.
-   */
-  private searchLayoutForSymbol (symbolName: string): Array<{
-    symbol: NodeSymbol;
-    fileHint: string;
-    filepath: Filepath;
-  }> {
-    const results: Array<{ symbol: NodeSymbol;
-      fileHint: string;
-      filepath: Filepath; }> = [];
-
-    if (!this.compiler.layout) return results;
-
-    // Search all files in the layout
-    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
-    for (const fileInfo of allFiles) {
-      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
-
-      for (const sym of symbols) {
-        if ((sym as any).name === symbolName) {
-          const fileHint = `from ${fileInfo.filepath.basename}`;
-          results.push({
-            symbol: sym,
-            fileHint,
-            filepath: fileInfo.filepath,
-          });
-        }
-      }
-    }
-
-    return results;
+  private collectFileSymbols (fp: Filepath): Array<{ sym: NodeSymbol;
+    filepath: Filepath; }> {
+    const usable = this.compiler.fileUsableMembers(fp).getFiltered(UNHANDLED);
+    if (!usable) return [];
+    return [
+      ...usable.nonSchemaMembers,
+      ...usable.schemaMembers,
+    ].map((sym) => ({
+      sym,
+      filepath: fp,
+    }));
   }
 
   /**
@@ -138,10 +114,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     currentFileContent: string,
   ): CompletionItem {
     // Calculate the use statement that should be inserted
-    const mergeResult = UseStatementMerger.mergeSymbolIntoUses(
+    const mergeResult = mergeSymbolIntoUses(
       this.compiler,
       currentFilepath,
       currentFileContent,
+      symbolKind,
       symbolName,
       sourceFilepath,
     );
@@ -174,10 +151,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     };
   }
 
-  /**
-   * Search for cross-file symbols that match the context and return them
-   * with additionalTextEdits for use statement insertion
-   */
   suggestCrossFileSymbols (
     acceptedKinds: SymbolKind[],
     currentFilepath: Filepath,
@@ -186,37 +159,25 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     const results: CompletionList = {
       suggestions: [],
     };
-
-    if (!this.compiler.layout) return results;
-
-    // Get all symbols from all files
-    const allFiles = (this.compiler.layout as any).allFiles?.() || [];
     const seenNames = new Set<string>();
 
-    for (const fileInfo of allFiles) {
-      // Skip current file - we already suggest local symbols
-      if (fileInfo.filepath.equals(currentFilepath)) continue;
-
-      const symbols = (this.compiler.layout as any).getSymbols?.(fileInfo.filepath) || [];
-
-      for (const sym of symbols) {
-        const symbolName = this.compiler.symbolName(sym);
-        if (!symbolName || seenNames.has(symbolName)) continue;
+    for (const fp of this.compiler.layout.getEntryPoints()) {
+      if (fp.equals(currentFilepath)) continue;
+      for (const {
+        sym, filepath,
+      } of this.collectFileSymbols(fp)) {
         if (!acceptedKinds.includes(sym.kind)) continue;
-
-        seenNames.add(symbolName);
-
-        const fileHint = `from ${fileInfo.filepath.basename}`;
-        const item = this.createCrossFileCompletionItem(
-          symbolName,
+        const name = this.compiler.symbolName(sym);
+        if (!name || seenNames.has(name)) continue;
+        seenNames.add(name);
+        results.suggestions.push(this.createCrossFileCompletionItem(
+          name,
           sym.kind,
-          fileHint,
-          fileInfo.filepath,
+          `from ${filepath.basename}`,
+          filepath,
           currentFilepath,
           currentFileContent,
-        );
-
-        results.suggestions.push(item);
+        ));
       }
     }
 
@@ -254,6 +215,19 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
     if (bOcTokenId === undefined) {
       return suggestTopLevelElementType();
+    }
+
+    // Check if cursor is inside a use/reuse declaration.
+    // Must run before the string guard so import-path completions work inside string tokens.
+    {
+      const programAst = this.compiler.parseFile(filepath).getValue()?.ast;
+      if (programAst) {
+        for (const useDecl of programAst.uses) {
+          if (isOffsetInUseDeclaration(offset, useDecl, bOcToken)) {
+            return suggestInUseDeclaration(this.compiler, filepath, offset, useDecl, model, bOcToken);
+          }
+        }
+      }
     }
 
     // Check if we're inside a string

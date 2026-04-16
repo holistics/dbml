@@ -68,8 +68,8 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Convert Monaco markers format (for editor integration)
    */
-  provideMarkers (): MarkerData[] {
-    const diagnostics = this.provideDiagnostics();
+  provideMarkers (filepath?: Filepath): MarkerData[] {
+    const diagnostics = this.provideDiagnostics(filepath);
     return diagnostics.map((diag) => {
       const severity = this.getSeverityValue(diag.type);
       return {

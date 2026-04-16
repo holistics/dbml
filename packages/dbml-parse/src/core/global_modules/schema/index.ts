@@ -151,13 +151,13 @@ export const schemaModule: GlobalModule = {
         const key = `${member.kind}:${name}`;
         const existing = seen.get(key);
         if (existing) {
-          // Report only on the duplicate (second) declaration
-          const errorNode = (
-            member.declaration && member.declaration instanceof ElementDeclarationNode
-            && member.declaration.name
-          )
-            ? member.declaration.name
-            : member.declaration;
+          // For use-imported symbols point to the use specifier in the current file,
+          // not the original declaration in the imported file.
+          const errorNode = member instanceof UseSymbol
+            ? (member.useSpecifierDeclaration ?? member.declaration)
+            : (member.declaration instanceof ElementDeclarationNode && member.declaration.name
+                ? member.declaration.name
+                : member.declaration);
           if (errorNode) {
             errors.push(getDuplicateSchemaMemberError(member.kind, name!, qualifiedName.join('.'), errorNode));
           }
@@ -344,7 +344,13 @@ function lookupTableInFile (compiler: Compiler, filepath: Filepath, nameParts: s
   }
 
   // Qualified name (schema.table) — find the schema first, then the table
-  const [schemaName, tableName] = [nameParts[0], nameParts[nameParts.length - 1]];
+  const [
+    schemaName,
+    tableName,
+  ] = [
+    nameParts[0],
+    nameParts[nameParts.length - 1],
+  ];
   const usable = compiler.fileUsableMembers(filepath).getFiltered(UNHANDLED);
   if (!usable) return undefined;
   const schema = usable.schemaMembers.find((s) => s.name === schemaName);

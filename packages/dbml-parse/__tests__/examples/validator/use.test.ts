@@ -47,9 +47,9 @@ describe('[example] use declaration validation', () => {
     }
   });
 
-  test('invalid: specifier without name - 5 errors from parse recovery', () => {
+  test('invalid: specifier without name - 2 errors', () => {
     const errors = validate(`use { table } from './a'`).getErrors();
-    expect(errors).toHaveLength(5);
+    expect(errors).toHaveLength(2);
     expect(errors[0].diagnostic).toBe('Expect an element name');
   });
 

@@ -25,7 +25,7 @@ import type {
   Database, DiagramView, ElementRef, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
 import {
-  SchemaSymbol, SymbolKind, UseSymbol,
+  type NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
 import {
   getBody,
@@ -97,7 +97,7 @@ export default class ProgramInterpreter {
     {
       const extMap = new Map<string, ElementRef>();
 
-      const listForKind = (member: UseSymbol): ElementRef[] | undefined => {
+      const listForKind = (member: NodeSymbol): ElementRef[] | undefined => {
         if (member.isKind(SymbolKind.Table)) return db.externals.tables;
         if (member.isKind(SymbolKind.Enum)) return db.externals.enums;
         if (member.isKind(SymbolKind.TableGroup)) return db.externals.tableGroups;
@@ -106,7 +106,7 @@ export default class ProgramInterpreter {
         return undefined;
       };
 
-      const kindKey = (member: UseSymbol): string => {
+      const kindKey = (member: NodeSymbol): string => {
         if (member.isKind(SymbolKind.Table)) return ElementKind.Table;
         if (member.isKind(SymbolKind.Enum)) return ElementKind.Enum;
         if (member.isKind(SymbolKind.TableGroup)) return ElementKind.TableGroup;
@@ -123,7 +123,42 @@ export default class ProgramInterpreter {
           const name = member.usedSymbol ? this.compiler.symbolName(member.usedSymbol) : undefined;
           if (!name) continue;
           const list = listForKind(member);
-          if (!list) continue;
+          if (!list) {
+            // Schema import: expand the schema's members into externals
+            if (member.isKind(SymbolKind.Schema) && member.usedSymbol) {
+              const localSchemaName = this.compiler.symbolName(member);
+              const canonicalSchemaName = this.compiler.symbolName(member.usedSymbol);
+              const schemaMembers = this.compiler.symbolMembers(member.usedSymbol).getFiltered(UNHANDLED) ?? [];
+              for (const schemaMember of schemaMembers) {
+                const memberName = this.compiler.symbolName(schemaMember);
+                if (!memberName) continue;
+                const memberList = listForKind(schemaMember);
+                if (!memberList) continue;
+                const canonicalKey = `${kindKey(schemaMember)}:${canonicalSchemaName ?? ''}.${memberName}`;
+                const visibleSchemaName = localSchemaName ?? canonicalSchemaName ?? null;
+                if (extMap.has(canonicalKey)) {
+                  extMap.get(canonicalKey)!.visibleNames.push({
+                    schemaName: visibleSchemaName,
+                    name: memberName,
+                  });
+                } else {
+                  const ref: ElementRef = {
+                    name: memberName,
+                    schemaName: canonicalSchemaName ?? null,
+                    visibleNames: [
+                      {
+                        schemaName: visibleSchemaName,
+                        name: memberName,
+                      },
+                    ],
+                  };
+                  extMap.set(canonicalKey, ref);
+                  memberList.push(ref);
+                }
+              }
+            }
+            continue;
+          }
 
           const localName = this.compiler.symbolName(member) ?? name;
           const schemaName = member.usedSymbol?.declaration

@@ -2,8 +2,12 @@
 // objects. Structure mirrors toSnapshot in packages/dbml-parse/__tests__/utils/testHelpers.ts
 // but runs without a Compiler — pass source string optionally for snippets.
 
-import { SyntaxToken, SyntaxNode } from '@dbml/parse';
-import type { SymbolInfo, DeclPos } from '@/stores/parserStore';
+import {
+  SyntaxToken, SyntaxNode,
+} from '@dbml/parse';
+import type {
+  SymbolInfo, DeclPos,
+} from '@/stores/parserStore';
 
 export interface SerializedPosition {
   line: number;
@@ -45,7 +49,7 @@ function tokenReadableId (token: SyntaxToken): string {
   return `token@${token.kind}@${token.value ?? ''}@[L${sl}:C${sc}, L${el}:C${ec}]`;
 }
 
-export function nodeReadableId (node: SyntaxNode): string {
+function nodeReadableId (node: SyntaxNode): string {
   const sl = node.startPos.line + 1, sc = node.startPos.column + 1;
   const el = node.endPos.line + 1, ec = node.endPos.column + 1;
   return `node@${node.kind}@${nodeNameHint(node)}@[L${sl}:C${sc}, L${el}:C${ec}]`;
@@ -53,7 +57,9 @@ export function nodeReadableId (node: SyntaxNode): string {
 
 function symbolReadableId (sym: SymbolInfo): string {
   if (!sym.declPos) return `symbol@${sym.kind}@${sym.name}`;
-  const { startLine: sl, startCol: sc, endLine: el, endCol: ec } = sym.declPos;
+  const {
+    startLine: sl, startCol: sc, endLine: el, endCol: ec,
+  } = sym.declPos;
   return `symbol@${sym.kind}@${sym.name}@[L${sl}:C${sc}, L${el}:C${ec}]`;
 }
 
@@ -79,7 +85,7 @@ const NODE_SKIP = new Set([
   'id', 'parent', 'parentNode', 'kind',
   'startPos', 'endPos', 'start', 'end',
   'filepath', 'fullStart', 'fullEnd',
-  'source', // ProgramNode.source — full source text
+  'source', // ProgramNode.source - full source text
 ]);
 
 export function serializeToken (token: SyntaxToken, source?: string): SerializedToken {
@@ -109,8 +115,14 @@ export function serializeNode (node: SyntaxNode, source?: string): SerializedNod
       id: nodeReadableId(node),
       snippet: extractSnippet(node, source),
     },
-    start: { line: node.startPos.line + 1, column: node.startPos.column + 1 },
-    end: { line: node.endPos.line + 1, column: node.endPos.column + 1 },
+    start: {
+      line: node.startPos.line + 1,
+      column: node.startPos.column + 1,
+    },
+    end: {
+      line: node.endPos.line + 1,
+      column: node.endPos.column + 1,
+    },
     children,
   };
   if (!result.context.snippet) delete result.context.snippet;
