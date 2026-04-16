@@ -1,4 +1,7 @@
 import {
+  isInvalidToken,
+} from '@/core/utils/expression';
+import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
@@ -14,9 +17,6 @@ import {
 import {
   isAlphaNumeric, isAlphaOrUnderscore, isDigit,
 } from '@/core/utils/chars';
-import {
-  isInvalidToken,
-} from '@/core/utils/expression';
 
 export default class Lexer {
   private start: Position = {
@@ -160,9 +160,6 @@ export default class Lexer {
         case ':':
           this.addToken(SyntaxTokenKind.COLON);
           break;
-        case '*':
-          this.addToken(SyntaxTokenKind.WILDCARD);
-          break;
         case "'":
           if (this.match("''")) {
             this.multilineStringLiteral();
@@ -187,6 +184,9 @@ export default class Lexer {
           } else {
             this.operator(c);
           }
+          break;
+        case '*':
+          this.addToken(SyntaxTokenKind.WILDCARD);
           break;
         default:
           if (isOp(c)) {
@@ -255,7 +255,7 @@ export default class Lexer {
   }
 
   gatherInvalid () {
-    let i: number;
+    let i;
     const newTokenList: SyntaxToken[] = [];
 
     const leadingInvalidList: SyntaxToken[] = [];
