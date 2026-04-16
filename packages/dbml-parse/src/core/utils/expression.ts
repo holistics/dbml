@@ -186,10 +186,10 @@ export function isProgramNode (node: SyntaxNode | undefined): node is ProgramNod
 }
 
 // Return whether `node` is a field of some element
-export function isElementFieldNode (node: SyntaxNode | undefined, kind: ElementKind): node is FunctionApplicationNode {
+export function isElementFieldNode (node: SyntaxNode | undefined, ...kinds: ElementKind[]): node is FunctionApplicationNode {
   return node instanceof FunctionApplicationNode
     && node.parent instanceof ElementDeclarationNode
-    && node.parent.isKind(kind);
+    && node.parent.isKind(...kinds);
 }
 
 // Return whether `node` is within some element of a given kind

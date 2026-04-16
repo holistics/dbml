@@ -345,6 +345,11 @@ export default class Parser {
         }
         throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
       }
+
+      if (this.check(SyntaxTokenKind.IDENTIFIER) && isFromKeyword(this.peek())) {
+        break;
+      }
+
       if (!hasTrailingNewLines(this.previous()) && !this.check(SyntaxTokenKind.RBRACE)) {
         this.logError(this.peek(), CompileErrorCode.MISSING_SPACES, 'Expect a newline between use specifiers');
       }

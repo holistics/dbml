@@ -1,8 +1,5 @@
 import type Compiler from '@/compiler/index';
 import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
@@ -37,7 +34,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  getNodeMemberSymbols, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+  lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
 import TableGroupBinder from './bind';
 import {

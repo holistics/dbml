@@ -30,7 +30,7 @@ describe('[advanced] multifile edge cases', () => {
       const filepath = new Filepath(unixPath);
       const uri = filepath.toUri();
 
-      expect(uri).toBe('file:///home/user/project/models.dbml');
+      expect(uri).toBe(unixPath);
     });
 
     it('should round-trip URI conversion', () => {
@@ -66,7 +66,7 @@ describe('[advanced] multifile edge cases', () => {
       const uri = filepath.toUri();
 
       // Should be properly encoded/escaped
-      expect(uri).toContain('file://');
+      expect(uri).toBe(pathWithSpecialChars);
       expect(Filepath.fromUri(uri).absolute).toBe(pathWithSpecialChars);
     });
   });

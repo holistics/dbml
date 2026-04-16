@@ -24,6 +24,9 @@ import {
 import TableGroupValidator, {
   validateSettingList,
 } from './validate';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 
 export const tableGroupModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -56,7 +59,10 @@ export const tableGroupModule: LocalModule = {
       return new Report(destructureComplexVariable(node.name));
     }
     if (isElementFieldNode(node, ElementKind.TableGroup)) {
-      return new Report(destructureComplexVariable(node.callee));
+      const names = destructureComplexVariable(node.callee);
+      if (names?.length === 1) names.unshift(DEFAULT_SCHEMA_NAME);
+
+      return new Report(names);
     }
     return Report.create(PASS_THROUGH);
   },
