@@ -16,7 +16,7 @@ import {
 import {
   Position,
 } from '@/core/types/position';
-import type {
+import {
   SymbolKind,
 } from '@/core/types/symbol';
 import {
@@ -103,7 +103,7 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
   }
 
   intern (): InternedSyntaxNode {
-    return `node@${this.filepath.intern()}:${this.id}` as InternedSyntaxNode;
+    return `node@${this.filepath.intern()}:${this.id}`;
   }
 
   // Walk up the tree to find the nearest enclosing element or program
@@ -328,14 +328,13 @@ export class UseSpecifierNode extends SyntaxNode {
   getSymbolKind (): SymbolKind | undefined {
     const importKind = this.getImportKind();
     if (importKind === undefined) return undefined;
-    // Inline to avoid circular dep: nodes ↔ symbols
     const map: Record<ImportKind, SymbolKind> = {
-      [ImportKind.Table]: 'Table' as SymbolKind,
-      [ImportKind.Enum]: 'Enum' as SymbolKind,
-      [ImportKind.TableGroup]: 'TableGroup' as SymbolKind,
-      [ImportKind.TablePartial]: 'TablePartial' as SymbolKind,
-      [ImportKind.Note]: 'Note' as SymbolKind,
-      [ImportKind.Schema]: 'Schema' as SymbolKind,
+      [ImportKind.Table]: SymbolKind.Table,
+      [ImportKind.Enum]: SymbolKind.Enum,
+      [ImportKind.TableGroup]: SymbolKind.TableGroup,
+      [ImportKind.TablePartial]: SymbolKind.TablePartial,
+      [ImportKind.Note]: SymbolKind.Note,
+      [ImportKind.Schema]: SymbolKind.Schema,
     };
     return map[importKind];
   }
