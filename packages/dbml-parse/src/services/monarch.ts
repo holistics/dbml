@@ -1,8 +1,9 @@
 import type {
-  languages,
-} from 'monaco-editor-core';
+  LanguageConfiguration,
+  MonarchLanguage,
+} from './types';
 
-export const dbmlLanguageConfig: languages.LanguageConfiguration = {
+export const dbmlLanguageConfig: LanguageConfiguration = {
   comments: {
     lineComment: '//',
     blockComment: [
@@ -82,7 +83,7 @@ export const dbmlLanguageConfig: languages.LanguageConfiguration = {
   },
 };
 
-const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
+const dbmlMonarchTokensProvider: MonarchLanguage = {
   tokenPostfix: '.dbml',
   brackets: [
     {

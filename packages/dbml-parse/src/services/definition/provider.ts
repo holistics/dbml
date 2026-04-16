@@ -1,6 +1,6 @@
 import {
   Uri,
-} from 'monaco-editor-core';
+} from '@/services/types';
 import Compiler from '@/compiler';
 import {
   DEFAULT_ENTRY,

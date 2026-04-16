@@ -2,7 +2,7 @@
   "errors": [
     {
       "code": "BINDING_ERROR",
-      "diagnostic": "Column 'un_col1' does not exist in Table 'T1'",
+      "diagnostic": "Column 'un_col1' does not exist in Table 'public.T1'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
