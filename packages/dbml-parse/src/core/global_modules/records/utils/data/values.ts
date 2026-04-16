@@ -13,11 +13,14 @@ import {
   PrefixExpressionNode,
 } from '@/core/types/nodes';
 import {
-  isExpressionASignedNumberExpression, isExpressionAnIdentifierNode,
+  isExpressionAnIdentifierNode,
 } from '@/core/utils/expression';
 import {
   destructureComplexVariable, extractNumericLiteral, extractQuotedStringToken,
 } from '@/core/utils/expression';
+import {
+  isExpressionASignedNumberExpression,
+} from '@/core/utils';
 
 export {
   extractNumericLiteral,

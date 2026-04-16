@@ -34,7 +34,7 @@ import {
   getTokenPosition, lookupInDefaultSchema, lookupMember,
 } from '../utils';
 import {
-  validateForeignKeys, validatePrimaryKey, validateUnique,
+  validatePrimaryKey, validateUnique,
 } from './utils/constraints';
 import {
   getRecordValueType,

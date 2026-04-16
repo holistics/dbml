@@ -9,7 +9,7 @@ import {
   getMemberChain,
 } from '@/core/parser/utils';
 import type {
-  ColumnType, RelationCardinality, Table, TokenPosition,
+  ColumnType, RelationCardinality, TokenPosition,
 } from '@/core/types';
 import {
   CompileError, CompileErrorCode,
@@ -28,12 +28,17 @@ import {
   SyntaxTokenKind,
 } from '@/core/types/tokens';
 import {
-  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression, getNumberTextFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionASignedNumberExpression, isExpressionAVariableNode, isExpressionAnIdentifierNode, parseNumber,
+  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from '@/core/utils/expression';
+import {
+  getNumberTextFromExpression, isExpressionASignedNumberExpression, parseNumber,
+} from '@/core/utils';
 
-export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): { schemaName: string | null;
+export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): {
+  schemaName: string | null;
   tableName: string;
-  fieldNames: string[]; } {
+  fieldNames: string[];
+} {
   const {
     variables, tupleElements,
   } = destructureComplexVariableTuple(operand)!;

@@ -3,7 +3,7 @@ import {
 } from 'lodash-es';
 import Compiler from '@/compiler/index';
 import {
-  CompileError, CompileErrorCode,
+  CompileError,
 } from '@/core/types/errors';
 import {
   ElementKind, SettingName,
@@ -19,16 +19,15 @@ import {
 import Report from '@/core/types/report';
 import type {
   Check, Column, ColumnType, Index, InlineRef,
-  SchemaElement, TablePartial, TokenPosition,
+  SchemaElement, TablePartial,
 } from '@/core/types/schemaJson';
 import {
   SymbolKind,
 } from '@/core/types/symbol';
 import {
-  getNumberTextFromExpression, isElementFieldNode,
+  isElementFieldNode,
   isElementNode, isExpressionAQuotedString,
-  isExpressionASignedNumberExpression, isExpressionAVariableNode,
-  isRelationshipOp, parseNumber,
+  isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
@@ -36,11 +35,15 @@ import {
 } from '@/core/utils/expression';
 import {
   aggregateSettingList,
+  isExpressionASignedNumberExpression,
 } from '@/core/utils/validate';
 import {
   extractColor, extractElementName, getTokenPosition,
   normalizeNoteContent,
 } from '../utils';
+import {
+  getNumberTextFromExpression, parseNumber,
+} from '@/core/utils';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;

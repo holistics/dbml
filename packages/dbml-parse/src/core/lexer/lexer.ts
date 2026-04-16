@@ -1,15 +1,15 @@
 import {
   isInvalidToken,
-} from '@/core/utils/expression';
+} from '@/core/utils';
+import {
+  Position,
+} from '@/core/types/position';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
   Filepath,
 } from '@/core/types/filepath';
-import {
-  Position,
-} from '@/core/types/position';
 import Report from '@/core/types/report';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,

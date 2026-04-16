@@ -22,11 +22,11 @@ import {
   extractVarNameFromPrimaryVariable,
 } from '../../utils/expression';
 import {
-  isTupleOfVariables,
-} from '../../utils/expression';
-import {
   scanNonListNodeForBinding,
 } from '../utils';
+import {
+  isTupleOfVariables,
+} from '@/core/utils';
 
 export default class RecordsBinder {
   private compiler: Compiler;

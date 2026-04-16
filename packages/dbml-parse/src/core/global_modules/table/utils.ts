@@ -12,13 +12,18 @@ import type {
 import {
   destructureComplexVariable, destructureComplexVariableTuple,
   extractQuotedStringToken, extractVariableFromExpression,
-  getNumberTextFromExpression, isBinaryRelationship,
-  isExpressionAQuotedString, isExpressionASignedNumberExpression,
-  isExpressionAVariableNode, isRelationshipOp,
+  isBinaryRelationship,
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
   getTokenPosition,
 } from '../utils';
+import {
+  getNumberTextFromExpression,
+  isExpressionASignedNumberExpression,
+  isRelationshipOp,
+} from '@/core/utils';
 
 export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
   // Skip ListExpressionNode (settings bracket [pk, ...]) - it's not a type

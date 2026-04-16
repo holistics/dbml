@@ -1,9 +1,6 @@
 import {
   last,
 } from 'lodash-es';
-import {
-  NUMERIC_LITERAL_PREFIX,
-} from '@/constants';
 import type {
   ElementKind, ImportKind, SettingName,
 } from '@/core/types/keywords';
@@ -18,7 +15,6 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
-  PrefixExpressionNode,
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
@@ -32,39 +28,10 @@ import {
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-
-export function getNumberTextFromExpression (node: PrimaryExpressionNode | PrefixExpressionNode): string {
-  if (node instanceof PrefixExpressionNode) {
-    return `${node.op?.value}${getNumberTextFromExpression(node.expression!)}`;
-  }
-  return (node.expression as LiteralNode).literal!.value;
-}
-
-export function parseNumber (node: PrefixExpressionNode | PrimaryExpressionNode): number {
-  if (node instanceof PrefixExpressionNode) {
-    const op = node.op?.value;
-    if (op === '-') return -parseNumber(node.expression!);
-    return parseNumber(node.expression!);
-  }
-  return Number.parseFloat((node.expression as LiteralNode).literal!.value);
-}
-
-export type SignedNumberExpression =
-  (PrimaryExpressionNode & { expression: LiteralNode & { literal: { kind: SyntaxTokenKind.NUMERIC_LITERAL } } })
-  | (PrefixExpressionNode & { op: '-' | '+';
-    expression: SignedNumberExpression; });
-
-export function isExpressionASignedNumberExpression (value?: SyntaxNode): value is SignedNumberExpression {
-  if (value instanceof PrefixExpressionNode) {
-    if (!NUMERIC_LITERAL_PREFIX.includes(value.op!.value)) return false;
-    return isExpressionASignedNumberExpression(value.expression);
-  }
-  return (
-    value instanceof PrimaryExpressionNode
-    && value.expression instanceof LiteralNode
-    && value.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL
-  );
-}
+import {
+  isRelationshipOp,
+  isTupleOfVariables,
+} from './validate';
 
 export function extractVariableNode (value?: unknown): SyntaxToken | undefined {
   if (isExpressionAVariableNode(value)) {
@@ -182,16 +149,6 @@ export function isReuseKeyword (
   token?: SyntaxToken,
 ): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'reuse';
-}
-
-export function isTupleOfVariables (value?: SyntaxNode): value is TupleExpressionNode & {
-  elementList: (PrimaryExpressionNode & { expression: VariableNode })[];
-} {
-  return value instanceof TupleExpressionNode && value.elementList.every(isExpressionAVariableNode);
-}
-
-export function isRelationshipOp (op?: string): op is '>' | '<' | '-' | '<>' {
-  return op === '-' || op === '<>' || op === '>' || op === '<';
 }
 
 export function getBody (node?: ElementDeclarationNode): (FunctionApplicationNode | ElementDeclarationNode)[] {

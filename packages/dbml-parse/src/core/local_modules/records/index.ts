@@ -6,22 +6,20 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
+  PASS_THROUGH, type PassThrough,
 } from '@/core/types/module';
 import {
-  CallExpressionNode, ElementDeclarationNode, ProgramNode, SyntaxNode, TupleExpressionNode,
+  CallExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
   isElementFieldNode, isElementNode,
 } from '@/core/utils/expression';
 import {
-  destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression,
+  destructureComplexVariable,
 } from '@/core/utils/expression';
 import {
   isTupleOfVariables,
-} from '@/core/utils/expression';
-import {
   isValidName,
 } from '@/core/utils/validate';
 import {
