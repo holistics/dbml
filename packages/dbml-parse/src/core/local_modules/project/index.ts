@@ -10,12 +10,19 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
+  destructureComplexVariable,
   isElementFieldNode, isElementNode,
 } from '@/core/utils/expression';
 import {
   type LocalModule, type Settings,
 } from '../types';
 import ProjectValidator from './validate';
+import {
+  isSimpleName,
+} from '@/core/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types';
 
 export const projectModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -30,8 +37,19 @@ export const projectModule: LocalModule = {
 
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Project)) {
-      return new ProjectValidator(compiler, node).validateName(node.name);
+      if (!node.name) {
+        return new Report(undefined);
+      }
+
+      if (!isSimpleName(node.name)) {
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.INVALID_NAME, 'A Project\'s name is optional or must be an identifier or a quoted identifer', node.name),
+        ]);
+      }
+
+      return new Report(destructureComplexVariable(node.name));
     }
+
     if (isElementFieldNode(node, ElementKind.Project)) {
       return new Report(undefined);
     }

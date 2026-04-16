@@ -45,7 +45,7 @@ export default class ProjectValidator {
     return [];
   }
 
-  validateName (nameNode?: SyntaxNode): Report<string[] | undefined> {
+  private validateName (nameNode?: SyntaxNode): Report<string[] | undefined> {
     if (!nameNode) {
       return new Report(undefined);
     }
