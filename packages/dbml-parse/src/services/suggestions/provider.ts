@@ -49,9 +49,6 @@ import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
 import {
-  UseStatementMerger,
-} from '@/services/completion/utils/useMerger';
-import {
   suggestRecordRowSnippet,
 } from '@/services/suggestions/recordRowSnippet';
 import {
@@ -78,6 +75,7 @@ import {
 } from '@/services/types';
 import {
   getOffsetFromMonacoPosition,
+  mergeSymbolIntoUses,
 } from '@/services/utils';
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
@@ -116,10 +114,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     currentFileContent: string,
   ): CompletionItem {
     // Calculate the use statement that should be inserted
-    const mergeResult = UseStatementMerger.mergeSymbolIntoUses(
+    const mergeResult = mergeSymbolIntoUses(
       this.compiler,
       currentFilepath,
       currentFileContent,
+      symbolKind,
       symbolName,
       sourceFilepath,
     );

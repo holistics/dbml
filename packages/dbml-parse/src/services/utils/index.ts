@@ -8,12 +8,14 @@ import type {
 import {
   InfixExpressionNode,
 } from '@/core/types/nodes';
-import {
-  NodeSymbol, SchemaSymbol,
+import type {
+  NodeSymbol,
 } from '@/core/types/symbol';
 import type {
   Position, TextModel,
 } from '@/services/types';
+
+export * from './useMerger';
 
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {
   return model.getOffsetAt(position);

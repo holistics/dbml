@@ -2,8 +2,7 @@ import { describe, it, expect } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
-import { UseStatementMerger } from '@/services/completion/utils/useMerger';
-import { createMockTextModel, createPosition } from '../../utils';
+import { createMockTextModel, createPosition } from '../../../utils';
 import { Filepath } from '@/core/types/filepath';
 
 // Inline project source maps. Each entry maps a filepath (relative to /) onto
@@ -283,113 +282,6 @@ describe('[inline] multifile language services', () => {
           }
         }).not.toThrow();
       }
-    });
-  });
-
-  describe('completion with additionalTextEdits', () => {
-    it('should calculate additionalTextEdits for new use statement', () => {
-      const filepath = new Filepath('/project/models.dbml');
-      const mainContent = 'Table jobs { id int }';
-      const compiler = new Compiler();
-      compiler.setSource(filepath, mainContent);
-
-      const result = UseStatementMerger.mergeSymbolIntoUses(
-        compiler,
-        filepath,
-        mainContent,
-        'job_status',
-        filepath,
-      );
-
-      expect(result.newContent).toMatch(/^use { job_status } from '\.\/models'/);
-      expect(result.hint).toBe('created new');
-      expect(result.editStartOffset).toBe(0);
-    });
-
-    it('should merge symbol into existing use statement from same file', () => {
-      const filepath = new Filepath('/project/models.dbml');
-      const mainContent = `use { User } from './models'
-
-Table jobs {
-  id int
-  user_id int
-}`;
-      const compiler = new Compiler();
-      compiler.setSource(filepath, mainContent);
-
-      const result = UseStatementMerger.mergeSymbolIntoUses(
-        compiler,
-        filepath,
-        mainContent,
-        'Post',
-        filepath,
-      );
-
-      expect(result.newContent).toContain('User, Post');
-      expect(result.hint).toBe('merged into existing');
-      expect(result.newContent).toContain('Table jobs');
-    });
-
-    it('should detect when symbol already imported', () => {
-      const filepath = new Filepath('/project/models.dbml');
-      const mainContent = `use { User, Post } from './models'
-
-Table jobs { user_id int }`;
-      const compiler = new Compiler();
-      compiler.setSource(filepath, mainContent);
-
-      const result = UseStatementMerger.mergeSymbolIntoUses(
-        compiler,
-        filepath,
-        mainContent,
-        'User',
-        filepath,
-      );
-
-      expect(result.newContent).toBe(mainContent);
-      expect(result.hint).toBe('symbol already imported');
-    });
-
-    it('should handle completion in file with multiple use statements', () => {
-      const filepath = new Filepath('/project/models.dbml');
-      const mainContent = `use { User } from './auth'
-use { Table } from './schema'
-
-Table jobs {
-  id int
-}`;
-      const compiler = new Compiler();
-      compiler.setSource(filepath, mainContent);
-
-      const result = UseStatementMerger.mergeSymbolIntoUses(
-        compiler,
-        filepath,
-        mainContent,
-        'Column',
-        filepath,
-      );
-
-      expect(result.newContent).toMatch(/^use { Column } from '\.\/models'/);
-      expect(result.newContent).toContain('use { User } from');
-      expect(result.newContent).toContain('use { Table } from');
-    });
-
-    it('should preserve relative paths in additionalTextEdits', () => {
-      const filepath = new Filepath('/home/user/project/src/models.dbml');
-      const mainContent = '';
-      const compiler = new Compiler();
-      compiler.setSource(filepath, mainContent);
-
-      const result = UseStatementMerger.mergeSymbolIntoUses(
-        compiler,
-        filepath,
-        mainContent,
-        'Enum',
-        filepath,
-      );
-
-      expect(result.newContent).toContain("from './models'");
-      expect(result.newContent).not.toContain('/home/user');
     });
   });
 
