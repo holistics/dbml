@@ -9,7 +9,7 @@ import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
-  ElementDeclarationNode, UseDeclarationNode, type UseSpecifierNode, WildcardNode,
+  ElementDeclarationNode, UseDeclarationNode, UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
@@ -146,7 +146,21 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 // - Return a string for the directly nested schema name that the declaration belongs to
 export function shouldBelongToThisSchema (compiler: Compiler, schemaSymbol: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): boolean | string {
   const qualifiedName = schemaSymbol.qualifiedName;
-  const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
+  let fullname: string[] | undefined;
+
+  // For use specifier, alias is the real name existing in the scope
+  if (element instanceof UseSpecifierNode) {
+    const alias = compiler.nodeAlias(element).getFiltered(UNHANDLED);
+    if (alias !== undefined) {
+      fullname = [
+        alias,
+      ];
+    } else {
+      fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
+    }
+  } else {
+    fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
+  }
   if (!fullname) return false;
 
   // Elements with no name or no schema prefix belong to the default (public) schema
