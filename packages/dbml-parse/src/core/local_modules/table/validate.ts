@@ -100,7 +100,7 @@ export default class TableValidator {
     return [];
   }
 
-  validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (!aliasNode) {
       return [];
     }
@@ -114,7 +114,7 @@ export default class TableValidator {
     return [];
   }
 
-  validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
@@ -148,7 +148,7 @@ export default class TableValidator {
     return errors;
   }
 
-  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  private validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) {
       return [];
     }
@@ -168,7 +168,7 @@ export default class TableValidator {
     ];
   }
 
-  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+  private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     const validateColumn = (field: FunctionApplicationNode) => {
       const errors: CompileError[] = [];
       if (!field.callee) {
@@ -215,7 +215,7 @@ export default class TableValidator {
   }
 
   // This is needed to support legacy inline settings
-  validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
+  private validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
     if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
       return parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part));
     }
@@ -379,7 +379,7 @@ export default class TableValidator {
     return errors;
   }
 
-  validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const errors = subs.flatMap((sub) => {
       if (!sub.type) {
         return [];
