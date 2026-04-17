@@ -3,7 +3,7 @@
     <div
       class="flex items-center gap-2 py-[3px] cursor-pointer border-b border-gray-50 hover:bg-blue-50"
       :style="{ paddingLeft: `${8 + level * 14}px`, paddingRight: '12px' }"
-      @click="emit('symbol-click', sym)"
+      @click="emit('symbol-click', symbol)"
     >
       <PhCaretRight
         v-if="hasMembers"
@@ -26,14 +26,14 @@
           :class="iconColor"
         />
         <template #popper>
-          <span class="text-xs font-mono">{{ sym.kind }}</span>
+          <span class="text-xs font-mono">{{ symbol.kind }}</span>
         </template>
       </VTooltip>
-      <span class="text-blue-500">{{ sym.name }}</span>
+      <span class="text-blue-500">{{ symbol.name }}</span>
     </div>
     <template v-if="open && hasMembers">
       <SymbolRow
-        v-for="child in sym.members"
+        v-for="child in symbol.members"
         :key="child.id"
         :symbol="child"
         :level="level + 1"
