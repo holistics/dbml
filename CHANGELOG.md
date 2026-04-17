@@ -1,3 +1,15 @@
+## v7.1.1 (2026-04-17)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#877](https://github.com/holistics/dbml/pull/877) Fix no double quote when syncing diagram view ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-core`, `dbml-parse`
+  * [#876](https://github.com/holistics/dbml/pull/876) Missing model_structure exports in @dbml/core ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v7.1.0 (2026-04-16)
 
 #### :memo: Documentation
