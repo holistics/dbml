@@ -227,9 +227,36 @@ export const useParser = defineStore('parser', () => {
       // @dbml/parse types against monaco-editor-core while this bundle pulls
       // monaco-editor — structurally compatible at runtime, separate type
       // surfaces at compile time.
-      monaco.languages.registerDefinitionProvider(languageId, currentServices.definitionProvider as any);
-      monaco.languages.registerReferenceProvider(languageId, currentServices.referenceProvider as any);
-      monaco.languages.registerCompletionItemProvider(languageId, currentServices.autocompletionProvider as any);
+      // Wrap the language-service calls so we always push the editor's
+      // current text into the compiler before any analysis runs. The parse
+      // store is debounced (300 ms), so without this the providers see a
+      // stale snapshot and misclassify the cursor — e.g. returning top-level
+      // element-type suggestions after a `.` in a ref or right after `use `.
+      const syncCompilerFromModel = (model: monaco.editor.ITextModel) => {
+        if (!model.uri) return;
+        const fp = Filepath.fromUri(String(model.uri));
+        compiler.setSource(fp, model.getValue());
+      };
+
+      monaco.languages.registerDefinitionProvider(languageId, {
+        provideDefinition: (model, position, token) => {
+          syncCompilerFromModel(model);
+          return (currentServices!.definitionProvider as any).provideDefinition(model, position, token);
+        },
+      });
+      monaco.languages.registerReferenceProvider(languageId, {
+        provideReferences: (model, position, context, token) => {
+          syncCompilerFromModel(model);
+          return (currentServices!.referenceProvider as any).provideReferences(model, position, context, token);
+        },
+      });
+      monaco.languages.registerCompletionItemProvider(languageId, {
+        triggerCharacters: (currentServices.autocompletionProvider as any).triggerCharacters,
+        provideCompletionItems: (model, position, context, token) => {
+          syncCompilerFromModel(model);
+          return (currentServices!.autocompletionProvider as any).provideCompletionItems(model, position, context, token);
+        },
+      });
     } catch (err) {
       logger.warn('Failed to register Monaco language services:', err);
     }
