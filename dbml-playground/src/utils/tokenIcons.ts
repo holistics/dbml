@@ -66,30 +66,30 @@ export function tokenIconFor (kind: SyntaxTokenKind): TokenIconInfo {
 }
 
 export const TOKEN_KIND_CLASS: Partial<Record<SyntaxTokenKind, string>> = {
-  [SyntaxTokenKind.IDENTIFIER]: 'outline-blue-400/20 bg-blue-400/5',
-  [SyntaxTokenKind.QUOTED_STRING]: 'outline-violet-400/20 bg-violet-400/5',
-  [SyntaxTokenKind.STRING_LITERAL]: 'outline-green-500/20 bg-green-500/5',
-  [SyntaxTokenKind.NUMERIC_LITERAL]: 'outline-amber-400/20 bg-amber-400/5',
-  [SyntaxTokenKind.COLOR_LITERAL]: 'outline-pink-400/20 bg-pink-400/5',
-  [SyntaxTokenKind.FUNCTION_EXPRESSION]: 'outline-orange-400/20 bg-orange-400/5',
-  [SyntaxTokenKind.OP]: 'outline-red-400/20 bg-red-400/5',
-  [SyntaxTokenKind.LPAREN]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxTokenKind.RPAREN]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxTokenKind.LBRACE]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxTokenKind.RBRACE]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxTokenKind.LBRACKET]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxTokenKind.RBRACKET]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxTokenKind.LANGLE]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxTokenKind.RANGLE]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxTokenKind.COMMA]: 'outline-gray-400/20 bg-gray-400/5',
-  [SyntaxTokenKind.SEMICOLON]: 'outline-gray-400/20 bg-gray-400/5',
-  [SyntaxTokenKind.COLON]: 'outline-gray-400/20 bg-gray-400/5',
-  [SyntaxTokenKind.SINGLE_LINE_COMMENT]: 'outline-gray-400/20 bg-gray-400/5',
-  [SyntaxTokenKind.MULTILINE_COMMENT]: 'outline-gray-400/20 bg-gray-400/5',
-  [SyntaxTokenKind.WILDCARD]: 'outline-yellow-500/20 bg-yellow-500/5',
-  [SyntaxTokenKind.EOF]: 'outline-red-400/20 bg-red-400/5',
+  [SyntaxTokenKind.IDENTIFIER]: 'hl-token-identifier',
+  [SyntaxTokenKind.QUOTED_STRING]: 'hl-token-variable',
+  [SyntaxTokenKind.STRING_LITERAL]: 'hl-token-string',
+  [SyntaxTokenKind.NUMERIC_LITERAL]: 'hl-token-number',
+  [SyntaxTokenKind.COLOR_LITERAL]: 'hl-token-color',
+  [SyntaxTokenKind.FUNCTION_EXPRESSION]: 'hl-token-function',
+  [SyntaxTokenKind.OP]: 'hl-token-op',
+  [SyntaxTokenKind.LPAREN]: 'hl-token-bracket',
+  [SyntaxTokenKind.RPAREN]: 'hl-token-bracket',
+  [SyntaxTokenKind.LBRACE]: 'hl-token-bracket',
+  [SyntaxTokenKind.RBRACE]: 'hl-token-bracket',
+  [SyntaxTokenKind.LBRACKET]: 'hl-token-bracket',
+  [SyntaxTokenKind.RBRACKET]: 'hl-token-bracket',
+  [SyntaxTokenKind.LANGLE]: 'hl-token-bracket',
+  [SyntaxTokenKind.RANGLE]: 'hl-token-bracket',
+  [SyntaxTokenKind.COMMA]: 'hl-token-punct',
+  [SyntaxTokenKind.SEMICOLON]: 'hl-token-punct',
+  [SyntaxTokenKind.COLON]: 'hl-token-punct',
+  [SyntaxTokenKind.SINGLE_LINE_COMMENT]: 'hl-token-comment',
+  [SyntaxTokenKind.MULTILINE_COMMENT]: 'hl-token-comment',
+  [SyntaxTokenKind.WILDCARD]: 'hl-token-wildcard',
+  [SyntaxTokenKind.EOF]: 'hl-token-eof',
 };
 
 export function tokenKindClass (kind: SyntaxTokenKind): string {
-  return TOKEN_KIND_CLASS[kind] ?? 'outline-blue-400/20 bg-blue-400/5';
+  return TOKEN_KIND_CLASS[kind] ?? 'hl-token-identifier';
 }

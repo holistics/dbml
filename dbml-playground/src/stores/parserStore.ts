@@ -114,10 +114,25 @@ export const useParser = defineStore('parser', () => {
 
   const hasDatabase = computed(() => database.value !== null);
 
+  // Tracks which file paths the compiler's project layout currently holds, so
+  // we can send deleteSource for paths that disappear from the project store.
+  const loadedFilepaths = new Set<string>();
+
   const debouncedParse = debounce((targetFile?: string) => {
     isLoading.value = true;
     const currentFilepath = Filepath.fromUri(monaco.Uri.file(targetFile ?? project.currentFile).toString());
     try {
+      // Drop any files the compiler holds that no longer exist in the project
+      // store (renames show up as delete-old + add-new). setSource handles the
+      // rest — it invalidates per-file cache and refreshes existing entries.
+      const currentPaths = new Set(Object.keys(project.files));
+      for (const loadedPath of loadedFilepaths) {
+        if (!currentPaths.has(loadedPath)) {
+          compiler.deleteSource(Filepath.fromUri(monaco.Uri.file(loadedPath).toString()));
+          loadedFilepaths.delete(loadedPath);
+        }
+      }
+
       // Load all project files into the compiler. Go through Filepath.fromUri
       // using the same `file://` URIs Monaco builds for editor models — this
       // way Filepath carries a 'file:' protocol and `toUri()` on declarations
@@ -126,6 +141,7 @@ export const useParser = defineStore('parser', () => {
       for (const [path, content] of Object.entries(project.files)) {
         const filepath = Filepath.fromUri(monaco.Uri.file(path).toString());
         compiler.setSource(filepath, content);
+        loadedFilepaths.add(path);
       }
 
       // Bind the entire project to establish cross-file relationships

@@ -1,35 +1,5 @@
 @import "tailwindcss";
 
-@source inline("outline-blue-{300,400,500}/20");
-@source inline("outline-violet-{300,400,500}/20");
-@source inline("outline-orange-{300,400,500}/20");
-@source inline("outline-gray-{300,400,500}/20");
-@source inline("outline-green-{300,400,500}/20");
-@source inline("outline-cyan-{300,400,500}/20");
-@source inline("outline-sky-{300,400,500}/20");
-@source inline("outline-red-{300,400,500}/20");
-@source inline("outline-amber-{300,400,500}/20");
-@source inline("outline-yellow-{300,400,500}/20");
-@source inline("outline-pink-{300,400,500}/20");
-@source inline("outline-indigo-{300,400,500}/20");
-@source inline("outline-teal-{300,400,500}/20");
-@source inline("outline-purple-{300,400,500}/20");
-@source inline("bg-blue-{300,400,500}/5");
-@source inline("bg-violet-{300,400,500}/5");
-@source inline("bg-orange-{300,400,500}/5");
-@source inline("bg-gray-{300,400,500}/5");
-@source inline("bg-green-{300,400,500}/5");
-@source inline("bg-cyan-{300,400,500}/5");
-@source inline("bg-sky-{300,400,500}/5");
-@source inline("bg-red-{300,400,500}/5");
-@source inline("bg-amber-{300,400,500}/5");
-@source inline("bg-yellow-{300,400,500}/5");
-@source inline("bg-pink-{300,400,500}/5");
-@source inline("bg-indigo-{300,400,500}/5");
-@source inline("bg-teal-{300,400,500}/5");
-@source inline("bg-purple-{300,400,500}/5");
-@source inline("outline outline-1 -outline-offset-1 rounded-sm");
-
 /* Custom styles for the playground */
 body {
   margin: 0;
@@ -57,3 +27,89 @@ code, pre {
   background-color: rgba(0, 122, 204, 0.15) !important;
 }
 
+/* editor decoration color tokens — keep in sync with icon colors used by the
+   output panel (SymbolRow, RawAstTreeNode, tokenIcons). */
+:root {
+  --hl-indigo-rgb:       99, 102, 241;   /* indigo-500 */
+  --sym-table-rgb:       59, 130, 246;   /* blue-500 */
+  --sym-column-rgb:     107, 114, 128;   /* gray-500 */
+  --sym-ref-rgb:        168,  85, 247;   /* purple-500 */
+  --sym-enum-rgb:        22, 163,  74;   /* green-600 */
+  --sym-enum-field-rgb:  34, 197,  94;   /* green-500 */
+  --sym-tablegroup-rgb: 202, 138,   4;   /* yellow-600 */
+  --sym-tablegroup-field-rgb: 234, 179,   8; /* yellow-500 */
+  --sym-schema-rgb:     249, 115,  22;   /* orange-500 */
+  --sym-partial-rgb:     20, 184, 166;   /* teal-500 */
+  --sym-note-rgb:       156, 163, 175;   /* gray-400 */
+  --violet-rgb:         139,  92, 246;   /* violet-500 */
+  --amber-rgb:          245, 158,  11;   /* amber-500 */
+  --pink-rgb:           236,  72, 153;   /* pink-500 */
+  --red-rgb:            239,  68,  68;   /* red-500 */
+  --cyan-rgb:             6, 182, 212;   /* cyan-500 */
+  --yellow-rgb:         234, 179,   8;   /* yellow-500 */
+  --gray-400-rgb:       156, 163, 175;   /* gray-400 */
+  --gray-300-rgb:       209, 213, 219;   /* gray-300 */
+}
+
+[class*="hl-"] {
+  outline-offset: -1px;
+  border-radius: 2px;
+}
+
+/* symbol kind decorations */
+.hl-sym-table         { outline: 1px solid rgba(var(--sym-table-rgb),            0.30); background: rgba(var(--sym-table-rgb),            0.05); }
+.hl-sym-column        { outline: 1px solid rgba(var(--sym-column-rgb),           0.30); background: rgba(var(--sym-column-rgb),           0.05); }
+.hl-sym-ref           { outline: 1px solid rgba(var(--sym-ref-rgb),              0.30); background: rgba(var(--sym-ref-rgb),              0.05); }
+.hl-sym-enum          { outline: 1px solid rgba(var(--sym-enum-rgb),             0.30); background: rgba(var(--sym-enum-rgb),             0.05); }
+.hl-sym-enum-field    { outline: 1px solid rgba(var(--sym-enum-field-rgb),       0.30); background: rgba(var(--sym-enum-field-rgb),       0.05); }
+.hl-sym-tablegroup    { outline: 1px solid rgba(var(--sym-tablegroup-rgb),       0.30); background: rgba(var(--sym-tablegroup-rgb),       0.05); }
+.hl-sym-tablegroup-field { outline: 1px solid rgba(var(--sym-tablegroup-field-rgb), 0.30); background: rgba(var(--sym-tablegroup-field-rgb), 0.05); }
+.hl-sym-schema        { outline: 1px solid rgba(var(--sym-schema-rgb),           0.30); background: rgba(var(--sym-schema-rgb),           0.05); }
+.hl-sym-partial       { outline: 1px solid rgba(var(--sym-partial-rgb),          0.30); background: rgba(var(--sym-partial-rgb),          0.05); }
+.hl-sym-note          { outline: 1px solid rgba(var(--sym-note-rgb),             0.30); background: rgba(var(--sym-note-rgb),             0.05); }
+.hl-sym-indexes       { outline: 1px solid rgba(var(--sym-ref-rgb),              0.30); background: rgba(var(--sym-ref-rgb),              0.05); }
+
+/* token kind decorations */
+.hl-token-identifier { outline: 1px solid rgba(var(--sym-table-rgb), 0.30); background: rgba(var(--sym-table-rgb), 0.05); }
+.hl-token-variable   { outline: 1px solid rgba(var(--violet-rgb),    0.30); background: rgba(var(--violet-rgb),    0.05); }
+.hl-token-string     { outline: 1px solid rgba(var(--sym-enum-rgb),  0.30); background: rgba(var(--sym-enum-rgb),  0.05); }
+.hl-token-number     { outline: 1px solid rgba(var(--amber-rgb),     0.30); background: rgba(var(--amber-rgb),     0.05); }
+.hl-token-color      { outline: 1px solid rgba(var(--pink-rgb),      0.30); background: rgba(var(--pink-rgb),      0.05); }
+.hl-token-function   { outline: 1px solid rgba(var(--sym-schema-rgb),0.30); background: rgba(var(--sym-schema-rgb),0.05); }
+.hl-token-op         { outline: 1px solid rgba(var(--red-rgb),       0.30); background: rgba(var(--red-rgb),       0.05); }
+.hl-token-bracket    { outline: 1px solid rgba(var(--cyan-rgb),      0.30); background: rgba(var(--cyan-rgb),      0.05); }
+.hl-token-punct      { outline: 1px solid rgba(var(--gray-400-rgb),  0.30); background: rgba(var(--gray-400-rgb),  0.05); }
+.hl-token-comment    { outline: 1px solid rgba(var(--gray-400-rgb),  0.30); background: rgba(var(--gray-400-rgb),  0.05); }
+.hl-token-wildcard   { outline: 1px solid rgba(var(--yellow-rgb),    0.30); background: rgba(var(--yellow-rgb),    0.05); }
+.hl-token-eof        { outline: 1px solid rgba(var(--red-rgb),       0.30); background: rgba(var(--red-rgb),       0.05); }
+
+/* node kind decorations */
+.hl-node-program   { outline: 1px solid rgba(var(--sym-table-rgb),  0.30); background: rgba(var(--sym-table-rgb),  0.05); }
+.hl-node-element   { outline: 1px solid rgba(var(--hl-indigo-rgb),  0.30); background: rgba(var(--hl-indigo-rgb),  0.05); }
+.hl-node-use       { outline: 1px solid rgba(var(--sym-ref-rgb),    0.30); background: rgba(var(--sym-ref-rgb),    0.05); }
+.hl-node-use-spec  { outline: 1px solid rgba(var(--violet-rgb),     0.30); background: rgba(var(--violet-rgb),     0.05); }
+.hl-node-attribute { outline: 1px solid rgba(var(--amber-rgb),      0.30); background: rgba(var(--amber-rgb),      0.05); }
+.hl-node-id-stream { outline: 1px solid rgba(var(--sym-table-rgb),  0.30); background: rgba(var(--sym-table-rgb),  0.05); }
+.hl-node-literal   { outline: 1px solid rgba(var(--sym-enum-rgb),   0.30); background: rgba(var(--sym-enum-rgb),   0.05); }
+.hl-node-variable  { outline: 1px solid rgba(var(--violet-rgb),     0.30); background: rgba(var(--violet-rgb),     0.05); }
+.hl-node-arith     { outline: 1px solid rgba(var(--red-rgb),        0.30); background: rgba(var(--red-rgb),        0.05); }
+.hl-node-function  { outline: 1px solid rgba(var(--sym-schema-rgb), 0.30); background: rgba(var(--sym-schema-rgb), 0.05); }
+.hl-node-fn-app    { outline: 1px solid rgba(var(--amber-rgb),      0.30); background: rgba(var(--amber-rgb),      0.05); }
+.hl-node-block     { outline: 1px solid rgba(var(--cyan-rgb),       0.30); background: rgba(var(--cyan-rgb),       0.05); }
+.hl-node-list      { outline: 1px solid rgba(var(--cyan-rgb),       0.30); background: rgba(var(--cyan-rgb),       0.05); }
+.hl-node-tuple     { outline: 1px solid rgba(var(--cyan-rgb),       0.30); background: rgba(var(--cyan-rgb),       0.05); }
+.hl-node-call      { outline: 1px solid rgba(var(--amber-rgb),      0.30); background: rgba(var(--amber-rgb),      0.05); }
+.hl-node-primary   { outline: 1px solid rgba(var(--gray-400-rgb),   0.30); background: rgba(var(--gray-400-rgb),   0.05); }
+.hl-node-empty     { outline: 1px solid rgba(var(--gray-300-rgb),   0.30); background: rgba(var(--gray-300-rgb),   0.05); }
+.hl-node-wildcard  { outline: 1px solid rgba(var(--yellow-rgb),     0.30); background: rgba(var(--yellow-rgb),     0.05); }
+
+/* element declaration kind — enum element shows green, table element blue, etc. */
+.hl-element-table      { outline: 1px solid rgba(var(--sym-table-rgb),      0.30); background: rgba(var(--sym-table-rgb),      0.05); }
+.hl-element-partial    { outline: 1px solid rgba(var(--sym-partial-rgb),    0.30); background: rgba(var(--sym-partial-rgb),    0.05); }
+.hl-element-enum       { outline: 1px solid rgba(var(--sym-enum-rgb),       0.30); background: rgba(var(--sym-enum-rgb),       0.05); }
+.hl-element-tablegroup { outline: 1px solid rgba(var(--sym-tablegroup-rgb), 0.30); background: rgba(var(--sym-tablegroup-rgb), 0.05); }
+.hl-element-note       { outline: 1px solid rgba(var(--sym-note-rgb),       0.30); background: rgba(var(--sym-note-rgb),       0.05); }
+.hl-element-ref        { outline: 1px solid rgba(var(--sym-ref-rgb),        0.30); background: rgba(var(--sym-ref-rgb),        0.05); }
+.hl-element-indexes    { outline: 1px solid rgba(var(--sym-ref-rgb),        0.30); background: rgba(var(--sym-ref-rgb),        0.05); }
+.hl-element-project    { outline: 1px solid rgba(var(--sym-schema-rgb),     0.30); background: rgba(var(--sym-schema-rgb),     0.05); }
+.hl-element-diagram    { outline: 1px solid rgba(var(--sym-ref-rgb),        0.30); background: rgba(var(--sym-ref-rgb),        0.05); }

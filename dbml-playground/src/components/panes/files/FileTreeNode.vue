@@ -59,7 +59,7 @@
           v-if="node.type === 'folder'"
           class="p-0.5 rounded text-gray-400 hover:text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
           title="New file in folder"
-          @click.stop="emit('add-file-in-folder', node.path)"
+          @click.stop="onAddFileInFolder"
         >
           <PhFilePlus class="w-3 h-3" />
         </button>
@@ -245,6 +245,11 @@ function toggleConfirm () {
     };
   }
   confirmingDelete.value = !confirmingDelete.value;
+}
+
+function onAddFileInFolder () {
+  open.value = true;
+  emit('add-file-in-folder', props.node.path);
 }
 
 function handleClick () {

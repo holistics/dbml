@@ -25,13 +25,6 @@ export interface DecorationEntry {
   cls: string;
 }
 
-// Shared outline + rounded shell. Negative outline offset pulls the stroke
-// inward so decorations feel soft instead of boxed-in. The colour classes
-// below are safelisted in `styles/main.css` — Tailwind's JIT scan can't see
-// string literals that live in .ts files, so we tell it explicitly which
-// utilities to generate.
-export const DECORATION_SHELL = 'outline outline-1 -outline-offset-1 rounded-sm';
-
 export function collectTokenDecorations (tokens: readonly SyntaxToken[]): DecorationEntry[] {
   return tokens.map((t) => ({
     range: new monaco.Range(
@@ -45,36 +38,52 @@ export function collectTokenDecorations (tokens: readonly SyntaxToken[]): Decora
 }
 
 const NODE_KIND_CLASS: Partial<Record<SyntaxNodeKind, string>> = {
-  [SyntaxNodeKind.ELEMENT_DECLARATION]: 'outline-blue-400/20 bg-blue-400/5',
+  [SyntaxNodeKind.PROGRAM]: 'hl-node-program',
+  [SyntaxNodeKind.ELEMENT_DECLARATION]: 'hl-node-element',
 
-  [SyntaxNodeKind.USE_DECLARATION]: 'outline-violet-400/20 bg-violet-400/5',
-  [SyntaxNodeKind.USE_SPECIFIER]: 'outline-violet-400/20 bg-violet-400/5',
-  [SyntaxNodeKind.USE_SPECIFIER_LIST]: 'outline-violet-400/20 bg-violet-400/5',
+  [SyntaxNodeKind.USE_DECLARATION]: 'hl-node-use',
+  [SyntaxNodeKind.USE_SPECIFIER]: 'hl-node-use-spec',
+  [SyntaxNodeKind.USE_SPECIFIER_LIST]: 'hl-node-use-spec',
 
-  [SyntaxNodeKind.ATTRIBUTE]: 'outline-orange-400/20 bg-orange-400/5',
-  [SyntaxNodeKind.IDENTIFIER_STREAM]: 'outline-gray-400/20 bg-gray-400/5',
+  [SyntaxNodeKind.ATTRIBUTE]: 'hl-node-attribute',
+  [SyntaxNodeKind.IDENTIFIER_STREAM]: 'hl-node-id-stream',
 
-  [SyntaxNodeKind.LITERAL]: 'outline-green-500/20 bg-green-500/5',
-  [SyntaxNodeKind.VARIABLE]: 'outline-cyan-400/20 bg-cyan-400/5',
-  [SyntaxNodeKind.PRIMARY_EXPRESSION]: 'outline-sky-400/20 bg-sky-400/5',
+  [SyntaxNodeKind.LITERAL]: 'hl-node-literal',
+  [SyntaxNodeKind.VARIABLE]: 'hl-node-variable',
+  [SyntaxNodeKind.PRIMARY_EXPRESSION]: 'hl-node-primary',
 
-  [SyntaxNodeKind.PREFIX_EXPRESSION]: 'outline-red-400/20 bg-red-400/5',
-  [SyntaxNodeKind.INFIX_EXPRESSION]: 'outline-red-400/20 bg-red-400/5',
-  [SyntaxNodeKind.POSTFIX_EXPRESSION]: 'outline-red-400/20 bg-red-400/5',
+  [SyntaxNodeKind.PREFIX_EXPRESSION]: 'hl-node-arith',
+  [SyntaxNodeKind.INFIX_EXPRESSION]: 'hl-node-arith',
+  [SyntaxNodeKind.POSTFIX_EXPRESSION]: 'hl-node-arith',
 
-  [SyntaxNodeKind.FUNCTION_EXPRESSION]: 'outline-amber-400/20 bg-amber-400/5',
-  [SyntaxNodeKind.FUNCTION_APPLICATION]: 'outline-yellow-500/20 bg-yellow-500/5',
-  [SyntaxNodeKind.CALL_EXPRESSION]: 'outline-pink-400/20 bg-pink-400/5',
-  [SyntaxNodeKind.GROUP_EXPRESSION]: 'outline-pink-400/20 bg-pink-400/5',
+  [SyntaxNodeKind.FUNCTION_EXPRESSION]: 'hl-node-function',
+  [SyntaxNodeKind.FUNCTION_APPLICATION]: 'hl-node-fn-app',
+  [SyntaxNodeKind.CALL_EXPRESSION]: 'hl-node-call',
+  [SyntaxNodeKind.GROUP_EXPRESSION]: 'hl-node-primary',
 
-  [SyntaxNodeKind.BLOCK_EXPRESSION]: 'outline-indigo-400/20 bg-indigo-400/5',
-  [SyntaxNodeKind.LIST_EXPRESSION]: 'outline-teal-400/20 bg-teal-400/5',
-  [SyntaxNodeKind.TUPLE_EXPRESSION]: 'outline-teal-400/20 bg-teal-400/5',
-  [SyntaxNodeKind.COMMA_EXPRESSION]: 'outline-teal-400/20 bg-teal-400/5',
-  [SyntaxNodeKind.ARRAY]: 'outline-teal-400/20 bg-teal-400/5',
+  [SyntaxNodeKind.BLOCK_EXPRESSION]: 'hl-node-block',
+  [SyntaxNodeKind.LIST_EXPRESSION]: 'hl-node-list',
+  [SyntaxNodeKind.TUPLE_EXPRESSION]: 'hl-node-tuple',
+  [SyntaxNodeKind.COMMA_EXPRESSION]: 'hl-node-primary',
+  [SyntaxNodeKind.ARRAY]: 'hl-node-list',
 
-  [SyntaxNodeKind.EMPTY]: 'outline-gray-400/20 bg-gray-400/5',
-  [SyntaxNodeKind.WILDCARD]: 'outline-yellow-500/20 bg-yellow-500/5',
+  [SyntaxNodeKind.EMPTY]: 'hl-node-empty',
+  [SyntaxNodeKind.WILDCARD]: 'hl-node-wildcard',
+};
+
+// ElementDeclaration gets its color from the element keyword (Table, Enum,
+// TableGroup, ...) so an enum block shows green, a table block shows blue,
+// matching the symbol icon colors in the output panel.
+const ELEMENT_TYPE_CLASS: Record<string, string> = {
+  Table: 'hl-element-table',
+  TablePartial: 'hl-element-partial',
+  Enum: 'hl-element-enum',
+  TableGroup: 'hl-element-tablegroup',
+  Note: 'hl-element-note',
+  Ref: 'hl-element-ref',
+  Indexes: 'hl-element-indexes',
+  Project: 'hl-element-project',
+  DiagramView: 'hl-element-diagram',
 };
 
 // Properties the walker should never follow — they point outside the
@@ -98,11 +107,19 @@ export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
     const ep = obj.endPos as { line?: number; column?: number } | null | undefined;
     if (sp && ep && typeof sp.line === 'number' && !Number.isNaN(sp.line)
       && typeof ep.line === 'number' && !Number.isNaN(ep.line)) {
-      const cls = NODE_KIND_CLASS[obj.kind as SyntaxNodeKind] ?? null;
-      if (cls) {
+      let decoration = NODE_KIND_CLASS[obj.kind as SyntaxNodeKind] ?? null;
+      if (obj.kind === SyntaxNodeKind.ELEMENT_DECLARATION) {
+        const typeToken = obj.type as { value?: string } | undefined;
+        const typeName = typeToken?.value;
+        const normalized = Object.keys(ELEMENT_TYPE_CLASS).find(
+          (k) => k.toLowerCase() === typeName?.toLowerCase(),
+        );
+        if (normalized) decoration = ELEMENT_TYPE_CLASS[normalized];
+      }
+      if (decoration) {
         entries.push({
           range: new monaco.Range(sp.line + 1, (sp.column ?? 0) + 1, ep.line + 1, (ep.column ?? 0) + 1),
-          cls,
+          cls: decoration,
         });
       }
     }
@@ -116,28 +133,28 @@ export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
 }
 
 export const SYM_KIND_CLASS: Partial<Record<SymbolKind, string>> = {
-  [SymbolKind.Schema]: 'outline-orange-400/20 bg-orange-400/5',
+  [SymbolKind.Schema]: 'hl-sym-schema',
 
-  [SymbolKind.Table]: 'outline-blue-400/20 bg-blue-400/5',
-  [SymbolKind.Column]: 'outline-gray-400/20 bg-gray-400/5',
+  [SymbolKind.Table]: 'hl-sym-table',
+  [SymbolKind.Column]: 'hl-sym-column',
 
-  [SymbolKind.TablePartial]: 'outline-blue-400/20 bg-blue-400/5',
-  [SymbolKind.PartialInjection]: 'outline-blue-400/20 bg-blue-400/5',
+  [SymbolKind.TablePartial]: 'hl-sym-partial',
+  [SymbolKind.PartialInjection]: 'hl-sym-partial',
 
-  [SymbolKind.Enum]: 'outline-green-500/20 bg-green-500/5',
-  [SymbolKind.EnumField]: 'outline-green-400/20 bg-green-400/5',
+  [SymbolKind.Enum]: 'hl-sym-enum',
+  [SymbolKind.EnumField]: 'hl-sym-enum-field',
 
-  [SymbolKind.TableGroup]: 'outline-yellow-500/20 bg-yellow-500/5',
-  [SymbolKind.TableGroupField]: 'outline-yellow-500/20 bg-yellow-500/5',
+  [SymbolKind.TableGroup]: 'hl-sym-tablegroup',
+  [SymbolKind.TableGroupField]: 'hl-sym-tablegroup-field',
 
-  [SymbolKind.Note]: 'outline-gray-400/20 bg-gray-400/5',
-  [SymbolKind.Indexes]: 'outline-purple-400/20 bg-purple-400/5',
-  [SymbolKind.DiagramView]: 'outline-purple-400/20 bg-purple-400/5',
-  [SymbolKind.DiagramViewTopLevelWildcard]: 'outline-purple-400/20 bg-purple-400/5',
-  [SymbolKind.DiagramViewTable]: 'outline-purple-400/20 bg-purple-400/5',
-  [SymbolKind.DiagramViewTableGroup]: 'outline-purple-400/20 bg-purple-400/5',
-  [SymbolKind.DiagramViewNote]: 'outline-purple-400/20 bg-purple-400/5',
-  [SymbolKind.DiagramViewSchema]: 'outline-purple-400/20 bg-purple-400/5',
+  [SymbolKind.Note]: 'hl-sym-note',
+  [SymbolKind.Indexes]: 'hl-sym-indexes',
+  [SymbolKind.DiagramView]: 'hl-sym-indexes',
+  [SymbolKind.DiagramViewTopLevelWildcard]: 'hl-sym-indexes',
+  [SymbolKind.DiagramViewTable]: 'hl-sym-indexes',
+  [SymbolKind.DiagramViewTableGroup]: 'hl-sym-indexes',
+  [SymbolKind.DiagramViewNote]: 'hl-sym-indexes',
+  [SymbolKind.DiagramViewSchema]: 'hl-sym-indexes',
 };
 
 export function collectSymbolDecorations (symbols: SymbolInfo[]): DecorationEntry[] {

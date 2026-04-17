@@ -131,7 +131,6 @@ import * as monaco from 'monaco-editor';
 // Per-tab decoration logic lives in ./tabs/common/decorations.ts so each tab's
 // color map and collector travels with the tab and OutputPane stays thin.
 import {
-  DECORATION_SHELL,
   collectDatabaseDecorations,
   collectNodeDecorations,
   collectSymbolDecorations,
@@ -237,7 +236,7 @@ function updateEditorDecorations () {
     }) => ({
       range,
       options: {
-        inlineClassName: `${DECORATION_SHELL} ${cls}`,
+        inlineClassName: cls,
       },
     })),
   );
