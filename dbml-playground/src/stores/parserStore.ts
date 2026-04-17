@@ -144,7 +144,11 @@ export const useParser = defineStore('parser', () => {
       // highlight positions that exist in the editor being shown.
       errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Array<Record<string, unknown>>).map(diagnosticToParserError);
 
-      database.value = compiler.parse.rawDb() as Database | undefined ?? null;
+      // exportSchemaJson returns the current file's schema reconciled against
+      // its imports (externals, alias rename, cross-file refs/records). Using
+      // the legacy `parse.rawDb()` hardcodes DEFAULT_ENTRY, so switching to a
+      // non-default file left the Database tab empty.
+      database.value = compiler.exportSchemaJson(currentFilepath).getValue() as Database | undefined ?? null;
 
       const rawSymbols = compiler.parse.publicSymbolTable();
       symbols.value = rawSymbols
