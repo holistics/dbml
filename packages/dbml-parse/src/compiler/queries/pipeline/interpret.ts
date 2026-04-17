@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
   AliasKind,
@@ -298,14 +298,23 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
   return new Report(stripDatabase(reconciled), projectResult.getErrors(), projectResult.getWarnings());
 }
 
+// Normalize schemaName so `null`, `undefined`, and the implicit DEFAULT_SCHEMA_NAME
+// ('public') collapse to a single canonical form. Externals carry the literal
+// 'public' via nodeFullname while local items store null — without normalization
+// the two never line up.
+function normSchema (schema: string | null | undefined): string {
+  return schema ?? DEFAULT_SCHEMA_NAME;
+}
+
 function canonicalElementKey (schema: string | null | undefined, name: string): string {
-  return `${schema ?? ''}.${name}`;
+  return `${normSchema(schema)}.${name}`;
 }
 
 function findItem (items: Database, kind: AliasKind, name: string, schema: string | null): SchemaElement | undefined {
+  const s = normSchema(schema);
   switch (kind) {
-    case AliasKind.Table: return items.tables.find((t) => t.name === name && (t.schemaName ?? null) === schema);
-    case AliasKind.Enum: return items.enums.find((e) => e.name === name && (e.schemaName ?? null) === schema);
+    case AliasKind.Table: return items.tables.find((t) => t.name === name && normSchema(t.schemaName) === s);
+    case AliasKind.Enum: return items.enums.find((e) => e.name === name && normSchema(e.schemaName) === s);
     case AliasKind.TableGroup: return items.tableGroups.find((g) => g.name === name);
     case AliasKind.TablePartial: return items.tablePartials.find((p) => p.name === name);
     case AliasKind.Note: return items.notes.find((n) => n.name === name);
