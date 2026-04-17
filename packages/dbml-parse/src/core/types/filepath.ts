@@ -100,6 +100,13 @@ export class Filepath implements Internable<FilepathId> {
     return this.path === other.path;
   }
 
+  // True when this filepath is a strict ancestor directory of `other`.
+  isParentOf (other: Filepath): boolean {
+    if (this.path === other.path) return false;
+    const prefix = this.path.endsWith('/') ? this.path : `${this.path}/`;
+    return other.path.startsWith(prefix);
+  }
+
   toUri (options: { protocol?: string } = {}): string {
     const protocol = options.protocol ?? this.protocol;
     if (protocol === undefined) {

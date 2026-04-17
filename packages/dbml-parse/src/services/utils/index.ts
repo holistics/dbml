@@ -11,8 +11,11 @@ import {
 import type {
   NodeSymbol,
 } from '@/core/types/symbol';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import type {
-  Position, TextModel,
+  Position, Range, TextModel,
 } from '@/services/types';
 
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {
@@ -28,4 +31,18 @@ export function extractReferee (compiler: Compiler, node: SyntaxNode | undefined
   const result = compiler.nodeReferee(node);
   if (result.hasValue(UNHANDLED)) return undefined;
   return result.getValue() ?? undefined;
+}
+
+export function getEditorRange (model: TextModel, nodeOrToken: SyntaxNode | SyntaxToken): Range {
+  const {
+    startPos,
+    endPos,
+  } = nodeOrToken;
+
+  return {
+    startLineNumber: startPos.line + 1,
+    startColumn: startPos.column + 1,
+    endLineNumber: endPos.line + 1,
+    endColumn: endPos.column + 1,
+  };
 }

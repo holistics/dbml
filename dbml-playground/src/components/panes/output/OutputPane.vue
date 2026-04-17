@@ -80,6 +80,7 @@
         :errors="parser.errors"
         :warnings="parser.warnings"
         :current-file="project.currentFile"
+        @position-click="onDiagnosticClick"
       />
     </div>
   </div>
@@ -439,6 +440,17 @@ function navigateTo (range: { startLineNumber: number;
   } catch (err) {
     logger.warn('Navigation failed:', err);
   }
+}
+
+// Reveal and highlight the syntax range a diagnostic points at. ParserError
+// carries start/end line+column — translate straight into an editor range.
+function onDiagnosticClick (diag: { location: { line: number; column: number }; endLocation: { line: number; column: number } }) {
+  navigateTo({
+    startLineNumber: diag.location.line,
+    startColumn: diag.location.column,
+    endLineNumber: diag.endLocation.line,
+    endColumn: diag.endLocation.column,
+  });
 }
 
 // Navigate to a declaration that may be in a different file.

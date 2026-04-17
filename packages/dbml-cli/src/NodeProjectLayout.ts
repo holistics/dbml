@@ -1,5 +1,5 @@
 import {
-  existsSync, readFileSync, readdirSync,
+  existsSync, readFileSync, readdirSync, statSync,
 } from 'node:fs';
 import {
   type DbmlProjectLayout, Filepath,
@@ -51,6 +51,33 @@ export class NodeProjectLayout implements DbmlProjectLayout {
       return this.overlay.get(abs) !== null;
     }
     return existsSync(abs);
+  }
+
+  isFile (filePath: Filepath): boolean {
+    const abs = filePath.absolute;
+    if (this.overlay.has(abs)) return this.overlay.get(abs) !== null;
+    // `statSync` (not lstatSync) so symlinks resolve to their target, matching
+    // how node reads the file on disk.
+    try {
+      return statSync(abs).isFile();
+    } catch {
+      return false;
+    }
+  }
+
+  isDirectory (filePath: Filepath): boolean {
+    const abs = filePath.absolute;
+    try {
+      if (statSync(abs).isDirectory()) return true;
+    } catch {
+      // fall through: the path may exist only in the overlay
+    }
+    const prefix = abs.endsWith('/') ? abs : `${abs}/`;
+    for (const [over, content] of this.overlay) {
+      if (content === null) continue;
+      if (over.startsWith(prefix)) return true;
+    }
+    return false;
   }
 
   listDirectory (dirPath?: Filepath): Filepath[] {

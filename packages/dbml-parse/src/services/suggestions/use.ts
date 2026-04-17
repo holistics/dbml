@@ -30,6 +30,15 @@ import {
   type CompletionList,
   type TextModel,
 } from '@/services/types';
+import {
+  getEditorRange,
+} from '../utils';
+import {
+  uniqBy,
+} from 'lodash-es';
+import {
+  DBML_EXT,
+} from '@/constants';
 
 function isTokenInUseDecl (token: SyntaxToken, useDecl: UseDeclarationNode): boolean {
   if (token === useDecl.useKeyword) return true;
@@ -82,12 +91,12 @@ function suggestInUseDeclaration (
   model: TextModel,
   bOcToken: SyntaxToken | undefined,
 ): CompletionList {
-  // Cursor inside the importPath string → filepath completions with replacement
+  // Cursor inside the importPath string -> filepath completions with replacement
   if (useDecl.importPath && isOffsetWithinSpan(offset, useDecl.importPath)) {
     return suggestUseFilepath(compiler, filepath, useDecl.importPath, model);
   }
 
-  // Cursor after `from` keyword → filepath completions (fresh insert)
+  // Cursor after `from` keyword -> filepath completions (fresh insert)
   if (useDecl.fromKeyword && offset > useDecl.fromKeyword.end) {
     return suggestUseFilepath(compiler, filepath, undefined, model);
   }
@@ -217,6 +226,11 @@ function suggestUseSpecifierStart (): CompletionList {
   };
 }
 
+// Suggest all subpaths that are direct children of the existing (incomplete) filepath
+// e.g.
+// use * from './'
+//              ^
+//            suggest files under `./`
 function suggestUseFilepath (
   compiler: Compiler,
   currentFilepath: Filepath,
@@ -225,96 +239,72 @@ function suggestUseFilepath (
 ): CompletionList {
   const currentDir = currentFilepath.dirname;
 
-  // When the cursor is inside an existing `'…'` importPath literal, the
-  // suggestion should replace exactly the *content between the quotes* and
-  // never re-insert the quotes themselves — otherwise accepting a
-  // completion against `'./'` ends up producing `'././b'` (the old
-  // behaviour stacked the already-typed `./` with the full quoted insert).
-  //
-  // We also only show entries whose rel path starts with whatever the user
-  // has typed so far, so `./foo/` narrows the list to that subdirectory.
-  const existingRaw = importPath ? stripQuotes(sourceText(model, importPath)) : '';
-  const prefix = existingRaw;
-  const insertQuoted = importPath === undefined;
+  // Default to `./` so direct-children slicing lines up with
+  // `asImportPath`'s output when the user hasn't started the string yet.
+  const existingIncompleteImportPath = importPath ? importPath.value : './';
+  // If the import path hasn't been typed out, that means we have to quote the import path
+  // e.g.
+  // use * from
+  //            ^
+  //         import path hasn't been typed out
+  const shouldInsertQuoteToImportPath = importPath === undefined;
 
-  const range = importPath ? computeImportPathRange(model, importPath) : undefined as any;
-  const byLabel = new Map<string, CompletionItem>();
+  // When the importPath token exists, target the range *between* its quotes
+  // so the replacement leaves the surrounding quotes intact. The caller
+  // already guaranteed this runs against a string-literal token, so we can
+  // assume both quotes are present and skip them directly.
+  let existingImportPathRange: any = undefined;
+  if (importPath) {
+    const tokenRange = getEditorRange(model, importPath);
+    existingImportPathRange = {
+      startLineNumber: tokenRange.startLineNumber,
+      startColumn: tokenRange.startColumn + 1,
+      endLineNumber: tokenRange.endLineNumber,
+      endColumn: tokenRange.endColumn - 1,
+    };
+  }
 
-  for (const fp of compiler.layout.getEntryPoints()) {
-    if (fp.equals(currentFilepath)) continue;
-    let relPath = fp.relativeTo(currentDir);
-    if (relPath.endsWith('.dbml')) relPath = relPath.slice(0, -5);
-    if (!relPath.startsWith('.')) relPath = `./${relPath}`;
+  const pathToCompletionItem = new Map<string, CompletionItem>();
 
-    if (prefix && !relPath.startsWith(prefix)) continue;
+  // Scan all filepaths
+  const allFilepaths = uniqBy(compiler.layout.getEntryPoints().flatMap((f) => [
+    ...compiler.reachableFiles(f),
+  ]), (p) => p.intern());
+  for (const filepath of allFilepaths) {
+    if (filepath.equals(currentFilepath)) continue; // Do not suggest current filepath
 
-    // Only surface direct children of the current prefix. If the remaining
-    // tail after the prefix still contains a `/`, collapse it into a
-    // synthetic directory entry so the user can descend one level at a time
-    // instead of being flooded with every descendant.
-    const tail = relPath.slice(prefix.length);
-    const slashIdx = tail.indexOf('/');
-    const isDir = slashIdx !== -1;
-    const childLabel = isDir
-      ? `${prefix}${tail.slice(0, slashIdx + 1)}`  // e.g. `./foo/`
-      : relPath;
+    let relativePathToCurrentDir = filepath.relativeTo(currentDir);
+    if (relativePathToCurrentDir.endsWith(DBML_EXT)) relativePathToCurrentDir = relativePathToCurrentDir.slice(0, -DBML_EXT.length); // slice off `.dbml` postfix to allow conciseness
+    if (!relativePathToCurrentDir.startsWith('.')) relativePathToCurrentDir = `./${relativePathToCurrentDir}`;
 
-    if (byLabel.has(childLabel)) continue;
-    const insertText = insertQuoted ? `'${childLabel}'` : childLabel;
-    byLabel.set(childLabel, {
+    if (existingIncompleteImportPath && !relativePathToCurrentDir.startsWith(existingIncompleteImportPath)) continue;
+
+    // Only suggested direct children — take just the next segment after the
+    // already-typed prefix so deeper entries collapse onto their folder.
+    const tail = relativePathToCurrentDir.slice(existingIncompleteImportPath.length);
+    const childLabel = `${existingIncompleteImportPath}${tail.split('/')[0]}`;
+
+    // Ask the layout instead of inspecting the path shape so symlinks etc.
+    // resolve correctly under node-backed layouts.
+    const childAbsolute = Filepath.resolve(currentDir, childLabel);
+    const isDir = compiler.layout.isDirectory(childAbsolute);
+
+    if (pathToCompletionItem.has(childLabel)) continue;
+
+    const insertText = shouldInsertQuoteToImportPath ? `'${childLabel}'` : childLabel;
+    pathToCompletionItem.set(childLabel, {
       label: childLabel,
       insertText,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
       kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
       sortText: `${isDir ? '0' : '1'}${childLabel}`, // folders first
-      range,
+      range: existingImportPathRange,
     });
   }
 
   return {
     suggestions: [
-      ...byLabel.values(),
+      ...pathToCompletionItem.values(),
     ],
   };
-}
-
-// Range covering the content between the importPath's opening and closing
-// quotes. If the token is unterminated (e.g. the user hasn't typed the
-// closing quote yet) we shrink from the start (skip the opening quote) and
-// extend to token end.
-function computeImportPathRange (model: TextModel, importPath: SyntaxToken) {
-  const raw = sourceText(model, importPath);
-  const hasOpenQuote = raw.startsWith('\'') || raw.startsWith('"');
-  const hasCloseQuote = raw.length > 1 && (raw.endsWith('\'') || raw.endsWith('"'));
-  const contentStart = importPath.start + (hasOpenQuote ? 1 : 0);
-  const contentEnd = importPath.end - (hasCloseQuote ? 1 : 0);
-  const startPos = model.getPositionAt(contentStart);
-  const endPos = model.getPositionAt(contentEnd);
-  return {
-    startLineNumber: startPos.lineNumber,
-    startColumn: startPos.column,
-    endLineNumber: endPos.lineNumber,
-    endColumn: endPos.column,
-  };
-}
-
-function sourceText (model: TextModel, token: SyntaxToken): string {
-  const startPos = model.getPositionAt(token.start);
-  const endPos = model.getPositionAt(token.end);
-  return model.getValueInRange({
-    startLineNumber: startPos.lineNumber,
-    startColumn: startPos.column,
-    endLineNumber: endPos.lineNumber,
-    endColumn: endPos.column,
-  });
-}
-
-function stripQuotes (s: string): string {
-  if (s.length >= 2 && (s.startsWith('\'') || s.startsWith('"'))) {
-    const open = s[0];
-    let content = s.slice(1);
-    if (content.endsWith(open)) content = content.slice(0, -1);
-    return content;
-  }
-  return s;
 }

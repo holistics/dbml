@@ -9,6 +9,9 @@ import {
 import {
   Filepath,
 } from '@/core/types/filepath';
+import {
+  CompletionItemKind,
+} from '@/services/types';
 
 function setupMultiFile (files: Record<string, string>) {
   const compiler = new Compiler();
@@ -183,6 +186,73 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 12));
       expect(result.suggestions.every((s) => !String(s.label).includes('main'))).toBe(true);
+    });
+
+    it('suggests only direct children of the typed prefix', () => {
+      const compiler = setupMultiFile({
+        '/sub/a.dbml': 'Table a { id int }',
+        '/sub/b.dbml': 'Table b { id int }',
+        '/other.dbml': 'Table c { id int }',
+        '/main.dbml': "use * from './sub/'",
+      });
+      const program = "use * from './sub/'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      // cursor after `./sub/`
+      const result = provider.provideCompletionItems(model, createPosition(1, 19));
+      const labels = result.suggestions.map((s) => String(s.label));
+      expect(labels).toContain('./sub/a');
+      expect(labels).toContain('./sub/b');
+      expect(labels).not.toContain('./other');
+    });
+
+    it('collapses nested files into folder entries at the current prefix', () => {
+      const compiler = setupMultiFile({
+        '/sub/deeper/a.dbml': 'Table a { id int }',
+        '/main.dbml': "use * from './'",
+      });
+      const program = "use * from './'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 15));
+      const labels = result.suggestions.map((s) => String(s.label));
+      // Only the first directory segment under `./` is surfaced; the
+      // leaf `./sub/deeper/a` stays hidden until the user descends.
+      expect(labels).toContain('./sub');
+      expect(labels).not.toContain('./sub/deeper/a');
+    });
+
+    it('tags folders as Folder and files as File', () => {
+      const compiler = setupMultiFile({
+        '/sub/a.dbml': 'Table a { id int }',
+        '/other.dbml': 'Table b { id int }',
+        '/main.dbml': "use * from './'",
+      });
+      const program = "use * from './'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 15));
+      const folder = result.suggestions.find((s) => String(s.label) === './sub');
+      const file = result.suggestions.find((s) => String(s.label) === './other');
+      expect(folder?.kind).toBe(CompletionItemKind.Folder);
+      expect(file?.kind).toBe(CompletionItemKind.File);
+    });
+
+    it('replaces content between quotes without re-inserting them', () => {
+      const compiler = setupMultiFile({
+        '/schema.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': "use * from './'",
+      });
+      const program = "use * from './'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      // cursor inside the `'./'` literal
+      const result = provider.provideCompletionItems(model, createPosition(1, 15));
+      const schemaItem = result.suggestions.find((s) => String(s.label) === './schema');
+      expect(schemaItem).toBeDefined();
+      // Bare insertText (no surrounding quotes) since the range targets
+      // content-between-quotes only.
+      expect(schemaItem!.insertText).toBe('./schema');
     });
   });
 

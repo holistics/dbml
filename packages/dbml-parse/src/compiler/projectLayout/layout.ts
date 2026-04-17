@@ -16,6 +16,12 @@ export interface DbmlProjectLayout {
 
   exists (filePath: Filepath): boolean;
 
+  // Distinguishing file vs directory lets callers (e.g. filepath suggestions)
+  // decide without re-implementing path-map probing, and gives node-backed
+  // layouts a place to resolve through symlinks.
+  isFile (filePath: Filepath): boolean;
+  isDirectory (filePath: Filepath): boolean;
+
   listDirectory (dirPath?: Filepath): Filepath[];
 
   getEntryPoints (): Filepath[];
@@ -54,9 +60,15 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
   }
 
   exists (filePath: Filepath): boolean {
-    const abs = filePath.absolute;
-    if (this.files.has(abs)) return true;
-    const prefix = abs + '/';
+    return this.isFile(filePath) || this.isDirectory(filePath);
+  }
+
+  isFile (filePath: Filepath): boolean {
+    return this.files.has(filePath.absolute);
+  }
+
+  isDirectory (filePath: Filepath): boolean {
+    const prefix = filePath.absolute.endsWith('/') ? filePath.absolute : `${filePath.absolute}/`;
     for (const f of this.files.keys()) {
       if (f.startsWith(prefix)) return true;
     }
