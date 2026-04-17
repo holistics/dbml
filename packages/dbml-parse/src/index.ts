@@ -2,6 +2,7 @@ import Compiler from '@/compiler/index';
 
 export {
   dbmlMonarchTokensProvider,
+  dbmlLanguageConfig,
 } from '@/services/monarch';
 
 // Export the types that playground and other consumers need

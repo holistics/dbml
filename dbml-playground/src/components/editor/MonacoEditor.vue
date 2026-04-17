@@ -405,6 +405,8 @@ watch([() => parser.errors, () => parser.warnings], () => {
 });
 
 // Character classes that should open / keep the suggestion widget open.
+// Extended with quotes + slash + space so filepath completions fire inside
+// `use { ... } from '<path>'`.
 const SUGGESTION_TRIGGER_CHARS = [
   '.', // subname access
   ',', // next setting
@@ -413,6 +415,9 @@ const SUGGESTION_TRIGGER_CHARS = [
   ':',
   '>', '<', '-', // ref
   '~', // partial injection
+  '\'', '"', // opening string literal (importPath)
+  '/',        // importPath segment separator
+  ' ',        // after `from `
 ];
 function shouldTriggerSuggestion (): boolean {
   if (!editor) return false;
