@@ -1,0 +1,26 @@
+# DBML documentation
+
+> [DBML (Database Markup Language)](https://github.com/holistics/dbml) is an open-source DSL for database schemas. This site documents syntax, database support, the CLI, and JavaScript packages (`@dbml/core`, `@dbml/connector`).
+
+For the dbdiagram.io web app (diagrams, collaboration, API), see [dbdiagram docs llms.txt](https://docs.dbdiagram.io/llms.txt).
+
+## Language and reference
+
+- [Home](https://dbml.dbdiagram.io/home): Overview, ecosystem, and links to tools.
+- [Core database markup](https://dbml.dbdiagram.io/docs): Tables, columns, relationships, indexes, enums, and other core syntax.
+- [Enrichment and visualization](https://dbml.dbdiagram.io/syntax/enrichment-visualization): Notes, labels, colors, and display-oriented syntax like table groups, diagram views.
+- [Language basics](https://dbml.dbdiagram.io/syntax/language-basics): Core language constructs (strings, comments, and syntax conventions).
+
+## Tooling
+
+- [Database support](https://dbml.dbdiagram.io/database-support): Dialects and compatibility notes.
+- [CLI](https://dbml.dbdiagram.io/cli): Command-line tool for DBML ⇄ SQL conversion.
+
+## JavaScript modules
+
+- [@dbml/core](https://dbml.dbdiagram.io/js-module/core): Parse and compile DBML in Node or the browser.
+- [@dbml/connector](https://dbml.dbdiagram.io/js-module/connector): Connect DBML workflows to databases.
+
+## Optional
+
+- [DBML source on GitHub](https://github.com/holistics/dbml): Issues, contributions, and full monorepo.

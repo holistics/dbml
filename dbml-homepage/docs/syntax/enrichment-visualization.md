@@ -36,7 +36,7 @@ Table users {
 }
 ```
 
-Note's value is a string. If your note spans over multiple lines, you can use [multi-line string](./language-reference.md#multi-line-string) to define your note.
+Note's value is a string. If your note spans over multiple lines, you can use [multi-line string](./language-basics.md#multi-line-string) to define your note.
 
 ### Project Notes
 

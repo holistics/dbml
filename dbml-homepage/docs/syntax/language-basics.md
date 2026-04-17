@@ -1,8 +1,8 @@
 ---
-title: Language Reference
+title: Language Basics
 ---
 
-# Language Reference
+# Language Basics
 
 This part describes the language-level constructs that apply across all DBML definitions.
 
