@@ -784,3 +784,235 @@ DiagramView my_view {
     expect(newDbml).toContain('Inv');
   });
 });
+
+// Entity name quoting (spaces, special chars, digits, inner quotes)
+
+describe('syncDiagramView - entity name quoting', () => {
+  // Tables
+
+  it('quotes table names with spaces', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'Order Details', schemaName: 'public' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"Order Details"');
+    // Verify it's quoted, not bare
+    expect(newDbml).not.toMatch(/Tables {\n\s+Order Details\n/);
+  });
+
+  it('quotes table names with hyphens', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'user-table', schemaName: 'public' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"user-table"');
+  });
+
+  it('quotes table names starting with digit', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: '123table', schemaName: 'public' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"123table"');
+  });
+
+  it('escapes inner double quotes in table names', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'say "hello"', schemaName: 'public' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"say \\"hello\\""');
+  });
+
+  it('quotes schema name when it has spaces', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'my schema' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"my schema".users');
+  });
+
+  it('quotes both schema and table when both have spaces', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'Order Details', schemaName: 'Sales Data' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"Sales Data"."Order Details"');
+  });
+
+  it('does not quote simple table names', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'users', schemaName: 'public' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('users');
+    expect(newDbml).not.toContain('"users"');
+  });
+
+  // TableGroups
+
+  it('quotes tableGroup names with spaces', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [],
+          tableGroups: [{ name: 'Inventory Group' }, { name: 'Reporting' }],
+          schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"Inventory Group"');
+    expect(newDbml).toContain('Reporting');
+    expect(newDbml).not.toContain('"Reporting"');
+  });
+
+  it('quotes tableGroup names with special characters', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [],
+          tableGroups: [{ name: 'my-group!' }],
+          schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"my-group!"');
+  });
+
+  // Schemas
+
+  it('quotes schema names with spaces', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [],
+          tableGroups: [],
+          schemas: [{ name: 'Sales Data' }, { name: 'analytics' }],
+          stickyNotes: [],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"Sales Data"');
+    expect(newDbml).toContain('analytics');
+    expect(newDbml).not.toContain('"analytics"');
+  });
+
+  // Sticky Notes
+
+  it('quotes stickyNote names with spaces', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [], schemas: [],
+          stickyNotes: [{ name: 'Important Note' }, { name: 'reminder' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"Important Note"');
+    expect(newDbml).toContain('reminder');
+    expect(newDbml).not.toContain('"reminder"');
+  });
+
+  it('escapes inner double quotes in stickyNote names', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [], tableGroups: [], schemas: [],
+          stickyNotes: [{ name: 'note "A"' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('"note \\"A\\""');
+  });
+
+  // Round-trip: quoted names parse back correctly
+
+  it('round-trip: quoted table name re-parses without errors', () => {
+    const existingDbml = `Table "Order Details" { id int }`;
+    const { newDbml } = syncDiagramView(existingDbml, [
+      {
+        operation: 'create',
+        name: 'V',
+        visibleEntities: {
+          tables: [{ name: 'Order Details', schemaName: 'public' }],
+          tableGroups: [], schemas: [], stickyNotes: [],
+        },
+      },
+    ]);
+    const compiler = new Compiler();
+    compiler.setSource(newDbml);
+    expect(compiler.parse.errors()).toHaveLength(0);
+  });
+
+  it('round-trip: all entity types with special names produce correct DBML output', () => {
+    const { newDbml } = syncDiagramView('', [
+      {
+        operation: 'create',
+        name: 'My View',
+        visibleEntities: {
+          tables: [{ name: 'Order Details', schemaName: 'Sales Data' }],
+          tableGroups: [{ name: 'my-group' }],
+          schemas: [{ name: '123schema' }],
+          stickyNotes: [{ name: 'Important Note' }],
+        },
+      },
+    ]);
+    expect(newDbml).toContain('DiagramView "My View"');
+    expect(newDbml).toContain('"Sales Data"."Order Details"');
+    expect(newDbml).toContain('"my-group"');
+    expect(newDbml).toContain('"123schema"');
+    expect(newDbml).toContain('"Important Note"');
+  });
+});
