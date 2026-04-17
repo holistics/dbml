@@ -14,7 +14,7 @@ import {
   ElementDeclarationNode, SyntaxNode, UseSpecifierNode,
 } from '@/core/types/nodes';
 import {
-  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
+  AliasSymbol, NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
 import {
   isAlphaOrUnderscore, isDigit,
@@ -216,6 +216,11 @@ export function renameTable (
   const tableSymbol = lookupTableSymbol(this, filepath, oldSchema, oldTable);
   if (!tableSymbol) return newLayout;
 
+  // Inline table aliases (e.g. `Table users as U`) resolve to an AliasSymbol.
+  // Renaming via the alias name is a no-op — aliases are not renameable handles;
+  // only the direct declaration name (or a use-specifier alias) can be renamed.
+  if (tableSymbol instanceof AliasSymbol) return newLayout;
+
   if (checkForNameCollision(this, filepath, oldSchema, oldTable, newSchema, newTable)) {
     return newLayout;
   }
@@ -319,10 +324,12 @@ function renameRealDeclaration (
     });
   }
 
-  // 2. Direct references to the original symbol across the project. These
-  //    include in-file refs and the source-name tokens inside use specifiers
-  //    (`use { table users [as alias] }` — the `users` token references the
-  //    original symbol regardless of alias).
+  // 2. All references to the original symbol across the project. symbolReferences
+  //    is transitive: it unions refs to `original`, to any AliasSymbol wrapping it,
+  //    and to any UseSymbol importing it. findReplacements then filters by source
+  //    text — alias-side refs (e.g. `u.id` when `oldTable === 'users'`) are
+  //    skipped automatically, while source-name refs (inside use specifiers and
+  //    unaliased importers) are rewritten.
   const directRefs = compiler.symbolReferences(original).getValue();
   for (const ref of directRefs) {
     if (ref === declNameNode) continue; // already handled above
@@ -332,27 +339,6 @@ function renameRealDeclaration (
       ref,
     ], oldSchema, oldTable, newFormatted, src)) {
       addEdit(fp, e);
-    }
-  }
-
-  // 3. Cascade through unaliased UseSymbols that wrap the original. Refs in
-  //    importer files that use the direct name resolve to those UseSymbols
-  //    (not to `original`), so they need a separate sweep.
-  for (const fp of compiler.layout.getEntryPoints()) {
-    if (fp.absolute === declFp.absolute) continue;
-    const useSymbols = findUnaliasedUseSymbols(compiler, fp, original);
-    if (useSymbols.length === 0) continue;
-    const src = compiler.layout.getSource(fp) ?? '';
-    for (const useSym of useSymbols) {
-      const useRefs = compiler.symbolReferences(useSym).getValue();
-      for (const ref of useRefs) {
-        if (ref.filepath.absolute !== fp.absolute) continue;
-        for (const e of findReplacements([
-          ref,
-        ], oldSchema, oldTable, newFormatted, src)) {
-          addEdit(fp, e);
-        }
-      }
     }
   }
 
@@ -366,28 +352,3 @@ function renameRealDeclaration (
   return newLayout;
 }
 
-/**
- * Returns every UseSymbol in `fp`'s public schema scope whose `originalSymbol`
- * is `original` and whose use specifier carries no alias — i.e. importers that
- * pulled the table in by its source name.
- */
-function findUnaliasedUseSymbols (
-  compiler: Compiler,
-  fp: Filepath,
-  original: NodeSymbol,
-): UseSymbol[] {
-  const ast = compiler.parseFile(fp).getValue().ast;
-  const schemaSymbol = compiler.lookupMembers(ast, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue();
-  if (!schemaSymbol || !(schemaSymbol instanceof SchemaSymbol)) return [];
-  const members = compiler.symbolMembers(schemaSymbol).getFiltered(UNHANDLED) ?? [];
-  const out: UseSymbol[] = [];
-  for (const m of members) {
-    if (!(m instanceof UseSymbol)) continue;
-    if (m.originalSymbol !== original) continue;
-    const spec = m.useSpecifierDeclaration;
-    if (spec instanceof UseSpecifierNode && !spec.alias) {
-      out.push(m);
-    }
-  }
-  return out;
-}

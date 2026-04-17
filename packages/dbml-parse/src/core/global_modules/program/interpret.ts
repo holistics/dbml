@@ -90,7 +90,7 @@ export default class ProgramInterpreter {
     }
 
     // Collect external references from use/reuse declarations.
-    // UseSymbols are the symbols of UseSpecifierNodes — not members of the program scope —
+    // UseSymbols are the symbols of UseSpecifierNodes - not members of the program scope,
     // so we walk the use declarations directly instead of going through symbolMembers.
     // Group by canonical (kind + schema + name) so multiple imports of the same element
     // accumulate into a single ElementRef with multiple visibleNames.
@@ -195,7 +195,7 @@ export default class ProgramInterpreter {
         }
       }
 
-      // Wildcard imports are not enumerated at the AST level — every importable
+      // Wildcard imports are not enumerated at the AST level - every importable
       // member becomes a synthesized UseSymbol in `schemaModule.symbolMembers`.
       // Walk the public schema to pick those up so they land in `externals`.
       const publicSchema = this.compiler.lookupMembers(this.programNode, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue();

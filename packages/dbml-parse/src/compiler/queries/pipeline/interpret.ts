@@ -6,7 +6,7 @@ import {
   AliasKind,
 } from '@/core/types';
 import type {
-  Database, ElementRef, MasterDatabase, Table, TablePartial,
+  Database, ElementRef, MasterDatabase, SchemaElement, Table, TablePartial,
 } from '@/core/types';
 import type {
   CompileError, CompileWarning,
@@ -302,13 +302,13 @@ function canonicalElementKey (schema: string | null | undefined, name: string): 
   return `${schema ?? ''}.${name}`;
 }
 
-function findItem (items: Database, kind: AliasKind, name: string, schema: string | null): any {
+function findItem (items: Database, kind: AliasKind, name: string, schema: string | null): SchemaElement | undefined {
   switch (kind) {
     case AliasKind.Table: return items.tables.find((t) => t.name === name && (t.schemaName ?? null) === schema);
     case AliasKind.Enum: return items.enums.find((e) => e.name === name && (e.schemaName ?? null) === schema);
     case AliasKind.TableGroup: return items.tableGroups.find((g) => g.name === name);
     case AliasKind.TablePartial: return items.tablePartials.find((p) => p.name === name);
-    case AliasKind.Note: return items.notes.find((n) => (n as any).name === name);
+    case AliasKind.Note: return items.notes.find((n) => n.name === name);
     default: {
       const _: never = kind;
       return _;

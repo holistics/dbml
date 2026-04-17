@@ -162,7 +162,7 @@ export default class TableBinder {
     const errors: CompileError[] = [];
     const schemaBindees = fragments.variables;
 
-    // Collect errors from schema components — errors are silently dropped by
+    // Collect errors from schema components - errors are silently dropped by
     // nodeRefereeOfLeftExpression, so we must bind them explicitly here.
     for (const schemaBind of schemaBindees) {
       errors.push(...this.compiler.nodeReferee(schemaBind).getErrors());
