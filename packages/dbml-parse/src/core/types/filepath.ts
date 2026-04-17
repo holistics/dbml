@@ -44,7 +44,11 @@ export class Filepath implements Internable<FilepathId> {
   static fromUri (uri: string): Filepath {
     try {
       const url = new URL(uri);
-      return new Filepath(normalize(`/${url.host}${url.pathname}`), {
+      // Only prepend host when it's non-empty (inmemory://model/1 → /model/1).
+      // For file:// URIs host is empty and pathname already starts with '/',
+      // so prepending '/' produced '//main.dbml'.
+      const raw = url.host ? `/${url.host}${url.pathname}` : url.pathname;
+      return new Filepath(normalize(raw), {
         protocol: url.protocol,
       });
     } catch {

@@ -11,17 +11,20 @@ import type {
   Ref, RefEndpoint, Table, TableRecord,
 } from '@/core/types/schemaJson';
 import {
+  RecordNodes,
   buildColumnIndex,
   createConstraintErrors,
   extractKeyValueWithDefault,
   formatFullColumnNames,
   formatValues,
   hasNullWithoutDefaultInKey,
+  pickCell,
 } from './helper';
 
 type TableInfo = {
   rows: TableRecord;
   mergedTable: Table;
+  nodes: RecordNodes;
 };
 
 export function validateForeignKeys (
@@ -54,19 +57,18 @@ function validateFkSourceToTarget (
     ),
   );
 
-  // Filter rows with NULL values (optional relationships)
-  const rowsWithValues = sourceTable.rows.values.filter((row) =>
-    !hasNullWithoutDefaultInKey(row, sourceEndpoint.fieldNames, sourceColumnIndex),
+  // Keep row indices so we can anchor warnings on the offending row's cell.
+  const candidateIndices = sourceTable.rows.values.map((_, i) => i).filter((i) =>
+    !hasNullWithoutDefaultInKey(sourceTable.rows.values[i], sourceEndpoint.fieldNames, sourceColumnIndex),
   );
 
-  // Find rows with FK values that don't exist in target
-  const invalidRows = rowsWithValues.filter((row) => {
-    const fkValue = extractKeyValueWithDefault(row, sourceEndpoint.fieldNames, sourceColumnIndex);
+  const invalidIndices = candidateIndices.filter((i) => {
+    const fkValue = extractKeyValueWithDefault(sourceTable.rows.values[i], sourceEndpoint.fieldNames, sourceColumnIndex);
     return !validFkValues.has(fkValue);
   });
 
-  // Transform invalid rows to errors
-  return flatMap(invalidRows, (row) => {
+  return flatMap(invalidIndices, (idx) => {
+    const row = sourceTable.rows.values[idx];
     const sourceColumnRef = formatFullColumnNames(
       sourceTable.mergedTable.schemaName,
       sourceTable.mergedTable.name,
@@ -80,8 +82,10 @@ function validateFkSourceToTarget (
     const valueStr = formatValues(row, sourceEndpoint.fieldNames, sourceColumnIndex);
     const message = `FK violation: ${sourceColumnRef} = ${valueStr} does not exist in ${targetColumnRef}`;
 
-    // Create one error per FK column in the source endpoint
-    return sourceEndpoint.fieldNames.flatMap(() => createConstraintErrors(sourceTable.rows, message));
+    // One warning per FK column, anchored on that column's cell.
+    return sourceEndpoint.fieldNames.flatMap((col) =>
+      createConstraintErrors(pickCell(sourceTable.nodes, idx, col), message),
+    );
   });
 }
 

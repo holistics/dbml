@@ -279,7 +279,13 @@ const SYM_KIND_CLASS: Record<string, string> = {
   'Enum': 'hl-sym-enum',
   'Enum field': 'hl-sym-enum-field',
   'TableGroup': 'hl-sym-tablegroup',
+  'TableGroup field': 'hl-sym-tablegroup',
+  'TablePartial': 'hl-sym-table',
+  'PartialInjection': 'hl-sym-table',
+  'Note': 'hl-sym-column',
+  'Indexes': 'hl-sym-ref',
   'Schema': 'hl-sym-schema',
+  'DiagramView': 'hl-sym-ref',
 };
 
 function collectSymbolEntries (symbols: SymbolInfo[]): Array<{ range: monaco.IRange;
@@ -322,7 +328,8 @@ function collectDatabaseEntries (): Array<{ range: monaco.IRange;
   for (const e of db.enums) { add(e.token, 'hl-sym-enum'); }
   for (const n of db.notes) { add(n.token, 'hl-sym-column'); }
   for (const tg of db.tableGroups) { add(tg.token, 'hl-sym-tablegroup'); }
-  for (const tp of db.tablePartials ?? []) { add((tp as { token?: DbToken }).token as DbToken, 'hl-sym-table'); }
+  for (const tp of db.tablePartials ?? []) { add((tp as { token?: DbToken }).token, 'hl-sym-table'); }
+  for (const rec of db.records ?? []) { add((rec as { token?: DbToken }).token, 'hl-sym-column'); }
   return result;
 }
 

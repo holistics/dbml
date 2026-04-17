@@ -99,9 +99,12 @@ describe('[example - record] composite primary key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
-    expect(warnings[1].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
+    // One warning per PK column per duplicate row → 2 rows × 2 columns = 4,
+    // each anchored on the offending row's column cell.
+    expect(warnings.length).toBe(4);
+    for (const w of warnings) {
+      expect(w.diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
+    }
   });
 
   test('should reject NULL in any column of composite primary key', () => {

@@ -99,9 +99,11 @@ describe('[example - record] composite unique constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
-    expect(warnings[1].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
+    // One warning per UNIQUE column per duplicate row → 2 rows × 2 columns = 4.
+    expect(warnings.length).toBe(4);
+    for (const w of warnings) {
+      expect(w.diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
+    }
   });
 
   test('should allow NULL values in composite unique (NULLs dont conflict)', () => {

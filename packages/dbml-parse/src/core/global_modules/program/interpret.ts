@@ -31,8 +31,14 @@ import {
   getBody,
 } from '@/core/utils/expression';
 import {
+  recordNodesByRecord,
+} from '../records/interpret';
+import {
   validateForeignKeys,
 } from '../records/utils/constraints';
+import type {
+  RecordNodes,
+} from '../records/utils/constraints/helper';
 import {
   buildMergedTableFromElement, extractInlineRefsFromTablePartials,
 } from '../records/utils/interpret';
@@ -325,9 +331,15 @@ export default class ProgramInterpreter {
       }
     }
 
-    // Run FK validation
-    const recordTableMap = new Map<string, { rows: TableRecord;
-      mergedTable: Table; }>();
+    // Run FK validation. Each entry carries the RecordNodes (block + per-row
+    // + per-cell SyntaxNodes) so constraint warnings anchor on the offending
+    // row's specific column cell. For tables with no records block we fall
+    // back to the table declaration node as a single-node stub.
+    const recordTableMap = new Map<string, {
+      rows: TableRecord;
+      mergedTable: Table;
+      nodes: RecordNodes;
+    }>();
     const allRefs: Ref[] = [
       ...db.refs,
     ]; // Collect both table partial refs and table refs
@@ -335,15 +347,28 @@ export default class ProgramInterpreter {
       const key = `${table.schemaName ?? DEFAULT_SCHEMA_NAME}.${table.name}`;
       const merged = mergedTables.get(table) ?? table;
       const record = db.records.find((r) => r.tableName === table.name && (r.schemaName ?? DEFAULT_SCHEMA_NAME) === (table.schemaName ?? DEFAULT_SCHEMA_NAME));
+      const tableNode = this.tableElements.find((el) =>
+        (this.compiler.interpretNode(el).getValue() as Table | undefined)?.name === table.name,
+      );
+      const recordBlock = tableNode ? this.recordsByTable.get(tableNode)?.[0] : undefined;
+      const fallbackNode = recordBlock ?? tableNode;
+      if (!fallbackNode) continue;
+      const nodes: RecordNodes = (record && recordNodesByRecord.get(record)) ?? {
+        block: fallbackNode,
+        rows: [],
+        cells: [],
+      };
+      const stubRecord = record ?? {
+        schemaName: table.schemaName ?? undefined,
+        tableName: table.name,
+        columns: [],
+        values: [],
+        token: table.token,
+      };
       recordTableMap.set(key, {
-        rows: record ?? {
-          schemaName: table.schemaName ?? undefined,
-          tableName: table.name,
-          columns: [],
-          values: [],
-          token: table.token,
-        },
+        rows: stubRecord,
         mergedTable: merged,
+        nodes,
       });
       allRefs.push(...extractInlineRefsFromTablePartials(table, db.tablePartials));
     }

@@ -2,6 +2,9 @@ import {
   CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
   Column, RecordValue, TableRecord,
 } from '@/core/types/schemaJson';
 import {
@@ -113,19 +116,37 @@ export {
   createConstraintWarnings as createConstraintErrors,
 };
 
+// Source-range nodes collected at records-interpret time. Threaded through
+// constraint validators so violation warnings can anchor to the offending
+// row's cell (or row, or records-block) instead of passing a schemaJson
+// TableRecord — the latter has no startPos/endPos and crashes diagnostics.
+export interface RecordNodes {
+  block: SyntaxNode;
+  rows: SyntaxNode[];
+  cells: Array<Record<string, SyntaxNode>>;
+}
+
+export function pickCell (nodes: RecordNodes, rowIdx: number, colName?: string): SyntaxNode {
+  if (colName !== undefined) {
+    const cell = nodes.cells[rowIdx]?.[colName];
+    if (cell) return cell;
+  }
+  return nodes.rows[rowIdx] ?? nodes.block;
+}
+
 /**
- * Create constraint warnings for a record.
- * Uses the record's token as location since we don't have per-row nodes.
+ * Create constraint warnings anchored on a syntax node so diagnostics have a
+ * valid startPos/endPos.
  */
 export function createConstraintWarnings (
-  record: TableRecord,
+  node: SyntaxNode,
   message: string,
 ): CompileWarning[] {
   return [
     new CompileWarning(
       CompileErrorCode.INVALID_RECORDS_FIELD,
       message,
-      record as any,
+      node,
     ),
   ];
 }

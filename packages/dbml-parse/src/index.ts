@@ -11,18 +11,14 @@ export {
 
 export * from '@/core/global_modules/records/utils';
 
-export {
-  // Core AST node types
-  SyntaxNode,
-  ElementDeclarationNode,
-  ProgramNode,
-  SyntaxNodeKind,
-} from '@/core/types/nodes';
+export * from '@/core/types/nodes';
 
 export {
-  // Token types
   SyntaxToken,
   SyntaxTokenKind,
+  isTriviaToken,
+  isOp,
+  isOpToken,
 } from '@/core/types/tokens';
 
 export {
@@ -46,6 +42,20 @@ export {
 export {
   DEFAULT_ENTRY,
 } from './constants';
+export {
+  UNHANDLED,
+  PASS_THROUGH,
+} from '@/core/types/module';
+
+export {
+  NodeSymbol,
+  SchemaSymbol,
+  AliasSymbol,
+  UseSymbol,
+  InjectedColumnSymbol,
+  ProgramSymbol,
+  SymbolKind,
+} from '@/core/types/symbol';
 export * from '@/core/global_modules/records/utils/data';
 
 export type {

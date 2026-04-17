@@ -5,12 +5,16 @@ import {
   CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
   Column, Table, TableRecord,
 } from '@/core/types/schemaJson';
 import {
   isSerialType,
 } from '../data';
 import {
+  RecordNodes,
   buildColumnIndex,
   createConstraintErrors,
   extractKeyValueWithDefault,
@@ -18,12 +22,13 @@ import {
   formatValues,
   hasNullWithoutDefaultInKey,
   isAutoIncrementColumn,
+  pickCell,
 } from './helper';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';
 
-export function validatePrimaryKey (record: TableRecord, mergedTable: Table): CompileWarning[] {
+export function validatePrimaryKey (nodes: RecordNodes, record: TableRecord, mergedTable: Table): CompileWarning[] {
   const rows = record.values;
   if (isEmpty(rows)) return [];
 
@@ -36,11 +41,12 @@ export function validatePrimaryKey (record: TableRecord, mergedTable: Table): Co
   ]));
 
   return flatMap(pkConstraints, (pkColumns) =>
-    validatePkConstraint(pkColumns, record, availableColumns, columnMap, columnIndex, mergedTable),
+    validatePkConstraint(nodes, pkColumns, record, availableColumns, columnMap, columnIndex, mergedTable),
   );
 }
 
 function validatePkConstraint (
+  nodes: RecordNodes,
   pkColumns: string[],
   record: TableRecord,
   availableColumns: Set<string>,
@@ -50,6 +56,7 @@ function validatePkConstraint (
 ): CompileWarning[] {
   // Check for missing columns
   const missingErrors = checkMissingPkColumns(
+    nodes,
     pkColumns,
     availableColumns,
     columnMap,
@@ -76,10 +83,11 @@ function validatePkConstraint (
   // Validate NULL rows (only error if not all columns are auto-increment)
   const nullErrors = areAllColumnsAutoIncrement
     ? []
-    : createNullErrors(rowsWithNull, pkColumns, mergedTable, record);
+    : createNullErrors(nodes, rowsWithNull, pkColumns, mergedTable);
 
   // Find duplicate rows using groupBy
   const duplicateErrors = findDuplicateErrors(
+    nodes,
     rowsWithoutNull,
     record,
     pkColumns,
@@ -95,10 +103,10 @@ function validatePkConstraint (
 }
 
 function createNullErrors (
+  nodes: RecordNodes,
   rowsWithNull: number[],
   pkColumns: string[],
   mergedTable: Table,
-  record: TableRecord,
 ): CompileWarning[] {
   if (isEmpty(rowsWithNull)) return [];
 
@@ -110,13 +118,14 @@ function createNullErrors (
   );
   const message = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
 
-  // Report one warning per PK column per NULL row
-  return flatMap(rowsWithNull, () =>
-    pkColumns.flatMap(() => createConstraintErrors(record, message)),
+  // Anchor each warning on the offending row's column cell.
+  return flatMap(rowsWithNull, (rowIdx) =>
+    pkColumns.flatMap((col) => createConstraintErrors(pickCell(nodes, rowIdx, col), message)),
   );
 }
 
 function findDuplicateErrors (
+  nodes: RecordNodes,
   rows: number[],
   record: TableRecord,
   pkColumns: string[],
@@ -141,11 +150,11 @@ function findDuplicateErrors (
       pkColumns,
     );
 
-    // Report all rows in the duplicate group
+    // Report all rows in the duplicate group, anchored on the offending row.
     return flatMap(duplicateRows, (idx) => {
       const valueStr = formatValues(record.values[idx], pkColumns, columnIndex);
       const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
-      return createConstraintErrors(record, message);
+      return pkColumns.flatMap((col) => createConstraintErrors(pickCell(nodes, idx, col), message));
     });
   });
 }
@@ -164,6 +173,7 @@ function collectAvailableColumns (record: TableRecord): Set<string> {
 }
 
 function checkMissingPkColumns (
+  nodes: RecordNodes,
   pkColumns: string[],
   availableColumns: Set<string>,
   columnMap: Map<string, Column>,
@@ -191,9 +201,10 @@ function checkMissingPkColumns (
   );
   const message = `${constraintType}: Column ${columnRef} is missing from record and has no default value`;
 
+  // Missing-column is row-independent — anchor on the records block itself.
   return record.values.map(() => new CompileWarning(
     CompileErrorCode.INVALID_RECORDS_FIELD,
     message,
-    record as any,
+    nodes.block,
   ));
 }

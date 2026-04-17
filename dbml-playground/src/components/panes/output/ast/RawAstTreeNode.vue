@@ -39,8 +39,13 @@
         </template>
       </VTooltip>
 
-      <span class="text-gray-700 mr-1">{{ node.propertyName }}</span>
+      <span class="text-gray-700 mr-2">{{ node.propertyName }}</span>
 
+      <span
+        v-if="hintText"
+        class="mr-2 truncate"
+        :class="hintClass"
+      >{{ hintText }}</span>
       <span
         v-if="leafValue !== ''"
         class="text-green-700"
@@ -52,113 +57,6 @@
     </div>
 
     <div v-if="isExpanded && isExpandable">
-      <!-- Token entries: SyntaxToken properties rendered as key-value rows -->
-      <div
-        v-if="node.tokenEntries.length > 0"
-        class="border-b border-gray-100 border-l-2 border-l-blue-100 bg-blue-50/20"
-        :style="{ paddingLeft: `${8 + (level + 1) * 14}px`, paddingRight: '8px' }"
-      >
-        <div
-          class="grid py-1 gap-y-0.5 items-start text-[11px]"
-          style="grid-template-columns: max-content 1fr; column-gap: 10px;"
-        >
-          <template
-            v-for="entry in node.tokenEntries"
-            :key="entry.key"
-          >
-            <span class="text-gray-400 text-[10px] font-medium pt-[2px] select-none shrink-0">{{ entry.key }}</span>
-
-            <!-- Single SyntaxToken -->
-            <span
-              v-if="!Array.isArray(entry.data)"
-              class="inline-flex items-center gap-1 font-mono"
-            >
-              <span :class="entry.data.kind === SyntaxTokenKind.EOF ? 'text-red-400' : 'text-green-700'">
-                {{ entry.data.kind === SyntaxTokenKind.EOF ? '<EOF>' : (entry.data.value || '·') }}
-              </span>
-            </span>
-
-            <!-- SyntaxToken[] -->
-            <span
-              v-else
-              class="inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 font-mono"
-            >
-              <template
-                v-for="(tok, ti) in entry.data"
-                :key="ti"
-              >
-                <span
-                  v-if="tok.kind === '<space>'"
-                  class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
-                ><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ tok.value.length }}</span>
-                <PhKeyReturn
-                  v-else-if="tok.kind === '<newline>'"
-                  class="w-3 h-3 text-gray-400 flex-shrink-0"
-                />
-                <span
-                  v-else-if="tok.kind === '<tab>'"
-                  class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
-                >→</span>
-                <span
-                  v-else-if="tok.kind === '<single-line-comment>' || tok.kind === '<multiline-comment>'"
-                  class="text-gray-400 italic text-[10px] break-all"
-                >{{ tok.value }}</span>
-                <span
-                  v-else
-                  class="text-green-700 font-mono"
-                >{{ tok.value }}</span>
-              </template>
-            </span>
-
-            <!-- Trivia/error rows for single token -->
-            <template v-if="!Array.isArray(entry.data)">
-              <template
-                v-for="section in triviaRows(entry.data)"
-                :key="section.label"
-              >
-                <template v-if="section.tokens.length > 0">
-                  <span
-                    class="text-[10px] font-medium select-none"
-                    :class="section.error ? 'text-red-400' : 'text-gray-400'"
-                  >{{ section.label }}</span>
-                  <span
-                    class="inline-flex flex-wrap items-center gap-x-1 gap-y-0.5 font-mono"
-                    :class="section.error ? 'text-red-600' : 'text-gray-600'"
-                  >
-                    <template
-                      v-for="(t, ti) in section.tokens"
-                      :key="ti"
-                    >
-                      <span
-                        v-if="t.kind === '<space>'"
-                        class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
-                      ><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ t.value.length }}</span>
-                      <PhKeyReturn
-                        v-else-if="t.kind === '<newline>'"
-                        class="w-3 h-3 text-gray-400 flex-shrink-0"
-                      />
-                      <span
-                        v-else-if="t.kind === '<tab>'"
-                        class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
-                      >→</span>
-                      <span
-                        v-else-if="t.kind === '<single-line-comment>' || t.kind === '<multiline-comment>'"
-                        class="italic break-all"
-                      >{{ t.value }}</span>
-                      <span
-                        v-else
-                        class="break-all"
-                      >{{ t.value }}</span>
-                    </template>
-                  </span>
-                </template>
-              </template>
-            </template>
-          </template>
-        </div>
-      </div>
-
-      <!-- SyntaxNode children -->
       <RawAstTreeNode
         v-for="child in node.children"
         :key="child.id"
@@ -194,27 +92,22 @@ import {
   PhMinus,
   PhLightning,
   PhMathOperations,
-  PhArrowsHorizontal,
-  PhKeyReturn,
-  type Icon,
 } from '@phosphor-icons/vue';
 import {
   SyntaxToken,
   SyntaxTokenKind,
 } from '@dbml/parse';
-
-export interface TokenEntry {
-  key: string;
-  data: SyntaxToken | SyntaxToken[];
-}
+import {
+  tokenIconFor,
+} from '@/utils/tokenIcons';
 
 export interface RawAstNode {
   id: string;
   propertyName: string;
   rawData: unknown;
   value?: unknown;
+  nameHint?: string;
   children: RawAstNode[];
-  tokenEntries: TokenEntry[];
   accessPath: string;
 }
 
@@ -238,7 +131,7 @@ const emit = defineEmits<{
 
 const rowEl = ref<HTMLElement | null>(null);
 const isExpanded = computed(() => props.expandedNodes.has(props.node.id));
-const isExpandable = computed(() => props.node.children.length > 0 || props.node.tokenEntries.length > 0);
+const isExpandable = computed(() => props.node.children.length > 0);
 const isActive = computed(() => props.node.id === props.cursorNodeId || props.selectedNode?.id === props.node.id);
 
 // Scroll into view when this node becomes the active cursor node
@@ -259,6 +152,13 @@ const nodeKind = computed(() => {
   const d = asObj(props.node.rawData);
   return d && typeof d.kind === 'string' ? d.kind : '';
 });
+
+// Tokens get a green hint, nodes blue. EOF tokens use the same red/semibold
+// `<EOF>` presentation as the Tokens tab.
+const isToken = computed(() => props.node.rawData instanceof SyntaxToken);
+const isEof = computed(() => isToken.value && (props.node.rawData as SyntaxToken).kind === SyntaxTokenKind.EOF);
+const hintText = computed(() => isEof.value ? '' : (props.node.nameHint ?? ''));
+const hintClass = computed(() => isToken.value ? 'text-green-700' : 'text-blue-600');
 
 interface IconInfo { icon: typeof PhDiamond;
   color: string;
@@ -384,6 +284,16 @@ const NODE_KIND_ICONS: Record<string, IconInfo> = {
 
 const typeIcon = computed((): IconInfo => {
   const d = props.node.rawData;
+  // Tokens use the same per-kind icons the Tokens tab does (flag for EOF,
+  // newline/space/tab glyphs for trivia, etc.).
+  if (d instanceof SyntaxToken) {
+    const info = tokenIconFor(d.kind);
+    return {
+      icon: info.icon as typeof PhDiamond,
+      color: d.kind === SyntaxTokenKind.EOF ? 'text-red-400' : info.color,
+      label: d.kind,
+    };
+  }
   if (nodeKind.value) return NODE_KIND_ICONS[nodeKind.value] ?? {
     icon: PhDiamond,
     color: 'text-blue-400',
@@ -439,31 +349,6 @@ const sizeHint = computed(() => {
   if (!Array.isArray(d)) return '';
   return d.length === 0 ? '[ ]' : `[ ${d.length} ]`;
 });
-
-function triviaRows (tok: SyntaxToken) {
-  return [
-    {
-      label: 'leading trivia',
-      tokens: tok.leadingTrivia,
-      error: false,
-    },
-    {
-      label: 'trailing trivia',
-      tokens: tok.trailingTrivia,
-      error: false,
-    },
-    {
-      label: 'leading errors',
-      tokens: tok.leadingInvalid,
-      error: true,
-    },
-    {
-      label: 'trailing errors',
-      tokens: tok.trailingInvalid,
-      error: true,
-    },
-  ];
-}
 
 function handleNodeClick () { emit('node-click', props.node); }
 function toggleExpanded () {

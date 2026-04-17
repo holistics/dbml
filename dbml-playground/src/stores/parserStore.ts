@@ -9,7 +9,7 @@ import {
 } from 'lodash-es';
 import * as monaco from 'monaco-editor';
 import {
-  Compiler, DBMLDiagnosticsProvider, Filepath,
+  Compiler, DBMLDiagnosticsProvider, Filepath, UNHANDLED,
 } from '@dbml/parse';
 import type {
   SyntaxToken, ProgramNode, Database, NodeSymbol,
@@ -47,8 +47,7 @@ export interface SymbolInfo {
 
 function getSymbolMembers (compiler: Compiler, sym: NodeSymbol): NodeSymbol[] {
   try {
-    const result = compiler.symbolMembers(sym);
-    const value = result.getValue();
+    const value = compiler.symbolMembers(sym).getFiltered(UNHANDLED);
     return Array.isArray(value) ? value : [];
   } catch {
     return [];
@@ -117,11 +116,15 @@ export const useParser = defineStore('parser', () => {
 
   const debouncedParse = debounce((targetFile?: string) => {
     isLoading.value = true;
-    const currentFilepath = new Filepath(targetFile ?? project.currentFile);
+    const currentFilepath = Filepath.fromUri(monaco.Uri.file(targetFile ?? project.currentFile).toString());
     try {
-      // Load all project files into the compiler
+      // Load all project files into the compiler. Go through Filepath.fromUri
+      // using the same `file://` URIs Monaco builds for editor models — this
+      // way Filepath carries a 'file:' protocol and `toUri()` on declarations
+      // produces URIs that match the models' URIs, so Ctrl+Click go-to-def
+      // resolves into the correct Monaco model instead of failing silently.
       for (const [path, content] of Object.entries(project.files)) {
-        const filepath = new Filepath(path);
+        const filepath = Filepath.fromUri(monaco.Uri.file(path).toString());
         compiler.setSource(filepath, content);
       }
 
@@ -142,7 +145,7 @@ export const useParser = defineStore('parser', () => {
 
       // Errors/warnings are scoped to the current file so Monaco markers only
       // highlight positions that exist in the editor being shown.
-      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Array<Record<string, unknown>>).map(diagnosticToParserError);
+      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as any[]).map(diagnosticToParserError);
 
       // exportSchemaJson returns the current file's schema reconciled against
       // its imports (externals, alias rename, cross-file refs/records). Using
@@ -150,10 +153,11 @@ export const useParser = defineStore('parser', () => {
       // non-default file left the Database tab empty.
       database.value = compiler.exportSchemaJson(currentFilepath).getValue() as Database | undefined ?? null;
 
-      const rawSymbols = compiler.parse.publicSymbolTable();
-      symbols.value = rawSymbols
-        ? [...rawSymbols].map((sym) => buildSymbolInfo(compiler, sym))
-        : [];
+      // Root the tree at the ProgramSymbol so the tab shows every schema and
+      // their nested members — the old `publicSymbolTable` returned a flat
+      // top-level list only.
+      const programSymbol = parseIndex ? compiler.nodeSymbol(parseIndex.ast).getFiltered(UNHANDLED) : undefined;
+      symbols.value = programSymbol ? [buildSymbolInfo(compiler, programSymbol)] : [];
     } catch (err) {
       logger.error('Unexpected parsing error:', err);
       const message = err instanceof Error ? err.message : 'Unexpected error';
@@ -175,7 +179,7 @@ export const useParser = defineStore('parser', () => {
       }];
     } finally {
       try {
-        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Array<Record<string, unknown>>).map(diagnosticToParserError);
+        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as any[]).map(diagnosticToParserError);
       } catch (err) {
         logger.warn('Failed to get warnings:', err);
         warnings.value = [];
@@ -214,18 +218,18 @@ export const useParser = defineStore('parser', () => {
       currentServices = await compiler.initMonacoServices();
       if (areServicesRegistered) return;
       areServicesRegistered = true;
-      monaco.languages.registerDefinitionProvider(languageId, {
-        provideDefinition: (...args) => currentServices?.definitionProvider.provideDefinition(...args) ?? null,
-      });
-      monaco.languages.registerReferenceProvider(languageId, {
-        provideReferences: (...args) => currentServices?.referenceProvider.provideReferences(...args) ?? [],
-      });
-      monaco.languages.registerCompletionItemProvider(languageId, {
-        triggerCharacters: ['.', ' '],
-        provideCompletionItems: (...args) => currentServices?.autocompletionProvider.provideCompletionItems(...args) ?? {
-          suggestions: [],
-        },
-      });
+      // Register the providers directly so that
+      // Monaco's own feature lookup finds provideDefinition / provideReferences /
+      // provideCompletionItems as own methods on the provider object. The
+      // previous wrapper indirection registered a bare literal, which Monaco's
+      // provider registry accepted, but some internals check the method with
+      // `own`-property semantics and silently skipped the provider.
+      // @dbml/parse types against monaco-editor-core while this bundle pulls
+      // monaco-editor — structurally compatible at runtime, separate type
+      // surfaces at compile time.
+      monaco.languages.registerDefinitionProvider(languageId, currentServices.definitionProvider as any);
+      monaco.languages.registerReferenceProvider(languageId, currentServices.referenceProvider as any);
+      monaco.languages.registerCompletionItemProvider(languageId, currentServices.autocompletionProvider as any);
     } catch (err) {
       logger.warn('Failed to register Monaco language services:', err);
     }

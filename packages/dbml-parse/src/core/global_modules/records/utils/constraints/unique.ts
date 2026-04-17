@@ -8,12 +8,14 @@ import type {
   Column, Table, TableRecord,
 } from '@/core/types/schemaJson';
 import {
+  RecordNodes,
   buildColumnIndex,
   createConstraintErrors,
   extractKeyValueWithDefault,
   formatFullColumnNames,
   formatValues,
   hasNullWithoutDefaultInKey,
+  pickCell,
 } from './helper';
 
 type CompileError = CompileWarning;
@@ -21,7 +23,7 @@ type CompileError = CompileWarning;
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';
 
-export function validateUnique (record: TableRecord, mergedTable: Table): CompileError[] {
+export function validateUnique (nodes: RecordNodes, record: TableRecord, mergedTable: Table): CompileError[] {
   if (isEmpty(record.values)) return [];
 
   const uniqueConstraints = collectUniqueConstraints(mergedTable);
@@ -30,7 +32,7 @@ export function validateUnique (record: TableRecord, mergedTable: Table): Compil
 
   return flatMap(uniqueConstraints, (uniqueColumns) => {
     const uniqueColumnFields = compact(uniqueColumns.map((col) => columnMap[col]));
-    return checkUniqueDuplicates(record, uniqueColumns, uniqueColumnFields, columnIndex, mergedTable);
+    return checkUniqueDuplicates(nodes, record, uniqueColumns, uniqueColumnFields, columnIndex, mergedTable);
   });
 }
 
@@ -44,26 +46,25 @@ function collectUniqueConstraints (mergedTable: Table): string[][] {
 }
 
 function checkUniqueDuplicates (
+  nodes: RecordNodes,
   record: TableRecord,
   uniqueColumns: string[],
   uniqueColumnFields: (Column | undefined)[],
   columnIndex: Map<string, number>,
   mergedTable: Table,
 ): CompileError[] {
-  // Filter out rows with NULL values (SQL standard: NULLs don't conflict in UNIQUE constraints)
-  const rowsWithoutNull = record.values.filter((row) =>
-    !hasNullWithoutDefaultInKey(row, uniqueColumns, columnIndex, uniqueColumnFields),
+  // Keep row indices alongside values so we can anchor warnings on the
+  // offending row's column cell.
+  const rowIndices = record.values.map((_, i) => i).filter((i) =>
+    !hasNullWithoutDefaultInKey(record.values[i], uniqueColumns, columnIndex, uniqueColumnFields),
   );
 
-  // Group rows by their unique key value
-  const rowsByKeyValue = groupBy(rowsWithoutNull, (row) =>
-    extractKeyValueWithDefault(row, uniqueColumns, columnIndex, uniqueColumnFields),
+  const rowsByKeyValue = groupBy(rowIndices, (idx) =>
+    extractKeyValueWithDefault(record.values[idx], uniqueColumns, columnIndex, uniqueColumnFields),
   );
 
-  // Find groups with more than 1 row (duplicates)
   const duplicateGroups = filter(rowsByKeyValue, (group) => group.length > 1);
 
-  // Transform duplicate groups to errors
   return flatMap(duplicateGroups, (duplicateRows) => {
     const constraintType = getConstraintType(uniqueColumns.length);
     const columnRef = formatFullColumnNames(
@@ -72,11 +73,10 @@ function checkUniqueDuplicates (
       uniqueColumns,
     );
 
-    // Report all rows in the duplicate group
-    return flatMap(duplicateRows, (row) => {
-      const valueStr = formatValues(row, uniqueColumns, columnIndex);
+    return flatMap(duplicateRows, (idx) => {
+      const valueStr = formatValues(record.values[idx], uniqueColumns, columnIndex);
       const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
-      return createConstraintErrors(record, message);
+      return uniqueColumns.flatMap((col) => createConstraintErrors(pickCell(nodes, idx, col), message));
     });
   });
 }

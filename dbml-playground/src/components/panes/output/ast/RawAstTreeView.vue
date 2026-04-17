@@ -25,8 +25,10 @@ import {
 } from '@dbml/parse';
 import RawAstTreeNode, {
   type RawAstNode,
-  type TokenEntry,
 } from './RawAstTreeNode.vue';
+import {
+  getNameHint,
+} from '@/services/serializers/utils';
 
 interface Props {
   readonly rawAst: ProgramNode;
@@ -90,6 +92,23 @@ const handleNodeExpand = (event: { id: string;
   }
 };
 
+// Smallest byte `.start` found anywhere inside `value`. Arrays of nodes /
+// tokens report the minimum of their items; primitives fall to Infinity.
+function sortStart (n: RawAstNode): number {
+  const d = n.rawData;
+  if (d instanceof SyntaxNode || d instanceof SyntaxToken) return d.start;
+  if (Array.isArray(d)) {
+    let m = Infinity;
+    for (const item of d) {
+      if (item instanceof SyntaxNode || item instanceof SyntaxToken) {
+        if (item.start < m) m = item.start;
+      }
+    }
+    return m;
+  }
+  return Infinity;
+}
+
 // Transform any value into a RawAstNode (with cycle detection via seen WeakSet)
 function transformToRawAstNode (
   data: unknown,
@@ -106,8 +125,8 @@ function transformToRawAstNode (
       rawData: data,
       value: data,
       children: [],
-      tokenEntries: [],
       accessPath,
+      nameHint: undefined,
     };
   }
 
@@ -119,8 +138,8 @@ function transformToRawAstNode (
       rawData: data,
       value: data,
       children: [],
-      tokenEntries: [],
       accessPath,
+      nameHint: undefined,
     };
   }
 
@@ -132,16 +151,18 @@ function transformToRawAstNode (
       rawData: data,
       value: data,
       children: [],
-      tokenEntries: [],
       accessPath,
+      nameHint: undefined,
     };
   }
   seen.add(data);
 
-  // Handle arrays — only keep SyntaxNode items as tree children
+  // Array of nodes/tokens — include both kinds as children
   if (Array.isArray(data)) {
-    const nodeItems = data.filter((item): item is SyntaxNode => item instanceof SyntaxNode);
-    const children: RawAstNode[] = nodeItems.map((item, index) =>
+    const items = data.filter((item): item is SyntaxNode | SyntaxToken =>
+      item instanceof SyntaxNode || item instanceof SyntaxToken,
+    );
+    const children: RawAstNode[] = items.map((item, index) =>
       transformToRawAstNode(item, `[${index}]`, `${accessPath}[${index}]`, seen),
     );
     return {
@@ -149,58 +170,48 @@ function transformToRawAstNode (
       propertyName,
       rawData: data,
       children,
-      tokenEntries: [],
       accessPath,
+      nameHint: undefined,
     };
   }
 
-  // Handle objects — recurse into SyntaxNode properties, collect SyntaxToken properties as token entries
+  // Object — recurse into SyntaxNode *and* SyntaxToken properties uniformly.
+  // Tokens used to be split off into `tokenEntries` and rendered as key/value
+  // rows; now they render like nodes so the tree is structurally consistent.
   const children: RawAstNode[] = [];
-  const tokenEntries: TokenEntry[] = [];
   const SKIP = new Set(['parent', 'parentNode', 'symbol', 'referee', 'source', 'filepath', '__proto__']);
 
   for (const [key, value] of Object.entries(data)) {
     if (SKIP.has(key) || value === undefined) continue;
-    if (value instanceof SyntaxNode) {
+    if (value instanceof SyntaxNode || value instanceof SyntaxToken) {
       children.push(transformToRawAstNode(value, key, `${accessPath}.${key}`, seen));
-    } else if (value instanceof SyntaxToken) {
-      tokenEntries.push({
-        key,
-        data: value,
-      });
     } else if (Array.isArray(value)) {
-      const nodeItems = value.filter((v): v is SyntaxNode => v instanceof SyntaxNode);
-      const tokenItems = value.filter((v): v is SyntaxToken => v instanceof SyntaxToken);
-      if (nodeItems.length > 0) {
-        children.push(transformToRawAstNode(nodeItems, key, `${accessPath}.${key}`, seen));
-      } else if (tokenItems.length > 0) {
-        tokenEntries.push({
-          key,
-          data: tokenItems,
-        });
+      const items = value.filter((v): v is SyntaxNode | SyntaxToken =>
+        v instanceof SyntaxNode || v instanceof SyntaxToken,
+      );
+      if (items.length > 0) {
+        children.push(transformToRawAstNode(items, key, `${accessPath}.${key}`, seen));
       }
     }
   }
 
   // Sort children by source position so the tree mirrors document order.
-  children.sort((a, b) => {
-    const aPos = (a.rawData as Record<string, unknown> | null)?.startPos as { line?: number;
-      column?: number; } | null | undefined;
-    const bPos = (b.rawData as Record<string, unknown> | null)?.startPos as { line?: number;
-      column?: number; } | null | undefined;
-    const aLine = aPos?.line ?? Infinity;
-    const bLine = bPos?.line ?? Infinity;
-    if (aLine !== bLine) return aLine - bLine;
-    return (aPos?.column ?? 0) - (bPos?.column ?? 0);
-  });
+  // For arrays (list of nodes / list of tokens) we use the minimum start of
+  // their contained items — otherwise arrays would all fall to the end and
+  // lose their natural interleaving with sibling nodes/tokens.
+  children.sort((a, b) => sortStart(a) - sortStart(b));
+
+  const nameHint = (data instanceof SyntaxNode || data instanceof SyntaxToken)
+    ? getNameHint(data) || undefined
+    : undefined;
 
   return {
     id: nodeId,
     propertyName,
     rawData: data,
     children,
-    tokenEntries,
     accessPath,
+    nameHint,
   };
 }
 

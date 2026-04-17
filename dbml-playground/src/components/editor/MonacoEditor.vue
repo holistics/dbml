@@ -311,7 +311,10 @@ const setupEventListeners = (): void => {
     editor.onDidChangeModelContent(() => {
       const value = editor?.getValue() || '';
       emit('update:modelValue', value);
-      pendingRetrigger = true;
+      // Only retrigger completions when the char
+      // just typed is a known DBML trigger (or an identifier char). Without
+      // this every keystroke would pop the suggestion widget.
+      pendingRetrigger = shouldTriggerSuggestion();
     });
   }
 
@@ -400,6 +403,28 @@ watch([() => parser.errors, () => parser.warnings], () => {
   if (!model) return;
   parser.updateDiagnostics(model);
 });
+
+// Character classes that should open / keep the suggestion widget open.
+const SUGGESTION_TRIGGER_CHARS = [
+  '.', // subname access
+  ',', // next setting
+  '[', // setting
+  '(',
+  ':',
+  '>', '<', '-', // ref
+  '~', // partial injection
+];
+function shouldTriggerSuggestion (): boolean {
+  if (!editor) return false;
+  const model = editor.getModel();
+  if (!model) return false;
+  const offset = model.getOffsetAt(editor.getPosition()!) - 1;
+  if (offset < 0) return false;
+  const prevChar = model.getValue()[offset];
+  if (!prevChar) return false;
+  if (SUGGESTION_TRIGGER_CHARS.includes(prevChar)) return true;
+  return /[a-zA-Z_]/.test(prevChar);
+}
 
 // After each completed parse the compiler is fully synced - retrigger the
 // suggestion widget so completions reflect the latest state.

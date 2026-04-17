@@ -1,0 +1,50 @@
+// Mirror of packages/dbml-parse/__tests__/utils/testHelpers.ts — adapted for
+// the playground (no Compiler on hand; source is passed in, and SymbolInfo
+// stands in for NodeSymbol). Stable-ordering normalization used for test
+// snapshots is intentionally dropped; a flat shape is produced so the
+// output-tab UIs can render directly without a nested `context` wrapper.
+
+import {
+  SyntaxNode, SyntaxToken,
+} from '@dbml/parse';
+import {
+  serializeNode,
+} from './node';
+import {
+  serializeSymbol,
+} from './symbol';
+import {
+  serializeToken,
+} from './token';
+import type {
+  Serializable, SerializeOpts, SerializedValue,
+} from './types';
+import {
+  isSymbolInfo,
+} from './utils';
+
+export * from './types';
+export {
+  serializeNode,
+} from './node';
+export {
+  serializeSymbol,
+} from './symbol';
+export {
+  serializeToken,
+} from './token';
+
+export function serialize (value: Serializable, opts?: SerializeOpts): SerializedValue {
+  if (Array.isArray(value)) return value.map((v) => serialize(v as Serializable, opts));
+  if (value instanceof SyntaxToken) return serializeToken(value, opts);
+  if (value instanceof SyntaxNode) return serializeNode(value, opts);
+  if (value === null || value === undefined) return value;
+  if (isSymbolInfo(value)) return serializeSymbol(value, opts);
+  if (typeof value === 'object') {
+    const out: Record<string, SerializedValue> = {};
+    for (const [k, v] of Object.entries(value)) out[k] = serialize(v as Serializable, opts);
+    return out;
+  }
+  if (typeof value === 'bigint' || typeof value === 'symbol') return value.toString();
+  return value;
+}

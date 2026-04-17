@@ -36,6 +36,9 @@ import {
 import {
   validatePrimaryKey, validateUnique,
 } from './utils/constraints';
+import type {
+  RecordNodes,
+} from './utils/constraints/helper';
 import {
   getRecordValueType,
   isBooleanType,
@@ -82,6 +85,8 @@ export default class RecordsInterpreter {
     }
 
     const values: RecordValue[][] = [];
+    const rowNodes: SyntaxNode[] = [];
+    const cellNodes: Array<Record<string, SyntaxNode>> = [];
     for (const row of (element.body as BlockExpressionNode).body) {
       const rowNode = row as FunctionApplicationNode;
       const result = extractDataFromRow(rowNode, mergedColumns, this.compiler);
@@ -90,6 +95,8 @@ export default class RecordsInterpreter {
       const rowData = result.getValue();
       if (!rowData.row) continue;
       values.push(rowData.row);
+      rowNodes.push(rowNode);
+      cellNodes.push(rowData.columnNodes);
     }
 
     const token = getTokenPosition(this.node);
@@ -100,27 +107,35 @@ export default class RecordsInterpreter {
       values,
       token,
     };
+    const recordNodes: RecordNodes = {
+      block: this.node,
+      rows: rowNodes,
+      cells: cellNodes,
+    };
+    recordNodesByRecord.set(tableRecord, recordNodes);
 
-    const constraintResult = this.validateConstraints(tableRecord, table);
+    const constraintResult = this.validateConstraints(recordNodes, tableRecord, table);
     warnings.push(...constraintResult);
 
     return new Report<TableRecord | undefined>(tableRecord, errors, warnings);
   }
 
-  private validateConstraints (tableRecord: TableRecord, table: Table): CompileWarning[] {
+  private validateConstraints (nodes: RecordNodes, tableRecord: TableRecord, table: Table): CompileWarning[] {
     const warnings: CompileWarning[] = [];
 
-    // Validate PK constraints
-    warnings.push(...validatePrimaryKey(tableRecord, table));
+    warnings.push(...validatePrimaryKey(nodes, tableRecord, table));
+    warnings.push(...validateUnique(nodes, tableRecord, table));
 
-    // Validate unique constraints
-    warnings.push(...validateUnique(tableRecord, table));
-
-    // FIXME: Validation of FK constraints are performed in the program module
+    // FK validation lives in the program module but needs the same node set;
+    // stash them on the side-channel WeakMap so the caller can look them up.
 
     return warnings;
   }
 }
+
+// Side channel mapping TableRecord (schemaJson, node-less) to its source
+// nodes. Used by the program-level FK validator to anchor warnings on rows.
+export const recordNodesByRecord = new WeakMap<TableRecord, RecordNodes>();
 
 // Returns:
 //   - `table`: The original interpreted table object that `records` refer to
