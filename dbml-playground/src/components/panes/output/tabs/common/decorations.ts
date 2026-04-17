@@ -103,8 +103,14 @@ export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
     visited.add(node);
     if (Array.isArray(node)) { node.forEach(walk); return; }
     const obj = node as Record<string, unknown>;
-    const sp = obj.startPos as { line?: number; column?: number } | null | undefined;
-    const ep = obj.endPos as { line?: number; column?: number } | null | undefined;
+    const sp = obj.startPos as {
+      line?: number;
+      column?: number;
+    } | undefined;
+    const ep = obj.endPos as {
+      line?: number;
+      column?: number;
+    } | undefined;
     if (sp && ep && typeof sp.line === 'number' && !Number.isNaN(sp.line)
       && typeof ep.line === 'number' && !Number.isNaN(ep.line)) {
       let decoration = NODE_KIND_CLASS[obj.kind as SyntaxNodeKind] ?? null;
@@ -174,7 +180,10 @@ export function collectSymbolDecorations (symbols: SymbolInfo[]): DecorationEntr
   return result;
 }
 
-type DbToken = { start: { line: number; column: number }; end: { line: number; column: number } } | undefined;
+type DbToken = { start: { line: number;
+  column: number; };
+end: { line: number;
+  column: number; }; } | undefined;
 
 export function collectDatabaseDecorations (db: Database | null): DecorationEntry[] {
   if (!db) return [];
