@@ -20,20 +20,20 @@
         No tokens
       </div>
       <template
-        v-for="(tok, i) in tokens"
+        v-for="(token, i) in tokens"
         :key="i"
       >
         <div
           :ref="(el) => setRowEl(i, el as HTMLElement | null)"
           class="flex items-center gap-2 px-3 py-[3px] cursor-pointer border-b border-gray-50"
           :class="[
-            tok.kind === '<eof>'
+            token.kind === SyntaxTokenKind.EOF
               ? 'bg-red-50/60 text-red-400 hover:bg-red-100/60'
               : activeIndex === i
                 ? 'bg-yellow-100'
                 : i % 2 === 0 ? 'bg-white hover:bg-blue-50' : 'bg-gray-50/60 hover:bg-blue-50',
           ]"
-          @click="onTokenClick(i, tok)"
+          @click="onTokenClick(i, token)"
         >
           <span class="text-gray-400 w-6 text-right flex-shrink-0 text-xs">{{ i }}</span>
 
@@ -43,18 +43,18 @@
             class="flex-shrink-0"
           >
             <component
-              :is="tokenIconFor(tok.kind).icon"
+              :is="tokenIconFor(token.kind).icon"
               class="w-3.5 h-3.5"
-              :class="tok.kind === '<eof>' ? 'text-red-400' : tokenIconFor(tok.kind).color"
+              :class="token.kind === SyntaxTokenKind.EOF ? 'text-red-400' : tokenIconFor(token.kind).color"
             />
             <template #popper>
-              <span class="text-xs font-mono">{{ tok.kind }}</span>
+              <span class="text-xs font-mono">{{ token.kind }}</span>
             </template>
           </VTooltip>
 
           <div class="flex-1 min-w-0 flex items-center">
             <VDropdown
-              :disabled="tok.kind === '<eof>' || !isTruncated(rawTexts[i])"
+              :disabled="token.kind === SyntaxTokenKind.EOF || !isTruncated(rawTexts[i])"
               placement="bottom-start"
               :distance="6"
               :arrow-padding="0"
@@ -64,8 +64,8 @@
             >
               <span
                 class="truncate block"
-                :class="tok.kind === '<eof>' ? 'text-red-400 font-semibold' : 'text-green-700'"
-              >{{ tok.kind === '<eof>' ? '<EOF>' : truncateText(rawTexts[i]) }}</span>
+                :class="token.kind === SyntaxTokenKind.EOF ? 'text-red-400 font-semibold' : 'text-green-700'"
+              >{{ token.kind === SyntaxTokenKind.EOF ? '<EOF>' : truncateText(rawTexts[i]) }}</span>
               <template #popper>
                 <pre
                   class="text-xs font-mono whitespace-pre-wrap break-all max-w-[320px] p-3 m-0"
@@ -87,11 +87,11 @@
             style="grid-template-columns: max-content 1fr; column-gap: 1.5rem;"
           >
             <span class="text-gray-400 text-[10px] font-medium">kind</span>
-            <span class="text-blue-600 font-mono break-all">{{ tok.kind }}</span>
+            <span class="text-blue-600 font-mono break-all">{{ token.kind }}</span>
             <span class="text-gray-400 text-[10px] font-medium">value</span>
-            <span class="text-green-700 font-mono break-all">{{ (rawTexts[i] ?? tok.value) || '·' }}</span>
+            <span class="text-green-700 font-mono break-all">{{ (rawTexts[i] ?? token.value) || '·' }}</span>
             <template
-              v-for="section in detailSections(tok)"
+              v-for="section in detailSections(token)"
               :key="section.label"
             >
               <template v-if="section.tokens.length > 0">
@@ -104,28 +104,28 @@
                   :class="section.error ? 'text-red-600' : 'text-gray-600'"
                 >
                   <template
-                    v-for="(trivTok, si) in section.tokens"
+                    v-for="(trivToken, si) in section.tokens"
                     :key="si"
                   >
-                    <template v-if="trivTok.kind === '<space>'">
-                      <span class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ trivTok.value.length }}</span>
+                    <template v-if="trivToken.kind === '<space>'">
+                      <span class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"><PhArrowsHorizontal class="w-2.5 h-2.5" />{{ trivToken.value.length }}</span>
                     </template>
                     <PhKeyReturn
-                      v-else-if="trivTok.kind === '<newline>'"
+                      v-else-if="trivToken.kind === '<newline>'"
                       class="w-3 h-3 text-gray-400 flex-shrink-0"
                     />
                     <span
-                      v-else-if="trivTok.kind === '<tab>'"
+                      v-else-if="trivToken.kind === '<tab>'"
                       class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
                     >→</span>
                     <span
-                      v-else-if="trivTok.kind === '<single-line-comment>' || trivTok.kind === '<multiline-comment>'"
+                      v-else-if="trivToken.kind === '<single-line-comment>' || trivToken.kind === '<multiline-comment>'"
                       class="text-gray-400 italic break-all"
-                    >{{ trivTok.value }}</span>
+                    >{{ trivToken.value }}</span>
                     <span
                       v-else
                       class="break-all"
-                    >{{ trivTok.value }}</span>
+                    >{{ trivToken.value }}</span>
                   </template>
                 </span>
               </template>
@@ -147,6 +147,9 @@ import {
   PhArrowsHorizontal,
 } from '@phosphor-icons/vue';
 import TabSettingsButton from './common/TabSettingsButton.vue';
+import {
+  SyntaxTokenKind,
+} from '@dbml/parse';
 import type {
   SyntaxToken,
 } from '@dbml/parse';
@@ -166,26 +169,26 @@ const emit = defineEmits<{ 'toggle-decoration': [] }>();
 
 const props = defineProps<Props>();
 
-function detailSections (tok: SyntaxToken) {
+function detailSections (token: SyntaxToken) {
   return [
     {
       label: 'leading trivia',
-      tokens: tok.leadingTrivia,
+      tokens: token.leadingTrivia,
       error: false,
     },
     {
       label: 'trailing trivia',
-      tokens: tok.trailingTrivia,
+      tokens: token.trailingTrivia,
       error: false,
     },
     {
       label: 'leading errors',
-      tokens: tok.leadingInvalid,
+      tokens: token.leadingInvalid,
       error: true,
     },
     {
       label: 'trailing errors',
-      tokens: tok.trailingInvalid,
+      tokens: token.trailingInvalid,
       error: true,
     },
   ];
@@ -287,30 +290,27 @@ onUnmounted(() => {
   cursorListener = null;
 });
 
-function onTokenClick (i: number, tok: SyntaxToken) {
-  if (activeIndex.value === i) {
-    detailCollapsed.value = !detailCollapsed.value;
-    if (!detailCollapsed.value) scrollToVisible(i);
-  } else {
-    detailCollapsed.value = false;
-    navigateTo(tok);
-  }
+function onTokenClick (i: number, token: SyntaxToken) {
+  const wasActive = activeIndex.value === i;
+  detailCollapsed.value = wasActive ? !detailCollapsed.value : false;
+  navigateTo(token);
+  scrollToVisible(i);
 }
 
-function navigateTo (tok: SyntaxToken) {
+function navigateTo (token: SyntaxToken) {
   const editor = getEditor?.();
   if (!editor) return;
   const range = {
-    startLineNumber: tok.startPos.line + 1,
-    startColumn: tok.startPos.column + 1,
-    endLineNumber: tok.endPos.line + 1,
-    endColumn: tok.endPos.column + 1,
+    startLineNumber: token.startPos.line + 1,
+    startColumn: token.startPos.column + 1,
+    endLineNumber: token.endPos.line + 1,
+    endColumn: token.endPos.column + 1,
   };
   editor.setSelection({
-    selectionStartLineNumber: tok.endPos.line + 1,
-    selectionStartColumn: tok.endPos.column + 1,
-    positionLineNumber: tok.startPos.line + 1,
-    positionColumn: tok.startPos.column + 1,
+    selectionStartLineNumber: token.endPos.line + 1,
+    selectionStartColumn: token.endPos.column + 1,
+    positionLineNumber: token.startPos.line + 1,
+    positionColumn: token.startPos.column + 1,
   });
   editor.revealRangeInCenter(range);
 }

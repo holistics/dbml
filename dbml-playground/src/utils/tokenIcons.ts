@@ -2,6 +2,9 @@ import type {
   Component,
 } from 'vue';
 import {
+  SyntaxTokenKind,
+} from '@dbml/parse';
+import {
   PhIdentificationCard,
   PhQuotes,
   PhTextAa,
@@ -25,107 +28,32 @@ import {
 export interface TokenIconInfo { icon: Component;
   color: string; }
 
-export const TOKEN_ICON_MAP: Record<string, TokenIconInfo> = {
-  '<identifier>': {
-    icon: PhIdentificationCard,
-    color: 'text-blue-500',
-  },
-  '<variable>': {
-    icon: PhQuotes,
-    color: 'text-violet-500',
-  },
-  '<string>': {
-    icon: PhTextAa,
-    color: 'text-green-600',
-  },
-  '<number>': {
-    icon: PhNumberSquareOne,
-    color: 'text-amber-500',
-  },
-  '<color>': {
-    icon: PhPalette,
-    color: 'text-pink-500',
-  },
-  '<function-expression>': {
-    icon: PhLightning,
-    color: 'text-orange-500',
-  },
-  '<op>': {
-    icon: PhMathOperations,
-    color: 'text-red-500',
-  },
-  '<lparen>': {
-    icon: PhBracketsRound,
-    color: 'text-cyan-500',
-  },
-  '<rparen>': {
-    icon: PhBracketsRound,
-    color: 'text-cyan-500',
-  },
-  '<lbrace>': {
-    icon: PhBracketsCurly,
-    color: 'text-cyan-500',
-  },
-  '<rbrace>': {
-    icon: PhBracketsCurly,
-    color: 'text-cyan-500',
-  },
-  '<lbracket>': {
-    icon: PhBracketsSquare,
-    color: 'text-cyan-500',
-  },
-  '<rbracket>': {
-    icon: PhBracketsSquare,
-    color: 'text-cyan-500',
-  },
-  '<langle>': {
-    icon: PhBracketsAngle,
-    color: 'text-cyan-500',
-  },
-  '<rangle>': {
-    icon: PhBracketsAngle,
-    color: 'text-cyan-500',
-  },
-  '<comma>': {
-    icon: PhAsterisk,
-    color: 'text-gray-400',
-  },
-  '<semicolon>': {
-    icon: PhAsterisk,
-    color: 'text-gray-400',
-  },
-  '<colon>': {
-    icon: PhAsterisk,
-    color: 'text-gray-400',
-  },
-  '<space>': {
-    icon: PhArrowsHorizontal,
-    color: 'text-gray-300',
-  },
-  '<tab>': {
-    icon: PhArrowsHorizontal,
-    color: 'text-gray-300',
-  },
-  '<newline>': {
-    icon: PhKeyReturn,
-    color: 'text-gray-300',
-  },
-  '<single-line-comment>': {
-    icon: PhArticle,
-    color: 'text-gray-400',
-  },
-  '<multiline-comment>': {
-    icon: PhArticle,
-    color: 'text-gray-400',
-  },
-  '<wildcard>': {
-    icon: PhStar,
-    color: 'text-yellow-500',
-  },
-  '<eof>': {
-    icon: PhFlagCheckered,
-    color: 'text-red-400',
-  },
+export const TOKEN_ICON_MAP: Partial<Record<SyntaxTokenKind, TokenIconInfo>> = {
+  [SyntaxTokenKind.IDENTIFIER]: { icon: PhIdentificationCard, color: 'text-blue-500' },
+  [SyntaxTokenKind.QUOTED_STRING]: { icon: PhQuotes, color: 'text-violet-500' },
+  [SyntaxTokenKind.STRING_LITERAL]: { icon: PhTextAa, color: 'text-green-600' },
+  [SyntaxTokenKind.NUMERIC_LITERAL]: { icon: PhNumberSquareOne, color: 'text-amber-500' },
+  [SyntaxTokenKind.COLOR_LITERAL]: { icon: PhPalette, color: 'text-pink-500' },
+  [SyntaxTokenKind.FUNCTION_EXPRESSION]: { icon: PhLightning, color: 'text-orange-500' },
+  [SyntaxTokenKind.OP]: { icon: PhMathOperations, color: 'text-red-500' },
+  [SyntaxTokenKind.LPAREN]: { icon: PhBracketsRound, color: 'text-cyan-500' },
+  [SyntaxTokenKind.RPAREN]: { icon: PhBracketsRound, color: 'text-cyan-500' },
+  [SyntaxTokenKind.LBRACE]: { icon: PhBracketsCurly, color: 'text-cyan-500' },
+  [SyntaxTokenKind.RBRACE]: { icon: PhBracketsCurly, color: 'text-cyan-500' },
+  [SyntaxTokenKind.LBRACKET]: { icon: PhBracketsSquare, color: 'text-cyan-500' },
+  [SyntaxTokenKind.RBRACKET]: { icon: PhBracketsSquare, color: 'text-cyan-500' },
+  [SyntaxTokenKind.LANGLE]: { icon: PhBracketsAngle, color: 'text-cyan-500' },
+  [SyntaxTokenKind.RANGLE]: { icon: PhBracketsAngle, color: 'text-cyan-500' },
+  [SyntaxTokenKind.COMMA]: { icon: PhAsterisk, color: 'text-gray-400' },
+  [SyntaxTokenKind.SEMICOLON]: { icon: PhAsterisk, color: 'text-gray-400' },
+  [SyntaxTokenKind.COLON]: { icon: PhAsterisk, color: 'text-gray-400' },
+  [SyntaxTokenKind.SPACE]: { icon: PhArrowsHorizontal, color: 'text-gray-300' },
+  [SyntaxTokenKind.TAB]: { icon: PhArrowsHorizontal, color: 'text-gray-300' },
+  [SyntaxTokenKind.NEWLINE]: { icon: PhKeyReturn, color: 'text-gray-300' },
+  [SyntaxTokenKind.SINGLE_LINE_COMMENT]: { icon: PhArticle, color: 'text-gray-400' },
+  [SyntaxTokenKind.MULTILINE_COMMENT]: { icon: PhArticle, color: 'text-gray-400' },
+  [SyntaxTokenKind.WILDCARD]: { icon: PhStar, color: 'text-yellow-500' },
+  [SyntaxTokenKind.EOF]: { icon: PhFlagCheckered, color: 'text-red-400' },
 };
 
 const FALLBACK: TokenIconInfo = {
@@ -133,35 +61,35 @@ const FALLBACK: TokenIconInfo = {
   color: 'text-gray-400',
 };
 
-export function tokenIconFor (kind: string): TokenIconInfo {
+export function tokenIconFor (kind: SyntaxTokenKind): TokenIconInfo {
   return TOKEN_ICON_MAP[kind] ?? FALLBACK;
 }
 
-export const TOKEN_KIND_CLASS: Record<string, string> = {
-  '<identifier>': 'hl-tok-identifier',
-  '<variable>': 'hl-tok-variable',
-  '<string>': 'hl-tok-string',
-  '<number>': 'hl-tok-number',
-  '<color>': 'hl-tok-color',
-  '<function-expression>': 'hl-tok-function',
-  '<op>': 'hl-tok-op',
-  '<lparen>': 'hl-tok-bracket',
-  '<rparen>': 'hl-tok-bracket',
-  '<lbrace>': 'hl-tok-bracket',
-  '<rbrace>': 'hl-tok-bracket',
-  '<lbracket>': 'hl-tok-bracket',
-  '<rbracket>': 'hl-tok-bracket',
-  '<langle>': 'hl-tok-bracket',
-  '<rangle>': 'hl-tok-bracket',
-  '<comma>': 'hl-tok-punct',
-  '<semicolon>': 'hl-tok-punct',
-  '<colon>': 'hl-tok-punct',
-  '<single-line-comment>': 'hl-tok-comment',
-  '<multiline-comment>': 'hl-tok-comment',
-  '<wildcard>': 'hl-tok-wildcard',
-  '<eof>': 'hl-tok-eof',
+export const TOKEN_KIND_CLASS: Partial<Record<SyntaxTokenKind, string>> = {
+  [SyntaxTokenKind.IDENTIFIER]: 'outline-blue-400/20 bg-blue-400/5',
+  [SyntaxTokenKind.QUOTED_STRING]: 'outline-violet-400/20 bg-violet-400/5',
+  [SyntaxTokenKind.STRING_LITERAL]: 'outline-green-500/20 bg-green-500/5',
+  [SyntaxTokenKind.NUMERIC_LITERAL]: 'outline-amber-400/20 bg-amber-400/5',
+  [SyntaxTokenKind.COLOR_LITERAL]: 'outline-pink-400/20 bg-pink-400/5',
+  [SyntaxTokenKind.FUNCTION_EXPRESSION]: 'outline-orange-400/20 bg-orange-400/5',
+  [SyntaxTokenKind.OP]: 'outline-red-400/20 bg-red-400/5',
+  [SyntaxTokenKind.LPAREN]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxTokenKind.RPAREN]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxTokenKind.LBRACE]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxTokenKind.RBRACE]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxTokenKind.LBRACKET]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxTokenKind.RBRACKET]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxTokenKind.LANGLE]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxTokenKind.RANGLE]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxTokenKind.COMMA]: 'outline-gray-400/20 bg-gray-400/5',
+  [SyntaxTokenKind.SEMICOLON]: 'outline-gray-400/20 bg-gray-400/5',
+  [SyntaxTokenKind.COLON]: 'outline-gray-400/20 bg-gray-400/5',
+  [SyntaxTokenKind.SINGLE_LINE_COMMENT]: 'outline-gray-400/20 bg-gray-400/5',
+  [SyntaxTokenKind.MULTILINE_COMMENT]: 'outline-gray-400/20 bg-gray-400/5',
+  [SyntaxTokenKind.WILDCARD]: 'outline-yellow-500/20 bg-yellow-500/5',
+  [SyntaxTokenKind.EOF]: 'outline-red-400/20 bg-red-400/5',
 };
 
-export function tokenKindClass (kind: string): string {
-  return TOKEN_KIND_CLASS[kind] ?? 'hl-tok-identifier';
+export function tokenKindClass (kind: SyntaxTokenKind): string {
+  return TOKEN_KIND_CLASS[kind] ?? 'outline-blue-400/20 bg-blue-400/5';
 }

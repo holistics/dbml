@@ -1,6 +1,10 @@
 // Pure collectors that turn per-tab data into Monaco decoration entries.
 // Kept in a standalone module (rather than inside OutputPane.vue) so each
 // tab owns its own decoration logic and the outer shell can stay thin.
+//
+// Colour assignments mirror the old `.hl-*` CSS layer one-for-one; only the
+// alpha values are rounded to the nearest Tailwind-supported steps (/5 for
+// backgrounds, /20 for outlines).
 
 import {
   SymbolKind, SyntaxNodeKind,
@@ -21,10 +25,12 @@ export interface DecorationEntry {
   cls: string;
 }
 
-// Shared outline + rounded shell. Negative outline offset keeps the edge
-// flush with the glyph so decorations feel soft instead of boxed-in — the
-// previous CSS layer did the same via `outline-offset: -1px`.
-export const DECORATION_SHELL = 'outline outline-1 outline-offset-[-1px] rounded-[2px]';
+// Shared outline + rounded shell. Negative outline offset pulls the stroke
+// inward so decorations feel soft instead of boxed-in. The colour classes
+// below are safelisted in `styles/main.css` — Tailwind's JIT scan can't see
+// string literals that live in .ts files, so we tell it explicitly which
+// utilities to generate.
+export const DECORATION_SHELL = 'outline outline-1 -outline-offset-1 rounded-sm';
 
 export function collectTokenDecorations (tokens: readonly SyntaxToken[]): DecorationEntry[] {
   return tokens.map((t) => ({
@@ -39,33 +45,36 @@ export function collectTokenDecorations (tokens: readonly SyntaxToken[]): Decora
 }
 
 const NODE_KIND_CLASS: Partial<Record<SyntaxNodeKind, string>> = {
-  [SyntaxNodeKind.ELEMENT_DECLARATION]: 'outline-blue-500/35 bg-blue-500/7',
+  [SyntaxNodeKind.ELEMENT_DECLARATION]: 'outline-blue-400/20 bg-blue-400/5',
 
-  [SyntaxNodeKind.USE_DECLARATION]: 'outline-violet-500/35 bg-violet-500/7',
-  [SyntaxNodeKind.USE_SPECIFIER]: 'outline-violet-500/35 bg-violet-500/7',
-  [SyntaxNodeKind.USE_SPECIFIER_LIST]: 'outline-violet-500/35 bg-violet-500/7',
+  [SyntaxNodeKind.USE_DECLARATION]: 'outline-violet-400/20 bg-violet-400/5',
+  [SyntaxNodeKind.USE_SPECIFIER]: 'outline-violet-400/20 bg-violet-400/5',
+  [SyntaxNodeKind.USE_SPECIFIER_LIST]: 'outline-violet-400/20 bg-violet-400/5',
 
-  [SyntaxNodeKind.ATTRIBUTE]: 'outline-orange-500/35 bg-orange-500/7',
-  [SyntaxNodeKind.IDENTIFIER_STREAM]: 'outline-gray-500/35 bg-gray-500/7',
+  [SyntaxNodeKind.ATTRIBUTE]: 'outline-orange-400/20 bg-orange-400/5',
+  [SyntaxNodeKind.IDENTIFIER_STREAM]: 'outline-gray-400/20 bg-gray-400/5',
 
-  [SyntaxNodeKind.LITERAL]: 'outline-green-600/35 bg-green-600/7',
-  [SyntaxNodeKind.VARIABLE]: 'outline-cyan-500/35 bg-cyan-500/7',
-  [SyntaxNodeKind.PRIMARY_EXPRESSION]: 'outline-sky-500/35 bg-sky-500/7',
+  [SyntaxNodeKind.LITERAL]: 'outline-green-500/20 bg-green-500/5',
+  [SyntaxNodeKind.VARIABLE]: 'outline-cyan-400/20 bg-cyan-400/5',
+  [SyntaxNodeKind.PRIMARY_EXPRESSION]: 'outline-sky-400/20 bg-sky-400/5',
 
-  [SyntaxNodeKind.PREFIX_EXPRESSION]: 'outline-red-500/35 bg-red-500/7',
-  [SyntaxNodeKind.INFIX_EXPRESSION]: 'outline-red-500/35 bg-red-500/7',
-  [SyntaxNodeKind.POSTFIX_EXPRESSION]: 'outline-red-500/35 bg-red-500/7',
+  [SyntaxNodeKind.PREFIX_EXPRESSION]: 'outline-red-400/20 bg-red-400/5',
+  [SyntaxNodeKind.INFIX_EXPRESSION]: 'outline-red-400/20 bg-red-400/5',
+  [SyntaxNodeKind.POSTFIX_EXPRESSION]: 'outline-red-400/20 bg-red-400/5',
 
-  [SyntaxNodeKind.FUNCTION_EXPRESSION]: 'outline-amber-500/35 bg-amber-500/7',
-  [SyntaxNodeKind.FUNCTION_APPLICATION]: 'outline-yellow-600/35 bg-yellow-600/7',
-  [SyntaxNodeKind.CALL_EXPRESSION]: 'outline-pink-500/35 bg-pink-500/7',
-  [SyntaxNodeKind.GROUP_EXPRESSION]: 'outline-pink-500/35 bg-pink-500/7',
+  [SyntaxNodeKind.FUNCTION_EXPRESSION]: 'outline-amber-400/20 bg-amber-400/5',
+  [SyntaxNodeKind.FUNCTION_APPLICATION]: 'outline-yellow-500/20 bg-yellow-500/5',
+  [SyntaxNodeKind.CALL_EXPRESSION]: 'outline-pink-400/20 bg-pink-400/5',
+  [SyntaxNodeKind.GROUP_EXPRESSION]: 'outline-pink-400/20 bg-pink-400/5',
 
-  [SyntaxNodeKind.BLOCK_EXPRESSION]: 'outline-indigo-500/35 bg-indigo-500/7',
-  [SyntaxNodeKind.LIST_EXPRESSION]: 'outline-teal-500/35 bg-teal-500/7',
-  [SyntaxNodeKind.TUPLE_EXPRESSION]: 'outline-teal-500/35 bg-teal-500/7',
-  [SyntaxNodeKind.COMMA_EXPRESSION]: 'outline-teal-500/35 bg-teal-500/7',
-  [SyntaxNodeKind.ARRAY]: 'outline-teal-500/35 bg-teal-500/7',
+  [SyntaxNodeKind.BLOCK_EXPRESSION]: 'outline-indigo-400/20 bg-indigo-400/5',
+  [SyntaxNodeKind.LIST_EXPRESSION]: 'outline-teal-400/20 bg-teal-400/5',
+  [SyntaxNodeKind.TUPLE_EXPRESSION]: 'outline-teal-400/20 bg-teal-400/5',
+  [SyntaxNodeKind.COMMA_EXPRESSION]: 'outline-teal-400/20 bg-teal-400/5',
+  [SyntaxNodeKind.ARRAY]: 'outline-teal-400/20 bg-teal-400/5',
+
+  [SyntaxNodeKind.EMPTY]: 'outline-gray-400/20 bg-gray-400/5',
+  [SyntaxNodeKind.WILDCARD]: 'outline-yellow-500/20 bg-yellow-500/5',
 };
 
 // Properties the walker should never follow — they point outside the
@@ -85,10 +94,8 @@ export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
     visited.add(node);
     if (Array.isArray(node)) { node.forEach(walk); return; }
     const obj = node as Record<string, unknown>;
-    const sp = obj.startPos as { line?: number;
-      column?: number; } | null | undefined;
-    const ep = obj.endPos as { line?: number;
-      column?: number; } | null | undefined;
+    const sp = obj.startPos as { line?: number; column?: number } | null | undefined;
+    const ep = obj.endPos as { line?: number; column?: number } | null | undefined;
     if (sp && ep && typeof sp.line === 'number' && !Number.isNaN(sp.line)
       && typeof ep.line === 'number' && !Number.isNaN(ep.line)) {
       const cls = NODE_KIND_CLASS[obj.kind as SyntaxNodeKind] ?? null;
@@ -109,29 +116,36 @@ export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
 }
 
 export const SYM_KIND_CLASS: Partial<Record<SymbolKind, string>> = {
-  [SymbolKind.Schema]: 'outline-orange-500/40 bg-orange-500/7',
+  [SymbolKind.Schema]: 'outline-orange-400/20 bg-orange-400/5',
 
-  [SymbolKind.Table]: 'outline-blue-500/40 bg-blue-500/7',
-  [SymbolKind.Column]: 'outline-gray-500/40 bg-gray-500/7',
+  [SymbolKind.Table]: 'outline-blue-400/20 bg-blue-400/5',
+  [SymbolKind.Column]: 'outline-gray-400/20 bg-gray-400/5',
 
-  [SymbolKind.TablePartial]: 'outline-blue-500/40 bg-blue-500/7',
-  [SymbolKind.PartialInjection]: 'outline-blue-500/40 bg-blue-500/7',
+  [SymbolKind.TablePartial]: 'outline-blue-400/20 bg-blue-400/5',
+  [SymbolKind.PartialInjection]: 'outline-blue-400/20 bg-blue-400/5',
 
-  [SymbolKind.Enum]: 'outline-green-600/40 bg-green-600/7',
-  [SymbolKind.EnumField]: 'outline-green-500/40 bg-green-500/7',
+  [SymbolKind.Enum]: 'outline-green-500/20 bg-green-500/5',
+  [SymbolKind.EnumField]: 'outline-green-400/20 bg-green-400/5',
 
-  [SymbolKind.TableGroup]: 'outline-yellow-600/40 bg-yellow-600/7',
-  [SymbolKind.TableGroupField]: 'outline-yellow-600/40 bg-yellow-600/7',
+  [SymbolKind.TableGroup]: 'outline-yellow-500/20 bg-yellow-500/5',
+  [SymbolKind.TableGroupField]: 'outline-yellow-500/20 bg-yellow-500/5',
 
-  [SymbolKind.Note]: 'outline-gray-500/40 bg-gray-500/7',
-  [SymbolKind.Indexes]: 'outline-purple-500/40 bg-purple-500/7',
-  [SymbolKind.DiagramView]: 'outline-purple-500/40 bg-purple-500/7',
+  [SymbolKind.Note]: 'outline-gray-400/20 bg-gray-400/5',
+  [SymbolKind.Indexes]: 'outline-purple-400/20 bg-purple-400/5',
+  [SymbolKind.DiagramView]: 'outline-purple-400/20 bg-purple-400/5',
+  [SymbolKind.DiagramViewTopLevelWildcard]: 'outline-purple-400/20 bg-purple-400/5',
+  [SymbolKind.DiagramViewTable]: 'outline-purple-400/20 bg-purple-400/5',
+  [SymbolKind.DiagramViewTableGroup]: 'outline-purple-400/20 bg-purple-400/5',
+  [SymbolKind.DiagramViewNote]: 'outline-purple-400/20 bg-purple-400/5',
+  [SymbolKind.DiagramViewSchema]: 'outline-purple-400/20 bg-purple-400/5',
 };
 
 export function collectSymbolDecorations (symbols: SymbolInfo[]): DecorationEntry[] {
   const result: DecorationEntry[] = [];
   function walk (sym: SymbolInfo) {
-    if (sym.declPos) {
+    // Program covers the entire file so its decoration would blanket
+    // everything underneath — skip it.
+    if (sym.declPos && sym.kind !== SymbolKind.Program) {
       result.push({
         range: new monaco.Range(sym.declPos.startLine, sym.declPos.startCol, sym.declPos.endLine, sym.declPos.endCol),
         cls: SYM_KIND_CLASS[sym.kind as SymbolKind] ?? '',
@@ -143,10 +157,7 @@ export function collectSymbolDecorations (symbols: SymbolInfo[]): DecorationEntr
   return result;
 }
 
-type DbToken = { start: { line: number;
-  column: number; };
-end: { line: number;
-  column: number; }; } | undefined;
+type DbToken = { start: { line: number; column: number }; end: { line: number; column: number } } | undefined;
 
 export function collectDatabaseDecorations (db: Database | null): DecorationEntry[] {
   if (!db) return [];
