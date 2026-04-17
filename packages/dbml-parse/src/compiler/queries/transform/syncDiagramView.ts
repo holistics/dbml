@@ -66,8 +66,10 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   return blocks;
 }
 
-function emitTablesBlock (lines: string[], tables: Array<{ name: string;
-  schemaName: string; }>): void {
+function emitTablesBlock (lines: string[], tables: Array<{
+  name: string;
+  schemaName: string;
+}>): void {
   const tableNames = tables.map((t) =>
     t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`,
   );
