@@ -1,78 +1,59 @@
 import {
   UNHANDLED,
 } from '@/core/types/module';
-import {
-  UseDeclarationNode, UseSpecifierListNode,
-} from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  AliasSymbol, NodeSymbol, UseSymbol,
+  AliasSymbol, NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
 import type Compiler from '../index';
-import {
-  usableMembers,
-} from './usableMembers';
 
-// Collect every UseSymbol declared across the project.
-function allUseSymbols (compiler: Compiler): { symbols: UseSymbol[]; errors: any[]; warnings: any[] } {
-  const astMap = compiler.parseProject();
-  compiler.bindProject();
-  const symbols: UseSymbol[] = [];
+// Canonical enumeration of visible symbols, rooted at each file's programSymbol.
+//
+// WARNING: always go through `compiler.symbolMembers` — never hit usableMembers
+// or symbolFactory directly. AliasSymbol/UseSymbol instances are only canonical
+// when reached via this path; other entry points mint fresh SchemaSymbols and
+// spawn parallel copies, breaking identity comparison against nodeReferee.
+function allVisibleMembers (compiler: Compiler): Report<NodeSymbol[]> {
+  const members: NodeSymbol[] = [];
   const errors: any[] = [];
   const warnings: any[] = [];
 
-  for (const astReport of astMap.values()) {
+  compiler.bindProject();
+  for (const astReport of compiler.parseProject().values()) {
     errors.push(...astReport.getErrors());
     warnings.push(...astReport.getWarnings());
-    const ast = astReport.getValue().ast;
-    for (const element of ast.body) {
-      if (!(element instanceof UseDeclarationNode)) continue;
-      if (!(element.specifiers instanceof UseSpecifierListNode)) continue;
-      for (const spec of element.specifiers.specifiers) {
-        const sym = compiler.nodeSymbol(spec).getFiltered(UNHANDLED);
-        if (sym instanceof UseSymbol) symbols.push(sym);
+    const programSymbol = compiler.nodeSymbol(astReport.getValue().ast).getFiltered(UNHANDLED);
+    if (!programSymbol) continue;
+
+    const top = compiler.symbolMembers(programSymbol);
+    errors.push(...top.getErrors());
+    warnings.push(...top.getWarnings());
+    for (const m of top.getFiltered(UNHANDLED) ?? []) {
+      members.push(m);
+      if (m instanceof SchemaSymbol && m.isKind(SymbolKind.Schema)) {
+        const sub = compiler.symbolMembers(m);
+        errors.push(...sub.getErrors());
+        warnings.push(...sub.getWarnings());
+        members.push(...(sub.getFiltered(UNHANDLED) ?? []));
       }
     }
   }
 
-  return { symbols, errors, warnings };
+  return new Report(members, errors, warnings);
 }
 
-// Collect every AliasSymbol declared across the project.
-function allAliasSymbols (compiler: Compiler): { symbols: AliasSymbol[]; errors: any[]; warnings: any[] } {
-  const symbols: AliasSymbol[] = [];
-  const errors: any[] = [];
-  const warnings: any[] = [];
-
-  for (const filepath of compiler.layout.getEntryPoints()) {
-    const usable = usableMembers.call(compiler, filepath);
-    errors.push(...usable.getErrors());
-    warnings.push(...usable.getWarnings());
-    const value = usable.getValue();
-    for (const m of value.nonSchemaMembers) {
-      if (m instanceof AliasSymbol) symbols.push(m);
-    }
-  }
-
-  return { symbols, errors, warnings };
-}
-
-// Return all AliasSymbols whose (transitive) originalSymbol is `symbol`.
-// AliasSymbol.originalSymbol unwraps the alias/use chain, so matching against
-// symbol.originalSymbol captures aliases-of-aliases and aliases-of-uses.
+// All AliasSymbols across the project that alias `symbol` (transitive).
 export function symbolAliases (this: Compiler, symbol: NodeSymbol): Report<AliasSymbol[]> {
-  const { symbols, errors, warnings } = allAliasSymbols(this);
   const target = symbol.originalSymbol;
-  const result = symbols.filter((a) => a.originalSymbol === target && a !== symbol);
-  return new Report(result, errors, warnings);
+  return allVisibleMembers(this).map((all) =>
+    all.filter((m): m is AliasSymbol => m instanceof AliasSymbol && m.originalSymbol === target && m !== symbol),
+  );
 }
 
-// Return all UseSymbols whose (transitive) originalSymbol is `symbol`.
-// UseSymbol.originalSymbol unwraps the use/alias chain, so matching against
-// symbol.originalSymbol captures uses-of-uses and uses-of-aliases.
+// All UseSymbols across the project that import `symbol` (transitive).
 export function symbolUses (this: Compiler, symbol: NodeSymbol): Report<UseSymbol[]> {
-  const { symbols, errors, warnings } = allUseSymbols(this);
   const target = symbol.originalSymbol;
-  const result = symbols.filter((u) => u.originalSymbol === target && u !== symbol);
-  return new Report(result, errors, warnings);
+  return allVisibleMembers(this).map((all) =>
+    all.filter((m): m is UseSymbol => m instanceof UseSymbol && m.originalSymbol === target && m !== symbol),
+  );
 }

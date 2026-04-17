@@ -55,6 +55,9 @@ import {
   suggestRecordRowSnippet,
 } from '@/services/suggestions/recordRowSnippet';
 import {
+  suggestUseCompletion,
+} from '@/services/suggestions/use';
+import {
   addQuoteToSuggestionIfNeeded,
   addSuggestAllSuggestion,
   isOffsetWithinElementHeader,
@@ -216,6 +219,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     if (bOcTokenId === undefined) {
       return suggestTopLevelElementType();
     }
+
+    // Use declaration completions take priority over string-literal detection
+    // below which would swallow importPath completions.
+    const useSuggestion = suggestUseCompletion(this.compiler, filepath, offset, bOcToken, model);
+    if (useSuggestion !== null) return useSuggestion;
 
     // Check if we're inside a string
     if ([

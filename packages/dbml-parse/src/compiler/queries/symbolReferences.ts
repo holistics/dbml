@@ -38,16 +38,17 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<Sy
   const errors = [];
   const warnings = [];
 
-  const aliasesReport = this.symbolAliases(symbol);
-  const usesReport = this.symbolUses(symbol);
-  errors.push(...aliasesReport.getErrors(), ...usesReport.getErrors());
-  warnings.push(...aliasesReport.getWarnings(), ...usesReport.getWarnings());
-
-  const targets = new Set<NodeSymbol>([
-    symbol,
-    ...aliasesReport.getValue(),
-    ...usesReport.getValue(),
-  ]);
+  // When the target is the original declaration, include references that flow
+  // through any alias or use (they unwrap to the same originalSymbol). When
+  // the target is itself an alias/use, stay narrow — only direct identity
+  // matches — so callers like renameAlias see just the alias-side refs, not
+  // the source-side ones that bypass the alias entirely.
+  const isOriginal = symbol.originalSymbol === symbol;
+  const matches = (ref: NodeSymbol | undefined): boolean => {
+    if (!ref) return false;
+    if (ref === symbol) return true;
+    return isOriginal && ref.originalSymbol === symbol;
+  };
 
   const refs: SyntaxNode[] = [];
   const seen = new Set<SyntaxNode>();
@@ -65,7 +66,7 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<Sy
     const walk = (node: SyntaxNode): void => {
       if (isExpressionAVariableNode(node)) {
         const ref = nodeReferee.call(this, node).getFiltered(UNHANDLED);
-        if (ref && targets.has(ref)) pushRef(node);
+        if (matches(ref)) pushRef(node);
         return;
       }
       // Handle tuple access: table.(col1, col2) - tuple counts as a reference to the table
@@ -77,7 +78,7 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<Sy
           const tableNode = getRightmostVariable(leftExpr);
           if (tableNode) {
             const ref = nodeReferee.call(this, tableNode).getFiltered(UNHANDLED);
-            if (ref && targets.has(ref)) pushRef(tableNode);
+            if (matches(ref)) pushRef(tableNode);
           }
         }
       }

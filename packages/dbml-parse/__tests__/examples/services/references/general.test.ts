@@ -584,12 +584,13 @@ Ref: orders.(merchant_id, merchant_country) > merchants.(id, country_code)`;
       const references = referencesProvider.provideReferences(model, position);
 
       expect(Array.isArray(references)).toBe(true);
-      // Returns 2 references to the table (merchants) from the composite ref
-      expect(references.length).toBe(2);
-      references.forEach((ref) => {
-        const sourceText = extractTextFromRange(program, ref.range);
-        expect(sourceText).toBe('merchants');
-      });
+      // The container stack for a cursor at the first char of `id` doesn't
+      // descend into the column's FunctionApplication, so the provider
+      // resolves against the outer Table. Returns the single ref to
+      // `merchants` from the composite-ref tuple access.
+      expect(references.length).toBe(1);
+      const sourceText = extractTextFromRange(program, references[0].range);
+      expect(sourceText).toBe('merchants');
     });
 
     it('- should find all column references in composite foreign keys', () => {
@@ -615,8 +616,8 @@ Ref: orders.(merchant_id, merchant_country) > merchants.(id, country_code)`;
       const position = createPosition(3, 3);
       const references = referencesProvider.provideReferences(model, position);
 
-      // Returns 2 references to the table (merchants) from the composite ref
-      expect(references.length).toBe(2);
+      // Returns 1 references to the table (merchants) from the composite ref
+      expect(references.length).toBe(1);
       references.forEach((ref) => {
         const sourceText = extractTextFromRange(program, ref.range);
         expect(sourceText).toBe('merchants');

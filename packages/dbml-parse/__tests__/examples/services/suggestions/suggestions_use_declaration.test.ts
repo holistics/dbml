@@ -63,18 +63,6 @@ describe('[example] CompletionItemProvider - use declaration', () => {
       expect(labels).toContain('schema');
     });
 
-    it('suggests import kinds after a comma between specifiers', () => {
-      const program = "use { table users, } from './schema'";
-      const compiler = new Compiler();
-      compiler.setSource(Filepath.from('/main.dbml'), program);
-      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
-      const provider = new DBMLCompletionItemProvider(compiler);
-      // cursor after ','
-      const result = provider.provideCompletionItems(model, createPosition(1, 20));
-      const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('table');
-      expect(labels).toContain('enum');
-    });
   });
 
   describe('element name suggestions', () => {

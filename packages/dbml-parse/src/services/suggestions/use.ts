@@ -46,7 +46,7 @@ function isTokenInUseDecl (token: SyntaxToken, useDecl: UseDeclarationNode): boo
   return false;
 }
 
-export function isOffsetInUseDeclaration (
+function isOffsetInUseDeclaration (
   offset: number,
   useDecl: UseDeclarationNode,
   bOcToken: SyntaxToken | undefined,
@@ -55,7 +55,26 @@ export function isOffsetInUseDeclaration (
   return !!bOcToken && isTokenInUseDecl(bOcToken, useDecl);
 }
 
-export function suggestInUseDeclaration (
+// Entry point for use-declaration completions. Returns a CompletionList if the
+// cursor is inside any UseDeclarationNode of the file, or null to let the
+// generic provider handle it. Mirrors `suggestRecordRowSnippet`.
+export function suggestUseCompletion (
+  compiler: Compiler,
+  filepath: Filepath,
+  offset: number,
+  bOcToken: SyntaxToken | undefined,
+  model: TextModel,
+): CompletionList | null {
+  const ast = compiler.parse.ast(filepath);
+  for (const node of ast.body) {
+    if (node instanceof UseDeclarationNode && isOffsetInUseDeclaration(offset, node, bOcToken)) {
+      return suggestInUseDeclaration(compiler, filepath, offset, node, model, bOcToken);
+    }
+  }
+  return null;
+}
+
+function suggestInUseDeclaration (
   compiler: Compiler,
   filepath: Filepath,
   offset: number,

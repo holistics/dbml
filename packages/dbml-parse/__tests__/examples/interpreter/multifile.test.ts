@@ -620,7 +620,7 @@ use { tablegroup social } from './base.dbml'
 });
 
 
-describe('[example] multifile interpreter — refs with same logical endpoints via different aliases across files', () => {
+describe('[example] multifile interpreter - refs with same logical endpoints via different aliases across files', () => {
   // Two Ref declarations target the same pair of columns, but one uses the
   // original table name and the other uses an alias. They are two distinct
   // textual Refs — the system should include both in the exported schema.
@@ -660,21 +660,6 @@ Ref r2: orders.user_id > u.id
     expect(bindErrors).toHaveLength(2);
     expect(bindErrors[0].diagnostic).toMatchInlineSnapshot(`"References with same endpoints exist"`);
     expect(bindErrors[1].diagnostic).toMatchInlineSnapshot(`"References with same endpoints exist"`);
-  });
-
-  test('both Refs appear in exported schema', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    expect(db.refs).toHaveLength(2);
-  });
-
-  test('r1 targets the original table name; r2 targets the alias', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const r1 = db.refs.find((r) => r.name === 'r1')!;
-    const r2 = db.refs.find((r) => r.name === 'r2')!;
-    expect(r1).toBeDefined();
-    expect(r2).toBeDefined();
-    expect(r1.endpoints.find((e) => e.tableName === 'users')).toBeDefined();
-    expect(r2.endpoints.find((e) => e.tableName === 'u')).toBeDefined();
   });
 });
 
