@@ -70,9 +70,11 @@ function emitTablesBlock (lines: string[], tables: Array<{
   name: string;
   schemaName: string;
 }>): void {
-  const tableNames = tables.map((t) =>
-    t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`,
-  );
+  const tableNames = tables.map((t) => {
+    const tableName = addDoubleQuoteIfNeeded(t.name);
+    if (t.schemaName === DEFAULT_SCHEMA_NAME) return tableName;
+    return `${addDoubleQuoteIfNeeded(t.schemaName)}.${tableName}`;
+  });
   lines.push('  Tables {');
   tableNames.forEach((n) => lines.push(`    ${n}`));
   lines.push('  }');
@@ -80,19 +82,19 @@ function emitTablesBlock (lines: string[], tables: Array<{
 
 function emitTableGroupsBlock (lines: string[], tableGroups: Array<{ name: string }>): void {
   lines.push('  TableGroups {');
-  tableGroups.forEach((n) => lines.push(`    ${n.name}`));
+  tableGroups.forEach((n) => lines.push(`    ${addDoubleQuoteIfNeeded(n.name)}`));
   lines.push('  }');
 }
 
 function emitSchemasBlock (lines: string[], schemas: Array<{ name: string }>): void {
   lines.push('  Schemas {');
-  schemas.forEach((n) => lines.push(`    ${n.name}`));
+  schemas.forEach((n) => lines.push(`    ${addDoubleQuoteIfNeeded(n.name)}`));
   lines.push('  }');
 }
 
 function emitNotesBlock (lines: string[], notes: Array<{ name: string }>): void {
   lines.push('  Notes {');
-  notes.forEach((n) => lines.push(`    ${n.name}`));
+  notes.forEach((n) => lines.push(`    ${addDoubleQuoteIfNeeded(n.name)}`));
   lines.push('  }');
 }
 
