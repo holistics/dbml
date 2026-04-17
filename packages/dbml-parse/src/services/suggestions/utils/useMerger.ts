@@ -6,8 +6,26 @@ import {
   Filepath,
 } from '@/core/types/filepath';
 import {
+  ImportKind,
+} from '@/core/types/keywords';
+import {
   UseDeclarationNode, UseSpecifierListNode, VariableNode, WildcardNode,
 } from '@/core/types/nodes';
+
+// Maps a runtime SymbolKind ('Table', 'Enum', …) to its DBML import keyword
+// ('table', 'enum', …). Without this the merged / created use statement
+// produces `{ Table users }`, which doesn't parse.
+function importKindFor (kind: SymbolKind): string | undefined {
+  switch (kind) {
+    case SymbolKind.Table: return ImportKind.Table;
+    case SymbolKind.Enum: return ImportKind.Enum;
+    case SymbolKind.TableGroup: return ImportKind.TableGroup;
+    case SymbolKind.TablePartial: return ImportKind.TablePartial;
+    case SymbolKind.Note: return ImportKind.Note;
+    case SymbolKind.Schema: return ImportKind.Schema;
+    default: return undefined;
+  }
+}
 
 export interface ParsedUseStatement {
   startOffset: number;
@@ -18,10 +36,14 @@ export interface ParsedUseStatement {
 }
 
 export interface UseStatementMergeResult {
-  newContent: string;
-  editStartOffset: number;
-  editEndOffset: number;
-  hint?: string; // 'merged into existing' or 'created new'
+  // Use statement to prepend at the top of the file. Always ends with at
+  // least one trailing blank line so it doesn't collide with whatever
+  // element declaration appears right after it.
+  topInsert: string;
+  // Source range of an old `use { ... } from '...'` to delete when merging.
+  // Absent on the create-new path (no existing use matched the source file).
+  removeRange?: { startOffset: number; endOffset: number };
+  hint?: string; // 'merged into existing' | 'created new' | 'symbol already imported'
 }
 
 /**
@@ -195,53 +217,108 @@ export function mergeSymbolIntoUses (
   // Look for existing use from this source file
   const existingUseIndex = existingUses.findIndex((u) => u.sourceFile === sourceFileStr);
 
+  const importKeyword = importKindFor(symbolKind) ?? symbolKind.toString().toLowerCase();
+  const newSpecifier = `${importKeyword} ${symbolName}`;
+  const lineEnd = detectLineEnding(fileContent);
+
   if (existingUseIndex !== -1) {
-    // Merge into existing use statement
     const existingUse = existingUses[existingUseIndex];
 
-    // Check for duplicates
+    // Duplicate — nothing to do. Surface no edit.
     if (existingUse.importedSymbols.includes(symbolName)) {
-      // Already imported, no change needed
       return {
-        newContent: fileContent,
-        editStartOffset: existingUse.startOffset,
-        editEndOffset: existingUse.endOffset,
+        topInsert: '',
         hint: 'symbol already imported',
       };
     }
 
-    // Add symbol to existing import list
-    const beforeUse = fileContent.slice(0, existingUse.startOffset);
-    const afterUse = fileContent.slice(existingUse.endOffset);
-
-    // Find the closing brace of the import list
-    const useStatement = fileContent.slice(existingUse.startOffset, existingUse.endOffset);
-    const closingBraceIdx = useStatement.lastIndexOf('}');
-    const beforeClosingBrace = useStatement.slice(0, closingBraceIdx).trimEnd();
-
-    const newUseStatement = `${beforeClosingBrace}
-${symbolName}
-}${useStatement.slice(closingBraceIdx + 1)}`;
-    const newContent = beforeUse + newUseStatement + afterUse;
+    // Merge strategy: emit a fresh multi-line `use { ... } from '...'` at the
+    // top of the file and delete the old use statement. This avoids fragile
+    // in-place edits against possibly malformed specifier lists, keeps
+    // formatting consistent, and tolerates syntax errors — the deleted range
+    // is whatever the parser recovered as the old use.
+    const allSpecifiers = uniqueInOrder([
+      ...existingUse.importedSymbols.filter((s) => s !== '*').map((n) => guessSpecifier(existingUse, n) ?? n),
+      newSpecifier,
+    ]);
+    const topInsert = buildUseStatement(allSpecifiers, sourceFileStr, lineEnd);
 
     return {
-      newContent,
-      editStartOffset: existingUse.startOffset,
-      editEndOffset: existingUse.endOffset + (newUseStatement.length - useStatement.length),
+      topInsert,
+      removeRange: expandToFullLines(fileContent, existingUse.startOffset, existingUse.endOffset),
       hint: 'merged into existing',
     };
-  } else {
-    // Create new use statement at top of file
-    const newUseStatement = `use { ${symbolKind} ${symbolName} } from '${sourceFileStr}'\n`;
-    const newContent = newUseStatement + fileContent;
-
-    return {
-      newContent,
-      editStartOffset: 0,
-      editEndOffset: newUseStatement.length,
-      hint: 'created new',
-    };
   }
+
+  return {
+    topInsert: buildUseStatement([
+      newSpecifier,
+    ], sourceFileStr, lineEnd),
+    hint: 'created new',
+  };
+}
+
+// Render a multi-line use statement with an extra trailing blank line so it
+// cleanly separates from the element declaration that follows.
+function buildUseStatement (specifiers: string[], sourceFileStr: string, lineEnd: string): string {
+  const body = specifiers.map((s) => `  ${s}`).join(lineEnd);
+  return `use {${lineEnd}${body}${lineEnd}} from '${sourceFileStr}'${lineEnd}${lineEnd}`;
+}
+
+function uniqueInOrder (xs: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const x of xs) {
+    const key = x.trim();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(x);
+  }
+  return out;
+}
+
+// Recover the `<kind> <name>` form for an existing specifier whose parser
+// extraction only gave us the bare name. Falls back to the plain name when
+// the kind token isn't available (e.g. parse recovery).
+function guessSpecifier (existingUse: ParsedUseStatement, name: string): string | undefined {
+  const list = existingUse.node.specifiers;
+  if (!(list instanceof UseSpecifierListNode)) return undefined;
+  for (const spec of list.specifiers) {
+    const specName = (spec.name && extractSymbolName(spec.name)) ?? spec.importKind?.value;
+    if (specName !== name) continue;
+    const kind = spec.importKind?.value && isImportKind(spec.importKind.value) ? spec.importKind.value : undefined;
+    return kind ? `${kind} ${name}` : undefined;
+  }
+  return undefined;
+}
+
+function isImportKind (val: string): boolean {
+  return (
+    val === ImportKind.Table
+    || val === ImportKind.Enum
+    || val === ImportKind.TableGroup
+    || val === ImportKind.TablePartial
+    || val === ImportKind.Note
+    || val === ImportKind.Schema
+  );
+}
+
+// Extend a range so it consumes any trailing newline(s), so deleting it
+// removes the statement cleanly without leaving a blank line behind.
+function expandToFullLines (fileContent: string, start: number, end: number): { startOffset: number; endOffset: number } {
+  // Pull the start back to the beginning of the line.
+  const lineStart = fileContent.lastIndexOf('\n', start - 1) + 1;
+  // Eat the trailing line break so the surrounding blank line doesn't linger.
+  let newEnd = end;
+  while (newEnd < fileContent.length && (fileContent[newEnd] === ' ' || fileContent[newEnd] === '\t')) newEnd++;
+  if (fileContent[newEnd] === '\r') newEnd++;
+  if (fileContent[newEnd] === '\n') newEnd++;
+  return { startOffset: lineStart, endOffset: newEnd };
+}
+
+function detectLineEnding (source: string): string {
+  // Use whatever the file already uses; default to `\n`.
+  return source.includes('\r\n') ? '\r\n' : '\n';
 }
 
 /**

@@ -52,6 +52,10 @@ import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
 import {
+  buildCrossFileCompletionItem,
+  collectCrossFileSuggestions,
+} from '@/services/suggestions/crossFile';
+import {
   suggestRecordRowSnippet,
 } from '@/services/suggestions/recordRowSnippet';
 import {
@@ -91,100 +95,36 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     this.triggerCharacters = triggerCharacters;
   }
 
-  private collectFileSymbols (fp: Filepath): Array<{ sym: NodeSymbol;
-    filepath: Filepath; }> {
-    const usable = this.compiler.usableMembers(fp).getFiltered(UNHANDLED);
-    if (!usable) return [];
-    return [
-      ...usable.nonSchemaMembers,
-      ...usable.schemaMembers,
-    ].map((sym) => ({
-      sym,
-      filepath: fp,
-    }));
+  // Cross-file suggestion surfaces symbols from sibling project files at
+  // global-scope lookup points. Implementation in ./crossFile.ts — these
+  // thin wrappers keep the public provider surface stable for existing
+  // call sites that want a CompletionList.
+  suggestCrossFileSymbols (
+    acceptedKinds: SymbolKind[],
+    currentFilepath: Filepath,
+    _currentFileContent: string,
+  ): CompletionList {
+    return {
+      suggestions: collectCrossFileSuggestions(this.compiler, acceptedKinds, currentFilepath),
+    };
   }
 
-  /**
-   * Create completion item for cross-file symbol with additionalTextEdits
-   * to auto-insert the use statement
-   */
   createCrossFileCompletionItem (
     symbolName: string,
     symbolKind: SymbolKind,
-    fileHint: string,
+    _fileHint: string,
     sourceFilepath: Filepath,
     currentFilepath: Filepath,
     currentFileContent: string,
   ): CompletionItem {
-    // Calculate the use statement that should be inserted
-    const mergeResult = mergeSymbolIntoUses(
+    return buildCrossFileCompletionItem(
       this.compiler,
+      symbolName,
+      symbolKind,
+      sourceFilepath,
       currentFilepath,
       currentFileContent,
-      symbolKind,
-      symbolName,
-      sourceFilepath,
     );
-
-    // Extract just the new use statement line(s) to insert
-    const lines = mergeResult.newContent.split('\n');
-    const textToInsert = lines.slice(0, 1).join('\n') + '\n';
-
-    return {
-      label: symbolName,
-      insertText: symbolName,
-      insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-      kind: pickCompletionItemKind(symbolKind),
-      detail: fileHint,
-      // Use zzz_ prefix to sort cross-file suggestions after local ones
-      sortText: `zzz_${pickCompletionItemKind(symbolKind).toString().padStart(2, '0')}_${symbolName}`,
-      range: undefined as any,
-      // Add the use statement as additional text edits
-      additionalTextEdits: [
-        {
-          range: {
-            startLineNumber: 1,
-            startColumn: 1,
-            endLineNumber: 1,
-            endColumn: 1,
-          },
-          text: textToInsert,
-        },
-      ],
-    };
-  }
-
-  suggestCrossFileSymbols (
-    acceptedKinds: SymbolKind[],
-    currentFilepath: Filepath,
-    currentFileContent: string,
-  ): CompletionList {
-    const results: CompletionList = {
-      suggestions: [],
-    };
-    const seenNames = new Set<string>();
-
-    for (const fp of this.compiler.layout.getEntryPoints()) {
-      if (fp.equals(currentFilepath)) continue;
-      for (const {
-        sym, filepath,
-      } of this.collectFileSymbols(fp)) {
-        if (!acceptedKinds.includes(sym.kind)) continue;
-        const name = sym.name;
-        if (!name || seenNames.has(name)) continue;
-        seenNames.add(name);
-        results.suggestions.push(this.createCrossFileCompletionItem(
-          name,
-          sym.kind,
-          `from ${filepath.basename}`,
-          filepath,
-          currentFilepath,
-          currentFileContent,
-        ));
-      }
-    }
-
-    return results;
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
@@ -422,7 +362,9 @@ function suggestNamesInScope (
   const res: CompletionList = {
     suggestions: [],
   };
+  let programNode: ProgramNode | undefined;
   while (curElement) {
+    if (curElement instanceof ProgramNode) programNode = curElement;
     const symbol = compiler.nodeSymbol(curElement).getFiltered(UNHANDLED);
     if (symbol) {
       const memberSuggestions = suggestMembersOfSymbol(compiler, symbol, acceptedKinds).suggestions;
@@ -441,8 +383,23 @@ function suggestNamesInScope (
     curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
   }
 
+  // Global-scope lookups should also surface symbols that live in other
+  // project files. They come back with an additionalTextEdit that inserts the
+  // matching `use { ... }` statement when the suggestion is accepted.
+  if (programNode?.filepath) {
+    const fp = programNode.filepath;
+    const seen = new Set(res.suggestions.map((s) => typeof s.label === 'string' ? s.label : s.label.label));
+    for (const item of collectCrossFileSuggestions(compiler, acceptedKinds, fp)) {
+      const name = typeof item.label === 'string' ? item.label : item.label.label;
+      if (seen.has(name)) continue;
+      seen.add(name);
+      res.suggestions.push(item);
+    }
+  }
+
   return addQuoteToSuggestionIfNeeded(res);
 }
+
 
 function suggestInTuple (compiler: Compiler, filepath: Filepath, offset: number, tupleContainer: TupleExpressionNode): CompletionList {
   const scopeKind = compiler.container.scopeKind(filepath, offset);

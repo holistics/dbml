@@ -105,9 +105,9 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
     const tupleParent = node.parentNode;
     if (tupleParent && isAccessExpression(tupleParent.parentNode) && (tupleParent.parentNode as InfixExpressionNode).rightExpression === tupleParent) {
       const leftExpr = (tupleParent.parentNode as InfixExpressionNode).leftExpression!;
-      const tableResult = compiler.nodeReferee(leftExpr);
-      if (!tableResult.hasValue(UNHANDLED) && tableResult.getValue()?.isKind(SymbolKind.Table)) {
-        return lookupMember(compiler, tableResult.getValue()!, name, {
+      const tableSymbol = compiler.nodeReferee(leftExpr).getFiltered(UNHANDLED);
+      if (tableSymbol?.isKind(SymbolKind.Table)) {
+        return lookupMember(compiler, tableSymbol, name, {
           kinds: [
             SymbolKind.Column,
           ],
@@ -115,13 +115,8 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
         });
       }
     }
-    return lookupMember(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Column,
-      ],
-      ignoreNotFound: true,
-      errorNode: node,
-    });
+
+    return Report.create(undefined);
   }
 
   // Right side of access expression - resolve via left sibling
