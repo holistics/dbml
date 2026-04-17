@@ -114,6 +114,9 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
     'records',
     'checks',
     'diagramview',
+    'use',
+    'reuse',
+    'from',
   ],
 
   dataTypes: [

@@ -200,8 +200,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               filepath,
               offset,
               container as PrefixExpressionNode & { op: SyntaxToken },
-              model,
-              this,
             );
           case '~':
             return suggestOnPartialInjectionOp(
@@ -222,8 +220,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
               filepath,
               offset,
               container as InfixExpressionNode & { op: SyntaxToken },
-              model,
-              this,
             );
           case '.':
             return suggestMembers(
@@ -279,8 +275,6 @@ function suggestOnRelOp (
   filepath: Filepath,
   offset: number,
   container: (PrefixExpressionNode | InfixExpressionNode) & { op: SyntaxToken },
-  model?: TextModel,
-  provider?: DBMLCompletionItemProvider,
 ): CompletionList {
   const scopeKind = compiler.container.scopeKind(filepath, offset);
 
@@ -289,27 +283,13 @@ function suggestOnRelOp (
     ScopeKind.TABLE,
     ScopeKind.TABLEPARTIAL,
   ].includes(scopeKind)) {
+    // Cross-file suggestions are surfaced inside suggestNamesInScope when its
+    // walk reaches ProgramNode — no need to append them here.
     const res = suggestNamesInScope(compiler, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Table,
       SymbolKind.Schema,
       SymbolKind.Column,
     ]);
-
-    // Add cross-file symbol suggestions if available
-    if (model && provider && model.uri) {
-      const currentFilepath = Filepath.fromUri(String(model.uri));
-      const fileContent = model.getValue();
-      const crossFileSuggestions = provider.suggestCrossFileSymbols(
-        [
-          SymbolKind.Table,
-          SymbolKind.Schema,
-          SymbolKind.Column,
-        ],
-        currentFilepath,
-        fileContent,
-      );
-      res.suggestions.push(...crossFileSuggestions.suggestions);
-    }
 
     return !shouldPrependSpace(container.op, offset) ? res : prependSpace(res);
   }
@@ -335,12 +315,20 @@ function suggestMembersOfSymbol (
       .flatMap((member) => {
         const name = member.name;
         if (name === undefined) return [];
+        // Every suggestion shows where it comes from so users can tell
+        // local vs imported names apart. `this file` for symbols declared
+        // in the currently-open file; `from <basename>` for imports.
+        const originFp = member.originalFilepath;
+        const detail = originFp && !originFp.equals(symbol.filepath)
+          ? `from ${originFp.basename}`
+          : 'this file';
         return {
           label: name,
           insertText: name,
           insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
           kind: pickCompletionItemKind(member.kind),
           sortText: pickCompletionItemKind(member.kind).toString().padStart(2, '0'),
+          detail,
           range: undefined as any,
         };
       })

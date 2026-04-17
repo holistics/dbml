@@ -27,11 +27,16 @@ function importKindFor (kind: SymbolKind): string | undefined {
   }
 }
 
+export interface ParsedUseSpecifier {
+  kind?: string; // DBML import keyword: 'table' | 'enum' | ... (undefined if parser couldn't extract)
+  name: string;  // bare symbol name, or '*' for wildcard
+}
+
 export interface ParsedUseStatement {
   startOffset: number;
   endOffset: number;
   sourceFile: string; // e.g., './common'
-  importedSymbols: string[];
+  specifiers: ParsedUseSpecifier[];
   node: UseDeclarationNode; // Original AST node for precise source tracking
 }
 
@@ -80,50 +85,40 @@ export function scanExistingUses (
         sourceFile = fromMatch[2];
       }
     }
-    const importedSymbols: string[] = [];
+    const specifiers: ParsedUseSpecifier[] = [];
 
-    // Extract symbols from specifiers
     if (useNode.specifiers instanceof UseSpecifierListNode) {
-      // Selective import: use { [kind] symbol1, [kind] symbol2 } from './path'
+      const IMPORT_KIND_KEYWORDS = new Set([
+        'table', 'enum', 'tablepartial', 'tablegroup', 'note', 'schema', 'from',
+      ]);
       for (const specifier of useNode.specifiers.specifiers) {
-        let name: string | undefined = undefined;
+        let kind: string | undefined;
+        let name: string | undefined;
 
         if (specifier.name) {
-          // Fully formed specifier: has both importKind and name
+          // Fully formed: `use { table users }`
+          kind = specifier.importKind?.value;
           name = extractSymbolName(specifier.name);
-          // Fallback: extract from source text using node positions
           if (!name && specifier.name.start !== undefined && specifier.name.end !== undefined) {
             name = fileContent.slice(specifier.name.start, specifier.name.end).trim();
           }
         } else if (specifier.importKind) {
-          // No explicit kind token — the "kind slot" holds the symbol name (e.g. `use { User }`)
-          // Reject DBML import-kind keywords that leaked in due to parser error recovery.
-          const IMPORT_KIND_KEYWORDS = new Set([
-            'table',
-            'enum',
-            'tablepartial',
-            'tablegroup',
-            'note',
-            'from',
-          ]);
+          // Parse recovery: `use { User }` — "kind slot" holds the symbol name.
           const val = specifier.importKind.value ?? undefined;
           if (val && !IMPORT_KIND_KEYWORDS.has(val.toLowerCase())) {
             name = val;
           }
         }
 
-        // Filter out DBML keywords that can leak in as symbol names due to error recovery
         if (name && name.toLowerCase() !== 'from') {
-          importedSymbols.push(name);
+          specifiers.push({ kind, name });
         }
       }
     } else if (useNode.specifiers instanceof WildcardNode) {
-      // Wildcard import: use * from './path'
-      importedSymbols.push('*');
+      specifiers.push({ name: '*' });
     }
 
-    // Skip use statements without extractable symbols
-    if (importedSymbols.length === 0 && !(useNode.specifiers instanceof WildcardNode)) {
+    if (specifiers.length === 0 && !(useNode.specifiers instanceof WildcardNode)) {
       continue;
     }
 
@@ -141,7 +136,7 @@ export function scanExistingUses (
       startOffset: useNode.fullStart,
       endOffset,
       sourceFile,
-      importedSymbols,
+      specifiers,
       node: useNode,
     });
   }
@@ -225,7 +220,7 @@ export function mergeSymbolIntoUses (
     const existingUse = existingUses[existingUseIndex];
 
     // Duplicate — nothing to do. Surface no edit.
-    if (existingUse.importedSymbols.includes(symbolName)) {
+    if (existingUse.specifiers.some((s) => s.name === symbolName)) {
       return {
         topInsert: '',
         hint: 'symbol already imported',
@@ -237,8 +232,14 @@ export function mergeSymbolIntoUses (
     // in-place edits against possibly malformed specifier lists, keeps
     // formatting consistent, and tolerates syntax errors — the deleted range
     // is whatever the parser recovered as the old use.
+    //
+    // Every specifier is rendered as `<kind> <name>`; if the parser couldn't
+    // recover a kind for an existing specifier, we fall back to the new
+    // suggestion's kind as a reasonable default.
     const allSpecifiers = uniqueInOrder([
-      ...existingUse.importedSymbols.filter((s) => s !== '*').map((n) => guessSpecifier(existingUse, n) ?? n),
+      ...existingUse.specifiers
+        .filter((s) => s.name !== '*')
+        .map((s) => `${s.kind ?? importKeyword} ${s.name}`),
       newSpecifier,
     ]);
     const topInsert = buildUseStatement(allSpecifiers, sourceFileStr, lineEnd);
@@ -275,32 +276,6 @@ function uniqueInOrder (xs: string[]): string[] {
     out.push(x);
   }
   return out;
-}
-
-// Recover the `<kind> <name>` form for an existing specifier whose parser
-// extraction only gave us the bare name. Falls back to the plain name when
-// the kind token isn't available (e.g. parse recovery).
-function guessSpecifier (existingUse: ParsedUseStatement, name: string): string | undefined {
-  const list = existingUse.node.specifiers;
-  if (!(list instanceof UseSpecifierListNode)) return undefined;
-  for (const spec of list.specifiers) {
-    const specName = (spec.name && extractSymbolName(spec.name)) ?? spec.importKind?.value;
-    if (specName !== name) continue;
-    const kind = spec.importKind?.value && isImportKind(spec.importKind.value) ? spec.importKind.value : undefined;
-    return kind ? `${kind} ${name}` : undefined;
-  }
-  return undefined;
-}
-
-function isImportKind (val: string): boolean {
-  return (
-    val === ImportKind.Table
-    || val === ImportKind.Enum
-    || val === ImportKind.TableGroup
-    || val === ImportKind.TablePartial
-    || val === ImportKind.Note
-    || val === ImportKind.Schema
-  );
 }
 
 // Extend a range so it consumes any trailing newline(s), so deleting it
