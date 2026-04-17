@@ -66,7 +66,10 @@ export function buildCrossFileCompletionItem (
   );
 
   const additionalTextEdits: Array<{
-    range: { startLineNumber: number; startColumn: number; endLineNumber: number; endColumn: number };
+    range: { startLineNumber: number;
+      startColumn: number;
+      endLineNumber: number;
+      endColumn: number; };
     text: string;
   }> = [];
 
@@ -108,7 +111,8 @@ export function buildCrossFileCompletionItem (
   };
 }
 
-function offsetToPosition (content: string, offset: number): { line: number; column: number } {
+function offsetToPosition (content: string, offset: number): { line: number;
+  column: number; } {
   let line = 1;
   let col = 1;
   for (let i = 0; i < offset && i < content.length; i++) {
@@ -119,5 +123,8 @@ function offsetToPosition (content: string, offset: number): { line: number; col
       col++;
     }
   }
-  return { line, column: col };
+  return {
+    line,
+    column: col,
+  };
 }

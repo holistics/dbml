@@ -29,6 +29,7 @@
           <span class="text-xs font-mono">{{ symbol.kind }}</span>
         </template>
       </VTooltip>
+      <span class="text-gray-400 text-xs">{{ symbol.kind }}</span>
       <span class="text-blue-500">{{ symbol.name }}</span>
     </div>
     <template v-if="open && hasMembers">
@@ -56,7 +57,12 @@ import {
   PhAt,
   PhTextAa,
   PhNumberSquareOne,
+  PhPuzzlePiece,
+  PhFile,
 } from '@phosphor-icons/vue';
+import {
+  SymbolKind,
+} from '@dbml/parse';
 import type {
   SymbolInfo,
 } from '@/stores/parserStore';
@@ -76,26 +82,44 @@ function toggleOpen () { open.value = !open.value; }
 
 const hasMembers = computed(() => symbol.members.length > 0);
 
-const KIND_ICONS: Record<string, Component> = {
-  'Table': PhTable,
-  'Column': PhListBullets,
-  'Ref': PhArrowsLeftRight,
-  'Enum': PhTextAa,
-  'Enum field': PhNumberSquareOne,
-  'TableGroup': PhFolder,
-  'Schema': PhFolder,
+const KIND_ICONS: Partial<Record<SymbolKind, Component>> = {
+  [SymbolKind.Program]: PhFile,
+  [SymbolKind.Schema]: PhFolder,
+
+  [SymbolKind.Table]: PhTable,
+  [SymbolKind.Column]: PhListBullets,
+
+  [SymbolKind.TablePartial]: PhPuzzlePiece,
+  [SymbolKind.PartialInjection]: PhPuzzlePiece,
+
+  [SymbolKind.Enum]: PhTextAa,
+  [SymbolKind.EnumField]: PhNumberSquareOne,
+
+  [SymbolKind.TableGroup]: PhFolder,
+  [SymbolKind.TableGroupField]: PhListBullets,
+
+  [SymbolKind.Indexes]: PhArrowsLeftRight,
 };
 
-const KIND_COLORS: Record<string, string> = {
-  'Table': 'text-blue-500',
-  'Column': 'text-gray-500',
-  'Ref': 'text-purple-500',
-  'Enum': 'text-green-600',
-  'Enum field': 'text-green-500',
-  'TableGroup': 'text-yellow-600',
-  'Schema': 'text-orange-500',
+const KIND_COLORS: Partial<Record<SymbolKind, string>> = {
+  [SymbolKind.Program]: 'text-gray-500',
+  [SymbolKind.Schema]: 'text-orange-500',
+
+  [SymbolKind.Table]: 'text-blue-500',
+  [SymbolKind.Column]: 'text-gray-500',
+
+  [SymbolKind.TablePartial]: 'text-teal-500',
+  [SymbolKind.PartialInjection]: 'text-teal-500',
+
+  [SymbolKind.Enum]: 'text-green-600',
+  [SymbolKind.EnumField]: 'text-green-500',
+
+  [SymbolKind.TableGroup]: 'text-yellow-600',
+  [SymbolKind.TableGroupField]: 'text-yellow-500',
+
+  [SymbolKind.Indexes]: 'text-purple-500',
 };
 
-const icon = computed((): Component => KIND_ICONS[symbol.kind] ?? PhAt);
-const iconColor = computed(() => KIND_COLORS[symbol.kind] ?? 'text-gray-400');
+const icon = computed((): Component => KIND_ICONS[symbol.kind as SymbolKind] ?? PhAt);
+const iconColor = computed(() => KIND_COLORS[symbol.kind as SymbolKind] ?? 'text-gray-400');
 </script>

@@ -3,8 +3,8 @@
     <div class="flex-shrink-0 px-3 py-1 border-b border-gray-200 bg-white text-gray-500 text-xs flex items-center justify-between">
       <span>{{ tokens.length }} tokens</span>
       <TabSettingsButton
-        :show-decor="showDecor"
-        @toggle-decor="emit('toggle-decor')"
+        :show-decoration="showDecoration"
+        @toggle-decoration="emit('toggle-decoration')"
       />
     </div>
 
@@ -146,7 +146,7 @@ import {
   PhKeyReturn,
   PhArrowsHorizontal,
 } from '@phosphor-icons/vue';
-import TabSettingsButton from './TabSettingsButton.vue';
+import TabSettingsButton from './common/TabSettingsButton.vue';
 import type {
   SyntaxToken,
 } from '@dbml/parse';
@@ -159,10 +159,10 @@ import {
 
 interface Props {
   tokens: SyntaxToken[];
-  showDecor?: boolean;
+  showDecoration?: boolean;
 }
 
-const emit = defineEmits<{ 'toggle-decor': [] }>();
+const emit = defineEmits<{ 'toggle-decoration': [] }>();
 
 const props = defineProps<Props>();
 

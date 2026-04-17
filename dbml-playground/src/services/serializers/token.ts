@@ -8,10 +8,14 @@ import {
   getReadableId,
 } from './utils';
 
-export function serializeToken (token: SyntaxToken, { simple = false }: SerializeOpts = {}): SerializedToken {
+export function serializeToken (token: SyntaxToken, {
+  simple = false,
+}: SerializeOpts = {}): SerializedToken {
   const id = getReadableId(token);
   if (simple) {
-    const out: SerializedToken = { id };
+    const out: SerializedToken = {
+      id,
+    };
     if (token.isInvalid) out.isInvalid = true;
     return out;
   }

@@ -41,15 +41,25 @@
 
       <span class="text-gray-700 mr-2">{{ node.propertyName }}</span>
 
-      <span
-        v-if="hintText"
-        class="mr-2 truncate"
-        :class="hintClass"
-      >{{ hintText }}</span>
-      <span
-        v-if="leafValue !== ''"
-        class="text-green-700"
-      >{{ leafValue }}</span>
+      <!-- Tokens render with the same value styling the Tokens tab uses so
+           the two views stay visually consistent. -->
+      <template v-if="isToken">
+        <span
+          class="truncate"
+          :class="isEof ? 'text-red-400 font-semibold' : 'text-green-700'"
+        >{{ isEof ? '<EOF>' : (tokenValue || '·') }}</span>
+      </template>
+      <template v-else>
+        <span
+          v-if="hintText"
+          class="mr-2 truncate"
+          :class="hintClass"
+        >{{ hintText }}</span>
+        <span
+          v-if="leafValue !== ''"
+          class="text-green-700"
+        >{{ leafValue }}</span>
+      </template>
       <span
         v-if="sizeHint"
         class="text-gray-400"
@@ -82,8 +92,6 @@ import {
   PhDiamond,
   PhFile,
   PhTag,
-  PhListBullets,
-  PhArrowsLeftRight,
   PhBracketsSquare,
   PhBracketsCurly,
   PhTextAa,
@@ -92,10 +100,24 @@ import {
   PhMinus,
   PhLightning,
   PhMathOperations,
+  PhDownloadSimple,
+  PhPackage,
+  PhPlusMinus,
+  PhEquals,
+  PhTerminal,
+  PhLinkSimple,
+  PhListDashes,
+  PhAlignCenterHorizontal,
+  PhTextColumns,
+  PhAt,
+  PhCaretDoubleDown,
+  PhDotsThree,
+  PhPath,
 } from '@phosphor-icons/vue';
 import {
   SyntaxToken,
   SyntaxTokenKind,
+  SyntaxNodeKind,
 } from '@dbml/parse';
 import {
   tokenIconFor,
@@ -157,6 +179,7 @@ const nodeKind = computed(() => {
 // `<EOF>` presentation as the Tokens tab.
 const isToken = computed(() => props.node.rawData instanceof SyntaxToken);
 const isEof = computed(() => isToken.value && (props.node.rawData as SyntaxToken).kind === SyntaxTokenKind.EOF);
+const tokenValue = computed(() => isToken.value ? (props.node.rawData as SyntaxToken).value ?? '' : '');
 const hintText = computed(() => isEof.value ? '' : (props.node.nameHint ?? ''));
 const hintClass = computed(() => isToken.value ? 'text-green-700' : 'text-blue-600');
 
@@ -164,121 +187,131 @@ interface IconInfo { icon: typeof PhDiamond;
   color: string;
   label: string; }
 
-const NODE_KIND_ICONS: Record<string, IconInfo> = {
-  '<program>': {
+// Every kind gets a visually distinct icon so users can scan the Nodes tab at
+// a glance. Keys come from SyntaxNodeKind so they stay in sync with the
+// grammar instead of drifting via stringly-typed literals.
+const NODE_KIND_ICONS: Partial<Record<SyntaxNodeKind, IconInfo>> = {
+  [SyntaxNodeKind.PROGRAM]: {
     icon: PhFile,
     color: 'text-blue-500',
-    label: '<program>',
+    label: SyntaxNodeKind.PROGRAM,
   },
-  '<element-declaration>': {
-    icon: PhTag,
+  [SyntaxNodeKind.ELEMENT_DECLARATION]: {
+    icon: PhPackage,
     color: 'text-indigo-500',
-    label: '<element-declaration>',
+    label: SyntaxNodeKind.ELEMENT_DECLARATION,
   },
-  '<use-declaration>': {
-    icon: PhArrowsLeftRight,
+
+  [SyntaxNodeKind.USE_DECLARATION]: {
+    icon: PhDownloadSimple,
     color: 'text-purple-500',
-    label: '<use-declaration>',
+    label: SyntaxNodeKind.USE_DECLARATION,
   },
-  '<use-specifier>': {
-    icon: PhArrowsLeftRight,
+  [SyntaxNodeKind.USE_SPECIFIER]: {
+    icon: PhAt,
     color: 'text-purple-400',
-    label: '<use-specifier>',
+    label: SyntaxNodeKind.USE_SPECIFIER,
   },
-  '<use-specifier-list>': {
-    icon: PhArrowsLeftRight,
+  [SyntaxNodeKind.USE_SPECIFIER_LIST]: {
+    icon: PhListDashes,
     color: 'text-purple-400',
-    label: '<use-specifier-list>',
+    label: SyntaxNodeKind.USE_SPECIFIER_LIST,
   },
-  '<attribute>': {
+
+  [SyntaxNodeKind.ATTRIBUTE]: {
     icon: PhTag,
     color: 'text-amber-500',
-    label: '<attribute>',
+    label: SyntaxNodeKind.ATTRIBUTE,
   },
-  '<block-expression>': {
+  [SyntaxNodeKind.IDENTIFIER_STREAM]: {
+    icon: PhTextColumns,
+    color: 'text-blue-400',
+    label: SyntaxNodeKind.IDENTIFIER_STREAM,
+  },
+
+  [SyntaxNodeKind.BLOCK_EXPRESSION]: {
     icon: PhBracketsCurly,
     color: 'text-cyan-500',
-    label: '<block-expression>',
+    label: SyntaxNodeKind.BLOCK_EXPRESSION,
   },
-  '<list-expression>': {
+  [SyntaxNodeKind.LIST_EXPRESSION]: {
     icon: PhBracketsSquare,
     color: 'text-cyan-500',
-    label: '<list-expression>',
+    label: SyntaxNodeKind.LIST_EXPRESSION,
   },
-  '<tuple-expression>': {
-    icon: PhBracketsSquare,
+  [SyntaxNodeKind.TUPLE_EXPRESSION]: {
+    icon: PhBracketsCurly,
     color: 'text-cyan-400',
-    label: '<tuple-expression>',
+    label: SyntaxNodeKind.TUPLE_EXPRESSION,
   },
-  '<function-expression>': {
+
+  [SyntaxNodeKind.FUNCTION_EXPRESSION]: {
     icon: PhLightning,
     color: 'text-orange-500',
-    label: '<function-expression>',
+    label: SyntaxNodeKind.FUNCTION_EXPRESSION,
   },
-  '<function-application>': {
-    icon: PhLightning,
+  [SyntaxNodeKind.FUNCTION_APPLICATION]: {
+    icon: PhTerminal,
     color: 'text-orange-400',
-    label: '<function-application>',
+    label: SyntaxNodeKind.FUNCTION_APPLICATION,
   },
-  '<prefix-expression>': {
+
+  [SyntaxNodeKind.PREFIX_EXPRESSION]: {
+    icon: PhPlusMinus,
+    color: 'text-red-400',
+    label: SyntaxNodeKind.PREFIX_EXPRESSION,
+  },
+  [SyntaxNodeKind.INFIX_EXPRESSION]: {
     icon: PhMathOperations,
     color: 'text-red-400',
-    label: '<prefix-expression>',
+    label: SyntaxNodeKind.INFIX_EXPRESSION,
   },
-  '<infix-expression>': {
-    icon: PhMathOperations,
+  [SyntaxNodeKind.POSTFIX_EXPRESSION]: {
+    icon: PhEquals,
     color: 'text-red-400',
-    label: '<infix-expression>',
+    label: SyntaxNodeKind.POSTFIX_EXPRESSION,
   },
-  '<postfix-expression>': {
-    icon: PhMathOperations,
-    color: 'text-red-400',
-    label: '<postfix-expression>',
-  },
-  '<literal>': {
+
+  [SyntaxNodeKind.LITERAL]: {
     icon: PhTextAa,
     color: 'text-green-600',
-    label: '<literal>',
+    label: SyntaxNodeKind.LITERAL,
   },
-  '<variable>': {
-    icon: PhTextAa,
+  [SyntaxNodeKind.VARIABLE]: {
+    icon: PhAlignCenterHorizontal,
     color: 'text-violet-500',
-    label: '<variable>',
+    label: SyntaxNodeKind.VARIABLE,
   },
-  '<identifer-stream>': {
-    icon: PhListBullets,
-    color: 'text-blue-400',
-    label: '<identifier-stream>',
-  },
-  '<primary-expression>': {
+
+  [SyntaxNodeKind.PRIMARY_EXPRESSION]: {
     icon: PhDiamond,
     color: 'text-gray-400',
-    label: '<primary-expression>',
+    label: SyntaxNodeKind.PRIMARY_EXPRESSION,
   },
-  '<group-expression>': {
-    icon: PhDiamond,
+  [SyntaxNodeKind.GROUP_EXPRESSION]: {
+    icon: PhLinkSimple,
     color: 'text-gray-400',
-    label: '<group-expression>',
+    label: SyntaxNodeKind.GROUP_EXPRESSION,
   },
-  '<comma-expression>': {
-    icon: PhDiamond,
+  [SyntaxNodeKind.COMMA_EXPRESSION]: {
+    icon: PhDotsThree,
     color: 'text-gray-400',
-    label: '<comma-expression>',
+    label: SyntaxNodeKind.COMMA_EXPRESSION,
   },
-  '<call-expression>': {
-    icon: PhLightning,
+  [SyntaxNodeKind.CALL_EXPRESSION]: {
+    icon: PhPath,
     color: 'text-orange-400',
-    label: '<call-expression>',
+    label: SyntaxNodeKind.CALL_EXPRESSION,
   },
-  '<array>': {
-    icon: PhBracketsSquare,
+  [SyntaxNodeKind.ARRAY]: {
+    icon: PhCaretDoubleDown,
     color: 'text-cyan-500',
-    label: '<array>',
+    label: SyntaxNodeKind.ARRAY,
   },
-  '<dummy>': {
+  [SyntaxNodeKind.EMPTY]: {
     icon: PhMinus,
     color: 'text-gray-300',
-    label: '<dummy>',
+    label: SyntaxNodeKind.EMPTY,
   },
 };
 
@@ -294,7 +327,7 @@ const typeIcon = computed((): IconInfo => {
       label: d.kind,
     };
   }
-  if (nodeKind.value) return NODE_KIND_ICONS[nodeKind.value] ?? {
+  if (nodeKind.value) return NODE_KIND_ICONS[nodeKind.value as SyntaxNodeKind] ?? {
     icon: PhDiamond,
     color: 'text-blue-400',
     label: nodeKind.value,

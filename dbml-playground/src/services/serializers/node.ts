@@ -11,9 +11,13 @@ import {
   getReadableId, minStart,
 } from './utils';
 
-export function serializeNode (node: SyntaxNode, { simple = false }: SerializeOpts = {}): SerializedNode {
+export function serializeNode (node: SyntaxNode, {
+  simple = false,
+}: SerializeOpts = {}): SerializedNode {
   const id = getReadableId(node);
-  if (simple) return { id };
+  if (simple) return {
+    id,
+  };
 
   const {
     id: _id,
@@ -36,7 +40,9 @@ export function serializeNode (node: SyntaxNode, { simple = false }: SerializeOp
   const children: Record<string, SerializedValue> = {};
   for (const [k, v] of entries) children[k] = serialize(v as Serializable);
 
-  const out: SerializedNode = { id };
+  const out: SerializedNode = {
+    id,
+  };
   if (typeof fullStart === 'number') out.fullStart = fullStart;
   if (typeof fullEnd === 'number') out.fullEnd = fullEnd;
   if (Object.keys(children).length > 0) out.children = children;

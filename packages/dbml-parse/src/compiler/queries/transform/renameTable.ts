@@ -351,4 +351,3 @@ function renameRealDeclaration (
 
   return newLayout;
 }
-

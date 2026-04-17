@@ -12,10 +12,10 @@
       <div class="py-1 px-1 min-w-[140px]">
         <button
           class="flex items-center gap-2 w-full px-2 py-1.5 text-xs rounded hover:bg-gray-100 transition-colors text-gray-700"
-          @click="emit('toggle-decor')"
+          @click="emit('toggle-decoration')"
         >
           <PhEye
-            v-if="showDecor"
+            v-if="showDecoration"
             class="w-3.5 h-3.5 text-blue-500"
           />
           <PhEyeSlash
@@ -23,7 +23,7 @@
             class="w-3.5 h-3.5 text-gray-400"
           />
           <span>Decorations</span>
-          <span class="ml-auto text-[10px] text-gray-400">{{ showDecor ? 'on' : 'off' }}</span>
+          <span class="ml-auto text-[10px] text-gray-400">{{ showDecoration ? 'on' : 'off' }}</span>
         </button>
       </div>
     </template>
@@ -36,9 +36,9 @@ import {
 } from '@phosphor-icons/vue';
 
 interface Props {
-  showDecor?: boolean;
+  showDecoration?: boolean;
 }
 
 defineProps<Props>();
-const emit = defineEmits<{ 'toggle-decor': [] }>();
+const emit = defineEmits<{ 'toggle-decoration': [] }>();
 </script>

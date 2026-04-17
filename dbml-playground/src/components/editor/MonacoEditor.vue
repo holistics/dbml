@@ -416,8 +416,8 @@ const SUGGESTION_TRIGGER_CHARS = [
   '>', '<', '-', // ref
   '~', // partial injection
   '\'', '"', // opening string literal (importPath)
-  '/',        // importPath segment separator
-  ' ',        // after `from `
+  '/', // importPath segment separator
+  ' ', // after `from `
 ];
 function shouldTriggerSuggestion (): boolean {
   if (!editor) return false;

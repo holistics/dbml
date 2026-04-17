@@ -29,7 +29,7 @@ function importKindFor (kind: SymbolKind): string | undefined {
 
 export interface ParsedUseSpecifier {
   kind?: string; // DBML import keyword: 'table' | 'enum' | ... (undefined if parser couldn't extract)
-  name: string;  // bare symbol name, or '*' for wildcard
+  name: string; // bare symbol name, or '*' for wildcard
 }
 
 export interface ParsedUseStatement {
@@ -47,7 +47,8 @@ export interface UseStatementMergeResult {
   topInsert: string;
   // Source range of an old `use { ... } from '...'` to delete when merging.
   // Absent on the create-new path (no existing use matched the source file).
-  removeRange?: { startOffset: number; endOffset: number };
+  removeRange?: { startOffset: number;
+    endOffset: number; };
   hint?: string; // 'merged into existing' | 'created new' | 'symbol already imported'
 }
 
@@ -89,7 +90,13 @@ export function scanExistingUses (
 
     if (useNode.specifiers instanceof UseSpecifierListNode) {
       const IMPORT_KIND_KEYWORDS = new Set([
-        'table', 'enum', 'tablepartial', 'tablegroup', 'note', 'schema', 'from',
+        'table',
+        'enum',
+        'tablepartial',
+        'tablegroup',
+        'note',
+        'schema',
+        'from',
       ]);
       for (const specifier of useNode.specifiers.specifiers) {
         let kind: string | undefined;
@@ -111,11 +118,16 @@ export function scanExistingUses (
         }
 
         if (name && name.toLowerCase() !== 'from') {
-          specifiers.push({ kind, name });
+          specifiers.push({
+            kind,
+            name,
+          });
         }
       }
     } else if (useNode.specifiers instanceof WildcardNode) {
-      specifiers.push({ name: '*' });
+      specifiers.push({
+        name: '*',
+      });
     }
 
     if (specifiers.length === 0 && !(useNode.specifiers instanceof WildcardNode)) {
@@ -280,7 +292,8 @@ function uniqueInOrder (xs: string[]): string[] {
 
 // Extend a range so it consumes any trailing newline(s), so deleting it
 // removes the statement cleanly without leaving a blank line behind.
-function expandToFullLines (fileContent: string, start: number, end: number): { startOffset: number; endOffset: number } {
+function expandToFullLines (fileContent: string, start: number, end: number): { startOffset: number;
+  endOffset: number; } {
   // Pull the start back to the beginning of the line.
   const lineStart = fileContent.lastIndexOf('\n', start - 1) + 1;
   // Eat the trailing line break so the surrounding blank line doesn't linger.
@@ -288,7 +301,10 @@ function expandToFullLines (fileContent: string, start: number, end: number): { 
   while (newEnd < fileContent.length && (fileContent[newEnd] === ' ' || fileContent[newEnd] === '\t')) newEnd++;
   if (fileContent[newEnd] === '\r') newEnd++;
   if (fileContent[newEnd] === '\n') newEnd++;
-  return { startOffset: lineStart, endOffset: newEnd };
+  return {
+    startOffset: lineStart,
+    endOffset: newEnd,
+  };
 }
 
 function detectLineEnding (source: string): string {

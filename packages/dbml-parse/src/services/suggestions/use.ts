@@ -93,12 +93,12 @@ function suggestInUseDeclaration (
 ): CompletionList {
   // Cursor inside the importPath string -> filepath completions with replacement
   if (useDecl.importPath && isOffsetWithinSpan(offset, useDecl.importPath)) {
-    return suggestUseFilepath(compiler, filepath, useDecl.importPath, model);
+    return suggestUseFilepath(compiler, filepath, useDecl.importPath, model, useDecl);
   }
 
   // Cursor after `from` keyword -> filepath completions (fresh insert)
   if (useDecl.fromKeyword && offset > useDecl.fromKeyword.end) {
-    return suggestUseFilepath(compiler, filepath, undefined, model);
+    return suggestUseFilepath(compiler, filepath, undefined, model, useDecl);
   }
 
   // Cursor inside specifier list
@@ -231,11 +231,17 @@ function suggestUseSpecifierStart (): CompletionList {
 // use * from './'
 //              ^
 //            suggest files under `./`
+//
+// When the use statement already has specifiers (e.g.
+// `use { table users, table orders } from '<here>'`), files that export every
+// listed symbol are surfaced first so the user doesn't have to hunt for the
+// right source file.
 function suggestUseFilepath (
   compiler: Compiler,
   currentFilepath: Filepath,
   importPath: SyntaxToken | undefined,
   model: TextModel,
+  useDecl: UseDeclarationNode,
 ): CompletionList {
   const currentDir = currentFilepath.dirname;
 
@@ -264,7 +270,12 @@ function suggestUseFilepath (
     };
   }
 
+  const requiredSymbols = extractRequiredSymbols(useDecl);
+
   const pathToCompletionItem = new Map<string, CompletionItem>();
+  // Track which synthetic folder entries contain at least one matching file
+  // so they can sort ahead of unrelated folders.
+  const childContainsMatch = new Map<string, boolean>();
 
   // Scan all filepaths
   const allFilepaths = uniqBy(compiler.layout.getEntryPoints().flatMap((f) => [
@@ -289,6 +300,9 @@ function suggestUseFilepath (
     const childAbsolute = Filepath.resolve(currentDir, childLabel);
     const isDir = compiler.layout.isDirectory(childAbsolute);
 
+    const fileMatches = fileProvidesAllSpecifiers(compiler, filepath, requiredSymbols);
+    if (fileMatches) childContainsMatch.set(childLabel, true);
+
     if (pathToCompletionItem.has(childLabel)) continue;
 
     const insertText = shouldInsertQuoteToImportPath ? `'${childLabel}'` : childLabel;
@@ -297,9 +311,19 @@ function suggestUseFilepath (
       insertText,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
       kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
-      sortText: `${isDir ? '0' : '1'}${childLabel}`, // folders first
+      // Sort tiers: best-match file (0) → best-match folder (1) → folder (2) → file (3).
+      sortText: `${isDir ? '2' : '3'}${childLabel}`,
       range: existingImportPathRange,
     });
+  }
+
+  for (const [
+    label,
+    item,
+  ] of pathToCompletionItem) {
+    if (!childContainsMatch.get(label)) continue;
+    item.sortText = `${item.kind === CompletionItemKind.File ? '0' : '1'}${label}`;
+    item.detail = 'best match';
   }
 
   return {
@@ -307,4 +331,49 @@ function suggestUseFilepath (
       ...pathToCompletionItem.values(),
     ],
   };
+}
+
+// Pull out the symbol name + kind each specifier is asking for so we can tell
+// which candidate files actually expose them.
+function extractRequiredSymbols (useDecl: UseDeclarationNode): Array<{ name: string;
+  kind: ImportKind; }> {
+  if (!(useDecl.specifiers instanceof UseSpecifierListNode)) return [];
+  const required: Array<{ name: string;
+    kind: ImportKind; }> = [];
+  for (const spec of useDecl.specifiers.specifiers) {
+    const kind = spec.getImportKind();
+    if (kind === undefined || kind === ImportKind.Schema) continue;
+    const nameNode = spec.name;
+    if (!nameNode) continue;
+    const nameValue = (nameNode as any).variable?.value ?? (nameNode as any).value;
+    if (typeof nameValue !== 'string' || !nameValue) continue;
+    // Strip any schema-qualifier (`auth.users` → `users`) — we check for the
+    // bare member in the target file's usable members.
+    const bareName = nameValue.includes('.') ? nameValue.split('.').pop()! : nameValue;
+    required.push({
+      name: bareName,
+      kind,
+    });
+  }
+  return required;
+}
+
+// True when the file declares (or re-exports) every required specifier by
+// name + kind. An empty requirement list matches nothing specifically, so
+// fileMatches stays false and no file is boosted.
+function fileProvidesAllSpecifiers (
+  compiler: Compiler,
+  filepath: Filepath,
+  required: Array<{ name: string;
+    kind: ImportKind; }>,
+): boolean {
+  if (required.length === 0) return false;
+  const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
+  if (!usable) return false;
+  return required.every(({
+    name, kind,
+  }) => {
+    const symbolKind = convertImportKindToSymbolKind(kind);
+    return usable.nonSchemaMembers.some((m) => m.kind === symbolKind && m.name === name);
+  });
 }

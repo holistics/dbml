@@ -6,8 +6,8 @@
     >
       <span>{{ nodeCount }} nodes</span>
       <TabSettingsButton
-        :show-decor="showDecor"
-        @toggle-decor="emit('toggle-decor')"
+        :show-decoration="showDecoration"
+        @toggle-decoration="emit('toggle-decoration')"
       />
     </div>
     <div class="flex-1 overflow-auto">
@@ -30,7 +30,7 @@
 import {
   computed,
 } from 'vue';
-import TabSettingsButton from './TabSettingsButton.vue';
+import TabSettingsButton from './common/TabSettingsButton.vue';
 import RawAstTreeView from '../ast/RawAstTreeView.vue';
 import type {
   RawAstNode,
@@ -41,14 +41,14 @@ import type {
 
 interface Props {
   ast: ProgramNode | null;
-  showDecor?: boolean;
+  showDecoration?: boolean;
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
-  'toggle-decor': [];
+  'toggle-decoration': [];
 }>();
 
 // Properties that reference outside the AST tree (symbols, parents, sources).

@@ -13,8 +13,8 @@
       <div class="flex-shrink-0 px-3 py-1 border-b border-gray-200 text-xs text-gray-400 flex items-center justify-between">
         <span>{{ totalCount }} elements</span>
         <TabSettingsButton
-          :show-decor="showDecor"
-          @toggle-decor="emit('toggle-decor')"
+          :show-decoration="showDecoration"
+          @toggle-decoration="emit('toggle-decoration')"
         />
       </div>
       <div class="flex-1 overflow-auto">
@@ -290,7 +290,6 @@
 
         <!-- TableGroups -->
         <DbSection
-          v-if="database.tableGroups.length"
           label="TableGroups"
           :count="database.tableGroups.length"
           :icon="PhFolder"
@@ -318,9 +317,8 @@
 
         <!-- TablePartials -->
         <DbSection
-          v-if="database.tablePartials?.length"
           label="TablePartials"
-          :count="database.tablePartials.length"
+          :count="database.tablePartials?.length ?? 0"
           :icon="PhPuzzlePiece"
           icon-color="text-teal-500"
         >
@@ -374,7 +372,6 @@
 
         <!-- Records -->
         <DbSection
-          v-if="database.records.length"
           label="Records"
           :count="database.records.length"
           :icon="PhRows"
@@ -423,7 +420,7 @@ import {
   PhLightning,
   PhPuzzlePiece,
 } from '@phosphor-icons/vue';
-import TabSettingsButton from './TabSettingsButton.vue';
+import TabSettingsButton from './common/TabSettingsButton.vue';
 import type {
   Database,
 } from '@dbml/parse';
@@ -431,16 +428,16 @@ import type {
 type RefEndpoint = Database['refs'][number]['endpoints'][number];
 type IndexEntry = Database['tables'][number]['indexes'][number];
 
-import DbSection from './DbSection.vue';
-import DbBadge from './DbBadge.vue';
+import DbSection from './common/DbSection.vue';
+import DbBadge from './common/DbBadge.vue';
 
 interface Props {
   database: Database | null;
-  showDecor?: boolean;
+  showDecoration?: boolean;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits<{ 'toggle-decor': [] }>();
+const emit = defineEmits<{ 'toggle-decoration': [] }>();
 
 const totalCount = computed(() => {
   const db = props.database;

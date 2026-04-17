@@ -388,7 +388,6 @@ function suggestNamesInScope (
   return addQuoteToSuggestionIfNeeded(res);
 }
 
-
 function suggestInTuple (compiler: Compiler, filepath: Filepath, offset: number, tupleContainer: TupleExpressionNode): CompletionList {
   const scopeKind = compiler.container.scopeKind(filepath, offset);
   const element = compiler.container.element(filepath, offset);

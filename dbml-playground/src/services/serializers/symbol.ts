@@ -8,11 +8,17 @@ import {
   getReadableId,
 } from './utils';
 
-export function serializeSymbol (symbol: SymbolInfo, { simple = false }: SerializeOpts = {}): SerializedSymbol {
+export function serializeSymbol (symbol: SymbolInfo, {
+  simple = false,
+}: SerializeOpts = {}): SerializedSymbol {
   const id = getReadableId(symbol);
-  if (simple) return { id };
+  if (simple) return {
+    id,
+  };
 
-  const out: SerializedSymbol = { id };
+  const out: SerializedSymbol = {
+    id,
+  };
   if (symbol.members.length > 0) {
     out.members = symbol.members.map((m) => serializeSymbol(m));
   }
