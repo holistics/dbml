@@ -7,7 +7,7 @@ import type Compiler from '@/compiler';
 
 function findMember (compiler: Compiler, symbol: NodeSymbol, kind: SymbolKind, name: string): NodeSymbol | undefined {
   const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED) ?? [];
-  return members.find((m) => m.kind === kind && compiler.symbolName(m) === name);
+  return members.find((m) => m.kind === kind && m.name === name);
 }
 
 function nodeSymbol (compiler: Compiler, node: ElementDeclarationNode | ProgramNode): NodeSymbol | undefined {
@@ -208,7 +208,7 @@ describe('[example] records binder', () => {
     `;
     const errors = analyze(source).getErrors();
     expect(errors.length).toBe(1);
-    expect(errors[0].diagnostic).toBe("Enum field 'unknown_field' does not exist in Enum 'status'");
+    expect(errors[0].diagnostic).toBe("Enum field 'unknown_field' does not exist in Enum 'public.status'");
   });
 
   test('should bind multiple enum field references in same records', () => {

@@ -1,6 +1,7 @@
 import type Compiler from '@/compiler/index';
 import {
-  DEFAULT_SCHEMA_NAME, KEYWORDS_OF_DEFAULT_SETTING,
+  DEFAULT_SCHEMA_NAME,
+  KEYWORDS_OF_DEFAULT_SETTING,
 } from '@/constants';
 import {
   CompileError, CompileErrorCode,
@@ -12,7 +13,7 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, PrefixExpressionNode, ProgramNode,
+  ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, PrefixExpressionNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
@@ -22,7 +23,7 @@ import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  InjectedColumnSymbol, NodeSymbol, SchemaSymbol, SymbolKind,
+  InjectedColumnSymbol, NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type {
   SyntaxToken,
@@ -53,9 +54,6 @@ import TableBinder from './bind';
 import {
   TableInterpreter,
 } from './interpret';
-import {
-  addDoubleQuoteIfNeeded,
-} from '@/compiler/index';
 
 // Public utils that other modules can use
 export const tableUtils = {
@@ -72,10 +70,12 @@ export const tableUtils = {
 
 export const tableModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
+    const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
     if (isElementNode(node, ElementKind.Table)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Table,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.Table)) {
@@ -83,10 +83,12 @@ export const tableModule: GlobalModule = {
         ? new Report(compiler.symbolFactory.create(NodeSymbol, {
             kind: SymbolKind.Column,
             declaration: node,
+            name,
           }, node.filepath))
         : new Report(compiler.symbolFactory.create(NodeSymbol, {
             kind: SymbolKind.PartialInjection,
             declaration: node,
+            name,
           }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
@@ -115,10 +117,9 @@ export const tableModule: GlobalModule = {
     const seen = new Map<string, SyntaxNode>();
     for (const member of members) {
       if (!member.isKind(SymbolKind.Column, SymbolKind.PartialInjection) || !member.declaration) continue; // Ignore non-column members
-      const name = compiler.nodeFullname(member.declaration).getFiltered(UNHANDLED)?.map(addDoubleQuoteIfNeeded).join('.');
-      const key = `${member.kind}:${name}`;
+      const key = `${member.kind}:${member.name}`;
 
-      if (name !== undefined) {
+      if (member.name !== undefined) {
         const errorNode = (
           member.declaration instanceof ElementDeclarationNode && member.declaration.name
         )
@@ -128,11 +129,11 @@ export const tableModule: GlobalModule = {
         const firstNode = seen.get(key);
         if (firstNode) {
           if (member.isKind(SymbolKind.Column)) {
-            errors.push(tableUtils.getColumnDuplicateError(name, firstNode));
-            errors.push(tableUtils.getColumnDuplicateError(name, errorNode));
+            errors.push(tableUtils.getColumnDuplicateError(member.name, firstNode));
+            errors.push(tableUtils.getColumnDuplicateError(member.name, errorNode));
           } else {
-            errors.push(tableUtils.getPartialInjectionDuplicateError(name, firstNode));
-            errors.push(tableUtils.getPartialInjectionDuplicateError(name, errorNode));
+            errors.push(tableUtils.getPartialInjectionDuplicateError(member.name, firstNode));
+            errors.push(tableUtils.getPartialInjectionDuplicateError(member.name, errorNode));
           }
         } else {
           seen.set(key, errorNode);
@@ -168,7 +169,7 @@ export const tableModule: GlobalModule = {
         const injectedMembers = tablePartialMembers.flatMap((m) => {
           if (!m.declaration) return [];
 
-          const name = compiler.symbolName(m);
+          const name = m.name;
           if (name === undefined) return m;
 
           return compiler.symbolFactory.create(
@@ -256,9 +257,11 @@ export const tableModule: GlobalModule = {
 };
 
 // Look up a member in the default (public) schema, falling back to direct program search
-function lookupInDefaultSchema (compiler: Compiler, globalSymbol: NodeSymbol, name: string, opts: { kinds?: SymbolKind[];
+function lookupInDefaultSchema (compiler: Compiler, globalSymbol: NodeSymbol, name: string, opts: {
+  kinds?: SymbolKind[];
   ignoreNotFound?: boolean;
-  errorNode?: SyntaxNode; }): Report<NodeSymbol | undefined> {
+  errorNode?: SyntaxNode;
+}): Report<NodeSymbol | undefined> {
   const members = compiler.symbolMembers(globalSymbol);
   if (!members.hasValue(UNHANDLED)) {
     const publicSchema = members.getValue().find((m: NodeSymbol) => m.isPublicSchema());

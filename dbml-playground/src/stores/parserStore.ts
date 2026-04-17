@@ -56,7 +56,7 @@ function getSymbolMembers (compiler: Compiler, sym: NodeSymbol): NodeSymbol[] {
 }
 
 function buildSymbolInfo (compiler: Compiler, sym: NodeSymbol, depth = 0): SymbolInfo {
-  const name = compiler.symbolName(sym) ?? `#${sym.id}`;
+  const name = sym.name ?? `#${sym.id}`;
   const decl = sym.declaration;
   const sp = decl?.startPos;
   const ep = decl?.endPos;

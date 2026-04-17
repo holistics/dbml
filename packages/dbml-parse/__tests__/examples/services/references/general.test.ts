@@ -685,7 +685,8 @@ Ref: billing.invoices.user_id > auth.users.id`;
     });
 
     it('- should find references using table aliases', () => {
-      const program = `Table users as u {
+      const program =
+`Table users as u {
   id int pk
 }
 

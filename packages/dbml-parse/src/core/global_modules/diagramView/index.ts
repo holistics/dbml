@@ -24,7 +24,7 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  extractVarNameFromPrimaryVariable, getBody, isAccessExpression, isElementFieldNode, isElementNode, isExpressionAVariableNode, isInsideSettingList, isTerminalAccessFragment,
+  extractVarNameFromPrimaryVariable, getBody, isAccessExpression, isElementFieldNode, isElementNode, isInsideSettingList, isTerminalAccessFragment,
 } from '@/core/utils/expression';
 import type {
   GlobalModule,
@@ -55,40 +55,47 @@ export const diagramViewUtils = {
 
 export const diagramViewModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
+    const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
     if (isElementNode(node, ElementKind.DiagramView)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.DiagramView,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.DiagramView) && node instanceof WildcardNode) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.DiagramViewTopLevelWildcard,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.DiagramViewNotes)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.DiagramViewNote,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.DiagramViewTables)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.DiagramViewTable,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.DiagramViewTableGroups)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.DiagramViewTableGroup,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.DiagramViewSchemas)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.DiagramViewSchema,
         declaration: node,
+        name,
       }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
@@ -257,7 +264,7 @@ function nodeRefereeOfDiagramViewTableRef (
   // Standalone reference
   const members = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED) || [];
   for (const member of members) {
-    const memberName = compiler.symbolName(member);
+    const memberName = member.name;
     if (member.isKind(SymbolKind.Table) && name === memberName) return Report.create(member);
   }
 

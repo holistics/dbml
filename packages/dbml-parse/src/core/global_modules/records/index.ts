@@ -240,36 +240,7 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
         ],
       });
     }
-    // Look up as Enum in default (public) schema first, then fall back to program scope
-    const symbolResult = lookupInDefaultSchema(
-      compiler,
-      globalSymbol,
-      name,
-      {
-        kinds: [
-          SymbolKind.Enum,
-        ],
-        ignoreNotFound: true,
-      },
-    );
-    const symbol = symbolResult.getValue();
-
-    if (symbol?.declaration) {
-      // Verify the enum is not schema-qualified when accessed without schema
-      const fullname = compiler.nodeFullname(symbol.declaration).getFiltered(UNHANDLED);
-      if (fullname && fullname.length > 1) {
-        // Schema-qualified enum accessed without schema prefix - report error
-        return new Report(undefined, [
-          new CompileError(
-            CompileErrorCode.BINDING_ERROR,
-            `Enum '${name}' does not exist in Schema 'public'`,
-            node,
-          ),
-        ]);
-      }
-      return symbolResult;
-    }
-    // Not found at all - report error
+    // Look up as Enum in default (public) schema
     return lookupInDefaultSchema(
       compiler,
       globalSymbol,

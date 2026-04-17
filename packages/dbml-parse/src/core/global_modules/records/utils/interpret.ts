@@ -168,7 +168,7 @@ export function getEnumMembers (column: Column, compiler: Compiler): string[] {
 
   return enumFields
     .map((field) => {
-      return compiler.symbolName(field);
+      return field.name;
     })
     .filter(Boolean) as string[];
 }

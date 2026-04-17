@@ -61,16 +61,19 @@ export const tablePartialUtils = {
 
 export const tablePartialModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
+    const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
     if (isElementNode(node, ElementKind.TablePartial)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.TablePartial,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.TablePartial)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Column,
         declaration: node,
+        name,
       }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
@@ -96,7 +99,7 @@ export const tablePartialModule: GlobalModule = {
       for (const member of members) {
         if (!member.isKind(SymbolKind.Column) || !member.declaration) continue; // Ignore non-column members
 
-        const name = compiler.symbolName(member);
+        const name = member.name;
         if (name !== undefined) {
           const errorNode = (member.declaration instanceof ElementDeclarationNode && member.declaration.name) ? member.declaration.name : member.declaration;
           const firstNode = seen.get(name);

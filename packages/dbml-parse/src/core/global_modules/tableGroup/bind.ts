@@ -83,7 +83,7 @@ export default class TableGroupBinder {
             ...result.getErrors(),
             new CompileError(
               CompileErrorCode.BINDING_ERROR,
-              `TableGroup cannot reference imported table '${this.compiler.symbolName(sym)}'`,
+              `TableGroup cannot reference imported table '${sym.name}'`,
               tableBindee,
             ),
           ];

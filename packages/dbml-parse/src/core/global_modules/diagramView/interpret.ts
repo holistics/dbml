@@ -267,7 +267,7 @@ export class DiagramViewInterpreter {
     return programMembers
       .filter((m) => m.isKind(SymbolKind.TableGroup))
       .map((m) => ({
-        name: this.compiler.symbolName(m) ?? '',
+        name: m.name ?? '',
       }))
       .filter((m) => m.name !== '');
   }

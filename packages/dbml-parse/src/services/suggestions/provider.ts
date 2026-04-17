@@ -90,7 +90,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   private collectFileSymbols (fp: Filepath): Array<{ sym: NodeSymbol;
     filepath: Filepath; }> {
-    const usable = this.compiler.fileUsableMembers(fp).getFiltered(UNHANDLED);
+    const usable = this.compiler.usableMembers(fp).getFiltered(UNHANDLED);
     if (!usable) return [];
     return [
       ...usable.nonSchemaMembers,
@@ -167,7 +167,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         sym, filepath,
       } of this.collectFileSymbols(fp)) {
         if (!acceptedKinds.includes(sym.kind)) continue;
-        const name = this.compiler.symbolName(sym);
+        const name = sym.name;
         if (!name || seenNames.has(name)) continue;
         seenNames.add(name);
         results.suggestions.push(this.createCrossFileCompletionItem(
@@ -385,7 +385,7 @@ function suggestMembersOfSymbol (
         return true;
       })
       .flatMap((member) => {
-        const name = compiler.symbolName(member);
+        const name = member.name;
         if (name === undefined) return [];
         return {
           label: name,
@@ -770,7 +770,7 @@ function resolveNameStack (
   // Walk through the name stack
   for (const name of nameStack) {
     const matching = candidates.filter((member) => {
-      const memberName = compiler.symbolName(member);
+      const memberName = member.name;
       return memberName === name;
     });
     if (matching.length === 0) return [];
@@ -800,16 +800,16 @@ function suggestMembers (
   return addQuoteToSuggestionIfNeeded({
     suggestions: resolvedSymbols
       .flatMap((symbol) => compiler.symbolMembers(symbol).getFiltered(UNHANDLED) || [])
-      .map((member) => {
-        const name = compiler.symbolName(member)!;
+      .flatMap((member) => {
+        const name = member.name;
+        if (name === undefined) return [];
         return {
           label: name,
           insertText: name,
           kind: pickCompletionItemKind(member.kind),
           range: undefined as any,
         };
-      })
-      .filter((s) => s.label !== ''),
+      }),
   });
 }
 
@@ -1096,7 +1096,7 @@ function suggestInTableGroupField (compiler: Compiler): CompletionList {
       ...addQuoteToSuggestionIfNeeded({
         suggestions: publicMembers.flatMap((member) => {
           if (member.kind !== SymbolKind.Table && member.kind !== SymbolKind.Schema) return [];
-          const name = compiler.symbolName(member);
+          const name = member.name;
           if (name === undefined) return [];
           // Skip the default 'public' schema
           if (member.isPublicSchema()) return [];

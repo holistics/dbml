@@ -1,6 +1,18 @@
 {
   "errors": [
     {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Table 'users' already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L13:C6, L13:C13]",
+          "snippet": "A.users"
+        }
+      }
+    },
+    {
       "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
       "diagnostic": "Table \"follows\" already appears in group \"A1\"",
       "filepath": "/main.dbml",
@@ -21,30 +33,6 @@
         "context": {
           "id": "node@<function-application>@users@[L27:C2, L27:C7]",
           "snippet": "users"
-        }
-      }
-    },
-    {
-      "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
-      "diagnostic": "Table \"U\" already appears in group \"A2\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@U@[L31:C4, L31:C5]",
-          "snippet": "U"
-        }
-      }
-    },
-    {
-      "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
-      "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L39:C2, L39:C9]",
-          "snippet": "A.users"
         }
       }
     }

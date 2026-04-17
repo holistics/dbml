@@ -17,7 +17,7 @@ function makeCompiler (files: Record<string, string>): { compiler: Compiler; fps
 }
 
 describe('[example] multifile binder', () => {
-  describe('selective use — basic visibility', () => {
+  describe('selective use - basic visibility', () => {
     test('imported table is visible in the consumer file scope', () => {
       const { compiler, fps } = makeCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
@@ -89,7 +89,7 @@ describe('[example] multifile binder', () => {
       // 'u' is visible
       const uSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue();
       expect(uSymbol).toBeInstanceOf(UseSymbol);
-      expect(compiler.symbolName(uSymbol!)).toBe('u');
+      expect(uSymbol?.name).toBe('u');
 
       // 'users' is NOT visible under its original name
       const usersSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
@@ -183,7 +183,7 @@ describe('[example] multifile binder', () => {
       expect(useSymbol).toBeInstanceOf(UseSymbol);
       // usedSymbol points to the table declaration in auth.dbml
       expect(useSymbol.usedSymbol).toBeDefined();
-      expect(compiler.symbolName(useSymbol.usedSymbol!)).toBe('users');
+      expect(useSymbol.usedSymbol?.name).toBe('users');
     });
 
     test('reuse with schema-qualified source and alias produces a no-schema local name', () => {
@@ -211,7 +211,8 @@ describe('[example] multifile binder', () => {
   describe('wildcard use', () => {
     test('wildcard use brings all public tables from source into consumer scope', () => {
       const { compiler, fps } = makeCompiler({
-        '/base.dbml': 'Table users { id int [pk] }\nTable posts { id int [pk] }',
+        '/base.dbml': `Table users { id int [pk] }
+Table posts { id int [pk] }`,
         '/main.dbml': "use * from './base.dbml'",
       });
 
@@ -265,17 +266,28 @@ describe('[example] multifile binder', () => {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
 
-      // 'users' should NOT appear in consumer's scope — use does not re-export
-      const usersInConsumer = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
-      expect(usersInConsumer).toBeUndefined();
+      // 'users' should NOT appear in consumer's scope - use does not re-export
+      const usersInConsumer = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue() as UseSymbol;
+      // There's still a use symbol, but its used symbol is undefined!
+      expect(usersInConsumer).toBeInstanceOf(UseSymbol);
+      expect(usersInConsumer.usedSymbol).toBeUndefined();
     });
   });
 
   describe('circular dependencies', () => {
     test('circular use does not infinite loop or crash during binding', () => {
       const { compiler, fps } = makeCompiler({
-        '/x.dbml': "use { table y_table } from './y.dbml'\nTable x_table { id int [pk]\n  y_id int [ref: > y_table.id] }",
-        '/y.dbml': "use { table x_table } from './x.dbml'\nTable y_table { id int [pk]\n  x_id int [ref: > x_table.id] }",
+        '/x.dbml': `
+use { table y_table } from './y.dbml'
+Table x_table {
+  id int [pk]
+  y_id int [ref: > y_table.id]
+}`,
+        '/y.dbml': `use { table x_table } from './x.dbml'
+Table y_table {
+  id int [pk]
+  x_id int [ref: > x_table.id]
+}`,
       });
 
       const xAst = compiler.parseFile(fps['/x.dbml']).getValue().ast;
@@ -341,7 +353,7 @@ describe('[example] multifile binder', () => {
       const useSymbol = compiler.nodeSymbol(spec.specifiers[0]).getValue() as UseSymbol;
       expect(useSymbol).toBeInstanceOf(UseSymbol);
       expect(useSymbol.usedSymbol).toBeDefined();
-      expect(compiler.symbolName(useSymbol.usedSymbol!)).toBe('roles');
+      expect(useSymbol.usedSymbol?.name).toBe('roles');
     });
   });
 
@@ -423,9 +435,6 @@ describe('[example] multifile binder', () => {
 
   describe('file with both element declarations and reuse', () => {
     test('file with elements AND reuse * still exposes all symbols correctly', () => {
-      // Regression for topLevelSchemaMembers: a file that declares elements
-      // AND has use/reuse declarations must not lose its own elements from
-      // the public schema when the reuse-only synthetic-schema path runs.
       const { compiler, fps } = makeCompiler({
         '/base.dbml': 'Table products { id int [pk] }',
         '/hub.dbml': [

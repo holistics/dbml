@@ -139,11 +139,10 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
 // 4. Rename refs/records endpoints to use local names
 // 5. Alias replaces both schema and name: use { table auth.users as u } -> name: 'u', schemaName: null
 export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  const fp = filepath ?? DEFAULT_ENTRY;
   const projectResult = this.interpretProject();
   const master = projectResult.getValue();
 
-  const fileDb = master.files[fp.absolute];
+  const fileDb = master.files[filepath.absolute];
   if (!fileDb) {
     return projectResult.map(() => undefined);
   }

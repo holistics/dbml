@@ -1,8 +1,5 @@
 import type Compiler from '@/compiler/index';
 import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
@@ -19,7 +16,7 @@ import type {
   Ref,
 } from '@/core/types/schemaJson';
 import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
+  NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type {
   SyntaxToken,

@@ -53,16 +53,19 @@ export const tableGroupUtils = {
 
 export const tableGroupModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
+    const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
     if (isElementNode(node, ElementKind.TableGroup)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.TableGroup,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.TableGroup)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.TableGroupField,
         declaration: node,
+        name,
       }, node.filepath));
     }
     return Report.create(PASS_THROUGH);

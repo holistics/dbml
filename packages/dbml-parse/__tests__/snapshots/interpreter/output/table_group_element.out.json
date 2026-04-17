@@ -21,10 +21,12 @@
         },
         "tables": [
           {
-            "name": "table1"
+            "name": "table1",
+            "schemaName": "public"
           },
           {
-            "name": "table2"
+            "name": "table2",
+            "schemaName": "public"
           }
         ],
         "token": {

@@ -44,7 +44,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
     for (const name of nameStack) {
       matchedSymbols = currentPossibleSymbols
         .filter((s) =>
-          this.symbolName(s) === name || (
+          s.name === name || (
             (ownerSymbol.isKind(SymbolKind.Program)
               || (ownerSymbol.isPublicSchema()))
             && s.declaration

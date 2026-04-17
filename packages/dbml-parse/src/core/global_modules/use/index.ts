@@ -1,4 +1,6 @@
-import Compiler from '@/compiler';
+import Compiler, {
+  addDoubleQuoteIfNeeded,
+} from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -34,6 +36,23 @@ import {
   lookupMember,
 } from '../utils';
 
+export const useUtils = {
+  // The name that the owning file would see the use specifier as
+  visibleName (compiler: Compiler, nodeOrSymbol: UseSpecifierNode | UseSymbol): string[] | undefined {
+    const node =
+      nodeOrSymbol instanceof SyntaxNode
+        ? nodeOrSymbol
+        : nodeOrSymbol.useSpecifierDeclaration instanceof UseSpecifierNode
+          ? nodeOrSymbol.useSpecifierDeclaration
+          : nodeOrSymbol.declaration;
+    if (!node) return undefined;
+    return compiler.nodeAlias(node).mapFiltered((a) => [
+      a,
+    ], UNHANDLED, undefined).getFiltered(UNHANDLED)
+    || compiler.nodeFullname(node).getFiltered(UNHANDLED);
+  },
+};
+
 export const useModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
     if (!isUseSpecifier(node) || !node.name) return Report.create(PASS_THROUGH);
@@ -52,9 +71,14 @@ export const useModule: GlobalModule = {
         declaration: originalSymbol?.declaration,
         usedSymbol: originalSymbol,
         kind: symbolKind,
+        name: useUtils.visibleName(compiler, node)?.at(-1),
       },
       node.filepath,
-    ));
+    ), originalSymbol === undefined
+      ? [
+          new CompileError(CompileErrorCode.BINDING_ERROR, `Failed to resolve the import of ${symbolKind} '${(compiler.nodeFullname(node).getFiltered(UNHANDLED) || []).map(addDoubleQuoteIfNeeded).join('.')}'`, node),
+        ]
+      : []);
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
@@ -172,7 +196,7 @@ export const useModule: GlobalModule = {
     const value = result.getValue();
     if (!value || Array.isArray(value)) return result;
 
-    const name = compiler.symbolName(symbol);
+    const name = symbol.name;
 
     if (name && 'name' in value) {
       return Report.create({
@@ -189,18 +213,18 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   if (!importPath || visited.has(importPath)) return undefined;
   visited.add(importPath);
 
-  const usable = compiler.fileUsableMembers(importPath).getFiltered(UNHANDLED);
+  const usable = compiler.usableMembers(importPath).getFiltered(UNHANDLED);
   if (!usable) return undefined;
 
   // 1. Direct non-schema members
-  const directMember = usable.nonSchemaMembers.find((m) => compiler.symbolName(m) === name);
-  if (directMember && directMember.isKind(symbolKind)) {
+  const directMember = usable.nonSchemaMembers.find((m) => m.name === name);
+  if (directMember?.isKind(symbolKind)) {
     return directMember;
   }
 
   // 2. Direct schema members
   const directSchema = usable.schemaMembers.find((m) => m.name === name);
-  if (directSchema && directSchema.isKind(SymbolKind.Schema)) {
+  if (directSchema?.isKind(SymbolKind.Schema)) {
     return directSchema;
   }
 

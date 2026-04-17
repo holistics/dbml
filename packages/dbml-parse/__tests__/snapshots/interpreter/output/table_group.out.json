@@ -74,10 +74,12 @@
         "name": "g1",
         "tables": [
           {
-            "name": "merchants"
+            "name": "merchants",
+            "schemaName": "public"
           },
           {
-            "name": "users"
+            "name": "users",
+            "schemaName": "public"
           }
         ],
         "token": {

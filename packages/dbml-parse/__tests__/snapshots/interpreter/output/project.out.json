@@ -516,10 +516,12 @@
         "name": "g1",
         "tables": [
           {
-            "name": "merchants"
+            "name": "merchants",
+            "schemaName": "public"
           },
           {
-            "name": "users"
+            "name": "users",
+            "schemaName": "public"
           }
         ],
         "token": {
@@ -540,10 +542,12 @@
         "name": "g2",
         "tables": [
           {
-            "name": "countries"
+            "name": "countries",
+            "schemaName": "public"
           },
           {
-            "name": "orders"
+            "name": "orders",
+            "schemaName": "public"
           }
         ],
         "token": {

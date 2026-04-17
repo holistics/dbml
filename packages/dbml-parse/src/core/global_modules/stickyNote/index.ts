@@ -3,7 +3,7 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  PASS_THROUGH, type PassThrough,
+  PASS_THROUGH, UNHANDLED, type PassThrough,
 } from '@/core/types/module';
 import {
   type ElementDeclarationNode, ProgramNode, type SyntaxNode,
@@ -41,6 +41,7 @@ export const noteModule: GlobalModule = {
     return new Report(compiler.symbolFactory.create(NodeSymbol, {
       kind: SymbolKind.Note,
       declaration: node,
+      name: compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1),
     }, node.filepath));
   },
 

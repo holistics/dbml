@@ -120,17 +120,17 @@ export default class ProgramInterpreter {
         for (const spec of useDecl.specifiers.specifiers) {
           const member = this.compiler.nodeSymbol(spec).getFiltered(UNHANDLED);
           if (!(member instanceof UseSymbol)) continue;
-          const name = member.usedSymbol ? this.compiler.symbolName(member.usedSymbol) : undefined;
+          const name = member.usedSymbol?.name;
           if (!name) continue;
           const list = listForKind(member);
           if (!list) {
             // Schema import: expand the schema's members into externals
             if (member.isKind(SymbolKind.Schema) && member.usedSymbol) {
-              const localSchemaName = this.compiler.symbolName(member);
-              const canonicalSchemaName = this.compiler.symbolName(member.usedSymbol);
+              const localSchemaName = member.name;
+              const canonicalSchemaName = member.usedSymbol.name;
               const schemaMembers = this.compiler.symbolMembers(member.usedSymbol).getFiltered(UNHANDLED) ?? [];
               for (const schemaMember of schemaMembers) {
-                const memberName = this.compiler.symbolName(schemaMember);
+                const memberName = schemaMember.name;
                 if (!memberName) continue;
                 const memberList = listForKind(schemaMember);
                 if (!memberList) continue;
@@ -160,7 +160,7 @@ export default class ProgramInterpreter {
             continue;
           }
 
-          const localName = this.compiler.symbolName(member) ?? name;
+          const localName = member.name ?? name;
           const schemaName = member.usedSymbol?.declaration
             ? (this.compiler.nodeFullname(member.usedSymbol.declaration).getFiltered(UNHANDLED)?.slice(0, -1).join('.') || null)
             : null;
@@ -206,7 +206,7 @@ export default class ProgramInterpreter {
           // Selective specs are already handled above; skip them here to avoid
           // duplicating the per-spec visibleName accounting.
           if (member.useSpecifierDeclaration instanceof UseSpecifierNode) continue;
-          const name = member.usedSymbol ? this.compiler.symbolName(member.usedSymbol) : undefined;
+          const name = member.usedSymbol ? member.usedSymbol.name : undefined;
           if (!name) continue;
           const list = listForKind(member);
           if (!list) continue;

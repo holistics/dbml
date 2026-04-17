@@ -12,6 +12,8 @@ import {
 } from '@/core/types/keywords';
 import {
   type SyntaxNode, UseDeclarationNode, type UseSpecifierNode, type WildcardNode,
+  ProgramNode,
+  ElementDeclarationNode,
 } from '@/core/types/nodes';
 
 export enum SymbolKind {
@@ -32,7 +34,6 @@ export enum SymbolKind {
   PartialInjection = 'PartialInjection',
 
   Indexes = 'Indexes',
-  IndexesField = 'Indexes field',
 
   DiagramView = 'DiagramView',
   DiagramViewTopLevelWildcard = 'DiagramView top-level wildcard',
@@ -82,18 +83,22 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
   kind: SymbolKind;
   declaration?: SyntaxNode;
   filepath: Filepath;
+  name?: string;
 
   constructor ({
     kind,
     declaration,
+    name,
   }: {
     kind: SymbolKind;
     declaration?: SyntaxNode;
+    name?: string;
   }, id: NodeSymbolId, filepath: Filepath) {
     this.id = id;
     this.kind = kind;
     this.declaration = declaration;
     this.filepath = filepath;
+    this.name = name;
   }
 
   // Whether this symbol can be imported from other files.
@@ -128,6 +133,39 @@ export class NodeSymbol implements Internable<InternedNodeSymbol> {
   }
 }
 
+export class AliasSymbol extends NodeSymbol {
+  declare declaration: ElementDeclarationNode;
+  declare name: string;
+  aliasedSymbol: NodeSymbol;
+
+  constructor ({
+    kind,
+    declaration,
+    aliasedSymbol,
+    name,
+  }: {
+    kind: SymbolKind;
+    declaration?: ElementDeclarationNode;
+    aliasedSymbol: NodeSymbol;
+    name: string;
+  }, id: NodeSymbolId, filepath: Filepath) {
+    super({
+      kind,
+      declaration,
+      name,
+    }, id, filepath);
+    this.aliasedSymbol = aliasedSymbol;
+  }
+
+  get canBeImported (): boolean {
+    return this.aliasedSymbol.canBeImported;
+  }
+
+  get originalSymbol (): NodeSymbol {
+    return this.aliasedSymbol.originalSymbol;
+  }
+}
+
 export class UseSymbol extends NodeSymbol {
   useSpecifierDeclaration: UseSpecifierNode | WildcardNode | undefined;
   usedSymbol?: NodeSymbol;
@@ -137,15 +175,18 @@ export class UseSymbol extends NodeSymbol {
     declaration,
     useSpecifierDeclaration,
     usedSymbol,
+    name,
   }: {
     kind: SymbolKind;
     declaration?: SyntaxNode;
     useSpecifierDeclaration: UseSpecifierNode | WildcardNode | undefined;
     usedSymbol?: NodeSymbol;
+    name?: string;
   }, id: NodeSymbolId, filepath: Filepath) {
     super({
       kind,
       declaration,
+      name,
     }, id, filepath);
     this.useSpecifierDeclaration = useSpecifierDeclaration;
     this.usedSymbol = usedSymbol;
@@ -167,7 +208,7 @@ export class UseSymbol extends NodeSymbol {
 // Carries its own name to avoid fullname(declaration) lookups which would resolve
 // against the original scope, not the injection target.
 export class InjectedColumnSymbol extends NodeSymbol {
-  name: string;
+  declare name: string;
   injectionDeclaration: SyntaxNode;
 
   constructor (
@@ -227,7 +268,27 @@ export class SchemaSymbol extends NodeSymbol {
     ];
   }
 
-  override isPublicSchema (): this is SchemaSymbol {
+  override isPublicSchema (): this is SchemaSymbol & { name: typeof DEFAULT_SCHEMA_NAME } {
     return this.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
+  }
+}
+
+export class ProgramSymbol extends NodeSymbol {
+  declare kind: SymbolKind.Program;
+
+  constructor (
+    {
+      declaration,
+    }: {
+      declaration: ProgramNode;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Program,
+      declaration,
+      name: filepath.absolute,
+    }, id, filepath);
   }
 }

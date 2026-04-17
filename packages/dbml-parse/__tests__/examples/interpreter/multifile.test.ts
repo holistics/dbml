@@ -50,7 +50,7 @@ Table jobs {
 
   test('no binding errors in consumer', () => {
     const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
-    // expect: zero binding errors — job_status resolves across file boundary
+    // expect: zero binding errors - job_status resolves across file boundary
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
@@ -654,9 +654,12 @@ Ref r2: orders.user_id > u.id
 `,
   });
 
-  test('no binding errors — both endpoint names resolve', () => {
+  test('references with the same endpoint exists can be detected even aliased', () => {
     const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
-    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+    const bindErrors = compiler.bindNode(ast).getErrors();
+    expect(bindErrors).toHaveLength(2);
+    expect(bindErrors[0].diagnostic).toMatchInlineSnapshot(`"References with same endpoints exist"`);
+    expect(bindErrors[1].diagnostic).toMatchInlineSnapshot(`"References with same endpoints exist"`);
   });
 
   test('both Refs appear in exported schema', () => {

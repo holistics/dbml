@@ -57,14 +57,11 @@ import {
   reachableFiles,
 } from './queries/reachableFiles';
 import {
-  symbolName,
-} from './queries/symbolName';
-import {
   symbolReferences,
 } from './queries/symbolReferences';
 import {
-  topLevelSchemaMembers,
-} from './queries/topLevelSchemaMembers';
+  symbolAliases, symbolUses,
+} from './queries/symbolUsesAndAliases';
 import {
   renameTable, syncDiagramView,
 } from './queries/transform';
@@ -93,45 +90,9 @@ const COMPUTING = Symbol('COMPUTING');
 
 type QuerySubCache = Map<string, any>;
 
-/**
- * ## Query system invariants
- *
- * Every public method on Compiler that begins with a lowercase noun (e.g.
- * `parseFile`, `bindNode`, `symbolName`) is a **query**: a memoised,
- * lazily-evaluated function with the following invariants:
- *
- * 1. **Purity** — queries must not mutate any shared state. They read from
- *    `this.layout` and from other cached queries, and return a value.
- *    Side-effecting logic belongs in `setSource` / `deleteSource`.
- *
- * 2. **Cache scope** — each query is registered with `this.query()` (global)
- *    or `this.localQuery()` (per-file):
- *    - `query()`: cached across all files. Invalidated entirely on any
- *      `setSource` / `deleteSource` / `clearSource` call.
- *    - `localQuery()`: cached per `Filepath.intern()` key. Only the changed
- *      file's cache entry is deleted on `setSource(filepath, ...)`.
- *    Use `localQuery` only when the function's output depends solely on the
- *    content of a single file (e.g. `parseFile`, `topLevelSchemaMembers`).
- *
- * 3. **Single wrapping** — each query function must be passed to `query()` or
- *    `localQuery()` exactly once. Each call allocates a unique `Symbol()` as
- *    the cache key; double-wrapping creates a second key and defeats caching.
- *
- * 4. **Cycle detection** — if a query calls itself (directly or transitively)
- *    before its result is stored, the COMPUTING sentinel is found in the cache
- *    and an error is thrown. This surfaces infinite loops at development time.
- *
- * 5. **Error propagation** — query functions return `Report<T>` objects that
- *    carry errors alongside values. A thrown exception is NOT caught by the
- *    cache layer; it propagates to the caller and the cache slot is left as
- *    COMPUTING (i.e., the entry is poisoned). Do not throw from queries.
- */
 export default class Compiler {
   private globalCache = new Map<symbol, QuerySubCache>();
 
-  // Outer key: Filepath.intern() string; inner key: queryKey symbol; innermost key: serialized remaining args.
-  // Invariant: Filepath.intern() must return a stable, unique string per logical filepath across the
-  // lifetime of this Compiler instance. If interning semantics change, per-file cache invalidation breaks.
   private localCache = new Map<string, Map<symbol, QuerySubCache>>();
 
   layout: DbmlProjectLayout = new MemoryProjectLayout();
@@ -294,6 +255,14 @@ export default class Compiler {
   // Find all reference nodes that point to a given symbol. Related: nodeReferee.
   // (symbol: NodeSymbol) => Report<SyntaxNode[]>
   symbolReferences = this.query(symbolReferences);
+  // A global query.
+  // Return all AliasSymbols across the project whose originalSymbol is the given symbol (transitive).
+  // (symbol: NodeSymbol) => Report<AliasSymbol[]>
+  symbolAliases = this.query(symbolAliases);
+  // A global query.
+  // Return all UseSymbols across the project whose originalSymbol is the given symbol (transitive).
+  // (symbol: NodeSymbol) => Report<UseSymbol[]>
+  symbolUses = this.query(symbolUses);
 
   // A global query.
   // Validate an AST node and return any compile errors.
@@ -303,10 +272,6 @@ export default class Compiler {
   // Return the fully-qualified name segments of an AST node (e.g. ['public', 'users']).
   // (node: SyntaxNode) => Report<string[] | undefined> | Report<Unhandled>
   nodeFullname = this.query(fullname);
-  // A global query.
-  // Return the display name string of a symbol (last segment of its fullname, or alias). Related: nodeFullname.
-  // (symbol: NodeSymbol) => string | undefined
-  symbolName = this.query(symbolName);
   // A global query.
   // Return the alias string of an AST node if one is declared. Related: nodeFullname.
   // (node: SyntaxNode) => Report<string | undefined> | Report<Unhandled>
@@ -324,14 +289,10 @@ export default class Compiler {
   // BFS-traverse imports from an entry filepath and return all reachable files. Related: fileDependencies.
   // (entry: Filepath) => Set<Filepath>
   reachableFiles = this.localQuery(reachableFiles);
-  // A local query.
-  // Return the top-level SchemaSymbols declared directly in a file. Related: fileUsableMembers.
-  // (filepath: Filepath) => SchemaSymbol[]
-  topLevelSchemaMembers = this.localQuery(topLevelSchemaMembers);
   // A global query.
   // Return the importable members (non-schema, schema, reuses, uses) of a schema symbol or file. Related: topLevelSchemaMembers.
   // (symbolOrFilepath: SchemaSymbol | Filepath) => Report<{ nonSchemaMembers, schemaMembers, reuses, uses }>
-  fileUsableMembers = this.query(usableMembers);
+  usableMembers = this.query(usableMembers);
 
   // transform queries
   renameTable = renameTable.bind(this);

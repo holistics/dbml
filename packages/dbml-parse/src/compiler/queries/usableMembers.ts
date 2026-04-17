@@ -3,6 +3,9 @@ import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
+  useUtils,
+} from '@/core/global_modules/use';
+import {
   Filepath, resolveImportFilepath,
 } from '@/core/types/filepath';
 import {
@@ -14,6 +17,7 @@ import {
 import Report from '@/core/types/report';
 import {
   type NodeSymbol, SchemaSymbol,
+  AliasSymbol,
 } from '@/core/types/symbol';
 
 // This does not perform duplicate checks
@@ -23,24 +27,32 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
   // reuses are transitive (re-exported to importers)
   reuses: {
     selective: UseSpecifierNode[];
-    wildcard: { importPath: Filepath;
-      node: WildcardNode; }[];
+    wildcard: {
+      importPath: Filepath;
+      node: WildcardNode;
+    }[];
   };
   // uses are local only (not re-exported)
   uses: {
     selective: UseSpecifierNode[];
-    wildcard: { importPath: Filepath;
-      node: WildcardNode; }[];
+    wildcard: {
+      importPath: Filepath;
+      node: WildcardNode;
+    }[];
   };
 }> {
   const nonSchemaMembers: NodeSymbol[] = [];
   const childSchemas = new Map<string, SchemaSymbol>();
 
-  const wildcardReuses: { importPath: Filepath;
-    node: WildcardNode; }[] = [];
+  const wildcardReuses: {
+    importPath: Filepath;
+    node: WildcardNode;
+  }[] = [];
   const selectiveReuses: UseSpecifierNode[] = [];
-  const wildcardUses: { importPath: Filepath;
-    node: WildcardNode; }[] = [];
+  const wildcardUses: {
+    importPath: Filepath;
+    node: WildcardNode;
+  }[] = [];
   const selectiveUses: UseSpecifierNode[] = [];
 
   const filepath = symbolOrFilepath instanceof Filepath ? symbolOrFilepath : symbolOrFilepath.filepath;
@@ -79,12 +91,12 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
   const schemaMembers: SchemaSymbol[] = [];
 
   if (symbolOrFilepath instanceof Filepath) {
-    const schemas = this.topLevelSchemaMembers(symbolOrFilepath) as SchemaSymbol[];
+    const schemas = directTopLevelSchemaMembers(this, symbolOrFilepath);
     schemaMembers.push(...schemas);
     // Also collect non-schema members from the public schema
-    const publicSchema = schemas.find((s) => s.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME);
+    const publicSchema = schemas.find((s) => s.isPublicSchema());
     if (publicSchema) {
-      const publicUsable = this.fileUsableMembers(publicSchema).getFiltered(UNHANDLED);
+      const publicUsable = this.usableMembers(publicSchema).getFiltered(UNHANDLED);
       if (publicUsable) {
         nonSchemaMembers.push(...publicUsable.nonSchemaMembers);
       }
@@ -95,6 +107,21 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
     // Process element declaration
       if (!(element instanceof ElementDeclarationNode)) continue;
       const nestedSchemaName = shouldBelongToThisSchema(this, symbol, element);
+      const alias = this.nodeAlias(element).getFiltered(UNHANDLED);
+      const elementSymbol = this.nodeSymbol(element).getFiltered(UNHANDLED);
+      // public symbol can still have aliased symbol
+      if (alias !== undefined && symbol.isPublicSchema() && elementSymbol) {
+        nonSchemaMembers.push(this.symbolFactory.create(
+          AliasSymbol,
+          {
+            kind: elementSymbol.kind,
+            declaration: element,
+            aliasedSymbol: elementSymbol,
+            name: alias,
+          },
+          symbol.filepath,
+        ));
+      }
       if (nestedSchemaName === false) continue;
 
       if (nestedSchemaName === true) {
@@ -144,20 +171,13 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 // - Return true if the declaration belongs directly to the schemaSymbol
 // - Return false if the declaration doesn't belong to the schemaSymbol
 // - Return a string for the directly nested schema name that the declaration belongs to
-export function shouldBelongToThisSchema (compiler: Compiler, schemaSymbol: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): boolean | string {
-  const qualifiedName = schemaSymbol.qualifiedName;
+export function shouldBelongToThisSchema (compiler: Compiler, symbol: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): boolean | string {
+  const qualifiedName = symbol.qualifiedName;
   let fullname: string[] | undefined;
 
   // For use specifier, alias is the real name existing in the scope
   if (element instanceof UseSpecifierNode) {
-    const alias = compiler.nodeAlias(element).getFiltered(UNHANDLED);
-    if (alias !== undefined) {
-      fullname = [
-        alias,
-      ];
-    } else {
-      fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
-    }
+    fullname = useUtils.visibleName(compiler, element);
   } else {
     fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
   }
@@ -182,4 +202,34 @@ export function shouldBelongToThisSchema (compiler: Compiler, schemaSymbol: Sche
     // Element belongs to a child schema - create it if not yet seen
     return elementSchemaChain[qualifiedName.length];
   }
+}
+
+// Return all top level schema members that are defined inside that file (not including uses and reuses)
+export function directTopLevelSchemaMembers (compiler: Compiler, filepath: Filepath): SchemaSymbol[] {
+  const ast = compiler.parseFile(filepath).getValue().ast;
+
+  // Collect and create schemas
+  const schemaMembers = new Map<string, SchemaSymbol>([
+    [
+      DEFAULT_SCHEMA_NAME,
+      compiler.symbolFactory.create(SchemaSymbol, {
+        name: DEFAULT_SCHEMA_NAME,
+      }, filepath),
+    ],
+  ]);
+
+  for (const element of ast.declarations) {
+    const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED) || [];
+
+    const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0]; // When fullname doesn't have a schema name, `public` is assumed
+    if (!schemaMembers.has(schemaName)) {
+      schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, {
+        name: schemaName,
+      }, filepath));
+    }
+  }
+
+  return [
+    ...schemaMembers.values(),
+  ];
 }

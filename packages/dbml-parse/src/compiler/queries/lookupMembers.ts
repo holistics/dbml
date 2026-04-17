@@ -30,9 +30,8 @@ export function lookupMembers (this: Compiler, symbolOrNode: NodeSymbol | Syntax
     members.find((m) => {
       if (!m.isKind(targetKind)) return false;
 
-      const name = this.symbolName(m);
-      const alias = (symbol instanceof SchemaSymbol || symbol.isKind(SymbolKind.Program)) && m.declaration ? this.nodeAlias(m.declaration).getFiltered(UNHANDLED) : undefined;
-      return name === targetName || alias === targetName;
+      const name = m.name;
+      return name === targetName;
     }),
   );
 }

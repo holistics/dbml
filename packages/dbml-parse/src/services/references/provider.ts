@@ -53,28 +53,25 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
       ) {
         // Try nodeSymbol first (for declarations), then nodeReferee (for reference positions)
         const symbol = this.compiler.nodeSymbol(node).getFiltered(UNHANDLED) ?? extractReferee(this.compiler, node);
-        const referencesResult = symbol ? this.compiler.symbolReferences(symbol) : undefined;
-        if (referencesResult && !referencesResult.hasValue(UNHANDLED)) {
-          const references = referencesResult.getValue();
-          if (references && references.length > 0) {
-            return references.map((refNode) => {
-              // Use filepath from reference node if available and in multi-file mode (uri is set)
-              let refUri: any = uri;
-              if (uri && refNode.filepath) {
-                refUri = Uri.parse(refNode.filepath.toUri());
-              }
+        const references = symbol ? this.compiler.symbolReferences(symbol).getFiltered(UNHANDLED) : undefined;
+        if (references && references.length > 0) {
+          return references.map((refNode) => {
+            // Use filepath from reference node if available and in multi-file mode (uri is set)
+            let refUri: Uri = uri;
+            if (uri && refNode.filepath) {
+              refUri = Uri.parse(refNode.filepath.toUri());
+            }
 
-              return {
-                range: {
-                  startColumn: refNode.startPos.column + 1,
-                  startLineNumber: refNode.startPos.line + 1,
-                  endColumn: refNode.endPos.column + 1,
-                  endLineNumber: refNode.endPos.line + 1,
-                },
-                uri: refUri,
-              };
-            });
-          }
+            return {
+              range: {
+                startColumn: refNode.startPos.column + 1,
+                startLineNumber: refNode.startPos.line + 1,
+                endColumn: refNode.endPos.column + 1,
+                endLineNumber: refNode.endPos.line + 1,
+              },
+              uri: refUri,
+            };
+          });
         }
       }
     }

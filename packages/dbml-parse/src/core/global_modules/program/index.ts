@@ -6,14 +6,14 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  ProgramNode, UseDeclarationNode, UseSpecifierListNode, type SyntaxNode,
+  ProgramNode, type SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
   Database,
 } from '@/core/types/schemaJson';
 import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
+  NodeSymbol, ProgramSymbol, SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
   isProgramNode,
@@ -35,9 +35,8 @@ export const programModule: GlobalModule = {
 
     return Report.create(
       compiler.symbolFactory.create(
-        NodeSymbol,
+        ProgramSymbol,
         {
-          kind: SymbolKind.Program,
           declaration: node,
         },
         node.filepath,
@@ -64,24 +63,8 @@ export const programModule: GlobalModule = {
       ],
     ]);
 
-    for (const element of ast.body) {
-      const fullname = compiler.nodeFullname(element).getValue();
-      if (!Array.isArray(fullname)) {
-        // Discover schemas from schema-qualified use specifiers (e.g. `use { table auth.users }`)
-        if (element instanceof UseDeclarationNode && element.specifiers instanceof UseSpecifierListNode) {
-          for (const specifier of element.specifiers.specifiers) {
-            const specFullname = compiler.nodeFullname(specifier).getValue();
-            if (!Array.isArray(specFullname) || specFullname.length <= 1) continue;
-            const schemaName = specFullname[0];
-            if (schemaName !== DEFAULT_SCHEMA_NAME && !schemaMembers.has(schemaName)) {
-              schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, {
-                name: schemaName,
-              }, symbol.filepath));
-            }
-          }
-        }
-        continue;
-      }
+    for (const element of ast.declarations) {
+      const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED) || [];
 
       const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0]; // When fullname doesn't have a schema name, `public` is assumed
       if (!schemaMembers.has(schemaName)) {
@@ -91,19 +74,36 @@ export const programModule: GlobalModule = {
       }
     }
 
+    // Create all schemas in reachable files
+    for (const filepath of compiler.reachableFiles(symbol.filepath)) {
+      const {
+        schemaMembers: schemas,
+      } = compiler.usableMembers(filepath).getValue();
+      for (const schema of schemas) {
+        const {
+          name,
+        } = schema;
+        if (!schemaMembers.has(name)) {
+          schemaMembers.set(name, compiler.symbolFactory.create(SchemaSymbol, {
+            name,
+          }, symbol.filepath));
+        }
+      }
+    }
+
     // Flatten public schema members into program members for lookups.
     // Errors are NOT propagated - the binder collects them by walking schemas explicitly.
     const publicSymbol = schemaMembers.get(DEFAULT_SCHEMA_NAME);
     if (!publicSymbol) return Report.create([
       ...schemaMembers.values(),
     ]);
-    const publicMembers = compiler.symbolMembers(publicSymbol);
-    if (publicMembers.hasValue(UNHANDLED)) return Report.create([
+    const publicMembers = compiler.symbolMembers(publicSymbol).getFiltered(UNHANDLED)?.filter((s) => !s.isKind(SymbolKind.Schema)); // Do not include nested schema
+    if (!publicMembers) return Report.create([
       ...schemaMembers.values(),
     ]);
     return Report.create([
       ...schemaMembers.values(),
-      ...publicMembers.getValue(),
+      ...publicMembers,
     ]);
   },
 

@@ -29,15 +29,34 @@ function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
   return undefined;
 }
 
-// Collect all AST nodes whose nodeReferee resolves to the given symbol.
+// Collect all AST nodes whose nodeReferee resolves to any of the given symbols.
 // Walks every variable node checking the memoized nodeReferee result.
 export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<SyntaxNode[]> {
   const astMap = this.parseProject();
   this.bindProject();
 
-  const refs: SyntaxNode[] = [];
   const errors = [];
   const warnings = [];
+
+  const aliasesReport = this.symbolAliases(symbol);
+  const usesReport = this.symbolUses(symbol);
+  errors.push(...aliasesReport.getErrors(), ...usesReport.getErrors());
+  warnings.push(...aliasesReport.getWarnings(), ...usesReport.getWarnings());
+
+  const targets = new Set<NodeSymbol>([
+    symbol,
+    ...aliasesReport.getValue(),
+    ...usesReport.getValue(),
+  ]);
+
+  const refs: SyntaxNode[] = [];
+  const seen = new Set<SyntaxNode>();
+  const pushRef = (n: SyntaxNode) => {
+    if (!seen.has(n)) {
+      seen.add(n);
+      refs.push(n);
+    }
+  };
 
   for (const astReport of astMap.values()) {
     errors.push(...astReport.getErrors());
@@ -45,7 +64,8 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<Sy
     const ast = astReport.getValue().ast;
     const walk = (node: SyntaxNode): void => {
       if (isExpressionAVariableNode(node)) {
-        if (nodeReferee.call(this, node).getFiltered(UNHANDLED) === symbol) refs.push(node);
+        const ref = nodeReferee.call(this, node).getFiltered(UNHANDLED);
+        if (ref && targets.has(ref)) pushRef(node);
         return;
       }
       // Handle tuple access: table.(col1, col2) - tuple counts as a reference to the table
@@ -55,9 +75,9 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): Report<Sy
         const leftExpr = (node.parentNode as InfixExpressionNode).leftExpression;
         if (leftExpr) {
           const tableNode = getRightmostVariable(leftExpr);
-          if (tableNode && nodeReferee.call(this, tableNode).getFiltered(UNHANDLED) === symbol) {
-            // Push the table variable node, not the tuple, so sourceText shows the table name
-            refs.push(tableNode);
+          if (tableNode) {
+            const ref = nodeReferee.call(this, tableNode).getFiltered(UNHANDLED);
+            if (ref && targets.has(ref)) pushRef(tableNode);
           }
         }
       }

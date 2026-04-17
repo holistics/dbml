@@ -1,6 +1,6 @@
 import { describe, expect } from 'vitest';
 import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode, ProgramNode } from '@/core/types/nodes';
-import { SchemaSymbol, NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/core/types/module';
 import { CompileErrorCode } from '@/core/types/errors';
 import { analyze } from '@tests/utils';
@@ -8,7 +8,7 @@ import type Compiler from '@/compiler';
 
 function findMember (compiler: Compiler, symbol: NodeSymbol, kind: SymbolKind, name: string): NodeSymbol | undefined {
   const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED) ?? [];
-  return members.find((m) => m.kind === kind && compiler.symbolName(m) === name);
+  return members.find((m) => m.kind === kind && m.name === name);
 }
 
 function nodeSymbol (compiler: Compiler, node: ElementDeclarationNode | ProgramNode): NodeSymbol | undefined {
@@ -190,8 +190,8 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(2);
-      expect(errors[0].diagnostic).toBe('Duplicate column id');
-      expect(errors[1].diagnostic).toBe('Duplicate column id');
+      expect(errors[0].diagnostic).toBe('Duplicate column \'id\'');
+      expect(errors[1].diagnostic).toBe('Duplicate column \'id\'');
     });
 
     test('should handle column settings (pk, not null, unique, increment)', () => {
@@ -355,8 +355,8 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(2);
-      expect(errors[0].diagnostic).toBe('Duplicate enum field active');
-      expect(errors[1].diagnostic).toBe('Duplicate enum field active');
+      expect(errors[0].diagnostic).toBe('Duplicate enum field \'active\'');
+      expect(errors[1].diagnostic).toBe('Duplicate enum field \'active\'');
     });
 
     test('should isolate enum field scope to enum', () => {
@@ -484,7 +484,7 @@ describe('[example] binder', () => {
       `;
       const errors = analyze(source).getErrors();
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("Enum field 'nonexistent' does not exist in Enum 'status'");
+      expect(errors[0].diagnostic).toBe("Enum field 'nonexistent' does not exist in Enum 'public.status'");
     });
 
     test('should detect invalid enum in default value', () => {
@@ -571,7 +571,7 @@ describe('[example] binder', () => {
       `;
       const errors = analyze(source).getErrors();
       expect(errors.length).toBe(1);
-      expect(errors[0].diagnostic).toBe("Enum field 'value' does not exist in Enum 'true'");
+      expect(errors[0].diagnostic).toBe("Enum field 'value' does not exist in Enum 'public.true'");
     });
 
     test('should bind true.value when enum true exists with field value', () => {
@@ -639,7 +639,7 @@ describe('[example] binder', () => {
       `;
       const errors2 = analyze(source2).getErrors();
       expect(errors2).toHaveLength(1);
-      expect(errors2[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'users'");
+      expect(errors2[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'public.users'");
     });
 
     test('should resolve cross-schema references', () => {
@@ -754,8 +754,8 @@ describe('[example] binder', () => {
       `;
       const errors = analyze(source).getErrors();
       expect(errors.length).toBe(2);
-      expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'posts'");
-      expect(errors[1].diagnostic).toBe("Column 'also_nonexistent' does not exist in Table 'users'");
+      expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'public.posts'");
+      expect(errors[1].diagnostic).toBe("Column 'also_nonexistent' does not exist in Table 'public.users'");
     });
   });
 
@@ -882,9 +882,9 @@ describe('[example] binder', () => {
 
       const errorDiagnostics = errors.map((e) => e.diagnostic);
       expect(errorDiagnostics).toContain("Column 'un_col1' does not exist in TablePartial 'T1'");
-      expect(errorDiagnostics).toContain("Column 'un_col2' does not exist in Table 'T1'");
+      expect(errorDiagnostics).toContain("Column 'un_col2' does not exist in Table 'public.T1'");
       expect(errorDiagnostics).toContain("Table 'un_T' does not exist in Schema 'public'");
-      expect(errorDiagnostics).toContain("Column 'un_col' does not exist in Table 'T1'");
+      expect(errorDiagnostics).toContain("Column 'un_col' does not exist in Table 'public.T1'");
     });
 
     test('should disallow self-referential ref in table partial', () => {

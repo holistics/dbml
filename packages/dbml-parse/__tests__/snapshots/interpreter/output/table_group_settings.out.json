@@ -22,7 +22,8 @@
         },
         "tables": [
           {
-            "name": "table1"
+            "name": "table1",
+            "schemaName": "public"
           }
         ],
         "token": {

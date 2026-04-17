@@ -10,7 +10,7 @@ import type {
   SchemaElement,
 } from '../types/schemaJson';
 import type {
-  NodeSymbol, SymbolKind,
+  NodeSymbol,
 } from '../types/symbol';
 
 // Modules decouple element-specific logic from the compiler: each module handles one DBML element kind

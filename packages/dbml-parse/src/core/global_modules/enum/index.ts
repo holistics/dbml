@@ -42,22 +42,25 @@ export const enumUtils = {
     return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum '${name}' already exists in schema '${schemaLabel}'`, errorNode);
   },
   getFieldDuplicateError (name: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field ${name}`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate enum field '${name}'`, errorNode);
   },
 };
 
 export const enumModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
+    const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
     if (isElementNode(node, ElementKind.Enum)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Enum,
         declaration: node,
+        name,
       }, node.filepath));
     }
     if (isElementFieldNode(node, ElementKind.Enum)) {
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.EnumField,
         declaration: node,
+        name,
       }, node.filepath));
     }
     return Report.create(PASS_THROUGH);
@@ -86,7 +89,7 @@ export const enumModule: GlobalModule = {
     for (const member of members) {
       if (!member.isKind(SymbolKind.EnumField) || !member.declaration) continue; // Ignore non-enum-field members
 
-      const name = compiler.symbolName(member);
+      const name = member.name;
       if (name !== undefined) {
         const errorNode = member.declaration;
 

@@ -117,7 +117,7 @@ describe('[example] validator', () => {
       // Two errors - one for each occurrence of the duplicate
       expect(errors).toHaveLength(2);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_COLUMN_NAME);
-      expect(errors[0].diagnostic).toBe('Duplicate column id');
+      expect(errors[0].diagnostic).toBe('Duplicate column \'id\'');
 
       // Verify both errors point to different lines
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).not.toBe((errors[1].nodeOrToken as SyntaxToken).startPos.line);
@@ -239,7 +239,7 @@ describe('[example] validator', () => {
 
       // Two errors - one for each duplicate occurrence
       expect(errors).toHaveLength(2);
-      expect(errors[0].diagnostic).toBe('Duplicate enum field active');
+      expect(errors[0].diagnostic).toBe('Duplicate enum field \'active\'');
     });
 
     test('should accept enum field with note', () => {
@@ -339,7 +339,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.BINDING_ERROR);
-      expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'posts'");
+      expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'public.posts'");
     });
 
     test('should accept ref with named ref and settings in block form', () => {
@@ -873,8 +873,8 @@ Table users { name varchar }`;
       // - Duplicate enum field (2 - one for each occurrence, uses same code as duplicate column)
       // - Unknown table in ref (1)
       expect(errors).toHaveLength(5);
-      expect(errors.filter((e) => e.diagnostic === 'Duplicate column id')).toHaveLength(2);
-      expect(errors.filter((e) => e.diagnostic === 'Duplicate enum field active')).toHaveLength(2);
+      expect(errors.filter((e) => e.diagnostic === 'Duplicate column \'id\'')).toHaveLength(2);
+      expect(errors.filter((e) => e.diagnostic === 'Duplicate enum field \'active\'')).toHaveLength(2);
       expect(errors.filter((e) => e.code === CompileErrorCode.BINDING_ERROR)).toHaveLength(1);
     });
 
@@ -1111,7 +1111,7 @@ Table users { name varchar }`;
       const dupColSource = 'Table users { id int\nid varchar }';
       const dupColErrors = analyze(dupColSource).getErrors();
       expect(dupColErrors).toHaveLength(2);
-      expect(dupColErrors[0].diagnostic).toBe('Duplicate column id');
+      expect(dupColErrors[0].diagnostic).toBe('Duplicate column \'id\'');
 
       // Test missing table name
       const missingNameErrors = analyze('Table { id int }').getErrors();
@@ -1122,7 +1122,7 @@ Table users { name varchar }`;
       const dupEnumSource = 'Enum status { active\nactive }';
       const dupEnumErrors = analyze(dupEnumSource).getErrors();
       expect(dupEnumErrors).toHaveLength(2);
-      expect(dupEnumErrors[0].diagnostic).toBe('Duplicate enum field active');
+      expect(dupEnumErrors[0].diagnostic).toBe('Duplicate enum field \'active\'');
 
       // Test unknown setting
       const unknownErrors = analyze('Table users [unknown: value] { id int }').getErrors();

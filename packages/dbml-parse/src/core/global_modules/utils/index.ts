@@ -33,6 +33,9 @@ import {
 import {
   getNumberTextFromExpression, isExpressionASignedNumberExpression, parseNumber,
 } from '@/core/utils';
+import {
+  useUtils,
+} from '../use';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): {
   schemaName: string | null;
@@ -425,14 +428,10 @@ export function lookupMember (
 
   const match = members.find((m: NodeSymbol) => {
     if (kinds && !m.isKind(...kinds)) return false;
-    if (parentSymbol.isProgram() || (parentSymbol.isPublicSchema())) {
-      // For UseSymbols, use the specifier node (which carries the local alias) rather than
-      // the original declaration (which has the source schema-qualified name).
-      const lookupDecl = (m instanceof UseSymbol && m.useSpecifierDeclaration) ? m.useSpecifierDeclaration : m.declaration;
-      if (lookupDecl && compiler.nodeAlias(lookupDecl).getFiltered(UNHANDLED) === name) return true; // Aliases (table `as`) and use-specifier aliases can be found in public
-      if (lookupDecl && (compiler.nodeFullname(lookupDecl).getFiltered(UNHANDLED) || []).length > 1) return false; // This is a qualified element
+    if (m instanceof UseSymbol) {
+      return useUtils.visibleName(compiler, m)?.at(-1) === name;
     }
-    return compiler.symbolName(m) === name;
+    return m.name === name;
   });
 
   // Report symbol not found
@@ -530,9 +529,11 @@ export function getMultiplicities (
   }
 }
 
-export function getSymbolSchemaAndName (compiler: Compiler, symbol: NodeSymbol): { schemaName: string | null;
-  name: string; } {
-  const name = compiler.symbolName(symbol);
+export function getSymbolSchemaAndName (compiler: Compiler, symbol: NodeSymbol): {
+  schemaName: string | null;
+  name: string;
+} {
+  const name = symbol.name;
 
   const fullname = symbol.declaration ? compiler.nodeFullname(symbol.declaration).getFiltered(UNHANDLED) : undefined;
   const schemaName = (fullname && fullname.length > 1) ? fullname[0] : null;

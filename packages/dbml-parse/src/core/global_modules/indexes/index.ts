@@ -36,19 +36,12 @@ import IndexesInterpreter from './interpret';
 export const indexesModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Indexes)) {
+      const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
       return new Report(compiler.symbolFactory.create(NodeSymbol, {
         kind: SymbolKind.Indexes,
         declaration: node,
+        name,
       }, node.filepath));
-    }
-    if (isElementFieldNode(node, ElementKind.Indexes)) {
-      if (node instanceof PrimaryExpressionNode) {
-        return new Report(compiler.symbolFactory.create(NodeSymbol, {
-          kind: SymbolKind.IndexesField,
-          declaration: node,
-        }, node.filepath));
-      }
-      return Report.create(PASS_THROUGH);
     }
     return Report.create(PASS_THROUGH);
   },
@@ -63,9 +56,6 @@ export const indexesModule: GlobalModule = {
         return new Report([]);
       }
       return symbols as Report<NodeSymbol[]>;
-    }
-    if (symbol.isKind(SymbolKind.IndexesField)) {
-      return new Report([]);
     }
     return Report.create(PASS_THROUGH);
   },

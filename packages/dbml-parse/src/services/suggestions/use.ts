@@ -141,25 +141,25 @@ function suggestUseElementNames (
   if (!targetFilepath) return noSuggestions();
 
   const symbolKind = convertImportKindToSymbolKind(importKind);
-  const usable = compiler.fileUsableMembers(targetFilepath).getFiltered(UNHANDLED);
+  const usable = compiler.usableMembers(targetFilepath).getFiltered(UNHANDLED);
   if (!usable) return noSuggestions();
 
   const names: string[] = [];
 
   for (const member of usable.nonSchemaMembers) {
     if (member.kind !== symbolKind) continue;
-    const name = compiler.symbolName(member);
+    const name = member.name;
     if (name) names.push(name);
   }
 
   for (const schema of usable.schemaMembers) {
     if (schema.isPublicSchema()) continue;
-    const schemaName = compiler.symbolName(schema);
+    const schemaName = schema.name;
     if (!schemaName) continue;
     const schemaMembers = compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
     for (const member of schemaMembers) {
       if (member.kind !== symbolKind) continue;
-      const memberName = compiler.symbolName(member);
+      const memberName = member.name;
       if (memberName) names.push(`${schemaName}.${memberName}`);
     }
   }
