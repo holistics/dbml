@@ -66,7 +66,8 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   return blocks;
 }
 
-function emitTablesBlock (lines: string[], tables: Array<{ name: string; schemaName: string }>): void {
+function emitTablesBlock (lines: string[], tables: Array<{ name: string;
+  schemaName: string; }>): void {
   const tableNames = tables.map((t) =>
     t.schemaName === DEFAULT_SCHEMA_NAME ? t.name : `${t.schemaName}.${t.name}`,
   );
@@ -104,7 +105,9 @@ function generateDiagramViewBlock (
     return `${header}\n}`;
   }
 
-  const { tables, tableGroups, schemas, stickyNotes } = visibleEntities;
+  const {
+    tables, tableGroups, schemas, stickyNotes,
+  } = visibleEntities;
 
   const tablesIsNull = tables === null;
   const tableGroupsIsNull = tableGroups === null;
@@ -129,7 +132,9 @@ function generateDiagramViewBlock (
       // No Trinity dims have items
       if (stickyNotes && stickyNotes.length > 0) {
         // Specific notes but no Trinity items → Notes { items }
-        const lines: string[] = [header];
+        const lines: string[] = [
+          header,
+        ];
         emitNotesBlock(lines, stickyNotes);
         lines.push('}');
         return lines.join('\n');
@@ -139,7 +144,9 @@ function generateDiagramViewBlock (
     }
 
     // Rule 3: null dims + items exist → union rule, omit null dims
-    const lines: string[] = [header];
+    const lines: string[] = [
+      header,
+    ];
     if (tablesHasItems) emitTablesBlock(lines, tables!);
     if (tableGroupsHasItems) emitTableGroupsBlock(lines, tableGroups!);
     if (schemasHasItems) emitSchemasBlock(lines, schemas!);
@@ -149,7 +156,8 @@ function generateDiagramViewBlock (
   }
 
   // All Trinity dims are non-null arrays
-  const tablesArr = tables as Array<{ name: string; schemaName: string }>;
+  const tablesArr = tables as Array<{ name: string;
+    schemaName: string; }>;
   const tableGroupsArr = tableGroups as Array<{ name: string }>;
   const schemasArr = schemas as Array<{ name: string }>;
 
@@ -159,7 +167,10 @@ function generateDiagramViewBlock (
   if (allTrinityEmpty) {
     // Rule 4: body-level { * }, or Tables { * } + Notes if notes have items
     if (hasNotesItems) {
-      const lines: string[] = [header, '  Tables { * }'];
+      const lines: string[] = [
+        header,
+        '  Tables { * }',
+      ];
       emitNotesBlock(lines, stickyNotes!);
       lines.push('}');
       return lines.join('\n');
@@ -168,7 +179,9 @@ function generateDiagramViewBlock (
   }
 
   // Rules 5 & 6: emit only dims with items, omit empty arrays
-  const lines: string[] = [header];
+  const lines: string[] = [
+    header,
+  ];
   if (tablesArr.length > 0) emitTablesBlock(lines, tablesArr);
   if (tableGroupsArr.length > 0) emitTableGroupsBlock(lines, tableGroupsArr);
   if (schemasArr.length > 0) emitSchemasBlock(lines, schemasArr);
