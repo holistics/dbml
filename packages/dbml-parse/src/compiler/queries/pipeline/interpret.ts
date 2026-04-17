@@ -1,3 +1,6 @@
+import {
+  cloneDeep,
+} from 'lodash-es';
 import type Compiler from '@/compiler';
 import {
   DEFAULT_SCHEMA_NAME,
@@ -152,34 +155,10 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
   // Build rename map: canonical "schemaName.name" -> local primary name
   const renameMap = new Map<string, string>();
 
-  // Start with local items (identity mapping in rename map)
-  const reconciled: Database = {
-    ...fileDb,
-    tables: [
-      ...fileDb.tables,
-    ],
-    notes: [
-      ...fileDb.notes,
-    ],
-    refs: [
-      ...fileDb.refs,
-    ],
-    enums: [
-      ...fileDb.enums,
-    ],
-    tableGroups: [
-      ...fileDb.tableGroups,
-    ],
-    aliases: [
-      ...fileDb.aliases,
-    ],
-    tablePartials: [
-      ...fileDb.tablePartials,
-    ],
-    records: [
-      ...fileDb.records,
-    ],
-  };
+  // Deep-clone the file's interpreted schema so downstream mutations (endpoint
+  // rewrites, alias insertion) never leak back into the memoized interpretNode
+  // cache or into other files' views of the same master database.
+  const reconciled: Database = cloneDeep(fileDb);
 
   for (const t of fileDb.tables) renameMap.set(canonicalElementKey(t.schemaName, t.name), t.name);
 
@@ -219,9 +198,11 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
       ] = ext.visibleNames;
       const primaryName = primaryVisible.name;
 
-      // Find canonical item from merged items
-      const found = findItem(allItems, kind, ext.name, ext.schemaName);
-      if (!found) continue;
+      // Find canonical item from merged items. Deep-clone before inserting —
+      // the item lives in another file's memoized db and must not be shared.
+      const foundRaw = findItem(allItems, kind, ext.name, ext.schemaName);
+      if (!foundRaw) continue;
+      const found = cloneDeep(foundRaw);
 
       // Add with primary name; strip schema only when an alias was used
       const isRenamed = primaryName !== ext.name;
@@ -252,19 +233,23 @@ export function exportSchemaJson (this: Compiler, filepath: Filepath): Report<Re
     }
   }
 
-  // Collect cross-file refs whose endpoints are all visible (by canonical name)
+  // Collect cross-file refs whose endpoints are all visible (by canonical name).
+  // Dedup against refs already copied from fileDb by identity against the cloned
+  // master source (ref objects in allItems are the originals, not the clones).
+  const localRefSources = new Set(fileDb.refs);
   for (const ref of allItems.refs) {
-    if (reconciled.refs.includes(ref)) continue;
+    if (localRefSources.has(ref)) continue;
     if (ref.endpoints.every((ep) => renameMap.has(canonicalElementKey(ep.schemaName, ep.tableName)))) {
-      reconciled.refs.push(ref);
+      reconciled.refs.push(cloneDeep(ref));
     }
   }
 
   // Collect cross-file records whose table is visible
+  const localRecordSources = new Set(fileDb.records);
   for (const rec of allItems.records) {
-    if (reconciled.records.includes(rec)) continue;
+    if (localRecordSources.has(rec)) continue;
     if (renameMap.has(canonicalElementKey(rec.schemaName ?? null, rec.tableName))) {
-      reconciled.records.push(rec);
+      reconciled.records.push(cloneDeep(rec));
     }
   }
 
