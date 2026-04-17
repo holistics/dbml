@@ -329,7 +329,9 @@ export default class Compiler {
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),
-      autocompletionProvider: new DBMLCompletionItemProvider(this),
+      autocompletionProvider: new DBMLCompletionItemProvider(this, [
+        '.', ',', '[', '(', ':', '>', '<', '-', '~', '\'', '"', '/', ' ',
+      ]),
       diagnosticsProvider: new DBMLDiagnosticsProvider(this),
     };
   }
