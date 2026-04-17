@@ -10,14 +10,12 @@ import {
   computed,
 } from 'vue';
 
-interface Props {
+const {
+  color = 'gray', label,
+} = defineProps<{
   label: string;
   color?: 'blue' | 'gray' | 'purple' | 'orange' | 'indigo';
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  color: 'gray',
-});
+}>();
 
 const colorClass = computed(() => ({
   blue: 'bg-blue-100 text-blue-600',
@@ -25,5 +23,5 @@ const colorClass = computed(() => ({
   purple: 'bg-purple-100 text-purple-600',
   orange: 'bg-orange-100 text-orange-600',
   indigo: 'bg-indigo-100 text-indigo-600',
-}[props.color]));
+}[color]));
 </script>

@@ -20,7 +20,7 @@
       <SymbolRow
         v-for="sym in symbols"
         :key="sym.id"
-        :sym="sym"
+        :symbol="sym"
         :level="0"
         @symbol-click="emit('symbol-click', $event)"
       />

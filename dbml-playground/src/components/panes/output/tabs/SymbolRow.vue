@@ -35,7 +35,7 @@
       <SymbolRow
         v-for="child in sym.members"
         :key="child.id"
-        :sym="child"
+        :symbol="child"
         :level="level + 1"
         @symbol-click="emit('symbol-click', $event)"
       />
@@ -61,21 +61,20 @@ import type {
   SymbolInfo,
 } from '@/stores/parserStore';
 
-interface Props {
-  sym: SymbolInfo;
+const {
+  symbol,
+  level = 0,
+} = defineProps<{
+  symbol: SymbolInfo;
   level?: number;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  level: 0,
-});
+}>();
 
 const emit = defineEmits<{ 'symbol-click': [sym: SymbolInfo] }>();
 
 const open = ref(false);
 function toggleOpen () { open.value = !open.value; }
 
-const hasMembers = computed(() => props.sym.members.length > 0);
+const hasMembers = computed(() => symbol.members.length > 0);
 
 const KIND_ICONS: Record<string, Component> = {
   'Table': PhTable,
@@ -97,6 +96,6 @@ const KIND_COLORS: Record<string, string> = {
   'Schema': 'text-orange-500',
 };
 
-const icon = computed((): Component => KIND_ICONS[props.sym.kind] ?? PhAt);
-const iconColor = computed(() => KIND_COLORS[props.sym.kind] ?? 'text-gray-400');
+const icon = computed((): Component => KIND_ICONS[symbol.kind] ?? PhAt);
+const iconColor = computed(() => KIND_COLORS[symbol.kind] ?? 'text-gray-400');
 </script>

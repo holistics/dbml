@@ -29,16 +29,16 @@ import {
   PhCaretRight,
 } from '@phosphor-icons/vue';
 
-interface Props {
+const {
+  label,
+  count,
+  icon = undefined,
+  iconColor = 'text-gray-500',
+} = defineProps<{
   label: string;
   count: number;
   icon?: Component;
   iconColor?: string;
-}
-
-withDefaults(defineProps<Props>(), {
-  icon: undefined,
-  iconColor: 'text-gray-500',
-});
+}>();
 const open = ref(true);
 </script>
