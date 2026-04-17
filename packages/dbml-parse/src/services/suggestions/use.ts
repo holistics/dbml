@@ -224,7 +224,21 @@ function suggestUseFilepath (
   model: TextModel,
 ): CompletionList {
   const currentDir = currentFilepath.dirname;
-  const suggestions: CompletionItem[] = [];
+
+  // When the cursor is inside an existing `'…'` importPath literal, the
+  // suggestion should replace exactly the *content between the quotes* and
+  // never re-insert the quotes themselves — otherwise accepting a
+  // completion against `'./'` ends up producing `'././b'` (the old
+  // behaviour stacked the already-typed `./` with the full quoted insert).
+  //
+  // We also only show entries whose rel path starts with whatever the user
+  // has typed so far, so `./foo/` narrows the list to that subdirectory.
+  const existingRaw = importPath ? stripQuotes(sourceText(model, importPath)) : '';
+  const prefix = existingRaw;
+  const insertQuoted = importPath === undefined;
+
+  const range = importPath ? computeImportPathRange(model, importPath) : undefined as any;
+  const byLabel = new Map<string, CompletionItem>();
 
   for (const fp of compiler.layout.getEntryPoints()) {
     if (fp.equals(currentFilepath)) continue;
@@ -232,31 +246,75 @@ function suggestUseFilepath (
     if (relPath.endsWith('.dbml')) relPath = relPath.slice(0, -5);
     if (!relPath.startsWith('.')) relPath = `./${relPath}`;
 
-    const insertText = `'${relPath}'`;
-    let range: any = undefined as any;
+    if (prefix && !relPath.startsWith(prefix)) continue;
 
-    if (importPath) {
-      const startPos = model.getPositionAt(importPath.start);
-      const endPos = model.getPositionAt(importPath.end + 1);
-      range = {
-        startLineNumber: startPos.lineNumber,
-        startColumn: startPos.column,
-        endLineNumber: endPos.lineNumber,
-        endColumn: endPos.column,
-      };
-    }
+    // Only surface direct children of the current prefix. If the remaining
+    // tail after the prefix still contains a `/`, collapse it into a
+    // synthetic directory entry so the user can descend one level at a time
+    // instead of being flooded with every descendant.
+    const tail = relPath.slice(prefix.length);
+    const slashIdx = tail.indexOf('/');
+    const isDir = slashIdx !== -1;
+    const childLabel = isDir
+      ? `${prefix}${tail.slice(0, slashIdx + 1)}`  // e.g. `./foo/`
+      : relPath;
 
-    suggestions.push({
-      label: relPath,
+    if (byLabel.has(childLabel)) continue;
+    const insertText = insertQuoted ? `'${childLabel}'` : childLabel;
+    byLabel.set(childLabel, {
+      label: childLabel,
       insertText,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-      kind: CompletionItemKind.File,
-      sortText: relPath,
+      kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
+      sortText: `${isDir ? '0' : '1'}${childLabel}`, // folders first
       range,
     });
   }
 
   return {
-    suggestions,
+    suggestions: [
+      ...byLabel.values(),
+    ],
   };
+}
+
+// Range covering the content between the importPath's opening and closing
+// quotes. If the token is unterminated (e.g. the user hasn't typed the
+// closing quote yet) we shrink from the start (skip the opening quote) and
+// extend to token end.
+function computeImportPathRange (model: TextModel, importPath: SyntaxToken) {
+  const raw = sourceText(model, importPath);
+  const hasOpenQuote = raw.startsWith('\'') || raw.startsWith('"');
+  const hasCloseQuote = raw.length > 1 && (raw.endsWith('\'') || raw.endsWith('"'));
+  const contentStart = importPath.start + (hasOpenQuote ? 1 : 0);
+  const contentEnd = importPath.end - (hasCloseQuote ? 1 : 0);
+  const startPos = model.getPositionAt(contentStart);
+  const endPos = model.getPositionAt(contentEnd);
+  return {
+    startLineNumber: startPos.lineNumber,
+    startColumn: startPos.column,
+    endLineNumber: endPos.lineNumber,
+    endColumn: endPos.column,
+  };
+}
+
+function sourceText (model: TextModel, token: SyntaxToken): string {
+  const startPos = model.getPositionAt(token.start);
+  const endPos = model.getPositionAt(token.end);
+  return model.getValueInRange({
+    startLineNumber: startPos.lineNumber,
+    startColumn: startPos.column,
+    endLineNumber: endPos.lineNumber,
+    endColumn: endPos.column,
+  });
+}
+
+function stripQuotes (s: string): string {
+  if (s.length >= 2 && (s.startsWith('\'') || s.startsWith('"'))) {
+    const open = s[0];
+    let content = s.slice(1);
+    if (content.endsWith(open)) content = content.slice(0, -1);
+    return content;
+  }
+  return s;
 }
