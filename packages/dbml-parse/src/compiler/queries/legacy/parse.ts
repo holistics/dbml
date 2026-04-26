@@ -1,3 +1,6 @@
+import {
+  type Filepath,
+} from '@/core/types';
 import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
@@ -13,7 +16,7 @@ import type {
 } from '@/core/types/tokens';
 import type Compiler from '../../index';
 
-export function ast (this: Compiler): Readonly<ProgramNode> {
+export function ast (this: Compiler, filepath: Filepath): Readonly<ProgramNode> {
   return this.parse._().getValue().ast;
 }
 
@@ -25,7 +28,7 @@ export function warnings (this: Compiler): readonly Readonly<CompileWarning>[] {
   return this.parse._().getWarnings();
 }
 
-export function tokens (this: Compiler): Readonly<SyntaxToken>[] {
+export function tokens (this: Compiler, filepath: Filepath): Readonly<SyntaxToken>[] {
   return this.parse._().getValue().tokens;
 }
 
