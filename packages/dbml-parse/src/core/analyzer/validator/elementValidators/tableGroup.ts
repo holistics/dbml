@@ -129,14 +129,14 @@ export default class TableGroupValidator implements ElementValidator {
     this.declarationNode.symbol = this.symbolFactory.create(TableGroupSymbol, {
       declaration: this.declarationNode,
       symbolTable: new SymbolTable(),
-    });
+    }, this.declarationNode.filepath);
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments !== undefined) {
       const nameFragments = [
         ...maybeNameFragments,
       ];
       const tableGroupName = nameFragments.pop()!;
-      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
+      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory, this.declarationNode.filepath);
       const tableId = createTableGroupSymbolIndex(tableGroupName);
       if (symbolTable.has(tableId)) {
         return [
@@ -269,7 +269,7 @@ export default class TableGroupValidator implements ElementValidator {
 
       const tableGroupSymbol = this.symbolFactory.create(TableGroupFieldSymbol, {
         declaration: field,
-      });
+      }, this.declarationNode.filepath);
       field.symbol = tableGroupSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;

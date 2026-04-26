@@ -113,7 +113,7 @@ export default class EnumValidator implements ElementValidator {
     this.declarationNode.symbol = this.symbolFactory.create(EnumSymbol, {
       declaration: this.declarationNode,
       symbolTable: new SymbolTable(),
-    });
+    }, this.declarationNode.filepath);
     const {
       name,
     } = this.declarationNode;
@@ -122,7 +122,7 @@ export default class EnumValidator implements ElementValidator {
     if (maybeNameFragments !== undefined) {
       const nameFragments = maybeNameFragments;
       const enumName = nameFragments.pop()!;
-      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
+      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory, this.declarationNode.filepath);
       const enumId = createEnumSymbolIndex(enumName);
       if (symbolTable.has(enumId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Enum '${enumName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
@@ -242,7 +242,7 @@ export default class EnumValidator implements ElementValidator {
 
       const enumSymbol = this.symbolFactory.create(EnumFieldSymbol, {
         declaration: field,
-      });
+      }, this.declarationNode.filepath);
       field.symbol = enumSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;

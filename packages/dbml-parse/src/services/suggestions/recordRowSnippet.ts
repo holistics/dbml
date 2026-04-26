@@ -1,5 +1,11 @@
 import Compiler from '@/compiler';
 import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
@@ -38,7 +44,8 @@ export function suggestRecordRowSnippet (
   position: Position,
   offset: number,
 ): CompletionList | null {
-  const element = compiler.container.element(offset);
+  const filepath = model.uri ? Filepath.fromUri(String(model.uri)) : DEFAULT_ENTRY;
+  const element = compiler.container.element(filepath, offset);
 
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;

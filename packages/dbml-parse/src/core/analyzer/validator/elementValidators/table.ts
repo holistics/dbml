@@ -179,7 +179,7 @@ export default class TableValidator implements ElementValidator {
     this.declarationNode.symbol = this.symbolFactory.create(TableSymbol, {
       declaration: this.declarationNode,
       symbolTable: new SymbolTable(),
-    });
+    }, this.declarationNode.filepath);
 
     const {
       name, alias,
@@ -191,7 +191,7 @@ export default class TableValidator implements ElementValidator {
         ...maybeNameFragments,
       ];
       const tableName = nameFragments.pop()!;
-      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
+      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory, this.declarationNode.filepath);
       const tableId = createTableSymbolIndex(tableName);
       if (symbolTable.has(tableId)) {
         errors.push(new CompileError(CompileErrorCode.DUPLICATE_NAME, `Table '${tableName}' already exists in schema '${nameFragments.join('.') || DEFAULT_SCHEMA_NAME}'`, name!));
@@ -272,7 +272,7 @@ export default class TableValidator implements ElementValidator {
         const partialInjectionSymbol = this.symbolFactory.create(PartialInjectionSymbol, {
           symbolTable: new SymbolTable(),
           declaration: field,
-        });
+        }, this.declarationNode.filepath);
         field.symbol = partialInjectionSymbol;
         const partialInjectionSymbolId = createPartialInjectionSymbolIndex(injectedTablePartialName);
         const symbolTable = this.declarationNode.symbol!.symbolTable!;
@@ -305,7 +305,7 @@ export default class TableValidator implements ElementValidator {
 
       const columnSymbol = this.symbolFactory.create(ColumnSymbol, {
         declaration: field,
-      });
+      }, this.declarationNode.filepath);
       field.symbol = columnSymbol;
 
       const symbolTable = this.declarationNode.symbol!.symbolTable!;

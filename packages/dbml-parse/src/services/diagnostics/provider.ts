@@ -1,4 +1,10 @@
 import type Compiler from '@/compiler';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
@@ -33,18 +39,15 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get all diagnostics (errors and warnings) from the current compilation
    */
-  provideDiagnostics (): Diagnostic[] {
+  provideDiagnostics (filepath: Filepath = DEFAULT_ENTRY): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const report = this.compiler.parse._();
 
-    // Add errors
-    const errors = report.getErrors();
+    const errors = this.compiler.parse.errors(filepath);
     for (const error of errors) {
       diagnostics.push(this.createDiagnostic(error, 'error'));
     }
 
-    // Add warnings
-    const warnings = report.getWarnings();
+    const warnings = this.compiler.parse.warnings(filepath);
     for (const warning of warnings) {
       diagnostics.push(this.createDiagnostic(warning, 'warning'));
     }
@@ -55,24 +58,24 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get only errors from the current compilation
    */
-  provideErrors (): Diagnostic[] {
-    const errors = this.compiler.parse._().getErrors();
+  provideErrors (filepath: Filepath = DEFAULT_ENTRY): Diagnostic[] {
+    const errors = this.compiler.parse.errors(filepath);
     return errors.map((error) => this.createDiagnostic(error, 'error'));
   }
 
   /**
    * Get only warnings from the current compilation
    */
-  provideWarnings (): Diagnostic[] {
-    const warnings = this.compiler.parse._().getWarnings();
+  provideWarnings (filepath: Filepath = DEFAULT_ENTRY): Diagnostic[] {
+    const warnings = this.compiler.parse.warnings(filepath);
     return warnings.map((warning) => this.createDiagnostic(warning, 'warning'));
   }
 
   /**
    * Convert Monaco markers format (for editor integration)
    */
-  provideMarkers (): MarkerData[] {
-    const diagnostics = this.provideDiagnostics();
+  provideMarkers (filepath: Filepath = DEFAULT_ENTRY): MarkerData[] {
+    const diagnostics = this.provideDiagnostics(filepath);
     return diagnostics.map((diag) => {
       const severity = this.getSeverityValue(diag.type);
       return {

@@ -40,20 +40,19 @@ export class NodeSymbol {
       kind,
       declaration,
       symbolTable,
-      filepath,
     }: {
       kind: SymbolKind;
       declaration?: SyntaxNode;
       symbolTable?: SymbolTable;
-      filepath?: Filepath;
     },
     id: NodeSymbolId,
+    filepath: Filepath,
   ) {
     this.id = id;
     this.kind = kind;
     this.declaration = declaration;
     this.symbolTable = symbolTable;
-    this.filepath = filepath ?? declaration?.filepath ?? DEFAULT_ENTRY;
+    this.filepath = filepath;
   }
 
   isKind (kind: SymbolKind): boolean {
@@ -69,11 +68,11 @@ export class SchemaSymbol extends NodeSymbol {
   constructor ({
     symbolTable, name,
   }: { symbolTable: SymbolTable;
-    name?: string; }, id: NodeSymbolId) {
+    name?: string; }, id: NodeSymbolId, filepath: Filepath) {
     super({
       kind: SymbolKind.Schema,
       symbolTable,
-    }, id);
+    }, id, filepath);
     this.name = name;
   }
 }
@@ -90,12 +89,13 @@ export class EnumSymbol extends NodeSymbol {
     }: { symbolTable: SymbolTable;
       declaration: SyntaxNode; },
     id: NodeSymbolId,
+    filepath: Filepath,
   ) {
     super({
       kind: SymbolKind.Enum,
       symbolTable,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
@@ -105,11 +105,11 @@ export class EnumFieldSymbol extends NodeSymbol {
 
   constructor ({
     declaration,
-  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
     super({
       kind: SymbolKind.EnumField,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
@@ -125,12 +125,13 @@ export class TableSymbol extends NodeSymbol {
     }: { symbolTable: SymbolTable;
       declaration: SyntaxNode; },
     id: NodeSymbolId,
+    filepath: Filepath,
   ) {
     super({
       kind: SymbolKind.Table,
       symbolTable,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
@@ -140,11 +141,11 @@ export class ColumnSymbol extends NodeSymbol {
 
   constructor ({
     declaration,
-  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
     super({
       kind: SymbolKind.Column,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
@@ -160,12 +161,13 @@ export class TableGroupSymbol extends NodeSymbol {
     }: { symbolTable: SymbolTable;
       declaration: SyntaxNode; },
     id: NodeSymbolId,
+    filepath: Filepath,
   ) {
     super({
       kind: SymbolKind.TableGroup,
       symbolTable,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
@@ -175,11 +177,11 @@ export class TableGroupFieldSymbol extends NodeSymbol {
 
   constructor ({
     declaration,
-  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
     super({
       kind: SymbolKind.TableGroupField,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
@@ -195,12 +197,13 @@ export class TablePartialSymbol extends NodeSymbol {
     }: { symbolTable: SymbolTable;
       declaration: SyntaxNode; },
     id: NodeSymbolId,
+    filepath: Filepath,
   ) {
     super({
       kind: SymbolKind.TablePartial,
       symbolTable,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
@@ -215,12 +218,13 @@ export class PartialInjectionSymbol extends NodeSymbol {
     }: { symbolTable: SymbolTable;
       declaration: SyntaxNode; },
     id: NodeSymbolId,
+    filepath: Filepath,
   ) {
     super({
       kind: SymbolKind.PartialInjection,
       symbolTable,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
@@ -235,11 +239,12 @@ export class TablePartialInjectedColumnSymbol extends NodeSymbol {
     }: { declaration: SyntaxNode;
       tablePartialSymbol: TablePartialSymbol; },
     id: NodeSymbolId,
+    filepath: Filepath,
   ) {
     super({
       kind: SymbolKind.Column,
       declaration,
-    }, id);
+    }, id, filepath);
     this.tablePartialSymbol = tablePartialSymbol;
   }
 }
@@ -248,7 +253,6 @@ export class TablePartialInjectedColumnSymbol extends NodeSymbol {
 export class DiagramViewSymbol extends NodeSymbol {
   declare symbolTable: SymbolTable;
   declare declaration: SyntaxNode;
-  declare filepath: Filepath;
 
   constructor (
     {
@@ -256,41 +260,40 @@ export class DiagramViewSymbol extends NodeSymbol {
     }: { symbolTable: SymbolTable;
       declaration: SyntaxNode; },
     id: NodeSymbolId,
+    filepath: Filepath,
   ) {
     super({
       kind: SymbolKind.DiagramView,
       symbolTable,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
 // A symbol for a DiagramView field (table/note/group/schema reference)
 export class DiagramViewFieldSymbol extends NodeSymbol {
   declare declaration: SyntaxNode;
-  declare filepath: Filepath;
 
   constructor ({
     declaration,
-  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
     super({
       kind: SymbolKind.DiagramViewField,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }
 
 // A symbol for a sticky note
 export class StickyNoteSymbol extends NodeSymbol {
   declare declaration: SyntaxNode;
-  declare filepath: Filepath;
 
   constructor ({
     declaration,
-  }: { declaration: SyntaxNode }, id: NodeSymbolId) {
+  }: { declaration: SyntaxNode }, id: NodeSymbolId, filepath: Filepath) {
     super({
       kind: SymbolKind.StickyNote,
       declaration,
-    }, id);
+    }, id, filepath);
   }
 }

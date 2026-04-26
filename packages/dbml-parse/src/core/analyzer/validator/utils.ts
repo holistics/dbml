@@ -33,6 +33,9 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
   createSchemaSymbolIndex,
 } from '@/core/types/symbol';
 import SymbolFactory from '@/core/types/symbol/factory';
@@ -143,6 +146,7 @@ export function registerSchemaStack (
   variables: string[],
   globalSchema: SymbolTable,
   symbolFactory: SymbolFactory,
+  filepath: Filepath,
 ): SymbolTable {
   // public schema is already global schema
   if (variables[0] === DEFAULT_SCHEMA_NAME) {
@@ -160,7 +164,7 @@ export function registerSchemaStack (
       const curSymbol = symbolFactory.create(SchemaSymbol, {
         symbolTable: curSchema,
         name: curName,
-      });
+      }, filepath);
       prevSchema.set(curId, curSymbol);
     } else {
       curSchema = prevSchema.get(curId)?.symbolTable;

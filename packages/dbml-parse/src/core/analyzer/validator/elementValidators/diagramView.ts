@@ -120,12 +120,12 @@ export default class DiagramViewValidator implements ElementValidator {
     this.declarationNode.symbol = this.symbolFactory.create(DiagramViewSymbol, {
       declaration: this.declarationNode,
       symbolTable: new SymbolTable(),
-    });
+    }, this.declarationNode.filepath);
     const maybeNameFragments = destructureComplexVariable(name);
     if (maybeNameFragments !== undefined) {
       const nameFragments = maybeNameFragments;
       const diagramViewName = nameFragments.pop()!;
-      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory);
+      const symbolTable = registerSchemaStack(nameFragments, this.publicSymbolTable, this.symbolFactory, this.declarationNode.filepath);
       const diagramViewId = createDiagramViewSymbolIndex(diagramViewName);
       if (symbolTable.has(diagramViewId)) {
         return [
@@ -314,7 +314,7 @@ export default class DiagramViewValidator implements ElementValidator {
 
         const fieldSymbol = this.symbolFactory.create(DiagramViewFieldSymbol, {
           declaration: field,
-        });
+        }, this.declarationNode.filepath);
         field.symbol = fieldSymbol;
 
         const symbolTable = this.declarationNode.symbol!.symbolTable!;

@@ -19,5 +19,5 @@ export function containerElement (
     }
   }
 
-  return this.parse.ast();
+  return this.parse.ast(filepath);
 }

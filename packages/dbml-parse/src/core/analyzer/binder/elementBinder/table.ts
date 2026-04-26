@@ -101,6 +101,7 @@ export default class TableBinder implements ElementBinder {
               declaration: i,
               tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol,
             },
+            this.declarationNode.filepath,
           );
           const columnSymbolId = createColumnSymbolIndex(columnName);
           const symbolTable = this.declarationNode.symbol?.symbolTable;

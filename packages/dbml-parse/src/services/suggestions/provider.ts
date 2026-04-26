@@ -2,8 +2,11 @@ import Compiler, {
   ScopeKind,
 } from '@/compiler';
 import {
-  DEFAULT_SCHEMA_NAME,
+  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import {
+  Filepath,
+} from '@/core/types/filepath';
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
@@ -87,6 +90,10 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
+    const {
+      uri,
+    } = model;
+    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
     const offset = getOffsetFromMonacoPosition(model, position);
 
     // Try to suggest record row snippet first
@@ -95,11 +102,11 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return recordRowSnippet;
     }
 
-    const flatStream = this.compiler.token.flatStream();
+    const flatStream = this.compiler.token.flatStream(filepath);
     // bOc: before-or-contain
     const {
       token: bOcToken, index: bOcTokenId,
-    } = this.compiler.container.token(offset);
+    } = this.compiler.container.token(filepath, offset);
     // abOc: after before-or-contain
     const abOcToken = bOcTokenId === undefined ? flatStream[0] : flatStream[bOcTokenId + 1];
 
@@ -126,9 +133,9 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return noSuggestions();
     }
 
-    const element = this.compiler.container.element(offset);
+    const element = this.compiler.container.element(filepath, offset);
     if (
-      this.compiler.container.scopeKind(offset) === ScopeKind.TOPLEVEL
+      this.compiler.container.scopeKind(filepath, offset) === ScopeKind.TOPLEVEL
       || (element instanceof ElementDeclarationNode
         && element.type
         && element.type.start <= offset
@@ -138,7 +145,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     }
 
     const containers = [
-      ...this.compiler.container.stack(offset),
+      ...this.compiler.container.stack(filepath, offset),
     ].reverse();
 
     for (const container of containers) {
@@ -150,12 +157,14 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           case '-':
             return suggestOnRelOp(
               this.compiler,
+              filepath,
               offset,
               container as PrefixExpressionNode & { op: SyntaxToken },
             );
           case '~':
             return suggestOnPartialInjectionOp(
               this.compiler,
+              filepath,
               offset,
             );
           default:
@@ -168,39 +177,41 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           case '-':
             return suggestOnRelOp(
               this.compiler,
+              filepath,
               offset,
               container as InfixExpressionNode & { op: SyntaxToken },
             );
           case '.':
             return suggestMembers(
               this.compiler,
+              filepath,
               offset,
               container as InfixExpressionNode & { op: SyntaxToken },
             );
           default:
         }
       } else if (container instanceof AttributeNode) {
-        return suggestInAttribute(this.compiler, offset, container);
+        return suggestInAttribute(this.compiler, filepath, offset, container);
       } else if (container instanceof ListExpressionNode) {
-        return suggestInAttribute(this.compiler, offset, container);
+        return suggestInAttribute(this.compiler, filepath, offset, container);
       } else if (container instanceof TupleExpressionNode) {
-        return suggestInTuple(this.compiler, offset, container);
+        return suggestInTuple(this.compiler, filepath, offset, container);
       } else if (container instanceof CommaExpressionNode) {
-        return suggestInCommaExpression(this.compiler, offset);
+        return suggestInCommaExpression(this.compiler, filepath, offset);
       } else if (container instanceof CallExpressionNode) {
-        return suggestInCallExpression(this.compiler, offset, container);
+        return suggestInCallExpression(this.compiler, filepath, offset, container);
       } else if (container instanceof FunctionApplicationNode) {
-        return suggestInSubField(this.compiler, offset, container);
+        return suggestInSubField(this.compiler, filepath, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
         if (isOffsetWithinElementHeader(offset, container)) {
-          return suggestInElementHeader(this.compiler, offset, container);
+          return suggestInElementHeader(this.compiler, filepath, offset, container);
         }
 
         if (
           (container.bodyColon && offset >= container.bodyColon.end)
           || (container.body && isOffsetWithinSpan(offset, container.body))
         ) {
-          return suggestInSubField(this.compiler, offset, undefined);
+          return suggestInSubField(this.compiler, filepath, offset, undefined);
         }
       }
     }
@@ -211,26 +222,28 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
 function suggestOnPartialInjectionOp (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
 ) {
-  return suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+  return suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
     SymbolKind.TablePartial,
   ]);
 }
 
 function suggestOnRelOp (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container: (PrefixExpressionNode | InfixExpressionNode) & { op: SyntaxToken },
 ): CompletionList {
-  const scopeKind = compiler.container.scopeKind(offset);
+  const scopeKind = compiler.container.scopeKind(filepath, offset);
 
   if ([
     ScopeKind.REF,
     ScopeKind.TABLE,
     ScopeKind.TABLEPARTIAL,
   ].includes(scopeKind)) {
-    const res = suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+    const res = suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Table,
       SymbolKind.Schema,
       SymbolKind.Column,
@@ -268,6 +281,7 @@ function suggestMembersOfSymbol (
 
 function suggestNamesInScope (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   parent: ElementDeclarationNode | ProgramNode | undefined,
   acceptedKinds: SymbolKind[],
@@ -295,17 +309,17 @@ function suggestNamesInScope (
   return addQuoteToSuggestionIfNeeded(res);
 }
 
-function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: TupleExpressionNode): CompletionList {
-  const scopeKind = compiler.container.scopeKind(offset);
-  const element = compiler.container.element(offset);
+function suggestInTuple (compiler: Compiler, filepath: Filepath, offset: number, tupleContainer: TupleExpressionNode): CompletionList {
+  const scopeKind = compiler.container.scopeKind(filepath, offset);
+  const element = compiler.container.element(filepath, offset);
 
   // Check if we're inside a CallExpression - delegate to suggestInCallExpression
   const containers = [
-    ...compiler.container.stack(offset),
+    ...compiler.container.stack(filepath, offset),
   ];
   for (const c of containers) {
     if (c instanceof CallExpressionNode && c.argumentList === tupleContainer) {
-      return suggestInCallExpression(compiler, offset, c);
+      return suggestInCallExpression(compiler, filepath, offset, c);
     }
   }
 
@@ -329,7 +343,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
 
   switch (scopeKind) {
     case ScopeKind.INDEXES:
-      return suggestColumnNameInIndexes(compiler, offset);
+      return suggestColumnNameInIndexes(compiler, filepath, offset);
     case ScopeKind.REF:
       {
         while (containers.length > 0) {
@@ -337,6 +351,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
           if (container instanceof InfixExpressionNode && container.op?.value === '.') {
             return suggestMembers(
               compiler,
+              filepath,
               offset,
               container as InfixExpressionNode & { op: { value: '.' } },
             );
@@ -344,7 +359,7 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
         }
       }
 
-      return suggestInRefField(compiler, offset);
+      return suggestInRefField(compiler, filepath, offset);
     default:
       break;
   }
@@ -352,13 +367,13 @@ function suggestInTuple (compiler: Compiler, offset: number, tupleContainer: Tup
   return noSuggestions();
 }
 
-function suggestInCommaExpression (compiler: Compiler, offset: number): CompletionList {
-  const scopeKind = compiler.container.scopeKind(offset);
+function suggestInCommaExpression (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
+  const scopeKind = compiler.container.scopeKind(filepath, offset);
 
   // CommaExpressionNode is used in records data rows
   if (scopeKind === ScopeKind.RECORDS) {
     // In records, suggest enum values if applicable
-    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+    return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Schema,
       SymbolKind.Enum,
       SymbolKind.EnumField,
@@ -370,17 +385,18 @@ function suggestInCommaExpression (compiler: Compiler, offset: number): Completi
 
 function suggestInAttribute (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container: AttributeNode,
 ): CompletionList {
   const {
     token,
-  } = compiler.container.token(offset);
+  } = compiler.container.token(filepath, offset);
   if ([
     SyntaxTokenKind.COMMA,
     SyntaxTokenKind.LBRACKET,
   ].includes(token?.kind as any)) {
-    const res = suggestAttributeName(compiler, offset);
+    const res = suggestAttributeName(compiler, filepath, offset);
 
     return token?.kind === SyntaxTokenKind.COMMA && shouldPrependSpace(token, offset)
       ? prependSpace(res)
@@ -388,12 +404,13 @@ function suggestInAttribute (
   }
 
   if (container.name && container.name.start <= offset && container.name.end >= offset) {
-    return suggestAttributeName(compiler, offset);
+    return suggestAttributeName(compiler, filepath, offset);
   }
 
   if (container.name instanceof IdentiferStreamNode) {
     const res = suggestAttributeValue(
       compiler,
+      filepath,
       offset,
       extractStringFromIdentifierStream(container.name) ?? '',
     );
@@ -404,11 +421,11 @@ function suggestInAttribute (
   return noSuggestions();
 }
 
-function suggestAttributeName (compiler: Compiler, offset: number): CompletionList {
-  const element = compiler.container.element(offset);
+function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
+  const element = compiler.container.element(filepath, offset);
   if (element instanceof ProgramNode) return noSuggestions();
 
-  const scopeKind = compiler.container.scopeKind(offset);
+  const scopeKind = compiler.container.scopeKind(filepath, offset);
   if (element.body && !isOffsetWithinSpan(offset, (element as ElementDeclarationNode).body!)) {
     let attributes: string[];
 
@@ -553,6 +570,7 @@ function suggestAttributeName (compiler: Compiler, offset: number): CompletionLi
 
 function suggestAttributeValue (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   settingName: string,
 ): CompletionList {
@@ -587,7 +605,7 @@ function suggestAttributeValue (
         })),
       };
     case 'default':
-      return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
         SymbolKind.Schema,
         SymbolKind.Enum,
       ]);
@@ -600,6 +618,7 @@ function suggestAttributeValue (
 
 function suggestMembers (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container: InfixExpressionNode & { op: SyntaxToken },
 ): CompletionList {
@@ -613,7 +632,7 @@ function suggestMembers (
 
   return addQuoteToSuggestionIfNeeded({
     suggestions: compiler.symbol
-      .ofName(nameStack, compiler.container.element(offset))
+      .ofName(nameStack, compiler.container.element(filepath, offset))
       .flatMap(({
         symbol,
       }) => compiler.symbol.members(symbol))
@@ -630,44 +649,45 @@ function suggestMembers (
 
 function suggestInSubField (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const scopeKind = compiler.container.scopeKind(offset);
+  const scopeKind = compiler.container.scopeKind(filepath, offset);
 
   switch (scopeKind) {
     case ScopeKind.TABLE:
     case ScopeKind.TABLEPARTIAL:
-      return suggestInColumn(compiler, offset, container);
+      return suggestInColumn(compiler, filepath, offset, container);
     case ScopeKind.PROJECT:
-      return suggestInProjectField(compiler, offset, container);
+      return suggestInProjectField(compiler, filepath, offset, container);
     case ScopeKind.INDEXES:
-      return suggestInIndex(compiler, offset);
+      return suggestInIndex(compiler, filepath, offset);
     case ScopeKind.ENUM:
-      return suggestInEnumField(compiler, offset, container);
+      return suggestInEnumField(compiler, filepath, offset, container);
     case ScopeKind.REF: {
-      const suggestions = suggestInRefField(compiler, offset);
+      const suggestions = suggestInRefField(compiler, filepath, offset);
 
       return (
-        compiler.container.token(offset).token?.kind === SyntaxTokenKind.COLON
-        && shouldPrependSpace(compiler.container.token(offset).token, offset)
+        compiler.container.token(filepath, offset).token?.kind === SyntaxTokenKind.COLON
+        && shouldPrependSpace(compiler.container.token(filepath, offset).token, offset)
       )
         ? prependSpace(suggestions)
         : suggestions;
     }
     case ScopeKind.TABLEGROUP:
-      return suggestInTableGroupField(compiler);
+      return suggestInTableGroupField(compiler, filepath);
     case ScopeKind.DIAGRAMVIEW:
       return suggestInDiagramViewField();
     case ScopeKind.CUSTOM: {
       // Check if inside a DiagramView sub-block (Tables, Schemas, etc.)
-      const element = compiler.container.element(offset);
+      const element = compiler.container.element(filepath, offset);
       if (
         element instanceof ElementDeclarationNode
         && element.parent instanceof ElementDeclarationNode
         && element.parent.isKind(ElementKind.DiagramView)
       ) {
-        return suggestInDiagramViewSubBlock(compiler, offset);
+        return suggestInDiagramViewSubBlock(compiler, filepath, offset);
       }
       return noSuggestions();
     }
@@ -699,6 +719,7 @@ function suggestTopLevelElementType (): CompletionList {
 
 function suggestInEnumField (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
@@ -708,7 +729,7 @@ function suggestInEnumField (
   const containerArgId = findContainerArg(offset, container);
 
   if (containerArgId === 1) {
-    return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+    return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Schema,
       SymbolKind.Table,
       SymbolKind.Column,
@@ -720,6 +741,7 @@ function suggestInEnumField (
 
 function suggestInColumn (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
@@ -756,7 +778,7 @@ function suggestInColumn (
     };
   }
   if (containerArgId === 1) {
-    return suggestColumnType(compiler, offset);
+    return suggestColumnType(compiler, filepath, offset);
   }
 
   return noSuggestions();
@@ -764,6 +786,7 @@ function suggestInColumn (
 
 function suggestInProjectField (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
@@ -804,8 +827,8 @@ function suggestInProjectField (
   return noSuggestions();
 }
 
-function suggestInRefField (compiler: Compiler, offset: number): CompletionList {
-  return suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+function suggestInRefField (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
+  return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
     SymbolKind.Schema,
     SymbolKind.Table,
     SymbolKind.Column,
@@ -814,11 +837,12 @@ function suggestInRefField (compiler: Compiler, offset: number): CompletionList 
 
 function suggestInElementHeader (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container: ElementDeclarationNode,
 ): CompletionList {
   if (container.isKind(ElementKind.Records)) {
-    return suggestNamesInScope(compiler, offset, container.parent, [
+    return suggestNamesInScope(compiler, filepath, offset, container.parent, [
       SymbolKind.Schema,
       SymbolKind.Table,
     ]);
@@ -828,10 +852,11 @@ function suggestInElementHeader (
 
 function suggestInCallExpression (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   container: CallExpressionNode,
 ): CompletionList {
-  const element = compiler.container.element(offset);
+  const element = compiler.container.element(filepath, offset);
 
   // Determine if we're in the callee or in the arguments
   const inCallee = container.callee && isOffsetWithinSpan(offset, container.callee);
@@ -843,7 +868,7 @@ function suggestInCallExpression (
     && element.isKind(ElementKind.Records)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
+    if (inCallee) return suggestNamesInScope(compiler, filepath, offset, element.parent, [
       SymbolKind.Schema,
       SymbolKind.Table,
     ]);
@@ -876,14 +901,14 @@ function suggestInCallExpression (
   //   Records () // This is currently treated as a CallExpressionNode
   // }
   const containers = [
-    ...compiler.container.stack(offset),
+    ...compiler.container.stack(filepath, offset),
   ];
   for (const c of containers) {
     if (!inArgs) continue;
     if (!(c instanceof FunctionApplicationNode)) continue;
     if (c.callee !== container) continue;
     if (convertStringToEnum(ElementKind, extractVariableFromExpression(container.callee) ?? '') !== ElementKind.Records) continue;
-    const tableSymbol = compiler.container.element(offset).symbol;
+    const tableSymbol = compiler.container.element(filepath, offset).symbol;
     if (!tableSymbol) return noSuggestions();
     const suggestions = suggestMembersOfSymbol(compiler, tableSymbol, [
       SymbolKind.Column,
@@ -899,12 +924,12 @@ function suggestInCallExpression (
   return noSuggestions();
 }
 
-function suggestInTableGroupField (compiler: Compiler): CompletionList {
+function suggestInTableGroupField (compiler: Compiler, filepath: Filepath): CompletionList {
   return {
     suggestions: [
       ...addQuoteToSuggestionIfNeeded({
         suggestions: [
-          ...compiler.parse.publicSymbolTable().entries(),
+          ...compiler.parse.publicSymbolTable(filepath).entries(),
         ].flatMap(([
           index,
         ]) => {
@@ -963,8 +988,8 @@ function suggestInDiagramViewField (): CompletionList {
   };
 }
 
-function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): CompletionList {
-  const element = compiler.container.element(offset);
+function suggestInDiagramViewSubBlock (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
+  const element = compiler.container.element(filepath, offset);
   if (!(element instanceof ElementDeclarationNode)) return noSuggestions();
 
   const blockType = (element as ElementDeclarationNode).type?.value.toLowerCase();
@@ -978,7 +1003,7 @@ function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): Comp
 
   switch (blockType) {
     case 'tables': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+      const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.Table,
         SymbolKind.Schema,
       ]);
@@ -990,7 +1015,7 @@ function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): Comp
       };
     }
     case 'tablegroups': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+      const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.TableGroup,
       ]);
       return {
@@ -1008,7 +1033,7 @@ function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): Comp
         kind: CompletionItemKind.Module,
         range: undefined as any,
       };
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+      const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.Schema,
       ]);
       return {
@@ -1020,7 +1045,7 @@ function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): Comp
       };
     }
     case 'notes': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(), [
+      const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.StickyNote,
       ]);
       return {
@@ -1035,11 +1060,11 @@ function suggestInDiagramViewSubBlock (compiler: Compiler, offset: number): Comp
   }
 }
 
-function suggestInIndex (compiler: Compiler, offset: number): CompletionList {
-  return suggestColumnNameInIndexes(compiler, offset);
+function suggestInIndex (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
+  return suggestColumnNameInIndexes(compiler, filepath, offset);
 }
 
-function suggestColumnType (compiler: Compiler, offset: number): CompletionList {
+function suggestColumnType (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
   return {
     suggestions: [
       ...[
@@ -1107,7 +1132,7 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
         sortText: CompletionItemKind.TypeParameter.toString().padStart(2, '0'),
         range: undefined as any,
       })),
-      ...suggestNamesInScope(compiler, offset, compiler.container.element(offset), [
+      ...suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
         SymbolKind.Enum,
         SymbolKind.Schema,
       ]).suggestions,
@@ -1115,8 +1140,8 @@ function suggestColumnType (compiler: Compiler, offset: number): CompletionList 
   };
 }
 
-function suggestColumnNameInIndexes (compiler: Compiler, offset: number): CompletionList {
-  const indexesNode = compiler.container.element(offset);
+function suggestColumnNameInIndexes (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
+  const indexesNode = compiler.container.element(filepath, offset);
   const tableNode = (indexesNode as any)?.parent;
   if (!(tableNode?.symbol instanceof TableSymbol)) {
     return noSuggestions();

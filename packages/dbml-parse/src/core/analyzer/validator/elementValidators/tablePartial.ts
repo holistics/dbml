@@ -185,7 +185,7 @@ export default class TablePartialValidator implements ElementValidator {
     this.declarationNode.symbol = this.symbolFactory.create(TablePartialSymbol, {
       declaration: this.declarationNode,
       symbolTable: new SymbolTable(),
-    });
+    }, this.declarationNode.filepath);
     const maybeNamePartials = destructureComplexVariable(name);
     if (maybeNamePartials === undefined) return [];
 
@@ -193,7 +193,7 @@ export default class TablePartialValidator implements ElementValidator {
       ...maybeNamePartials,
     ];
     const tablePartialName = namePartials.pop()!;
-    const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory);
+    const symbolTable = registerSchemaStack(namePartials, this.publicSymbolTable, this.symbolFactory, this.declarationNode.filepath);
     const tablePartialId = createTablePartialSymbolIndex(tablePartialName);
     if (symbolTable.has(tablePartialId)) {
       return [
@@ -259,7 +259,7 @@ export default class TablePartialValidator implements ElementValidator {
 
     const columnSymbol = this.symbolFactory.create(ColumnSymbol, {
       declaration: field,
-    });
+    }, this.declarationNode.filepath);
     field.symbol = columnSymbol;
 
     const symbolTable = this.declarationNode.symbol!.symbolTable!;

@@ -122,7 +122,7 @@ export default class NoteValidator implements ElementValidator {
 
     this.declarationNode.symbol = this.symbolFactory.create(StickyNoteSymbol, {
       declaration: this.declarationNode,
-    });
+    }, this.declarationNode.filepath);
     this.publicSymbolTable.set(noteId, this.declarationNode.symbol);
 
     return [];

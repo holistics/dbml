@@ -3,6 +3,9 @@ import {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/queries/utils';
 import {
+  type Filepath,
+} from '@/core/types/filepath';
+import {
   extractVariableFromExpression,
 } from '@/core/analyzer/utils';
 import {
@@ -123,8 +126,8 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
 }
 
 // Get the source text of a node or a token
-export function getNodeOrTokenSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
-  return compiler.parse.source().slice(tokenOrNode.start, tokenOrNode.end);
+export function getNodeOrTokenSource (compiler: Compiler, filepath: Filepath, tokenOrNode: SyntaxToken | SyntaxNode): string {
+  return compiler.parse.source(filepath).slice(tokenOrNode.start, tokenOrNode.end);
 }
 
 /**

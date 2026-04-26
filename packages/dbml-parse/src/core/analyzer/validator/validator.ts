@@ -36,7 +36,7 @@ export default class Validator {
     this.publicSchemaSymbol = this.symbolFactory.create(SchemaSymbol, {
       symbolTable: new SymbolTable(),
       name: DEFAULT_SCHEMA_NAME,
-    });
+    }, this.ast.filepath);
 
     this.ast.symbol = this.publicSchemaSymbol;
     this.ast.symbol.declaration = this.ast;
