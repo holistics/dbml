@@ -72,14 +72,18 @@ import {
   getOffsetFromMonacoPosition,
 } from '@/services/utils';
 
+export interface DBMLCompletionItemProviderOptions {
+  triggerCharacters?: string[];
+}
+
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
   private compiler: Compiler;
 
   triggerCharacters: string[];
 
-  constructor (compiler: Compiler, triggerCharacters: string[] = []) {
+  constructor (compiler: Compiler, options: DBMLCompletionItemProviderOptions = {}) {
     this.compiler = compiler;
-    this.triggerCharacters = triggerCharacters;
+    this.triggerCharacters = options.triggerCharacters ?? [];
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {

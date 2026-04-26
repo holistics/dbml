@@ -49,6 +49,12 @@ import {
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
 } from './queries/utils';
+import {
+  SymbolFactory,
+} from '@/core/types';
+import {
+  DbmlProjectLayout, MemoryProjectLayout,
+} from './projectLayout';
 
 // Re-export types
 export {
@@ -64,17 +70,30 @@ export {
 };
 
 export default class Compiler {
-  private source = '';
-  private cache = new Map<symbol, any>();
-  private nodeIdGenerator = new SyntaxNodeIdGenerator();
+  // Interners
+  nodeIdGenerator = new SyntaxNodeIdGenerator();
   private symbolIdGenerator = new NodeSymbolIdGenerator();
+  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  setSource (source: string) {
-    this.source = source;
+  // The structure of the DbmlProject
+  layout: DbmlProjectLayout = new MemoryProjectLayout();
+
+  setSource (filepath: Filepath, source: string) {
+    this.layout.setSource(filepath, source);
     this.cache.clear();
-    this.nodeIdGenerator.reset();
-    this.symbolIdGenerator.reset();
   }
+
+  clearSource () {
+    this.layout = new MemoryProjectLayout();
+    this.cache.clear();
+  }
+
+  deleteSource (filepath: Filepath) {
+    this.layout.deleteSource(filepath);
+    this.cache.clear();
+  }
+
+  private cache = new Map<symbol, any>();
 
   private query<Args extends unknown[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
@@ -103,12 +122,16 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode;
+  private interpret (): Report<{
+    ast: ProgramNode;
     tokens: SyntaxToken[];
-    rawDb?: Database; }> {
+    rawDb?: Database;
+  }> {
     const filepath = DEFAULT_ENTRY;
-    const parseRes: Report<{ ast: ProgramNode;
-      tokens: SyntaxToken[]; }> = new Lexer(this.source, filepath)
+    const parseRes: Report<{
+      ast: ProgramNode;
+      tokens: SyntaxToken[];
+    }> = new Lexer(this.source, filepath)
       .lex()
       .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator, filepath).parse())
       .chain(({
@@ -163,9 +186,11 @@ export default class Compiler {
     flatStream: this.query(flatStream),
   };
 
+  parseFile = this.query(parseFile);
+
+  // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: () => this.source as Readonly<string>,
-    _: this.query(this.interpret),
+    source: (filepath: Filepath) => this.layout.getSource(filepath) as Readonly<string>,
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),
@@ -174,6 +199,12 @@ export default class Compiler {
     publicSymbolTable: this.query(publicSymbolTable),
   };
 
+  readonly symbol = {
+    ofName: this.query(symbolOfName, symbolOfNameToKey),
+    members: this.query(symbolMembers),
+  };
+
+  // @deprecated - legacy APIs for services compatibility
   readonly container = {
     stack: this.query(containerStack),
     token: this.query(containerToken),
@@ -182,16 +213,33 @@ export default class Compiler {
     scopeKind: this.query(containerScopeKind),
   };
 
-  readonly symbol = {
-    ofName: this.query(symbolOfName, symbolOfNameToKey),
-    members: this.query(symbolMembers),
-  };
+  async initMonacoServices (options?: {
+    autocompletion?: {
+      triggerCharacters?: string[];
+    };
+  }) {
+    const triggerCharacters = options?.autocompletion?.triggerCharacters ?? [
+      '.',
+      ',',
+      '[',
+      '(',
+      ':',
+      '>',
+      '<',
+      '-',
+      '~',
+      '\'',
+      '"',
+      '/',
+      ' ',
+    ];
 
-  initMonacoServices () {
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),
-      autocompletionProvider: new DBMLCompletionItemProvider(this),
+      autocompletionProvider: new DBMLCompletionItemProvider(this, {
+        triggerCharacters,
+      }),
       diagnosticsProvider: new DBMLDiagnosticsProvider(this),
     };
   }

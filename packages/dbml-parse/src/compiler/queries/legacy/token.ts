@@ -1,5 +1,5 @@
 import {
-  Filepath,
+  type Filepath,
 } from '@/core/types';
 import type {
   SyntaxToken,
@@ -13,8 +13,8 @@ export function flatStream (
   this: Compiler,
   filepath: Filepath,
 ): readonly SyntaxToken[] {
-  return this.parse.tokens(filepath)
-    .flatMap((token) => [
+  return (this.parseFile(filepath).getValue().tokens)
+    .flatMap((token: SyntaxToken) => [
       ...token.leadingInvalid,
       token,
       ...token.trailingInvalid,
@@ -25,5 +25,6 @@ export function invalidStream (
   this: Compiler,
   filepath: Filepath,
 ): readonly SyntaxToken[] {
-  return this.parse.tokens(filepath).filter(isInvalidToken);
+  return (this.parseFile(filepath).getValue().tokens).filter(isInvalidToken);
 }
+
