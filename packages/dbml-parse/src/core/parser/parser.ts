@@ -10,7 +10,6 @@ import {
 import NodeFactory from '@/core/parser/factory';
 import {
   convertFuncAppToElem,
-  isAsKeyword,
   markInvalid,
 } from '@/core/parser/utils';
 import {
@@ -50,6 +49,9 @@ import Report from '@/core/types/report';
 import {
   SyntaxToken, SyntaxTokenKind, isOpToken,
 } from '@/core/types/tokens';
+import {
+  isAsKeyword,
+} from '../utils/tokens';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {

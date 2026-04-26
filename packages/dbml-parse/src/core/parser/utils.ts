@@ -37,6 +37,9 @@ import {
 import {
   alternateLists,
 } from '@/core/utils/array';
+import {
+  isAsKeyword,
+} from '../utils/tokens';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
@@ -108,14 +111,6 @@ export function convertFuncAppToElem (
   }
 
   return undefined;
-}
-
-// Check if a token is an `as` keyword
-export function isAsKeyword (
-  token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER;
-  value: 'as'; } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
 
 export function markInvalid (nodeOrToken?: SyntaxNode | SyntaxToken) {
