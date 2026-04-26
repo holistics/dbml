@@ -1,8 +1,89 @@
 import type {
-  languages,
-} from 'monaco-editor-core';
+  LanguageConfiguration,
+  MonarchLanguage,
+} from './types';
 
-const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
+export const dbmlLanguageConfig: LanguageConfiguration = {
+  comments: {
+    lineComment: '//',
+    blockComment: [
+      '/*',
+      '*/',
+    ],
+  },
+  brackets: [
+    [
+      '{',
+      '}',
+    ],
+    [
+      '[',
+      ']',
+    ],
+    [
+      '(',
+      ')',
+    ],
+  ],
+  autoClosingPairs: [
+    {
+      open: '{',
+      close: '}',
+    },
+    {
+      open: '[',
+      close: ']',
+    },
+    {
+      open: '(',
+      close: ')',
+    },
+    {
+      open: '"',
+      close: '"',
+    },
+    {
+      open: '\'',
+      close: '\'',
+    },
+    {
+      open: '`',
+      close: '`',
+    },
+  ],
+  surroundingPairs: [
+    {
+      open: '{',
+      close: '}',
+    },
+    {
+      open: '[',
+      close: ']',
+    },
+    {
+      open: '(',
+      close: ')',
+    },
+    {
+      open: '"',
+      close: '"',
+    },
+    {
+      open: '\'',
+      close: '\'',
+    },
+    {
+      open: '`',
+      close: '`',
+    },
+  ],
+  indentationRules: {
+    increaseIndentPattern: /^(.*\{[^}]*|\s*[{[].*)$/,
+    decreaseIndentPattern: /^(.*\}.*|\s*[}\]].*)$/,
+  },
+};
+
+const dbmlMonarchTokensProvider: MonarchLanguage = {
   tokenPostfix: '.dbml',
   brackets: [
     {
@@ -33,6 +114,9 @@ const dbmlMonarchTokensProvider: languages.IMonarchLanguage = {
     'records',
     'checks',
     'diagramview',
+    'use',
+    'reuse',
+    'from',
   ],
 
   dataTypes: [
