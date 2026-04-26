@@ -35,9 +35,6 @@ import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
 import {
-  alternateLists,
-} from '@/core/utils/array';
-import {
   isAsKeyword,
 } from '../utils/tokens';
 
@@ -430,4 +427,15 @@ export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode)
 export function getElementNameString (element?: ElementDeclarationNode): string | undefined {
   const res = destructureComplexVariable(element?.name);
   return res !== undefined ? res.join('.') : undefined;
+}
+
+export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {
+  const res: (T | S)[] = [];
+  const minLength = Math.min(firstList.length, secondList.length);
+  for (let i = 0; i < minLength; i += 1) {
+    res.push(firstList[i], secondList[i]);
+  }
+  res.push(...firstList.slice(minLength), ...secondList.slice(minLength));
+
+  return res;
 }
