@@ -1,26 +1,15 @@
 import {
   DEFAULT_ENTRY,
 } from '@/constants';
-import Analyzer from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
 import {
   Filepath,
 } from '@/core/types/filepath';
 import {
-  ProgramNode, SyntaxNodeIdGenerator,
+  SyntaxNodeIdGenerator,
 } from '@/core/types/nodes';
-import Report from '@/core/types/report';
-import {
-  Database,
-} from '@/core/types/schemaJson';
 import {
   NodeSymbolIdGenerator,
 } from '@/core/types/symbol/symbols';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
 import {
   DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
 } from '@/services/index';
@@ -36,6 +25,12 @@ import {
 import {
   flatStream, invalidStream,
 } from './queries/legacy/token';
+import {
+  interpretFile,
+} from './queries/pipeline/interpret';
+import {
+  parseFile,
+} from './queries/pipeline/parse';
 import {
   type DiagramViewBlock,
   type DiagramViewSyncOperation,
@@ -72,7 +67,7 @@ export {
 export default class Compiler {
   // Interners
   nodeIdGenerator = new SyntaxNodeIdGenerator();
-  private symbolIdGenerator = new NodeSymbolIdGenerator();
+  symbolIdGenerator = new NodeSymbolIdGenerator();
   symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   // The structure of the DbmlProject
@@ -122,47 +117,12 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{
-    ast: ProgramNode;
-    tokens: SyntaxToken[];
-    rawDb?: Database;
-  }> {
-    const filepath = DEFAULT_ENTRY;
-    const parseRes: Report<{
-      ast: ProgramNode;
-      tokens: SyntaxToken[];
-    }> = new Lexer(this.source, filepath)
-      .lex()
-      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator, filepath).parse())
-      .chain(({
-        ast, tokens,
-      }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({
-        ast,
-        tokens,
-      })));
-
-    if (parseRes.getErrors().length > 0) {
-      return parseRes as Report<{ ast: ProgramNode;
-        tokens: SyntaxToken[];
-        rawDb?: Database; }>;
-    }
-
-    return parseRes.chain(({
-      ast, tokens,
-    }) =>
-      new Interpreter(ast).interpret().map((rawDb) => ({
-        ast,
-        tokens,
-        rawDb,
-      })),
-    );
-  }
-
   renameTable (
+    filepath: Filepath,
     oldName: TableNameInput,
     newName: TableNameInput,
   ): string {
-    return renameTable.call(this, oldName, newName);
+    return renameTable.call(this, filepath, oldName, newName);
   }
 
   syncDiagramView (
@@ -170,15 +130,15 @@ export default class Compiler {
     blocks?: DiagramViewBlock[],
   ): { newDbml: string;
     edits: TextEdit[]; } {
-    return syncDiagramView(this.parse.source(), operations, blocks);
+    return syncDiagramView(this.parse.source(DEFAULT_ENTRY), operations, blocks);
   }
 
   findDiagramViewBlocks (): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.parse.source());
+    return findDiagramViewBlocks(this.parse.source(DEFAULT_ENTRY));
   }
 
   applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.parse.source(), edits);
+    return applyTextEdits(this.parse.source(DEFAULT_ENTRY), edits);
   }
 
   readonly token = {
@@ -187,6 +147,8 @@ export default class Compiler {
   };
 
   parseFile = this.query(parseFile);
+
+  interpretFile = this.query(interpretFile);
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {

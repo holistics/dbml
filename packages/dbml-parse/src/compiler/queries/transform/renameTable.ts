@@ -2,6 +2,9 @@ import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
+  type Filepath,
+} from '@/core/types/filepath';
+import {
   SyntaxNode,
 } from '@/core/types/nodes';
 import {
@@ -251,11 +254,12 @@ function findReplacements (
  */
 export function renameTable (
   this: Compiler,
+  filepath: Filepath,
   oldName: TableNameInput,
   newName: TableNameInput,
 ): string {
-  const source = this.parse.source();
-  const symbolTable = this.parse.publicSymbolTable();
+  const source = this.parse.source(filepath);
+  const symbolTable = this.parse.publicSymbolTable(filepath);
 
   const normalizedOld = normalizeTableName(oldName);
   const normalizedNew = normalizeTableName(newName);

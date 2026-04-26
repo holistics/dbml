@@ -1,9 +1,12 @@
 import {
-  type Filepath,
-} from '@/core/types';
+  DEFAULT_ENTRY,
+} from '@/constants';
 import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
+import {
+  type Filepath,
+} from '@/core/types/filepath';
 import type {
   ProgramNode,
 } from '@/core/types/nodes';
@@ -17,25 +20,25 @@ import type {
 import type Compiler from '../../index';
 
 export function ast (this: Compiler, filepath: Filepath): Readonly<ProgramNode> {
-  return this.parse._().getValue().ast;
+  return this.parseFile(filepath).getValue().ast;
 }
 
-export function errors (this: Compiler): readonly Readonly<CompileError>[] {
-  return this.parse._().getErrors();
+export function errors (this: Compiler, filepath: Filepath): readonly Readonly<CompileError>[] {
+  return this.interpretFile(filepath).getErrors();
 }
 
-export function warnings (this: Compiler): readonly Readonly<CompileWarning>[] {
-  return this.parse._().getWarnings();
+export function warnings (this: Compiler, filepath: Filepath): readonly Readonly<CompileWarning>[] {
+  return this.interpretFile(filepath).getWarnings();
 }
 
-export function tokens (this: Compiler, filepath: Filepath): Readonly<SyntaxToken>[] {
-  return this.parse._().getValue().tokens;
+export function tokens (this: Compiler, filepath: Filepath): readonly Readonly<SyntaxToken>[] {
+  return this.parseFile(filepath).getValue().tokens;
 }
 
-export function rawDb (this: Compiler): Readonly<Database> | undefined {
-  return this.parse._().getValue().rawDb;
+export function rawDb (this: Compiler, filepath: Filepath): Readonly<Database> | undefined {
+  return this.interpretFile(filepath).getValue() ?? undefined;
 }
 
-export function publicSymbolTable (this: Compiler): Readonly<SymbolTable> {
-  return this.parse._().getValue().ast.symbol!.symbolTable!;
+export function publicSymbolTable (this: Compiler, filepath: Filepath): Readonly<SymbolTable> {
+  return this.parseFile(filepath).getValue().ast.symbol!.symbolTable!;
 }
