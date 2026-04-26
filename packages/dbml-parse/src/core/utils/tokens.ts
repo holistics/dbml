@@ -12,3 +12,7 @@ export function isAsKeyword (
 } {
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
 }
+
+export function isInvalidToken (token?: SyntaxToken): boolean {
+  return !!token?.isInvalid;
+}

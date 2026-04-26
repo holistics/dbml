@@ -6,7 +6,7 @@ import type {
 } from '@/core/types/tokens';
 import {
   isInvalidToken,
-} from '@/core/parser/utils';
+} from '@/core/utils/tokens';
 import type Compiler from '../../index';
 
 export function flatStream (
@@ -27,4 +27,3 @@ export function invalidStream (
 ): readonly SyntaxToken[] {
   return (this.parseFile(filepath).getValue().tokens).filter(isInvalidToken);
 }
-

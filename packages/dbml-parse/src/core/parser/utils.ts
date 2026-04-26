@@ -203,10 +203,6 @@ function markInvalidNode (node: SyntaxNode) {
   }
 }
 
-export function isInvalidToken (token?: SyntaxToken): boolean {
-  return !!token?.isInvalid;
-}
-
 function filterUndefined (
   ...args: (SyntaxNode | SyntaxToken | undefined)[]
 ): (SyntaxNode | SyntaxToken)[] {
