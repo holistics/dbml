@@ -80,7 +80,7 @@ export function pickValidator (element: ElementDeclarationNode & { type: SyntaxT
       return IndexesValidator;
     case ElementKind.TablePartial:
       return TablePartialValidator;
-    case ElementKind.Check:
+    case ElementKind.Checks:
       return ChecksValidator;
     case ElementKind.Records:
       return RecordsValidator;

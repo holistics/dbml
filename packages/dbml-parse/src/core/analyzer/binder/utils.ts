@@ -56,7 +56,7 @@ export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToke
       return IndexesBinder;
     case ElementKind.TablePartial:
       return TablePartialBinder;
-    case ElementKind.Check:
+    case ElementKind.Checks:
       return ChecksBinder;
     case ElementKind.Records:
       return RecordsBinder;

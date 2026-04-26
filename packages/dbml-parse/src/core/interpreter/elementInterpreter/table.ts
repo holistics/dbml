@@ -197,7 +197,7 @@ export class TableInterpreter implements ElementInterpreter {
         case ElementKind.Indexes:
           return this.interpretIndexes(sub);
 
-        case ElementKind.Check:
+        case ElementKind.Checks:
           return this.interpretChecks(sub);
 
         case ElementKind.Records:

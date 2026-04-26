@@ -158,7 +158,7 @@ export class TablePartialInterpreter implements ElementInterpreter {
         case ElementKind.Indexes:
           return this.interpretIndexes(sub);
 
-        case ElementKind.Check:
+        case ElementKind.Checks:
           return this.interpretChecks(sub);
 
         default:
