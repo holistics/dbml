@@ -38,43 +38,43 @@ describe('[example - record] composite unique constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: user_id=1, profile_type="work", data="Software Engineer"
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'string',
       value: 'work',
     });
-    expect(db.records[0].values[0][2]).toEqual({
+    expect(db.records[0].values[0][2]).toMatchObject({
       type: 'string',
       value: 'Software Engineer',
     });
 
     // Row 2: user_id=1, profile_type="personal", data="Loves hiking"
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'string',
       value: 'personal',
     });
-    expect(db.records[0].values[1][2]).toEqual({
+    expect(db.records[0].values[1][2]).toMatchObject({
       type: 'string',
       value: 'Loves hiking',
     });
 
     // Row 3: user_id=2, profile_type="work", data="Designer"
-    expect(db.records[0].values[2][0]).toEqual({
+    expect(db.records[0].values[2][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[0].values[2][1]).toEqual({
+    expect(db.records[0].values[2][1]).toMatchObject({
       type: 'string',
       value: 'work',
     });
-    expect(db.records[0].values[2][2]).toEqual({
+    expect(db.records[0].values[2][2]).toMatchObject({
       type: 'string',
       value: 'Designer',
     });
@@ -99,9 +99,11 @@ describe('[example - record] composite unique constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
-    expect(warnings[1].diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
+    // One warning per UNIQUE column per duplicate row → 2 rows × 2 columns = 4.
+    expect(warnings.length).toBe(4);
+    for (const w of warnings) {
+      expect(w.diagnostic).toBe('Duplicate Composite UNIQUE: (public.user_profiles.user_id, public.user_profiles.profile_type) = (1, "work")');
+    }
   });
 
   test('should allow NULL values in composite unique (NULLs dont conflict)', () => {
@@ -130,37 +132,37 @@ describe('[example - record] composite unique constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: user_id=1, category=null, value="default"
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
     expect(db.records[0].values[0][1].value).toBe(null);
-    expect(db.records[0].values[0][2]).toEqual({
+    expect(db.records[0].values[0][2]).toMatchObject({
       type: 'string',
       value: 'default',
     });
 
     // Row 2: user_id=1, category=null, value="another default"
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
     expect(db.records[0].values[1][1].value).toBe(null);
-    expect(db.records[0].values[1][2]).toEqual({
+    expect(db.records[0].values[1][2]).toMatchObject({
       type: 'string',
       value: 'another default',
     });
 
     // Row 3: user_id=1, category="theme", value="dark"
-    expect(db.records[0].values[2][0]).toEqual({
+    expect(db.records[0].values[2][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[2][1]).toEqual({
+    expect(db.records[0].values[2][1]).toMatchObject({
       type: 'string',
       value: 'theme',
     });
-    expect(db.records[0].values[2][2]).toEqual({
+    expect(db.records[0].values[2][2]).toMatchObject({
       type: 'string',
       value: 'dark',
     });
@@ -192,11 +194,11 @@ describe('[example - record] composite unique constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: event_id=1, attendee_id=100, registration_date="2024-01-01"
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'integer',
       value: 100,
     });
@@ -204,11 +206,11 @@ describe('[example - record] composite unique constraints', () => {
     expect(db.records[0].values[0][2].value).toBe('2024-01-01');
 
     // Row 2: event_id=1, attendee_id=101, registration_date="2024-01-02"
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'integer',
       value: 101,
     });
@@ -216,11 +218,11 @@ describe('[example - record] composite unique constraints', () => {
     expect(db.records[0].values[1][2].value).toBe('2024-01-02');
 
     // Row 3: event_id=2, attendee_id=100, registration_date="2024-01-03"
-    expect(db.records[0].values[2][0]).toEqual({
+    expect(db.records[0].values[2][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[0].values[2][1]).toEqual({
+    expect(db.records[0].values[2][1]).toMatchObject({
       type: 'integer',
       value: 100,
     });
@@ -270,11 +272,11 @@ describe('[example - record] simple unique constraints', () => {
     // Verify users table
     expect(db.records[0].tableName).toBe('users');
     expect(db.records[0].values.length).toBe(2);
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'string',
       value: 'alice@example.com',
     });
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'string',
       value: 'bob@example.com',
     });
@@ -282,7 +284,7 @@ describe('[example - record] simple unique constraints', () => {
     // Verify products table
     expect(db.records[1].tableName).toBe('products');
     expect(db.records[1].values.length).toBe(2);
-    expect(db.records[1].values[0][1]).toEqual({
+    expect(db.records[1].values[0][1]).toMatchObject({
       type: 'string',
       value: 'PROD-001',
     });
@@ -290,15 +292,15 @@ describe('[example - record] simple unique constraints', () => {
     // Verify accounts table with numeric unique values including zero and negative
     expect(db.records[2].tableName).toBe('accounts');
     expect(db.records[2].values.length).toBe(3);
-    expect(db.records[2].values[0][1]).toEqual({
+    expect(db.records[2].values[0][1]).toMatchObject({
       type: 'integer',
       value: 0,
     });
-    expect(db.records[2].values[1][1]).toEqual({
+    expect(db.records[2].values[1][1]).toMatchObject({
       type: 'integer',
       value: -1,
     });
-    expect(db.records[2].values[2][1]).toEqual({
+    expect(db.records[2].values[2][1]).toMatchObject({
       type: 'integer',
       value: 1000,
     });
@@ -330,12 +332,12 @@ describe('[example - record] simple unique constraints', () => {
     expect(warnings.length).toBeGreaterThan(0);
 
     // Verify users.email duplicate warnings
-    const userWarnings = warnings.filter((w) => w.diagnostic.includes('users.email') && w.diagnostic.includes('alice@example.com'));
+    const userWarnings = warnings.filter((w) => w.diagnostic.includes('public.users.email') && w.diagnostic.includes('alice@example.com'));
     expect(userWarnings.length).toBeGreaterThan(0);
     expect(userWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
 
     // Verify products.sku duplicate warnings
-    const productWarnings = warnings.filter((w) => w.diagnostic.includes('products.sku') && w.diagnostic.includes('PROD-001'));
+    const productWarnings = warnings.filter((w) => w.diagnostic.includes('public.products.sku') && w.diagnostic.includes('PROD-001'));
     expect(productWarnings.length).toBeGreaterThan(0);
     expect(productWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
   });
@@ -363,14 +365,14 @@ describe('[example - record] simple unique constraints', () => {
     expect(db.records[0].values.length).toBe(4);
 
     // Row 1: email="alice@example.com", phone=null
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'string',
       value: 'alice@example.com',
     });
     expect(db.records[0].values[0][2].value).toBe(null);
 
     // Row 2: email="bob@example.com", phone=null
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'string',
       value: 'bob@example.com',
     });
@@ -378,14 +380,14 @@ describe('[example - record] simple unique constraints', () => {
 
     // Row 3: email=null, phone="123-456"
     expect(db.records[0].values[2][1].value).toBe(null);
-    expect(db.records[0].values[2][2]).toEqual({
+    expect(db.records[0].values[2][2]).toMatchObject({
       type: 'string',
       value: '123-456',
     });
 
     // Row 4: email=null, phone="789-012"
     expect(db.records[0].values[3][1].value).toBe(null);
-    expect(db.records[0].values[3][2]).toEqual({
+    expect(db.records[0].values[3][2]).toMatchObject({
       type: 'string',
       value: '789-012',
     });
@@ -407,7 +409,7 @@ describe('[example - record] simple unique constraints', () => {
 
     // Should have warnings for duplicate PK
     expect(warnings.length).toBeGreaterThan(0);
-    expect(warnings.every((w) => w.diagnostic.includes('Duplicate PK') && w.diagnostic.includes('users.id'))).toBe(true);
+    expect(warnings.every((w) => w.diagnostic.includes('Duplicate PK') && w.diagnostic.includes('public.users.id'))).toBe(true);
   });
 
   test('should validate multiple unique columns on same table', () => {
@@ -431,8 +433,8 @@ describe('[example - record] simple unique constraints', () => {
     // username "alice" is duplicate (rows 1 and 3) and phone "111-111" is duplicate (rows 1 and 4)
     // Each duplicate generates one warning per affected row
     expect(warnings.length).toBeGreaterThan(0);
-    expect(warnings.some((w) => w.diagnostic.includes('users.username') && w.diagnostic.includes('alice'))).toBe(true);
-    expect(warnings.some((w) => w.diagnostic.includes('users.phone') && w.diagnostic.includes('111-111'))).toBe(true);
+    expect(warnings.some((w) => w.diagnostic.includes('public.users.username') && w.diagnostic.includes('alice'))).toBe(true);
+    expect(warnings.some((w) => w.diagnostic.includes('public.users.phone') && w.diagnostic.includes('111-111'))).toBe(true);
   });
 
   test('should report error for duplicate records blocks', () => {
@@ -454,8 +456,8 @@ describe('[example - record] simple unique constraints', () => {
 
     expect(errors.length).toBe(2);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
+    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
+    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
   });
 });

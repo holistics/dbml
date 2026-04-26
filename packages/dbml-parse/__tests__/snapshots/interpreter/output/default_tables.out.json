@@ -106,6 +106,7 @@
           }
         ],
         "name": "orders",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -187,6 +188,7 @@
           }
         ],
         "name": "order_items",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -358,6 +360,7 @@
           }
         ],
         "name": "products",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

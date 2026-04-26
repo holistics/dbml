@@ -1,11 +1,8 @@
-import {
-  describe, expect, it,
-} from 'vitest';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import {
-  createMockTextModel, createPosition, extractTextFromRange,
-} from '../../../utils';
+import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[example - records] DefinitionProvider - Records', () => {
   describe('should find table definition from records', () => {
@@ -19,7 +16,7 @@ records users(id, name) {
   1, "Alice"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -65,7 +62,7 @@ records auth.users(id, email) {
   1, "alice@example.com"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -116,7 +113,7 @@ records auth.users(id, email) {
   1, "alice@example.com"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -164,7 +161,7 @@ records users(id, name) {
   1, "Alice"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -205,7 +202,7 @@ records users(id, name) {
   1, "Alice"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -253,7 +250,7 @@ records users(id, status) {
   1, status.active
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -304,7 +301,7 @@ records users(id, status) {
   1, status.active
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -350,7 +347,7 @@ records auth.users(id, role) {
   1, auth.role.admin
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);

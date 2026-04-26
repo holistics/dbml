@@ -1,0 +1,207 @@
+import Compiler from '@/compiler';
+import {
+  addDoubleQuoteIfNeeded,
+} from '@/compiler/queries/utils';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  hasTrailingSpaces,
+} from '@/core/lexer/utils';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  FunctionApplicationNode, SyntaxNode, TupleExpressionNode,
+} from '@/core/types/nodes';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
+import {
+  isValidPartialInjection,
+} from '@/core/utils/validate';
+import {
+  CompletionItemInsertTextRule, CompletionItemKind, type CompletionList,
+} from '@/services/types';
+
+export * from './useMerger';
+
+export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
+  switch (symbolKind) {
+    case SymbolKind.Schema:
+      return CompletionItemKind.Module;
+    case SymbolKind.Table:
+    case SymbolKind.TablePartial:
+      return CompletionItemKind.Class;
+    case SymbolKind.Column:
+    case SymbolKind.TableGroupField:
+      return CompletionItemKind.Field;
+    case SymbolKind.Enum:
+      return CompletionItemKind.Enum;
+    case SymbolKind.EnumField:
+      return CompletionItemKind.EnumMember;
+    case SymbolKind.TableGroup:
+      return CompletionItemKind.Struct;
+    default:
+      return CompletionItemKind.Text;
+  }
+}
+
+// To determine if autocompletion should insert an additional space before
+// inserting other tokens
+export function shouldPrependSpace (token: SyntaxToken | undefined, offset: number): boolean {
+  if (!token) {
+    return false;
+  }
+
+  if (hasTrailingSpaces(token)) {
+    return false;
+  }
+
+  for (const trivia of token.trailingTrivia) {
+    if (trivia.start > offset) {
+      break;
+    }
+    if (trivia.kind === SyntaxTokenKind.NEWLINE && trivia.end <= offset) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function noSuggestions (): CompletionList {
+  return {
+    suggestions: [],
+  };
+}
+
+export function prependSpace (completionList: CompletionList): CompletionList {
+  return {
+    ...completionList,
+    suggestions: completionList.suggestions.map((s) => ({
+      ...s,
+      insertText: ` ${s.insertText}`,
+    })),
+  };
+}
+
+export function addQuoteToSuggestionIfNeeded (completionList: CompletionList): CompletionList {
+  return {
+    ...completionList,
+    suggestions: completionList.suggestions.map((s) => ({
+      ...s,
+      insertText: s.quoted ? s.insertText : addDoubleQuoteIfNeeded(s.insertText ?? ''),
+      quoted: true,
+    })),
+  };
+}
+
+// Given a completion list with multiple suggestions: `a`, `b`, `c`
+// This function returns a new completion list augmented with `a, b, c`
+export function addSuggestAllSuggestion (completionList: CompletionList, separator = ', '): CompletionList {
+  const allColumns = completionList.suggestions
+    .map((s) => typeof s.label === 'string' ? s.label : s.label.label)
+    .join(separator);
+
+  if (!allColumns) {
+    return completionList;
+  }
+
+  return {
+    ...completionList,
+    suggestions: [
+      {
+        label: '* (all)',
+        insertText: allColumns,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Snippet,
+        sortText: '00',
+        range: undefined as any,
+      },
+      ...completionList.suggestions,
+    ],
+  };
+}
+
+// Get the source text of a node or a token
+export function getNodeOrTokenSource (compiler: Compiler, filepath: Filepath, tokenOrNode: SyntaxToken | SyntaxNode): string {
+  return compiler.parse.source(filepath).slice(tokenOrNode.start, tokenOrNode.end);
+}
+
+/**
+ * Checks if the offset is within the element's header
+ * (within the element, but outside the body)
+ */
+export function isOffsetWithinElementHeader (offset: number, element: SyntaxNode & { body?: SyntaxNode }): boolean {
+  // Check if offset is within the element at all
+  if (offset < element.start || offset > element.end) {
+    return false;
+  }
+
+  // If element has a body, check if offset is outside it
+  if (element.body) {
+    return offset < element.body.start || offset > element.body.end;
+  }
+
+  // Element has no body, so entire element is considered header
+  return true;
+}
+
+export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
+  return tuple.commaList.length + tuple.elementList.length === 0;
+}
+
+/**
+ * Get columns from a table symbol
+ * @param tableSymbol The table symbol to extract columns from
+ * @returns Array of column objects with name and type information
+ */
+export function getColumnsFromTableSymbol (
+  compiler: Compiler,
+  tableSymbol: NodeSymbol,
+): Array<{ name: string;
+  type: string; }> | null {
+  const columns: Array<{ name: string;
+    type: string; }> = [];
+
+  const members = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED) || [];
+  for (const member of members) {
+    if (!member.isKind(SymbolKind.Column)) continue;
+    // Skip partial injection nodes (~PartialName)
+    if (member.declaration instanceof FunctionApplicationNode && isValidPartialInjection(member.declaration.callee)) continue;
+    const columnName = member.name;
+    if (columnName === undefined) continue;
+    const columnInfo = extractNameAndTypeOfColumnSymbol(member, columnName);
+    if (!columnInfo) continue;
+    columns.push(columnInfo);
+  }
+
+  return columns;
+}
+
+// This function also works with injected columns
+export function extractNameAndTypeOfColumnSymbol (
+  columnSymbol: NodeSymbol,
+  _columnName: string,
+): { name: string;
+  type: string; } | null {
+  const columnDeclaration = columnSymbol.declaration;
+  if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
+
+  const name = extractVariableFromExpression(columnDeclaration.callee) ?? null;
+  const type = extractVariableFromExpression(columnDeclaration.args[0]) ?? null;
+
+  if (name === null || type === null) return null;
+
+  return {
+    name,
+    type,
+  };
+}

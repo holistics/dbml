@@ -1,12 +1,24 @@
 import {
   CancellationToken as ICancellationToken, IDisposable, IPosition, IRange, editor, languages,
 } from 'monaco-editor-core';
+import {
+  URI as Uri,
+  // @ts-expect-error "We need to export from the untyped uri.js file because we cannot import directly from monaco-editor-core for a portable library"
+} from 'monaco-editor-core/esm/vs/base/common/uri.js';
+export {
+  Uri,
+};
 
+export type LanguageConfiguration = languages.LanguageConfiguration;
+export type MonarchLanguage = languages.IMonarchLanguage;
 export type Position = IPosition;
 export type TextModel = editor.ITextModel;
 export type ProviderResult<T> = languages.ProviderResult<T>;
 export type Range = IRange;
-export type Location = languages.Location;
+export interface Location {
+  uri: Uri; // Monaco Uri
+  range: Range;
+}
 export type Disposable = IDisposable;
 
 // Autocompletion types
@@ -73,7 +85,7 @@ export type Color = languages.IColor;
 
 // Go to definition
 export type DefinitionProvider = languages.DefinitionProvider;
-export type Definition = languages.Definition;
+export type Definition = Location | Location[];
 export type CodeActionList = languages.CodeActionList;
 export type SignatureHelpResult = languages.SignatureHelpResult;
 

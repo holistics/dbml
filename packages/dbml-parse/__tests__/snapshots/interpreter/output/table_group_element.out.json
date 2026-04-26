@@ -19,12 +19,15 @@
           },
           "value": "# Note\n\n## Objective\n  * Support define element's note inside element body\n  * Make writing long note easier with the new syntax\n  \n"
         },
+        "schemaName": "public",
         "tables": [
           {
-            "name": "table1"
+            "name": "table1",
+            "schemaName": "public"
           },
           {
-            "name": "table2"
+            "name": "table2",
+            "schemaName": "public"
           }
         ],
         "token": {
@@ -59,6 +62,7 @@
           },
           "value": "# Note\n* Support define element's note inside element body\n  "
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -91,6 +95,7 @@
           },
           "value": "simple note"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -133,6 +138,7 @@
           }
         ],
         "name": "table1",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -173,6 +179,7 @@
           }
         ],
         "name": "table2",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

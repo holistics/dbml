@@ -30,7 +30,7 @@ const EXPECTED_DBML_WITH_RECORDS =
   "name" varchar
 }
 
-Records users(id, name) {
+Records public.users(id, name) {
   1, 'Alice'
   2, 'Bob'
 }`;

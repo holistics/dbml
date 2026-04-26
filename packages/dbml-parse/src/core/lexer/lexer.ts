@@ -1,9 +1,9 @@
 import {
   isInvalidToken,
-} from '@/core/parser/utils';
+} from '@/core/utils';
 import {
   Position,
-} from '@/core/types';
+} from '@/core/types/position';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';

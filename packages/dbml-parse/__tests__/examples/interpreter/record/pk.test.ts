@@ -38,43 +38,43 @@ describe('[example - record] composite primary key constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: order_id=1, product_id=100, quantity=2
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'integer',
       value: 100,
     });
-    expect(db.records[0].values[0][2]).toEqual({
+    expect(db.records[0].values[0][2]).toMatchObject({
       type: 'integer',
       value: 2,
     });
 
     // Row 2: order_id=1, product_id=101, quantity=1
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'integer',
       value: 101,
     });
-    expect(db.records[0].values[1][2]).toEqual({
+    expect(db.records[0].values[1][2]).toMatchObject({
       type: 'integer',
       value: 1,
     });
 
     // Row 3: order_id=2, product_id=100, quantity=3
-    expect(db.records[0].values[2][0]).toEqual({
+    expect(db.records[0].values[2][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[0].values[2][1]).toEqual({
+    expect(db.records[0].values[2][1]).toMatchObject({
       type: 'integer',
       value: 100,
     });
-    expect(db.records[0].values[2][2]).toEqual({
+    expect(db.records[0].values[2][2]).toMatchObject({
       type: 'integer',
       value: 3,
     });
@@ -99,9 +99,12 @@ describe('[example - record] composite primary key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
-    expect(warnings[1].diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
+    // One warning per PK column per duplicate row → 2 rows × 2 columns = 4,
+    // each anchored on the offending row's column cell.
+    expect(warnings.length).toBe(4);
+    for (const w of warnings) {
+      expect(w.diagnostic).toBe('Duplicate Composite PK: (public.order_items.order_id, public.order_items.product_id) = (1, 100)');
+    }
   });
 
   test('should reject NULL in any column of composite primary key', () => {
@@ -125,10 +128,10 @@ describe('[example - record] composite primary key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(4);
-    expect(warnings[0].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
-    expect(warnings[1].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
-    expect(warnings[2].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
-    expect(warnings[3].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
+    expect(warnings[0].diagnostic).toBe('NULL in Composite PK: (public.order_items.order_id, public.order_items.product_id) cannot be NULL');
+    expect(warnings[1].diagnostic).toBe('NULL in Composite PK: (public.order_items.order_id, public.order_items.product_id) cannot be NULL');
+    expect(warnings[2].diagnostic).toBe('NULL in Composite PK: (public.order_items.order_id, public.order_items.product_id) cannot be NULL');
+    expect(warnings[3].diagnostic).toBe('NULL in Composite PK: (public.order_items.order_id, public.order_items.product_id) cannot be NULL');
   });
 });
 
@@ -179,19 +182,19 @@ describe('[example - record] simple primary key constraints', () => {
     const usersRecord = db.records.find((r) => r.tableName === 'users');
     expect(usersRecord).toBeDefined();
     expect(usersRecord!.values.length).toBe(2);
-    expect(usersRecord!.values[0][0]).toEqual({
+    expect(usersRecord!.values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(usersRecord!.values[0][1]).toEqual({
+    expect(usersRecord!.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
-    expect(usersRecord!.values[1][0]).toEqual({
+    expect(usersRecord!.values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(usersRecord!.values[1][1]).toEqual({
+    expect(usersRecord!.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
@@ -200,11 +203,11 @@ describe('[example - record] simple primary key constraints', () => {
     const countriesRecord = db.records.find((r) => r.tableName === 'countries');
     expect(countriesRecord).toBeDefined();
     expect(countriesRecord!.values.length).toBe(2);
-    expect(countriesRecord!.values[0][0]).toEqual({
+    expect(countriesRecord!.values[0][0]).toMatchObject({
       type: 'string',
       value: 'US',
     });
-    expect(countriesRecord!.values[1][0]).toEqual({
+    expect(countriesRecord!.values[1][0]).toMatchObject({
       type: 'string',
       value: 'UK',
     });
@@ -213,15 +216,15 @@ describe('[example - record] simple primary key constraints', () => {
     const accountsRecord = db.records.find((r) => r.tableName === 'accounts');
     expect(accountsRecord).toBeDefined();
     expect(accountsRecord!.values.length).toBe(3);
-    expect(accountsRecord!.values[0][0]).toEqual({
+    expect(accountsRecord!.values[0][0]).toMatchObject({
       type: 'integer',
       value: 0,
     });
-    expect(accountsRecord!.values[1][0]).toEqual({
+    expect(accountsRecord!.values[1][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(accountsRecord!.values[2][0]).toEqual({
+    expect(accountsRecord!.values[2][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
@@ -253,12 +256,12 @@ describe('[example - record] simple primary key constraints', () => {
     expect(warnings.length).toBeGreaterThan(0);
 
     // Verify users.id duplicate warnings
-    const userWarnings = warnings.filter((w) => w.diagnostic.includes('users.id'));
+    const userWarnings = warnings.filter((w) => w.diagnostic.includes('public.users.id'));
     expect(userWarnings.length).toBeGreaterThan(0);
     expect(userWarnings.every((w) => w.diagnostic.includes('Duplicate PK'))).toBe(true);
 
     // Verify countries.code duplicate warnings
-    const countryWarnings = warnings.filter((w) => w.diagnostic.includes('countries.code'));
+    const countryWarnings = warnings.filter((w) => w.diagnostic.includes('public.countries.code'));
     expect(countryWarnings.length).toBeGreaterThan(0);
     expect(countryWarnings.every((w) => w.diagnostic.includes('Duplicate PK'))).toBe(true);
   });
@@ -278,7 +281,7 @@ describe('[example - record] simple primary key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('NULL in PK: users.id cannot be NULL');
+    expect(warnings[0].diagnostic).toBe('NULL in PK: public.users.id cannot be NULL');
   });
 
   test('should validate PK alias syntax (primary key)', () => {
@@ -299,11 +302,11 @@ describe('[example - record] simple primary key constraints', () => {
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(2);
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
@@ -328,15 +331,15 @@ describe('[example - record] simple primary key constraints', () => {
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(3);
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[0].values[2][0]).toEqual({
+    expect(db.records[0].values[2][0]).toMatchObject({
       type: 'integer',
       value: 3,
     });
@@ -361,8 +364,8 @@ describe('[example - record] simple primary key constraints', () => {
 
     expect(errors.length).toBe(2);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
+    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
+    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
   });
 });

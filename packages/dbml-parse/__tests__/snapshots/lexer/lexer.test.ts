@@ -18,7 +18,7 @@ import type {
 } from '@/index';
 import type Report from '@/core/types/report';
 
-function serializeLexerResult (compiler: Compiler, report: Report<SyntaxToken[]>): string {
+function serializeLexerResult (compiler: Compiler, report: Report<readonly Readonly<SyntaxToken>[]>): string {
   const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();
@@ -36,7 +36,7 @@ describe('[snapshot] lexer', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
     const lexer = new Lexer(program, DEFAULT_ENTRY);
 

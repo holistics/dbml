@@ -1,0 +1,135 @@
+import type Compiler from '@/compiler';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  PASS_THROUGH, UNHANDLED, type PassThrough,
+} from '@/core/types/module';
+import {
+  CallExpressionNode, ProgramNode, SyntaxNode,
+  WildcardNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  isElementFieldNode, isElementNode,
+} from '@/core/utils/expression';
+import {
+  destructureComplexVariable,
+} from '@/core/utils/expression';
+import {
+  isTupleOfVariables,
+  isValidName,
+} from '@/core/utils/validate';
+import {
+  type LocalModule, type Settings,
+} from '../types';
+import RecordsValidator from './validate';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+
+export const recordsModule: LocalModule = {
+  validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+    if (isElementNode(node, ElementKind.Records)) {
+      return Report.create(undefined, new RecordsValidator(compiler, node).validate());
+    }
+    return Report.create(PASS_THROUGH);
+  },
+
+  nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
+    if (isElementNode(node, ElementKind.Records)) {
+      if (node.name instanceof WildcardNode) {
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Records name', node.name),
+        ]);
+      }
+      const parent = node.parent;
+      const isTopLevel = parent instanceof ProgramNode;
+
+      if (isTopLevel) {
+        // Top-level: must have name in form table(col1, col2, ...)
+        if (!(node.name instanceof CallExpressionNode)) {
+          return new Report(undefined, [
+            new CompileError(
+              CompileErrorCode.INVALID_RECORDS_NAME,
+              'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
+              node.name || node.type || node,
+            ),
+          ]);
+        }
+
+        const errs: CompileError[] = [];
+        if (!node.name.callee || !isValidName(node.name.callee)) {
+          errs.push(new CompileError(
+            CompileErrorCode.INVALID_RECORDS_NAME,
+            'Records table reference must be a valid table name',
+            node.name.callee || node.name,
+          ));
+        }
+        if (!node.name.argumentList || !isTupleOfVariables(node.name.argumentList)) {
+          errs.push(new CompileError(
+            CompileErrorCode.INVALID_RECORDS_NAME,
+            'Records column list must be simple column names',
+            node.name.argumentList || node.name,
+          ));
+        }
+
+        // Fullname: destructure the callee (table name) of the call expression
+        // e.g. records auth.users(id, name) → ['auth', 'users']
+        const names = destructureComplexVariable(node.name.callee);
+        if (names?.length === 1) names.unshift(DEFAULT_SCHEMA_NAME);
+        return new Report(names, errs);
+      } else {
+        // Inside a table: optional column list only
+        const ownerTableName = node.parent && compiler.nodeFullname(node.parent).getFiltered(UNHANDLED);
+        if (node.name && !isTupleOfVariables(node.name)) {
+          return new Report(ownerTableName, [
+            new CompileError(
+              CompileErrorCode.INVALID_RECORDS_NAME,
+              'Records inside a Table can only have a column list like (col1, col2, ...)',
+              node.name,
+            ),
+          ]);
+        }
+        return new Report(ownerTableName);
+      }
+    }
+    if (isElementFieldNode(node, ElementKind.Records)) {
+      return new Report(undefined);
+    }
+    return Report.create(PASS_THROUGH);
+  },
+
+  nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
+    if (isElementNode(node, ElementKind.Records)) {
+      if (node.alias) {
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'Records cannot have an alias', node.alias),
+        ]);
+      }
+      return new Report(undefined);
+    }
+    if (isElementFieldNode(node, ElementKind.Records)) {
+      return new Report(undefined);
+    }
+    return Report.create(PASS_THROUGH);
+  },
+
+  nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
+    if (isElementNode(node, ElementKind.Records)) {
+      if (node.attributeList) {
+        return new Report({}, [
+          new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', node.attributeList),
+        ]);
+      }
+      return new Report({});
+    }
+    if (isElementFieldNode(node, ElementKind.Records)) {
+      return new Report({});
+    }
+    return Report.create(PASS_THROUGH);
+  },
+};

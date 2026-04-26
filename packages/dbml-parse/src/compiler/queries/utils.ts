@@ -6,10 +6,21 @@ import {
   tryExtractDateTime,
   tryExtractNumeric,
   tryExtractString,
-} from '@/core/interpreter/records/utils';
+} from '@/core/global_modules/records/utils/data';
+import {
+  Filepath, FilepathId,
+} from '@/core/types/filepath';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import Report from '@/core/types/report';
+import {
+  NodeSymbol, SchemaSymbol, SymbolKind,
+} from '@/core/types/symbol';
 import {
   isAlphaOrUnderscore, isDigit,
 } from '@/core/utils/chars';
+import Compiler from '..';
 
 /**
  * Checks if an identifier is valid (can be used without quotes in DBML).
@@ -295,4 +306,62 @@ export function splitQualifiedIdentifier (identifier: string): string[] {
       return match.trim();
     })
     .filter((component) => component.length > 0);
+}
+
+export function collectTransitiveDependencies (
+  compiler: Compiler,
+  entrypoints: Filepath[],
+): Filepath[] {
+  const visited = new Set<FilepathId>();
+  const order: Filepath[] = [];
+
+  const collect = (fp: Filepath) => {
+    const id = fp.intern();
+    if (visited.has(id)) return;
+    visited.add(id);
+    order.push(fp);
+
+    for (const dep of compiler.fileDependencies(fp)) {
+      collect(dep);
+    }
+  };
+  for (const e of entrypoints) {
+    collect(e);
+  }
+  return order;
+}
+
+// Canonical enumeration of visible symbols, rooted at each file's programSymbol.
+//
+// WARNING: always go through `compiler.symbolMembers` — never hit usableMembers
+// or symbolFactory directly. AliasSymbol/UseSymbol instances are only canonical
+// when reached via this path; other entry points mint fresh SchemaSymbols and
+// spawn parallel copies, breaking identity comparison against nodeReferee.
+export function allVisibleMembers (compiler: Compiler): Report<NodeSymbol[]> {
+  const members: NodeSymbol[] = [];
+  const errors: any[] = [];
+  const warnings: any[] = [];
+
+  compiler.bindProject();
+  for (const astReport of compiler.parseProject().values()) {
+    errors.push(...astReport.getErrors());
+    warnings.push(...astReport.getWarnings());
+    const programSymbol = compiler.nodeSymbol(astReport.getValue().ast).getFiltered(UNHANDLED);
+    if (!programSymbol) continue;
+
+    const top = compiler.symbolMembers(programSymbol);
+    errors.push(...top.getErrors());
+    warnings.push(...top.getWarnings());
+    for (const m of top.getFiltered(UNHANDLED) ?? []) {
+      members.push(m);
+      if (m instanceof SchemaSymbol && m.isKind(SymbolKind.Schema)) {
+        const sub = compiler.symbolMembers(m);
+        errors.push(...sub.getErrors());
+        warnings.push(...sub.getWarnings());
+        members.push(...(sub.getFiltered(UNHANDLED) ?? []));
+      }
+    }
+  }
+
+  return new Report(members, errors, warnings);
 }

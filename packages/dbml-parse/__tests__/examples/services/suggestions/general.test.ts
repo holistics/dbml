@@ -1,18 +1,16 @@
-import {
-  describe, expect, it,
-} from 'vitest';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import {
-  createMockTextModel, createPosition,
-} from '@tests/utils';
+import { createMockTextModel, createPosition } from '@tests/utils';
+import { DEFAULT_ENTRY } from '@/constants';
+import { Filepath } from '@/core/types/filepath';
 
 describe('[example] CompletionItemProvider', () => {
   describe('should suggest element types when at top level', () => {
     it('- work if the source is empty', () => {
       const program = '';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 1);
@@ -38,7 +36,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- work even if some characters have been typed out', () => {
       const program = 'Ta    ';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 3);
@@ -59,7 +57,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- work even if there are some not directly following nonsensical characters', () => {
       const program = '  @&@*&@*^@!#';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 3);
@@ -80,7 +78,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- work even if there are some directly following nonsensical characters', () => {
       const program = 'ab';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 3);
@@ -104,7 +102,7 @@ describe('[example] CompletionItemProvider', () => {
     it.skip('- work even if the table body is non-existent', () => {
       const program = 'Table T []';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
@@ -116,7 +114,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- work even if the table body is partially opened', () => {
       const program = 'Table T [] {';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 13);
@@ -134,7 +132,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- work even if the table body is complete', () => {
       const program = 'Table T [] {\n  id int\n  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 3);
@@ -156,7 +154,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- work when there is a comma following', () => {
       const program = 'Table T [headercolor: #fff, ] {}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 29);
@@ -164,17 +162,25 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['headercolor', 'note']);
+      expect(labels).toEqual([
+        'headercolor',
+        'note',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['headercolor: ', 'note: ']);
+      expect(insertTexts).toEqual([
+        'headercolor: ',
+        'note: ',
+
+      ]);
     });
 
     it('- work when there is a comma preceding', () => {
       const program = 'Table T [, headercolor: #fff] {}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
@@ -182,11 +188,19 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['headercolor', 'note']);
+      expect(labels).toEqual([
+        'headercolor',
+        'note',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['headercolor: ', 'note: ']);
+      expect(insertTexts).toEqual([
+        'headercolor: ',
+        'note: ',
+
+      ]);
     });
   });
 
@@ -194,7 +208,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest Note, indexes, and checks in table body', () => {
       const program = 'Table users {\n  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 3);
@@ -216,7 +230,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest after column definition', () => {
       const program = 'Table users {\n  id int\n  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 3);
@@ -240,7 +254,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest basic data types for column definitions', () => {
       const program = 'Table users {\n  id \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 6);
@@ -374,7 +388,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest enum types for column definitions', () => {
       const program = 'Enum status { active inactive }\nTable users {\n  st \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 6);
@@ -510,7 +524,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest schema-qualified enums', () => {
       const program = 'Enum myschema.status { active }\nTable users {\n  st \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 6);
@@ -648,7 +662,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest pk, null, unique settings in column brackets', () => {
       const program = 'Table users {\n  id int []\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 11);
@@ -690,7 +704,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest settings with colons (ref, default, note)', () => {
       const program = 'Table users {\n  id int []\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 11);
@@ -732,7 +746,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest after comma in column settings', () => {
       const program = 'Table users {\n  id int [pk, ]\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 15);
@@ -776,7 +790,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest enum values for default setting', () => {
       const program = 'Enum status { active inactive }\nTable users {\n  st status [default: ]\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 22);
@@ -784,17 +798,23 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['status']);
+      expect(labels).toEqual([
+        'status',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['status']);
+      expect(insertTexts).toEqual([
+        'status',
+
+      ]);
     });
 
     it('- should suggest schemas in default context', () => {
       const program = 'Enum myschema.status { active }\nTable users {\n  st myschema.status [default: ]\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 32);
@@ -802,11 +822,17 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['myschema']);
+      expect(labels).toEqual([
+        'myschema',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['myschema']);
+      expect(insertTexts).toEqual([
+        'myschema',
+
+      ]);
     });
   });
 
@@ -814,7 +840,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest tables for inline ref', () => {
       const program = 'Table orders { id int }\nTable users {\n  order_id int [ref: > ]\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 23);
@@ -822,17 +848,27 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['order_id', 'orders', 'users']);
+      expect(labels).toEqual([
+        'order_id',
+        'orders',
+        'users',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['order_id', 'orders', 'users']);
+      expect(insertTexts).toEqual([
+        'order_id',
+        'orders',
+        'users',
+
+      ]);
     });
 
     it('- should suggest columns after table name in ref', () => {
       const program = 'Table orders { id int pk }\nTable users {\n  order_id int [ref: > orders.]\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 31);
@@ -840,17 +876,23 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['id']);
+      expect(labels).toEqual([
+        'id',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['id']);
+      expect(insertTexts).toEqual([
+        'id',
+
+      ]);
     });
 
     it('- should suggest schemas in ref context', () => {
       const program = 'Table myschema.orders { id int }\nTable users {\n  order_id int [ref: > ]\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 23);
@@ -858,11 +900,21 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['order_id', 'myschema', 'users']);
+      expect(labels).toEqual([
+        'order_id',
+        'myschema',
+        'users',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['order_id', 'myschema', 'users']);
+      expect(insertTexts).toEqual([
+        'order_id',
+        'myschema',
+        'users',
+
+      ]);
     });
   });
 
@@ -870,7 +922,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest tables in Ref block', () => {
       const program = 'Table orders { id int }\nTable users { id int }\nRef: ';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 6);
@@ -878,17 +930,25 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['orders', 'users']);
+      expect(labels).toEqual([
+        'orders',
+        'users',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['orders', 'users']);
+      expect(insertTexts).toEqual([
+        'orders',
+        'users',
+
+      ]);
     });
 
     it('- should suggest columns in Ref after dot', () => {
       const program = 'Table orders { id int }\nRef: orders.';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 13);
@@ -896,17 +956,23 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['id']);
+      expect(labels).toEqual([
+        'id',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['id']);
+      expect(insertTexts).toEqual([
+        'id',
+
+      ]);
     });
 
     it('- should suggest after relationship operators', () => {
       const program = 'Table orders { id int }\nTable users { order_id int }\nRef: users.order_id > ';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 23);
@@ -914,17 +980,65 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['orders', 'users']);
+      expect(labels).toEqual([
+        'orders',
+        'users',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['orders', 'users']);
+      expect(insertTexts).toEqual([
+        'orders',
+        'users',
+
+      ]);
+    });
+
+    it('- should suggest columns after dot on right-hand side of relationship operator', () => {
+      const program = 'Table T { id int\n  name varchar\n}\nRef: T.id > T.';
+      const compiler = new Compiler();
+      compiler.setSource(DEFAULT_ENTRY, program);
+      const model = createMockTextModel(program);
+      const provider = new DBMLCompletionItemProvider(compiler);
+      // Line 4: 'Ref: T.id > T.' — cursor after the trailing dot
+      const position = createPosition(4, 'Ref: T.id > T.'.length + 1);
+      const result = provider.provideCompletionItems(model, position);
+
+      const labels = result.suggestions.map((s) => s.label);
+      expect(labels).toContain('id');
+      expect(labels).toContain('name');
+      expect(labels).not.toContain('Table');
+      expect(labels).not.toContain('Ref');
+      expect(labels).not.toContain('Enum');
+    });
+
+    it('- should suggest columns after dot on rhs of relationship operator when table is imported via use', () => {
+      const baseContent = 'Table T {\n  id int [pk]\n  name varchar\n}';
+      const consumerContent = "use { table T } from './base.dbml'\nRef: T.id > T.";
+      const compiler = new Compiler();
+      const baseFp = Filepath.from('/base.dbml');
+      const consumerFp = Filepath.from('/consumer.dbml');
+      compiler.setSource(baseFp, baseContent);
+      compiler.setSource(consumerFp, consumerContent);
+      compiler.bindProject();
+      const model = createMockTextModel(consumerContent, consumerFp.toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const position = createPosition(2, 'Ref: T.id > T.'.length + 1);
+      const result = provider.provideCompletionItems(model, position);
+
+      const labels = result.suggestions.map((s) => s.label);
+      expect(labels).toContain('id');
+      expect(labels).toContain('name');
+      expect(labels).not.toContain('Table');
+      expect(labels).not.toContain('Ref');
+      expect(labels).not.toContain('Enum');
     });
 
     it('- should suggest ref settings in brackets', () => {
       const program = 'Ref: users.id > orders.id []';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 28);
@@ -932,17 +1046,27 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['update', 'delete', 'color']);
+      expect(labels).toEqual([
+        'update',
+        'delete',
+        'color',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['update: ', 'delete: ', 'color: ']);
+      expect(insertTexts).toEqual([
+        'update: ',
+        'delete: ',
+        'color: ',
+
+      ]);
     });
 
     it('- should suggest action values for update/delete settings', () => {
       const program = 'Ref: users.id > orders.id [update: ]';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 36);
@@ -974,7 +1098,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest table columns in indexes block', () => {
       const program = 'Table users {\n  id int\n  email varchar\n  indexes {\n    \n  }\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(5, 5);
@@ -982,17 +1106,25 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['id', 'email']);
+      expect(labels).toEqual([
+        'id',
+        'email',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['id', 'email']);
+      expect(insertTexts).toEqual([
+        'id',
+        'email',
+
+      ]);
     });
 
     it('- should suggest in composite index', () => {
       const program = 'Table users {\n  id int\n  email varchar\n  indexes {\n    (id, )\n  }\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(5, 10);
@@ -1000,11 +1132,19 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['id', 'email']);
+      expect(labels).toEqual([
+        'id',
+        'email',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['id', 'email']);
+      expect(insertTexts).toEqual([
+        'id',
+        'email',
+
+      ]);
     });
   });
 
@@ -1012,7 +1152,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest index settings in brackets', () => {
       const program = 'Table users {\n  id int\n  indexes {\n    id []\n  }\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(4, 9);
@@ -1044,7 +1184,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest index type values', () => {
       const program = 'Table users {\n  id int\n  indexes {\n    id [type: ]\n  }\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(4, 15);
@@ -1052,11 +1192,19 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['btree', 'hash']);
+      expect(labels).toEqual([
+        'btree',
+        'hash',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['btree', 'hash']);
+      expect(insertTexts).toEqual([
+        'btree',
+        'hash',
+
+      ]);
     });
   });
 
@@ -1064,7 +1212,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest check settings', () => {
       const program = 'Table users {\n  age int\n  checks {\n    age > 0 []\n  }\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(4, 14);
@@ -1072,11 +1220,17 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['name']);
+      expect(labels).toEqual([
+        'name',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['name: ']);
+      expect(insertTexts).toEqual([
+        'name: ',
+
+      ]);
     });
   });
 
@@ -1084,7 +1238,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest tables in TableGroup', () => {
       const program = 'Table users { id int }\nTable orders { id int }\nTableGroup ecommerce {\n  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(4, 3);
@@ -1092,17 +1246,27 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['users', 'orders', 'Note']);
+      expect(labels).toEqual([
+        'users',
+        'orders',
+        'Note',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['users', 'orders', 'Note']);
+      expect(insertTexts).toEqual([
+        'users',
+        'orders',
+        'Note',
+
+      ]);
     });
 
     it('- should suggest schema-qualified tables', () => {
       const program = 'Table myschema.users { id int }\nTableGroup group1 {\n  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 3);
@@ -1110,11 +1274,17 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['myschema', 'Note']);
+      expect(labels).toEqual([
+        'myschema',
+        'Note',
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['myschema', 'Note']);
+      expect(insertTexts).toEqual([
+        'myschema',
+        'Note',
+      ]);
     });
   });
 
@@ -1122,7 +1292,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest table elements in TablePartial body', () => {
       const program = 'TablePartial mypartial {\n  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 3);
@@ -1144,7 +1314,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest TablePartial names after tilde operator', () => {
       const program = 'TablePartial mypartial {}\nTable users {\n  id int\n  ~\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(4, 4);
@@ -1152,11 +1322,15 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['mypartial']);
+      expect(labels).toEqual([
+        'mypartial',
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['mypartial']);
+      expect(insertTexts).toEqual([
+        'mypartial',
+      ]);
     });
   });
 
@@ -1164,7 +1338,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest tables after schema dot', () => {
       const program = 'Table myschema.users { id int }\nTable myschema.orders { id int }\nmyschema.';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 10);
@@ -1182,7 +1356,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should suggest columns after table dot', () => {
       const program = 'Table orders { id int, user_id int }\nRef: orders.';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 12);
@@ -1190,11 +1364,15 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['id']);
+      expect(labels).toEqual([
+        'id',
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['id']);
+      expect(insertTexts).toEqual([
+        'id',
+      ]);
     });
   });
 
@@ -1202,7 +1380,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should return no suggestions inside single-line comments', () => {
       const program = '// Table users\nTable orders { id int }';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
@@ -1214,7 +1392,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should return no suggestions inside multi-line comments', () => {
       const program = '/* Table users */\nTable orders { id int }';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
@@ -1226,7 +1404,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should return no suggestions inside string literals', () => {
       const program = 'Table users {\n  name varchar [note: "user "]  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 32);
@@ -1238,7 +1416,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should handle whitespace after operators', () => {
       const program = 'Ref: users.id >  ';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 18);
@@ -1256,7 +1434,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should work with incomplete syntax', () => {
       const program = 'Table users {\n  id int [pk\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 13);
@@ -1269,7 +1447,7 @@ describe('[example] CompletionItemProvider', () => {
     it('- should handle special characters in identifiers', () => {
       const program = 'Table "user-table" { id int }\nRef: ';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 6);
@@ -1277,17 +1455,21 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['user-table']);
+      expect(labels).toEqual([
+        'user-table',
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['"user-table"']);
+      expect(insertTexts).toEqual([
+        '"user-table"',
+      ]);
     });
 
     it('- should handle enum field settings', () => {
       const program = 'Enum status {\n  active []\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 11);
@@ -1295,17 +1477,23 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual(['note']);
+      expect(labels).toEqual([
+        'note',
+
+      ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual(['note: ']);
+      expect(insertTexts).toEqual([
+        'note: ',
+
+      ]);
     });
 
     it('- should handle project scope', () => {
       const program = 'Project myproject {\n  \n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 3);
@@ -1342,7 +1530,7 @@ Table billing.customers { id int pk }
 Table shop.orders { id int pk }
 Ref: `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(4, 6);
@@ -1361,7 +1549,7 @@ Table auth.sessions { id int pk }
 Table billing.invoices { id int pk }
 Ref: auth.`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(4, 11);
@@ -1381,7 +1569,7 @@ Ref: auth.`;
 }
 Ref: auth.users.`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(6, 16);
@@ -1400,7 +1588,7 @@ Table users {
   id int
   status `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(5, 10);
@@ -1417,7 +1605,7 @@ Table users {
     it('- should suggest remaining settings after multiple have been used', () => {
       const program = 'Table users {\n  id int [pk, not null, unique, ]\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 32);
@@ -1436,7 +1624,7 @@ Table users {
   order_id int [not null, ref: > ]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 33);
@@ -1449,7 +1637,7 @@ Table users {
     it('- should suggest default values for boolean column', () => {
       const program = 'Table users {\n  is_active bool [default: ]\n}';
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(2, 29);
@@ -1465,7 +1653,7 @@ Table users {
   quantity int [check: ]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 23);
@@ -1489,7 +1677,7 @@ Table users {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 12);
@@ -1511,7 +1699,7 @@ Table users {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 13);
@@ -1533,7 +1721,7 @@ Table users {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(7, 38);
@@ -1563,7 +1751,7 @@ Table users {
   ~
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(12, 4);
@@ -1584,7 +1772,7 @@ Table users {
   }
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(6, 5);
@@ -1605,7 +1793,7 @@ Table users {
   ~common.
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(7, 11);
@@ -1629,7 +1817,7 @@ Table payments {
   status billing.payment_status [default: billing.payment_status.]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(9, 65);
@@ -1646,7 +1834,7 @@ Table payments {
   high
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 11);
@@ -1663,7 +1851,7 @@ Table payments {
 Table orders { user_id int }
 Ref order_user [update: cascade, delete: ]: orders.user_id > users.id`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 42);
@@ -1688,7 +1876,7 @@ Table inventory {
 
 Ref: (inventory.)`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(11, 17);
@@ -1704,7 +1892,7 @@ Ref: (inventory.)`;
 Table public.orders { user_id int }
 Ref: public.orders.user_id > auth.`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 35);
@@ -1729,7 +1917,7 @@ Ref order_user {
   orders.user_id > users.
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(12, 26);
@@ -1750,7 +1938,7 @@ TableGroup authentication {
   auth.
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(6, 8);
@@ -1771,7 +1959,7 @@ TableGroup ecommerce {
 
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(7, 3);
@@ -1790,7 +1978,7 @@ TableGroup core {
 
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(4, 3);
@@ -1831,7 +2019,7 @@ Table notifications {
   user_id int
   `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(26, 3);
@@ -1851,7 +2039,7 @@ Table users {
   work_address_id int [ref: > addresses.]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(5, 41);
@@ -1871,7 +2059,7 @@ Table products {
 
 Ref: products.category_id > categories.`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 41);
@@ -1894,7 +2082,7 @@ Table mycompany.ecommerce.orders {
 
 Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(11, 62);
@@ -1916,7 +2104,7 @@ Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
   status
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(5, 10);
@@ -1931,7 +2119,7 @@ Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
   id int pk
   email varchar [`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 18);
@@ -1948,7 +2136,7 @@ Ref: mycompany.ecommerce.orders.user_id > mycompany.ecommerce.`;
 Table orders { user_id int }
 Ref: orders.user_id >`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(3, 22);
@@ -1970,7 +2158,7 @@ Table posts {
   user_id int [ref: > users.]
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(9, 29);
@@ -1994,7 +2182,7 @@ Table orders {
 
 Records `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(10, 9);
@@ -2014,7 +2202,7 @@ Records `;
 
 Records users(id, )`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 19);
@@ -2036,7 +2224,7 @@ Table s.orders {
 
 Records s.`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(9, 11);
@@ -2055,7 +2243,7 @@ Records s.`;
   Records ()
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(6, 12);
@@ -2082,7 +2270,7 @@ Records users(id, user_status) {
   1, status.
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(13, 14);
@@ -2101,7 +2289,7 @@ Records users(id, user_status) {
 
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(5, 3);
@@ -2119,7 +2307,7 @@ Records users(id, user_status) {
 
 Records users()`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(7, 15);
@@ -2149,7 +2337,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       // Position right after opening brace on new line
@@ -2179,7 +2367,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(10, 9);
@@ -2202,7 +2390,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(9, 9);
@@ -2225,7 +2413,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 11);
@@ -2249,7 +2437,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       // Position at the end of line 10 (after the last record)
@@ -2277,7 +2465,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(7, 9);
@@ -2300,7 +2488,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(9, 9);
@@ -2325,7 +2513,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       // Position inside the record entry (after the comma)
@@ -2350,7 +2538,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       // Position in the header (after "Records ")
@@ -2371,7 +2559,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       // Position inside Table body
@@ -2403,7 +2591,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(16, 9);
@@ -2444,7 +2632,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(17, 11);
@@ -2453,7 +2641,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
       expect(result).toBeDefined();
       const recordSnippet = result?.suggestions?.find((s) => s.label === 'Record row snippet');
       expect(recordSnippet).toBeDefined();
-      expect(recordSnippet?.insertText).toEqual('${1:age (int)}, ${2:email (varchar)}, ${3:name (varchar)}, ${4:id (int)}');
+      expect(recordSnippet?.insertText).toEqual('${1:id (int)}, ${2:email (varchar)}, ${3:name (varchar)}, ${4:age (int)}');
     });
 
     it('- should work with explicit column list in records with partial table injection', () => {
@@ -2474,7 +2662,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(13, 1);
@@ -2507,7 +2695,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(13, 1);
@@ -2541,7 +2729,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(17, 1);
@@ -2570,7 +2758,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(6, 9);
@@ -2594,7 +2782,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(9, 9);
@@ -2618,7 +2806,7 @@ describe('[example] CompletionItemProvider - Records Row Snippets', () => {
         }
       `;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(10, 9);

@@ -16,18 +16,21 @@ declare const __filepathIdBrand: unique symbol;
 export type FilepathId = string & { [__filepathIdBrand]: true };
 
 export class Filepath implements Internable<FilepathId> {
+  private readonly protocol?: string; // The protocol, such as `file` or `inmemory`
   private readonly path: string;
 
-  constructor (absolutePath: string) {
+  constructor (absolutePath: string, options: { protocol?: string } = {}) {
     const normalized = normalize(absolutePath);
     if (!isAbsolute(normalized)) {
       throw new Error(`FilePath requires an absolute path, got: "${absolutePath}"`);
     }
     this.path = normalized;
+    this.protocol = options.protocol;
   }
 
   intern (): FilepathId {
-    return `filepath@${this.path}` as FilepathId;
+    if (!this.protocol) return `filepath@${this.path}` as FilepathId;
+    return `filepath@${this.protocol}://${this.path}` as FilepathId;
   }
 
   static from (absolutePath: string): Filepath {
@@ -38,14 +41,21 @@ export class Filepath implements Internable<FilepathId> {
     return new Filepath(resolve(fromDir, relativePath));
   }
 
+  // For custom URIs (e.g. inmemory://model/1), map to a synthetic absolute path
   static fromUri (uri: string): Filepath {
-    if (uri.startsWith('file://')) {
-      let p = decodeURIComponent(new URL(uri).pathname);
-      // Windows: URL gives /C:/path - strip the leading slash
-      if (/^\/[a-zA-Z]:[\\/]/.test(p)) p = p.slice(1);
-      return new Filepath(normalize(p));
+    try {
+      const url = new URL(uri);
+      // Only prepend host when it's non-empty (inmemory://model/1 → /model/1).
+      // For file:// URIs host is empty and pathname already starts with '/',
+      // so prepending '/' produced '//main.dbml'.
+      const raw = url.host ? `/${url.host}${url.pathname}` : url.pathname;
+      return new Filepath(normalize(raw), {
+        protocol: url.protocol,
+      });
+    } catch {
+      // Not a valid URL - fall through to treat as plain path
+      return new Filepath(normalize(uri));
     }
-    return new Filepath(normalize(uri));
   }
 
   get absolute (): string {
@@ -91,10 +101,21 @@ export class Filepath implements Internable<FilepathId> {
     return this.path === other.path;
   }
 
-  toUri (): string {
+  // True when this filepath is a strict ancestor directory of `other`.
+  isParentOf (other: Filepath): boolean {
+    if (this.path === other.path) return false;
+    const prefix = this.path.endsWith('/') ? this.path : `${this.path}/`;
+    return other.path.startsWith(prefix);
+  }
+
+  toUri (options: { protocol?: string } = {}): string {
+    const protocol = options.protocol ?? this.protocol;
+    if (protocol === undefined) {
+      return this.path;
+    }
     // Use URL to handle percent-encoding of spaces and non-ASCII characters.
     // Windows: C:/path needs an extra leading slash -> file:///C:/path
-    const prefix = WIN_DRIVE_RE.test(this.path) ? 'file:///' : 'file://';
+    const prefix = WIN_DRIVE_RE.test(this.path) ? `${protocol}:///` : `${protocol}://`;
     return new URL(prefix + this.path).href;
   }
 

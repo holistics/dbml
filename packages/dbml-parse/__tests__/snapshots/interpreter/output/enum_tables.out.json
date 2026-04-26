@@ -3,6 +3,7 @@
     "enums": [
       {
         "name": "job_status",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -149,6 +150,7 @@
       },
       {
         "name": "order status",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -311,6 +313,7 @@
           }
         ],
         "name": "jobs",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -392,6 +395,7 @@
           }
         ],
         "name": "orders",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

@@ -3,6 +3,7 @@
     "enums": [
       {
         "name": "products_status",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -101,6 +102,7 @@
       },
       {
         "name": "products_status2",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -381,6 +383,7 @@
           }
         ],
         "name": "orders",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

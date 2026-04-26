@@ -3,6 +3,7 @@
     "enums": [
       {
         "name": "order status",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -234,6 +235,7 @@
           },
           "value": "Note on table orders"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -704,6 +706,7 @@
           }
         ],
         "name": "bookings",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

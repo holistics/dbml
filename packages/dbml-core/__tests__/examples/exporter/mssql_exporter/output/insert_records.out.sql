@@ -19,25 +19,25 @@ ALTER TABLE [posts] ADD FOREIGN KEY ([user_id]) REFERENCES [users] ([id])
 GO
 
 -- Disable constraint checks for tables with data
-ALTER TABLE [users] NOCHECK CONSTRAINT ALL;
+ALTER TABLE [public].[users] NOCHECK CONSTRAINT ALL;
 GO
-ALTER TABLE [posts] NOCHECK CONSTRAINT ALL;
+ALTER TABLE [public].[posts] NOCHECK CONSTRAINT ALL;
 GO
 
-INSERT INTO [users] ([id], [name], [email], [active], [created_at])
+INSERT INTO [public].[users] ([id], [name], [email], [active], [created_at])
 VALUES
   (1, 'Alice', 'alice@example.com', 1, '2024-01-15T10:30:00+07:00'),
   (2, 'Bob', 'bob@example.com', 0, '2024-01-16T14:20:00+07:00'),
   (3, 'Charlie', NULL, 1, '2024-01-17T09:15:00+07:00');
 GO
-INSERT INTO [posts] ([id], [user_id], [title], [content])
+INSERT INTO [public].[posts] ([id], [user_id], [title], [content])
 VALUES
   (1, 1, 'First Post', 'Hello World'),
   (2, 1, 'Second Post', 'It''s a beautiful day');
 GO
 
 -- Re-enable constraint checks
-ALTER TABLE [users] WITH CHECK CHECK CONSTRAINT ALL;
+ALTER TABLE [public].[users] WITH CHECK CHECK CONSTRAINT ALL;
 GO
-ALTER TABLE [posts] WITH CHECK CHECK CONSTRAINT ALL;
+ALTER TABLE [public].[posts] WITH CHECK CHECK CONSTRAINT ALL;
 GO

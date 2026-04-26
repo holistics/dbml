@@ -8,6 +8,7 @@
               "user_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "posts",
             "token": {
               "end": {
@@ -28,6 +29,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "users",
             "token": {
               "end": {
@@ -65,6 +67,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "users",
             "token": {
               "end": {
@@ -85,6 +88,7 @@
               "following_user_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "follows",
             "token": {
               "end": {
@@ -122,6 +126,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "users",
             "token": {
               "end": {
@@ -142,6 +147,7 @@
               "followed_user_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "follows",
             "token": {
               "end": {
@@ -257,6 +263,7 @@
           },
           "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 1\n"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -376,6 +383,7 @@
           },
           "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -554,6 +562,7 @@
           },
           "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n    * 1.1\n    * 1.2\n  * 2\n"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

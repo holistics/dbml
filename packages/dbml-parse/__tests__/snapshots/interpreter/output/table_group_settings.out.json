@@ -20,9 +20,11 @@
           },
           "value": "note inside setting list of a table group\n"
         },
+        "schemaName": "public",
         "tables": [
           {
-            "name": "table1"
+            "name": "table1",
+            "schemaName": "public"
           }
         ],
         "token": {
@@ -67,6 +69,7 @@
           }
         ],
         "name": "table1",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

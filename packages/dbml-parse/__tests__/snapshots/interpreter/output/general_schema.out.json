@@ -3,6 +3,7 @@
     "enums": [
       {
         "name": "orders_status",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -85,6 +86,7 @@
       },
       {
         "name": "product status",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -142,6 +144,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "orders",
             "token": {
               "end": {
@@ -162,6 +165,7 @@
               "order_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "order_items",
             "token": {
               "end": {
@@ -199,6 +203,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "products",
             "token": {
               "end": {
@@ -219,6 +224,7 @@
               "product_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "order_items",
             "token": {
               "end": {
@@ -256,6 +262,7 @@
               "code"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "countries",
             "token": {
               "end": {
@@ -276,6 +283,7 @@
               "country_code"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "users",
             "token": {
               "end": {
@@ -313,6 +321,7 @@
               "code"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "countries",
             "token": {
               "end": {
@@ -333,6 +342,7 @@
               "country_code"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "merchants",
             "token": {
               "end": {
@@ -370,6 +380,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "merchants",
             "token": {
               "end": {
@@ -390,6 +401,7 @@
               "merchant_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "products",
             "token": {
               "end": {
@@ -427,6 +439,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "users",
             "token": {
               "end": {
@@ -447,6 +460,7 @@
               "admin_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "merchants",
             "token": {
               "end": {
@@ -481,12 +495,15 @@
     "tableGroups": [
       {
         "name": "g1",
+        "schemaName": "public",
         "tables": [
           {
-            "name": "merchants"
+            "name": "merchants",
+            "schemaName": "public"
           },
           {
-            "name": "users"
+            "name": "users",
+            "schemaName": "public"
           }
         ],
         "token": {
@@ -505,12 +522,15 @@
       },
       {
         "name": "g2",
+        "schemaName": "public",
         "tables": [
           {
-            "name": "countries"
+            "name": "countries",
+            "schemaName": "public"
           },
           {
-            "name": "orders"
+            "name": "orders",
+            "schemaName": "public"
           }
         ],
         "token": {
@@ -621,6 +641,7 @@
         ],
         "headerColor": "#fff",
         "name": "orders",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -707,6 +728,7 @@
           }
         ],
         "name": "order_items",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -952,6 +974,7 @@
           }
         ],
         "name": "products",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -1119,6 +1142,7 @@
           }
         ],
         "name": "users",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -1243,6 +1267,7 @@
           }
         ],
         "name": "merchants",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -1325,6 +1350,7 @@
           }
         ],
         "name": "countries",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

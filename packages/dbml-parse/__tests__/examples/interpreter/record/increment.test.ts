@@ -29,7 +29,7 @@ describe('[example - record] auto-increment and serial type constraints', () => 
 
     // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
+    expect(record.schemaName).toBe('public');
     expect(record.tableName).toBe('users');
     expect(record.columns).toEqual(['id', 'name']);
     expect(record.values.length).toBe(3);
@@ -37,33 +37,33 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     // Verify ALL rows and ALL columns in each row
     // Row 1: (null, "Alice") - id is auto-generated
     expect(record.values[0].length).toBe(2);
-    expect(record.values[0][0]).toEqual({
+    expect(record.values[0][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[0][1]).toEqual({
+    expect(record.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
 
     // Row 2: (null, "Bob") - id is auto-generated
     expect(record.values[1].length).toBe(2);
-    expect(record.values[1][0]).toEqual({
+    expect(record.values[1][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[1][1]).toEqual({
+    expect(record.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
 
     // Row 3: (1, "Charlie")
     expect(record.values[2].length).toBe(2);
-    expect(record.values[2][0]).toEqual({
+    expect(record.values[2][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(record.values[2][1]).toEqual({
+    expect(record.values[2][1]).toMatchObject({
       type: 'string',
       value: 'Charlie',
     });
@@ -91,7 +91,7 @@ describe('[example - record] auto-increment and serial type constraints', () => 
 
     // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
+    expect(record.schemaName).toBe('public');
     expect(record.tableName).toBe('users');
     expect(record.columns).toEqual(['id', 'name']);
     expect(record.values.length).toBe(2);
@@ -99,22 +99,22 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     // Verify ALL rows and ALL columns in each row
     // Row 1: (null, "Alice") - id is auto-generated
     expect(record.values[0].length).toBe(2);
-    expect(record.values[0][0]).toEqual({
+    expect(record.values[0][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[0][1]).toEqual({
+    expect(record.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
 
     // Row 2: (null, "Bob") - id is auto-generated
     expect(record.values[1].length).toBe(2);
-    expect(record.values[1][0]).toEqual({
+    expect(record.values[1][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[1][1]).toEqual({
+    expect(record.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
@@ -141,7 +141,7 @@ describe('[example - record] auto-increment and serial type constraints', () => 
 
     // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
+    expect(record.schemaName).toBe('public');
     expect(record.tableName).toBe('users');
     expect(record.columns).toEqual(['id', 'name']);
     expect(record.values.length).toBe(2);
@@ -149,22 +149,22 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     // Verify ALL rows and ALL columns in each row
     // Row 1: (null, "Alice") - id is auto-generated
     expect(record.values[0].length).toBe(2);
-    expect(record.values[0][0]).toEqual({
+    expect(record.values[0][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[0][1]).toEqual({
+    expect(record.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
 
     // Row 2: (null, "Bob") - id is auto-generated
     expect(record.values[1].length).toBe(2);
-    expect(record.values[1][0]).toEqual({
+    expect(record.values[1][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[1][1]).toEqual({
+    expect(record.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
@@ -185,8 +185,9 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = 1');
+    expect(warnings.length).toBe(2);
+    expect(warnings[0].diagnostic).toBe('Duplicate PK: public.users.id = 1');
+    expect(warnings[1].diagnostic).toBe('Duplicate PK: public.users.id = 1');
   });
 
   test('should detect duplicate pk with not null + dbdefault', () => {
@@ -204,7 +205,8 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     const warnings = result.getWarnings();
 
     // Both NULLs resolve to default value 1, which is a duplicate
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = null');
+    expect(warnings.length).toBe(2);
+    expect(warnings[0].diagnostic).toBe('Duplicate PK: public.users.id = null');
+    expect(warnings[1].diagnostic).toBe('Duplicate PK: public.users.id = null');
   });
 });

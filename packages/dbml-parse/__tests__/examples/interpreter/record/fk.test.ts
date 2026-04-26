@@ -50,11 +50,11 @@ describe('[example - record] composite foreign key constraints', () => {
     // columns = ['id', 'country_code']
     expect(db.records[0].tableName).toBe('merchants');
     expect(db.records[0].values.length).toBe(3);
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'string',
       value: 'US',
     });
@@ -63,19 +63,19 @@ describe('[example - record] composite foreign key constraints', () => {
     // columns = ['id', 'merchant_id', 'country', 'amount']
     expect(db.records[1].tableName).toBe('orders');
     expect(db.records[1].values.length).toBe(3);
-    expect(db.records[1].values[0][0]).toEqual({
+    expect(db.records[1].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[1].values[0][1]).toEqual({
+    expect(db.records[1].values[0][1]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[1].values[0][2]).toEqual({
+    expect(db.records[1].values[0][2]).toMatchObject({
       type: 'string',
       value: 'US',
     });
-    expect(db.records[1].values[0][3]).toEqual({
+    expect(db.records[1].values[0][3]).toMatchObject({
       type: 'real',
       value: 100.00,
     });
@@ -111,8 +111,8 @@ describe('[example - record] composite foreign key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
-    expect(warnings[1].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
+    expect(warnings[0].diagnostic).toBe('FK violation: (public.orders.merchant_id, public.orders.country) = (1, "UK") does not exist in (public.merchants.id, public.merchants.country_code)');
+    expect(warnings[1].diagnostic).toBe('FK violation: (public.orders.merchant_id, public.orders.country) = (1, "UK") does not exist in (public.merchants.id, public.merchants.country_code)');
   });
 
   test('should allow NULL in composite FK columns', () => {
@@ -153,22 +153,22 @@ describe('[example - record] composite foreign key constraints', () => {
     // Row 2: null FK column
     // columns = ['id', 'merchant_id', 'country', 'status']
     expect(db.records[1].values[1][1].value).toBe(null); // merchant_id
-    expect(db.records[1].values[1][2]).toEqual({
+    expect(db.records[1].values[1][2]).toMatchObject({
       type: 'string',
       value: 'UK',
     }); // country
-    expect(db.records[1].values[1][3]).toEqual({
+    expect(db.records[1].values[1][3]).toMatchObject({
       type: 'string',
       value: 'pending',
     }); // status
 
     // Row 3: null FK column
-    expect(db.records[1].values[2][0]).toEqual({
+    expect(db.records[1].values[2][0]).toMatchObject({
       type: 'integer',
       value: 3,
     }); // id
     expect(db.records[1].values[2][2].value).toBe(null); // country
-    expect(db.records[1].values[2][3]).toEqual({
+    expect(db.records[1].values[2][3]).toMatchObject({
       type: 'string',
       value: 'processing',
     }); // status
@@ -207,10 +207,10 @@ describe('[example - record] composite foreign key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(4);
-    expect(warnings[0].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
-    expect(warnings[1].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
-    expect(warnings[2].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
-    expect(warnings[3].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
+    expect(warnings[0].diagnostic).toBe('FK violation: (public.products.id, public.products.region) = (2, "US") does not exist in (public.categories.id, public.categories.region)');
+    expect(warnings[1].diagnostic).toBe('FK violation: (public.products.id, public.products.region) = (2, "US") does not exist in (public.categories.id, public.categories.region)');
+    expect(warnings[2].diagnostic).toBe('FK violation: (public.categories.id, public.categories.region) = (3, "EU") does not exist in (public.products.id, public.products.region)');
+    expect(warnings[3].diagnostic).toBe('FK violation: (public.categories.id, public.categories.region) = (3, "EU") does not exist in (public.products.id, public.products.region)');
   });
 
   test('should validate composite FK with schema-qualified tables', () => {
@@ -328,19 +328,19 @@ describe('[example - record] simple foreign key constraints', () => {
     // Verify users table
     expect(db.records[0].tableName).toBe('users');
     expect(db.records[0].values.length).toBe(2);
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
@@ -349,7 +349,7 @@ describe('[example - record] simple foreign key constraints', () => {
     const postsRecord = db.records.find((r) => r.tableName === 'posts');
     expect(postsRecord).toBeDefined();
     expect(postsRecord!.values.length).toBe(3);
-    expect(postsRecord!.values[0][1]).toEqual({
+    expect(postsRecord!.values[0][1]).toMatchObject({
       type: 'integer',
       value: 1,
     }); // user_id
@@ -357,11 +357,11 @@ describe('[example - record] simple foreign key constraints', () => {
     // Verify cities table with string FK
     const citiesRecord = db.records.find((r) => r.tableName === 'cities');
     expect(citiesRecord).toBeDefined();
-    expect(citiesRecord!.values[0][1]).toEqual({
+    expect(citiesRecord!.values[0][1]).toMatchObject({
       type: 'string',
       value: 'US',
     }); // country_code
-    expect(citiesRecord!.values[1][1]).toEqual({
+    expect(citiesRecord!.values[1][1]).toMatchObject({
       type: 'string',
       value: 'UK',
     });
@@ -369,15 +369,15 @@ describe('[example - record] simple foreign key constraints', () => {
     // Verify transactions table with zero values
     const transactionsRecord = db.records.find((r) => r.tableName === 'transactions');
     expect(transactionsRecord).toBeDefined();
-    expect(transactionsRecord!.values[0][1]).toEqual({
+    expect(transactionsRecord!.values[0][1]).toMatchObject({
       type: 'integer',
       value: 0,
     }); // account_id=0
-    expect(transactionsRecord!.values[1][1]).toEqual({
+    expect(transactionsRecord!.values[1][1]).toMatchObject({
       type: 'integer',
       value: 1,
     }); // account_id=1
-    expect(transactionsRecord!.values[2][1]).toEqual({
+    expect(transactionsRecord!.values[2][1]).toMatchObject({
       type: 'integer',
       value: 2,
     }); // account_id=2
@@ -425,8 +425,8 @@ describe('[example - record] simple foreign key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
-    expect(warnings[1].diagnostic).toBe('FK violation: cities.country_code = "FR" does not exist in countries.code');
+    expect(warnings[0].diagnostic).toBe('FK violation: public.posts.user_id = 999 does not exist in public.users.id');
+    expect(warnings[1].diagnostic).toBe('FK violation: public.cities.country_code = "FR" does not exist in public.countries.code');
   });
 
   test('should allow NULL FK values (optional relationship)', () => {
@@ -459,26 +459,26 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(db.records[1].values.length).toBe(2);
 
     // Row 1: id=1, category_id=1, name="Laptop"
-    expect(db.records[1].values[0][0]).toEqual({
+    expect(db.records[1].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[1].values[0][1]).toEqual({
+    expect(db.records[1].values[0][1]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[1].values[0][2]).toEqual({
+    expect(db.records[1].values[0][2]).toMatchObject({
       type: 'string',
       value: 'Laptop',
     });
 
     // Row 2: id=2, category_id=null, name="Uncategorized Item"
-    expect(db.records[1].values[1][0]).toEqual({
+    expect(db.records[1].values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
     expect(db.records[1].values[1][1].value).toBe(null);
-    expect(db.records[1].values[1][2]).toEqual({
+    expect(db.records[1].values[1][2]).toMatchObject({
       type: 'string',
       value: 'Uncategorized Item',
     });
@@ -532,9 +532,9 @@ describe('[example - record] simple foreign key constraints', () => {
     // One-to-many violation:
     // 3. employees.dept_id=999 doesn't exist in departments.id
     expect(warnings.length).toBe(3);
-    expect(warnings[0].diagnostic).toBe('FK violation: user_profiles.user_id = 3 does not exist in users.id');
-    expect(warnings[1].diagnostic).toBe('FK violation: users.id = 2 does not exist in user_profiles.user_id');
-    expect(warnings[2].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
+    expect(warnings[0].diagnostic).toBe('FK violation: public.user_profiles.user_id = 3 does not exist in public.users.id');
+    expect(warnings[1].diagnostic).toBe('FK violation: public.users.id = 2 does not exist in public.user_profiles.user_id');
+    expect(warnings[2].diagnostic).toBe('FK violation: public.employees.dept_id = 999 does not exist in public.departments.id');
   });
 
   test('should validate inline ref syntax and self-referencing FK', () => {
@@ -572,8 +572,8 @@ describe('[example - record] simple foreign key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
-    expect(warnings[1].diagnostic).toBe('FK violation: employees.manager_id = 999 does not exist in employees.id');
+    expect(warnings[0].diagnostic).toBe('FK violation: public.posts.user_id = 999 does not exist in public.users.id');
+    expect(warnings[1].diagnostic).toBe('FK violation: public.employees.manager_id = 999 does not exist in public.employees.id');
   });
 
   test('should detect FK violation when target table is empty', () => {
@@ -625,9 +625,9 @@ describe('[example - record] simple foreign key constraints', () => {
 
     expect(errors.length).toBe(2);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
+    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
+    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
   });
 });
 
@@ -696,7 +696,7 @@ describe('[example - record] FK in table partials', () => {
 
     expect(warnings.length).toBe(1);
     expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
+    expect(warnings[0].diagnostic).toBe('FK violation: public.posts.user_id = 999 does not exist in public.users.id');
   });
 
   test('should validate FK when partial injected into multiple tables', () => {
@@ -742,7 +742,7 @@ describe('[example - record] FK in table partials', () => {
 
     expect(warnings.length).toBe(1);
     expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toBe('FK violation: comments.created_by = 999 does not exist in users.id');
+    expect(warnings[0].diagnostic).toBe('FK violation: public.comments.created_by = 999 does not exist in public.users.id');
   });
 
   test('should allow NULL FK values from injected table partial', () => {
@@ -852,6 +852,6 @@ describe('[example - record] FK in table partials', () => {
 
     expect(warnings.length).toBe(1);
     expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toBe('FK violation: nodes.parent_id = 999 does not exist in nodes.id');
+    expect(warnings[0].diagnostic).toBe('FK violation: public.nodes.parent_id = 999 does not exist in public.nodes.id');
   });
 });

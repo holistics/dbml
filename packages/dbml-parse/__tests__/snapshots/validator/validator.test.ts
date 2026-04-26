@@ -1,36 +1,19 @@
-import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
-  readFileSync,
-} from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import {
-  describe, expect, it,
-} from 'vitest';
-import type {
-  ProgramNode,
-} from '@/core/types/nodes';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Validator from '@/core/analyzer/validator/validator';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  scanTestNames, toSnapshot,
-} from '@tests/utils';
+import { describe, expect, it } from 'vitest';
+import type { ProgramNode } from '@/core/types/nodes';
+import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
-import type Report from '@/core/types/report';
+import { DEFAULT_ENTRY } from '@/constants';
 
-function serializeValidatorResult (compiler: Compiler, report: Report<ProgramNode>): string {
-  const value = report.getValue();
-  const errors = report.getErrors();
-  const warnings = report.getWarnings();
+function serializeValidatorResult (compiler: Compiler, ast: ProgramNode): string {
+  const validation = compiler.validateNode(ast);
   return JSON.stringify(toSnapshot(compiler, {
-    program: value,
-    errors,
-    warnings,
+    program: ast,
+    errors: validation.getErrors(),
+    warnings: validation.getWarnings(),
   }, {
-    includeSymbols: false,
+    includeReferences: false, includeReferee: false, includeSymbols: false,
   }), null, 2);
 }
 
@@ -41,24 +24,9 @@ describe('[snapshot] validator', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
-
-    const {
-      // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
-      nodeIdGenerator, symbolIdGenerator,
-    } = compiler;
-
-    const report = new Lexer(program, DEFAULT_ENTRY)
-      .lex()
-      .chain((tokens) => {
-        return new Parser(program, tokens, nodeIdGenerator, DEFAULT_ENTRY).parse();
-      })
-      .chain(({
-        ast,
-      }) => {
-        return new Validator(ast, new SymbolFactory(symbolIdGenerator)).validate();
-      });
-    const output = serializeValidatorResult(compiler, report);
+    compiler.setSource(DEFAULT_ENTRY, program);
+    const ast = compiler.parseFile(DEFAULT_ENTRY).getValue().ast;
+    const output = serializeValidatorResult(compiler, ast);
 
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

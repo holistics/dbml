@@ -19,13 +19,13 @@ ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERR
 SET CONSTRAINTS ALL DEFERRED;
 
 INSERT ALL
-  INTO "users" ("id", "name", "email", "active", "created_at") VALUES (1, 'Alice', 'alice@example.com', 1, TO_TIMESTAMP_TZ('2024-01-15 10:30:00.000 +07:00', 'YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM'))
-  INTO "users" ("id", "name", "email", "active", "created_at") VALUES (2, 'Bob', 'bob@example.com', 0, TO_TIMESTAMP_TZ('2024-01-16 14:20:00.000 +07:00', 'YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM'))
-  INTO "users" ("id", "name", "email", "active", "created_at") VALUES (3, 'Charlie', NULL, 1, TO_TIMESTAMP_TZ('2024-01-17 09:15:00.000 +07:00', 'YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM'))
+  INTO "public"."users" ("id", "name", "email", "active", "created_at") VALUES (1, 'Alice', 'alice@example.com', 1, TO_TIMESTAMP_TZ('2024-01-15 10:30:00.000 +07:00', 'YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM'))
+  INTO "public"."users" ("id", "name", "email", "active", "created_at") VALUES (2, 'Bob', 'bob@example.com', 0, TO_TIMESTAMP_TZ('2024-01-16 14:20:00.000 +07:00', 'YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM'))
+  INTO "public"."users" ("id", "name", "email", "active", "created_at") VALUES (3, 'Charlie', NULL, 1, TO_TIMESTAMP_TZ('2024-01-17 09:15:00.000 +07:00', 'YYYY-MM-DD HH24:MI:SS.FF3 TZH:TZM'))
 SELECT * FROM dual;
 INSERT ALL
-  INTO "posts" ("id", "user_id", "title", "content") VALUES (1, 1, 'First Post', 'Hello World')
-  INTO "posts" ("id", "user_id", "title", "content") VALUES (2, 1, 'Second Post', 'It''s a beautiful day')
+  INTO "public"."posts" ("id", "user_id", "title", "content") VALUES (1, 1, 'First Post', 'Hello World')
+  INTO "public"."posts" ("id", "user_id", "title", "content") VALUES (2, 1, 'Second Post', 'It''s a beautiful day')
 SELECT * FROM dual;
 
 SET CONSTRAINTS ALL IMMEDIATE;

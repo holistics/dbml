@@ -229,6 +229,7 @@
           }
         ],
         "name": "customer",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -332,6 +333,7 @@
           },
           "value": "sasasa"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -392,6 +394,7 @@
           }
         ],
         "name": "country",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -505,6 +508,7 @@
           }
         ],
         "name": "citites",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

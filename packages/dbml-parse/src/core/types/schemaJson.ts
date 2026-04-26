@@ -5,6 +5,14 @@ import type {
   Position,
 } from './position';
 
+export enum AliasKind {
+  Table = 'table',
+  Enum = 'enum',
+  TableGroup = 'tablegroup',
+  TablePartial = 'tablepartial',
+  Note = 'note',
+}
+
 export interface TokenPosition {
   start: Position;
   end: Position;
@@ -15,12 +23,24 @@ export interface TokenPosition {
 // `name` + `schemaName` identify the original element in the source file.
 // `visibleNames` lists every local name under which the element is reachable in this file.
 export interface ElementRef {
-  name: string;
+  name: string; // canonical name in source file
   schemaName: string | null;
+  filepath: Filepath;
+  // [0] = primary name in exported JSON, [1..] = aliases.
+  // Alias strips schemaName to null.
   visibleNames: {
     schemaName: string | null;
     name: string;
   }[];
+}
+
+// Imported elements - refs to other files, resolved by exportSchemaJson.
+export interface DatabaseExternals {
+  tables: ElementRef[];
+  enums: ElementRef[];
+  tableGroups: ElementRef[];
+  tablePartials: ElementRef[];
+  notes: ElementRef[];
 }
 
 /**
@@ -46,6 +66,7 @@ export interface DiagramView {
   token: TokenPosition;
 }
 
+// Per-file schema. Local elements + externals (import refs).
 export interface Database {
   schemas: [];
   tables: Table[];
@@ -57,10 +78,12 @@ export interface Database {
   project?: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
+  externals: DatabaseExternals;
   diagramViews: DiagramView[];
   token?: TokenPosition;
 }
 
+// Full project: files = per-file Database, items = flat merge for canonical lookup
 export interface MasterDatabase {
   files: Record<string, Database>;
   items: Database;
@@ -205,8 +228,6 @@ export interface TableGroupField {
   schemaName: string | null;
 }
 
-export type AliasKind = 'table' | 'enum' | 'tablegroup' | 'tablepartial' | 'note';
-
 export interface Alias {
   name: string;
   kind: AliasKind;
@@ -242,6 +263,7 @@ export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 
 export interface RecordValue {
   value: any;
   type: RecordValueType;
+  token: TokenPosition;
 }
 
 export interface TableRecord {

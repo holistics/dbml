@@ -8,6 +8,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "user",
             "token": {
               "end": {
@@ -28,6 +29,7 @@
               "user_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "merchant",
             "token": {
               "end": {
@@ -65,6 +67,7 @@
               "id"
             ],
             "relation": "1",
+            "schemaName": "public",
             "tableName": "product",
             "token": {
               "end": {
@@ -85,6 +88,7 @@
               "product_id"
             ],
             "relation": "*",
+            "schemaName": "public",
             "tableName": "merchant",
             "token": {
               "end": {
@@ -165,6 +169,7 @@
         ],
         "headerColor": "#555",
         "name": "user",
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -244,6 +249,7 @@
           },
           "value": "name is required"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -345,6 +351,7 @@
           },
           "value": "product must have price"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -465,6 +472,7 @@
           },
           "value": "merchants sell a lot"
         },
+        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

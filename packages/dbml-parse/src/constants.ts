@@ -12,7 +12,7 @@ export const NUMERIC_LITERAL_PREFIX = [
   '-',
   '+',
 ] as readonly string[];
-export const DEFAULT_SCHEMA_NAME = 'public';
+export const DEFAULT_SCHEMA_NAME = 'public' as const;
 export const DEFAULT_ENTRY: Filepath = Filepath.from('/main.dbml');
 
 export const ROOT = Filepath.from('/');
