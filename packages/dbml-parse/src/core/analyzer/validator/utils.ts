@@ -6,7 +6,7 @@ import {
 } from '@/constants';
 import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   destructureComplexVariable, destructureMemberAccessExpression,
 } from '@/core/analyzer/utils';

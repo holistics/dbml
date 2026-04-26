@@ -3,7 +3,7 @@ import {
 } from 'lodash-es';
 import {
   ElementKind, SettingName,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,

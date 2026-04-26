@@ -3,7 +3,7 @@ import {
 } from 'lodash-es';
 import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   destructureIndexNode,
 } from '@/core/analyzer/utils';

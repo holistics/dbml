@@ -6,7 +6,7 @@ import {
 } from '@/constants';
 import {
   ElementKind, SettingName,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable, extractVariableFromExpression,
 } from '@/core/analyzer/utils';

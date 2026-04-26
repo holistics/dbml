@@ -3,7 +3,7 @@ import {
 } from 'lodash-es';
 import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   getTokenFullEnd, getTokenFullStart,
 } from '@/core/lexer/utils';
@@ -42,6 +42,7 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
   id: Readonly<SyntaxNodeId>;
   kind: SyntaxNodeKind;
   readonly filepath: Filepath;
+
   startPos: Readonly<Position>;
   start: Readonly<number>;
   fullStart: Readonly<number>; // Start offset with trivias counted
@@ -105,15 +106,31 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
     return `node@${this.filepath.intern()}:${this.id}`;
   }
 
-  parentOfKind<T extends SyntaxNode> (cls: (new (...args: any[]) => T)): T | undefined {
+  // Walk up the tree to find the nearest enclosing element or program
+  get parent (): ElementDeclarationNode | ProgramNode | undefined {
     let current: SyntaxNode | undefined = this.parentNode;
     while (current) {
-      if (current instanceof cls) return current;
+      if (current instanceof ElementDeclarationNode || current instanceof ProgramNode) {
+        return current;
+      }
       current = current.parentNode;
     }
     return undefined;
   }
 
+  parentOfKind<T extends SyntaxNode> (cls: (new (...args: any[]) => T)): T | undefined {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let current: SyntaxNode | undefined = this;
+    while (current) {
+      if (current instanceof cls) {
+        return current;
+      }
+      current = current.parentNode;
+    }
+    return undefined;
+  }
+
+  // Return if `otherNode` is strictly contained inside this node
   strictlyContains (otherNode: SyntaxNode): boolean {
     const thisSmallerStart = this.start < otherNode.start;
     const thisSmallerEqStart = thisSmallerStart || this.start === otherNode.start;
@@ -122,8 +139,10 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
     return (thisSmallerStart && thisGreaterEqEnd) || (thisSmallerEqStart && thisGreaterEnd);
   }
 
+  // Return if `otherNode` is contained inside this node or equals this node
   containsEq (otherNode: SyntaxNode): boolean {
-    return this.start <= otherNode.start && this.end >= otherNode.end;
+    return this.start <= otherNode.start
+      && this.end >= otherNode.end;
   }
 }
 
@@ -151,9 +170,10 @@ export enum SyntaxNodeKind {
   PRIMARY_EXPRESSION = '<primary-expression>',
   GROUP_EXPRESSION = '<group-expression>',
   COMMA_EXPRESSION = '<comma-expression>',
-  WILDCARD = '<wildcard>',
   EMPTY = '<dummy>',
   ARRAY = '<array>',
+
+  WILDCARD = '<wildcard>',
 }
 
 // Form: <element-declaration>*
@@ -167,10 +187,14 @@ export class ProgramNode extends SyntaxNode {
 
   constructor (
     {
-      body = [], eof, source,
-    }: { body?: ElementDeclarationNode[];
+      body = [],
+      eof,
+      source,
+    }: {
+      body?: ElementDeclarationNode[];
       eof?: SyntaxToken;
-      source: string; },
+      source: string;
+    },
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
@@ -201,8 +225,6 @@ export class ElementDeclarationNode extends SyntaxNode {
 
   bodyColon?: SyntaxToken;
 
-  parent?: ElementDeclarationNode | ProgramNode; // The enclosing element/program
-
   body?: FunctionApplicationNode | BlockExpressionNode;
 
   constructor (
@@ -226,15 +248,19 @@ export class ElementDeclarationNode extends SyntaxNode {
     id: SyntaxNodeId,
     filepath: Filepath,
   ) {
-    super(id, SyntaxNodeKind.ELEMENT_DECLARATION, filepath, [
-      type,
-      name,
-      as,
-      alias,
-      attributeList,
-      bodyColon,
-      body,
-    ]);
+    super(
+      id,
+      SyntaxNodeKind.ELEMENT_DECLARATION,
+      filepath,
+      [
+        type,
+        name,
+        as,
+        alias,
+        attributeList,
+        bodyColon,
+        body,
+      ]);
 
     if (
       body && bodyColon
@@ -255,6 +281,10 @@ export class ElementDeclarationNode extends SyntaxNode {
   isKind (...kinds: ElementKind[]): boolean {
     return kinds.some((kind) => this.type?.value.toLowerCase() === kind);
   }
+
+  getElementKind (): ElementKind | undefined {
+    return Object.values(ElementKind).find((k) => this.isKind(k));
+  }
 }
 
 // Form: <identifier> <identifier>*
@@ -264,10 +294,19 @@ export class ElementDeclarationNode extends SyntaxNode {
 export class IdentiferStreamNode extends SyntaxNode {
   identifiers: SyntaxToken[];
 
-  constructor ({
-    identifiers = [],
-  }: { identifiers?: SyntaxToken[] }, id: SyntaxNodeId, filepath: Filepath) {
-    super(id, SyntaxNodeKind.IDENTIFIER_STREAM, filepath, identifiers || []);
+  constructor (
+    {
+      identifiers = [],
+    }: { identifiers?: SyntaxToken[] },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
+    super(
+      id,
+      SyntaxNodeKind.IDENTIFIER_STREAM,
+      filepath,
+      identifiers || [],
+    );
     this.identifiers = identifiers;
   }
 }
@@ -424,9 +463,13 @@ export class PostfixExpressionNode extends SyntaxNode {
 export class FunctionExpressionNode extends SyntaxNode {
   value?: SyntaxToken;
 
-  constructor ({
-    value,
-  }: { value?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor (
+    {
+      value,
+    }: { value?: SyntaxToken },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
     super(id, SyntaxNodeKind.FUNCTION_EXPRESSION, filepath, [
       value,
     ]);
@@ -679,9 +722,13 @@ export class CallExpressionNode extends SyntaxNode {
 export class LiteralNode extends SyntaxNode {
   literal?: SyntaxToken;
 
-  constructor ({
-    literal,
-  }: { literal?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor (
+    {
+      literal,
+    }: { literal?: SyntaxToken },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
     super(id, SyntaxNodeKind.LITERAL, filepath, [
       literal,
     ]);
@@ -689,13 +736,17 @@ export class LiteralNode extends SyntaxNode {
   }
 }
 
-// A wildcard (*) expression used in DiagramView blocks
+// A wildcard pattern (*) expression
 export class WildcardNode extends SyntaxNode {
   token?: SyntaxToken;
 
-  constructor ({
-    token,
-  }: { token?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor (
+    {
+      token,
+    }: { token?: SyntaxToken },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
     super(id, SyntaxNodeKind.WILDCARD, filepath, [
       token,
     ]);
@@ -710,9 +761,13 @@ export class WildcardNode extends SyntaxNode {
 export class VariableNode extends SyntaxNode {
   variable?: SyntaxToken;
 
-  constructor ({
-    variable,
-  }: { variable?: SyntaxToken }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor (
+    {
+      variable,
+    }: { variable?: SyntaxToken },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
     super(id, SyntaxNodeKind.VARIABLE, filepath, [
       variable,
     ]);
@@ -727,9 +782,13 @@ export class VariableNode extends SyntaxNode {
 export class PrimaryExpressionNode extends SyntaxNode {
   expression?: LiteralNode | VariableNode;
 
-  constructor ({
-    expression,
-  }: { expression?: LiteralNode | VariableNode }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor (
+    {
+      expression,
+    }: { expression?: LiteralNode | VariableNode },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
     super(id, SyntaxNodeKind.PRIMARY_EXPRESSION, filepath, [
       expression,
     ]);
@@ -743,9 +802,13 @@ export class PrimaryExpressionNode extends SyntaxNode {
 // - Empty fields in comma expressions (e.g. 1, , 3)
 // - Trailing commas in comma expressions (e.g. 1, 2,)
 export class EmptyNode extends SyntaxNode {
-  constructor ({
-    prevToken,
-  }: { prevToken: Readonly<SyntaxNode> | Readonly<SyntaxToken> }, id: SyntaxNodeId, filepath: Filepath) {
+  constructor (
+    {
+      prevToken,
+    }: { prevToken: Readonly<SyntaxNode> | Readonly<SyntaxToken> },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
     const nextToken = SyntaxToken.create(SyntaxTokenKind.SPACE, filepath, prevToken.endPos, prevToken.endPos, ' ', false);
     super(id, SyntaxNodeKind.EMPTY, filepath, [
       nextToken,

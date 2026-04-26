@@ -1,6 +1,6 @@
 import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   ElementValidator,
 } from '@/core/analyzer/validator/types';

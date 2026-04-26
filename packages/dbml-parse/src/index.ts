@@ -4,7 +4,7 @@ import * as services from '@/services/index';
 // Export the types that playground and other consumers need
 export {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 
 export * from '@/core/interpreter/records/utils';
 

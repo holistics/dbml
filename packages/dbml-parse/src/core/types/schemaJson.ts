@@ -11,16 +11,24 @@ export interface TokenPosition {
   filepath: Filepath;
 }
 
-// A reference to an element imported via `use` or `reuse`.
-// `name` + `schemaName` identify the original element in the source file.
-// `visibleNames` lists every local name under which the element is reachable in this file.
 export interface ElementRef {
-  name: string;
-  schemaName: string | null;
+  name: string; // canonical name in source file
+  schemaName: string | null; // canonical schema name in source file
+  filepath: Filepath; // The original source file
+  // Every local name under which the element is reachable in this file
   visibleNames: {
     schemaName: string | null;
     name: string;
   }[];
+}
+
+// Imported elements
+export interface DatabaseExternals {
+  tables: ElementRef[];
+  enums: ElementRef[];
+  tableGroups: ElementRef[];
+  tablePartials: ElementRef[];
+  notes: ElementRef[];
 }
 
 /**
@@ -46,6 +54,9 @@ export interface DiagramView {
   token: TokenPosition;
 }
 
+// Per-file schema:
+// - Local elements
+// - Externals (import refs)
 export interface Database {
   schemas: [];
   tables: Table[];
@@ -57,13 +68,14 @@ export interface Database {
   project?: Project;
   tablePartials: TablePartial[];
   records: TableRecord[];
+  externals: DatabaseExternals;
   diagramViews: DiagramView[];
   token?: TokenPosition;
 }
 
+// Multifile project
 export interface MasterDatabase {
   files: Record<string, Database>;
-  items: Database;
 }
 
 export interface Table {
@@ -93,8 +105,10 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
-  numericParams?: { precision: number;
-    scale: number; };
+  numericParams?: {
+    precision: number;
+    scale: number;
+  };
   lengthParam?: { length: number };
   isEnum?: boolean;
 }
@@ -205,14 +219,9 @@ export interface TableGroupField {
   schemaName: string | null;
 }
 
-export type AliasKind = 'table' | 'enum' | 'tablegroup' | 'tablepartial' | 'note';
-
 export interface Alias {
   name: string;
-  kind: AliasKind;
   value: {
-    elementName: string;
-    /** @deprecated Use elementName instead */
     tableName: string;
     schemaName: string | null;
   };
@@ -242,6 +251,7 @@ export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 
 export interface RecordValue {
   value: any;
   type: RecordValueType;
+  token: TokenPosition;
 }
 
 export interface TableRecord {

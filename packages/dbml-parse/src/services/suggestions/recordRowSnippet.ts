@@ -1,7 +1,7 @@
 import Compiler from '@/compiler';
 import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   extractReferee,
   extractVariableFromExpression,

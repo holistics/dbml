@@ -3,7 +3,7 @@ import {
 } from '@/constants';
 import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   destructureComplexVariableTuple, extractVarNameFromPrimaryVariable,
 } from '@/core/analyzer/utils';

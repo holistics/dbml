@@ -3,7 +3,7 @@ import {
 } from '@/core/analyzer/binder/utils';
 import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   CompileError,
 } from '@/core/types/errors';
