@@ -307,6 +307,10 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     );
   }
 
+  if (node instanceof EmptyNode) {
+    return [];
+  }
+
   if (node instanceof WildcardNode) {
     return filterUndefined(node.token);
   }
