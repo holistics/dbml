@@ -52,18 +52,18 @@ import {
 import {
   convertStringToEnum,
 } from '@/core/utils/enum';
-import ChecksValidator from './elementValidators/checks';
-import CustomValidator from './elementValidators/custom';
-import DiagramViewValidator from './elementValidators/diagramView';
-import EnumValidator from './elementValidators/enum';
-import IndexesValidator from './elementValidators/indexes';
-import NoteValidator from './elementValidators/note';
-import ProjectValidator from './elementValidators/project';
-import RecordsValidator from './elementValidators/records';
-import RefValidator from './elementValidators/ref';
-import TableValidator from './elementValidators/table';
-import TableGroupValidator from './elementValidators/tableGroup';
-import TablePartialValidator from './elementValidators/tablePartial';
+import ChecksValidator from '@/core/local_modules/checks/validate';
+import CustomValidator from '@/core/local_modules/custom/validate';
+import DiagramViewValidator from '@/core/local_modules/diagramView/validate';
+import EnumValidator from '@/core/local_modules/enum/validate';
+import IndexesValidator from '@/core/local_modules/indexes/validate';
+import NoteValidator from '@/core/local_modules/note/validate';
+import ProjectValidator from '@/core/local_modules/project/validate';
+import RecordsValidator from '@/core/local_modules/records/validate';
+import RefValidator from '@/core/local_modules/ref/validate';
+import TableValidator from '@/core/local_modules/table/validate';
+import TableGroupValidator from '@/core/local_modules/tableGroup/validate';
+import TablePartialValidator from '@/core/local_modules/tablePartial/validate';
 
 export function pickValidator (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (convertStringToEnum(ElementKind, element.type.value)) {

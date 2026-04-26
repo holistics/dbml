@@ -1,5 +1,5 @@
-import Binder from '@/core/analyzer/binder/binder';
-import Validator from '@/core/analyzer/validator/validator';
+import Binder from '@/core/global_modules/program/bind';
+import Validator from '@/core/local_modules/program/validate';
 import {
   ProgramNode,
 } from '@/core/types/nodes';

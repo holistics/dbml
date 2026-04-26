@@ -1,5 +1,5 @@
 import Analyzer from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
+import Interpreter from '@/core/global_modules/program/interpret';
 import type {
   Filepath,
 } from '@/core/types/filepath';

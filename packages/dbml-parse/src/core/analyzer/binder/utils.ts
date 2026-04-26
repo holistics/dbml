@@ -25,18 +25,18 @@ import {
 import {
   convertStringToEnum,
 } from '@/core/utils/enum';
-import ChecksBinder from './elementBinder/checks';
-import CustomBinder from './elementBinder/custom';
-import DiagramViewBinder from './elementBinder/diagramView';
-import EnumBinder from './elementBinder/enum';
-import IndexesBinder from './elementBinder/indexes';
-import NoteBinder from './elementBinder/note';
-import ProjectBinder from './elementBinder/project';
-import RecordsBinder from './elementBinder/records';
-import RefBinder from './elementBinder/ref';
-import TableBinder from './elementBinder/table';
-import TableGroupBinder from './elementBinder/tableGroup';
-import TablePartialBinder from './elementBinder/tablePartial';
+import ChecksBinder from '@/core/global_modules/checks/bind';
+import CustomBinder from '@/core/global_modules/custom/bind';
+import DiagramViewBinder from '@/core/global_modules/diagramView/bind';
+import EnumBinder from '@/core/global_modules/enum/bind';
+import IndexesBinder from '@/core/global_modules/indexes/bind';
+import NoteBinder from '@/core/global_modules/note/bind';
+import ProjectBinder from '@/core/global_modules/project/bind';
+import RecordsBinder from '@/core/global_modules/records/bind';
+import RefBinder from '@/core/global_modules/ref/bind';
+import TableBinder from '@/core/global_modules/table/bind';
+import TableGroupBinder from '@/core/global_modules/tableGroup/bind';
+import TablePartialBinder from '@/core/global_modules/tablePartial/bind';
 
 export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
   switch (convertStringToEnum(ElementKind, element.type.value)) {

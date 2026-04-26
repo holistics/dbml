@@ -10,6 +10,7 @@ import {
 import NodeFactory from '@/core/parser/factory';
 import {
   convertFuncAppToElem,
+  getMemberChain,
   markInvalid,
 } from '@/core/parser/utils';
 import {
@@ -202,11 +203,21 @@ export default class Parser {
       source: this.source,
     });
     this.gatherInvalid();
+    this.assignParents(program);
 
     return new Report({
       ast: program,
       tokens: this.tokens,
     }, this.errors);
+  }
+
+  private assignParents (node: SyntaxNode) {
+    getMemberChain(node).forEach((child) => {
+      if (child instanceof SyntaxNode) {
+        child.parentNode = node;
+        this.assignParents(child);
+      }
+    });
   }
 
   /* Parsing and synchronizing ProgramNode */
