@@ -142,8 +142,9 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
   resolvedName (compiler: Compiler, filepath?: Filepath): { schema: string | null;
     name: string; } {
     const canonical = this.canonicalName(compiler, filepath ?? this.filepath);
+    const schema = canonical?.schema || null;
     return {
-      schema: canonical?.schema || null,
+      schema: schema === DEFAULT_SCHEMA_NAME ? null : schema,
       name: canonical?.name ?? this.name ?? '',
     };
   }

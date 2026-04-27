@@ -9,7 +9,6 @@
               "id"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "b",
             "token": {
               "end": {
@@ -30,7 +29,6 @@
               "id"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "c",
             "token": {
               "end": {
@@ -70,7 +68,6 @@
               "id"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "c",
             "token": {
               "end": {
@@ -91,7 +88,6 @@
               "c_id"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "b",
             "token": {
               "end": {
@@ -172,7 +168,6 @@
         ],
         "headerColor": "#aaaaaa",
         "name": "b",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -233,7 +228,6 @@
           }
         ],
         "name": "c",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

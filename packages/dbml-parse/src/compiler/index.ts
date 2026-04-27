@@ -59,9 +59,6 @@ import {
   interpretFile, interpretProject,
 } from './queries/pipeline/interpret';
 import {
-  exportSchemaJson,
-} from './queries/pipeline/export';
-import {
   parseFile, parseProject,
 } from './queries/pipeline/parse';
 import {
@@ -295,12 +292,6 @@ export default class Compiler {
   // Interpret all reachable files and merge into a MasterDatabase (A database but for multifile)
   // Signature: () => Report<MasterDatabase>
   interpretProject = this.globalQuery(interpretProject);
-  // A global query
-  // Start from an entrypoint file, collects all imports and merges into the entrypoint
-  // Export a Database representing this merged view of the MasterDatabase
-  // Signature: (filepath: Filepath) => Report<Readonly<Database> | undefined>
-  exportSchemaJson = this.globalQuery(exportSchemaJson);
-
   // A global query
   // Return the NodeSymbol for a single SyntaxNode
   // Signature: (node: SyntaxNode) => Report<NodeSymbol> | Report<Unhandled>

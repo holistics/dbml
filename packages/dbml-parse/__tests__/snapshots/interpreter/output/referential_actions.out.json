@@ -8,7 +8,6 @@
               "id"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "users",
             "token": {
               "end": {
@@ -29,7 +28,6 @@
               "user_id"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "orders",
             "token": {
               "end": {
@@ -68,7 +66,6 @@
               "id"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "orders",
             "token": {
               "end": {
@@ -89,7 +86,6 @@
               "order_id"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "order_items",
             "token": {
               "end": {
@@ -129,7 +125,6 @@
               "name"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "products",
             "token": {
               "end": {
@@ -151,7 +146,6 @@
               "product_name"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "order_items",
             "token": {
               "end": {
@@ -190,7 +184,6 @@
               "code"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "countries",
             "token": {
               "end": {
@@ -211,7 +204,6 @@
               "country_code"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "users",
             "token": {
               "end": {
@@ -416,7 +408,6 @@
             }
           }
         ],
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -525,7 +516,6 @@
           }
         ],
         "name": "order_items",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -687,7 +677,6 @@
             }
           }
         ],
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -835,7 +824,6 @@
             }
           }
         ],
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -917,7 +905,6 @@
             }
           }
         ],
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

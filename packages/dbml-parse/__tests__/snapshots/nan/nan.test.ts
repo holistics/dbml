@@ -32,7 +32,7 @@ describe('[snapshot] nan', () => {
 
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
-    const report = compiler.exportSchemaJson(DEFAULT_ENTRY);
+    const report = compiler.interpretFile(DEFAULT_ENTRY);
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

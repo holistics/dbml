@@ -3,7 +3,6 @@
     "enums": [
       {
         "name": "status",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -346,7 +345,6 @@
           }
         ],
         "name": "user",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

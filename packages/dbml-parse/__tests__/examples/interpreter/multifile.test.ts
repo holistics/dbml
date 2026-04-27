@@ -20,7 +20,7 @@ function makeCompiler (files: Record<string, string>): { compiler: Compiler; fps
 
 // Interpret a file's full schema including externals imported via `use`.
 function exportDb (compiler: Compiler, fp: Filepath): Database {
-  const result = compiler.exportSchemaJson(fp);
+  const result = compiler.interpretFile(fp);
   expect(result.getErrors()).toHaveLength(0);
   return result.getValue()! as Database;
 }
@@ -817,17 +817,9 @@ use { table orders } from './base.dbml'
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
-  test('cross-file ref is pulled into consumer schema', () => {
+  test('cross-file ref declared in source is not pulled into consumer schema', () => {
     const db = exportDb(compiler, fps['/main.dbml']);
-    expect(db.refs).toHaveLength(1);
-  });
-
-  test('cross-file ref endpoint tableName rewritten to alias', () => {
-    const db = exportDb(compiler, fps['/main.dbml']);
-    const ref = db.refs[0];
-    const usersEp = ref.endpoints.find((e) => e.fieldNames.includes('id'))!;
-    expect(usersEp.tableName).toBe('u');
-    expect(usersEp.schemaName).toBeNull();
+    expect(db.refs).toHaveLength(0);
   });
 });
 
@@ -856,7 +848,7 @@ records u(id, name) {
   });
 
   test('no export errors', () => {
-    const result = compiler.exportSchemaJson(fps['/main.dbml']);
+    const result = compiler.interpretFile(fps['/main.dbml']);
     expect(result.getErrors()).toHaveLength(0);
   });
 

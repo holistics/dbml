@@ -8,7 +8,6 @@
               "col2"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "T",
             "token": {
               "end": {
@@ -29,7 +28,6 @@
               "col3"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "T",
             "token": {
               "end": {
@@ -180,7 +178,6 @@
                   "col3"
                 ],
                 "relation": ">",
-                "schemaName": "public",
                 "tableName": "T",
                 "token": {
                   "end": {
@@ -238,7 +235,6 @@
             }
           }
         ],
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

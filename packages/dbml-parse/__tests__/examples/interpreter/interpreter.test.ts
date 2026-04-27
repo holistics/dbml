@@ -26,7 +26,7 @@ describe('[example] interpreter', () => {
 
       expect(db.tables).toHaveLength(1);
       expect(db.tables[0].name).toBe('users');
-      expect(db.tables[0].schemaName).toBe('public');
+      expect(db.tables[0].schemaName).toBeNull();
     });
 
     test('should interpret table with alias', () => {
@@ -258,7 +258,7 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.enums[0].schemaName).toBe('public');
+      expect(db.enums[0].schemaName).toBeNull();
     });
 
     test('should interpret enum values', () => {
@@ -1976,7 +1976,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       expect(db.tables).toHaveLength(3);
-      expect(db.tables[0].schemaName).toBe('public');
+      expect(db.tables[0].schemaName).toBeNull();
       expect(db.tables[1].schemaName).toBe('auth');
       expect(db.tables[2].schemaName).toBe('billing');
     });

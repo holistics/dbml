@@ -6,7 +6,6 @@
         "name": "U",
         "value": {
           "elementName": "users",
-          "schemaName": "public",
           "tableName": "users"
         }
       }
@@ -19,7 +18,6 @@
               "admin_id"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "merchants",
             "token": {
               "end": {
@@ -74,7 +72,6 @@
     "tableGroups": [
       {
         "name": "g1",
-        "schemaName": "public",
         "tables": [
           {
             "name": "merchants",
@@ -190,7 +187,6 @@
           }
         ],
         "name": "users",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -337,7 +333,6 @@
           }
         ],
         "name": "merchants",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,

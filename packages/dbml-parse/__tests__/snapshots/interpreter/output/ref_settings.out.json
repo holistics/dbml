@@ -8,7 +8,6 @@
               "id"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "A",
             "token": {
               "end": {
@@ -29,7 +28,6 @@
               "id"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "B",
             "token": {
               "end": {
@@ -69,7 +67,6 @@
               "code"
             ],
             "relation": "*",
-            "schemaName": "public",
             "tableName": "A",
             "token": {
               "end": {
@@ -90,7 +87,6 @@
               "code"
             ],
             "relation": "1",
-            "schemaName": "public",
             "tableName": "B",
             "token": {
               "end": {
@@ -171,7 +167,6 @@
           }
         ],
         "name": "A",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
@@ -232,7 +227,6 @@
           }
         ],
         "name": "B",
-        "schemaName": "public",
         "token": {
           "end": {
             "column": 2,
