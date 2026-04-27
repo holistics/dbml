@@ -34,7 +34,7 @@ function load (): UserPreferences {
       ...JSON.parse(raw),
     };
   } catch (err) {
-    logger.warn('Failed to load user preferences:', err);
+    logger.warn('Failed to load user preferences');
   }
   return {
     ...defaults,
@@ -48,7 +48,7 @@ export const useUser = defineStore('user', () => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (err) {
-      logger.warn('Failed to save user preferences:', err);
+      logger.warn('Failed to save user preferences');
     }
   }, {
     deep: true,
