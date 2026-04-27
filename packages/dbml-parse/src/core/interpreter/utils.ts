@@ -28,7 +28,7 @@ import {
   SyntaxTokenKind,
 } from '@/core/types/tokens';
 import {
-  getNumberTextFromExpression, parseNumber,
+  getNumberTextFromExpression, extractNumber,
 } from '@/core/utils/numbers';
 import {
   isExpressionASignedNumberExpression, isValidPartialInjection,
@@ -223,7 +223,7 @@ export function processDefaultValue (valueNode?: SyntaxNode):
   if (isExpressionASignedNumberExpression(valueNode)) {
     return {
       type: 'number',
-      value: parseNumber(valueNode),
+      value: extractNumber(valueNode),
     };
   }
 
@@ -277,8 +277,8 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
     if (argElements.length === 2
       && isExpressionASignedNumberExpression(argElements[0])
       && isExpressionASignedNumberExpression(argElements[1])) {
-      const precision = parseNumber(argElements[0]);
-      const scale = parseNumber(argElements[1]);
+      const precision = extractNumber(argElements[0]);
+      const scale = extractNumber(argElements[1]);
       if (!isNaN(precision) && !isNaN(scale)) {
         numericParams = {
           precision: Math.trunc(precision),
@@ -286,7 +286,7 @@ export function processColumnType (typeNode: SyntaxNode, env: InterpreterDatabas
         };
       }
     } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
-      const length = parseNumber(argElements[0]);
+      const length = extractNumber(argElements[0]);
       if (!isNaN(length)) {
         lengthParam = {
           length: Math.trunc(length),
