@@ -47,14 +47,14 @@ import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
 
 export const recordsModule: GlobalModule = {
-  emitMetadata (compiler: Compiler, node: SyntaxNode): SymbolMetadata[] {
-    if (!isElementNode(node, ElementKind.Records)) return [];
+  emitMetadata (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough> {
+    if (!isElementNode(node, ElementKind.Records)) return Report.create(PASS_THROUGH);
 
     // Case 1: Nested records inside a table element
     const tableNode = node.parent;
     if (tableNode && isElementNode(tableNode, ElementKind.Table)) {
       const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
-      if (!tableSymbol) return [];
+      if (!tableSymbol) return Report.create(PASS_THROUGH);
 
       const meta: RecordMetadata = {
         kind: MetadataKind.Record,
@@ -63,12 +63,12 @@ export const recordsModule: GlobalModule = {
         values: [],
         declaration: node,
       };
-      return [
+      return Report.create([
         meta,
-      ];
+      ]);
     }
 
-    return [];
+    return Report.create(PASS_THROUGH);
   },
 
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {

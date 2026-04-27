@@ -44,14 +44,14 @@ import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
 
 export const indexesModule: GlobalModule = {
-  emitMetadata (compiler: Compiler, node: SyntaxNode): SymbolMetadata[] {
-    if (!isElementNode(node, ElementKind.Indexes)) return [];
+  emitMetadata (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough> {
+    if (!isElementNode(node, ElementKind.Indexes)) return Report.create(PASS_THROUGH);
 
     const tableNode = node.parent;
-    if (!tableNode || (!isElementNode(tableNode, ElementKind.Table) && !isElementNode(tableNode, ElementKind.TablePartial))) return [];
+    if (!tableNode || (!isElementNode(tableNode, ElementKind.Table) && !isElementNode(tableNode, ElementKind.TablePartial))) return Report.create(PASS_THROUGH);
 
     const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
-    if (!tableSymbol) return [];
+    if (!tableSymbol) return Report.create(PASS_THROUGH);
 
     const body = getBody(node as ElementDeclarationNode);
     const results: IndexMetadata[] = [];
@@ -110,7 +110,7 @@ export const indexesModule: GlobalModule = {
       });
     }
 
-    return results;
+    return Report.create(results);
   },
 
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

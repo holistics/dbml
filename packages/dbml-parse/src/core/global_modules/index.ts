@@ -121,15 +121,9 @@ export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Repo
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-// Collect metadata from all modules for a node (not chain-of-responsibility - all modules contribute)
 export function emitMetadata (compiler: Compiler, node: SyntaxNode): SymbolMetadata[] {
-  const result: SymbolMetadata[] = [];
-  for (const module of modules) {
-    if (module.emitMetadata) {
-      result.push(...module.emitMetadata(compiler, node));
-    }
-  }
-  return result;
+  const res = dispatch('emitMetadata', compiler, node);
+  return res.hasValue(PASS_THROUGH) ? [] : res.getValue() as SymbolMetadata[];
 }
 
 export function interpretSymbol (this: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {

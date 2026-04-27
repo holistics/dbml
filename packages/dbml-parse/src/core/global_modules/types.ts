@@ -24,7 +24,7 @@ export interface GlobalModule extends Module {
   symbolMembers? (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough>;
   nodeReferee? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough>;
   // Emit metadata (refs, checks, indexes, records) from this AST node, targeting symbols
-  emitMetadata? (compiler: Compiler, node: SyntaxNode): SymbolMetadata[];
+  emitMetadata? (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough>;
   bindNode? (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough>;
   interpretSymbol? (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;
   interpretMetadata? (compiler: Compiler, metadata: SymbolMetadata): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;

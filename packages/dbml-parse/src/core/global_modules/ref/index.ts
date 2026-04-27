@@ -78,13 +78,13 @@ export const refModule: GlobalModule = {
     return nodeRefereeOfRefEndpoint(compiler, globalSymbol, node);
   },
 
-  emitMetadata (compiler: Compiler, node: SyntaxNode): SymbolMetadata[] {
-    if (!isElementNode(node, ElementKind.Ref)) return [];
+  emitMetadata (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough> {
+    if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
 
     const field = getBody(node)[0];
-    if (!(field instanceof FunctionApplicationNode) || !field.callee) return [];
+    if (!(field instanceof FunctionApplicationNode) || !field.callee) return Report.create(PASS_THROUGH);
     const infix = field.callee;
-    if (!(infix instanceof InfixExpressionNode) || !infix.op) return [];
+    if (!(infix instanceof InfixExpressionNode) || !infix.op) return Report.create(PASS_THROUGH);
 
     const op = infix.op.value;
     const relation = op as RefMetadata['relation'];
@@ -100,7 +100,7 @@ export const refModule: GlobalModule = {
 
     const leftTable = resolveTable(infix.leftExpression);
     const rightTable = resolveTable(infix.rightExpression);
-    if (!leftTable || !rightTable) return [];
+    if (!leftTable || !rightTable) return Report.create(PASS_THROUGH);
 
     // Extract settings
     let onDelete: string | undefined;
@@ -139,7 +139,7 @@ export const refModule: GlobalModule = {
         target: rightTable,
       });
     }
-    return result;
+    return Report.create(result);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

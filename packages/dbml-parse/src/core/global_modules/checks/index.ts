@@ -31,14 +31,14 @@ import ChecksBinder from './bind';
 import ChecksInterpreter from './interpret';
 
 export const checksModule: GlobalModule = {
-  emitMetadata (compiler: Compiler, node: SyntaxNode): SymbolMetadata[] {
-    if (!isElementNode(node, ElementKind.Checks)) return [];
+  emitMetadata (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough> {
+    if (!isElementNode(node, ElementKind.Checks)) return Report.create(PASS_THROUGH);
 
     const tableNode = node.parent;
-    if (!tableNode || (!isElementNode(tableNode, ElementKind.Table) && !isElementNode(tableNode, ElementKind.TablePartial))) return [];
+    if (!tableNode || (!isElementNode(tableNode, ElementKind.Table) && !isElementNode(tableNode, ElementKind.TablePartial))) return Report.create(PASS_THROUGH);
 
     const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
-    if (!tableSymbol) return [];
+    if (!tableSymbol) return Report.create(PASS_THROUGH);
 
     const body = getBody(node as ElementDeclarationNode);
     const results: CheckMetadata[] = [];
@@ -56,7 +56,7 @@ export const checksModule: GlobalModule = {
       });
     }
 
-    return results;
+    return Report.create(results);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
