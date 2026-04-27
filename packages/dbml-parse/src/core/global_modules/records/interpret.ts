@@ -185,8 +185,10 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   };
 }
 
-type RowData = { row: RecordValue[] | null;
-  columnNodes: Record<string, SyntaxNode>; };
+type RowData = {
+  row: RecordValue[] | null;
+  columnNodes: Record<string, SyntaxNode>;
+};
 
 function extractDataFromRow (
   row: FunctionApplicationNode,
