@@ -74,7 +74,6 @@ export default class Compiler {
   // Interners
   nodeIdGenerator = new SyntaxNodeIdGenerator();
   symbolIdGenerator = new NodeSymbolIdGenerator();
-  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   // The structure of the DbmlProject
   layout: DbmlProjectLayout = new MemoryProjectLayout();
@@ -162,7 +161,7 @@ export default class Compiler {
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: (filepath: Filepath) => this.layout.getSource(filepath) as Readonly<string>,
+    source: (filepath: Filepath) => this.layout.getSource(filepath),
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),
