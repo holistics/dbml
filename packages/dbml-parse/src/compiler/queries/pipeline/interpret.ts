@@ -10,7 +10,9 @@ import Report from '@/core/types/report';
 import type Compiler from '../../index';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  return this.parseFile(filepath).chain(({ ast }) => {
+  return this.parseFile(filepath).chain(({
+    ast,
+  }) => {
     const analyzeResult = new Analyzer(ast, this.symbolIdGenerator).analyze();
     if (analyzeResult.getErrors().length > 0) {
       return analyzeResult.map(() => undefined);

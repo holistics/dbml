@@ -21,7 +21,7 @@ import {
   ElementBinder,
 } from '@/core/analyzer/binder/types';
 import {
-  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
+  lookupAndBindInScope, scanNonListNodeForBinding,
 } from '@/core/analyzer/binder/utils';
 
 export default class DiagramViewBinder implements ElementBinder {

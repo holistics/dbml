@@ -1,6 +1,3 @@
-import {
-  DEFAULT_ENTRY,
-} from '@/constants';
 import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
