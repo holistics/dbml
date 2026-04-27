@@ -49,7 +49,7 @@ class Parser {
 
     compiler.setSource(DEFAULT_ENTRY, str);
 
-    const diags = compiler.parse.errors().map((error) => ({
+    const diags = compiler.parse.errors(DEFAULT_ENTRY).map((error) => ({
       message: error.diagnostic,
       location: {
         start: {
@@ -66,7 +66,7 @@ class Parser {
 
     if (diags.length > 0) throw CompilerError.create(diags);
 
-    return compiler.exportSchemaJson(DEFAULT_ENTRY).getValue();
+    return compiler.interpretFile(DEFAULT_ENTRY).getValue();
   }
 
   /**
@@ -145,7 +145,7 @@ class Parser {
             rawDatabase = Parser.parseDBMLToJSONv2(layoutOrStr, this.DBMLCompiler);
           } else {
             this.DBMLCompiler.layout = layoutOrStr;
-            const diags = this.DBMLCompiler.parse.errors().map((error) => ({
+            const diags = this.DBMLCompiler.parse.errors(DEFAULT_ENTRY).map((error) => ({
               message: error.diagnostic,
               location: {
                 start: {
@@ -161,7 +161,7 @@ class Parser {
             }));
             if (diags.length > 0) throw CompilerError.create(diags);
             // @ts-expect-error "The type definition of @dbml/core's RawDatabase and @dbml/parse's Database have some mismatches"
-            rawDatabase = this.DBMLCompiler.exportSchemaJson(DEFAULT_ENTRY).getValue();
+            rawDatabase = this.DBMLCompiler.interpretFile(DEFAULT_ENTRY).getValue();
           }
           break;
 
@@ -195,7 +195,7 @@ class Parser {
 
       const schema = Parser.parseJSONToDatabase(rawDatabase);
       return schema;
-    } catch (diags) {
+    } catch (diags: any) {
       throw CompilerError.create(diags);
     }
   }

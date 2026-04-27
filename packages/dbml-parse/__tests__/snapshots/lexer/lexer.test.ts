@@ -18,7 +18,7 @@ import type {
 } from '@/index';
 import type Report from '@/core/types/report';
 
-function serializeLexerResult (compiler: Compiler, report: Report<readonly Readonly<SyntaxToken>[]>): string {
+function serializeLexerResult (compiler: Compiler, report: Report<SyntaxToken[]>): string {
   const value = report.getValue();
   const errors = report.getErrors();
   const warnings = report.getWarnings();

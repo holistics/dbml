@@ -27,7 +27,7 @@ function serializeParserResult (compiler: Compiler, report: Report<ProgramNode>)
     program: value,
     errors,
     warnings,
-  }, { includeReferences: false, includeSymbols: false, includeReferee: false }), null, 2);
+  }), null, 2);
 }
 
 describe('[snapshot] parser', () => {
@@ -39,9 +39,17 @@ describe('[snapshot] parser', () => {
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
 
+    const {
+      nodeIdGenerator,
+    } = compiler;
+
+    const lexer = new Lexer(program, DEFAULT_ENTRY);
     const output = serializeParserResult(
       compiler,
-      compiler.parseFile(DEFAULT_ENTRY).map(({ ast }) => ast),
+      lexer.lex().chain((tokens) => {
+        const parser = new Parser(DEFAULT_ENTRY, program, tokens, nodeIdGenerator);
+        return parser.parse().map((_) => _.ast);
+      }),
     );
     it(testName, () => expect(output).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

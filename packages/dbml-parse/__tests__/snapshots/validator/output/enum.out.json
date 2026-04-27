@@ -25,6 +25,30 @@
       }
     },
     {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate enum field 1",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@1@[L5:C4, L5:C7]",
+          "snippet": "\"1\""
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_COLUMN_NAME",
+      "diagnostic": "Duplicate enum field 1",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@1@[L6:C4, L6:C7]",
+          "snippet": "\"1\""
+        }
+      }
+    },
+    {
       "code": "INVALID_ENUM_ELEMENT_NAME",
       "diagnostic": "An enum field must be an identifier or a quoted identifier",
       "filepath": "/main.dbml",

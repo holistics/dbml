@@ -428,7 +428,6 @@
     },
     "5": {
       "id": 5,
-      "schemaName": "public",
       "tableName": "users",
       "fieldNames": [
         "id"
@@ -638,7 +637,6 @@
       "id": 4,
       "name": "ejs2",
       "type": {
-        "schemaName": "public",
         "type_name": "job_status",
         "args": null
       },
@@ -734,7 +732,6 @@
       "id": 10,
       "name": "pjs2",
       "type": {
-        "schemaName": "public",
         "type_name": "job_status",
         "args": null
       },

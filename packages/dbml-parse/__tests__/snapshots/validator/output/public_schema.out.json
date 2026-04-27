@@ -23,6 +23,18 @@
           "snippet": "Enum publi...{\r\n    \r\n}"
         }
       }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Enum 'status' already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
+          "snippet": "public.status"
+        }
+      }
     }
   ],
   "program": {

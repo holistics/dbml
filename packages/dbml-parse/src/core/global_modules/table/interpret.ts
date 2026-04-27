@@ -1,6 +1,9 @@
 import {
   last, partition,
 } from 'lodash-es';
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
@@ -342,7 +345,7 @@ export class TableInterpreter {
             columnName,
           ] = fragments;
           inlineRef = {
-            schemaName: schema,
+            schemaName: schema === DEFAULT_SCHEMA_NAME ? null : schema,
             tableName: table,
             fieldNames: [
               columnName,
@@ -356,7 +359,7 @@ export class TableInterpreter {
           const table = fragments.pop()!;
           const schema = fragments.join('.');
           inlineRef = {
-            schemaName: schema,
+            schemaName: schema === DEFAULT_SCHEMA_NAME ? null : schema,
             tableName: table,
             fieldNames: [
               columnName,

@@ -1,19 +1,31 @@
-import { readFileSync } from 'node:fs';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import {
+  readFileSync,
+} from 'node:fs';
 import path from 'node:path';
-import { describe, expect, it } from 'vitest';
-import type { ProgramNode } from '@/core/types/nodes';
-import { scanTestNames, toSnapshot } from '@tests/utils';
+import {
+  describe, expect, it,
+} from 'vitest';
+import type {
+  ProgramNode,
+} from '@/core/types/nodes';
+import {
+  scanTestNames, toSnapshot,
+} from '@tests/utils';
 import Compiler from '@/compiler';
-import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeValidatorResult (compiler: Compiler, ast: ProgramNode): string {
-  const validation = compiler.validateNode(ast);
+  const validateResult = compiler.validateFile(DEFAULT_ENTRY);
+  const errors = validateResult.getErrors();
+  const warnings = validateResult.getWarnings();
   return JSON.stringify(toSnapshot(compiler, {
     program: ast,
-    errors: validation.getErrors(),
-    warnings: validation.getWarnings(),
+    errors,
+    warnings,
   }, {
-    includeReferences: false, includeReferee: false, includeSymbols: false,
+    includeSymbols: false,
   }), null, 2);
 }
 
@@ -25,6 +37,7 @@ describe('[snapshot] validator', () => {
 
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
+
     const ast = compiler.parseFile(DEFAULT_ENTRY).getValue().ast;
     const output = serializeValidatorResult(compiler, ast);
 

@@ -22,7 +22,7 @@ import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  IndexesSymbol, NodeSymbol, SymbolKind,
+  NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type {
   SyntaxToken,
@@ -37,9 +37,6 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  getNodeMemberSymbols,
-} from '../utils';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
 
@@ -111,31 +108,6 @@ export const indexesModule: GlobalModule = {
     }
 
     return Report.create(results);
-  },
-
-  nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    if (isElementNode(node, ElementKind.Indexes)) {
-      const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
-      return new Report(compiler.symbolFactory.create(IndexesSymbol, {
-        declaration: node,
-        name,
-      }, node.filepath));
-    }
-    return Report.create(PASS_THROUGH);
-  },
-
-  symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (symbol.isKind(SymbolKind.Indexes)) {
-      if (!symbol.declaration) {
-        return new Report([]);
-      }
-      const symbols = getNodeMemberSymbols(compiler, symbol.declaration);
-      if (symbols.hasValue(UNHANDLED)) {
-        return new Report([]);
-      }
-      return symbols as Report<NodeSymbol[]>;
-    }
-    return Report.create(PASS_THROUGH);
   },
 
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {

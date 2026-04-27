@@ -1,5 +1,8 @@
 import Compiler from '@/compiler';
 import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
@@ -41,7 +44,7 @@ function buildRefEndpoint (
   token: TokenPosition,
 ): RefEndpoint {
   return {
-    schemaName: names.schemaName,
+    schemaName: names.schemaName === DEFAULT_SCHEMA_NAME ? null : names.schemaName,
     tableName: names.tableName,
     fieldNames: names.fieldNames,
     relation,
@@ -65,7 +68,8 @@ export class RefInterpreter {
       const segments = compiler.nodeFullname(parent).getFiltered(UNHANDLED);
       if (segments && segments.length > 0) {
         const tableName = segments[segments.length - 1];
-        const schemaName = segments.length > 1 ? segments.slice(0, -1).join('.') : null;
+        const rawSchema = segments.length > 1 ? segments.slice(0, -1).join('.') : null;
+        const schemaName = rawSchema === DEFAULT_SCHEMA_NAME ? null : rawSchema;
         this.ownerTable = tableName;
         this.ownerSchema = schemaName;
       }

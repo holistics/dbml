@@ -47,6 +47,20 @@
           "snippet": "~\r\n}"
         }
       }
+    },
+    {
+      "code": "INVALID_OPERAND",
+      "diagnostic": "Invalid start of operand \"}\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rbrace>@}@[L9:C0, L9:C1]",
+          "snippet": "}",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
     }
   ],
   "program": {
