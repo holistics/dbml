@@ -43,7 +43,7 @@ import {
   parseColor,
 } from '@/core/utils/interpret';
 import {
-  lookupMember, nodeRefereeOfLeftExpression,
+  nodeRefereeOfLeftExpression,
 } from '../utils';
 import RefBinder from './bind';
 import {
@@ -182,12 +182,7 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
       const leftExpr = (tupleParent.parentNode as InfixExpressionNode).leftExpression!;
       const tableSymbol = compiler.nodeReferee(leftExpr).getFiltered(UNHANDLED);
       if (tableSymbol?.isKind(SymbolKind.Table)) {
-        return lookupMember(compiler, tableSymbol, name, {
-          kinds: [
-            SymbolKind.Column,
-          ],
-          errorNode: node,
-        });
+        return compiler.lookupMembers(tableSymbol, SymbolKind.Column, name, false, node);
       }
     }
 
@@ -198,21 +193,13 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.Table,
-          SymbolKind.Schema,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(left, [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+      ], name, false, node);
     }
     if (left.isKind(SymbolKind.Table)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.Column,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(left, SymbolKind.Column, name, false, node);
     }
     return new Report(undefined);
   }
@@ -222,31 +209,15 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
   if (parent.leftExpression === node) {
     // If parent is also left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return lookupMember(compiler, globalSymbol, name, {
-        kinds: [
-          SymbolKind.Schema,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
     }
     // Otherwise look up as Table (by name or alias) in public schema, then program scope
     const schemaSymbol = getDefaultSchemaSymbol(compiler, globalSymbol);
     if (schemaSymbol) {
-      const result = lookupMember(compiler, schemaSymbol, name, {
-        kinds: [
-          SymbolKind.Table,
-        ],
-        ignoreNotFound: true,
-        errorNode: node,
-      });
+      const result = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, name, true, node);
       if (result.getValue()) return result;
     }
-    return lookupMember(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Table,
-      ],
-      errorNode: node,
-    });
+    return compiler.lookupMembers(globalSymbol, SymbolKind.Table, name, false, node);
   }
 
   return new Report(undefined);

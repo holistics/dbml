@@ -38,7 +38,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  getNodeMemberSymbols, lookupMember,
+  getNodeMemberSymbols,
 } from '../utils';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
@@ -158,11 +158,7 @@ export const indexesModule: GlobalModule = {
     if (!tableSymbol) return new Report(undefined);
 
     const varName = isExpressionAVariableNode(node) ? (node.expression.variable?.value ?? '') : '';
-    return lookupMember(compiler, tableSymbol, varName, {
-      kinds: [
-        SymbolKind.Column,
-      ],
-    });
+    return compiler.lookupMembers(tableSymbol, SymbolKind.Column, varName);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

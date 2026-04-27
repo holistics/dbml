@@ -32,9 +32,6 @@ import {
 import {
   GlobalModule,
 } from '../types';
-import {
-  lookupMember,
-} from '../utils';
 
 export const useUtils = {
   // The name that the owning file would see the use specifier as
@@ -126,12 +123,7 @@ export const useModule: GlobalModule = {
       const parentSymbol = compiler.nodeReferee(leftNode).getFiltered(UNHANDLED);
       if (!parentSymbol) return Report.create(undefined);
 
-      return lookupMember(compiler, parentSymbol, name, {
-        kinds: [
-          symbolKind,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(parentSymbol, symbolKind, name, false, node);
     }
 
     const found = lookupMemberInFilepath(compiler, importPath, name, symbolKind);

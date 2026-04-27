@@ -3,17 +3,11 @@ import {
 } from 'lodash-es';
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
   getMemberChain,
 } from '@/core/parser/utils';
 import type {
   RelationCardinality,
 } from '@/core/types';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
 import {
   UNHANDLED,
 } from '@/core/types/module';
@@ -22,14 +16,11 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
+  NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
   destructureComplexVariableTuple, destructureMemberAccessExpression, extractVarNameFromPrimaryVariable, isAccessExpression, isExpressionAVariableNode,
 } from '@/core/utils/expression';
-import {
-  useUtils,
-} from './use';
 
 // Extract referee from a simple variable (x) or access expression (a.b.c).
 // Walks dot-chains to the rightmost variable and calls compiler.nodeReferee on it.
@@ -214,59 +205,6 @@ export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (Pri
   return [];
 }
 
-// Look up a member by name within a parent symbol's members.
-// Returns Report with the found symbol (or undefined) and any errors.
-export function lookupMember (
-  compiler: Compiler,
-  parentSymbol: NodeSymbol,
-  name: string,
-  {
-    kinds,
-    ignoreNotFound = false,
-    errorNode,
-  }: {
-    kinds?: SymbolKind[];
-    ignoreNotFound?: boolean;
-    errorNode?: SyntaxNode;
-  } = {},
-): Report<NodeSymbol | undefined> {
-  const members = compiler.symbolMembers(parentSymbol).getFiltered(UNHANDLED);
-  if (!members) return new Report(undefined);
-
-  const match = members.find((m: NodeSymbol) => {
-    if (kinds && !m.isKind(...kinds)) return false;
-    if (m instanceof UseSymbol) {
-      return useUtils.visibleName(compiler, m)?.at(-1) === name;
-    }
-    return m.name === name;
-  });
-
-  // Report symbol not found
-  if (!match && !ignoreNotFound) {
-    const kindLabel = kinds?.length ? kinds[0] : 'member';
-    const parentName = parentSymbol.declaration ? compiler.nodeFullname(parentSymbol.declaration).getFiltered(UNHANDLED)?.join('.') : undefined;
-    const scopeLabel = parentSymbol instanceof SchemaSymbol
-      ? `Schema '${parentSymbol.name}'`
-      : parentName
-        ? `${parentSymbol.kind} '${parentName}'`
-        : (parentSymbol.isKind(SymbolKind.Program)
-            ? `Schema '${DEFAULT_SCHEMA_NAME}'`
-            : 'global scope');
-
-    return new Report(undefined, errorNode || parentSymbol.declaration
-      ? [
-          new CompileError(
-            CompileErrorCode.BINDING_ERROR,
-            `${kindLabel} '${name}' does not exist in ${scopeLabel}`,
-            (errorNode ?? parentSymbol.declaration)!,
-          ),
-        ]
-      : []);
-  }
-
-  return new Report(match);
-}
-
 // Look up a member in the default (public) schema, falling back to direct program search
 export function lookupInDefaultSchema (
   compiler: Compiler,
@@ -282,14 +220,11 @@ export function lookupInDefaultSchema (
   if (members) {
     const publicSchema = members.find((m: NodeSymbol) => m.isPublicSchema());
     if (publicSchema) {
-      const result = lookupMember(compiler, publicSchema, name, {
-        ...options,
-        ignoreNotFound: true,
-      });
+      const result = compiler.lookupMembers(publicSchema, options.kinds ?? [], name, true);
       if (result.getValue()) return result;
     }
   }
-  return lookupMember(compiler, globalSymbol, name, options);
+  return compiler.lookupMembers(globalSymbol, options.kinds ?? [], name, options.ignoreNotFound, options.errorNode);
 }
 
 // For a node that is the right side of an access expression (a.b),

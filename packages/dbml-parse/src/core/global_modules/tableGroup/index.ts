@@ -43,7 +43,7 @@ import {
   parseColor,
 } from '@/core/utils/interpret';
 import {
-  extractReferee, getSymbolSchemaAndName, lookupMember, nodeRefereeOfLeftExpression,
+  extractReferee, getSymbolSchemaAndName, nodeRefereeOfLeftExpression,
 } from '../utils';
 import TableGroupBinder from './bind';
 
@@ -187,13 +187,7 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
       for (const schema of schemasList) {
         if (!(schema instanceof SchemaSymbol)) continue;
         // lookupMember checks aliases only for public schemas; for non-public, also check aliases explicitly
-        const result = lookupMember(compiler, schema, name, {
-          kinds: [
-            SymbolKind.Table,
-          ],
-          ignoreNotFound: true,
-          errorNode: node,
-        });
+        const result = compiler.lookupMembers(schema, SymbolKind.Table, name, true, node);
         if (result.getValue()) return result;
         if (!schema.isPublicSchema()) {
           const membersList = compiler.symbolMembers(schema).getFiltered(UNHANDLED);
@@ -207,33 +201,21 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
         }
       }
     }
-    return lookupMember(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Table,
-      ],
-      ignoreNotFound: false,
-      errorNode: node,
-    });
+    return compiler.lookupMembers(globalSymbol, SymbolKind.Table, name, false, node);
   }
 
   // Right side of access: resolve via left sibling
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.Table,
-          SymbolKind.Schema,
-        ],
-      });
+      return compiler.lookupMembers(left, [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+      ], name);
     }
     return new Report(undefined);
   }
 
   // Left side of access: look up as Schema
-  return lookupMember(compiler, globalSymbol, name, {
-    kinds: [
-      SymbolKind.Schema,
-    ],
-  });
+  return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
 }

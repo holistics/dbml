@@ -48,7 +48,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression,
+  lookupInDefaultSchema, nodeRefereeOfLeftExpression,
 } from '../utils';
 import TablePartialBinder from './bind';
 import {
@@ -182,13 +182,10 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.Enum,
-          SymbolKind.Schema,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(left, [
+        SymbolKind.Enum,
+        SymbolKind.Schema,
+      ], name, false, node);
     }
     return new Report(undefined);
   }
@@ -196,13 +193,7 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
   // Left side of access - look up as Schema in program scope
   const parent = node.parentNode as InfixExpressionNode;
   if (parent.leftExpression === node) {
-    return lookupMember(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Schema,
-      ],
-      ignoreNotFound: true,
-      errorNode: node,
-    });
+    return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, true, node);
   }
 
   return new Report(undefined);
@@ -220,43 +211,23 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
     if (enclosingTablePartial instanceof ElementDeclarationNode && enclosingTablePartial.isKind(ElementKind.TablePartial)) {
       const tableSymbol = compiler.nodeSymbol(enclosingTablePartial).getFiltered(UNHANDLED);
       if (tableSymbol) {
-        return lookupMember(compiler, tableSymbol, name, {
-          kinds: [
-            SymbolKind.Column,
-          ],
-          ignoreNotFound: false,
-          errorNode: node,
-        });
+        return compiler.lookupMembers(tableSymbol, SymbolKind.Column, name, false, node);
       }
     }
-    return lookupMember(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Column,
-      ],
-      ignoreNotFound: true,
-      errorNode: node,
-    });
+    return compiler.lookupMembers(globalSymbol, SymbolKind.Column, name, true, node);
   }
 
   // Right side of access expression - resolve via left sibling
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.Table,
-          SymbolKind.Schema,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(left, [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+      ], name, false, node);
     }
     if (left.isKind(SymbolKind.Table)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.Column,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(left, SymbolKind.Column, name, false, node);
     }
     return new Report(undefined);
   }
@@ -266,12 +237,7 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
   if (parent.leftExpression === node) {
     // If our parent is also a left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return lookupMember(compiler, globalSymbol, name, {
-        kinds: [
-          SymbolKind.Schema,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
     }
     // First try by table name, then by alias
     const tableResult = lookupInDefaultSchema(compiler, globalSymbol, name, {
@@ -316,21 +282,13 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.Enum,
-          SymbolKind.Schema,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(left, [
+        SymbolKind.Enum,
+        SymbolKind.Schema,
+      ], name, false, node);
     }
     if (left.isKind(SymbolKind.Enum)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.EnumField,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(left, SymbolKind.EnumField, name, false, node);
     }
     return new Report(undefined);
   }
@@ -340,12 +298,7 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
   if (parent.leftExpression === node) {
     // If parent is also left of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return lookupMember(compiler, globalSymbol, name, {
-        kinds: [
-          SymbolKind.Schema,
-        ],
-        errorNode: node,
-      });
+      return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
     }
     return lookupInDefaultSchema(compiler, globalSymbol, name, {
       kinds: [

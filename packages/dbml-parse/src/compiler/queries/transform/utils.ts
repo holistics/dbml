@@ -2,9 +2,6 @@ import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  lookupMember,
-} from '@/core/global_modules/utils';
-import {
   Filepath,
 } from '@/core/types/filepath';
 import {
@@ -80,43 +77,28 @@ export function lookupTableSymbol (
   if (!astSymbol) return null;
 
   if (schema === DEFAULT_SCHEMA_NAME) {
-    const symbol = lookupMember(
-      compiler,
+    const symbol = compiler.lookupMembers(
       astSymbol,
+      SymbolKind.Table,
       table,
-      {
-        kinds: [
-          SymbolKind.Table,
-        ],
-        ignoreNotFound: true,
-      },
+      true,
     );
     return symbol.getValue() ?? null;
   }
 
-  const schemaSymbol = lookupMember(
-    compiler,
+  const schemaSymbol = compiler.lookupMembers(
     astSymbol,
+    SymbolKind.Schema,
     schema,
-    {
-      kinds: [
-        SymbolKind.Schema,
-      ],
-      ignoreNotFound: true,
-    },
+    true,
   ).getValue();
   if (!schemaSymbol) return null;
 
-  const tableSymbol = lookupMember(
-    compiler,
+  const tableSymbol = compiler.lookupMembers(
     schemaSymbol,
+    SymbolKind.Table,
     table,
-    {
-      kinds: [
-        SymbolKind.Table,
-      ],
-      ignoreNotFound: true,
-    },
+    true,
   );
 
   return tableSymbol.getValue() ?? null;

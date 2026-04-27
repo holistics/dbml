@@ -35,7 +35,7 @@ import {
   getTokenPosition,
 } from '@/core/utils/interpret';
 import {
-  lookupInDefaultSchema, lookupMember,
+  lookupInDefaultSchema,
 } from '../utils';
 import {
   getRecordValueType,
@@ -146,19 +146,9 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
 
   let tableSymbol: NodeSymbol | undefined;
   if (schemaName) {
-    const schemaResult = lookupMember(compiler, programSymbolValue, schemaName, {
-      kinds: [
-        SymbolKind.Schema,
-      ],
-      ignoreNotFound: true,
-    });
+    const schemaResult = compiler.lookupMembers(programSymbolValue, SymbolKind.Schema, schemaName, true);
     if (schemaResult.getValue()) {
-      tableSymbol = lookupMember(compiler, schemaResult.getValue()!, tableName, {
-        kinds: [
-          SymbolKind.Table,
-        ],
-        ignoreNotFound: true,
-      }).getValue() ?? undefined;
+      tableSymbol = compiler.lookupMembers(schemaResult.getValue()!, SymbolKind.Table, tableName, true).getValue() ?? undefined;
     }
   }
   if (!tableSymbol) {

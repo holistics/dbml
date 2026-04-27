@@ -33,7 +33,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression,
+  lookupInDefaultSchema, nodeRefereeOfLeftExpression,
 } from '../utils';
 import DiagramViewBinder from './bind';
 import {
@@ -242,26 +242,12 @@ function nodeRefereeOfDiagramViewTableRef (
     if (left) {
       if (left.isKind(SymbolKind.Schema)) {
         const isTerminal = isTerminalAccessFragment(node);
-        return lookupMember(compiler, left, name, {
-          kinds: isTerminal
-            ? [
-                SymbolKind.Table,
-              ]
-            : [
-                SymbolKind.Schema,
-              ],
-          errorNode: node,
-        });
+        return compiler.lookupMembers(left, isTerminal ? SymbolKind.Table : SymbolKind.Schema, name, false, node);
       }
       return new Report(undefined);
     }
     // Left side of access: always a Schema
-    return lookupMember(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Schema,
-      ],
-      errorNode: node,
-    });
+    return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
   }
 
   // Standalone reference
@@ -271,13 +257,7 @@ function nodeRefereeOfDiagramViewTableRef (
     if (member.isKind(SymbolKind.Table) && name === memberName) return Report.create(member);
   }
 
-  return lookupMember(compiler, globalSymbol, name, {
-    kinds: [
-      SymbolKind.Table,
-    ],
-    ignoreNotFound: false,
-    errorNode: node,
-  });
+  return compiler.lookupMembers(globalSymbol, SymbolKind.Table, name, false, node);
 }
 
 /**
@@ -313,10 +293,5 @@ function nodeRefereeOfDiagramViewSchemaRef (
   if (name === undefined) {
     return Report.create(undefined);
   }
-  return lookupMember(compiler, globalSymbol, name, {
-    kinds: [
-      SymbolKind.Schema,
-    ],
-    errorNode: node,
-  });
+  return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
 }

@@ -41,7 +41,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression,
+  lookupInDefaultSchema, nodeRefereeOfLeftExpression,
 } from '../utils';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
@@ -174,30 +174,24 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
 
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (!left) {
-    return lookupMember(
-      compiler,
+    return compiler.lookupMembers(
       globalSymbol,
+      [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+      ],
       name,
-      {
-        kinds: [
-          SymbolKind.Table,
-          SymbolKind.Schema,
-        ],
-      },
     );
   }
 
   if (left.isKind(SymbolKind.Schema)) {
-    return lookupMember(
-      compiler,
+    return compiler.lookupMembers(
       left,
+      [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+      ],
       name,
-      {
-        kinds: [
-          SymbolKind.Table,
-          SymbolKind.Schema,
-        ],
-      },
     );
   }
 
@@ -211,15 +205,10 @@ function nodeRefereeOfRecordsColumn (compiler: Compiler, tableSymbol: NodeSymbol
 
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
-  return lookupMember(
-    compiler,
+  return compiler.lookupMembers(
     tableSymbol,
+    SymbolKind.Column,
     name,
-    {
-      kinds: [
-        SymbolKind.Column,
-      ],
-    },
   );
 }
 
@@ -238,19 +227,13 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.Enum,
-          SymbolKind.Schema,
-        ],
-      });
+      return compiler.lookupMembers(left, [
+        SymbolKind.Enum,
+        SymbolKind.Schema,
+      ], name);
     }
     if (left.isKind(SymbolKind.Enum)) {
-      return lookupMember(compiler, left, name, {
-        kinds: [
-          SymbolKind.EnumField,
-        ],
-      });
+      return compiler.lookupMembers(left, SymbolKind.EnumField, name);
     }
     return new Report(undefined);
   }
@@ -260,11 +243,7 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
   if (parent.leftExpression === node) {
     // If our parent is also the left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return lookupMember(compiler, globalSymbol, name, {
-        kinds: [
-          SymbolKind.Schema,
-        ],
-      });
+      return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
     }
     // Look up as Enum in default (public) schema
     return lookupInDefaultSchema(
