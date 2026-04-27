@@ -3,16 +3,12 @@ import {
 } from 'lodash-es';
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
-import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+} from '@/core/utils/expression';
 import {
   isSimpleName,
-} from '@/core/analyzer/validator/utils';
-import {
-  aggregateSettingList, registerSchemaStack,
-} from '@/core/analyzer/validator/utils';
+  aggregateSettingList,
+  registerSchemaStack,
+} from '@/core/utils/validate';
 import {
   isExpressionAVariableNode, isWildcardExpression,
 } from '@/core/parser/utils';
@@ -34,7 +30,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class DiagramViewValidator implements ElementValidator {
+export default class DiagramViewValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

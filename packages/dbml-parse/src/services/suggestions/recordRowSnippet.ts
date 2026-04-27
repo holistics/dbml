@@ -11,7 +11,7 @@ import {
 import {
   extractReferee,
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   BlockExpressionNode,
   CallExpressionNode,

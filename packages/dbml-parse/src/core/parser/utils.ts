@@ -3,7 +3,7 @@ import {
 } from 'lodash-es';
 import {
   destructureComplexVariable,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,

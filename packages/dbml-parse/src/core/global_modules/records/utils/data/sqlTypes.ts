@@ -1,6 +1,6 @@
 import {
   extractNumericLiteral,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   CallExpressionNode,
   FunctionApplicationNode,

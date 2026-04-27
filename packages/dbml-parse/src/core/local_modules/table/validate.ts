@@ -9,10 +9,10 @@ import {
 } from '@/core/types/keywords';
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable, extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  pickValidator,
+} from '@/core/local_modules';
 import {
   aggregateSettingList,
   isSimpleName,
@@ -23,9 +23,8 @@ import {
   isValidDefaultValue,
   isValidName,
   isValidPartialInjection,
-  pickValidator,
   registerSchemaStack,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
@@ -60,7 +59,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class TableValidator implements ElementValidator {
+export default class TableValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private symbolFactory: SymbolFactory;
   private publicSymbolTable: SymbolTable;

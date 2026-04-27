@@ -18,13 +18,10 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  ElementBinder,
-} from '@/core/analyzer/binder/types';
-import {
   lookupAndBindInScope, scanNonListNodeForBinding,
-} from '@/core/analyzer/binder/utils';
+} from '@/core/global_modules/utils';
 
-export default class DiagramViewBinder implements ElementBinder {
+export default class DiagramViewBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private ast: ProgramNode;

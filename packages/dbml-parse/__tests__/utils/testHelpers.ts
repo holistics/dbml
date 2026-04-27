@@ -62,7 +62,7 @@ function getCodeSnippet (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol, co
 
   if (!node) return undefined;
 
-  const source = compiler.parse.source();
+  const source = compiler.layout.getSource(node.filepath) || '';
   const text = source.slice(node.start, node.end);
   if (text.length <= 20) {
     return text;

@@ -8,6 +8,7 @@ import {
 import {
   scanTestNames, toSnapshot,
 } from '@tests/utils';
+import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
 import type {
   Database,
@@ -32,10 +33,8 @@ describe('[snapshot] nan', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
-    const report = compiler.parse._().map(({
-      rawDb,
-    }) => rawDb);
+    compiler.setSource(DEFAULT_ENTRY, program);
+    const report = compiler.interpretFile(DEFAULT_ENTRY);
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

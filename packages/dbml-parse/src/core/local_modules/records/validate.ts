@@ -9,13 +9,15 @@ import {
 } from '@/core/types/keywords';
 import {
   destructureComplexVariable,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  pickValidator,
+} from '@/core/local_modules';
 import {
-  isExpressionASignedNumberExpression, isTupleOfVariables, isValidName, pickValidator,
-} from '@/core/analyzer/validator/utils';
+  isExpressionASignedNumberExpression,
+  isTupleOfVariables,
+  isValidName,
+} from '@/core/utils/validate';
 import {
   isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/parser/utils';
@@ -31,7 +33,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class RecordsValidator implements ElementValidator {
+export default class RecordsValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

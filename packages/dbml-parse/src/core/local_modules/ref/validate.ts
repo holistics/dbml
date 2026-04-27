@@ -3,13 +3,15 @@ import {
 } from 'lodash-es';
 import {
   destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  pickValidator,
+} from '@/core/local_modules';
 import {
-  aggregateSettingList, isSimpleName, isValidColor, pickValidator,
-} from '@/core/analyzer/validator/utils';
+  aggregateSettingList,
+  isSimpleName,
+  isValidColor,
+} from '@/core/utils/validate';
 import {
   extractStringFromIdentifierStream,
   isExpressionAVariableNode,
@@ -26,7 +28,7 @@ import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
 
-export default class RefValidator implements ElementValidator {
+export default class RefValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

@@ -3,13 +3,13 @@ import {
 } from 'lodash-es';
 import {
   destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -20,10 +20,10 @@ import {
   TableGroup,
 } from '@/core/types/schemaJson';
 import {
-  ElementInterpreter, InterpreterDatabase,
-} from '@/core/interpreter/types';
+  InterpreterDatabase,
+} from '@/core/global_modules/types';
 
-export class TableGroupInterpreter implements ElementInterpreter {
+export class TableGroupInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private tableGroup: Partial<TableGroup>;

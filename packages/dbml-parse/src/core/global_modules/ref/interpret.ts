@@ -1,12 +1,12 @@
 import {
   destructureComplexVariable, extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 import {
   extractStringFromIdentifierStream,
 } from '@/core/parser/utils';
@@ -20,10 +20,10 @@ import {
   Ref, Table,
 } from '@/core/types/schemaJson';
 import {
-  ElementInterpreter, InterpreterDatabase,
-} from '@/core/interpreter/types';
+  InterpreterDatabase,
+} from '@/core/global_modules/types';
 
-export class RefInterpreter implements ElementInterpreter {
+export class RefInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private container: Partial<Table> | undefined;

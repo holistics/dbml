@@ -1,7 +1,4 @@
 import {
-  CompileError,
-} from '@/core/types/errors';
-import {
   ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
 import type {
@@ -21,10 +18,6 @@ import type {
 export type {
   DiagramView, FilterConfig,
 };
-
-export interface ElementInterpreter {
-  interpret(): CompileError[];
-}
 
 export interface InterpreterDatabase {
   schema: [];

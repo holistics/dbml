@@ -32,8 +32,14 @@ import {
   validateNode,
 } from '@/core/local_modules';
 import {
+  bindFile,
+} from './queries/pipeline/bind';
+import {
   interpretFile,
 } from './queries/pipeline/interpret';
+import {
+  validateFile,
+} from './queries/pipeline/validate';
 import {
   parseFile,
 } from './queries/pipeline/parse';
@@ -74,6 +80,7 @@ export default class Compiler {
   // Interners
   nodeIdGenerator = new SyntaxNodeIdGenerator();
   symbolIdGenerator = new NodeSymbolIdGenerator();
+  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   // The structure of the DbmlProject
   layout: DbmlProjectLayout = new MemoryProjectLayout();
@@ -135,15 +142,15 @@ export default class Compiler {
     blocks?: DiagramViewBlock[],
   ): { newDbml: string;
     edits: TextEdit[]; } {
-    return syncDiagramView(this.parse.source(DEFAULT_ENTRY), operations, blocks);
+    return syncDiagramView(this.layout.getSource(DEFAULT_ENTRY) || '', operations, blocks);
   }
 
   findDiagramViewBlocks (): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.parse.source(DEFAULT_ENTRY));
+    return findDiagramViewBlocks(this.layout.getSource(DEFAULT_ENTRY) || '');
   }
 
   applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.parse.source(DEFAULT_ENTRY), edits);
+    return applyTextEdits(this.layout.getSource(DEFAULT_ENTRY) || '', edits);
   }
 
   readonly token = {
@@ -157,11 +164,15 @@ export default class Compiler {
 
   bindNode = this.query(bindNode);
 
+  validateFile = this.query(validateFile);
+
+  bindFile = this.query(bindFile);
+
   interpretFile = this.query(interpretFile);
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: (filepath: Filepath) => this.layout.getSource(filepath),
+    source: (filepath: Filepath) => this.layout.getSource(filepath) || '',
     ast: this.query(ast),
     errors: this.query(errors),
     warnings: this.query(warnings),

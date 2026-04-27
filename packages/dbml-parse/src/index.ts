@@ -3,8 +3,33 @@ import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
 export {
+  DEFAULT_ENTRY,
+} from '@/constants';
+
+export {
+  Filepath,
+} from '@/core/types/filepath';
+
+export {
+  UNHANDLED,
+  type Unhandled,
+} from '@/core/types/module';
+
+export {
   ElementKind,
 } from '@/core/types/keywords';
+
+export {
+  type NodeSymbol,
+} from '@/core/types/symbol/symbols';
+
+export {
+  SymbolKind,
+} from '@/core/types/symbol/symbolIndex';
+
+export {
+  DBMLDiagnosticsProvider,
+} from '@/services/index';
 
 export * from '@/core/global_modules/records/utils';
 
@@ -12,8 +37,13 @@ export {
   // Core AST node types
   SyntaxNode,
   ElementDeclarationNode,
+  FunctionApplicationNode,
+  FunctionExpressionNode,
+  LiteralNode,
+  PrimaryExpressionNode,
   ProgramNode,
   SyntaxNodeKind,
+  VariableNode,
   type SyntaxNodeId,
 } from '@/core/types/nodes';
 
@@ -89,6 +119,7 @@ export type {
 } from '@/compiler/queries/transform/applyTextEdits';
 
 export {
+  dbmlLanguageConfig,
   dbmlMonarchTokensProvider,
 } from '@/services/monarch';
 

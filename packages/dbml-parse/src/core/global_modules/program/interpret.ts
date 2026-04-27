@@ -43,10 +43,10 @@ import {
 } from '@/core/utils/enum';
 import {
   InterpreterDatabase,
-} from '@/core/interpreter/types';
+} from '@/core/global_modules/types';
 import {
   getTokenPosition,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 
 function processColumnInDb<T extends Table | TablePartial> (table: T): T {
   return {

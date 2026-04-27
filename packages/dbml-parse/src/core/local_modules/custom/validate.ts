@@ -2,9 +2,6 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
-import {
   isExpressionAQuotedString,
 } from '@/core/parser/utils';
 import {
@@ -19,7 +16,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class CustomValidator implements ElementValidator {
+export default class CustomValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

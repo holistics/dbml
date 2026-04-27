@@ -36,7 +36,7 @@ describe('[snapshot] lexer', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
     const lexer = new Lexer(program, DEFAULT_ENTRY);
 

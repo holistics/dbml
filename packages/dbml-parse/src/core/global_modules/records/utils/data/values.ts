@@ -6,10 +6,10 @@ import {
 } from 'luxon';
 import {
   destructureComplexVariable, extractNumericLiteral, extractQuotedStringToken,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   isExpressionASignedNumberExpression,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
@@ -22,7 +22,7 @@ import {
 
 export {
   extractNumericLiteral,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {

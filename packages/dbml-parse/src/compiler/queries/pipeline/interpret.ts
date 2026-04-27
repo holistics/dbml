@@ -1,4 +1,3 @@
-import Analyzer from '@/core/analyzer/analyzer';
 import Interpreter from '@/core/global_modules/program/interpret';
 import type {
   Filepath,
@@ -10,13 +9,12 @@ import Report from '@/core/types/report';
 import type Compiler from '../../index';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  return this.parseFile(filepath).chain(({
+  const bindResult = this.bindFile(filepath);
+  if (bindResult.getErrors().length > 0) {
+    return bindResult.map(() => undefined);
+  }
+  const {
     ast,
-  }) => {
-    const analyzeResult = new Analyzer(ast, this.symbolIdGenerator).analyze();
-    if (analyzeResult.getErrors().length > 0) {
-      return analyzeResult.map(() => undefined);
-    }
-    return analyzeResult.chain(() => new Interpreter(ast).interpret());
-  });
+  } = this.parseFile(filepath).getValue();
+  return bindResult.chain(() => new Interpreter(ast).interpret());
 }

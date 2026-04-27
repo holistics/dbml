@@ -17,6 +17,7 @@ import type {
 import type Compiler from '../../index';
 
 export function ast (this: Compiler, filepath: Filepath): Readonly<ProgramNode> {
+  this.bindFile(filepath);
   return this.parseFile(filepath).getValue().ast;
 }
 
@@ -37,5 +38,9 @@ export function rawDb (this: Compiler, filepath: Filepath): Readonly<Database> |
 }
 
 export function publicSymbolTable (this: Compiler, filepath: Filepath): Readonly<SymbolTable> {
-  return this.parseFile(filepath).getValue().ast.symbol!.symbolTable!;
+  this.bindFile(filepath);
+  const {
+    ast,
+  } = this.parseFile(filepath).getValue();
+  return ast.symbol!.symbolTable!;
 }

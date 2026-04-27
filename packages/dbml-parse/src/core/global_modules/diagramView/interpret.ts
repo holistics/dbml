@@ -6,13 +6,13 @@ import {
 } from '@/constants';
 import {
   destructureComplexVariable, extractReferee,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
-  DiagramView, ElementInterpreter, InterpreterDatabase,
-} from '@/core/interpreter/types';
+  DiagramView, InterpreterDatabase,
+} from '@/core/global_modules/types';
 import {
   getTokenPosition,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 import {
   isWildcardExpression,
 } from '@/core/parser/utils';
@@ -23,7 +23,7 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
 } from '@/core/types/nodes';
 
-export class DiagramViewInterpreter implements ElementInterpreter {
+export class DiagramViewInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private diagramView: Partial<DiagramView>;
