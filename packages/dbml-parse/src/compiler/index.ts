@@ -59,6 +59,9 @@ import {
   interpretFile, interpretProject,
 } from './queries/pipeline/interpret';
 import {
+  validateFile,
+} from './queries/pipeline/validate';
+import {
   parseFile, parseProject,
 } from './queries/pipeline/parse';
 import {
@@ -244,6 +247,10 @@ export default class Compiler {
   // Validate an AST node and return any compile errors
   // Signature: (node: SyntaxNode) => Report<void> | Report<Unhandled>
   validateNode = this.localQuery(validateNode);
+  // A local query
+  // Validate a single file's AST
+  // Signature: (filepath: Filepath) => Report<void>
+  validateFile = this.localQuery(validateFile);
   // A local query
   // Return the fully-qualified name segments of an AST node (e.g. ['public', 'users'])
   // Signature: (node: SyntaxNode) => Report<string[] | undefined> | Report<Unhandled>

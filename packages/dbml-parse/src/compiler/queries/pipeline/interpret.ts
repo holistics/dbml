@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import type {
-  Column, Database, MasterDatabase, Table, TablePartial,
+  Database, MasterDatabase,
 } from '@/core/types/schemaJson';
 import type {
   CompileError, CompileWarning,
@@ -13,37 +13,13 @@ import {
 } from '@/core/types/module';
 import Report from '@/core/types/report';
 
-function stripColumnInternals<T extends Table | TablePartial> (table: T): T {
-  return {
-    ...table,
-    fields: table.fields.map((c: Column) => ({
-      ...c,
-      type: {
-        ...c.type,
-        isEnum: undefined,
-        lengthParam: undefined,
-        numericParams: undefined,
-      },
-    })),
-  };
-}
-
-function stripDatabase (db: Database): Database {
-  return {
-    ...db,
-    tables: db.tables.map(stripColumnInternals),
-    tablePartials: db.tablePartials.map(stripColumnInternals),
-  };
-}
-
-// Interpret a single file. Strips internal fields from the output.
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
   return this.parseFile(filepath).chain(({
     ast,
   }) => {
     const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
     if (!symbol) return Report.create(undefined);
-    return this.interpretSymbol(symbol).map((v) => (v === UNHANDLED || !v) ? undefined : stripDatabase(v as Database));
+    return this.interpretSymbol(symbol).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
   });
 }
 

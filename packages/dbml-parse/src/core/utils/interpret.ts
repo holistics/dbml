@@ -11,9 +11,6 @@ import {
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
 import Report from '@/core/types/report';
 import {
   SyntaxTokenKind,
@@ -127,13 +124,6 @@ export function processColumnType (
 ): Report<ColumnType> {
   let typeSuffix = '';
   let typeArgs: string | null = null;
-  let numericParams: {
-    precision: number;
-    scale: number;
-  } | undefined;
-  let lengthParam: {
-    length: number;
-  } | undefined;
 
   if (typeNode instanceof CallExpressionNode) {
     const argElements = typeNode.argumentList?.elementList ?? [];
@@ -144,21 +134,6 @@ export function processColumnType (
     }).join(',');
     typeSuffix = `(${typeArgs})`;
 
-    if (argElements.length === 2
-      && isExpressionASignedNumberExpression(argElements[0])
-      && isExpressionASignedNumberExpression(argElements[1])) {
-      const precision = extractNumber(argElements[0]);
-      const scale = extractNumber(argElements[1]);
-      if (!Number.isNaN(precision) && !Number.isNaN(scale)) numericParams = {
-        precision: Math.trunc(precision),
-        scale: Math.trunc(scale),
-      };
-    } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
-      const length = extractNumber(argElements[0]);
-      if (!Number.isNaN(length)) lengthParam = {
-        length: Math.trunc(length),
-      };
-    }
     if (!typeNode.callee) return new Report({
       schemaName: null,
       type_name: '',
@@ -188,17 +163,12 @@ export function processColumnType (
   const {
     name: typeName, schemaName: typeSchemaName,
   } = parseElementName(typeNode);
-  const isEnum = !!compiler.nodeReferee(typeNode).getFiltered(UNHANDLED);
-
   if (typeSchemaName.length > 1) {
     return new Report(
       {
         schemaName: typeSchemaName[0] ?? null,
         type_name: `${typeName}${typeSuffix}`,
         args: typeArgs,
-        numericParams,
-        lengthParam,
-        isEnum,
       },
       [
         new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', typeNode),
@@ -210,8 +180,5 @@ export function processColumnType (
     schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
     type_name: `${typeName}${typeSuffix}`,
     args: typeArgs,
-    numericParams,
-    lengthParam,
-    isEnum,
   });
 }

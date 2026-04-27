@@ -114,12 +114,6 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
-  numericParams?: {
-    precision: number;
-    scale: number;
-  };
-  lengthParam?: { length: number };
-  isEnum?: boolean;
 }
 
 export interface Column {

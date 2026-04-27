@@ -9,9 +9,6 @@ import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
   ArrayNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode,
@@ -21,9 +18,6 @@ import type {
   Check, Column, ColumnType, Index, InlineRef,
   SchemaElement, TablePartial,
 } from '@/core/types/schemaJson';
-import {
-  SymbolKind,
-} from '@/core/types/symbol';
 import type {
   Filepath,
 } from '@/core/types/filepath';
@@ -204,11 +198,6 @@ export class TablePartialInterpreter {
     const columnType = this.interpretColumnType(field);
     column.type = columnType;
 
-    // Check if type resolves to an enum
-    if (field.args[0]) {
-      column.type.isEnum = this.isEnumType(field.args[0]);
-    }
-
     column.token = getTokenPosition(field);
     column.inline_refs = [];
 
@@ -344,12 +333,6 @@ export class TablePartialInterpreter {
       this.pkColumns.push(column as Column);
     }
     return errors;
-  }
-
-  private isEnumType (typeNode: SyntaxNode): boolean {
-    const symbol = this.compiler.nodeReferee(typeNode).getFiltered(UNHANDLED);
-    if (!symbol) return false;
-    return symbol.isKind(SymbolKind.Enum);
   }
 
   private interpretColumnType (field: FunctionApplicationNode): ColumnType {
