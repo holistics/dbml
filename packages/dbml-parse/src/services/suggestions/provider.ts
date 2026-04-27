@@ -97,6 +97,10 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
+    const {
+      uri,
+    } = model;
+    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
     const offset = getOffsetFromMonacoPosition(model, position);
     const filepath = model.uri ? Filepath.fromUri(String(model.uri)) : DEFAULT_ENTRY;
 
@@ -234,7 +238,7 @@ function suggestOnPartialInjectionOp (
   filepath: Filepath,
   offset: number,
 ) {
-  return suggestNamesInScope(compiler, offset, compiler.parse.ast(filepath), [
+  return suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
     SymbolKind.TablePartial,
   ]);
 }
@@ -254,7 +258,7 @@ function suggestOnRelOp (
   ].includes(scopeKind)) {
     // Cross-file suggestions are surfaced inside suggestNamesInScope when its
     // walk reaches ProgramNode — no need to append them here.
-    const res = suggestNamesInScope(compiler, offset, compiler.container.element(filepath, offset), [
+    const res = suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Table,
       SymbolKind.Schema,
       SymbolKind.Column,
@@ -307,6 +311,7 @@ function suggestMembersOfSymbol (
 
 function suggestNamesInScope (
   compiler: Compiler,
+  filepath: Filepath,
   offset: number,
   parent: ElementDeclarationNode | ProgramNode | undefined,
   acceptedKinds: SymbolKind[],
@@ -424,7 +429,7 @@ function suggestInCommaExpression (compiler: Compiler, filepath: Filepath, offse
   // CommaExpressionNode is used in records data rows
   if (scopeKind === ScopeKind.RECORDS) {
     // In records, suggest enum values if applicable
-    return suggestNamesInScope(compiler, offset, compiler.container.element(filepath, offset), [
+    return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Schema,
       SymbolKind.Enum,
       SymbolKind.EnumField,
@@ -656,7 +661,7 @@ function suggestAttributeValue (
         })),
       };
     case 'default':
-      return suggestNamesInScope(compiler, offset, compiler.container.element(filepath, offset), [
+      return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
         SymbolKind.Schema,
         SymbolKind.Enum,
       ]);
@@ -763,7 +768,7 @@ function suggestInSubField (
         : suggestions;
     }
     case ScopeKind.TABLEGROUP:
-      return suggestInTableGroupField(compiler);
+      return suggestInTableGroupField(compiler, filepath);
     case ScopeKind.DIAGRAMVIEW:
       return suggestInDiagramViewBody();
     case ScopeKind.CUSTOM: {
@@ -815,7 +820,7 @@ function suggestInEnumField (
   const containerArgId = findContainerArg(offset, container);
 
   if (containerArgId === 1) {
-    return suggestNamesInScope(compiler, offset, compiler.container.element(filepath, offset), [
+    return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Schema,
       SymbolKind.Table,
       SymbolKind.Column,
@@ -914,7 +919,7 @@ function suggestInProjectField (
 }
 
 function suggestInRefField (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
-  return suggestNamesInScope(compiler, offset, compiler.container.element(filepath, offset), [
+  return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
     SymbolKind.Schema,
     SymbolKind.Table,
     SymbolKind.Column,
@@ -928,7 +933,7 @@ function suggestInElementHeader (
   container: ElementDeclarationNode,
 ): CompletionList {
   if (container.isKind(ElementKind.Records)) {
-    return suggestNamesInScope(compiler, offset, container.parent, [
+    return suggestNamesInScope(compiler, filepath, offset, container.parent, [
       SymbolKind.Schema,
       SymbolKind.Table,
     ]);
@@ -954,7 +959,7 @@ function suggestInCallExpression (
     && element.isKind(ElementKind.Records)
     && isOffsetWithinElementHeader(offset, element)
   ) {
-    if (inCallee) return suggestNamesInScope(compiler, offset, element.parent, [
+    if (inCallee) return suggestNamesInScope(compiler, filepath, offset, element.parent, [
       SymbolKind.Schema,
       SymbolKind.Table,
     ]);
@@ -1010,7 +1015,7 @@ function suggestInCallExpression (
   return noSuggestions();
 }
 
-function suggestInTableGroupField (compiler: Compiler): CompletionList {
+function suggestInTableGroupField (compiler: Compiler, filepath: Filepath): CompletionList {
   const publicMembers = compiler.parse.publicSymbolTable() ?? [];
   return {
     suggestions: [
@@ -1116,7 +1121,7 @@ function suggestColumnType (compiler: Compiler, filepath: Filepath, offset: numb
         sortText: CompletionItemKind.TypeParameter.toString().padStart(2, '0'),
         range: undefined as any,
       })),
-      ...suggestNamesInScope(compiler, offset, compiler.container.element(filepath, offset), [
+      ...suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
         SymbolKind.Enum,
         SymbolKind.Schema,
       ]).suggestions,

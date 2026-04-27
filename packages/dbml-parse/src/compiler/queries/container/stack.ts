@@ -2,11 +2,11 @@ import {
   findLastIndex, last,
 } from 'lodash-es';
 import {
-  getMemberChain,
-} from '@/core/parser/utils';
-import {
   type Filepath,
 } from '@/core/types/filepath';
+import {
+  getMemberChain,
+} from '@/core/parser/utils';
 import {
   BlockExpressionNode,
   CommaExpressionNode,
@@ -27,7 +27,11 @@ import {
 } from '@/core/utils/span';
 import type Compiler from '../../index';
 
-export function containerStack (this: Compiler, filepath: Filepath, offset: number): readonly Readonly<SyntaxNode>[] {
+export function containerStack (
+  this: Compiler,
+  filepath: Filepath,
+  offset: number,
+): readonly Readonly<SyntaxNode>[] {
   const tokens = this.token.flatStream(filepath);
   const {
     index: startIndex, token,

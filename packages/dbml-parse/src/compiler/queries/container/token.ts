@@ -1,14 +1,22 @@
 import {
   type Filepath,
-} from '@/core/types/filepath';
+} from '@/core/types';
 import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import type Compiler from '../../index';
 
-export function containerToken (this: Compiler, filepath: Filepath, offset: number): { token: SyntaxToken;
-  index: number; } | { token: undefined;
-    index: undefined; } {
+export function containerToken (
+  this: Compiler,
+  filepath: Filepath,
+  offset: number,
+): {
+  token: SyntaxToken;
+  index: number;
+} | {
+  token: undefined;
+  index: undefined;
+} {
   const id = this.token.flatStream(filepath).findIndex((t) => t.start >= offset);
 
   if (id === undefined) {

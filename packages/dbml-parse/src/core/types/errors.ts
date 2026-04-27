@@ -1,6 +1,6 @@
 import {
   Filepath,
-} from '@/core/types/filepath';
+} from './filepath';
 import {
   SyntaxNode,
 } from '@/core/types/nodes';

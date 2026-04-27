@@ -38,7 +38,7 @@ import {
 } from '@/services/types';
 import {
   extractReferee,
-} from '@/services/utils';
+} from '../utils';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

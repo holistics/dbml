@@ -16,7 +16,7 @@ import {
 } from '@/core/types/tokens';
 import {
   ElementKind,
-} from '../../types';
+} from '@/core/types/keywords';
 import {
   scanNonListNodeForBinding,
 } from '../utils';

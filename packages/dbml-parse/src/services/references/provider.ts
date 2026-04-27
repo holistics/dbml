@@ -18,8 +18,11 @@ import {
   Location, Position, ReferenceProvider, TextModel,
 } from '@/services/types';
 import {
-  extractReferee, getOffsetFromMonacoPosition,
+  getOffsetFromMonacoPosition,
 } from '@/services/utils';
+import {
+  extractReferee,
+} from '../utils';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;
@@ -32,6 +35,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     const {
       uri,
     } = model;
+    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
     const offset = getOffsetFromMonacoPosition(model, position);
     const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
 

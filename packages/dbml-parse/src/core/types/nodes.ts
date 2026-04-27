@@ -898,7 +898,6 @@ export class LiteralNode extends SyntaxNode {
 }
 
 // A wildcard pattern (*) expression
-// Currently, also support standalone (*)
 export class WildcardNode extends SyntaxNode {
   token?: SyntaxToken;
 

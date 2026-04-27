@@ -406,8 +406,10 @@ export class TableSymbol extends NodeSymbol {
     return color;
   }
 
-  mergedNote (compiler: Compiler): { value: string;
-    token: TokenPosition; } | undefined {
+  mergedNote (compiler: Compiler): {
+    value: string;
+    token: TokenPosition;
+  } | undefined {
     let note = this.note(compiler);
     for (const partial of this.partialSymbols(compiler)) {
       const partialNote = partial.note(compiler);

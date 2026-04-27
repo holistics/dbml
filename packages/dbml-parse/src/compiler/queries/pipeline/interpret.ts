@@ -15,7 +15,9 @@ import Report from '@/core/types/report';
 
 // Interpret a single file. Returns raw Database
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  return this.parseFile(filepath).chain(({ ast }) => {
+  return this.parseFile(filepath).chain(({
+    ast,
+  }) => {
     const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
     if (!symbol) return Report.create(undefined);
     return this.interpretSymbol(symbol).map((v) => v === UNHANDLED ? undefined : v as Database);

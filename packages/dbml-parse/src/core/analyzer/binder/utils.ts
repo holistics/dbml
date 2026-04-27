@@ -1,0 +1,175 @@
+import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  destructureComplexVariableTuple, extractVarNameFromPrimaryVariable,
+} from '@/core/analyzer/utils';
+import {
+  getElementNameString, isExpressionAVariableNode,
+} from '@/core/parser/utils';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  ElementDeclarationNode, InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, TupleExpressionNode, VariableNode,
+} from '@/core/types/nodes';
+import {
+  SymbolKind, createNodeSymbolIndex,
+} from '@/core/types/symbol';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
+import ChecksBinder from '@/core/global_modules/checks/bind';
+import CustomBinder from '@/core/global_modules/custom/bind';
+import DiagramViewBinder from '@/core/global_modules/diagramView/bind';
+import EnumBinder from '@/core/global_modules/enum/bind';
+import IndexesBinder from '@/core/global_modules/indexes/bind';
+import NoteBinder from '@/core/global_modules/note/bind';
+import ProjectBinder from '@/core/global_modules/project/bind';
+import RecordsBinder from '@/core/global_modules/records/bind';
+import RefBinder from '@/core/global_modules/ref/bind';
+import TableBinder from '@/core/global_modules/table/bind';
+import TableGroupBinder from '@/core/global_modules/tableGroup/bind';
+import TablePartialBinder from '@/core/global_modules/tablePartial/bind';
+
+export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
+  switch (convertStringToEnum(ElementKind, element.type.value)) {
+    case ElementKind.Enum:
+      return EnumBinder;
+    case ElementKind.Table:
+      return TableBinder;
+    case ElementKind.TableGroup:
+      return TableGroupBinder;
+    case ElementKind.Project:
+      return ProjectBinder;
+    case ElementKind.Ref:
+      return RefBinder;
+    case ElementKind.Note:
+      return NoteBinder;
+    case ElementKind.Indexes:
+      return IndexesBinder;
+    case ElementKind.TablePartial:
+      return TablePartialBinder;
+    case ElementKind.Checks:
+      return ChecksBinder;
+    case ElementKind.Records:
+      return RecordsBinder;
+    case ElementKind.DiagramView:
+      return DiagramViewBinder;
+    default:
+      return CustomBinder;
+  }
+}
+
+// Scan for variable node and member access expression in the node except ListExpressionNode
+export function scanNonListNodeForBinding (node?: SyntaxNode):
+{ variables: (PrimaryExpressionNode & { expression: VariableNode })[];
+  tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[]; }[] {
+  if (!node) {
+    return [];
+  }
+
+  if (isExpressionAVariableNode(node)) {
+    return [
+      {
+        variables: [
+          node,
+        ],
+        tupleElements: [],
+      },
+    ];
+  }
+
+  if (node instanceof InfixExpressionNode) {
+    const fragments = destructureComplexVariableTuple(node);
+    if (!fragments) {
+      return [
+        ...scanNonListNodeForBinding(node.leftExpression),
+        ...scanNonListNodeForBinding(node.rightExpression),
+      ];
+    }
+
+    return [
+      fragments,
+    ];
+  }
+
+  if (node instanceof PrefixExpressionNode) {
+    return scanNonListNodeForBinding(node.expression);
+  }
+
+  if (node instanceof PostfixExpressionNode) {
+    return scanNonListNodeForBinding(node.expression);
+  }
+
+  if (node instanceof TupleExpressionNode) {
+    const fragments = destructureComplexVariableTuple(node);
+    if (!fragments) {
+      // Tuple elements are not simple variables (e.g., member access expressions like table.column)
+      // Recurse into each element
+      return node.elementList.flatMap(scanNonListNodeForBinding);
+    }
+    return [
+      fragments,
+    ];
+  }
+
+  // The other cases are not supported as practically they shouldn't arise
+  return [];
+}
+
+export function lookupAndBindInScope (
+  initialScope: ElementDeclarationNode | ProgramNode,
+  symbolInfos: { node: PrimaryExpressionNode & { expression: VariableNode };
+    kind: SymbolKind; }[],
+): CompileError[] {
+  if (!initialScope.symbol?.symbolTable) {
+    throw new Error('lookupAndBindInScope should only be called with initial scope having a symbol table');
+  }
+
+  let curSymbolTable = initialScope.symbol.symbolTable;
+  let curKind = initialScope.symbol.kind;
+  let curName = initialScope instanceof ElementDeclarationNode ? (getElementNameString(initialScope) ?? '<invalid name>') : DEFAULT_SCHEMA_NAME;
+
+  if (initialScope instanceof ProgramNode && symbolInfos.length) {
+    const {
+      node, kind,
+    } = symbolInfos[0];
+    const name = extractVarNameFromPrimaryVariable(node) ?? '<unnamed>';
+    if (name === DEFAULT_SCHEMA_NAME && kind === SymbolKind.Schema) {
+      symbolInfos.shift();
+    }
+  }
+
+  for (const curSymbolInfo of symbolInfos) {
+    const {
+      node, kind,
+    } = curSymbolInfo;
+    const name = extractVarNameFromPrimaryVariable(node) ?? '<unnamed>';
+    const index = createNodeSymbolIndex(name, kind);
+    const symbol = curSymbolTable.get(index);
+
+    if (!symbol) {
+      return [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `${kind} '${name}' does not exist in ${curName === undefined ? 'global scope' : `${curKind} '${curName}'`}`, node),
+      ];
+    }
+    node.referee = symbol;
+    symbol.references.push(node);
+
+    curName = name;
+    curKind = kind;
+    if (!symbol.symbolTable) {
+      return [];
+    }
+    curSymbolTable = symbol.symbolTable;
+  }
+
+  return [];
+}

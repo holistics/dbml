@@ -1,12 +1,12 @@
 import {
   type Filepath,
-} from '@/core/types/filepath';
+} from '@/core/types';
 import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
   isInvalidToken,
-} from '@/core/utils/expression';
+} from '@/core/utils/tokens';
 import type Compiler from '../../index';
 
 export function flatStream (this: Compiler, filepath: Filepath): readonly SyntaxToken[] {
@@ -18,6 +18,9 @@ export function flatStream (this: Compiler, filepath: Filepath): readonly Syntax
     ]);
 }
 
-export function invalidStream (this: Compiler, filepath: Filepath): readonly SyntaxToken[] {
+export function invalidStream (
+  this: Compiler,
+  filepath: Filepath,
+): readonly SyntaxToken[] {
   return (this.parseFile(filepath).getValue().tokens).filter(isInvalidToken);
 }

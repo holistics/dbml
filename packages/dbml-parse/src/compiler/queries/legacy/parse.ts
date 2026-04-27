@@ -1,8 +1,5 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
   Database,
 } from '@/core/types';
 import type {
@@ -28,27 +25,27 @@ export function ast (this: Compiler, filepath: Filepath): Readonly<ProgramNode> 
   return this.parseFile(filepath).getValue().ast;
 }
 
-export function errors (this: Compiler): readonly Readonly<CompileError>[] {
-  return this.interpretFile(DEFAULT_ENTRY).getErrors();
+export function errors (this: Compiler, filepath: Filepath): readonly Readonly<CompileError>[] {
+  return this.interpretFile(filepath).getErrors();
 }
 
-export function warnings (this: Compiler): readonly Readonly<CompileWarning>[] {
-  return this.interpretFile(DEFAULT_ENTRY).getWarnings();
+export function warnings (this: Compiler, filepath: Filepath): readonly Readonly<CompileWarning>[] {
+  return this.interpretFile(filepath).getWarnings();
 }
 
 export function tokens (this: Compiler, filepath: Filepath): readonly Readonly<SyntaxToken>[] {
   return this.parseFile(filepath).getValue().tokens;
 }
 
-export function rawDb (this: Compiler): Readonly<Database> | undefined {
-  const ast = this.parseFile(DEFAULT_ENTRY).getValue().ast;
+export function rawDb (this: Compiler, filepath: Filepath): Readonly<Database> | undefined {
+  const ast = this.parseFile(filepath).getValue().ast;
   const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!symbol) return undefined;
   return this.interpretSymbol(symbol).getFiltered(UNHANDLED) as Database | undefined;
 }
 
-export function publicSymbolTable (this: Compiler): readonly Readonly<NodeSymbol>[] | undefined {
-  const astNode = this.parseFile(DEFAULT_ENTRY).getValue().ast;
+export function publicSymbolTable (this: Compiler, filepath: Filepath): readonly Readonly<NodeSymbol>[] | undefined {
+  const astNode = this.parseFile(filepath).getValue().ast;
   const sym = this.nodeSymbol(astNode);
   if (sym.hasValue(UNHANDLED)) return undefined;
   const programMembers = this.symbolMembers(sym.getValue());

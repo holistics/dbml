@@ -19,22 +19,18 @@ export interface TokenPosition {
   filepath: Filepath;
 }
 
-// A reference to an element imported via `use` or `reuse`.
-// `name` + `schemaName` identify the original element in the source file.
-// `visibleNames` lists every local name under which the element is reachable in this file.
 export interface ElementRef {
   name: string; // canonical name in source file
-  schemaName: string | null;
-  filepath: Filepath;
-  // [0] = primary name in exported JSON, [1..] = aliases.
-  // Alias strips schemaName to null.
+  schemaName: string | null; // canonical schema name in source file
+  filepath: Filepath; // The original source file
+  // Every local name under which the element is reachable in this file
   visibleNames: {
     schemaName: string | null;
     name: string;
   }[];
 }
 
-// Imported elements - refs to other files, resolved by exportSchemaJson.
+// Imported elements
 export interface DatabaseExternals {
   tables: ElementRef[];
   enums: ElementRef[];
@@ -66,7 +62,9 @@ export interface DiagramView {
   token: TokenPosition;
 }
 
-// Per-file schema. Local elements + externals (import refs).
+// Per-file schema:
+// - Local elements
+// - Externals (import refs)
 export interface Database {
   schemas: [];
   tables: Table[];
@@ -83,10 +81,9 @@ export interface Database {
   token?: TokenPosition;
 }
 
-// Full project: files = per-file Database, items = flat merge for canonical lookup
+// Multifile project
 export interface MasterDatabase {
   files: Record<string, Database>;
-  items: Database;
 }
 
 export interface Table {
@@ -116,8 +113,10 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
-  numericParams?: { precision: number;
-    scale: number; };
+  numericParams?: {
+    precision: number;
+    scale: number;
+  };
   lengthParam?: { length: number };
   isEnum?: boolean;
 }
