@@ -6,7 +6,7 @@ export {
   ElementKind,
 } from '@/core/types/keywords';
 
-export * from '@/core/interpreter/records/utils';
+export * from '@/core/global_modules/records/utils';
 
 export {
   // Core AST node types

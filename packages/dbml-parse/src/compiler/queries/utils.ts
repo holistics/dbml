@@ -6,7 +6,7 @@ import {
   tryExtractDateTime,
   tryExtractNumeric,
   tryExtractString,
-} from '@/core/interpreter/records/utils';
+} from '@/core/global_modules/records/utils';
 import {
   isAlphaOrUnderscore, isDigit,
 } from '@/core/utils/chars';
