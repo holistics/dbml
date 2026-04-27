@@ -45,7 +45,7 @@ import {
   extractInlineRefsFromTablePartials,
 } from '../records/utils/interpret';
 import {
-  tokenPositionOf,
+  getTokenPosition,
 } from '@/core/utils/interpret';
 import {
   getMultiplicities,
@@ -86,7 +86,7 @@ export default class ProgramInterpreter {
       tablePartials: [],
       records: [],
       diagramViews: [],
-      token: tokenPositionOf(node),
+      token: getTokenPosition(node),
       externals: {
         tables: [],
         enums: [],

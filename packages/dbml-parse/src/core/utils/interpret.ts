@@ -21,13 +21,17 @@ import {
 import {
   destructureComplexVariable, destructureMemberAccessExpression,
   extractQuotedStringToken, extractVariableFromExpression,
-  getNumberTextFromExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode, parseNumber,
+  isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode,
 } from './expression';
 import {
   isExpressionASignedNumberExpression,
 } from './validate';
+import {
+    extractNumber,
+  getNumberTextFromExpression,
+} from './numbers';
 
-export function tokenPositionOf (node: SyntaxNode): TokenPosition {
+export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
     start: {
       offset: node.startPos.offset,
@@ -95,7 +99,7 @@ export function processDefaultValue (valueNode?: SyntaxNode): {
   }
   if (isExpressionASignedNumberExpression(valueNode)) return {
     type: 'number',
-    value: parseNumber(valueNode),
+    value: extractNumber(valueNode),
   };
   if (isExpressionAnIdentifierNode(valueNode)) return {
     value: valueNode.expression.variable.value.toLowerCase(),
@@ -143,14 +147,14 @@ export function processColumnType (
     if (argElements.length === 2
       && isExpressionASignedNumberExpression(argElements[0])
       && isExpressionASignedNumberExpression(argElements[1])) {
-      const precision = parseNumber(argElements[0]);
-      const scale = parseNumber(argElements[1]);
+      const precision = extractNumber(argElements[0]);
+      const scale = extractNumber(argElements[1]);
       if (!Number.isNaN(precision) && !Number.isNaN(scale)) numericParams = {
         precision: Math.trunc(precision),
         scale: Math.trunc(scale),
       };
     } else if (argElements.length === 1 && isExpressionASignedNumberExpression(argElements[0])) {
-      const length = parseNumber(argElements[0]);
+      const length = extractNumber(argElements[0]);
       if (!Number.isNaN(length)) lengthParam = {
         length: Math.trunc(length),
       };

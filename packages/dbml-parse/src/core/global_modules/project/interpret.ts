@@ -16,7 +16,7 @@ import {
   extractQuotedStringToken,
 } from '@/core/utils/expression';
 import {
-  parseElementName, tokenPositionOf, normalizeNote,
+  parseElementName, getTokenPosition, normalizeNote,
 } from '@/core/utils/interpret';
 import {
   RefInterpreter,
@@ -40,7 +40,7 @@ export class ProjectInterpreter {
   }
 
   interpret (): Report<Project> {
-    this.project.token = tokenPositionOf(this.declarationNode);
+    this.project.token = getTokenPosition(this.declarationNode);
     const errors = [
       ...this.interpretName(this.declarationNode.name),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
@@ -105,7 +105,7 @@ export class ProjectInterpreter {
           if (content) {
             this.project.note = {
               value: normalizeNote(content),
-              token: tokenPositionOf(sub),
+              token: getTokenPosition(sub),
             };
           }
           return [];

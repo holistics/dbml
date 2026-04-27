@@ -463,31 +463,3 @@ export function isTerminalAccessFragment (node: SyntaxNode): boolean {
   if (currentAccess.rightExpression !== node) return false;
   return !(isAccessExpression(currentAccess.parentNode) && (currentAccess.parentNode as InfixExpressionNode).leftExpression === currentAccess);
 }
-
-export function isInvalidToken (token?: SyntaxToken): boolean {
-  return !!token?.isInvalid;
-}
-
-export function getNumberTextFromExpression (node: PrimaryExpressionNode | PrefixExpressionNode): string {
-  if (node instanceof PrefixExpressionNode) {
-    const op = node.op?.value ?? '';
-    if (!node.expression) return op;
-    return `${op}${getNumberTextFromExpression(node.expression)}`;
-  }
-  if (node.expression instanceof LiteralNode && node.expression.literal) {
-    return node.expression.literal.value;
-  }
-  return '';
-}
-
-export function parseNumber (node: PrefixExpressionNode | PrimaryExpressionNode): number {
-  if (node instanceof PrefixExpressionNode) {
-    if (!node.expression) return NaN;
-    const value = parseNumber(node.expression);
-    return node.op?.value === '-' ? -value : value;
-  }
-  if (node.expression instanceof LiteralNode && node.expression.literal) {
-    return Number.parseFloat(node.expression.literal.value);
-  }
-  return NaN;
-}

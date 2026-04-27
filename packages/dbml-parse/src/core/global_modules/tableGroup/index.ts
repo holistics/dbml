@@ -31,7 +31,7 @@ import {
   extractQuotedStringToken, getBody, isAccessExpression, isElementFieldNode, isElementNode, isExpressionAVariableNode, isInsideElementBody, isInsideSettingList,
 } from '@/core/utils/expression';
 import {
-  tokenPositionOf, normalizeNote,
+  getTokenPosition, normalizeNote,
 } from '@/core/utils/interpret';
 import {
   extractVarNameFromPrimaryVariable,
@@ -157,7 +157,7 @@ export const tableGroupModule: GlobalModule = {
           if (noteContent) {
             note = {
               value: normalizeNote(noteContent),
-              token: tokenPositionOf(sub),
+              token: getTokenPosition(sub),
             };
           }
           break;

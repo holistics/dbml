@@ -43,12 +43,12 @@ import {
   isExpressionASignedNumberExpression,
 } from '@/core/utils/validate';
 import {
-  parseColor, parseElementName, tokenPositionOf,
+  parseColor, parseElementName, getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
 import {
-  getNumberTextFromExpression, parseNumber,
-} from '@/core/utils';
+  getNumberTextFromExpression, extractNumber,
+} from '@/core/utils/numbers';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -74,7 +74,7 @@ export class TablePartialInterpreter {
   }
 
   interpret (): Report<SchemaElement | SchemaElement[] | undefined> {
-    this.tablePartial.token = this.symbol?.token ?? tokenPositionOf(this.declarationNode);
+    this.tablePartial.token = this.symbol?.token ?? getTokenPosition(this.declarationNode);
 
     if (this.symbol) {
       this.tablePartial.name = this.symbol.resolvedName(this.compiler, this.filepath).name;
@@ -145,7 +145,7 @@ export class TablePartialInterpreter {
     ] = settingMap[SettingName.Note] || [];
     this.tablePartial.note = noteNode && {
       value: extractQuotedStringToken(noteNode?.value) ? normalizeNote(extractQuotedStringToken(noteNode?.value)!) : '',
-      token: tokenPositionOf(noteNode),
+      token: getTokenPosition(noteNode),
     };
 
     return [];
@@ -174,7 +174,7 @@ export class TablePartialInterpreter {
                   : sub.body!.callee,
               )!,
             ),
-            token: tokenPositionOf(sub),
+            token: getTokenPosition(sub),
           };
           return [];
 
@@ -209,7 +209,7 @@ export class TablePartialInterpreter {
       column.type.isEnum = this.isEnumType(field.args[0]);
     }
 
-    column.token = tokenPositionOf(field);
+    column.token = getTokenPosition(field);
     column.inline_refs = [];
 
     const settings = field.args.slice(1);
@@ -238,7 +238,7 @@ export class TablePartialInterpreter {
         } else if (isExpressionASignedNumberExpression(defaultSetting)) {
           column.dbdefault = {
             type: 'number',
-            value: parseNumber(defaultSetting),
+            value: extractNumber(defaultSetting),
           };
         } else if (defaultSetting instanceof FunctionExpressionNode) {
           column.dbdefault = {
@@ -265,7 +265,7 @@ export class TablePartialInterpreter {
       const noteNode = settingMap[SettingName.Note]?.at(0);
       column.note = noteNode && {
         value: extractQuotedStringToken(noteNode.value) ? normalizeNote(extractQuotedStringToken(noteNode.value)!) : '',
-        token: tokenPositionOf(noteNode),
+        token: getTokenPosition(noteNode),
       };
 
       const refs = settingMap[SettingName.Ref] || [];
@@ -286,7 +286,7 @@ export class TablePartialInterpreter {
               columnName,
             ],
             relation: op.value as any,
-            token: tokenPositionOf(ref),
+            token: getTokenPosition(ref),
           };
         } else if (fragments.length === 3) {
           const [
@@ -301,7 +301,7 @@ export class TablePartialInterpreter {
               columnName,
             ],
             relation: op.value as any,
-            token: tokenPositionOf(ref),
+            token: getTokenPosition(ref),
           };
         } else {
           const columnName = fragments.pop()!;
@@ -314,7 +314,7 @@ export class TablePartialInterpreter {
               columnName,
             ],
             relation: op.value as any,
-            token: tokenPositionOf(ref),
+            token: getTokenPosition(ref),
           };
         }
 
@@ -327,7 +327,7 @@ export class TablePartialInterpreter {
 
       const checkNodes = settingMap[SettingName.Check] || [];
       column.checks = checkNodes.map((checkNode) => {
-        const token = tokenPositionOf(checkNode);
+        const token = getTokenPosition(checkNode);
         const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
         return {
           token,
@@ -414,7 +414,7 @@ export class TablePartialInterpreter {
       };
 
       const indexField = _indexField as FunctionApplicationNode;
-      index.token = tokenPositionOf(indexField);
+      index.token = getTokenPosition(indexField);
       const args = [
         indexField.callee!,
         ...indexField.args,
@@ -427,7 +427,7 @@ export class TablePartialInterpreter {
         const noteNode = settingMap[SettingName.Note]?.at(0);
         index.note = noteNode && {
           value: extractQuotedStringToken(noteNode.value)!,
-          token: tokenPositionOf(noteNode),
+          token: getTokenPosition(noteNode),
         };
         index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value);
       }
@@ -455,12 +455,12 @@ export class TablePartialInterpreter {
           ...functional.map((s) => ({
             value: s.value!.value,
             type: 'expression',
-            token: tokenPositionOf(s),
+            token: getTokenPosition(s),
           })),
           ...nonFunctional.map((s) => ({
             value: extractVarNameFromPrimaryVariable(s) ?? '',
             type: 'column',
-            token: tokenPositionOf(s),
+            token: getTokenPosition(s),
           })),
         );
       });
@@ -475,7 +475,7 @@ export class TablePartialInterpreter {
     this.tablePartial.checks!.push(...(checks.body as BlockExpressionNode).body.map((_checkField) => {
       const check: Partial<Check> = {};
       const checkField = _checkField as FunctionApplicationNode;
-      check.token = tokenPositionOf(checkField);
+      check.token = getTokenPosition(checkField);
 
       if (checkField.args[0] instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();

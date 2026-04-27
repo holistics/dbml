@@ -34,7 +34,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  tokenPositionOf, normalizeNote,
+  getTokenPosition, normalizeNote,
 } from '@/core/utils/interpret';
 import EnumBinder from './bind';
 
@@ -136,7 +136,7 @@ export const enumModule: GlobalModule = {
           ? {
               note: {
                 value: noteText,
-                token: tokenPositionOf(noteAttr),
+                token: getTokenPosition(noteAttr),
               },
             }
           : {}),

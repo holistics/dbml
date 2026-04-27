@@ -17,13 +17,15 @@ import {
   isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
-  tokenPositionOf,
+  getTokenPosition,
 } from '@/core/utils/interpret';
 import {
-  getNumberTextFromExpression,
   isExpressionASignedNumberExpression,
   isRelationshipOp,
 } from '@/core/utils';
+import {
+  getNumberTextFromExpression,
+} from '@/core/utils/numbers';
 
 export function interpretColumnType (typeNode?: SyntaxNode): ColumnType {
   // Skip ListExpressionNode (settings bracket [pk, ...]) - it's not a type
@@ -112,7 +114,7 @@ export function interpretInlineRefs (refs: any[]): InlineRef[] {
           tableName,
           fieldNames,
           relation: op,
-          token: tokenPositionOf(ref),
+          token: getTokenPosition(ref),
         });
       }
     } else if (ref.value instanceof PrefixExpressionNode && isRelationshipOp(ref.value.op?.value)) {
@@ -144,7 +146,7 @@ export function interpretInlineRefs (refs: any[]): InlineRef[] {
           tableName,
           fieldNames,
           relation: op,
-          token: tokenPositionOf(ref),
+          token: getTokenPosition(ref),
         });
       }
     }

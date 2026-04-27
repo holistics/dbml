@@ -30,7 +30,7 @@ import {
   isValidPartialInjection,
 } from '@/core/utils/validate';
 import {
-  parseColor, tokenPositionOf, normalizeNote, processColumnType, processDefaultValue,
+  parseColor, getTokenPosition, normalizeNote, processColumnType, processDefaultValue,
 } from '@/core/utils/interpret';
 import {
   type AttributeNode,
@@ -169,7 +169,7 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
 
   get token (): TokenPosition | undefined {
     if (!this.declaration) return undefined;
-    return tokenPositionOf(this.declaration);
+    return getTokenPosition(this.declaration);
   }
 
   note (compiler: Compiler): { value: string;
@@ -183,7 +183,7 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     if (!text) return undefined;
     return {
       value: text,
-      token: tokenPositionOf(noteAttr),
+      token: getTokenPosition(noteAttr),
     };
   }
 
@@ -525,7 +525,7 @@ export class ColumnSymbol extends NodeSymbol {
         {
           target,
           relation: prefixExpr.op?.value ?? '',
-          token: tokenPositionOf(attr),
+          token: getTokenPosition(attr),
         },
       ];
     });
@@ -540,7 +540,7 @@ export class ColumnSymbol extends NodeSymbol {
       return [
         {
           expression: funcExpr.value.value,
-          token: tokenPositionOf(attr),
+          token: getTokenPosition(attr),
         },
       ];
     });

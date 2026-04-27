@@ -25,7 +25,7 @@ import {
   aggregateSettingList,
 } from '@/core/utils/validate';
 import {
-  parseColor, tokenPositionOf,
+  parseColor, getTokenPosition,
 } from '@/core/utils/interpret';
 import {
   extractNamesFromRefOperand, getMultiplicities,
@@ -73,7 +73,7 @@ export class RefInterpreter {
   }
 
   interpret (): Report<Ref> {
-    this.ref.token = tokenPositionOf(this.declarationNode);
+    this.ref.token = getTokenPosition(this.declarationNode);
     const errors = [
       ...this.interpretName(this.declarationNode.name!),
       ...this.interpretBody(this.declarationNode.body!),
@@ -130,8 +130,8 @@ export class RefInterpreter {
     const leftNames = extractNamesFromRefOperand(leftExpression!, this.ownerSchema, this.ownerTable);
     const rightNames = extractNamesFromRefOperand(rightExpression!, this.ownerSchema, this.ownerTable);
     this.ref.endpoints = [
-      buildRefEndpoint(leftNames, multiplicities[0], tokenPositionOf(leftExpression!)),
-      buildRefEndpoint(rightNames, multiplicities[1], tokenPositionOf(rightExpression!)),
+      buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)),
+      buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!)),
     ];
 
     return [];

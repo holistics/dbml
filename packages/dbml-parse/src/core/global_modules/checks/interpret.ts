@@ -19,7 +19,7 @@ import {
   aggregateSettingList,
 } from '@/core/utils/validate';
 import {
-  tokenPositionOf,
+  getTokenPosition,
 } from '@/core/utils/interpret';
 
 export default class ChecksInterpreter {
@@ -38,7 +38,7 @@ export default class ChecksInterpreter {
     const checks = body.body.flatMap((field) => {
       if (!(field instanceof FunctionApplicationNode)) return [];
 
-      const token = tokenPositionOf(field);
+      const token = getTokenPosition(field);
 
       // Extract the backtick expression as the check body
       const expression = field.callee instanceof FunctionExpressionNode

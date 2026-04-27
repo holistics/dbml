@@ -39,7 +39,7 @@ import {
 } from '@/core/utils/validate';
 import {
   parseColor, parseElementName,
-  tokenPositionOf, normalizeNote,
+  getTokenPosition, normalizeNote,
   processColumnType, processDefaultValue,
 } from '@/core/utils/interpret';
 import {
@@ -73,7 +73,7 @@ export class TableInterpreter {
   }
 
   interpret (): Report<Table> {
-    this.table.token = this.symbol?.token ?? tokenPositionOf(this.declarationNode);
+    this.table.token = this.symbol?.token ?? getTokenPosition(this.declarationNode);
 
     const nameErrors: CompileError[] = [];
     if (this.symbol) {
@@ -173,7 +173,7 @@ export class TableInterpreter {
     ] = settingMap[SettingName.Note] || [];
     this.table.note = noteNode && {
       value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
-      token: tokenPositionOf(noteNode),
+      token: getTokenPosition(noteNode),
     };
 
     return [];
@@ -200,7 +200,7 @@ export class TableInterpreter {
                 ? (sub.body.body[0] as FunctionApplicationNode).callee
                 : sub.body!.callee,
             )!),
-            token: tokenPositionOf(sub),
+            token: getTokenPosition(sub),
           };
           return [];
 
@@ -223,7 +223,7 @@ export class TableInterpreter {
   private interpretInjection (injection: PrefixExpressionNode, order: number) {
     const partial: Partial<TablePartialInjection> = {
       order,
-      token: tokenPositionOf(injection),
+      token: getTokenPosition(injection),
     };
     partial.name = extractVariableFromExpression(injection.expression) || '';
     this.table.partials!.push(partial as TablePartialInjection);
@@ -267,7 +267,7 @@ export class TableInterpreter {
     column.type = typeReport.getValue();
     errors.push(...typeReport.getErrors());
 
-    column.token = tokenPositionOf(field);
+    column.token = getTokenPosition(field);
     column.inline_refs = [];
 
     const settings = field.args.slice(1);
@@ -288,7 +288,7 @@ export class TableInterpreter {
       const noteNode = settingMap[SettingName.Note]?.at(0);
       column.note = noteNode && {
         value: normalizeNote(extractQuotedStringToken(noteNode.value)!),
-        token: tokenPositionOf(noteNode),
+        token: getTokenPosition(noteNode),
       };
 
       const refs = settingMap[SettingName.Ref] || [];
@@ -319,7 +319,7 @@ export class TableInterpreter {
               columnName,
             ],
             relation: op.value as any,
-            token: tokenPositionOf(ref),
+            token: getTokenPosition(ref),
           };
         } else if (fragments.length === 2) {
           const [
@@ -333,7 +333,7 @@ export class TableInterpreter {
               columnName,
             ],
             relation: op.value as any,
-            token: tokenPositionOf(ref),
+            token: getTokenPosition(ref),
           };
         } else if (fragments.length === 3) {
           const [
@@ -348,7 +348,7 @@ export class TableInterpreter {
               columnName,
             ],
             relation: op.value as any,
-            token: tokenPositionOf(ref),
+            token: getTokenPosition(ref),
           };
         } else {
           errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
@@ -362,7 +362,7 @@ export class TableInterpreter {
               columnName,
             ],
             relation: op.value as any,
-            token: tokenPositionOf(ref),
+            token: getTokenPosition(ref),
           };
         }
 
@@ -371,7 +371,7 @@ export class TableInterpreter {
 
       const checkNodes = settingMap[SettingName.Check] || [];
       column.checks = checkNodes.map((checkNode) => {
-        const token = tokenPositionOf(checkNode);
+        const token = getTokenPosition(checkNode);
         const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
         return {
           token,
@@ -398,7 +398,7 @@ export class TableInterpreter {
       };
 
       const indexField = _indexField as FunctionApplicationNode;
-      index.token = tokenPositionOf(indexField);
+      index.token = getTokenPosition(indexField);
       const args = [
         indexField.callee!,
         ...indexField.args,
@@ -411,7 +411,7 @@ export class TableInterpreter {
         const noteNode = settingMap[SettingName.Note]?.at(0);
         index.note = noteNode && {
           value: extractQuotedStringToken(noteNode.value)!,
-          token: tokenPositionOf(noteNode),
+          token: getTokenPosition(noteNode),
         };
         index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value);
       }
@@ -440,12 +440,12 @@ export class TableInterpreter {
           ...functional.map((s) => ({
             value: s.value!.value,
             type: 'expression',
-            token: tokenPositionOf(s),
+            token: getTokenPosition(s),
           })),
           ...nonFunctional.map((s) => ({
             value: extractVarNameFromPrimaryVariable(s)!,
             type: 'column',
-            token: tokenPositionOf(s),
+            token: getTokenPosition(s),
           })),
         );
       });
@@ -460,7 +460,7 @@ export class TableInterpreter {
     this.table.checks!.push(...(checks.body as BlockExpressionNode).body.map((_checkField) => {
       const check: Partial<Check> = {};
       const checkField = _checkField as FunctionApplicationNode;
-      check.token = tokenPositionOf(checkField);
+      check.token = getTokenPosition(checkField);
 
       if (checkField.args[0] instanceof ListExpressionNode) {
         const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();

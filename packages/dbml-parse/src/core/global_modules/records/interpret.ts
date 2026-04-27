@@ -32,7 +32,7 @@ import {
   destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
-  tokenPositionOf,
+  getTokenPosition,
 } from '@/core/utils/interpret';
 import {
   lookupInDefaultSchema, lookupMember,
@@ -87,7 +87,7 @@ export default class RecordsInterpreter {
       values.push(rowData.row);
     }
 
-    const token = tokenPositionOf(this.element);
+    const token = getTokenPosition(this.element);
     const tableRecord: TableRecord = {
       schemaName: result.schemaName ?? undefined,
       tableName: result.tableName,
@@ -228,7 +228,7 @@ function extractDataFromRow (
     rowValues.push(value ?? {
       value: null,
       type: 'expression',
-      token: tokenPositionOf(arg),
+      token: getTokenPosition(arg),
     });
   }
 
@@ -250,7 +250,7 @@ function extractValue (
   colSymbol: ColumnSymbol,
   compiler: Compiler,
 ): Report<RecordValue | null> {
-  const token = tokenPositionOf(node);
+  const token = getTokenPosition(node);
   const typeInfo = colSymbol.type(compiler);
   const typeName = (typeInfo?.name ?? '').split('(')[0];
   const isEnum = !!typeInfo?.symbol;

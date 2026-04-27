@@ -22,7 +22,7 @@ import {
   destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
-  tokenPositionOf,
+  getTokenPosition,
 } from '@/core/utils/interpret';
 
 export default class IndexesInterpreter {
@@ -43,7 +43,7 @@ export default class IndexesInterpreter {
       if (!field.callee) return [];
 
       const columns: Index['columns'] = [];
-      const token = tokenPositionOf(field);
+      const token = getTokenPosition(field);
       const args: SyntaxNode[] = [
         field.callee,
         ...field.args,
@@ -76,7 +76,7 @@ export default class IndexesInterpreter {
           if (noteValue !== undefined) {
             note = {
               value: noteValue,
-              token: tokenPositionOf(noteNode),
+              token: getTokenPosition(noteNode),
             };
           }
         }
@@ -105,14 +105,14 @@ export default class IndexesInterpreter {
           columns.push({
             value: s.value?.value ?? '',
             type: 'expression',
-            token: tokenPositionOf(s),
+            token: getTokenPosition(s),
           });
         }
         for (const s of result.nonFunctional) {
           columns.push({
             value: extractVarNameFromPrimaryVariable(s) ?? '',
             type: 'column',
-            token: tokenPositionOf(s),
+            token: getTokenPosition(s),
           });
         }
       }
