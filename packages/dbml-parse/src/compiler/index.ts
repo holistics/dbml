@@ -26,6 +26,12 @@ import {
   flatStream, invalidStream,
 } from './queries/legacy/token';
 import {
+  bindNode,
+} from '@/core/global_modules';
+import {
+  validateNode,
+} from '@/core/local_modules';
+import {
   interpretFile,
 } from './queries/pipeline/interpret';
 import {
@@ -147,6 +153,10 @@ export default class Compiler {
   };
 
   parseFile = this.query(parseFile);
+
+  validateNode = this.query(validateNode);
+
+  bindNode = this.query(bindNode);
 
   interpretFile = this.query(interpretFile);
 
