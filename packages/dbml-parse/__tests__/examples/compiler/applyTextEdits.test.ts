@@ -256,7 +256,7 @@ describe('[example] applyTextEdits', () => {
       ]);
 
       // Original source should be unchanged
-      expect(compiler.parse.source(DEFAULT_ENTRY)).toBe(originalSource);
+      expect(compiler.layout.getSource(DEFAULT_ENTRY)).toBe(originalSource);
     });
   });
 });

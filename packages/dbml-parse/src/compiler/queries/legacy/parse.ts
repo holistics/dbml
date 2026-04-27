@@ -22,6 +22,7 @@ import type {
 } from '@/core/types/tokens';
 
 export function ast (this: Compiler, filepath: Filepath): Readonly<ProgramNode> {
+  this.bindFile(filepath);
   return this.parseFile(filepath).getValue().ast;
 }
 

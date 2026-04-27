@@ -107,7 +107,7 @@ export default class Compiler {
   // Interners
   nodeIdGenerator = new SyntaxNodeIdGenerator();
 
-  private symbolIdGenerator = new NodeSymbolIdGenerator();
+  symbolIdGenerator = new NodeSymbolIdGenerator();
   symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   // The structure of the DbmlProject

@@ -72,7 +72,7 @@ export function containerStack (
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.parse.source(filepath);
+      const source = this.layout.getSource(filepath) || '';
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();

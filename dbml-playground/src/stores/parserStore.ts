@@ -175,7 +175,7 @@ export const useParser = defineStore('parser', () => {
       const programSymbol = parseIndex ? compiler.nodeSymbol(parseIndex.ast).getFiltered(UNHANDLED) : undefined;
       symbols.value = programSymbol ? [buildSymbolInfo(compiler, programSymbol)] : [];
     } catch (err) {
-      logger.error('Unexpected parsing error:', err);
+      logger.error('Unexpected parsing error');
       const message = err instanceof Error ? err.message : 'Unexpected error';
       tokens.value = [];
       ast.value = null;
@@ -197,7 +197,7 @@ export const useParser = defineStore('parser', () => {
       try {
         warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as any[]).map(diagnosticToParserError);
       } catch (err) {
-        logger.warn('Failed to get warnings:', err);
+        logger.warn('Failed to get warnings');
         warnings.value = [];
       }
       isLoading.value = false;
@@ -274,7 +274,7 @@ export const useParser = defineStore('parser', () => {
         },
       });
     } catch (err) {
-      logger.warn('Failed to register Monaco language services:', err);
+      logger.warn('Failed to register Monaco language services');
     }
   }
 

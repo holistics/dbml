@@ -14,13 +14,14 @@ import {
 import Report from '@/core/types/report';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  return this.parseFile(filepath).chain(({
-    ast,
-  }) => {
-    const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
-    if (!symbol) return Report.create(undefined);
-    return this.interpretSymbol(symbol).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
-  });
+  const bindResult = this.bindFile(filepath);
+  if (bindResult.getErrors().length > 0) {
+    return bindResult.map(() => undefined);
+  }
+  const ast = this.parseFile(filepath).getValue().ast;
+  const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
+  if (!symbol) return Report.create(undefined);
+  return this.interpretSymbol(symbol).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
 }
 
 // Interpret all files. Returns raw MasterDatabase

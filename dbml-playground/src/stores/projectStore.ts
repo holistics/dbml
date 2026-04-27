@@ -34,7 +34,7 @@ function saveProject (files: Record<string, string>, folders: string[]): void {
     };
     localStorage.setItem(PROJECT_KEY, JSON.stringify(data));
   } catch (err) {
-    logger.warn('Failed to persist project:', err);
+    logger.warn('Failed to persist project');
   }
 }
 
@@ -87,7 +87,7 @@ function initProject (): { files: Record<string, string>;
       }
     }
   } catch (err) {
-    logger.warn('Failed to load project from storage:', err);
+    logger.warn('Failed to load project from storage');
   }
 
   const files = {
@@ -233,7 +233,7 @@ export const useProject = defineStore('project', () => {
       url.searchParams.set('code', encoded);
       return url.toString();
     } catch (err) {
-      logger.warn('Failed to generate share URL:', err);
+      logger.warn('Failed to generate share URL');
       return null;
     }
   }

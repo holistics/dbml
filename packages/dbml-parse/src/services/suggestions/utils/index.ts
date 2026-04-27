@@ -132,7 +132,7 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
 
 // Get the source text of a node or a token
 export function getNodeOrTokenSource (compiler: Compiler, filepath: Filepath, tokenOrNode: SyntaxToken | SyntaxNode): string {
-  return compiler.parse.source(filepath).slice(tokenOrNode.start, tokenOrNode.end);
+  return (compiler.layout.getSource(filepath) || '').slice(tokenOrNode.start, tokenOrNode.end);
 }
 
 /**

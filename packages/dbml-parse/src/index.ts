@@ -7,6 +7,10 @@ export {
 
 // Export the types that playground and other consumers need
 export {
+  type Unhandled,
+} from '@/core/types/module';
+
+export {
   ElementKind,
 } from '@/core/types/keywords';
 

@@ -8,7 +8,6 @@ import {
   PrimaryExpressionNode,
   ElementDeclarationNode,
   ProgramNode,
-  UseDeclarationNode,
 } from '@dbml/parse';
 import type {
   SymbolInfo,
@@ -31,11 +30,6 @@ export function getNameHint (node: SyntaxNode | SyntaxToken): string {
   if (node instanceof FunctionExpressionNode) return node.value?.value ?? '';
   if (node instanceof FunctionApplicationNode && node.callee) return getNameHint(node.callee);
   if (node instanceof PrimaryExpressionNode && node.expression) return getNameHint(node.expression);
-  if (node instanceof UseDeclarationNode) {
-    // `use <importPath>` reads like the source: `use './schema'`.
-    const path = node.importPath?.value;
-    return path ? `use ${path}` : 'use';
-  }
   if (node instanceof ElementDeclarationNode) {
     // Show both the element keyword and the declared name so `Table users`
     // reads at a glance in the Nodes tab.
