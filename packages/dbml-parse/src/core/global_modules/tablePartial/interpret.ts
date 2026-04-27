@@ -7,14 +7,14 @@ import {
 import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   extractColor, extractElementName, getColumnSymbolsOfRefOperand, getTokenPosition,
   isSameEndpoint, normalizeNoteContent, processColumnType, processDefaultValue,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -34,10 +34,10 @@ import {
   convertStringToEnum,
 } from '@/core/utils/enum';
 import {
-  ElementInterpreter, InterpreterDatabase,
-} from '@/core/interpreter/types';
+  InterpreterDatabase,
+} from '@/core/global_modules/types';
 
-export class TablePartialInterpreter implements ElementInterpreter {
+export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private tablePartial: Partial<TablePartial>;

@@ -13,7 +13,7 @@ import {
 import {
   destructureMemberAccessExpression,
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   isComment,
 } from '@/core/lexer/utils';

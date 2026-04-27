@@ -1,6 +1,6 @@
 import {
   pickBinder,
-} from '@/core/analyzer/binder/utils';
+} from '@/core/global_modules';
 import {
   ElementKind,
 } from '@/core/types/keywords';

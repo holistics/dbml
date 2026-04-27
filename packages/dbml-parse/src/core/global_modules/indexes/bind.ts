@@ -22,15 +22,15 @@ import {
 } from '@/core/types/keywords';
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
-  ElementBinder,
-} from '@/core/analyzer/binder/types';
+  pickBinder,
+} from '@/core/global_modules';
 import {
-  pickBinder, scanNonListNodeForBinding,
-} from '@/core/analyzer/binder/utils';
+  scanNonListNodeForBinding,
+} from '@/core/global_modules/utils';
 
-export default class IndexesBinder implements ElementBinder {
+export default class IndexesBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private ast: ProgramNode;

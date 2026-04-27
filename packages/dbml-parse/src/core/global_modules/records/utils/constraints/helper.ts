@@ -1,6 +1,6 @@
 import {
   TableRecordRow,
-} from '@/core/interpreter/types';
+} from '@/core/global_modules/types';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';

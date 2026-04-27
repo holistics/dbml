@@ -6,13 +6,13 @@ import {
 } from '@/core/types/keywords';
 import {
   destructureIndexNode,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  pickValidator,
+} from '@/core/local_modules';
 import {
-  aggregateSettingList, pickValidator,
-} from '@/core/analyzer/validator/utils';
+  aggregateSettingList,
+} from '@/core/utils/validate';
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/parser/utils';
@@ -37,7 +37,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class IndexesValidator implements ElementValidator {
+export default class IndexesValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

@@ -9,13 +9,10 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  ElementBinder,
-} from '@/core/analyzer/binder/types';
-import {
   pickBinder,
-} from '@/core/analyzer/binder/utils';
+} from '@/core/global_modules';
 
-export default class EnumBinder implements ElementBinder {
+export default class EnumBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private ast: ProgramNode;

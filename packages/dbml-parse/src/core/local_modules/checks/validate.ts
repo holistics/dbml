@@ -5,11 +5,11 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  pickValidator,
+} from '@/core/local_modules';
 import {
-  aggregateSettingList, pickValidator,
-} from '@/core/analyzer/validator/utils';
+  aggregateSettingList,
+} from '@/core/utils/validate';
 import {
   isExpressionAQuotedString,
 } from '@/core/parser/utils';
@@ -32,7 +32,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class ChecksValidator implements ElementValidator {
+export default class ChecksValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

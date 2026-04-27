@@ -21,13 +21,13 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  ElementBinder,
-} from '@/core/analyzer/binder/types';
+  pickBinder,
+} from '@/core/global_modules';
 import {
-  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
-} from '@/core/analyzer/binder/utils';
+  lookupAndBindInScope, scanNonListNodeForBinding,
+} from '@/core/global_modules/utils';
 
-export default class RefBinder implements ElementBinder {
+export default class RefBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private ast: ProgramNode;

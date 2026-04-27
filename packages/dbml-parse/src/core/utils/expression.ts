@@ -3,7 +3,7 @@ import {
 } from 'lodash-es';
 import {
   isRelationshipOp, isTupleOfVariables,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   isAccessExpression,
   isExpressionAQuotedString,

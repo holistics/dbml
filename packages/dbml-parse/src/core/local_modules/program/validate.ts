@@ -6,7 +6,7 @@ import {
 } from '@/core/types/keywords';
 import {
   pickValidator,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/local_modules';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';

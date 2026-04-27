@@ -9,13 +9,10 @@ import {
 } from '@/core/types/keywords';
 import {
   destructureComplexVariable,
-} from '@/core/analyzer/utils';
-import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+} from '@/core/utils/expression';
 import {
   pickValidator,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/local_modules';
 import {
   isExpressionAQuotedString,
 } from '@/core/parser/utils';
@@ -37,7 +34,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class NoteValidator implements ElementValidator {
+export default class NoteValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

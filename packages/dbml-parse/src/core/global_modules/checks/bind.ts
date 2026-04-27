@@ -8,11 +8,8 @@ import {
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
-import {
-  ElementBinder,
-} from '@/core/analyzer/binder/types';
 
-export default class ChecksBinder implements ElementBinder {
+export default class ChecksBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private ast: ProgramNode;

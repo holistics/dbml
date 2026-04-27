@@ -15,13 +15,13 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  ElementBinder,
-} from '@/core/analyzer/binder/types';
+  pickBinder,
+} from '@/core/global_modules';
 import {
-  lookupAndBindInScope, pickBinder, scanNonListNodeForBinding,
-} from '@/core/analyzer/binder/utils';
+  lookupAndBindInScope, scanNonListNodeForBinding,
+} from '@/core/global_modules/utils';
 
-export default class TableGroupBinder implements ElementBinder {
+export default class TableGroupBinder {
   private symbolFactory: SymbolFactory;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private ast: ProgramNode;

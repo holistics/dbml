@@ -3,7 +3,7 @@ import {
 } from 'lodash-es';
 import {
   destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
@@ -24,10 +24,10 @@ import {
 } from '@/core/types/schemaJson';
 import {
   InterpreterDatabase,
-} from '../types';
+} from '@/core/global_modules/types';
 import {
   mergeTableAndPartials,
-} from '../utils';
+} from '@/core/global_modules/utils';
 import {
   getRecordValueType,
   isBooleanType,

@@ -6,19 +6,15 @@ import {
 } from '@/constants';
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  pickValidator,
+} from '@/core/local_modules';
 import {
   aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
-import {
-  isValidName, pickValidator,
-} from '@/core/analyzer/validator/utils';
-import {
+  isValidName,
   registerSchemaStack,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/parser/utils';
@@ -40,7 +36,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class EnumValidator implements ElementValidator {
+export default class EnumValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

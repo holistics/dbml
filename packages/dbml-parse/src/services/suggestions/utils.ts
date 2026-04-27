@@ -7,7 +7,7 @@ import {
 } from '@/core/types/filepath';
 import {
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   hasTrailingSpaces,
 } from '@/core/lexer/utils';

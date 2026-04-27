@@ -3,10 +3,10 @@ import {
 } from 'lodash-es';
 import {
   InterpreterDatabase, TableRecordRow,
-} from '@/core/interpreter/types';
+} from '@/core/global_modules/types';
 import {
   mergeTableAndPartials,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';

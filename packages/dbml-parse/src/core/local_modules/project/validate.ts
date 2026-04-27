@@ -2,11 +2,11 @@ import {
   partition,
 } from 'lodash-es';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  pickValidator,
+} from '@/core/local_modules';
 import {
-  isSimpleName, pickValidator,
-} from '@/core/analyzer/validator/utils';
+  isSimpleName,
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
@@ -19,7 +19,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class ProjectValidator implements ElementValidator {
+export default class ProjectValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

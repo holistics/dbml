@@ -9,16 +9,16 @@ import {
 } from '@/core/types/keywords';
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
-  ElementValidator,
-} from '@/core/analyzer/validator/types';
+  pickValidator,
+} from '@/core/local_modules';
 import {
-  isSimpleName, pickValidator,
-} from '@/core/analyzer/validator/utils';
-import {
-  aggregateSettingList, isValidColor, registerSchemaStack,
-} from '@/core/analyzer/validator/utils';
+  isSimpleName,
+  aggregateSettingList,
+  isValidColor,
+  registerSchemaStack,
+} from '@/core/utils/validate';
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
 } from '@/core/parser/utils';
@@ -40,7 +40,7 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 
-export default class TableGroupValidator implements ElementValidator {
+export default class TableGroupValidator {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
   private publicSymbolTable: SymbolTable;
   private symbolFactory: SymbolFactory;

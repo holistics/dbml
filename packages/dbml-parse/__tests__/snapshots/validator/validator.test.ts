@@ -13,7 +13,7 @@ import type {
 } from '@/core/types/nodes';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Validator from '@/core/analyzer/validator/validator';
+import Validator from '@/core/local_modules/program/validate';
 import SymbolFactory from '@/core/types/symbol/factory';
 import {
   scanTestNames, toSnapshot,
@@ -41,10 +41,9 @@ describe('[snapshot] validator', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
     const {
-      // @ts-expect-error "Current workaround to use compiler but only trigger analyzer"
       nodeIdGenerator, symbolIdGenerator,
     } = compiler;
 
