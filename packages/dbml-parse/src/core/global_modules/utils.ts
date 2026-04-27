@@ -3,6 +3,9 @@ import {
 } from 'lodash-es';
 import type Compiler from '@/compiler';
 import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
   getMemberChain,
 } from '@/core/parser/utils';
 import type {
@@ -276,7 +279,8 @@ export function getSymbolSchemaAndName (compiler: Compiler, symbol: NodeSymbol):
   // Resolve through aliases so both name and schema come from the real declaration.
   const resolved = symbol.originalSymbol;
   const fullname = resolved.declaration ? compiler.nodeFullname(resolved.declaration).getFiltered(UNHANDLED) : undefined;
-  const schemaName = (fullname && fullname.length > 1) ? fullname[0] : null;
+  const rawSchema = (fullname && fullname.length > 1) ? fullname[0] : null;
+  const schemaName = rawSchema === DEFAULT_SCHEMA_NAME ? null : rawSchema;
   const name = fullname?.at(-1) ?? resolved.name ?? '';
 
   return {

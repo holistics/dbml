@@ -16,7 +16,7 @@ import {
   extractQuotedStringToken,
 } from '@/core/utils/expression';
 import {
-  parseElementName, getTokenPosition, normalizeNote,
+  extractElementName, getTokenPosition, normalizeNote,
 } from '@/core/utils/interpret';
 import {
   RefInterpreter,
@@ -58,7 +58,7 @@ export class ProjectInterpreter {
 
     const {
       name,
-    } = parseElementName(nameNode);
+    } = extractElementName(nameNode);
     this.project.name = name;
 
     return [];

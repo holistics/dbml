@@ -53,7 +53,7 @@ export function normalizeNote (content: string): string {
   return trimmedTopEmptyLines.map((line) => line.slice(minIndent)).join('\n');
 }
 
-export function parseElementName (nameNode: SyntaxNode): {
+export function extractElementName (nameNode: SyntaxNode): {
   schemaName: string[];
   name: string;
 } {
@@ -162,7 +162,7 @@ export function processColumnType (
 
   const {
     name: typeName, schemaName: typeSchemaName,
-  } = parseElementName(typeNode);
+  } = extractElementName(typeNode);
   if (typeSchemaName.length > 1) {
     return new Report(
       {

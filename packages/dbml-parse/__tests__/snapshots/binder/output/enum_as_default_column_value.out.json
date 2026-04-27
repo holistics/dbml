@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_COLUMN_SETTING_VALUE",
-      "diagnostic": "'default' must be an enum value, a string literal, number literal, function expression, true, false or null",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<primary-expression>@invalid_value@[L26:C46, L26:C59]",
-          "snippet": "invalid_value"
-        }
-      }
-    },
-    {
-      "code": "INVALID_COLUMN_SETTING_VALUE",
-      "diagnostic": "'default' must be an enum value, a string literal, number literal, function expression, true, false or null",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L27:C47, L27:C74]",
-          "snippet": "field1.fie...ld3.field4"
-        }
-      }
-    },
-    {
       "code": "BINDING_ERROR",
       "diagnostic": "Schema 'field1' does not exist in Schema 'public'",
       "filepath": "/main.dbml",

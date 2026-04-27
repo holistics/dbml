@@ -25,30 +25,6 @@
       }
     },
     {
-      "code": "EMPTY_ENUM",
-      "diagnostic": "An Enum must have at least one element",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@Users@[L16:C0, L18:C1]",
-          "snippet": "Enum Users {\r\n\r\n}"
-        }
-      }
-    },
-    {
-      "code": "EMPTY_ENUM",
-      "diagnostic": "An Enum must have at least one element",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<element-declaration>@Users@[L20:C0, L22:C1]",
-          "snippet": "Enum Users {\r\n\r\n}"
-        }
-      }
-    },
-    {
       "code": "DUPLICATE_NAME",
       "diagnostic": "Enum 'Users' already exists in schema 'public'",
       "filepath": "/main.dbml",

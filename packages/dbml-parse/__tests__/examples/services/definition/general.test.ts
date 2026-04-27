@@ -1263,9 +1263,9 @@ Ref: schema1.orders.id > schema2.orders.id`;
           {
             "range": {
               "endColumn": 2,
-              "endLineNumber": 3,
+              "endLineNumber": 7,
               "startColumn": 1,
-              "startLineNumber": 1,
+              "startLineNumber": 5,
             },
             "uri": "",
           },

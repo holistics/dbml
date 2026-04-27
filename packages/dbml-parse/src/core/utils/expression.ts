@@ -123,33 +123,9 @@ export function getElementNameString (element?: SyntaxNode): string | undefined 
   return ss !== undefined ? ss.join('.') : undefined;
 }
 
-export function isAsKeyword (
-  token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER;
-  value: 'as'; } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'as';
-}
-
-// Check if a token is the `use` keyword (case-insensitive)
-export function isUseKeyword (
-  token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'use';
-}
-
-// Check if a token is the `from` keyword (case-insensitive)
-export function isFromKeyword (
-  token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'from';
-}
-
-// Check if a token is the `reuse` keyword (case-insensitive)
-export function isReuseKeyword (
-  token?: SyntaxToken,
-): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
-  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'reuse';
-}
+export {
+  isAsKeyword, isUseKeyword, isFromKeyword, isReuseKeyword,
+} from './tokens';
 
 export function getBody (node?: ElementDeclarationNode): (FunctionApplicationNode | ElementDeclarationNode)[] {
   if (!node?.body) return [];

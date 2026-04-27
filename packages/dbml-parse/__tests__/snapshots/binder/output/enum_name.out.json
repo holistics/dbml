@@ -1,30 +1,6 @@
 {
   "errors": [
     {
-      "code": "INVALID_COLUMN_TYPE",
-      "diagnostic": "Invalid column type",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L6:C12, L6:C18]",
-          "snippet": "v2. []"
-        }
-      }
-    },
-    {
-      "code": "INVALID_COLUMN_TYPE",
-      "diagnostic": "Invalid column type",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L7:C12, L7:C15]",
-          "snippet": "v2."
-        }
-      }
-    },
-    {
       "code": "INVALID_OPERAND",
       "diagnostic": "Invalid start of operand \"}\"",
       "filepath": "/main.dbml",

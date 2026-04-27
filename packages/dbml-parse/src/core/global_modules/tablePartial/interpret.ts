@@ -37,7 +37,7 @@ import {
   isExpressionASignedNumberExpression,
 } from '@/core/utils/validate';
 import {
-  parseColor, parseElementName, getTokenPosition,
+  parseColor, extractElementName, getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
 import {
@@ -119,7 +119,7 @@ export class TablePartialInterpreter {
   private interpretName (nameNode: SyntaxNode): CompileError[] {
     const {
       name,
-    } = parseElementName(nameNode);
+    } = extractElementName(nameNode);
 
     this.tablePartial.name = name;
 

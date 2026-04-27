@@ -63,11 +63,11 @@ export {
 export * from '@/core/global_modules/records/utils/data';
 
 export type {
-  AliasKind, DiagramView, FilterConfig,
+  AliasKind, DiagramView, ElementRef, FilterConfig,
   Table, Note, Column, ColumnType, Index, Check, InlineRef,
-  RelationCardinality,
-  Enum, EnumField, TableGroup, TablePartial,
-  Alias, Project, RecordValue, TokenPosition,
+  MasterDatabase, RelationCardinality, RecordValueType,
+  Enum, EnumField, TableGroup, TableGroupField, TablePartial, TablePartialInjection,
+  Alias, Project, RecordValue, SchemaElement, TokenPosition,
 } from '@/core/types/schemaJson';
 export type {
   Database, Ref, RefEndpoint, RefEndpointPair, TableRecord,

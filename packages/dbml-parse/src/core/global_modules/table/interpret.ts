@@ -38,7 +38,7 @@ import {
   aggregateSettingList, isValidPartialInjection,
 } from '@/core/utils/validate';
 import {
-  parseColor, parseElementName,
+  parseColor, extractElementName,
   getTokenPosition, normalizeNote,
   processColumnType, processDefaultValue,
 } from '@/core/utils/interpret';
@@ -131,7 +131,7 @@ export class TableInterpreter {
   private interpretName (nameNode: SyntaxNode): CompileError[] {
     const {
       name, schemaName,
-    } = parseElementName(nameNode);
+    } = extractElementName(nameNode);
 
     if (schemaName.length > 1) {
       this.table.name = name;
