@@ -26,7 +26,7 @@ import {
 } from '../utils';
 import {
   isTupleOfVariables,
-} from '@/core/utils';
+} from '@/core/utils/validate';
 
 export default class RecordsBinder {
   private compiler: Compiler;

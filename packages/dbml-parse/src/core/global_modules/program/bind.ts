@@ -25,7 +25,7 @@ import {
 } from '@/core/types/tokens';
 import {
   isRelationshipOp,
-} from '@/core/utils';
+} from '@/core/utils/validate';
 import {
   destructureComplexVariable,
   destructureMemberAccessExpression,

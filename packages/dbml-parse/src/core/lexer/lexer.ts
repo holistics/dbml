@@ -1,6 +1,6 @@
 import {
   isInvalidToken,
-} from '@/core/utils';
+} from '@/core/utils/tokens';
 import {
   Position,
 } from '@/core/types/position';

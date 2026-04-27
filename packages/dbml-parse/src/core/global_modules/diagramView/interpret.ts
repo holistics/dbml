@@ -26,7 +26,7 @@ import {
 } from '@/core/types/symbol';
 import {
   destructureComplexVariable, isWildcardExpression,
-} from '@/core/utils';
+} from '@/core/utils/expression';
 import {
   extractReferee,
 } from '@/services/utils';

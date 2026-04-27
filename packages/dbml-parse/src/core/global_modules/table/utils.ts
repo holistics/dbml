@@ -22,7 +22,7 @@ import {
 import {
   isExpressionASignedNumberExpression,
   isRelationshipOp,
-} from '@/core/utils';
+} from '@/core/utils/validate';
 import {
   getNumberTextFromExpression,
 } from '@/core/utils/numbers';

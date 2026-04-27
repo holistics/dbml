@@ -9,7 +9,7 @@ import {
 } from '@/core/utils/expression';
 import {
   isExpressionASignedNumberExpression,
-} from '@/core/utils';
+} from '@/core/utils/validate';
 import {
   isExpressionAnIdentifierNode,
 } from '@/core/utils/expression';

@@ -19,7 +19,7 @@ import {
 import ProjectValidator from './validate';
 import {
   isSimpleName,
-} from '@/core/utils';
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types';
