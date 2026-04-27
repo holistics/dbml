@@ -6,12 +6,12 @@ import {
   describe, expect, it,
 } from 'vitest';
 import {
-  scanTestNames, Snappable, toSnapshot,
+  scanTestNames, toSnapshot,
 } from '@tests/utils';
+import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
 import type { Database } from '@/core/types/schemaJson';
 import type Report from '@/core/types/report';
-import { DEFAULT_ENTRY } from '@/constants';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
   const errors = report.getErrors();
@@ -32,7 +32,7 @@ describe('[snapshot] interpreter', () => {
 
     const compiler = new Compiler();
     compiler.setSource(DEFAULT_ENTRY, program);
-    const report = compiler.parse._();
+    const report = compiler.interpretFile(DEFAULT_ENTRY);
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));
   });

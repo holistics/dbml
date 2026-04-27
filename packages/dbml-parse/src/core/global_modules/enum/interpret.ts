@@ -1,12 +1,12 @@
 import {
   extractQuotedStringToken, extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -17,10 +17,10 @@ import {
   Enum, EnumField,
 } from '@/core/types/schemaJson';
 import {
-  ElementInterpreter, InterpreterDatabase,
-} from '@/core/interpreter/types';
+  InterpreterDatabase,
+} from '@/core/global_modules/types';
 
-export class EnumInterpreter implements ElementInterpreter {
+export class EnumInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private enum: Partial<Enum>;

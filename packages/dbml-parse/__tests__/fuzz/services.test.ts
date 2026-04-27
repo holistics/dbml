@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as fc from 'fast-check';
+import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';

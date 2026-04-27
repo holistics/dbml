@@ -1,6 +1,7 @@
 import {
   describe, expect, it,
 } from 'vitest';
+import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import {
@@ -190,8 +191,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[2]; // users table is the third element
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -226,8 +225,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[1];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -258,8 +255,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[1];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -289,8 +284,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._(); // Trigger parsing
-
       // Get the table symbol
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
@@ -325,8 +318,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -360,8 +351,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -387,8 +376,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -415,8 +402,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -442,8 +427,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -471,8 +454,6 @@ describe('[example] Suggestions Utils - Records', () => {
       `;
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, program);
-      compiler.parse._();
-
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;

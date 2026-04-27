@@ -6,10 +6,10 @@ import {
 } from '@/constants';
 import {
   InterpreterDatabase, TableRecordRow,
-} from '@/core/interpreter/types';
+} from '@/core/global_modules/types';
 import {
   extractInlineRefsFromTablePartials, mergeTableAndPartials,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 import {
   CompileError,
 } from '@/core/types/errors';

@@ -29,7 +29,7 @@ import {
 } from '@/core/utils/expression';
 import {
   extractReferee,
-} from '@/services/utils';
+} from '../utils';
 
 export class DiagramViewInterpreter {
   private compiler: Compiler;

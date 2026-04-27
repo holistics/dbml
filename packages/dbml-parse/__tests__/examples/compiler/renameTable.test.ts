@@ -1,9 +1,9 @@
 import {
   describe, expect, test,
 } from 'vitest';
+import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler/index';
 import { TableNameInput } from '@/compiler/queries/transform';
-import { DEFAULT_ENTRY } from '@/constants';
 import { Filepath } from '@/core/types/filepath';
 
 function renameTable (

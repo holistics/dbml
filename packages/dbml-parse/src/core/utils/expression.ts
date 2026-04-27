@@ -15,7 +15,6 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
-  PrefixExpressionNode,
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
@@ -335,6 +334,7 @@ export function destructureIndexNode (node?: SyntaxNode): {
       (e) => e instanceof FunctionExpressionNode,
     ) as FunctionExpressionNode[];
     const nonfunctionalIndexName = node.elementList.filter(isExpressionAVariableNode);
+
     return {
       functional: functionalIndexName,
       nonFunctional: nonfunctionalIndexName,

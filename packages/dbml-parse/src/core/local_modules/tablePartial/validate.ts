@@ -30,7 +30,6 @@ import {
   isUnaryRelationship,
   isValidColor,
   isValidColumnType,
-
   isValidDefaultValue,
 } from '@/core/utils/validate';
 

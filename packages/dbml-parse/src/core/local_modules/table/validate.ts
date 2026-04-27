@@ -40,7 +40,6 @@ import {
   isValidColumnType,
   isValidDefaultValue,
   isValidName,
-
   isValidPartialInjection,
 } from '@/core/utils/validate';
 

@@ -124,7 +124,7 @@ export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Repo
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-// Collect metadata from all modules for a node (not chain-of-responsibility — all modules contribute)
+// Collect metadata from all modules for a node (not chain-of-responsibility - all modules contribute)
 export function emitMetadata (compiler: Compiler, node: SyntaxNode): SymbolMetadata[] {
   const result: SymbolMetadata[] = [];
   for (const module of modules) {

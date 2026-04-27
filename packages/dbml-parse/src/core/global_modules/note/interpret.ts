@@ -3,10 +3,10 @@ import {
 } from 'lodash-es';
 import {
   aggregateSettingList,
-} from '@/core/analyzer/validator/utils';
+} from '@/core/utils/validate';
 import {
   extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/interpreter/utils';
+} from '@/core/global_modules/utils';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -17,10 +17,10 @@ import {
   Note,
 } from '@/core/types/schemaJson';
 import {
-  ElementInterpreter, InterpreterDatabase,
-} from '@/core/interpreter/types';
+  InterpreterDatabase,
+} from '@/core/global_modules/types';
 
-export class StickyNoteInterpreter implements ElementInterpreter {
+export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
   private env: InterpreterDatabase;
   private note: Partial<Note>;

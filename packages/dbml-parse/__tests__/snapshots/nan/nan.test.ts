@@ -8,8 +8,8 @@ import {
 import {
   scanTestNames, toSnapshot,
 } from '@tests/utils';
-import Compiler from '@/compiler';
 import { DEFAULT_ENTRY } from '@/constants';
+import Compiler from '@/compiler';
 import type { Database } from '@/core/types/schemaJson';
 import type Report from '@/core/types/report';
 

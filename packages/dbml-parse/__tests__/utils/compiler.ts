@@ -82,7 +82,7 @@ export function analyze (source: string) {
   );
 }
 
-export function interpret (source: string): Report<Database | undefined> {
+export function interpret (source: string): Report<Readonly<Database> | undefined> {
   const compiler = new Compiler();
   compiler.setSource(DEFAULT_ENTRY, source);
 
