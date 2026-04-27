@@ -867,6 +867,16 @@
       }
     },
     "fullEnd": 142,
-    "fullStart": 0
+    "fullStart": 0,
+    "symbol": {
+      "context": {
+        "id": "symbol@Schema@@[L0:C0, L13:C1]",
+        "snippet": "Test Tuple...    12)\r\n}"
+      },
+      "declaration": {
+        "id": "node@<program>@@[L0:C0, L13:C1]",
+        "snippet": "Test Tuple...    12)\r\n}"
+      }
+    }
   }
 }

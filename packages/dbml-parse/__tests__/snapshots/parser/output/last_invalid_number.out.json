@@ -149,7 +149,17 @@
                       }
                     },
                     "fullEnd": 25,
-                    "fullStart": 10
+                    "fullStart": 10,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@id@[L1:C4, L1:C14]",
+                        "snippet": "id integer"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@id@[L1:C4, L1:C14]",
+                        "snippet": "id integer"
+                      }
+                    }
                   }
                 ]
               },
@@ -196,7 +206,25 @@
             }
           },
           "fullEnd": 27,
-          "fullStart": 0
+          "fullStart": 0,
+          "symbol": {
+            "context": {
+              "id": "symbol@Table@E@[L0:C0, L2:C1]",
+              "snippet": "Table E {\n... integer\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@E@[L0:C0, L2:C1]",
+              "snippet": "Table E {\n... integer\n}"
+            },
+            "members": [
+              {
+                "context": {
+                  "id": "symbol@Column@id@[L1:C4, L1:C14]",
+                  "snippet": "id integer"
+                }
+              }
+            ]
+          }
         },
         {
           "context": {
@@ -242,7 +270,17 @@
             }
           },
           "fullEnd": 37,
-          "fullStart": 27
+          "fullStart": 27,
+          "symbol": {
+            "context": {
+              "id": "symbol@Note@@[L4:C0, L4:C9]",
+              "snippet": "Note: 12."
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@@[L4:C0, L4:C9]",
+              "snippet": "Note: 12."
+            }
+          }
         }
       ],
       "eof": {
@@ -256,6 +294,24 @@
       }
     },
     "fullEnd": 37,
-    "fullStart": 0
+    "fullStart": 0,
+    "symbol": {
+      "context": {
+        "id": "symbol@Schema@@[L0:C0, L4:C9]",
+        "snippet": "Table E {\n...\nNote: 12."
+      },
+      "declaration": {
+        "id": "node@<program>@@[L0:C0, L4:C9]",
+        "snippet": "Table E {\n...\nNote: 12."
+      },
+      "members": [
+        {
+          "context": {
+            "id": "symbol@Table@E@[L0:C0, L2:C1]",
+            "snippet": "Table E {\n... integer\n}"
+          }
+        }
+      ]
+    }
   }
 }

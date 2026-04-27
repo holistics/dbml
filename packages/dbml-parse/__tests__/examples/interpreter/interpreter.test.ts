@@ -610,7 +610,7 @@ describe('[example] interpreter', () => {
 
       expect(field.name).toBe('col');
       expect(field.type.type_name).toBe('custom_type');
-      expect(field.type.schemaName).toBe('public');
+      expect(field.type.schemaName).toBeNull();
       expect(field.type.args).toBeNull();
     });
 
@@ -887,7 +887,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ref = db.refs[0];
 
-      expect(ref.endpoints[0].schemaName).toBe('public');
+      expect(ref.endpoints[0].schemaName).toBeNull();
       expect(ref.endpoints[1].schemaName).toBe('auth');
     });
   });

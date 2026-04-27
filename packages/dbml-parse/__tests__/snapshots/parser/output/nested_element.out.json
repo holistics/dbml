@@ -111,7 +111,17 @@
                       }
                     },
                     "fullEnd": 35,
-                    "fullStart": 11
+                    "fullStart": 11,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Table@A@[L1:C4, L3:C5]",
+                        "snippet": "Table A {\r\n\r\n    }"
+                      },
+                      "declaration": {
+                        "id": "node@<element-declaration>@A@[L1:C4, L3:C5]",
+                        "snippet": "Table A {\r\n\r\n    }"
+                      }
+                    }
                   },
                   {
                     "context": {
@@ -225,7 +235,17 @@
                       }
                     },
                     "fullEnd": 74,
-                    "fullStart": 36
+                    "fullStart": 36,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Table@B@[L5:C4, L7:C5]",
+                        "snippet": "Table B as...   \r\n    }"
+                      },
+                      "declaration": {
+                        "id": "node@<element-declaration>@B@[L5:C4, L7:C5]",
+                        "snippet": "Table B as...   \r\n    }"
+                      }
+                    }
                   }
                 ]
               },
@@ -458,7 +478,17 @@
                       }
                     },
                     "fullEnd": 196,
-                    "fullStart": 112
+                    "fullStart": 112,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@Indexes@[L11:C4, L11:C35]",
+                        "snippet": "Indexes wr...element {}"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@Indexes@[L11:C4, L11:C35]",
+                        "snippet": "Indexes wr...element {}"
+                      }
+                    }
                   }
                 ]
               },
@@ -505,7 +535,25 @@
             }
           },
           "fullEnd": 199,
-          "fullStart": 78
+          "fullStart": 78,
+          "symbol": {
+            "context": {
+              "id": "symbol@Table@wrong_nested_element@[L10:C0, L12:C1]",
+              "snippet": "Table wron...ication\r\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@wrong_nested_element@[L10:C0, L12:C1]",
+              "snippet": "Table wron...ication\r\n}"
+            },
+            "members": [
+              {
+                "context": {
+                  "id": "symbol@Column@Indexes@[L11:C4, L11:C35]",
+                  "snippet": "Indexes wr...element {}"
+                }
+              }
+            ]
+          }
         }
       ],
       "eof": {
@@ -519,6 +567,24 @@
       }
     },
     "fullEnd": 199,
-    "fullStart": 0
+    "fullStart": 0,
+    "symbol": {
+      "context": {
+        "id": "symbol@Schema@@[L0:C0, L13:C0]",
+        "snippet": "Project {\r...ation\r\n}\r\n"
+      },
+      "declaration": {
+        "id": "node@<program>@@[L0:C0, L13:C0]",
+        "snippet": "Project {\r...ation\r\n}\r\n"
+      },
+      "members": [
+        {
+          "context": {
+            "id": "symbol@Table@wrong_nested_element@[L10:C0, L12:C1]",
+            "snippet": "Table wron...ication\r\n}"
+          }
+        }
+      ]
+    }
   }
 }

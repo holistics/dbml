@@ -46,7 +46,17 @@
             }
           },
           "fullEnd": 6,
-          "fullStart": 0
+          "fullStart": 0,
+          "symbol": {
+            "context": {
+              "id": "symbol@Note@@[L0:C0, L0:C5]",
+              "snippet": "Note:"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@@[L0:C0, L0:C5]",
+              "snippet": "Note:"
+            }
+          }
         }
       ],
       "eof": {
@@ -60,6 +70,16 @@
       }
     },
     "fullEnd": 15,
-    "fullStart": 0
+    "fullStart": 0,
+    "symbol": {
+      "context": {
+        "id": "symbol@Schema@@[L0:C0, L0:C15]",
+        "snippet": "Note: Enum E {}"
+      },
+      "declaration": {
+        "id": "node@<program>@@[L0:C0, L0:C15]",
+        "snippet": "Note: Enum E {}"
+      }
+    }
   }
 }

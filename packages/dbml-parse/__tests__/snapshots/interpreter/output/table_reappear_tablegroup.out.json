@@ -23,30 +23,6 @@
           "snippet": "users"
         }
       }
-    },
-    {
-      "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
-      "diagnostic": "Table \"U\" already appears in group \"A2\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@U@[L31:C4, L31:C5]",
-          "snippet": "U"
-        }
-      }
-    },
-    {
-      "code": "TABLE_REAPPEAR_IN_TABLEGROUP",
-      "diagnostic": "Table \"A.users\" already appears in group \"A5\"",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@@[L39:C2, L39:C9]",
-          "snippet": "A.users"
-        }
-      }
     }
   ]
 }

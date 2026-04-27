@@ -603,7 +603,13 @@
                           }
                         },
                         "fullEnd": 153,
-                        "fullStart": 146
+                        "fullStart": 146,
+                        "referee": {
+                          "context": {
+                            "id": "symbol@Table@t1@[L0:C0, L2:C1]",
+                            "snippet": "Table t1 {... integer\n}"
+                          }
+                        }
                       }
                     },
                     "fullEnd": 153,
@@ -1028,7 +1034,13 @@
                           }
                         },
                         "fullEnd": 234,
-                        "fullStart": 225
+                        "fullStart": 225,
+                        "referee": {
+                          "context": {
+                            "id": "symbol@Table@table2@[L13:C0, L15:C1]",
+                            "snippet": "Table tabl...int [pk]\n}"
+                          }
+                        }
                       }
                     },
                     "fullEnd": 234,

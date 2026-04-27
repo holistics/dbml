@@ -312,7 +312,17 @@
                       }
                     },
                     "fullEnd": 44,
-                    "fullStart": 19
+                    "fullStart": 19,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@id@[L1:C2, L1:C24]",
+                        "snippet": "id int [pk...increment]"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@id@[L1:C2, L1:C24]",
+                        "snippet": "id int [pk...increment]"
+                      }
+                    }
                   }
                 ]
               },
@@ -359,7 +369,25 @@
             }
           },
           "fullEnd": 46,
-          "fullStart": 0
+          "fullStart": 0,
+          "symbol": {
+            "context": {
+              "id": "symbol@Table@users@[L0:C0, L2:C1]",
+              "snippet": "Table user...crement]\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
+              "snippet": "Table user...crement]\n}"
+            },
+            "members": [
+              {
+                "context": {
+                  "id": "symbol@Column@id@[L1:C2, L1:C24]",
+                  "snippet": "id int [pk...increment]"
+                }
+              }
+            ]
+          }
         },
         {
           "context": {
@@ -460,7 +488,17 @@
                       }
                     },
                     "fullEnd": 90,
-                    "fullStart": 76
+                    "fullStart": 76,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@user_id@[L5:C2, L5:C13]",
+                        "snippet": "user_id int"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@user_id@[L5:C2, L5:C13]",
+                        "snippet": "user_id int"
+                      }
+                    }
                   },
                   {
                     "context": {
@@ -530,7 +568,17 @@
                       }
                     },
                     "fullEnd": 107,
-                    "fullStart": 90
+                    "fullStart": 90,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@diagram_id@[L6:C2, L6:C16]",
+                        "snippet": "diagram_id int"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@diagram_id@[L6:C2, L6:C16]",
+                        "snippet": "diagram_id int"
+                      }
+                    }
                   },
                   {
                     "context": {
@@ -741,7 +789,17 @@
                       }
                     },
                     "fullEnd": 222,
-                    "fullStart": 107
+                    "fullStart": 107,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@role@[L7:C2, L9:C30]",
+                        "snippet": "role int [...m_id) [pk]"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@role@[L7:C2, L9:C30]",
+                        "snippet": "role int [...m_id) [pk]"
+                      }
+                    }
                   }
                 ]
               },
@@ -788,7 +846,37 @@
             }
           },
           "fullEnd": 226,
-          "fullStart": 46
+          "fullStart": 46,
+          "symbol": {
+            "context": {
+              "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
+              "snippet": "Table user...) [pk]\n  }"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@user_role_in_diagram@[L4:C0, L10:C3]",
+              "snippet": "Table user...) [pk]\n  }"
+            },
+            "members": [
+              {
+                "context": {
+                  "id": "symbol@Column@diagram_id@[L6:C2, L6:C16]",
+                  "snippet": "diagram_id int"
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@role@[L7:C2, L9:C30]",
+                  "snippet": "role int [...m_id) [pk]"
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@user_id@[L5:C2, L5:C13]",
+                  "snippet": "user_id int"
+                }
+              }
+            ]
+          }
         },
         {
           "context": {
@@ -950,7 +1038,17 @@
                       }
                     },
                     "fullEnd": 265,
-                    "fullStart": 249
+                    "fullStart": 249,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@bit@[L14:C2, L14:C14]",
+                        "snippet": "bit int [pk]"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@bit@[L14:C2, L14:C14]",
+                        "snippet": "bit int [pk]"
+                      }
+                    }
                   },
                   {
                     "context": {
@@ -1020,7 +1118,17 @@
                       }
                     },
                     "fullEnd": 280,
-                    "fullStart": 265
+                    "fullStart": 265,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@name@[L15:C2, L15:C14]",
+                        "snippet": "name varchar"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@name@[L15:C2, L15:C14]",
+                        "snippet": "name varchar"
+                      }
+                    }
                   }
                 ]
               },
@@ -1067,7 +1175,31 @@
             }
           },
           "fullEnd": 282,
-          "fullStart": 228
+          "fullStart": 228,
+          "symbol": {
+            "context": {
+              "id": "symbol@Table@permissions@[L13:C0, L16:C1]",
+              "snippet": "Table perm... varchar\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@permissions@[L13:C0, L16:C1]",
+              "snippet": "Table perm... varchar\n}"
+            },
+            "members": [
+              {
+                "context": {
+                  "id": "symbol@Column@bit@[L14:C2, L14:C14]",
+                  "snippet": "bit int [pk]"
+                }
+              },
+              {
+                "context": {
+                  "id": "symbol@Column@name@[L15:C2, L15:C14]",
+                  "snippet": "name varchar"
+                }
+              }
+            ]
+          }
         },
         {
           "context": {
@@ -1271,7 +1403,17 @@
                       }
                     },
                     "fullEnd": 343,
-                    "fullStart": 300
+                    "fullStart": 300,
+                    "symbol": {
+                      "context": {
+                        "id": "symbol@Column@id@[L19:C2, L19:C24]",
+                        "snippet": "id int [pk...increment]"
+                      },
+                      "declaration": {
+                        "id": "node@<function-application>@id@[L19:C2, L19:C24]",
+                        "snippet": "id int [pk...increment]"
+                      }
+                    }
                   }
                 ]
               },
@@ -1318,7 +1460,25 @@
             }
           },
           "fullEnd": 345,
-          "fullStart": 282
+          "fullStart": 282,
+          "symbol": {
+            "context": {
+              "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
+              "snippet": "Table diag...ncrement\n}"
+            },
+            "declaration": {
+              "id": "node@<element-declaration>@diagrams@[L18:C0, L20:C1]",
+              "snippet": "Table diag...ncrement\n}"
+            },
+            "members": [
+              {
+                "context": {
+                  "id": "symbol@Column@id@[L19:C2, L19:C24]",
+                  "snippet": "id int [pk...increment]"
+                }
+              }
+            ]
+          }
         },
         {
           "context": {
@@ -1371,7 +1531,13 @@
                             }
                           },
                           "fullEnd": 358,
-                          "fullStart": 351
+                          "fullStart": 351,
+                          "referee": {
+                            "context": {
+                              "id": "symbol@Table@users@[L0:C0, L2:C1]",
+                              "snippet": "Table user...crement]\n}"
+                            }
+                          }
                         },
                         "op": {
                           "context": {
@@ -1409,7 +1575,13 @@
                             }
                           },
                           "fullEnd": 364,
-                          "fullStart": 359
+                          "fullStart": 359,
+                          "referee": {
+                            "context": {
+                              "id": "symbol@Column@id@[L1:C2, L1:C24]",
+                              "snippet": "id int [pk...increment]"
+                            }
+                          }
                         }
                       },
                       "fullEnd": 364,
@@ -1457,7 +1629,13 @@
                             }
                           },
                           "fullEnd": 388,
-                          "fullStart": 366
+                          "fullStart": 366,
+                          "referee": {
+                            "context": {
+                              "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
+                              "snippet": "Table user...) [pk]\n  }"
+                            }
+                          }
                         },
                         "op": {
                           "context": {
@@ -1495,7 +1673,13 @@
                             }
                           },
                           "fullEnd": 399,
-                          "fullStart": 389
+                          "fullStart": 389,
+                          "referee": {
+                            "context": {
+                              "id": "symbol@Column@user_id@[L5:C2, L5:C13]",
+                              "snippet": "user_id int"
+                            }
+                          }
                         }
                       },
                       "fullEnd": 399,
@@ -1582,7 +1766,13 @@
                             }
                           },
                           "fullEnd": 415,
-                          "fullStart": 405
+                          "fullStart": 405,
+                          "referee": {
+                            "context": {
+                              "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
+                              "snippet": "Table diag...ncrement\n}"
+                            }
+                          }
                         },
                         "op": {
                           "context": {
@@ -1620,7 +1810,13 @@
                             }
                           },
                           "fullEnd": 421,
-                          "fullStart": 416
+                          "fullStart": 416,
+                          "referee": {
+                            "context": {
+                              "id": "symbol@Column@id@[L19:C2, L19:C24]",
+                              "snippet": "id int [pk...increment]"
+                            }
+                          }
                         }
                       },
                       "fullEnd": 421,
@@ -1668,7 +1864,13 @@
                             }
                           },
                           "fullEnd": 445,
-                          "fullStart": 423
+                          "fullStart": 423,
+                          "referee": {
+                            "context": {
+                              "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
+                              "snippet": "Table user...) [pk]\n  }"
+                            }
+                          }
                         },
                         "op": {
                           "context": {
@@ -1706,7 +1908,13 @@
                             }
                           },
                           "fullEnd": 459,
-                          "fullStart": 446
+                          "fullStart": 446,
+                          "referee": {
+                            "context": {
+                              "id": "symbol@Column@diagram_id@[L6:C2, L6:C16]",
+                              "snippet": "diagram_id int"
+                            }
+                          }
                         }
                       },
                       "fullEnd": 459,
@@ -1754,6 +1962,48 @@
       }
     },
     "fullEnd": 459,
-    "fullStart": 0
+    "fullStart": 0,
+    "symbol": {
+      "context": {
+        "id": "symbol@Schema@@[L0:C0, L25:C0]",
+        "snippet": "Table user...agram_id\"\n"
+      },
+      "declaration": {
+        "id": "node@<program>@@[L0:C0, L25:C0]",
+        "snippet": "Table user...agram_id\"\n"
+      },
+      "members": [
+        {
+          "context": {
+            "id": "symbol@Table@diagrams@[L18:C0, L20:C1]",
+            "snippet": "Table diag...ncrement\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@permissions@[L13:C0, L16:C1]",
+            "snippet": "Table perm... varchar\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@user_role_in_diagram@[L4:C0, L10:C3]",
+            "snippet": "Table user...) [pk]\n  }"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@users@[L0:C0, L2:C1]",
+            "snippet": "Table user...crement]\n}"
+          }
+        },
+        {
+          "context": {
+            "id": "symbol@Table@users@[L0:C0, L2:C1]",
+            "snippet": "Table user...crement]\n}"
+          }
+        }
+      ]
+    }
   }
 }

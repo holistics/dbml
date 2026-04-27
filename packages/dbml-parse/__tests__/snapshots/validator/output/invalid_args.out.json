@@ -1043,7 +1043,13 @@
                           }
                         },
                         "fullEnd": 132,
-                        "fullStart": 126
+                        "fullStart": 126,
+                        "referee": {
+                          "context": {
+                            "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                            "snippet": "Table A {\n...    ssid\n}"
+                          }
+                        }
                       }
                     },
                     "fullEnd": 134,
@@ -1142,7 +1148,13 @@
                           }
                         },
                         "fullEnd": 140,
-                        "fullStart": 134
+                        "fullStart": 134,
+                        "referee": {
+                          "context": {
+                            "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                            "snippet": "Table A {\n...    ssid\n}"
+                          }
+                        }
                       }
                     },
                     "fullEnd": 144,
@@ -1401,7 +1413,13 @@
                                   }
                                 },
                                 "fullEnd": 158,
-                                "fullStart": 153
+                                "fullStart": 153,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                    "snippet": "Table A {\n...    ssid\n}"
+                                  }
+                                }
                               },
                               "op": {
                                 "context": {
@@ -1439,7 +1457,13 @@
                                   }
                                 },
                                 "fullEnd": 162,
-                                "fullStart": 159
+                                "fullStart": 159,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
+                                    "snippet": "id int"
+                                  }
+                                }
                               }
                             },
                             "fullEnd": 162,
@@ -1487,7 +1511,13 @@
                                   }
                                 },
                                 "fullEnd": 165,
-                                "fullStart": 164
+                                "fullStart": 164,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                    "snippet": "Table A {\n...    ssid\n}"
+                                  }
+                                }
                               },
                               "op": {
                                 "context": {
@@ -1525,7 +1555,13 @@
                                   }
                                 },
                                 "fullEnd": 169,
-                                "fullStart": 166
+                                "fullStart": 166,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
+                                    "snippet": "id int"
+                                  }
+                                }
                               }
                             },
                             "fullEnd": 169,
@@ -1763,7 +1799,13 @@
                                   }
                                 },
                                 "fullEnd": 203,
-                                "fullStart": 198
+                                "fullStart": 198,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                    "snippet": "Table A {\n...    ssid\n}"
+                                  }
+                                }
                               },
                               "op": {
                                 "context": {
@@ -1801,7 +1843,13 @@
                                   }
                                 },
                                 "fullEnd": 207,
-                                "fullStart": 204
+                                "fullStart": 204,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
+                                    "snippet": "id int"
+                                  }
+                                }
                               }
                             },
                             "fullEnd": 207,
@@ -1849,7 +1897,13 @@
                                   }
                                 },
                                 "fullEnd": 210,
-                                "fullStart": 209
+                                "fullStart": 209,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                    "snippet": "Table A {\n...    ssid\n}"
+                                  }
+                                }
                               },
                               "op": {
                                 "context": {
@@ -1887,7 +1941,13 @@
                                   }
                                 },
                                 "fullEnd": 214,
-                                "fullStart": 211
+                                "fullStart": 211,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
+                                    "snippet": "id int"
+                                  }
+                                }
                               }
                             },
                             "fullEnd": 214,
@@ -2026,7 +2086,13 @@
                                   }
                                 },
                                 "fullEnd": 248,
-                                "fullStart": 243
+                                "fullStart": 243,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                    "snippet": "Table A {\n...    ssid\n}"
+                                  }
+                                }
                               },
                               "op": {
                                 "context": {
@@ -2064,7 +2130,13 @@
                                   }
                                 },
                                 "fullEnd": 252,
-                                "fullStart": 249
+                                "fullStart": 249,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
+                                    "snippet": "id int"
+                                  }
+                                }
                               }
                             },
                             "fullEnd": 252,
@@ -2112,7 +2184,13 @@
                                   }
                                 },
                                 "fullEnd": 255,
-                                "fullStart": 254
+                                "fullStart": 254,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                    "snippet": "Table A {\n...    ssid\n}"
+                                  }
+                                }
                               },
                               "op": {
                                 "context": {
@@ -2150,7 +2228,13 @@
                                   }
                                 },
                                 "fullEnd": 259,
-                                "fullStart": 256
+                                "fullStart": 256,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
+                                    "snippet": "id int"
+                                  }
+                                }
                               }
                             },
                             "fullEnd": 259,
@@ -2318,7 +2402,13 @@
                                   }
                                 },
                                 "fullEnd": 275,
-                                "fullStart": 270
+                                "fullStart": 270,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                    "snippet": "Table A {\n...    ssid\n}"
+                                  }
+                                }
                               },
                               "op": {
                                 "context": {
@@ -2356,7 +2446,13 @@
                                   }
                                 },
                                 "fullEnd": 279,
-                                "fullStart": 276
+                                "fullStart": 276,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
+                                    "snippet": "id int"
+                                  }
+                                }
                               }
                             },
                             "fullEnd": 279,
@@ -2404,7 +2500,13 @@
                                   }
                                 },
                                 "fullEnd": 282,
-                                "fullStart": 281
+                                "fullStart": 281,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                    "snippet": "Table A {\n...    ssid\n}"
+                                  }
+                                }
                               },
                               "op": {
                                 "context": {
@@ -2442,7 +2544,13 @@
                                   }
                                 },
                                 "fullEnd": 286,
-                                "fullStart": 283
+                                "fullStart": 283,
+                                "referee": {
+                                  "context": {
+                                    "id": "symbol@Column@id@[L1:C4, L1:C10]",
+                                    "snippet": "id int"
+                                  }
+                                }
                               }
                             },
                             "fullEnd": 286,

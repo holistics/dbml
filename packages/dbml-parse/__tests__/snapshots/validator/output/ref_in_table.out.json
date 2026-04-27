@@ -752,7 +752,13 @@
                                       }
                                     },
                                     "fullEnd": 144,
-                                    "fullStart": 143
+                                    "fullStart": 143,
+                                    "referee": {
+                                      "context": {
+                                        "id": "symbol@Table@A@[L0:C0, L3:C1]",
+                                        "snippet": "Table A {\n...e number\n}"
+                                      }
+                                    }
                                   },
                                   "op": {
                                     "context": {
@@ -790,7 +796,13 @@
                                       }
                                     },
                                     "fullEnd": 148,
-                                    "fullStart": 145
+                                    "fullStart": 145,
+                                    "referee": {
+                                      "context": {
+                                        "id": "symbol@Column@id@[L1:C4, L1:C14]",
+                                        "snippet": "id integer"
+                                      }
+                                    }
                                   }
                                 },
                                 "fullEnd": 148,
@@ -915,7 +927,13 @@
                                       }
                                     },
                                     "fullEnd": 165,
-                                    "fullStart": 164
+                                    "fullStart": 164,
+                                    "referee": {
+                                      "context": {
+                                        "id": "symbol@Table@B@[L5:C0, L8:C1]",
+                                        "snippet": "Table B {\n...e number\n}"
+                                      }
+                                    }
                                   },
                                   "op": {
                                     "context": {
@@ -953,7 +971,13 @@
                                       }
                                     },
                                     "fullEnd": 171,
-                                    "fullStart": 166
+                                    "fullStart": 166,
+                                    "referee": {
+                                      "context": {
+                                        "id": "symbol@Column@code@[L7:C4, L7:C15]",
+                                        "snippet": "code number"
+                                      }
+                                    }
                                   }
                                 },
                                 "fullEnd": 171,

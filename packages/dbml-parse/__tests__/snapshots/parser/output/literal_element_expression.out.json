@@ -605,6 +605,16 @@
       }
     },
     "fullEnd": 227,
-    "fullStart": 0
+    "fullStart": 0,
+    "symbol": {
+      "context": {
+        "id": "symbol@Schema@@[L0:C0, L11:C1]",
+        "snippet": "Test Liter...\r\n    }\r\n}"
+      },
+      "declaration": {
+        "id": "node@<program>@@[L0:C0, L11:C1]",
+        "snippet": "Test Liter...\r\n    }\r\n}"
+      }
+    }
   }
 }

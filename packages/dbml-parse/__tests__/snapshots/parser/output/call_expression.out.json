@@ -553,6 +553,16 @@
       }
     },
     "fullEnd": 69,
-    "fullStart": 0
+    "fullStart": 0,
+    "symbol": {
+      "context": {
+        "id": "symbol@Schema@@[L0:C0, L5:C0]",
+        "snippet": "Test CallE...a.b()\r\n}\r\n"
+      },
+      "declaration": {
+        "id": "node@<program>@@[L0:C0, L5:C0]",
+        "snippet": "Test CallE...a.b()\r\n}\r\n"
+      }
+    }
   }
 }

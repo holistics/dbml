@@ -8,9 +8,20 @@ import {
 } from '../utils';
 
 export function bindFile (this: Compiler, filepath: Filepath): Report<void> {
-  return this.parseFile(filepath).chain(({
-    ast,
-  }) => this.bindNode(ast).map(() => undefined));
+  const validateResult = this.validateFile(filepath);
+  const ast = this.parseFile(filepath).getValue().ast;
+  const bindResult = this.bindNode(ast).map(() => undefined);
+  return new Report(
+    undefined,
+    [
+      ...validateResult.getErrors(),
+      ...bindResult.getErrors(),
+    ],
+    [
+      ...validateResult.getWarnings(),
+      ...bindResult.getWarnings(),
+    ],
+  );
 }
 
 export function bindProject (this: Compiler): Map<string, Report<void>> {
