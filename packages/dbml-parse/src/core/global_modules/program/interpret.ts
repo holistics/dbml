@@ -27,7 +27,7 @@ import {
 } from '@/core/global_modules/tablePartial/interpret';
 import {
   RecordsInterpreter,
-} from '@/core/global_modules/records';
+} from '@/core/global_modules/records/interpret';
 import {
   CompileWarning,
 } from '@/core/types/errors';
