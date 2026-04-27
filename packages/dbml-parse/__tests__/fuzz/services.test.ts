@@ -7,7 +7,6 @@ import DBMLReferencesProvider from '@/services/references/provider';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import { dbmlSchemaArbitrary, tableArbitrary } from '../utils/arbitraries';
 import { MockTextModel, createPosition } from '../utils';
-import { DEFAULT_ENTRY } from '@/constants';
 
 const FUZZ_CONFIG = {
   numRuns: 50,

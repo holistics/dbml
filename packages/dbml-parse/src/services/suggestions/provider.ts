@@ -102,7 +102,6 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     } = model;
     const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
     const offset = getOffsetFromMonacoPosition(model, position);
-    const filepath = model.uri ? Filepath.fromUri(String(model.uri)) : DEFAULT_ENTRY;
 
     // Try to suggest record row snippet first
     const recordRowSnippet = suggestRecordRowSnippet(this.compiler, model, position, filepath, offset);
@@ -1016,7 +1015,7 @@ function suggestInCallExpression (
 }
 
 function suggestInTableGroupField (compiler: Compiler, filepath: Filepath): CompletionList {
-  const publicMembers = compiler.parse.publicSymbolTable() ?? [];
+  const publicMembers = compiler.parse.publicSymbolTable(filepath) ?? [];
   return {
     suggestions: [
       ...addQuoteToSuggestionIfNeeded({
@@ -1207,7 +1206,7 @@ function suggestInDiagramViewSubBlock (
   const blockType = elem.type?.value.toLowerCase();
   switch (blockType) {
     case 'tables': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(filepath), [
+      const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.Table,
         SymbolKind.Schema,
       ]);
@@ -1219,7 +1218,7 @@ function suggestInDiagramViewSubBlock (
       };
     }
     case 'tablegroups': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(filepath), [
+      const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.TableGroup,
       ]);
       return {
@@ -1237,7 +1236,7 @@ function suggestInDiagramViewSubBlock (
         kind: CompletionItemKind.Module,
         range: undefined as any,
       };
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(filepath), [
+      const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.Schema,
       ]);
       return {
@@ -1249,7 +1248,7 @@ function suggestInDiagramViewSubBlock (
       };
     }
     case 'notes': {
-      const namesInScope = suggestNamesInScope(compiler, offset, compiler.parse.ast(filepath), [
+      const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.Note,
       ]);
       return {

@@ -13,7 +13,7 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Database, SchemaElement,
+  SchemaElement,
 } from '@/core/types/schemaJson';
 import {
   NodeSymbol, ProgramSymbol, SchemaSymbol, SymbolKind,

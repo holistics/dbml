@@ -63,9 +63,6 @@ import type {
 import {
   useModule,
 } from './use';
-import {
-  shouldInterpretNode,
-} from './utils';
 
 // Registry of all element modules; the dispatcher tries each in order until one claims the node.
 // Each time you add a new element, register its module here.

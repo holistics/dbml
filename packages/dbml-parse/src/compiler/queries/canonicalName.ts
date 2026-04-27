@@ -57,12 +57,21 @@ export function canonicalName (this: Compiler, filepath: Filepath, symbol: NodeS
       const isRenamed = name !== original.name;
       if (isRenamed) {
         // Aliased import — strip schema
-        return Report.create({ schema: '', name });
+        return Report.create({
+          schema: '',
+          name,
+        });
       }
       // Non-aliased import — preserve original schema
       const originalCanonical = fullnameToCanonical(this, original);
-      if (originalCanonical) return Report.create({ ...originalCanonical, name });
-      return Report.create({ schema: DEFAULT_SCHEMA_NAME, name });
+      if (originalCanonical) return Report.create({
+        ...originalCanonical,
+        name,
+      });
+      return Report.create({
+        schema: DEFAULT_SCHEMA_NAME,
+        name,
+      });
     }
   }
 

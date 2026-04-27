@@ -13,7 +13,7 @@ import type {
   Column, Database, Ref, Table, TablePartial,
 } from '@/core/types/schemaJson';
 import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
+  SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
   enrichWithCrossFileElements,
@@ -64,7 +64,8 @@ function rewriteRefEndpoints (compiler: Compiler, filepath: Filepath, refs: Ref[
   const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!programSymbol) return;
 
-  const nameMap = new Map<string, { schema: string | null; name: string }>();
+  const nameMap = new Map<string, { schema: string | null;
+    name: string; }>();
   const members = compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED) ?? [];
 
   for (const m of members) {

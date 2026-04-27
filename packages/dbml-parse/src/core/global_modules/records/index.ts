@@ -5,7 +5,9 @@ import {
 import type {
   RecordMetadata, SymbolMetadata,
 } from '@/core/types/metadata';
-import { MetadataKind } from '@/core/types/metadata';
+import {
+  MetadataKind,
+} from '@/core/types/metadata';
 import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
@@ -20,7 +22,7 @@ import type {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  SchemaElement, TableRecord,
+  SchemaElement,
 } from '@/core/types/schemaJson';
 import {
   NodeSymbol, SymbolKind,
@@ -39,7 +41,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+  lookupInDefaultSchema, lookupMember, nodeRefereeOfLeftExpression,
 } from '../utils';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';

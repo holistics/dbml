@@ -1,7 +1,4 @@
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
   bindNode,
   interpretMetadata,
   interpretSymbol,

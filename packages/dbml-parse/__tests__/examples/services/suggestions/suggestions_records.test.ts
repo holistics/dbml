@@ -9,7 +9,6 @@ import {
 } from '@tests/utils';
 import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
-import { DEFAULT_ENTRY } from '@/constants';
 import { UNHANDLED } from '@/core/types/module';
 
 describe('[example] CompletionItemProvider - Records', () => {

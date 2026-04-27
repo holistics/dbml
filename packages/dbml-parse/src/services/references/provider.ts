@@ -37,7 +37,6 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     } = model;
     const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
     const offset = getOffsetFromMonacoPosition(model, position);
-    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
 
     // Ensure binding is done before resolving references
     this.compiler.bindProject();

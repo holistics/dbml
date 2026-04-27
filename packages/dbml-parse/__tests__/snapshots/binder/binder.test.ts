@@ -10,8 +10,8 @@ import { SymbolKind, SchemaSymbol } from '@/core/types/symbol';
 import type { NodeSymbol } from '@/core/types/symbol';
 
 function serializeBinderResult (compiler: Compiler, ast: ProgramNode): string {
-  const errors = compiler.parse.errors();
-  const warnings = compiler.parse.warnings();
+  const errors = compiler.parse.errors(DEFAULT_ENTRY);
+  const warnings = compiler.parse.warnings(DEFAULT_ENTRY);
   const nodeReferees = collectNodesWithReferee(compiler, ast);
 
   // FIXME: this snapshot manually splits the program's symbol table into

@@ -5,7 +5,9 @@ import {
 import type {
   IndexMetadata, SymbolMetadata,
 } from '@/core/types/metadata';
-import { MetadataKind } from '@/core/types/metadata';
+import {
+  MetadataKind,
+} from '@/core/types/metadata';
 import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
@@ -36,7 +38,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  getNodeMemberSymbols, lookupMember, shouldInterpretNode,
+  getNodeMemberSymbols, lookupMember,
 } from '../utils';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';

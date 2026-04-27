@@ -1,16 +1,10 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
   Filepath,
 } from '@/core/types/filepath';
 import type {
   CompileError, CompileWarning,
 } from '@/core/types/errors';
-import {
-  Filepath,
-} from '@/core/types/filepath';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';

@@ -84,6 +84,7 @@ export interface Database {
 // Multifile project
 export interface MasterDatabase {
   files: Record<string, Database>;
+  items: Database;
 }
 
 export interface Table {

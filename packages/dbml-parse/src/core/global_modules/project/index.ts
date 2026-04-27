@@ -13,9 +13,6 @@ import type {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
-import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
@@ -24,13 +21,7 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  shouldInterpretNode,
-} from '../utils';
 import ProjectBinder from './bind';
-import {
-  ProjectInterpreter,
-} from './interpret';
 
 export const projectModule: GlobalModule = {
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

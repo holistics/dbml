@@ -27,7 +27,7 @@ import {
   isExpressionASignedNumberExpression,
 } from './validate';
 import {
-    extractNumber,
+  extractNumber,
   getNumberTextFromExpression,
 } from './numbers';
 

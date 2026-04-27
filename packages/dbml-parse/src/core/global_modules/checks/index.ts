@@ -27,9 +27,6 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  shouldInterpretNode,
-} from '../utils';
 import ChecksBinder from './bind';
 import ChecksInterpreter from './interpret';
 

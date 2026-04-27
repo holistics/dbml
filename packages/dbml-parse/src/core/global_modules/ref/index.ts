@@ -5,7 +5,9 @@ import {
 import type {
   RefMetadata, SymbolMetadata,
 } from '@/core/types/metadata';
-import { MetadataKind } from '@/core/types/metadata';
+import {
+  MetadataKind,
+} from '@/core/types/metadata';
 import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
@@ -17,7 +19,7 @@ import type {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Ref, SchemaElement,
+  SchemaElement,
 } from '@/core/types/schemaJson';
 import {
   NodeSymbol, SymbolKind,
@@ -41,7 +43,7 @@ import {
   parseColor,
 } from '@/core/utils/interpret';
 import {
-  lookupMember, nodeRefereeOfLeftExpression, shouldInterpretNode,
+  lookupMember, nodeRefereeOfLeftExpression,
 } from '../utils';
 import RefBinder from './bind';
 import {
