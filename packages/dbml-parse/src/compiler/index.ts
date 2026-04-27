@@ -362,7 +362,7 @@ export default class Compiler {
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: (filepath: Filepath) => this.layout.getSource(filepath) as Readonly<string>,
+    source: (filepath: Filepath) => this.layout.getSource(filepath) || '',
     _: () => this.exportSchemaJson(DEFAULT_ENTRY),
     ast: this.localQuery(ast),
     errors: this.globalQuery(errors),
