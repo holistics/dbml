@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   rule_check:
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-2vcpu-ubuntu-2404
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3
