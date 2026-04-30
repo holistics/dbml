@@ -237,7 +237,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
         'operators',
       ],
 
-      // Wildcard — standalone * gets its own token type for distinct styling
+      // Wildcard  -- standalone * gets its own token type for distinct styling
       [
         /\*/,
         'keyword.wildcard',

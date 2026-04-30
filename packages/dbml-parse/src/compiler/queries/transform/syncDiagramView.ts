@@ -47,7 +47,7 @@ export interface DiagramViewBlock {
 /**
  * Returns the start/end byte positions of every DiagramView block in `source`.
  *
- * Returns an empty array on any lex or parse error — callers cannot
+ * Returns an empty array on any lex or parse error  -- callers cannot
  * distinguish "no DiagramView blocks present" from "malformed DBML" based on
  * the return value alone. If you need to detect malformed input, lex/parse
  * the source separately and check for errors before calling this function.
@@ -55,11 +55,11 @@ export interface DiagramViewBlock {
 export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
   const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return blocks; // malformed — cannot tokenize
+  if (lexerResult.getErrors().length > 0) return blocks; // malformed  -- cannot tokenize
 
   const tokens = lexerResult.getValue();
   const ast = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
-  if (ast.getErrors().length > 0) return blocks; // malformed — cannot parse
+  if (ast.getErrors().length > 0) return blocks; // malformed  -- cannot parse
 
   const program = ast.getValue().ast;
 
@@ -130,7 +130,7 @@ function generateDiagramViewBlock (
   const schemasIsNull = schemas === null;
   const notesIsNull = stickyNotes === null;
 
-  // A1: All null → empty block
+  // A1: All null -> empty block
   if (tablesIsNull && tableGroupsIsNull && schemasIsNull && notesIsNull) {
     return `${header}\n}`;
   }
@@ -147,7 +147,7 @@ function generateDiagramViewBlock (
     if (!anyTrinityHasItems) {
       // No Trinity dims have items
       if (stickyNotes && stickyNotes.length > 0) {
-        // Specific notes but no Trinity items → Notes { items }
+        // Specific notes but no Trinity items -> Notes { items }
         const lines: string[] = [
           header,
         ];
@@ -155,11 +155,11 @@ function generateDiagramViewBlock (
         lines.push('}');
         return lines.join('\n');
       }
-      // Rule 2: all Trinity null/empty + no notes → Notes { * }
+      // Rule 2: all Trinity null/empty + no notes -> Notes { * }
       return `${header}\n  Notes { * }\n}`;
     }
 
-    // Rule 3: null dims + items exist → union rule, omit null dims
+    // Rule 3: null dims + items exist -> union rule, omit null dims
     const lines: string[] = [
       header,
     ];
@@ -328,7 +328,7 @@ function computeDeleteEdit (
     if (start > 0 && dbml[start - 1] === '\r') {
       start--;
     }
-    // Check if the line before is blank — if not, stop
+    // Check if the line before is blank  -- if not, stop
     const prevLineStart = dbml.lastIndexOf('\n', start - 1) + 1;
     const prevLine = dbml.substring(prevLineStart, start);
     if (prevLine.trim() !== '') {

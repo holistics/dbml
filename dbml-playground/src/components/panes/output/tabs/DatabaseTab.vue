@@ -229,7 +229,7 @@
               </template>
             </VTooltip>
             <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[0]) }}</span>
-            <span class="text-gray-400">{{ ref_.endpoints[0].relation }}—{{ ref_.endpoints[1].relation }}</span>
+            <span class="text-gray-400">{{ ref_.endpoints[0].relation }} --{{ ref_.endpoints[1].relation }}</span>
             <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[1]) }}</span>
           </div>
         </DbSection>

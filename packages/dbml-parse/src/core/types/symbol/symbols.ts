@@ -484,14 +484,14 @@ export class ColumnSymbol extends NodeSymbol {
     const raw = processColumnType(compiler, this.declaration.args[0]).getValue();
     if (!raw) return undefined;
 
-    // Parse args: "10,2" → [10, 2], "a,b" → ["a", "b"]
+    // Parse args: "10,2" -> [10, 2], "a,b" -> ["a", "b"]
     const args = raw.args
       ? raw.args.split(',').map((a) => { const n = Number(a); return Number.isNaN(n) ? a : n; })
       : undefined;
 
-    // Parse array from type_name: "int[]" → baseName "int", array [undefined]
-    //                              "int[256]" → baseName "int", array [256]
-    //                              "int[][]" → baseName "int", array [undefined, undefined]
+    // Parse array from type_name: "int[]" -> baseName "int", array [undefined]
+    //                              "int[256]" -> baseName "int", array [256]
+    //                              "int[][]" -> baseName "int", array [undefined, undefined]
     const arrayParts: (string | number | undefined)[] = [];
     const bracketRegex = /\[([^\]]*)\]/g;
     let match;

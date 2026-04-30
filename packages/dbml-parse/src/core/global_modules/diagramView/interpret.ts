@@ -126,7 +126,7 @@ export class DiagramViewInterpreter {
     }
 
     // Trinity omit rule: if any Trinity dim was explicitly set with a non-null value,
-    // promote omitted Trinity dims from null → [] (show all)
+    // promote omitted Trinity dims from null -> [] (show all)
     const ve = this.diagramView.visibleEntities!;
     const trinityHasNonNull =
       (explicitlySet.has('tables') && ve.tables !== null)
@@ -191,7 +191,7 @@ export class DiagramViewInterpreter {
     for (const field of body.body) {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
-      // If the field was bound to a symbol (e.g., alias "U" → Table "users"),
+      // If the field was bound to a symbol (e.g., alias "U" -> Table "users"),
       // resolve the real name from the referee's declaration
       const referee = extractReferee(this.compiler, field.callee);
       if (referee?.declaration instanceof ElementDeclarationNode) {
@@ -254,22 +254,22 @@ export class DiagramViewInterpreter {
    *
    * Expands when:
    * 1. The user wrote `TableGroups { * }` (tracked via diagramViewWildcards)
-   * 2. NOT a body-level `{ * }` — body-level wildcard sets ALL dims to [] simultaneously,
+   * 2. NOT a body-level `{ * }`  -- body-level wildcard sets ALL dims to [] simultaneously,
    *    which is a different semantic (show everything) that doesn't need expansion.
    *    We detect body-level by checking if all four dims are in the wildcards set.
    *
    * Why only TableGroups needs expansion:
-   * - Tables: * → [] means "show all tables" (every table is a table, no indirection)
-   * - Schemas: * → [] means "show all schemas" (every table belongs to a schema)
+   * - Tables: * -> [] means "show all tables" (every table is a table, no indirection)
+   * - Schemas: * -> [] means "show all schemas" (every table belongs to a schema)
    * - TableGroups: * needs concrete names because some tables DON'T belong to any group.
-   *   The frontend does name-based lookup; [] would produce an empty name map → no groups matched.
+   *   The frontend does name-based lookup; [] would produce an empty name map -> no groups matched.
    */
   expandDiagramViewWildcards (): void {
     const ve = this.diagramView.visibleEntities;
     const wildcards = this.diagramViewWildcards;
     if (!wildcards || !ve) return;
 
-    // Tables * or Schemas * → union covers everything → all Trinity dims become [] (show all)
+    // Tables * or Schemas * -> union covers everything -> all Trinity dims become [] (show all)
     if (wildcards.has('tables') || wildcards.has('schemas')) {
       ve.tables = [];
       ve.tableGroups = [];

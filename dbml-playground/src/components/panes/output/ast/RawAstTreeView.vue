@@ -157,7 +157,7 @@ function transformToRawAstNode (
   }
   seen.add(data);
 
-  // Array of nodes/tokens — include both kinds as children
+  // Array of nodes/tokens  -- include both kinds as children
   if (Array.isArray(data)) {
     const items = data.filter((item): item is SyntaxNode | SyntaxToken =>
       item instanceof SyntaxNode || item instanceof SyntaxToken,
@@ -175,7 +175,7 @@ function transformToRawAstNode (
     };
   }
 
-  // Object — recurse into SyntaxNode *and* SyntaxToken properties uniformly.
+  // Object  -- recurse into SyntaxNode *and* SyntaxToken properties uniformly.
   // Tokens used to be split off into `tokenEntries` and rendered as key/value
   // rows; now they render like nodes so the tree is structurally consistent.
   const children: RawAstNode[] = [];
@@ -197,7 +197,7 @@ function transformToRawAstNode (
 
   // Sort children by source position so the tree mirrors document order.
   // For arrays (list of nodes / list of tokens) we use the minimum start of
-  // their contained items — otherwise arrays would all fall to the end and
+  // their contained items  -- otherwise arrays would all fall to the end and
   // lose their natural interleaving with sibling nodes/tokens.
   children.sort((a, b) => sortStart(a) - sortStart(b));
 

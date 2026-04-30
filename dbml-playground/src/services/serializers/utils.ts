@@ -16,12 +16,12 @@ import type {
 // Short human-readable label for a node/token, used both as the `name` segment
 // of a readable id and for inline rendering in the AST output tab.
 //
-// - ProgramNode       → absolute filepath
-// - ElementDeclaration → element's declared name
-// - Variable / Literal / FunctionExpression → their underlying token value
-// - PrimaryExpression  → inner expression's hint
-// - FunctionApplication → callee's hint
-// - any SyntaxToken    → its raw value
+// - ProgramNode       -> absolute filepath
+// - ElementDeclaration -> element's declared name
+// - Variable / Literal / FunctionExpression -> their underlying token value
+// - PrimaryExpression  -> inner expression's hint
+// - FunctionApplication -> callee's hint
+// - any SyntaxToken    -> its raw value
 export function getNameHint (node: SyntaxNode | SyntaxToken): string {
   if (node instanceof SyntaxToken) return String(node.value ?? '');
   if (node instanceof ProgramNode) return node.filepath?.absolute ?? '';
@@ -62,7 +62,7 @@ export function getReadableId (value: SyntaxNode | SyntaxToken | SymbolInfo): st
 }
 
 // Smallest `.start` offset found anywhere inside `value`. Used to order the
-// children of a SyntaxNode by source position — properties are declared in
+// children of a SyntaxNode by source position  -- properties are declared in
 // class order, which doesn't match how tokens and child nodes actually
 // appear in the source.
 export function minStart (value: unknown): number {

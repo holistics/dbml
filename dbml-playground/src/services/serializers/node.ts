@@ -33,7 +33,7 @@ export function serializeNode (node: SyntaxNode, {
     fullEnd,
     ...props
   } = node as SyntaxNode & Record<string, unknown>;
-  // ProgramNode carries the full source text — redundant in the rendered tree.
+  // ProgramNode carries the full source text  -- redundant in the rendered tree.
   if (node instanceof ProgramNode) delete (props as any).source;
 
   const entries = Object.entries(props).sort(([, a], [, b]) => minStart(a) - minStart(b));

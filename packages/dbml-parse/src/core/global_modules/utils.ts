@@ -42,7 +42,7 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: s
   tableName: string;
   fieldNames: string[];
 } {
-  // Sanitize ownerSchema — default schema should be null in output
+  // Sanitize ownerSchema  -- default schema should be null in output
   if (ownerSchema === DEFAULT_SCHEMA_NAME) ownerSchema = null;
   const {
     variables, tupleElements,

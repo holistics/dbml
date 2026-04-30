@@ -56,13 +56,13 @@ export function canonicalName (this: Compiler, filepath: Filepath, symbol: NodeS
       if (!name) continue;
       const isRenamed = name !== original.name;
       if (isRenamed) {
-        // Aliased import — strip schema
+        // Aliased import  -- strip schema
         return Report.create({
           schema: '',
           name,
         });
       }
-      // Non-aliased import — preserve original schema
+      // Non-aliased import  -- preserve original schema
       const originalCanonical = fullnameToCanonical(this, original);
       if (originalCanonical) return Report.create({
         ...originalCanonical,

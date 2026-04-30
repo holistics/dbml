@@ -95,7 +95,7 @@ export const useModule: GlobalModule = {
 
     // `node` is the terminal name fragment when it IS the specifier name,
     // or is the rightmost part of a qualified name (e.g. `table` in `public.table`).
-    // Otherwise it's a schema prefix → always resolved as Schema.
+    // Otherwise it's a schema prefix -> always resolved as Schema.
     const isTerminalFragment = useSpecifier.name === node
       || (isAccessExpression(useSpecifier.name) && useSpecifier.name.rightExpression === node);
     const symbolKind = isTerminalFragment ? useSpecifier.getSymbolKind() : SymbolKind.Schema;

@@ -78,7 +78,7 @@ export const recordsModule: LocalModule = {
         }
 
         // Fullname: destructure the callee (table name) of the call expression
-        // e.g. records auth.users(id, name) → ['auth', 'users']
+        // e.g. records auth.users(id, name) -> ['auth', 'users']
         const names = destructureComplexVariable(node.name.callee);
         if (names?.length === 1) names.unshift(DEFAULT_SCHEMA_NAME);
         return new Report(names, errs);

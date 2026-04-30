@@ -110,7 +110,7 @@ export function scanExistingUses (
             name = fileContent.slice(specifier.name.start, specifier.name.end).trim();
           }
         } else if (specifier.importKind) {
-          // Parse recovery: `use { User }` — "kind slot" holds the symbol name.
+          // Parse recovery: `use { User }`  -- "kind slot" holds the symbol name.
           const val = specifier.importKind.value ?? undefined;
           if (val && !IMPORT_KIND_KEYWORDS.has(val.toLowerCase())) {
             name = val;
@@ -160,15 +160,15 @@ export function scanExistingUses (
    * Extract the symbol name string from a specifier's name expression node.
    *
    * The AST shape varies depending on how complete the parse is:
-   *   1. `VariableNode` with a `variable` token — the normal, fully-parsed case.
-   *   2. Node with a `.variable.value` string — produced by some parser recovery paths.
-   *   3. Node with a `.value` string — token-level nodes (e.g. SyntaxToken directly).
-   *   4. Node with a `.name` string — rare structural variant.
-   *   5. Source-text slice via `.source` + `.start`/`.end` — last resort when the
+   *   1. `VariableNode` with a `variable` token  -- the normal, fully-parsed case.
+   *   2. Node with a `.variable.value` string  -- produced by some parser recovery paths.
+   *   3. Node with a `.value` string  -- token-level nodes (e.g. SyntaxToken directly).
+   *   4. Node with a `.name` string  -- rare structural variant.
+   *   5. Source-text slice via `.source` + `.start`/`.end`  -- last resort when the
    *      node carries no parsed text; used when the parser recovered with partial info.
    *
    * Branches are tried in order of specificity; the first match wins. The `any`
-   * parameter type is intentional — specifier name nodes may be any expression
+   * parameter type is intentional  -- specifier name nodes may be any expression
    * subtype and the concrete type is not narrowed at the call site.
    */
 function extractSymbolName (node: any): string | undefined {
@@ -218,7 +218,7 @@ export function mergeSymbolIntoUses (
 ): UseStatementMergeResult {
   const existingUses = scanExistingUses(compiler, filepath, fileContent);
 
-  // Normalize source file path: '/path/to/common' → './common'
+  // Normalize source file path: '/path/to/common' -> './common'
   const sourceFileStr = normalizeSourcePath(sourceFile);
 
   // Look for existing use from this source file
@@ -231,7 +231,7 @@ export function mergeSymbolIntoUses (
   if (existingUseIndex !== -1) {
     const existingUse = existingUses[existingUseIndex];
 
-    // Duplicate — nothing to do. Surface no edit.
+    // Duplicate  -- nothing to do. Surface no edit.
     if (existingUse.specifiers.some((s) => s.name === symbolName)) {
       return {
         topInsert: '',
@@ -242,7 +242,7 @@ export function mergeSymbolIntoUses (
     // Merge strategy: emit a fresh multi-line `use { ... } from '...'` at the
     // top of the file and delete the old use statement. This avoids fragile
     // in-place edits against possibly malformed specifier lists, keeps
-    // formatting consistent, and tolerates syntax errors — the deleted range
+    // formatting consistent, and tolerates syntax errors  -- the deleted range
     // is whatever the parser recovered as the old use.
     //
     // Every specifier is rendered as `<kind> <name>`; if the parser couldn't

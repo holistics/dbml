@@ -89,19 +89,19 @@ function suggestInUseDeclaration (
   model: TextModel,
   bOcToken: SyntaxToken | undefined,
 ): CompletionList {
-  // Inside importPath string → filepath completions
+  // Inside importPath string -> filepath completions
   if (useDecl.importPath && isOffsetWithinSpan(offset, useDecl.importPath)) {
     return suggestUseFilepath(compiler, filepath, useDecl.importPath, model, useDecl);
   }
 
-  // After `from` → filepath completions
+  // After `from` -> filepath completions
   if (useDecl.fromKeyword && offset > useDecl.fromKeyword.end) {
     return suggestUseFilepath(compiler, filepath, undefined, model, useDecl);
   }
 
   // Inside specifier list
   if (useDecl.specifiers instanceof UseSpecifierListNode) {
-    // No openBrace → cursor before specifier list (e.g. `use |`)
+    // No openBrace -> cursor before specifier list (e.g. `use |`)
     if (!useDecl.specifiers.openBrace) {
       const res = suggestUseSpecifierStart();
       return shouldPrependSpace(useDecl.useKeyword, offset) ? prependSpace(res) : res;
@@ -109,7 +109,7 @@ function suggestInUseDeclaration (
     return suggestInUseSpecifierList(compiler, filepath, offset, useDecl.specifiers, useDecl.importPath, bOcToken);
   }
 
-  // After `*` wildcard → nothing to suggest
+  // After `*` wildcard -> nothing to suggest
   if (useDecl.specifiers instanceof WildcardNode) {
     return noSuggestions();
   }
@@ -270,7 +270,7 @@ function suggestUseFilepath (
 
     if (existingIncompleteImportPath && !relativePathToCurrentDir.startsWith(existingIncompleteImportPath)) continue;
 
-    // Take next segment only — deeper entries collapse onto their folder.
+    // Take next segment only  -- deeper entries collapse onto their folder.
     const tail = relativePathToCurrentDir.slice(existingIncompleteImportPath.length);
     const childLabel = `${existingIncompleteImportPath}${tail.split('/')[0]}`;
 
@@ -289,7 +289,7 @@ function suggestUseFilepath (
       insertText,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
       kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
-      // Sort: best-match file (0) → best-match folder (1) → folder (2) → file (3).
+      // Sort: best-match file (0) -> best-match folder (1) -> folder (2) -> file (3).
       sortText: `${isDir ? '2' : '3'}${childLabel}`,
       range: existingImportPathRange,
     });
@@ -326,7 +326,7 @@ function extractRequiredSymbols (useDecl: UseDeclarationNode): Array<{
     if (!nameNode) continue;
     const nameValue = (nameNode as any).variable?.value ?? (nameNode as any).value;
     if (typeof nameValue !== 'string' || !nameValue) continue;
-    // Strip schema-qualifier (`auth.users` → `users`).
+    // Strip schema-qualifier (`auth.users` -> `users`).
     const bareName = nameValue.includes('.') ? nameValue.split('.').pop()! : nameValue;
     required.push({
       name: bareName,

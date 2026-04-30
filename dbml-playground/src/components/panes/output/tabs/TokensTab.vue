@@ -117,7 +117,7 @@
                     <span
                       v-else-if="trivToken.kind === '<tab>'"
                       class="inline-flex items-center gap-0.5 text-gray-400 bg-gray-100 rounded px-1 text-[10px]"
-                    >→</span>
+                    >-></span>
                     <span
                       v-else-if="trivToken.kind === '<single-line-comment>' || trivToken.kind === '<multiline-comment>'"
                       class="text-gray-400 italic break-all"

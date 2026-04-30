@@ -136,7 +136,7 @@ export default class ProgramInterpreter {
         }
       }
 
-      // Metadata-based elements (ref, records, project) — interpret via metadata or directly
+      // Metadata-based elements (ref, records, project)  -- interpret via metadata or directly
       const kind = node.getElementKind();
       if (kind === ElementKind.Ref) {
         const result = new RefInterpreter(this.compiler, node).interpret();
@@ -196,7 +196,7 @@ export default class ProgramInterpreter {
     }
   }
 
-  // Walk symbol members for UseSymbols — interpret each external element with filepath context
+  // Walk symbol members for UseSymbols  -- interpret each external element with filepath context
   private collectExternals () {
     const externalMap = new Map<string, ElementRef>();
 
