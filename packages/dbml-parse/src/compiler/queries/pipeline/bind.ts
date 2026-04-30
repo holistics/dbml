@@ -22,13 +22,13 @@ import type Compiler from '../../index';
 
 export function bindFile (this: Compiler, filepath: Filepath): Report<ProgramNode> {
   return this.validateFile(filepath).chain((program) =>
-    new Binder(program, this.symbolFactory).resolve(),
+    this.bindNode(program) as Report<ProgramNode>,
   );
 }
 
-export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
+export function bindNode (this: Compiler, node: SyntaxNode): Report<SyntaxNode> | Report<Unhandled> {
   if (node instanceof ProgramNode) {
-    return new Binder(node, this.symbolFactory).resolve().map(() => undefined);
+    return new Binder(node, this.symbolFactory).resolve();
   }
 
   if (!(node instanceof ElementDeclarationNode) || !node.type) {
@@ -47,5 +47,5 @@ export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Repo
     this.symbolFactory,
   );
 
-  return Report.create(undefined, binder.bind());
+  return Report.create(node as SyntaxNode, binder.bind());
 }
