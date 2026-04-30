@@ -24,13 +24,13 @@ export function validateFile (this: Compiler, filepath: Filepath): Report<Progra
   return this.parseFile(filepath).chain(({
     ast,
   }) =>
-    new Validator(ast, this.symbolFactory).validate(),
+    this.validateNode(ast) as Report<ProgramNode>,
   );
 }
 
-export function validateNode (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
+export function validateNode (this: Compiler, node: SyntaxNode): Report<SyntaxNode> | Report<Unhandled> {
   if (node instanceof ProgramNode) {
-    return new Validator(node, this.symbolFactory).validate().map(() => undefined);
+    return new Validator(node, this.symbolFactory).validate();
   }
 
   if (!(node instanceof ElementDeclarationNode) || !node.type) {
@@ -50,5 +50,5 @@ export function validateNode (this: Compiler, node: SyntaxNode): Report<void> | 
   );
   const result = validator.validate();
 
-  return Report.create(undefined, result.errors, result.warnings);
+  return Report.create(node, result.errors, result.warnings);
 }
