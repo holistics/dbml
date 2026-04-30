@@ -2,312 +2,110 @@
 
 ## Overview
 
-The DBML Playground is a modern, multi-file DBML editor with real-time parsing, syntax highlighting, diagnostics, and visualization of the compiled database schema. It uses a **three-pane layout** (Files, Editor, Output) with **Pinia-based state management** for a clean separation between business logic and UI.
-
-## Design Principles
-
-This codebase follows principles from "A Philosophy of Software Design" to minimize complexity and maximize maintainability:
-
-### 1. Deep Modules
-Modules with simple interfaces and powerful internal functionality:
-- **ParserStore**: Single source of truth for all parsing state, handles all compilation complexity
-- **ProjectStore**: Multi-file project state management
-- **Language Services**: Encapsulates Monaco Editor language features (syntax highlighting, completion, definitions)
-
-### 2. Information Hiding
-Implementation details are hidden behind well-defined interfaces:
-- Parser state internals hidden from UI components
-- Monaco Editor complexity hidden from consumers
-- Symbol processing and data transformation encapsulated in stores
-- Language services registration logic isolated
-
-### 3. Single Responsibility
-Each module handles exactly one concern:
-- **ParserStore**: DBML compilation, error handling, diagnostics
-- **ProjectStore**: Multi-file project management, file persistence
-- **UserStore**: User preferences and UI state
-- **Components**: UI presentation only
-- **Language Services**: Monaco Editor language support
+Multi-file DBML editor with real-time parsing, syntax highlighting, diagnostics, and database schema visualization. Three-pane layout (Files, Editor, Output) with Pinia stores for state management.
 
 ## Directory Structure
 
 ```
 dbml-playground/
 ├── src/
-│   ├── components/               # UI Components
+│   ├── components/
+│   │   ├── SplitPanel.vue            # Generic resizable panel grid (CSS grid + drag)
 │   │   ├── editor/
-│   │   │   ├── MonacoEditor.vue  # Monaco Editor wrapper
-│   │   │   └── dbml-language.ts  # Language service registration
-│   │   ├── panes/                # Three-pane layout
-│   │   │   ├── files/            # File tree pane
-│   │   │   │   ├── FilesPane.vue
-│   │   │   │   └── FileTreeNode.vue
-│   │   │   ├── editor/           # Code editor pane
-│   │   │   │   └── EditorPane.vue
-│   │   │   └── output/           # Output pane
-│   │   │       ├── OutputPane.vue
-│   │   │       ├── tabs/         # Output tabs
-│   │   │       │   ├── AstTab.vue
-│   │   │       │   ├── DatabaseTab.vue
-│   │   │       │   ├── DiagnosticsTab.vue
-│   │   │       │   ├── SymbolsTab.vue
-│   │   │       │   └── TokensTab.vue
-│   │   │       └── ast/          # AST visualization
-│   │   │           ├── RawAstTreeView.vue
-│   │   │           └── RawAstTreeNode.vue
-│   │   └── [other UI components]
+│   │   │   └── MonacoEditor.vue      # Monaco wrapper (lifecycle, vim, cursor tracking)
+│   │   ├── monaco/
+│   │   │   └── dbml-language.ts      # Monaco language registration (tokens, theme)
+│   │   └── panes/
+│   │       ├── files/
+│   │       │   ├── FilesPane.vue     # File tree with create/rename/delete
+│   │       │   └── FileTreeNode.vue  # Recursive tree node
+│   │       ├── editor/
+│   │       │   └── EditorPane.vue    # Editor pane (wraps MonacoEditor + settings)
+│   │       └── output/
+│   │           ├── OutputPane.vue    # Tab container + editor decorations
+│   │           ├── tabs/
+│   │           │   ├── TokensTab.vue
+│   │           │   ├── AstTab.vue
+│   │           │   ├── SymbolsTab.vue
+│   │           │   ├── DatabaseTab.vue
+│   │           │   └── DiagnosticsTab.vue
+│   │           └── ast/
+│   │               ├── RawAstTreeView.vue
+│   │               └── RawAstTreeNode.vue
 │   │
-│   ├── stores/                   # Pinia Stores (State Management)
-│   │   ├── parserStore.ts        # Parser state, compilation, diagnostics
-│   │   ├── projectStore.ts       # Multi-file project management
-│   │   └── userStore.ts          # UI preferences
+│   ├── stores/
+│   │   ├── parserStore.ts            # Compiler state, parsing, diagnostics, Monaco services
+│   │   ├── projectStore.ts           # Multi-file project, persistence, URL sharing
+│   │   └── userStore.ts              # User preferences (vim mode, active tab)
 │   │
-│   ├── services/                 # Business Logic Services
-│   │   └── language-services.ts  # Monaco language service setup
+│   ├── services/
+│   │   ├── sample-content.ts         # Default DBML content
+│   │   └── serializers/              # AST/symbol/token serialization for UI
 │   │
-│   ├── utils/                    # Utilities
-│   │   ├── logger.ts             # Logging utility
-│   │   └── [other utilities]
+│   ├── utils/
+│   │   ├── logger.ts
+│   │   ├── scroll.ts
+│   │   └── tokenIcons.ts
 │   │
-│   ├── types/                    # TypeScript Type Definitions
-│   │   └── index.ts              # Shared types
-│   │
-│   ├── App.vue                   # Root component (3-pane layout)
-│   └── main.ts                   # Application entry point
+│   ├── types/index.ts
+│   ├── styles/main.css               # Self-hosted Open Sans, editor decorations
+│   ├── App.vue
+│   └── main.ts
 │
-├── public/                       # Static assets
-│   ├── dbml-logo.png
-│   └── [other assets]
+├── public/
+│   ├── fonts/                        # Self-hosted Open Sans woff2 files
+│   └── dbml-logo.png
 │
-├── ARCHITECTURE.md               # This file
-└── [config files]                # Build and tooling configuration (Vite, TypeScript, etc.)
+└── ARCHITECTURE.md
 ```
 
-## Core Architecture Layers
+## Stores
 
-### 1. State Management (Pinia Stores)
+### parserStore
+Owns a single `Compiler` instance from `@dbml/parse`. On each project file change (debounced 300ms):
+1. Syncs all project files into the compiler via `setSource(filepath, content)`
+2. Runs `parseFile` -> gets tokens + AST
+3. Runs `interpretFile` -> gets Database schema
+4. Extracts `SymbolInfo` tree from AST symbols (breaks circular refs for Vue reactivity)
+5. Collects errors/warnings via `DBMLDiagnosticsProvider`
 
-#### ParserStore
-**Responsibility**: DBML compilation, parsing, and diagnostics
-**Key State**:
-- `input: Ref<string>` — Current file content
-- `tokens: Ref<SyntaxToken[]>` — Lexer output
-- `ast: Ref<ProgramNode | null>` — Parser AST
-- `symbols: Ref<SymbolInfo[]>` — Compiled symbols
-- `database: Ref<Database | null>` — Final schema
-- `diagnostics: Ref<ParserError[]>` — Error list
-- `compiler: Compiler` — @dbml/parse compiler instance
+State exposed as `shallowRef` to prevent Vue from deep-proxying circular AST structures.
 
-**Key Methods**:
-- `parse(input: string)` — Trigger parsing with debouncing
-- `getSymbolMembers(sym: NodeSymbol)` — Get symbol children
-- `buildSymbolInfo(sym: NodeSymbol)` — Transform symbol for UI display
+Registers Monaco language services (definition, references, completion) once, wrapping each call with a `syncCompilerFromModel` that pushes the editor's current text into the compiler before analysis. This avoids stale results from the 300ms debounce.
 
-**Hidden Complexity**:
-- Debouncing (300ms) to avoid excessive recompilation
-- Compiler lifecycle (create, parse, bind, check)
-- Symbol transformation (removing circular refs, normalizing for UI)
-- Error formatting and positioning
+### projectStore
+`files: Record<string, string>` (path -> content), `folders: string[]`, `currentFile: string`.
 
-#### ProjectStore
-**Responsibility**: Multi-file project and file management
-**Key State**:
-- `files: Map<string, string>` — File contents by path
-- `activeFile: Ref<string>` — Currently edited file
-- `fileTree: Ref<FileNode[]>` — Hierarchical file structure
+Persistence: localStorage (debounced 500ms). URL sharing via `CompressionStream('deflate-raw')` + base64url encoding/decoding.
 
-**Key Methods**:
-- `createFile(path: string)` — Add new file
-- `updateFile(path: string, content: string)` — Update file
-- `deleteFile(path: string)` — Remove file
-- `selectFile(path: string)` — Switch active file
+### userStore
+`prefs: { isVim, activeOutputTab }`. Persisted to localStorage.
 
-**Hidden Complexity**:
-- File path validation
-- File tree building from flat file list
-- Project persistence (localStorage)
-
-#### UserStore
-**Responsibility**: User preferences and UI state
-**Key State**:
-- `theme: Ref<'light' | 'dark'>` — Editor theme
-- `fontSize: Ref<number>` — Editor font size
-- `[other preferences]`
-
-### 2. Component Layer
-
-#### Three-Pane Layout
-```
-┌─────────────────────────────────────┐
-│          Header (App Bar)            │
-├────────────┬──────────┬──────────────┤
-│   Files    │  Editor  │   Output     │
-│  (Tree)    │(Monaco)  │  (Tabs)      │
-├────────────┼──────────┼──────────────┤
-│    FilesPane.vue     │ OutputPane.vue│
-│    - FilesTree       │ - AstTab      │
-│    - FileTreeNode    │ - DatabaseTab │
-│                      │ - SymbolsTab  │
-│ EditorPane.vue       │ - TokensTab   │
-│ - MonacoEditor       │ - DiagnosticsTab
-│   ├─ dbml-language.ts├─ RawAstTreeView
-│   └─ [syntax support]└─ [visualizations]
-└────────────┴──────────┴──────────────┘
-```
-
-**Component Hierarchy**:
-- `App.vue` (orchestrates layout)
-  - `FilesPane` (left, file tree)
-    - `FileTreeNode` (recursive file/folder)
-  - `EditorPane` (center, editor)
-    - `MonacoEditor` (Monaco wrapper)
-  - `OutputPane` (right, output tabs)
-    - Tab components (AstTab, DatabaseTab, etc.)
-    - Visualization components (RawAstTreeView, etc.)
-
-**Design Pattern**: Each component is shallow—minimal logic, maximum data binding to store
-
-#### MonacoEditor Component
-**Responsibility**: Editor lifecycle and Monaco instance
-**Props**: Editor options, language, theme
-**Events**: Input, selection changes
-**Integration**: Provides Monaco instance to language services
-
-#### Language Services Registration
-**File**: `src/services/language-services.ts`
-**Responsibility**: Configure Monaco for DBML
-**Features**:
-- Token provider (syntax highlighting)
-- Completion provider (autocomplete)
-- Hover provider (tooltips)
-- Definition provider (go-to-definition)
-- References provider (find-all-references)
-
-**Integration Points**:
-```typescript
-registerLanguageServices(compiler)
-// Registers all language features with Monaco using compiler state
-```
-
-### 3. Data Flow
+## Data Flow
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│ User edits in MonacoEditor                               │
-└────────────────┬─────────────────────────────────────────┘
-                 │
-┌────────────────▼─────────────────────────────────────────┐
-│ EditorPane → parserStore.parse(newContent)               │
-│ [Debounced 300ms]                                        │
-└────────────────┬─────────────────────────────────────────┘
-                 │
-┌────────────────▼─────────────────────────────────────────┐
-│ ParserStore (Pinia)                                      │
-│ - Calls compiler.setSource()                             │
-│ - Compiler.parse() → tokens, ast                         │
-│ - Compiler.bind() + check() → diagnostics                │
-│ - Extract symbols, database schema                       │
-└────────────────┬─────────────────────────────────────────┘
-                 │
-┌────────────────▼─────────────────────────────────────────┐
-│ Reactive Updates                                         │
-│ - MonacoEditor gets syntax highlighting                  │
-│ - OutputPane tabs display results                        │
-│ - Diagnostics shown in editor                            │
-└──────────────────────────────────────────────────────────┘
+User types in MonacoEditor
+  -> EditorPane updates project.currentContent (computed setter)
+  -> projectStore.files[currentFile] changes
+  -> parserStore watcher fires (debounced 300ms)
+  -> Compiler: setSource -> parseFile -> interpretFile
+  -> Reactive state updates: tokens, ast, database, symbols, errors
+  -> OutputPane tabs re-render
+  -> MonacoEditor markers update via updateDiagnostics
 ```
 
-## Key Design Decisions
+## Component Layer
 
-### 1. Pinia for State Management
-**Decision**: Use Pinia instead of reactive composition APIs
-**Rationale**: 
-- Single source of truth for parser state
-- Easier testing and debugging
-- Better DevTools support
-- Cleaner data flow and less prop drilling
+`App.vue` uses `SplitPanel` (CSS grid with drag handles) for the three-pane layout.
 
-### 2. Three-Pane Layout
-**Decision**: Files (left) | Editor (center) | Output (right)
-**Rationale**:
-- Multi-file editing requires file navigation
-- Simultaneous view of code and output aids debugging
-- Scalable—easy to add more panes or tabs
+Components are thin -- they read from stores and emit events. No business logic in components.
 
-### 3. Debounced Parsing
-**Decision**: Debounce parser updates by 300ms
-**Rationale**:
-- Prevents excessive compilation on every keystroke
-- Improves responsiveness (only compiles when user pauses)
-- Balances UX and performance
+Cross-file go-to-definition works via `_codeEditorService.registerCodeEditorOpenHandler` on Monaco (internal API, guarded with `?.`). When a definition target is in a different file, App.vue switches `project.currentFile` and waits for the model swap before revealing the position.
 
-### 4. Language Services Integration
-**Decision**: Register all language features (completion, definition, etc.) via Monaco API
-**Rationale**:
-- Leverages Monaco's built-in infrastructure
-- Consistent UX with other editors
-- Easier to add new features (hover, inlay hints, etc.)
+## Key Decisions
 
-### 5. Symbol Info Transformation
-**Decision**: Transform `NodeSymbol` to `SymbolInfo` in store layer
-**Rationale**:
-- Breaks circular references in compiler data
-- Removes internal types from UI components
-- Simplifies UI serialization (no cycles)
-
-## Extensibility Points
-
-### Adding a New Output Tab
-1. Create `src/components/panes/output/tabs/NewTab.vue`
-2. Add to `OutputPane.vue` tab list
-3. Subscribe to `parserStore` state as needed
-4. No changes to store or parser layer required
-
-### Adding a New Language Feature
-1. Implement provider in `src/services/language-services.ts`
-2. Call `monaco.languages.register*Provider()` 
-3. Use `parserStore.compiler` for symbol/definition queries
-4. No changes to component layer required
-
-### Adding a New Store
-1. Create `src/stores/newStore.ts` with Pinia `defineStore()`
-2. Import in components via `useNewStore()`
-3. Follow existing store patterns (computed, actions)
-4. No changes to existing stores required
-
-## Performance Optimizations
-
-### 1. Debounced Parsing
-- Input changes trigger parse after 300ms of inactivity
-- Prevents thrashing on rapid typing
-
-### 2. Shallow Reactivity in Components
-- Components use `shallowRef` for large objects (AST, symbols)
-- Reduces Vue's reactivity overhead
-
-### 3. Memoized Symbol Lookups
-- `buildSymbolInfo` caches results per symbol
-- Avoids recomputing for repeated queries
-
-### 4. Monaco Instance Reuse
-- Single Monaco editor instance shared across app
-- Editor options (theme, fontSize) applied reactively
-
-## Testing Strategy
-
-### Unit Tests
-- Store actions and computed properties (no DOM)
-- Service functions (language features, utilities)
-- Type guards and data transformers
-
-### Integration Tests
-- Component mounting with mock stores
-- User interactions (typing, navigation)
-- Store state updates from components
-
-### E2E Tests (Future)
-- Full editor workflow: load file, edit, see output
-- Cross-file references and navigation
-- Multi-file project operations
-
-This architecture enables rapid iteration while maintaining code quality and clarity. 
+- **shallowRef for AST/tokens/symbols**: Vue's deep reactivity proxy breaks on circular structures (SyntaxNode.parentNode, NodeSymbol.declaration). `shallowRef` avoids this.
+- **No external split pane library**: `SplitPanel.vue` uses CSS grid + mousedown drag (~70 lines). Removes `splitpanes` dependency.
+- **No external compression library**: `CompressionStream`/`DecompressionStream` (builtin) + base64url. Removes `lzbase62` dependency.
+- **Self-hosted fonts**: Open Sans served from `public/fonts/` instead of Google Fonts CDN.
+- **Monaco language config from @dbml/parse**: Monarch token provider and language config are exported from the parser package so the playground stays in sync with the grammar.
