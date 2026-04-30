@@ -9,7 +9,6 @@ import type {
 } from './internable';
 
 // Matches a Windows drive-letter prefix after normalization (e.g. "C:/").
-// Used only in fromUri/toUri where URL parsing adds/needs an extra leading slash.
 const WIN_DRIVE_RE = /^[a-zA-Z]:\//;
 
 declare const __filepathIdBrand: unique symbol;
@@ -41,14 +40,11 @@ export class Filepath implements Internable<FilepathId> {
     return new Filepath(resolve(fromDir, relativePath));
   }
 
-  // For custom URIs (e.g. inmemory://model/1), map to a synthetic absolute path
+  // Convert monaco URI to filepath
   static fromUri (uri: string): Filepath {
     try {
       const url = new URL(uri);
-      // Only prepend host when it's non-empty (inmemory://model/1 → /model/1).
-      // For file:// URIs host is empty and pathname already starts with '/',
-      // so prepending '/' produced '//main.dbml'.
-      const raw = url.host ? `/${url.host}${url.pathname}` : url.pathname;
+      const raw = url.host ? `/${url.host}${url.pathname}` : url.pathname; // Treat url host as part of the path
       return new Filepath(normalize(raw), {
         protocol: url.protocol,
       });
@@ -108,15 +104,15 @@ export class Filepath implements Internable<FilepathId> {
     return other.path.startsWith(prefix);
   }
 
+  // Convert filepath to monaco URI
   toUri (options: { protocol?: string } = {}): string {
     const protocol = options.protocol ?? this.protocol;
     if (protocol === undefined) {
       return this.path;
     }
-    // Use URL to handle percent-encoding of spaces and non-ASCII characters.
     // Windows: C:/path needs an extra leading slash -> file:///C:/path
     const prefix = WIN_DRIVE_RE.test(this.path) ? `${protocol}:///` : `${protocol}://`;
-    return new URL(prefix + this.path).href;
+    return new URL(prefix + this.path).href; // URL is used to handle url-encoded chars
   }
 
   static isRelative (p: string): boolean {
@@ -124,8 +120,7 @@ export class Filepath implements Internable<FilepathId> {
   }
 }
 
-// Resolve the relativePath
-// based on the currentFilepath
+// From the currentFilepath, resolve the relativePath to an absolute path
 // Append `.dbml` if relativePath does not ends with `.dbml`
 export function resolveImportFilepath (currentFilepath: Filepath, relativePath: string): Filepath | undefined {
   if (!Filepath.isRelative(relativePath)) return undefined;
