@@ -72,37 +72,23 @@
     </div>
 
     <main class="flex-1 overflow-hidden p-2">
-      <Splitpanes class="h-full">
-        <Pane
-          :size="15"
-          :min-size="10"
-          :max-size="30"
-        >
+      <SplitPanel :sizes="[15, 42, 43]">
+        <template #panel-0>
           <FilesPane />
-        </Pane>
-        <Pane
-          :size="42"
-          :min-size="20"
-          :max-size="70"
-        >
+        </template>
+        <template #panel-1>
           <EditorPane
             v-model="project.currentContent"
             @editor-mounted="onDbmlEditorMounted"
             @cursor-move="(pos) => { dbmlCursorPos.value = pos }"
           />
-        </Pane>
-        <Pane
-          :min-size="25"
-          :max-size="70"
-        >
-          <div
-            class="flex flex-col h-full bg-white rounded border border-gray-200 overflow-hidden"
-            style="min-width: 260px;"
-          >
+        </template>
+        <template #panel-2>
+          <div class="flex flex-col h-full bg-white rounded border border-gray-200 overflow-hidden min-w-[260px]">
             <OutputPane ref="outputPaneRef" />
           </div>
-        </Pane>
-      </Splitpanes>
+        </template>
+      </SplitPanel>
     </main>
   </div>
 </template>
@@ -111,10 +97,6 @@
 import {
   ref, shallowRef, provide, onMounted, onBeforeUnmount, nextTick,
 } from 'vue';
-import {
-  Splitpanes, Pane,
-} from 'splitpanes';
-import 'splitpanes/dist/splitpanes.css';
 import {
   PhClipboardText, PhCheck,
 } from '@phosphor-icons/vue';
@@ -127,6 +109,7 @@ import {
 import {
   Filepath,
 } from '@dbml/parse';
+import SplitPanel from '@/components/SplitPanel.vue';
 import FilesPane from '@/components/panes/files/FilesPane.vue';
 import EditorPane from '@/components/panes/editor/EditorPane.vue';
 import OutputPane from '@/components/panes/output/OutputPane.vue';
@@ -233,17 +216,6 @@ const displayVersion = isUsingWorkspaceVersion ? 'development' : version;
 <style>
 .v-popper--theme-dropdown .v-popper__arrow-container {
   display: none !important;
-}
-
-.splitpanes__splitter {
-  background: transparent !important;
-  width: 8px !important;
-  min-width: 8px !important;
-  border: none !important;
-  cursor: col-resize;
-}
-.splitpanes__splitter:hover {
-  background: transparent !important;
 }
 
 html, body {

@@ -7,7 +7,6 @@ import {
 import {
   debounce,
 } from 'lodash-es';
-import lzbase62 from 'lzbase62';
 import {
   DEFAULT_SAMPLE_CONTENT,
 } from '@/services/sample-content';
@@ -15,6 +14,25 @@ import logger from '../utils/logger';
 import {
   DEFAULT_ENTRY,
 } from '@dbml/parse';
+
+async function compressToBase64 (input: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const stream = new Blob([encoder.encode(input)]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+  const compressed = await new Response(stream).arrayBuffer();
+  const bytes = new Uint8Array(compressed);
+  let binary = '';
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function decompressFromBase64 (encoded: string): Promise<string> {
+  const padded = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new Response(stream).text();
+}
 
 const PROJECT_KEY = 'PROJECT_DATA';
 const CURRENT_FILE_KEY = 'PROJECT_CURRENT_FILE';
@@ -38,14 +56,14 @@ function saveProject (files: Record<string, string>, folders: string[]): void {
   }
 }
 
-function loadFromUrl (): ProjectData | null {
+async function loadFromUrl (): Promise<ProjectData | null> {
   try {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     if (!code) return null;
-    const decoded = JSON.parse(lzbase62.decompress(code));
+    const json = await decompressFromBase64(code);
+    const decoded = JSON.parse(json);
     if (decoded && typeof decoded === 'object' && 'files' in decoded) return decoded as ProjectData;
-    // Legacy: plain files object
     if (decoded && typeof decoded === 'object') return {
       files: decoded as Record<string, string>,
       folders: [],
@@ -59,19 +77,6 @@ function loadFromUrl (): ProjectData | null {
 function initProject (): { files: Record<string, string>;
   folders: string[];
   currentFile: string; } {
-  const fromUrl = loadFromUrl();
-  if (fromUrl && Object.keys(fromUrl.files).length > 0) {
-    saveProject(fromUrl.files, fromUrl.folders ?? []);
-    const url = new URL(window.location.href);
-    url.searchParams.delete('code');
-    window.history.replaceState(null, '', url.toString());
-    return {
-      files: fromUrl.files,
-      folders: fromUrl.folders ?? [],
-      currentFile: Object.keys(fromUrl.files).sort()[0],
-    };
-  }
-
   try {
     const raw = localStorage.getItem(PROJECT_KEY);
     if (raw) {
@@ -109,6 +114,19 @@ export const useProject = defineStore('project', () => {
   const files = ref<Record<string, string>>(initialFiles);
   const folders = ref<string[]>(initialFolders);
   const currentFile = ref<string>(initialCurrentFile);
+
+  // Load from URL asynchronously (decompression is async).
+  // Overwrites the sync localStorage init if a ?code= param is present.
+  loadFromUrl().then((fromUrl) => {
+    if (!fromUrl || Object.keys(fromUrl.files).length === 0) return;
+    files.value = fromUrl.files;
+    folders.value = fromUrl.folders ?? [];
+    currentFile.value = Object.keys(fromUrl.files).sort()[0];
+    saveProject(fromUrl.files, fromUrl.folders ?? []);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('code');
+    window.history.replaceState(null, '', url.toString());
+  });
 
   const currentContent = computed({
     get: () => files.value[currentFile.value] ?? '',
@@ -221,13 +239,13 @@ export const useProject = defineStore('project', () => {
     saveProject(defaultFiles, []);
   }
 
-  function getShareUrl (): string | null {
+  async function getShareUrl (): Promise<string | null> {
     try {
       const data: ProjectData = {
         files: files.value,
         folders: folders.value,
       };
-      const encoded = lzbase62.compress(JSON.stringify(data));
+      const encoded = await compressToBase64(JSON.stringify(data));
       if (encoded.length > MAX_SHARE_SIZE) return null;
       const url = new URL(window.location.href);
       url.searchParams.set('code', encoded);
