@@ -10,7 +10,7 @@ import {
   SymbolKind, SyntaxNodeKind,
 } from '@dbml/parse';
 import type {
-  Database, SyntaxToken,
+  Database, ProgramNode, SyntaxToken,
 } from '@dbml/parse';
 import * as monaco from 'monaco-editor';
 import type {
@@ -91,7 +91,7 @@ const AST_WALK_SKIP_KEYS = new Set(['parentNode', 'parent', 'symbol', 'referee',
 // Soft cap so a pathological tree can't blow up Monaco's decoration model.
 const AST_RANGE_LIMIT = 2000;
 
-export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
+export function collectNodeDecorations (ast: ProgramNode | null): DecorationEntry[] {
   const entries: DecorationEntry[] = [];
   const visited = new WeakSet<object>();
   function walk (node: unknown) {
