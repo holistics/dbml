@@ -123,7 +123,7 @@ Enum status {
   },
 ] as const;
 
-export function getSampleContent (categoryName: string): string | null {
+export function getSampleContent (categoryName: string): string | undefined {
   const category = SAMPLE_CATEGORIES.find((cat) => cat.name === categoryName);
   return category?.content ?? null;
 }

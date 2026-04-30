@@ -101,3 +101,6 @@ export {
   DBMLReferencesProvider,
   DBMLDiagnosticsProvider,
 } from '@/services/index';
+export type {
+  Diagnostic,
+} from '@/services/diagnostics/provider';

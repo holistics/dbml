@@ -139,9 +139,12 @@
 
 <script setup lang="ts">
 import {
-  ref, watch, onMounted, onUnmounted, inject, type Ref,
+  ref, watch, nextTick, onMounted, onUnmounted, inject, type Ref,
 } from 'vue';
 import * as monaco from 'monaco-editor';
+import {
+  toMonacoRange,
+} from '@/utils/monaco';
 import {
   PhKeyReturn,
   PhArrowsHorizontal,
@@ -155,10 +158,7 @@ import type {
 } from '@dbml/parse';
 import {
   tokenIconFor,
-} from '@/utils/tokenIcons';
-import {
-  scrollRowIntoView,
-} from '@/utils/scroll';
+} from '@/components/panes/output/tokenIcons';
 
 interface Props {
   tokens: SyntaxToken[];
@@ -211,7 +211,6 @@ function isTruncated (text: string | undefined): boolean {
 }
 
 // --- Editor integration ---
-const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getDbmlEditor');
 const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
 
 const scrollEl = ref<HTMLElement | null>(null);
@@ -221,12 +220,9 @@ const detailEls: (HTMLElement | null)[] = [];
 const rawTexts = ref<string[]>([]);
 
 function updateRawTexts () {
-  const model = getEditor?.()?.getModel();
+  const model = dbmlEditorRef?.value?.getModel();
   if (!model) { rawTexts.value = props.tokens.map((t) => t.value); return; }
-  rawTexts.value = props.tokens.map((t) => model.getValueInRange(new monaco.Range(
-    t.startPos.line + 1, t.startPos.column + 1,
-    t.endPos.line + 1, t.endPos.column + 1,
-  )));
+  rawTexts.value = props.tokens.map((t) => model.getValueInRange(toMonacoRange(t.startPos, t.endPos)));
 }
 
 const activeIndex = ref(-1);
@@ -237,7 +233,30 @@ function setDetailEl (i: number, el: HTMLElement | null) { detailEls[i] = el; }
 
 watch(() => props.tokens.length, () => { rowEls.length = 0; detailEls.length = 0; });
 
-function scrollToVisible (i: number) { scrollRowIntoView(i, rowEls, detailEls, scrollEl); }
+function scrollToVisible (index: number) {
+  nextTick(() => {
+    const row = rowEls[index];
+    const container = scrollEl.value;
+    if (!row || !container) return;
+    const bottomEl = detailEls[index] ?? row;
+    const containerRect = container.getBoundingClientRect();
+    const rowTop = row.getBoundingClientRect().top - containerRect.top + container.scrollTop;
+    const bottomEdge = bottomEl.getBoundingClientRect().bottom - containerRect.top + container.scrollTop;
+    const visibleTop = container.scrollTop;
+    const visibleBottom = visibleTop + container.clientHeight;
+    if (rowTop < visibleTop) {
+      container.scrollTo({
+        top: rowTop,
+        behavior: 'smooth',
+      });
+    } else if (bottomEdge > visibleBottom) {
+      container.scrollTo({
+        top: bottomEdge - container.clientHeight,
+        behavior: 'smooth',
+      });
+    }
+  });
+}
 
 function computeActiveIndex (line: number, column: number): number {
   let best = -1;
@@ -252,7 +271,7 @@ function computeActiveIndex (line: number, column: number): number {
 }
 
 function updateActiveIndex () {
-  const editor = getEditor?.();
+  const editor = dbmlEditorRef?.value;
   const pos = editor?.getPosition();
   const next = pos ? computeActiveIndex(pos.lineNumber, pos.column) : -1;
   if (next !== activeIndex.value) {
@@ -277,7 +296,7 @@ function attachCursorListener (editor: monaco.editor.IStandaloneCodeEditor) {
 }
 
 onMounted(() => {
-  const editor = getEditor?.();
+  const editor = dbmlEditorRef?.value;
   if (editor) attachCursorListener(editor);
 });
 
@@ -298,19 +317,14 @@ function onTokenClick (i: number, token: SyntaxToken) {
 }
 
 function navigateTo (token: SyntaxToken) {
-  const editor = getEditor?.();
+  const editor = dbmlEditorRef?.value;
   if (!editor) return;
-  const range = {
-    startLineNumber: token.startPos.line + 1,
-    startColumn: token.startPos.column + 1,
-    endLineNumber: token.endPos.line + 1,
-    endColumn: token.endPos.column + 1,
-  };
+  const range = toMonacoRange(token.startPos, token.endPos);
   editor.setSelection({
-    selectionStartLineNumber: token.endPos.line + 1,
-    selectionStartColumn: token.endPos.column + 1,
-    positionLineNumber: token.startPos.line + 1,
-    positionColumn: token.startPos.column + 1,
+    selectionStartLineNumber: range.endLineNumber,
+    selectionStartColumn: range.endColumn,
+    positionLineNumber: range.startLineNumber,
+    positionColumn: range.startColumn,
   });
   editor.revealRangeInCenter(range);
 }

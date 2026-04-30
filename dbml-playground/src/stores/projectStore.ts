@@ -7,7 +7,6 @@ import {
 import {
   debounce,
 } from 'lodash-es';
-import lzbase62 from 'lzbase62';
 import {
   DEFAULT_SAMPLE_CONTENT,
 } from '@/services/sample-content';
@@ -15,6 +14,25 @@ import logger from '../utils/logger';
 import {
   DEFAULT_ENTRY,
 } from '@dbml/parse';
+
+async function compressToBase64 (input: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const stream = new Blob([encoder.encode(input)]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+  const compressed = await new Response(stream).arrayBuffer();
+  const bytes = new Uint8Array(compressed);
+  let binary = '';
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function decompressFromBase64 (encoded: string): Promise<string> {
+  const padded = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new Response(stream).text();
+}
 
 const PROJECT_KEY = 'PROJECT_DATA';
 const CURRENT_FILE_KEY = 'PROJECT_CURRENT_FILE';
@@ -33,45 +51,32 @@ function saveProject (files: Record<string, string>, folders: string[]): void {
       folders,
     };
     localStorage.setItem(PROJECT_KEY, JSON.stringify(data));
-  } catch (err) {
+  } catch (_err) {
     logger.warn('Failed to persist project');
   }
 }
 
-function loadFromUrl (): ProjectData | null {
+async function loadFromUrl (): Promise<ProjectData | undefined> {
   try {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
-    if (!code) return null;
-    const decoded = JSON.parse(lzbase62.decompress(code));
+    if (!code) return undefined;
+    const json = await decompressFromBase64(code);
+    const decoded = JSON.parse(json);
     if (decoded && typeof decoded === 'object' && 'files' in decoded) return decoded as ProjectData;
-    // Legacy: plain files object
     if (decoded && typeof decoded === 'object') return {
       files: decoded as Record<string, string>,
       folders: [],
     };
-    return null;
+    return undefined;
   } catch {
-    return null;
+    return undefined;
   }
 }
 
 function initProject (): { files: Record<string, string>;
   folders: string[];
   currentFile: string; } {
-  const fromUrl = loadFromUrl();
-  if (fromUrl && Object.keys(fromUrl.files).length > 0) {
-    saveProject(fromUrl.files, fromUrl.folders ?? []);
-    const url = new URL(window.location.href);
-    url.searchParams.delete('code');
-    window.history.replaceState(null, '', url.toString());
-    return {
-      files: fromUrl.files,
-      folders: fromUrl.folders ?? [],
-      currentFile: Object.keys(fromUrl.files).sort()[0],
-    };
-  }
-
   try {
     const raw = localStorage.getItem(PROJECT_KEY);
     if (raw) {
@@ -86,7 +91,7 @@ function initProject (): { files: Record<string, string>;
         };
       }
     }
-  } catch (err) {
+  } catch (_err) {
     logger.warn('Failed to load project from storage');
   }
 
@@ -109,6 +114,19 @@ export const useProject = defineStore('project', () => {
   const files = ref<Record<string, string>>(initialFiles);
   const folders = ref<string[]>(initialFolders);
   const currentFile = ref<string>(initialCurrentFile);
+
+  // Load from URL asynchronously (decompression is async).
+  // Overwrites the sync localStorage init if a ?code= param is present.
+  loadFromUrl().then((fromUrl) => {
+    if (!fromUrl || Object.keys(fromUrl.files).length === 0) return;
+    files.value = fromUrl.files;
+    folders.value = fromUrl.folders ?? [];
+    currentFile.value = Object.keys(fromUrl.files).sort()[0];
+    saveProject(fromUrl.files, fromUrl.folders ?? []);
+    const url = new URL(window.location.href);
+    url.searchParams.delete('code');
+    window.history.replaceState(null, '', url.toString());
+  });
 
   const currentContent = computed({
     get: () => files.value[currentFile.value] ?? '',
@@ -142,7 +160,6 @@ export const useProject = defineStore('project', () => {
   function addFile (path: string, content = '') {
     files.value[path] = content;
     currentFile.value = path;
-    localStorage.setItem(CURRENT_FILE_KEY, path);
     persistProject();
   }
 
@@ -166,7 +183,6 @@ export const useProject = defineStore('project', () => {
     delete files.value[oldPath];
     if (currentFile.value === oldPath) {
       currentFile.value = newPath;
-      localStorage.setItem(CURRENT_FILE_KEY, newPath);
     }
     persistProject();
   }
@@ -217,24 +233,23 @@ export const useProject = defineStore('project', () => {
     files.value = defaultFiles;
     folders.value = [];
     currentFile.value = DEFAULT_FILE;
-    localStorage.setItem(CURRENT_FILE_KEY, DEFAULT_FILE);
     saveProject(defaultFiles, []);
   }
 
-  function getShareUrl (): string | null {
+  async function getShareUrl (): Promise<string | undefined> {
     try {
       const data: ProjectData = {
         files: files.value,
         folders: folders.value,
       };
-      const encoded = lzbase62.compress(JSON.stringify(data));
-      if (encoded.length > MAX_SHARE_SIZE) return null;
+      const encoded = await compressToBase64(JSON.stringify(data));
+      if (encoded.length > MAX_SHARE_SIZE) return undefined;
       const url = new URL(window.location.href);
       url.searchParams.set('code', encoded);
       return url.toString();
-    } catch (err) {
+    } catch (_err) {
       logger.warn('Failed to generate share URL');
-      return null;
+      return undefined;
     }
   }
 
@@ -243,7 +258,6 @@ export const useProject = defineStore('project', () => {
     folders,
     currentFile,
     currentContent,
-    totalSize,
     isLarge,
     setCurrentFile,
     addFile,

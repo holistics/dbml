@@ -432,7 +432,7 @@ import DbSection from './common/DbSection.vue';
 import DbBadge from './common/DbBadge.vue';
 
 interface Props {
-  database: Database | null;
+  database: Database | undefined;
   showDecoration?: boolean;
 }
 

@@ -121,7 +121,7 @@ import {
 } from '@dbml/parse';
 import {
   tokenIconFor,
-} from '@/utils/tokenIcons';
+} from '@/components/panes/output/tokenIcons';
 
 export interface RawAstNode {
   id: string;

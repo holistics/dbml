@@ -10,7 +10,7 @@ import {
   SymbolKind, SyntaxNodeKind,
 } from '@dbml/parse';
 import type {
-  Database, SyntaxToken,
+  Database, ProgramNode, SyntaxToken,
 } from '@dbml/parse';
 import * as monaco from 'monaco-editor';
 import type {
@@ -18,7 +18,10 @@ import type {
 } from '@/stores/parserStore';
 import {
   tokenKindClass,
-} from '@/utils/tokenIcons';
+} from '@/components/panes/output/tokenIcons';
+import {
+  toMonacoRange,
+} from '@/utils/monaco';
 
 export interface DecorationEntry {
   range: monaco.IRange;
@@ -27,12 +30,7 @@ export interface DecorationEntry {
 
 export function collectTokenDecorations (tokens: readonly SyntaxToken[]): DecorationEntry[] {
   return tokens.map((t) => ({
-    range: new monaco.Range(
-      t.startPos.line + 1,
-      t.startPos.column + 1,
-      t.endPos.line + 1,
-      t.endPos.column + 1,
-    ),
+    range: toMonacoRange(t.startPos, t.endPos),
     cls: tokenKindClass(t.kind),
   }));
 }
@@ -93,7 +91,7 @@ const AST_WALK_SKIP_KEYS = new Set(['parentNode', 'parent', 'symbol', 'referee',
 // Soft cap so a pathological tree can't blow up Monaco's decoration model.
 const AST_RANGE_LIMIT = 2000;
 
-export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
+export function collectNodeDecorations (ast: ProgramNode | undefined): DecorationEntry[] {
   const entries: DecorationEntry[] = [];
   const visited = new WeakSet<object>();
   function walk (node: unknown) {
@@ -124,7 +122,7 @@ export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
       }
       if (decoration) {
         entries.push({
-          range: new monaco.Range(sp.line + 1, (sp.column ?? 0) + 1, ep.line + 1, (ep.column ?? 0) + 1),
+          range: toMonacoRange(sp, ep),
           cls: decoration,
         });
       }
@@ -168,9 +166,9 @@ export function collectSymbolDecorations (symbols: SymbolInfo[]): DecorationEntr
   function walk (sym: SymbolInfo) {
     // Program covers the entire file so its decoration would blanket
     // everything underneath — skip it.
-    if (sym.declPos && sym.kind !== SymbolKind.Program) {
+    if (sym.declarationPosition && sym.kind !== SymbolKind.Program) {
       result.push({
-        range: new monaco.Range(sym.declPos.startLine, sym.declPos.startCol, sym.declPos.endLine, sym.declPos.endCol),
+        range: new monaco.Range(sym.declarationPosition.startLine, sym.declarationPosition.startColumn, sym.declarationPosition.endLine, sym.declarationPosition.endColumn),
         cls: SYM_KIND_CLASS[sym.kind as SymbolKind] ?? '',
       });
     }
@@ -185,7 +183,7 @@ type DbToken = { start: { line: number;
 end: { line: number;
   column: number; }; } | undefined;
 
-export function collectDatabaseDecorations (db: Database | null): DecorationEntry[] {
+export function collectDatabaseDecorations (db: Database | undefined): DecorationEntry[] {
   if (!db) return [];
   const result: DecorationEntry[] = [];
   function add (tp: DbToken, cls: string) {
