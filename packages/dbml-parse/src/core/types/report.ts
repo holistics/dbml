@@ -31,6 +31,8 @@ export default class Report<T> {
     return this.value as any === value;
   }
 
+  // Extract the reported value
+  // If the reported value is one of filteredValue, return undefined
   getFiltered<S extends symbol | undefined | null> (...filteredValues: S[]): Exclude<T, S> | undefined {
     return filteredValues.includes(this.value as any) ? undefined : this.value as Exclude<T, S>;
   }
@@ -47,6 +49,10 @@ export default class Report<T> {
     return this.warnings || [];
   }
 
+  // Chain the reported value
+  // 1. Transform the reported value via `fn`
+  // 2. If `fn` produces further warnings or errors, accumulate
+  // If the reported value is one of filteredValue, return undefined
   chainFiltered<S extends symbol | undefined | null, U>(fn: (_: Exclude<T, S>) => Report<U>, ...filteredValues: S[]): Report<U | undefined> {
     if (filteredValues.includes(this.value as any)) return new Report(undefined, this.errors, this.warnings);
     const res = fn(this.value as Exclude<T, S>);
@@ -76,6 +82,10 @@ export default class Report<T> {
     return new Report<U>(res.value, errors, warnings);
   }
 
+  // Map the reported value
+  // 1. Transform the reported value via `fn`
+  // 2. `fn` cannot produce further warnings or errors
+  // If the reported value is one of filteredValue, return undefined
   mapFiltered<S extends symbol | undefined | null, U>(fn: (_: Exclude<T, S>) => U, ...filteredValues: S[]): Report<U | undefined> {
     if (filteredValues.includes(this.value as any)) return new Report(undefined, this.errors, this.warnings);
     return new Report<U>(fn(this.value as Exclude<T, S>), this.errors, this.warnings);

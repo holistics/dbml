@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import type Report from '@/core/types/report';
 
-// Sentinel returned by a module when it does not handle a dispatched call -
+// Sentinel returned by a module when it does not handle a dispatched call —
 // lets the dispatcher fall through to the next candidate module.
 export const PASS_THROUGH = Symbol('PASS_THROUGH');
 export type PassThrough = typeof PASS_THROUGH;
