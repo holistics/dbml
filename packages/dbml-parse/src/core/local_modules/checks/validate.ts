@@ -6,7 +6,7 @@ import {
 } from '@/core/types/keywords';
 import {
   pickValidator,
-} from '@/core/local_modules';
+} from '@/core/local_modules/utils';
 import {
   aggregateSettingList,
 } from '@/core/utils/validate';

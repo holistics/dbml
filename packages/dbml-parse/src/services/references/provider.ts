@@ -3,9 +3,6 @@ import {
   DEFAULT_ENTRY,
 } from '@/constants';
 import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
   SyntaxNodeKind,
 } from '@/core/types/nodes';
 import {

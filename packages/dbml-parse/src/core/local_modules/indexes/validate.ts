@@ -9,7 +9,7 @@ import {
 } from '@/core/utils/expression';
 import {
   pickValidator,
-} from '@/core/local_modules';
+} from '@/core/local_modules/utils';
 import {
   aggregateSettingList,
 } from '@/core/utils/validate';

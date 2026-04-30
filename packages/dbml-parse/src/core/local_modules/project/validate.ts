@@ -3,7 +3,7 @@ import {
 } from 'lodash-es';
 import {
   pickValidator,
-} from '@/core/local_modules';
+} from '@/core/local_modules/utils';
 import {
   isSimpleName,
 } from '@/core/utils/validate';

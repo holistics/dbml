@@ -1,7 +1,4 @@
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
   Filepath,
 } from '@/core/types/filepath';
 import {
@@ -29,16 +26,13 @@ import {
   bindNode,
 } from '@/core/global_modules';
 import {
-  validateNode,
-} from '@/core/local_modules';
-import {
   bindFile,
 } from './queries/pipeline/bind';
 import {
   interpretFile,
 } from './queries/pipeline/interpret';
 import {
-  validateFile,
+  validateFile, validateNode,
 } from './queries/pipeline/validate';
 import {
   parseFile,

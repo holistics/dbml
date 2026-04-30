@@ -1,8 +1,5 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
   Filepath,
 } from '@/core/types/filepath';
 import type {
