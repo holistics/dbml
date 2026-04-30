@@ -67,10 +67,9 @@ export {
 };
 
 export default class Compiler {
-  // Interners
-  nodeIdGenerator = new SyntaxNodeIdGenerator();
-  symbolIdGenerator = new NodeSymbolIdGenerator();
-  symbolFactory = new SymbolFactory(this.symbolIdGenerator);
+  readonly nodeIdGenerator = new SyntaxNodeIdGenerator();
+  readonly symbolIdGenerator = new NodeSymbolIdGenerator();
+  readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   // The structure of the DbmlProject
   layout: DbmlProjectLayout = new MemoryProjectLayout();
