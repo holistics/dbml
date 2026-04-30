@@ -1,3 +1,12 @@
+## v7.1.2 (2026-04-28)
+
+#### :robot: Dependencies Update
+* `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#885](https://github.com/holistics/dbml/pull/885) misc(dbml-parse): upgrade lodash-es to v4.18.1 ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 1
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
 ## v7.1.1 (2026-04-17)
 
 #### :bug: Bug Fix

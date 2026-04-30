@@ -1,6 +1,6 @@
 {
   "name": "@dbml/playground",
-  "version": "7.1.1",
+  "version": "7.1.2",
   "description": "Interactive playground for debugging and visualizing the DBML parser pipeline",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -25,7 +25,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@dbml/parse": "^7.1.1",
+    "@dbml/parse": "^7.1.2",
     "@phosphor-icons/vue": "^2.2.0",
     "floating-vue": "^5.2.2",
     "lzbase62": "^2.0.0",
