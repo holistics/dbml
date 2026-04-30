@@ -1,10 +1,6 @@
-import Compiler from '@/compiler';
 import {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/queries/utils';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
 import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
@@ -123,11 +119,6 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
       ...completionList.suggestions,
     ],
   };
-}
-
-// Get the source text of a node or a token
-export function getNodeOrTokenSource (compiler: Compiler, filepath: Filepath, tokenOrNode: SyntaxToken | SyntaxNode): string {
-  return (compiler.layout.getSource(filepath) || '').slice(tokenOrNode.start, tokenOrNode.end);
 }
 
 /**
