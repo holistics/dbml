@@ -122,7 +122,7 @@ export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
       }
       if (decoration) {
         entries.push({
-          range: toMonacoRange({ line: sp.line, column: sp.column ?? 0 }, { line: ep.line, column: ep.column ?? 0 }),
+          range: toMonacoRange(sp, ep),
           cls: decoration,
         });
       }

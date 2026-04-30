@@ -319,8 +319,8 @@ async function navigateToDeclaration (targetFilepath: string | null, range: { st
 
 function posToRange (sp: Record<string, unknown>, ep?: Record<string, unknown> | null) {
   return toMonacoRange(
-    { line: sp.line as number, column: typeof sp.column === 'number' ? sp.column as number : 0 },
-    ep && typeof ep.line === 'number' ? { line: ep.line as number, column: typeof ep.column === 'number' ? ep.column as number : 0 } : null,
+    { line: sp.line as number, column: sp.column as number | undefined },
+    ep && typeof ep.line === 'number' ? { line: ep.line as number, column: ep.column as number | undefined } : null,
   );
 }
 

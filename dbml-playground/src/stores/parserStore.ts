@@ -65,7 +65,12 @@ function buildSymbolInfo (compiler: Compiler, sym: NodeSymbol, depth = 0): Symbo
   const declPos: DeclPos | null = sp && !Number.isNaN(sp.line)
     ? (() => {
         const r = toMonacoRange(sp, ep);
-        return { startLine: r.startLineNumber, startCol: r.startColumn, endLine: r.endLineNumber, endCol: r.endColumn };
+        return {
+          startLine: r.startLineNumber,
+          startCol: r.startColumn,
+          endLine: r.endLineNumber,
+          endCol: r.endColumn,
+        };
       })()
     : null;
 
