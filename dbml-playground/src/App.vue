@@ -217,33 +217,4 @@ const displayVersion = isUsingWorkspaceVersion ? 'development' : version;
 .v-popper--theme-dropdown .v-popper__arrow-container {
   display: none !important;
 }
-
-html, body {
-  height: 100%;
-  overflow: hidden;
-}
-
-#app {
-  height: 100vh;
-  overflow: hidden;
-}
-
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
 </style>

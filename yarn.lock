@@ -6993,11 +6993,6 @@ luxon@^3.4.4, luxon@^3.7.2:
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.7.2.tgz#d697e48f478553cca187a0f8436aff468e3ba0ba"
   integrity sha512-vtEhXh/gNjI9Yg1u4jX/0YVPMvxzHuGgCm6tC5kZyb08yjGWGnqAjGJvcXbqQR2P3MyMEFnRbpcdFS6PBcLqew==
 
-lzbase62@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/lzbase62/-/lzbase62-2.0.0.tgz#84f2003c4dbe1505c2679d96d72e9c4365e45980"
-  integrity sha512-hq7ZI8T42YVgSxCFHzg/Gt3GUKGZdQXKejvubdLjzxjiF5Tn9xKoWvZLZSY1u0+Orct+bxQMmb8XIcbXzR+2tg==
-
 magic-string@^0.30.17:
   version "0.30.17"
   resolved "https://registry.npmjs.org/magic-string/-/magic-string-0.30.17.tgz"
@@ -9116,11 +9111,6 @@ split@^1.0.1:
   integrity sha512-mTyOoPbrivtXnwnIxZRFYRrPNtEFKlpB2fvjSnCQUiAA6qAZzqwna5envK4uk6OIeP17CsdF3rSBGYVBsU0Tkg==
   dependencies:
     through "2"
-
-splitpanes@^4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/splitpanes/-/splitpanes-4.0.4.tgz#e8dfbbef4e93853ea336dc43f903e20946b42c1d"
-  integrity sha512-RbysugZhjbCw5fgplvk3hOXr41stahQDtZhHVkhnnJI6H4wlGDhM2kIpbehy7v92duy9GnMa8zIhHigIV1TWtg==
 
 sprintf-js@^1.1.3:
   version "1.1.3"
