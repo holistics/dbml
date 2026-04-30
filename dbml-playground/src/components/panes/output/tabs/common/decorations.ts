@@ -19,6 +19,9 @@ import type {
 import {
   tokenKindClass,
 } from '@/components/panes/output/tokenIcons';
+import {
+  toMonacoRange,
+} from '@/utils/monaco';
 
 export interface DecorationEntry {
   range: monaco.IRange;
@@ -27,12 +30,7 @@ export interface DecorationEntry {
 
 export function collectTokenDecorations (tokens: readonly SyntaxToken[]): DecorationEntry[] {
   return tokens.map((t) => ({
-    range: new monaco.Range(
-      t.startPos.line + 1,
-      t.startPos.column + 1,
-      t.endPos.line + 1,
-      t.endPos.column + 1,
-    ),
+    range: toMonacoRange(t.startPos, t.endPos),
     cls: tokenKindClass(t.kind),
   }));
 }
@@ -124,7 +122,7 @@ export function collectNodeDecorations (ast: unknown): DecorationEntry[] {
       }
       if (decoration) {
         entries.push({
-          range: new monaco.Range(sp.line + 1, (sp.column ?? 0) + 1, ep.line + 1, (ep.column ?? 0) + 1),
+          range: toMonacoRange({ line: sp.line, column: sp.column ?? 0 }, { line: ep.line, column: ep.column ?? 0 }),
           cls: decoration,
         });
       }

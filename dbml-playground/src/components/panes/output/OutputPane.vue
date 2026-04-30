@@ -123,6 +123,9 @@ import {
   useUser, OutputTabId,
 } from '@/stores/userStore';
 import logger from '@/utils/logger';
+import {
+  toMonacoRange,
+} from '@/utils/monaco';
 import * as monaco from 'monaco-editor';
 
 // Per-tab decoration logic lives in ./tabs/common/decorations.ts so each tab's
@@ -258,13 +261,11 @@ onBeforeUnmount(() => {
   navDecorations?.clear();
 });
 
-const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getDbmlEditor');
-
 function navigateTo (range: { startLineNumber: number;
   startColumn: number;
   endLineNumber: number;
   endColumn: number; }) {
-  const editor = getEditor?.();
+  const editor = dbmlEditorRef?.value;
   if (!editor) return;
   try {
     editor.setSelection(range);
@@ -303,7 +304,7 @@ async function navigateToDeclaration (targetFilepath: string | null, range: { st
   startColumn: number;
   endLineNumber: number;
   endColumn: number; }) {
-  const editor = getEditor?.();
+  const editor = dbmlEditorRef?.value;
   if (!editor) return;
   if (targetFilepath && new Filepath(targetFilepath).intern() !== new Filepath(project.currentFile).intern()) {
     if (project.files[targetFilepath] === undefined) return;
@@ -317,12 +318,10 @@ async function navigateToDeclaration (targetFilepath: string | null, range: { st
 }
 
 function posToRange (sp: Record<string, unknown>, ep?: Record<string, unknown> | null) {
-  return {
-    startLineNumber: (sp.line as number) + 1,
-    startColumn: typeof sp.column === 'number' ? (sp.column as number) + 1 : 1,
-    endLineNumber: ep && typeof ep.line === 'number' && !Number.isNaN(ep.line) ? (ep.line as number) + 1 : (sp.line as number) + 1,
-    endColumn: ep && typeof ep.column === 'number' ? (ep.column as number) + 1 : 1,
-  };
+  return toMonacoRange(
+    { line: sp.line as number, column: typeof sp.column === 'number' ? sp.column as number : 0 },
+    ep && typeof ep.line === 'number' ? { line: ep.line as number, column: typeof ep.column === 'number' ? ep.column as number : 0 } : null,
+  );
 }
 
 function handleNodeClick (node: RawAstNode) {

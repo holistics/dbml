@@ -143,6 +143,9 @@ import {
 } from 'vue';
 import * as monaco from 'monaco-editor';
 import {
+  toMonacoRange,
+} from '@/utils/monaco';
+import {
   PhKeyReturn,
   PhArrowsHorizontal,
 } from '@phosphor-icons/vue';
@@ -211,7 +214,6 @@ function isTruncated (text: string | undefined): boolean {
 }
 
 // --- Editor integration ---
-const getEditor = inject<() => monaco.editor.IStandaloneCodeEditor | null>('getDbmlEditor');
 const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
 
 const scrollEl = ref<HTMLElement | null>(null);
@@ -221,12 +223,9 @@ const detailEls: (HTMLElement | null)[] = [];
 const rawTexts = ref<string[]>([]);
 
 function updateRawTexts () {
-  const model = getEditor?.()?.getModel();
+  const model = dbmlEditorRef?.value?.getModel();
   if (!model) { rawTexts.value = props.tokens.map((t) => t.value); return; }
-  rawTexts.value = props.tokens.map((t) => model.getValueInRange(new monaco.Range(
-    t.startPos.line + 1, t.startPos.column + 1,
-    t.endPos.line + 1, t.endPos.column + 1,
-  )));
+  rawTexts.value = props.tokens.map((t) => model.getValueInRange(toMonacoRange(t.startPos, t.endPos)));
 }
 
 const activeIndex = ref(-1);
@@ -252,7 +251,7 @@ function computeActiveIndex (line: number, column: number): number {
 }
 
 function updateActiveIndex () {
-  const editor = getEditor?.();
+  const editor = dbmlEditorRef?.value;
   const pos = editor?.getPosition();
   const next = pos ? computeActiveIndex(pos.lineNumber, pos.column) : -1;
   if (next !== activeIndex.value) {
@@ -277,7 +276,7 @@ function attachCursorListener (editor: monaco.editor.IStandaloneCodeEditor) {
 }
 
 onMounted(() => {
-  const editor = getEditor?.();
+  const editor = dbmlEditorRef?.value;
   if (editor) attachCursorListener(editor);
 });
 
@@ -298,19 +297,14 @@ function onTokenClick (i: number, token: SyntaxToken) {
 }
 
 function navigateTo (token: SyntaxToken) {
-  const editor = getEditor?.();
+  const editor = dbmlEditorRef?.value;
   if (!editor) return;
-  const range = {
-    startLineNumber: token.startPos.line + 1,
-    startColumn: token.startPos.column + 1,
-    endLineNumber: token.endPos.line + 1,
-    endColumn: token.endPos.column + 1,
-  };
+  const range = toMonacoRange(token.startPos, token.endPos);
   editor.setSelection({
-    selectionStartLineNumber: token.endPos.line + 1,
-    selectionStartColumn: token.endPos.column + 1,
-    positionLineNumber: token.startPos.line + 1,
-    positionColumn: token.startPos.column + 1,
+    selectionStartLineNumber: range.endLineNumber,
+    selectionStartColumn: range.endColumn,
+    positionLineNumber: range.startLineNumber,
+    positionColumn: range.startColumn,
   });
   editor.revealRangeInCenter(range);
 }

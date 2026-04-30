@@ -148,7 +148,6 @@ onMounted(() => window.addEventListener('keydown', onKeyDown));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown));
 
 const dbmlEditorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-let dbmlEditor: monaco.editor.IStandaloneCodeEditor | null = null;
 const dbmlCursorPos = ref({
   line: 1,
   column: 1,
@@ -156,7 +155,6 @@ const dbmlCursorPos = ref({
 const outputPaneRef = ref<InstanceType<typeof OutputPane> | null>(null);
 
 const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
-  dbmlEditor = editor;
   dbmlEditorRef.value = editor;
   parser.setupMonacoServices(editor);
 
@@ -204,7 +202,6 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   });
 };
 
-provide('getDbmlEditor', () => dbmlEditor);
 provide('dbmlEditorRef', dbmlEditorRef);
 provide('dbmlCursorPos', dbmlCursorPos);
 

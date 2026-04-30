@@ -20,6 +20,9 @@ import {
 import type {
   ParserError,
 } from '../types';
+import {
+  toMonacoRange,
+} from '../utils/monaco';
 import logger from '../utils/logger';
 import {
   useProject,
@@ -60,12 +63,10 @@ function buildSymbolInfo (compiler: Compiler, sym: NodeSymbol, depth = 0): Symbo
   const sp = decl?.startPos;
   const ep = decl?.endPos;
   const declPos: DeclPos | null = sp && !Number.isNaN(sp.line)
-    ? {
-        startLine: sp.line + 1,
-        startCol: sp.column + 1,
-        endLine: ep && !Number.isNaN(ep.line) ? ep.line + 1 : sp.line + 1,
-        endCol: ep && !Number.isNaN(ep.line) ? ep.column + 1 : sp.column + 1,
-      }
+    ? (() => {
+        const r = toMonacoRange(sp, ep);
+        return { startLine: r.startLineNumber, startCol: r.startColumn, endLine: r.endLineNumber, endCol: r.endColumn };
+      })()
     : null;
 
   const members = depth < 4
