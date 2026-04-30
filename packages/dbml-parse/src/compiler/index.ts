@@ -39,7 +39,6 @@ import {
   type DiagramViewSyncOperation,
   type TableNameInput,
   type TextEdit,
-  applyTextEdits,
   findDiagramViewBlocks,
   renameTable,
   syncDiagramView,
@@ -132,17 +131,15 @@ export default class Compiler {
     filepath: Filepath,
     operations: DiagramViewSyncOperation[],
     blocks?: DiagramViewBlock[],
-  ): { newDbml: string;
-    edits: TextEdit[]; } {
-    return syncDiagramView(this.layout.getSource(filepath) || '', operations, blocks);
+  ): {
+    newDbml: string;
+    edits: TextEdit[];
+  } {
+    return syncDiagramView(this.layout.getSource(filepath) ?? '', operations, blocks);
   }
 
   findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.layout.getSource(filepath) || '');
-  }
-
-  applyTextEdits (filepath: Filepath, edits: TextEdit[]): string {
-    return applyTextEdits(this.layout.getSource(filepath) || '', edits);
+    return findDiagramViewBlocks(this.layout.getSource(filepath) ?? '');
   }
 
   readonly token = {
