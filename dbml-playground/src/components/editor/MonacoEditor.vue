@@ -26,17 +26,6 @@
 </template>
 
 <script setup lang="ts">
-/**
- * Monaco Editor Component
- *
- * A clean wrapper around Monaco Editor that focuses solely on editor concerns.
- * Complex language registration is delegated to specialized services.
- *
- * Design Principles Applied:
- * - Single Responsibility: Only handles editor lifecycle and events
- * - Information Hiding: Language setup complexity is hidden in services
- * - Shallow Module: Simple interface that delegates to deep modules
- */
 import {
   initVimMode, type VimAdapterInstance,
 } from 'monaco-vim';
@@ -87,40 +76,24 @@ const parser = useParser();
 const editorContainer = ref<HTMLElement>();
 let editor: monaco.editor.IStandaloneCodeEditor | null = null;
 
-/**
- * Reactive cursor position tracking
- */
 const cursorPosition = ref({
   line: 1,
   column: 1,
 });
 
-/**
- * Reactive selection info tracking
- */
 const selectionInfo = ref({
   hasSelection: false,
   selectedChars: 0,
 });
 
-/**
- * Vim mode state
- */
 let vimController: VimAdapterInstance | null = null;
 let pendingRetrigger = false;
 const vimModeStatus = ref('NORMAL');
 
-/**
- * Get the appropriate theme for the given language
- * Use DBML theme for both DBML and JSON to maintain consistency
- */
 const getThemeForLanguage = (_language: string): string => {
   return DBMLLanguageService.getThemeName();
 };
 
-/**
- * Create a Monaco model with the correct URI so language services can key on filepath.
- */
 const createModel = (): monaco.editor.ITextModel => {
   const uri = filepath
     ? monaco.Uri.file(filepath)
@@ -134,9 +107,6 @@ const createModel = (): monaco.editor.ITextModel => {
   return monaco.editor.createModel(modelValue, language, uri);
 };
 
-/**
- * Create Monaco Editor configuration
- */
 const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOptions => ({
   theme: getThemeForLanguage(language),
   readOnly,
@@ -194,22 +164,16 @@ const createEditorConfig = (): monaco.editor.IStandaloneEditorConstructionOption
   acceptSuggestionOnEnter: 'on',
   tabCompletion: 'off',
   wordBasedSuggestions: 'off',
-  // Reduce rendering frequency for better performance
   mouseWheelScrollSensitivity: 1,
   fastScrollSensitivity: 5,
 });
 
-/**
- * Setup vim mode using monaco-vim
- */
 const setupVimMode = async (): Promise<void> => {
   if (!editor || !vimMode) return;
 
   try {
-    // Initialize vim mode with status tracking
     vimController = initVimMode(editor);
 
-    // Track vim mode status changes
     if (vimController && vimController.on) {
       vimController.on('vim-mode-change', (mode: any) => {
         vimModeStatus.value = mode.mode?.toUpperCase() || 'NORMAL';
@@ -220,29 +184,20 @@ const setupVimMode = async (): Promise<void> => {
   }
 };
 
-/**
- * Clear vim mode
- */
 const clearVimMode = (): void => {
-  if (vimController && typeof vimController.dispose === 'function') {
+  if (vimController) {
     vimController.dispose();
     vimController = null;
   }
 };
 
-/**
- * Initialize the Monaco Editor
- */
 const initializeEditor = async (): Promise<void> => {
   if (!editorContainer.value) return;
 
-  // Ensure DBML language support is registered
   DBMLLanguageService.registerLanguage();
 
-  // Wait for next tick to ensure container is properly mounted
   await nextTick();
 
-  // Create the editor with configuration
   const model = createModel();
   editor = monaco.editor.create(editorContainer.value, {
     ...createEditorConfig(),
@@ -259,9 +214,6 @@ const initializeEditor = async (): Promise<void> => {
   emit('editor-mounted', editor);
 };
 
-/**
- * Update cursor position tracking
- */
 const updateCursorPosition = (): void => {
   if (!editor) return;
 
@@ -274,9 +226,6 @@ const updateCursorPosition = (): void => {
   }
 };
 
-/**
- * Update selection info tracking
- */
 const updateSelectionInfo = (): void => {
   if (!editor) return;
 
@@ -300,13 +249,9 @@ const updateSelectionInfo = (): void => {
   }
 };
 
-/**
- * Set up editor event listeners
- */
 const setupEventListeners = (): void => {
   if (!editor) return;
 
-  // Content change listener (only for non-readonly editors)
   if (!readOnly) {
     editor.onDidChangeModelContent(() => {
       const value = editor?.getValue() || '';
@@ -318,7 +263,6 @@ const setupEventListeners = (): void => {
     });
   }
 
-  // Cursor position change listener
   editor.onDidChangeCursorPosition(() => {
     updateCursorPosition();
     const pos = editor?.getPosition();
@@ -328,19 +272,14 @@ const setupEventListeners = (): void => {
     });
   });
 
-  // Selection change listener
   editor.onDidChangeCursorSelection(() => {
     updateSelectionInfo();
   });
 
-  // Initial position and selection update
   updateCursorPosition();
   updateSelectionInfo();
 };
 
-/**
- * Clean up editor resources
- */
 const cleanup = (): void => {
   clearVimMode();
   if (editor) {
@@ -349,7 +288,6 @@ const cleanup = (): void => {
   }
 };
 
-// Lifecycle hooks
 onMounted(() => {
   initializeEditor().catch((error) => {
     logger.error('Failed to initialize Monaco Editor:', error);
@@ -360,7 +298,6 @@ onBeforeUnmount(() => {
   cleanup();
 });
 
-// Watch for prop changes
 watch(() => modelValue, (newValue) => {
   if (editor && editor.getValue() !== newValue) {
     editor.setValue(newValue);
@@ -447,7 +384,6 @@ watch(() => parser.tokens, () => {
   });
 });
 
-// Watch for vim mode changes
 watch(() => vimMode, (newVimMode) => {
   if (editor) {
     if (newVimMode) {

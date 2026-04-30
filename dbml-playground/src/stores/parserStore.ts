@@ -30,60 +30,58 @@ import {
 
 const DEBOUNCE_MS = 300;
 
-export interface DeclPos {
+export interface DeclarationPosition {
   startLine: number;
-  startCol: number;
+  startColumn: number;
   endLine: number;
-  endCol: number;
+  endColumn: number;
 }
 
-// Pre-built symbol descriptor for display  -- avoids exposing the compiler's
-// internal graph (circular `declaration` refs, internal Report types) to UI components.
+// Breaks circular references in compiler symbols for safe Vue reactivity.
 export interface SymbolInfo {
   id: number;
-  kind: string; // SymbolKind value, e.g. 'Table', 'Column', 'Enum'
+  kind: string;
   name: string;
-  declPos: DeclPos | null;
-  declFilepath: string | null;
+  declarationPosition: DeclarationPosition | null;
+  declarationFilepath: string | null;
   members: SymbolInfo[];
 }
 
-function getSymbolMembers (compiler: Compiler, sym: NodeSymbol): NodeSymbol[] {
+function getSymbolMembers (compiler: Compiler, symbol: NodeSymbol): NodeSymbol[] {
   try {
-    const members = compiler.symbolMembers(sym);
+    const members = compiler.symbolMembers(symbol);
     return Array.isArray(members) ? members.map((m) => m.symbol) : [];
   } catch {
     return [];
   }
 }
 
-function buildSymbolInfo (compiler: Compiler, sym: NodeSymbol, depth = 0): SymbolInfo {
-  const name = sym.name ?? `#${sym.id}`;
-  const decl = sym.declaration;
-  const sp = decl?.startPos;
-  const ep = decl?.endPos;
-  const declPos: DeclPos | null = sp && !Number.isNaN(sp.line)
-    ? (() => {
-        const r = toMonacoRange(sp, ep);
-        return {
-          startLine: r.startLineNumber,
-          startCol: r.startColumn,
-          endLine: r.endLineNumber,
-          endCol: r.endColumn,
-        };
-      })()
-    : null;
+function buildSymbolInfo (compiler: Compiler, symbol: NodeSymbol, depth = 0): SymbolInfo {
+  const name = symbol.name ?? `#${symbol.id}`;
+  const declaration = symbol.declaration;
+  const startPos = declaration?.startPos;
+  const endPos = declaration?.endPos;
+  let declarationPosition: DeclarationPosition | null = null;
+  if (startPos && !Number.isNaN(startPos.line)) {
+    const range = toMonacoRange(startPos, endPos);
+    declarationPosition = {
+      startLine: range.startLineNumber,
+      startColumn: range.startColumn,
+      endLine: range.endLineNumber,
+      endColumn: range.endColumn,
+    };
+  }
 
   const members = depth < 4
-    ? getSymbolMembers(compiler, sym).map((m) => buildSymbolInfo(compiler, m, depth + 1))
+    ? getSymbolMembers(compiler, symbol).map((m) => buildSymbolInfo(compiler, m, depth + 1))
     : [];
 
   return {
-    id: sym.id,
-    kind: sym.kind,
+    id: symbol.id,
+    kind: symbol.kind,
     name,
-    declPos,
-    declFilepath: decl?.filepath?.absolute ?? null,
+    declarationPosition,
+    declarationFilepath: declaration?.filepath?.absolute ?? null,
     members,
   };
 }
@@ -173,7 +171,7 @@ export const useParser = defineStore('parser', () => {
 
       // Root the tree at the ProgramSymbol so the tab shows every schema
       // and their nested members.
-      const programSymbol = parseIndex?.ast?.symbol ?? undefined;
+      const programSymbol = parseIndex?.ast?.symbol;
       symbols.value = programSymbol ? [buildSymbolInfo(compiler, programSymbol)] : [];
     } catch (err) {
       logger.error('Unexpected parsing error');
@@ -197,7 +195,7 @@ export const useParser = defineStore('parser', () => {
     } finally {
       try {
         warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as any[]).map(diagnosticToParserError);
-      } catch (err) {
+      } catch (_err) {
         logger.warn('Failed to get warnings');
         warnings.value = [];
       }
@@ -251,8 +249,8 @@ export const useParser = defineStore('parser', () => {
       // element-type suggestions after a `.` in a ref or right after `use `.
       const syncCompilerFromModel = (model: monaco.editor.ITextModel) => {
         if (!model.uri) return;
-        const fp = Filepath.fromUri(String(model.uri));
-        compiler.setSource(fp, model.getValue());
+        const filepath = Filepath.fromUri(String(model.uri));
+        compiler.setSource(filepath, model.getValue());
       };
 
       monaco.languages.registerDefinitionProvider(languageId, {
@@ -274,15 +272,15 @@ export const useParser = defineStore('parser', () => {
           return (currentServices!.autocompletionProvider as any).provideCompletionItems(model, position, context, token);
         },
       });
-    } catch (err) {
+    } catch (_err) {
       logger.warn('Failed to register Monaco language services');
     }
   }
 
   function updateDiagnostics (model: monaco.editor.ITextModel): void {
     if (!currentServices) return;
-    const fp = model.uri ? Filepath.fromUri(String(model.uri)) : undefined;
-    const markers = (currentServices.diagnosticsProvider as { provideMarkers(f?: Filepath): monaco.editor.IMarkerData[] }).provideMarkers(fp);
+    const filepath = model.uri ? Filepath.fromUri(String(model.uri)) : undefined;
+    const markers = (currentServices.diagnosticsProvider as { provideMarkers(f?: Filepath): monaco.editor.IMarkerData[] }).provideMarkers(filepath);
     monaco.editor.setModelMarkers(model, languageId, markers);
   }
 

@@ -54,10 +54,10 @@ export function getReadableId (value: SyntaxNode | SyntaxToken | SymbolInfo): st
     const el = value.endPos.line + 1, ec = value.endPos.column + 1;
     return `node@${value.kind}@${getNameHint(value)}@[L${sl}:C${sc}, L${el}:C${ec}]`;
   }
-  if (!value.declPos) return `symbol@${value.kind}@${value.name}`;
+  if (!value.declarationPosition) return `symbol@${value.kind}@${value.name}`;
   const {
     startLine: sl, startCol: sc, endLine: el, endCol: ec,
-  } = value.declPos;
+  } = value.declarationPosition;
   return `symbol@${value.kind}@${value.name}@[L${sl}:C${sc}, L${el}:C${ec}]`;
 }
 

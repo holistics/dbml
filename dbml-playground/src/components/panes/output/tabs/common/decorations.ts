@@ -166,9 +166,9 @@ export function collectSymbolDecorations (symbols: SymbolInfo[]): DecorationEntr
   function walk (sym: SymbolInfo) {
     // Program covers the entire file so its decoration would blanket
     // everything underneath — skip it.
-    if (sym.declPos && sym.kind !== SymbolKind.Program) {
+    if (sym.declarationPosition && sym.kind !== SymbolKind.Program) {
       result.push({
-        range: new monaco.Range(sym.declPos.startLine, sym.declPos.startCol, sym.declPos.endLine, sym.declPos.endCol),
+        range: new monaco.Range(sym.declarationPosition.startLine, sym.declarationPosition.startColumn, sym.declarationPosition.endLine, sym.declarationPosition.endColumn),
         cls: SYM_KIND_CLASS[sym.kind as SymbolKind] ?? '',
       });
     }

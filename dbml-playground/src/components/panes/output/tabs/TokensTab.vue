@@ -139,7 +139,7 @@
 
 <script setup lang="ts">
 import {
-  ref, watch, onMounted, onUnmounted, inject, type Ref,
+  ref, watch, nextTick, onMounted, onUnmounted, inject, type Ref,
 } from 'vue';
 import * as monaco from 'monaco-editor';
 import {
@@ -159,9 +159,6 @@ import type {
 import {
   tokenIconFor,
 } from '@/components/panes/output/tokenIcons';
-import {
-  scrollRowIntoView,
-} from '@/utils/scroll';
 
 interface Props {
   tokens: SyntaxToken[];
@@ -236,7 +233,30 @@ function setDetailEl (i: number, el: HTMLElement | null) { detailEls[i] = el; }
 
 watch(() => props.tokens.length, () => { rowEls.length = 0; detailEls.length = 0; });
 
-function scrollToVisible (i: number) { scrollRowIntoView(i, rowEls, detailEls, scrollEl); }
+function scrollToVisible (index: number) {
+  nextTick(() => {
+    const row = rowEls[index];
+    const container = scrollEl.value;
+    if (!row || !container) return;
+    const bottomEl = detailEls[index] ?? row;
+    const containerRect = container.getBoundingClientRect();
+    const rowTop = row.getBoundingClientRect().top - containerRect.top + container.scrollTop;
+    const bottomEdge = bottomEl.getBoundingClientRect().bottom - containerRect.top + container.scrollTop;
+    const visibleTop = container.scrollTop;
+    const visibleBottom = visibleTop + container.clientHeight;
+    if (rowTop < visibleTop) {
+      container.scrollTo({
+        top: rowTop,
+        behavior: 'smooth',
+      });
+    } else if (bottomEdge > visibleBottom) {
+      container.scrollTo({
+        top: bottomEdge - container.clientHeight,
+        behavior: 'smooth',
+      });
+    }
+  });
+}
 
 function computeActiveIndex (line: number, column: number): number {
   let best = -1;

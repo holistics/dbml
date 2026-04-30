@@ -2,10 +2,14 @@ import * as monaco from 'monaco-editor';
 
 // @dbml/parse positions are 0-indexed, Monaco is 1-indexed.
 export function toMonacoRange (
-  startPos: { line: number;
-    column?: number; },
-  endPos?: { line: number;
-    column?: number; } | null,
+  startPos: {
+    line: number;
+    column?: number;
+  },
+  endPos?: {
+    line: number;
+    column?: number;
+  } | null,
 ): monaco.IRange {
   return {
     startLineNumber: startPos.line + 1,

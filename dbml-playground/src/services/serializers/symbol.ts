@@ -22,11 +22,11 @@ export function serializeSymbol (symbol: SymbolInfo, {
   if (symbol.members.length > 0) {
     out.members = symbol.members.map((m) => serializeSymbol(m));
   }
-  if (symbol.declPos) {
+  if (symbol.declarationPosition) {
     out.declaration = {
       id,
-      declPos: symbol.declPos,
-      declFilepath: symbol.declFilepath,
+      declarationPosition: symbol.declarationPosition,
+      declarationFilepath: symbol.declarationFilepath,
     };
   }
   return out;

@@ -214,20 +214,22 @@ function toggleDecoration (tabId: string) {
 const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
 let editorDecorations: monaco.editor.IEditorDecorationsCollection | null = null;
 
+function collectActiveDecorations (): DecorationEntry[] {
+  switch (activeTab.value) {
+    case OutputTabId.Tokens: return collectTokenDecorations(parser.tokens);
+    case OutputTabId.Nodes: return collectNodeDecorations(parser.ast);
+    case OutputTabId.Symbols: return collectSymbolDecorations(parser.symbols);
+    case OutputTabId.Database: return collectDatabaseDecorations(parser.database);
+    default: return [];
+  }
+}
+
 function updateEditorDecorations () {
   const editor = dbmlEditorRef?.value;
   editorDecorations?.clear();
   if (!editor || !isDecorationEnabled(activeTab.value)) return;
 
-  const entries: DecorationEntry[] = (() => {
-    switch (activeTab.value) {
-      case OutputTabId.Tokens: return collectTokenDecorations(parser.tokens);
-      case OutputTabId.Nodes: return collectNodeDecorations(parser.ast);
-      case OutputTabId.Symbols: return collectSymbolDecorations(parser.symbols);
-      case OutputTabId.Database: return collectDatabaseDecorations(parser.database);
-      default: return [];
-    }
-  })();
+  const entries = collectActiveDecorations();
   if (entries.length === 0) return;
 
   editorDecorations = editor.createDecorationsCollection(
@@ -253,11 +255,11 @@ watch(
 onBeforeUnmount(() => { editorDecorations?.clear(); editorDecorations = null; });
 
 const tokensTabRef = ref<InstanceType<typeof TokensTab> | null>(null);
-let highlightTimer: ReturnType<typeof setTimeout> | null = null;
+let highlightTimer: ReturnType<typeof setTimeout> | undefined;
 let navDecorations: monaco.editor.IEditorDecorationsCollection | null = null;
 
 onBeforeUnmount(() => {
-  if (highlightTimer !== null) clearTimeout(highlightTimer);
+  clearTimeout(highlightTimer);
   navDecorations?.clear();
 });
 
@@ -270,7 +272,7 @@ function navigateTo (range: { startLineNumber: number;
   try {
     editor.setSelection(range);
     editor.revealRangeInCenter(range);
-    if (highlightTimer !== null) clearTimeout(highlightTimer);
+    clearTimeout(highlightTimer);
     navDecorations?.clear();
     navDecorations = editor.createDecorationsCollection([{
       range,
@@ -279,7 +281,7 @@ function navigateTo (range: { startLineNumber: number;
         inlineClassName: 'token-navigation-highlight-inline',
       },
     }]);
-    highlightTimer = setTimeout(() => { navDecorations?.clear(); navDecorations = null; highlightTimer = null; }, 2000);
+    highlightTimer = setTimeout(() => { navDecorations?.clear(); navDecorations = null; highlightTimer = undefined; }, 2000);
   } catch (err) {
     logger.warn('Navigation failed:', err);
   }
@@ -333,33 +335,33 @@ function posToRange (sp: Record<string, unknown>, ep?: Record<string, unknown> |
 }
 
 function handleNodeClick (node: RawAstNode) {
-  const d = node.rawData as Record<string, unknown> | null | undefined;
-  if (!d) return;
+  const data = node.rawData as Record<string, unknown> | null | undefined;
+  if (!data) return;
 
-  // If the node declares a symbol, navigate to the symbol's declaration (may be cross-file).
-  const sym = d.symbol as { declaration?: Record<string, unknown> } | null | undefined;
-  const symDecl = sym?.declaration;
-  if (symDecl) {
-    const sp = symDecl.startPos as Record<string, unknown> | null | undefined;
-    if (sp && typeof sp.line === 'number' && !Number.isNaN(sp.line)) {
-      const fp = (symDecl.filepath as { absolute?: string } | null | undefined)?.absolute ?? null;
-      navigateToDeclaration(fp, posToRange(sp, symDecl.endPos as Record<string, unknown> | null));
+  // Navigate to the symbol's declaration if present (may be cross-file).
+  const nodeSymbol = data.symbol as { declaration?: Record<string, unknown> } | null | undefined;
+  const symbolDeclaration = nodeSymbol?.declaration;
+  if (symbolDeclaration) {
+    const startPos = symbolDeclaration.startPos as Record<string, unknown> | null | undefined;
+    if (startPos && typeof startPos.line === 'number' && !Number.isNaN(startPos.line)) {
+      const filepath = (symbolDeclaration.filepath as { absolute?: string })?.absolute ?? null;
+      navigateToDeclaration(filepath, posToRange(startPos, symbolDeclaration.endPos as Record<string, unknown> | null));
       return;
     }
   }
 
-  const sp = d.startPos as Record<string, unknown> | null | undefined;
-  if (!sp || typeof sp.line !== 'number' || Number.isNaN(sp.line)) return;
-  navigateTo(posToRange(sp, d.endPos as Record<string, unknown> | null));
+  const startPos = data.startPos as Record<string, unknown> | null | undefined;
+  if (!startPos || typeof startPos.line !== 'number' || Number.isNaN(startPos.line)) return;
+  navigateTo(posToRange(startPos, data.endPos as Record<string, unknown> | null));
 }
 
-function handleSymbolClick (sym: SymbolInfo) {
-  if (!sym.declPos) return;
-  navigateToDeclaration(sym.declFilepath, {
-    startLineNumber: sym.declPos.startLine,
-    startColumn: sym.declPos.startCol,
-    endLineNumber: sym.declPos.endLine,
-    endColumn: sym.declPos.endCol,
+function handleSymbolClick (symbol: SymbolInfo) {
+  if (!symbol.declarationPosition) return;
+  navigateToDeclaration(symbol.declarationFilepath, {
+    startLineNumber: symbol.declarationPosition.startLine,
+    startColumn: symbol.declarationPosition.startColumn,
+    endLineNumber: symbol.declarationPosition.endLine,
+    endColumn: symbol.declarationPosition.endColumn,
   });
 }
 

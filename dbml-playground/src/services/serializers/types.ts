@@ -5,7 +5,7 @@ import type {
   SyntaxNode, SyntaxToken,
 } from '@dbml/parse';
 import type {
-  SymbolInfo, DeclPos,
+  SymbolInfo, DeclarationPosition,
 } from '@/stores/parserStore';
 
 export type Serializable =
@@ -42,8 +42,8 @@ export interface SerializedNode {
 
 export interface SerializedSymbolDeclaration {
   id: string;
-  declPos: DeclPos;
-  declFilepath: string | null;
+  declarationPosition: DeclarationPosition;
+  declarationFilepath: string | null;
 }
 
 export interface SerializedSymbol {
