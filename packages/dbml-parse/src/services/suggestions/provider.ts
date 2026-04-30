@@ -90,10 +90,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
-    const {
-      uri,
-    } = model;
-    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
+    const filepath = DEFAULT_ENTRY; // FIXME: Currently just default filepath to DEFAULT_ENTRY
     const offset = getOffsetFromMonacoPosition(model, position);
 
     // Try to suggest record row snippet first

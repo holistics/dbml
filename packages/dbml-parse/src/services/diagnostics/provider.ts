@@ -39,7 +39,7 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get all diagnostics (errors and warnings) from the current compilation
    */
-  provideDiagnostics (filepath: Filepath = DEFAULT_ENTRY): Diagnostic[] {
+  provideDiagnostics (filepath: Filepath): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
 
     const errors = this.compiler.parse.errors(filepath);
@@ -58,7 +58,7 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get only errors from the current compilation
    */
-  provideErrors (filepath: Filepath = DEFAULT_ENTRY): Diagnostic[] {
+  provideErrors (filepath: Filepath): Diagnostic[] {
     const errors = this.compiler.parse.errors(filepath);
     return errors.map((error) => this.createDiagnostic(error, 'error'));
   }
@@ -66,7 +66,7 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get only warnings from the current compilation
    */
-  provideWarnings (filepath: Filepath = DEFAULT_ENTRY): Diagnostic[] {
+  provideWarnings (filepath: Filepath): Diagnostic[] {
     const warnings = this.compiler.parse.warnings(filepath);
     return warnings.map((warning) => this.createDiagnostic(warning, 'warning'));
   }
@@ -74,7 +74,7 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Convert Monaco markers format (for editor integration)
    */
-  provideMarkers (filepath: Filepath = DEFAULT_ENTRY): MarkerData[] {
+  provideMarkers (filepath: Filepath): MarkerData[] {
     const diagnostics = this.provideDiagnostics(filepath);
     return diagnostics.map((diag) => {
       const severity = this.getSeverityValue(diag.type);

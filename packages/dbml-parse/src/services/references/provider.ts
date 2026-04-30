@@ -26,7 +26,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     const {
       uri,
     } = model;
-    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
+    const filepath = DEFAULT_ENTRY; // FIXME: Currently just default filepath to DEFAULT_ENTRY
     const offset = getOffsetFromMonacoPosition(model, position);
 
     const containers = [
