@@ -10,6 +10,12 @@ import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
+  convertStringToEnum,
+} from '@/core/utils/enum';
+import {
   getElementNameString, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
 } from '@/core/parser/utils';
 import {
@@ -30,6 +36,9 @@ import {
 import {
   ColumnSymbol,
 } from '@/core/types/symbol/symbols';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
 import {
   SyntaxTokenKind,
 } from '@/core/types/tokens';
@@ -42,6 +51,18 @@ import {
 import {
   InterpreterDatabase,
 } from './types';
+import ChecksBinder from '@/core/global_modules/checks/bind';
+import CustomBinder from '@/core/global_modules/custom/bind';
+import DiagramViewBinder from '@/core/global_modules/diagramView/bind';
+import EnumBinder from '@/core/global_modules/enum/bind';
+import IndexesBinder from '@/core/global_modules/indexes/bind';
+import NoteBinder from '@/core/global_modules/note/bind';
+import ProjectBinder from '@/core/global_modules/project/bind';
+import RecordsBinder from '@/core/global_modules/records/bind';
+import RefBinder from '@/core/global_modules/ref/bind';
+import TableBinder from '@/core/global_modules/table/bind';
+import TableGroupBinder from '@/core/global_modules/tableGroup/bind';
+import TablePartialBinder from '@/core/global_modules/tablePartial/bind';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, owner?: Table): { schemaName: string | null;
   tableName: string;
@@ -579,8 +600,10 @@ export function scanNonListNodeForBinding (node?: SyntaxNode):
 
 export function lookupAndBindInScope (
   initialScope: ElementDeclarationNode | ProgramNode,
-  symbolInfos: { node: PrimaryExpressionNode & { expression: VariableNode };
-    kind: SymbolKind; }[],
+  symbolInfos: {
+    node: PrimaryExpressionNode & { expression: VariableNode };
+    kind: SymbolKind;
+  }[],
 ): CompileError[] {
   if (!initialScope.symbol?.symbolTable) {
     throw new Error('lookupAndBindInScope should only be called with initial scope having a symbol table');
@@ -625,4 +648,33 @@ export function lookupAndBindInScope (
   }
 
   return [];
+}
+
+export function pickBinder (element: ElementDeclarationNode & { type: SyntaxToken }) {
+  switch (convertStringToEnum(ElementKind, element.type.value)) {
+    case ElementKind.Enum:
+      return EnumBinder;
+    case ElementKind.Table:
+      return TableBinder;
+    case ElementKind.TableGroup:
+      return TableGroupBinder;
+    case ElementKind.Project:
+      return ProjectBinder;
+    case ElementKind.Ref:
+      return RefBinder;
+    case ElementKind.Note:
+      return NoteBinder;
+    case ElementKind.Indexes:
+      return IndexesBinder;
+    case ElementKind.TablePartial:
+      return TablePartialBinder;
+    case ElementKind.Checks:
+      return ChecksBinder;
+    case ElementKind.Records:
+      return RecordsBinder;
+    case ElementKind.DiagramView:
+      return DiagramViewBinder;
+    default:
+      return CustomBinder;
+  }
 }

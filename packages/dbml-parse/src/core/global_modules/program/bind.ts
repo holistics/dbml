@@ -1,6 +1,6 @@
 import {
   pickBinder,
-} from '@/core/global_modules';
+} from '@/core/global_modules/utils';
 import {
   ElementKind,
 } from '@/core/types/keywords';

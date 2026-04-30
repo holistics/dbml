@@ -10,7 +10,7 @@ import {
 } from '@/core/types/tokens';
 import {
   pickBinder,
-} from '@/core/global_modules';
+} from '@/core/global_modules/utils';
 
 export default class EnumBinder {
   private symbolFactory: SymbolFactory;

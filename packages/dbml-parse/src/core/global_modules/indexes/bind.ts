@@ -25,7 +25,7 @@ import {
 } from '@/core/utils/expression';
 import {
   pickBinder,
-} from '@/core/global_modules';
+} from '@/core/global_modules/utils';
 import {
   scanNonListNodeForBinding,
 } from '@/core/global_modules/utils';

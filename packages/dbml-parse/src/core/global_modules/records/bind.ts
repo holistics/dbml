@@ -29,7 +29,7 @@ import {
 } from '@/core/utils/validate';
 import {
   pickBinder,
-} from '@/core/global_modules';
+} from '@/core/global_modules/utils';
 import {
   lookupAndBindInScope, scanNonListNodeForBinding,
 } from '@/core/global_modules/utils';

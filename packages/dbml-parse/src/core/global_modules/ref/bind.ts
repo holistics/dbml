@@ -22,7 +22,7 @@ import {
 } from '@/core/types/keywords';
 import {
   pickBinder,
-} from '@/core/global_modules';
+} from '@/core/global_modules/utils';
 import {
   lookupAndBindInScope, scanNonListNodeForBinding,
 } from '@/core/global_modules/utils';

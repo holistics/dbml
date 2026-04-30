@@ -23,10 +23,7 @@ import {
   flatStream, invalidStream,
 } from './queries/legacy/token';
 import {
-  bindNode,
-} from '@/core/global_modules';
-import {
-  bindFile,
+  bindFile, bindNode,
 } from './queries/pipeline/bind';
 import {
   interpretFile,
