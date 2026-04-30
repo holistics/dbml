@@ -16,7 +16,7 @@ import type {
 } from '@dbml/parse';
 import {
   DBMLLanguageService,
-} from '@/components/monaco/dbml-language';
+} from '@/components/editor/dbml-language';
 import type {
   ParserError,
 } from '../types';

@@ -46,7 +46,7 @@ import {
 import * as monaco from 'monaco-editor';
 import {
   DBMLLanguageService,
-} from '@/components/monaco/dbml-language';
+} from '@/components/editor/dbml-language';
 import logger from '@/utils/logger';
 import {
   useParser,

@@ -18,7 +18,7 @@ import type {
 } from '@/stores/parserStore';
 import {
   tokenKindClass,
-} from '@/utils/tokenIcons';
+} from '@/components/panes/output/tokenIcons';
 
 export interface DecorationEntry {
   range: monaco.IRange;

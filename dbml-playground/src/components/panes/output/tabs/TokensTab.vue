@@ -155,7 +155,7 @@ import type {
 } from '@dbml/parse';
 import {
   tokenIconFor,
-} from '@/utils/tokenIcons';
+} from '@/components/panes/output/tokenIcons';
 import {
   scrollRowIntoView,
 } from '@/utils/scroll';
