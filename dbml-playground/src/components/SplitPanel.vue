@@ -5,7 +5,7 @@
     :style="{ gridTemplateColumns }"
   >
     <template
-      v-for="(_, index) in panels"
+      v-for="(_, index) in panelSizes"
       :key="index"
     >
       <div
@@ -36,8 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const containerRef = ref<HTMLElement | null>(null);
 const panelSizes = ref([...props.sizes]);
-
-const panels = computed(() => panelSizes.value);
 
 const gridTemplateColumns = computed(() =>
   panelSizes.value.map((s) => `${s}fr`).join(' 8px '),

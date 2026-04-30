@@ -95,7 +95,7 @@
 
 <script setup lang="ts">
 import {
-  ref, shallowRef, provide, onMounted, onBeforeUnmount, nextTick,
+  ref, shallowRef, provide, onMounted, onBeforeUnmount,
 } from 'vue';
 import {
   PhClipboardText, PhCheck,
@@ -123,7 +123,7 @@ const project = useProject();
 const copySuccess = ref(false);
 
 async function copyShareUrl () {
-  const url = project.getShareUrl();
+  const url = await project.getShareUrl();
   if (!url) {
     logger.warn('Project too large to share');
     return;

@@ -160,7 +160,6 @@ export const useProject = defineStore('project', () => {
   function addFile (path: string, content = '') {
     files.value[path] = content;
     currentFile.value = path;
-    localStorage.setItem(CURRENT_FILE_KEY, path);
     persistProject();
   }
 
@@ -184,7 +183,6 @@ export const useProject = defineStore('project', () => {
     delete files.value[oldPath];
     if (currentFile.value === oldPath) {
       currentFile.value = newPath;
-      localStorage.setItem(CURRENT_FILE_KEY, newPath);
     }
     persistProject();
   }
@@ -235,7 +233,6 @@ export const useProject = defineStore('project', () => {
     files.value = defaultFiles;
     folders.value = [];
     currentFile.value = DEFAULT_FILE;
-    localStorage.setItem(CURRENT_FILE_KEY, DEFAULT_FILE);
     saveProject(defaultFiles, []);
   }
 
@@ -261,7 +258,6 @@ export const useProject = defineStore('project', () => {
     folders,
     currentFile,
     currentContent,
-    totalSize,
     isLarge,
     setCurrentFile,
     addFile,

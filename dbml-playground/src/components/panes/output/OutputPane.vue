@@ -120,10 +120,7 @@ import {
   Filepath,
 } from '@dbml/parse';
 import {
-  useUser,
-} from '@/stores/userStore';
-import {
-  OutputTabId,
+  useUser, OutputTabId,
 } from '@/stores/userStore';
 import logger from '@/utils/logger';
 import * as monaco from 'monaco-editor';
