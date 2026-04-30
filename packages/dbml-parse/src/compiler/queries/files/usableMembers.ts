@@ -91,10 +91,20 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
   const schemaMembers: SchemaSymbol[] = [];
 
   if (symbolOrFilepath instanceof Filepath) {
-    const schemas = directTopLevelSchemaMembers(this, symbolOrFilepath);
-    schemaMembers.push(...schemas);
+    // Collect top-level schemas defined in this file (not from uses/reuses)
+    const fileSchemas = new Map<string, SchemaSymbol>([
+      [DEFAULT_SCHEMA_NAME, this.symbolFactory.create(SchemaSymbol, { name: DEFAULT_SCHEMA_NAME }, symbolOrFilepath)],
+    ]);
+    for (const element of ast.declarations) {
+      const fullname = this.nodeFullname(element).getFiltered(UNHANDLED) || [];
+      const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0];
+      if (!fileSchemas.has(schemaName)) {
+        fileSchemas.set(schemaName, this.symbolFactory.create(SchemaSymbol, { name: schemaName }, symbolOrFilepath));
+      }
+    }
+    schemaMembers.push(...fileSchemas.values());
     // Also collect non-schema members from the public schema
-    const publicSchema = schemas.find((s) => s.isPublicSchema());
+    const publicSchema = schemaMembers.find((s) => s.isPublicSchema());
     if (publicSchema) {
       const publicUsable = this.usableMembers(publicSchema).getFiltered(UNHANDLED);
       if (publicUsable) {
@@ -204,32 +214,3 @@ export function shouldBelongToThisSchema (compiler: Compiler, symbol: SchemaSymb
   }
 }
 
-// Return all top level schema members that are defined inside that file (not including uses and reuses)
-export function directTopLevelSchemaMembers (compiler: Compiler, filepath: Filepath): SchemaSymbol[] {
-  const ast = compiler.parseFile(filepath).getValue().ast;
-
-  // Collect and create schemas
-  const schemaMembers = new Map<string, SchemaSymbol>([
-    [
-      DEFAULT_SCHEMA_NAME,
-      compiler.symbolFactory.create(SchemaSymbol, {
-        name: DEFAULT_SCHEMA_NAME,
-      }, filepath),
-    ],
-  ]);
-
-  for (const element of ast.declarations) {
-    const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED) || [];
-
-    const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0]; // When fullname doesn't have a schema name, `public` is assumed
-    if (!schemaMembers.has(schemaName)) {
-      schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, {
-        name: schemaName,
-      }, filepath));
-    }
-  }
-
-  return [
-    ...schemaMembers.values(),
-  ];
-}
