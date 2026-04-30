@@ -9,7 +9,7 @@ export function toMonacoRange (
   endPos?: {
     line: number;
     column?: number;
-  } | null,
+  } | undefined,
 ): monaco.IRange {
   return {
     startLineNumber: startPos.line + 1,

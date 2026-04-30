@@ -16,7 +16,7 @@ import {
 } from '@/services/types';
 
 // This is the same format that dbdiagram-frontend uses
-interface Diagnostic {
+export interface Diagnostic {
   type: 'error' | 'warning';
   text: string;
   startRow: number;

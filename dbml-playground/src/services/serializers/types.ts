@@ -43,7 +43,7 @@ export interface SerializedNode {
 export interface SerializedSymbolDeclaration {
   id: string;
   declarationPosition: DeclarationPosition;
-  declarationFilepath: string | null;
+  declarationFilepath?: string;
 }
 
 export interface SerializedSymbol {

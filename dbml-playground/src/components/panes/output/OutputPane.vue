@@ -344,7 +344,7 @@ function handleNodeClick (node: RawAstNode) {
   if (symbolDeclaration) {
     const startPos = symbolDeclaration.startPos as Record<string, unknown> | null | undefined;
     if (startPos && typeof startPos.line === 'number' && !Number.isNaN(startPos.line)) {
-      const filepath = (symbolDeclaration.filepath as { absolute?: string })?.absolute ?? null;
+      const filepath = (symbolDeclaration.filepath as { absolute?: string })?.absolute ?? undefined;
       navigateToDeclaration(filepath, posToRange(startPos, symbolDeclaration.endPos as Record<string, unknown> | null));
       return;
     }

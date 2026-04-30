@@ -12,7 +12,7 @@ import {
   Compiler, DBMLDiagnosticsProvider, Filepath,
 } from '@dbml/parse';
 import type {
-  SyntaxToken, ProgramNode, Database, NodeSymbol,
+  Diagnostic, SyntaxToken, ProgramNode, Database, NodeSymbol,
 } from '@dbml/parse';
 import {
   DBMLLanguageService,
@@ -42,8 +42,8 @@ export interface SymbolInfo {
   id: number;
   kind: string;
   name: string;
-  declarationPosition: DeclarationPosition | null;
-  declarationFilepath: string | null;
+  declarationPosition?: DeclarationPosition;
+  declarationFilepath?: string;
   members: SymbolInfo[];
 }
 
@@ -61,7 +61,7 @@ function buildSymbolInfo (compiler: Compiler, symbol: NodeSymbol, depth = 0): Sy
   const declaration = symbol.declaration;
   const startPos = declaration?.startPos;
   const endPos = declaration?.endPos;
-  let declarationPosition: DeclarationPosition | null = null;
+  let declarationPosition: DeclarationPosition | undefined;
   if (startPos && !Number.isNaN(startPos.line)) {
     const range = toMonacoRange(startPos, endPos);
     declarationPosition = {
@@ -81,22 +81,22 @@ function buildSymbolInfo (compiler: Compiler, symbol: NodeSymbol, depth = 0): Sy
     kind: symbol.kind,
     name,
     declarationPosition,
-    declarationFilepath: declaration?.filepath?.absolute ?? null,
+    declarationFilepath: declaration?.filepath?.absolute,
     members,
   };
 }
 
-function diagnosticToParserError (d: Record<string, unknown>): ParserError {
+function toParserError (diagnostic: Diagnostic): ParserError {
   return {
-    code: typeof d.code === 'number' ? d.code : -1,
-    message: String(d.text ?? ''),
+    code: diagnostic.code ?? -1,
+    message: String(diagnostic.text ?? ''),
     location: {
-      line: Number(d.startRow),
-      column: Number(d.startColumn),
+      line: Number(diagnostic.startRow),
+      column: Number(diagnostic.startColumn),
     },
     endLocation: {
-      line: Number(d.endRow),
-      column: Number(d.endColumn),
+      line: Number(diagnostic.endRow),
+      column: Number(diagnostic.endColumn),
     },
   };
 }
@@ -110,13 +110,13 @@ export const useParser = defineStore('parser', () => {
   // shallowRef prevents Vue from deeply proxying objects with circular refs
   // (SyntaxNode.parentNode, NodeSymbol.declaration)
   const tokens = shallowRef<SyntaxToken[]>([]);
-  const ast = shallowRef<ProgramNode | null>(null);
-  const database = shallowRef<Database | null>(null);
+  const ast = shallowRef<ProgramNode>();
+  const database = shallowRef<Database>();
   const symbols = shallowRef<SymbolInfo[]>([]);
   const errors = ref<readonly ParserError[]>([]);
   const warnings = ref<readonly ParserError[]>([]);
 
-  const hasDatabase = computed(() => database.value !== null);
+  const hasDatabase = computed(() => database.value !== undefined);
 
   // Tracks which file paths the compiler's project layout currently holds, so
   // we can send deleteSource for paths that disappear from the project store.
@@ -158,16 +158,16 @@ export const useParser = defineStore('parser', () => {
         ast.value = parseIndex.ast as ProgramNode;
       } else {
         tokens.value = [];
-        ast.value = null;
+        ast.value = undefined;
       }
 
       // Errors/warnings are scoped to the current file so Monaco markers only
       // highlight positions that exist in the editor being shown.
-      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as any[]).map(diagnosticToParserError);
+      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).map(toParserError);
 
       // interpretFile runs the full pipeline (parse -> validate -> bind ->
       // interpret) for the current file and returns the Database schema.
-      database.value = compiler.interpretFile(currentFilepath).getValue() as Database | undefined ?? null;
+      database.value = compiler.interpretFile(currentFilepath).getValue() as Database | undefined;
 
       // Root the tree at the ProgramSymbol so the tab shows every schema
       // and their nested members.
@@ -177,8 +177,8 @@ export const useParser = defineStore('parser', () => {
       logger.error('Unexpected parsing error');
       const message = err instanceof Error ? err.message : 'Unexpected error';
       tokens.value = [];
-      ast.value = null;
-      database.value = null;
+      ast.value = undefined;
+      database.value = undefined;
       symbols.value = [];
       errors.value = [{
         code: -1,
@@ -194,7 +194,7 @@ export const useParser = defineStore('parser', () => {
       }];
     } finally {
       try {
-        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as any[]).map(diagnosticToParserError);
+        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).map(toParserError);
       } catch (_err) {
         logger.warn('Failed to get warnings');
         warnings.value = [];
@@ -224,7 +224,7 @@ export const useParser = defineStore('parser', () => {
   // these proxies and update the delegates to point at the current Compiler's services whenever the
   // store creates a new Compiler instance (e.g. on hot-reload or test teardown).
   type MonacoServices = Awaited<ReturnType<Compiler['initMonacoServices']>>;
-  let currentServices: MonacoServices | null = null;
+  let currentServices: MonacoServices | undefined;
   let areServicesRegistered = false;
   const languageId = DBMLLanguageService.getLanguageId();
 

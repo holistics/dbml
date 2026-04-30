@@ -30,6 +30,9 @@ export {
 export {
   DBMLDiagnosticsProvider,
 } from '@/services/index';
+export type {
+  Diagnostic,
+} from '@/services/index';
 
 export * from '@/core/global_modules/records/utils';
 

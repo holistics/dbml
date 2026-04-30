@@ -56,11 +56,11 @@ function saveProject (files: Record<string, string>, folders: string[]): void {
   }
 }
 
-async function loadFromUrl (): Promise<ProjectData | null> {
+async function loadFromUrl (): Promise<ProjectData | undefined> {
   try {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
-    if (!code) return null;
+    if (!code) return undefined;
     const json = await decompressFromBase64(code);
     const decoded = JSON.parse(json);
     if (decoded && typeof decoded === 'object' && 'files' in decoded) return decoded as ProjectData;
@@ -68,9 +68,9 @@ async function loadFromUrl (): Promise<ProjectData | null> {
       files: decoded as Record<string, string>,
       folders: [],
     };
-    return null;
+    return undefined;
   } catch {
-    return null;
+    return undefined;
   }
 }
 
@@ -236,20 +236,20 @@ export const useProject = defineStore('project', () => {
     saveProject(defaultFiles, []);
   }
 
-  async function getShareUrl (): Promise<string | null> {
+  async function getShareUrl (): Promise<string | undefined> {
     try {
       const data: ProjectData = {
         files: files.value,
         folders: folders.value,
       };
       const encoded = await compressToBase64(JSON.stringify(data));
-      if (encoded.length > MAX_SHARE_SIZE) return null;
+      if (encoded.length > MAX_SHARE_SIZE) return undefined;
       const url = new URL(window.location.href);
       url.searchParams.set('code', encoded);
       return url.toString();
     } catch (_err) {
       logger.warn('Failed to generate share URL');
-      return null;
+      return undefined;
     }
   }
 

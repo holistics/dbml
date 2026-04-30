@@ -1,7 +1,7 @@
 <template>
   <div class="h-full flex flex-col">
     <div
-      v-if="ast != null"
+      v-if="ast !== undefined"
       class="flex-shrink-0 px-3 py-1 border-b border-gray-200 text-xs text-gray-400 flex items-center justify-between"
     >
       <span>{{ nodeCount }} nodes</span>
@@ -12,7 +12,7 @@
     </div>
     <div class="flex-1 overflow-auto">
       <RawAstTreeView
-        v-if="ast != null"
+        v-if="ast !== undefined"
         :raw-ast="ast"
         @node-click="emit('node-click', $event)"
       />
@@ -40,7 +40,7 @@ import type {
 } from '@dbml/parse';
 
 interface Props {
-  ast: ProgramNode | null;
+  ast: ProgramNode | undefined;
   showDecoration?: boolean;
 }
 

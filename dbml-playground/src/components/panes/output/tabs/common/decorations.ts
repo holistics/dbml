@@ -91,7 +91,7 @@ const AST_WALK_SKIP_KEYS = new Set(['parentNode', 'parent', 'symbol', 'referee',
 // Soft cap so a pathological tree can't blow up Monaco's decoration model.
 const AST_RANGE_LIMIT = 2000;
 
-export function collectNodeDecorations (ast: ProgramNode | null): DecorationEntry[] {
+export function collectNodeDecorations (ast: ProgramNode | undefined): DecorationEntry[] {
   const entries: DecorationEntry[] = [];
   const visited = new WeakSet<object>();
   function walk (node: unknown) {
@@ -183,7 +183,7 @@ type DbToken = { start: { line: number;
 end: { line: number;
   column: number; }; } | undefined;
 
-export function collectDatabaseDecorations (db: Database | null): DecorationEntry[] {
+export function collectDatabaseDecorations (db: Database | undefined): DecorationEntry[] {
   if (!db) return [];
   const result: DecorationEntry[] = [];
   function add (tp: DbToken, cls: string) {
