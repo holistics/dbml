@@ -138,19 +138,20 @@ export default class Compiler {
   }
 
   syncDiagramView (
+    filepath: Filepath,
     operations: DiagramViewSyncOperation[],
     blocks?: DiagramViewBlock[],
   ): { newDbml: string;
     edits: TextEdit[]; } {
-    return syncDiagramView(this.layout.getSource(DEFAULT_ENTRY) || '', operations, blocks);
+    return syncDiagramView(this.layout.getSource(filepath) || '', operations, blocks);
   }
 
-  findDiagramViewBlocks (): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.layout.getSource(DEFAULT_ENTRY) || '');
+  findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
+    return findDiagramViewBlocks(this.layout.getSource(filepath) || '');
   }
 
-  applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.layout.getSource(DEFAULT_ENTRY) || '', edits);
+  applyTextEdits (filepath: Filepath, edits: TextEdit[]): string {
+    return applyTextEdits(this.layout.getSource(filepath) || '', edits);
   }
 
   readonly token = {
@@ -181,10 +182,9 @@ export default class Compiler {
     publicSymbolTable: this.query(publicSymbolTable),
   };
 
-  readonly symbol = {
-    ofName: this.query(symbolOfName, symbolOfNameToKey),
-    members: this.query(symbolMembers),
-  };
+  symbolMembers = this.query(symbolMembers);
+
+  symbolOfName = this.query(symbolOfName, symbolOfNameToKey);
 
   // @deprecated - legacy APIs for services compatibility
   readonly container = {

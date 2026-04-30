@@ -261,8 +261,7 @@ function suggestMembersOfSymbol (
   acceptedKinds: SymbolKind[],
 ): CompletionList {
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol
-      .members(symbol)
+    suggestions: compiler.symbolMembers(symbol)
       .filter(({
         kind,
       }) => acceptedKinds.includes(kind))
@@ -631,11 +630,10 @@ function suggestMembers (
   const nameStack = fragments.map((f) => extractVariableFromExpression(f)!);
 
   return addQuoteToSuggestionIfNeeded({
-    suggestions: compiler.symbol
-      .ofName(nameStack, compiler.container.element(filepath, offset))
+    suggestions: compiler.symbolOfName(nameStack, compiler.container.element(filepath, offset))
       .flatMap(({
         symbol,
-      }) => compiler.symbol.members(symbol))
+      }) => compiler.symbolMembers(symbol))
       .map(({
         kind, name,
       }) => ({

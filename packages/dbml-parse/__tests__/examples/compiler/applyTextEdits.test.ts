@@ -339,7 +339,7 @@ describe('[example] applyTextEdits', () => {
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, 'Table users { id int }');
 
-      const result = compiler.applyTextEdits([
+      const result = compiler.applyTextEdits(DEFAULT_ENTRY, [
         {
           start: 6,
           end: 11,
@@ -357,7 +357,7 @@ describe('[example] applyTextEdits', () => {
   email varchar
 }`);
 
-      const result = compiler.applyTextEdits([
+      const result = compiler.applyTextEdits(DEFAULT_ENTRY, [
         {
           start: 6,
           end: 11,
@@ -379,7 +379,7 @@ describe('[example] applyTextEdits', () => {
       const compiler = new Compiler();
       compiler.setSource(DEFAULT_ENTRY, originalSource);
 
-      compiler.applyTextEdits([
+      compiler.applyTextEdits(DEFAULT_ENTRY, [
         {
           start: 6,
           end: 11,

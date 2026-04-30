@@ -9,7 +9,7 @@ import {
 } from 'lodash-es';
 import * as monaco from 'monaco-editor';
 import {
-  Compiler, DBMLDiagnosticsProvider, Filepath, UNHANDLED,
+  Compiler, DBMLDiagnosticsProvider, Filepath,
 } from '@dbml/parse';
 import type {
   SyntaxToken, ProgramNode, Database, NodeSymbol,
@@ -34,7 +34,7 @@ export interface DeclPos {
   endCol: number;
 }
 
-// Pre-built symbol descriptor for display — avoids exposing the compiler's
+// Pre-built symbol descriptor for display  -- avoids exposing the compiler's
 // internal graph (circular `declaration` refs, internal Report types) to UI components.
 export interface SymbolInfo {
   id: number;
@@ -47,8 +47,8 @@ export interface SymbolInfo {
 
 function getSymbolMembers (compiler: Compiler, sym: NodeSymbol): NodeSymbol[] {
   try {
-    const value = compiler.symbolMembers(sym).getFiltered(UNHANDLED);
-    return Array.isArray(value) ? value : [];
+    const members = compiler.symbolMembers(sym);
+    return Array.isArray(members) ? members.map((m) => m.symbol) : [];
   } catch {
     return [];
   }
@@ -124,7 +124,7 @@ export const useParser = defineStore('parser', () => {
     try {
       // Drop any files the compiler holds that no longer exist in the project
       // store (renames show up as delete-old + add-new). setSource handles the
-      // rest — it invalidates per-file cache and refreshes existing entries.
+      // rest  -- it invalidates per-file cache and refreshes existing entries.
       const currentPaths = new Set(Object.keys(project.files));
       for (const loadedPath of loadedFilepaths) {
         if (!currentPaths.has(loadedPath)) {
@@ -134,7 +134,7 @@ export const useParser = defineStore('parser', () => {
       }
 
       // Load all project files into the compiler. Go through Filepath.fromUri
-      // using the same `file://` URIs Monaco builds for editor models — this
+      // using the same `file://` URIs Monaco builds for editor models  -- this
       // way Filepath carries a 'file:' protocol and `toUri()` on declarations
       // produces URIs that match the models' URIs, so Ctrl+Click go-to-def
       // resolves into the correct Monaco model instead of failing silently.
@@ -144,10 +144,8 @@ export const useParser = defineStore('parser', () => {
         loadedFilepaths.add(path);
       }
 
-      // Bind the entire project to establish cross-file relationships
-      compiler.bindProject();
-
-      // Parse the current file for tokens and AST
+      // Parse and bind the current file (bindFile is called transitively
+      // by interpretFile, so a standalone bindProject call is not needed).
       const parseResult = compiler.parseFile(currentFilepath);
 
       const parseIndex = parseResult.getValue();
@@ -163,16 +161,13 @@ export const useParser = defineStore('parser', () => {
       // highlight positions that exist in the editor being shown.
       errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as any[]).map(diagnosticToParserError);
 
-      // exportSchemaJson returns the current file's schema reconciled against
-      // its imports (externals, alias rename, cross-file refs/records). Using
-      // the legacy `parse.rawDb()` hardcodes DEFAULT_ENTRY, so switching to a
-      // non-default file left the Database tab empty.
-      database.value = compiler.exportSchemaJson(currentFilepath).getValue() as Database | undefined ?? null;
+      // interpretFile runs the full pipeline (parse -> validate -> bind ->
+      // interpret) for the current file and returns the Database schema.
+      database.value = compiler.interpretFile(currentFilepath).getValue() as Database | undefined ?? null;
 
-      // Root the tree at the ProgramSymbol so the tab shows every schema and
-      // their nested members — the old `publicSymbolTable` returned a flat
-      // top-level list only.
-      const programSymbol = parseIndex ? compiler.nodeSymbol(parseIndex.ast).getFiltered(UNHANDLED) : undefined;
+      // Root the tree at the ProgramSymbol so the tab shows every schema
+      // and their nested members.
+      const programSymbol = parseIndex?.ast?.symbol ?? undefined;
       symbols.value = programSymbol ? [buildSymbolInfo(compiler, programSymbol)] : [];
     } catch (err) {
       logger.error('Unexpected parsing error');
@@ -241,12 +236,12 @@ export const useParser = defineStore('parser', () => {
       // provider registry accepted, but some internals check the method with
       // `own`-property semantics and silently skipped the provider.
       // @dbml/parse types against monaco-editor-core while this bundle pulls
-      // monaco-editor — structurally compatible at runtime, separate type
+      // monaco-editor  -- structurally compatible at runtime, separate type
       // surfaces at compile time.
       // Wrap the language-service calls so we always push the editor's
       // current text into the compiler before any analysis runs. The parse
       // store is debounced (300 ms), so without this the providers see a
-      // stale snapshot and misclassify the cursor — e.g. returning top-level
+      // stale snapshot and misclassify the cursor  -- e.g. returning top-level
       // element-type suggestions after a `.` in a ref or right after `use `.
       const syncCompilerFromModel = (model: monaco.editor.ITextModel) => {
         if (!model.uri) return;
