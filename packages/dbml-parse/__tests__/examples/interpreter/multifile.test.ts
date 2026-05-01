@@ -1130,3 +1130,244 @@ use { tablegroup shop } from './base.dbml'
   });
 });
 
+
+describe('[example] multifile interpreter - Ref auto-pull matches through alias', () => {
+  // source defines tables + standalone Ref. Consumer imports one table with alias.
+  // Ref should still auto-pull if both endpoints are in scope (original or aliased).
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+
+Ref: orders.user_id > users.id
+`,
+    '/consumer.dbml': `
+use { table users as u } from './source.dbml'
+use { table orders } from './source.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('Ref is auto-pulled and endpoint uses alias name', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+    const usersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('id'))!;
+    expect(usersEp.tableName).toBe('u');
+  });
+});
+
+
+describe('[example] multifile interpreter - Ref between tables from different imported files', () => {
+  // file-a defines users, file-b defines orders + Ref to users.
+  // consumer imports both. The Ref in file-b references file-a's table.
+  const { compiler, fps } = makeCompiler({
+    '/file-a.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+`,
+    '/file-b.dbml': `
+use { table users } from './file-a.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+
+Ref: orders.user_id > users.id
+`,
+    '/consumer.dbml': `
+use { table users } from './file-a.dbml'
+use { table orders } from './file-b.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('both tables present in consumer schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.find((t) => t.name === 'users')).toBeDefined();
+    expect(db.tables.find((t) => t.name === 'orders')).toBeDefined();
+  });
+});
+
+
+describe('[example] multifile interpreter - wildcard import from file with multiple schemas', () => {
+  // source has tables in public and auth schemas.
+  // consumer does use * - both schemas should merge into consumer.
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+}
+
+Table auth.sessions {
+  id int [pk]
+  user_id int
+}
+`,
+    '/consumer.dbml': `
+use * from './source.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('public schema table present', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.find((t) => t.name === 'users')).toBeDefined();
+  });
+
+  test('auth schema table present with schema name', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const sessions = db.tables.find((t) => t.name === 'sessions');
+    expect(sessions).toBeDefined();
+    expect(sessions!.schemaName).toBe('auth');
+  });
+});
+
+
+describe('[example] multifile interpreter - records referencing imported table columns', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+  active boolean
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+
+records users(id, name, active) {
+  1, 'Alice', true
+  2, 'Bob', false
+}
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('no export errors', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('records appear with correct table and values', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const record = db.records.find((r) => r.tableName === 'users');
+    expect(record).toBeDefined();
+    expect(record!.values).toHaveLength(2);
+  });
+});
+
+
+describe('[example] multifile interpreter - records on table with partial-injected columns', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+TablePartial timestamps {
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table users {
+  id int [pk]
+  name varchar
+  =timestamps
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+
+records users(id, name, created_at, updated_at) {
+  1, 'Alice', '2024-01-01', '2024-01-02'
+}
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('records reference injected columns without error', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('record values present', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const record = db.records.find((r) => r.tableName === 'users');
+    expect(record).toBeDefined();
+    expect(record!.values).toHaveLength(1);
+  });
+});
+
+
+describe('[example] multifile interpreter - records on table with external partial-injected columns', () => {
+  // Partial is in a separate file from the table. Table imports and injects it.
+  // Consumer imports the table and writes records referencing injected columns.
+  const { compiler, fps } = makeCompiler({
+    '/partials.dbml': `
+TablePartial audit {
+  created_by int
+  modified_by int
+}
+`,
+    '/tables.dbml': `
+use { tablepartial audit } from './partials.dbml'
+
+Table orders {
+  id int [pk]
+  total decimal
+  =audit
+}
+`,
+    '/consumer.dbml': `
+use { table orders } from './tables.dbml'
+
+records orders(id, total, created_by, modified_by) {
+  1, 99.99, 10, 10
+  2, 49.50, 11, 12
+}
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('no export errors', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('records reference external partial columns without error', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const record = db.records.find((r) => r.tableName === 'orders');
+    expect(record).toBeDefined();
+    expect(record!.values).toHaveLength(2);
+  });
+});
+

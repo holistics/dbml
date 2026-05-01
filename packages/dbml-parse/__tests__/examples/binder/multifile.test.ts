@@ -1107,4 +1107,43 @@ Table y_table {
       expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(true);
     });
   });
+
+  describe('import from non-existent file', () => {
+    const { compiler, fps } = makeCompiler({
+      '/main.dbml': `
+use { table users } from './does-not-exist.dbml'
+`,
+    });
+
+    test('produces an error when importing from a file that does not exist', () => {
+      const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(ast).getErrors();
+      expect(errors.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('import non-existent symbol from valid file', () => {
+    const { compiler, fps } = makeCompiler({
+      '/source.dbml': `
+Table users {
+  id int [pk]
+}
+`,
+      '/main.dbml': `
+use { table orders } from './source.dbml'
+`,
+    });
+
+    test('produces a binding error for the missing symbol', () => {
+      const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(ast).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('error message names the missing symbol', () => {
+      const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
+      const errors = compiler.bindNode(ast).getErrors();
+      expect(errors.some((e) => e.message.includes('orders'))).toBe(true);
+    });
+  });
 });
