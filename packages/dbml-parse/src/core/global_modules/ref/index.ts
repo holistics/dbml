@@ -12,7 +12,7 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  AttributeNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode,
+  AttributeNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, InfixExpressionNode, ListExpressionNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
@@ -109,11 +109,11 @@ export const refModule: GlobalModule = {
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
       const del = settingMap.delete?.at(0)?.value;
-      onDelete = del instanceof IdentiferStreamNode
+      onDelete = del instanceof IdentifierStreamNode
         ? extractStringFromIdentifierStream(del) ?? undefined
         : extractVariableFromExpression(del) ?? undefined;
       const upd = settingMap.update?.at(0)?.value;
-      onUpdate = upd instanceof IdentiferStreamNode
+      onUpdate = upd instanceof IdentifierStreamNode
         ? extractStringFromIdentifierStream(upd) ?? undefined
         : extractVariableFromExpression(upd) ?? undefined;
       color = settingMap.color?.length ? parseColor(settingMap.color?.at(0)?.value as any) : undefined;

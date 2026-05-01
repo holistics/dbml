@@ -31,8 +31,8 @@ export default class IndexesBinder {
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
 
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
-    this.declarationNode = declarationNode;
     this.compiler = compiler;
+    this.declarationNode = declarationNode;
   }
 
   bind (): CompileError[] {

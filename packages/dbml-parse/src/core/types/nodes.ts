@@ -157,7 +157,7 @@ export enum SyntaxNodeKind {
   // Attribute name or value may use this
   // e.g [primary key] -> 'primary' 'key'
   // e.g [update: no action] -> 'no' 'action'
-  IDENTIFIER_STREAM = '<identifer-stream>',
+  IDENTIFIER_STREAM = '<identifier-stream>',
 
   LITERAL = '<literal>',
   VARIABLE = '<variable>',
@@ -452,7 +452,7 @@ export class ElementDeclarationNode extends SyntaxNode {
 // A contiguous stream of identifiers (space-separated)
 // e.g. primary key
 // e.g. no action
-export class IdentiferStreamNode extends SyntaxNode {
+export class IdentifierStreamNode extends SyntaxNode {
   identifiers: SyntaxToken[];
 
   constructor (
@@ -478,11 +478,11 @@ export class IdentiferStreamNode extends SyntaxNode {
 // e.g. ref: users.id
 // e.g. note: 'some note'
 export class AttributeNode extends SyntaxNode {
-  name?: IdentiferStreamNode | PrimaryExpressionNode;
+  name?: IdentifierStreamNode | PrimaryExpressionNode;
 
   colon?: SyntaxToken;
 
-  value?: NormalExpressionNode | IdentiferStreamNode;
+  value?: NormalExpressionNode | IdentifierStreamNode;
 
   constructor (
     {
@@ -490,9 +490,9 @@ export class AttributeNode extends SyntaxNode {
       colon,
       value,
     }: {
-      name?: IdentiferStreamNode | PrimaryExpressionNode;
+      name?: IdentifierStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
-      value?: NormalExpressionNode | IdentiferStreamNode;
+      value?: NormalExpressionNode | IdentifierStreamNode;
     },
     id: SyntaxNodeId,
     filepath: Filepath,

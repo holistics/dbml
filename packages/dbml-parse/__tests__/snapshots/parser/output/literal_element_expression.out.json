@@ -67,7 +67,7 @@
                                 },
                                 "name": {
                                   "context": {
-                                    "id": "node@<identifer-stream>@@[L1:C13, L1:C17]",
+                                    "id": "node@<identifier-stream>@@[L1:C13, L1:C17]",
                                     "snippet": "note"
                                   },
                                   "children": {
@@ -189,7 +189,7 @@
                                           "children": {
                                             "name": {
                                               "context": {
-                                                "id": "node@<identifer-stream>@@[L2:C24, L2:C35]",
+                                                "id": "node@<identifier-stream>@@[L2:C24, L2:C35]",
                                                 "snippet": "primary key"
                                               },
                                               "children": {
@@ -360,7 +360,7 @@
                                           "children": {
                                             "name": {
                                               "context": {
-                                                "id": "node@<identifer-stream>@@[L3:C14, L3:C20]",
+                                                "id": "node@<identifier-stream>@@[L3:C14, L3:C20]",
                                                 "snippet": "unique"
                                               },
                                               "children": {

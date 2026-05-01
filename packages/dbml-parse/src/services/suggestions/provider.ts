@@ -23,7 +23,7 @@ import {
   CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
@@ -462,7 +462,7 @@ function suggestInAttribute (
     return suggestAttributeName(compiler, filepath, offset);
   }
 
-  if (container.name instanceof IdentiferStreamNode) {
+  if (container.name instanceof IdentifierStreamNode) {
     const res = suggestAttributeValue(
       compiler,
       filepath,

@@ -11,7 +11,7 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -110,7 +110,7 @@ export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimit
   return isAccessExpression(node) && isExpressionAVariableNode(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
 }
 
-export function extractStringFromIdentifierStream (stream?: IdentiferStreamNode): string | undefined {
+export function extractStringFromIdentifierStream (stream?: IdentifierStreamNode): string | undefined {
   if (stream === undefined) return undefined;
   const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
   if (name === '') return undefined;

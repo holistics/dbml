@@ -37,7 +37,7 @@ export function extractReferee (compiler: Compiler, node: SyntaxNode | undefined
   return result.getValue() ?? undefined;
 }
 
-export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerName?: string): {
+export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerTable?: string): {
   schemaName: string | null;
   tableName: string;
   fieldNames: string[];
@@ -55,7 +55,7 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: s
     if (variables?.length === 0) {
       return {
         schemaName: ownerSchema ?? null,
-        tableName: ownerName ?? '',
+        tableName: ownerTable ?? '',
         fieldNames: tupleNames,
       };
     }
@@ -70,7 +70,7 @@ export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: s
   if (variables.length === 1) {
     return {
       schemaName: ownerSchema ?? null,
-      tableName: ownerName ?? '',
+      tableName: ownerTable ?? '',
       fieldNames: [
         variableNames[0],
       ],

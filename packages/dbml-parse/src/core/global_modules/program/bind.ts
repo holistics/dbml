@@ -46,8 +46,8 @@ export default class Binder {
   private compiler: Compiler;
 
   constructor (ast: ProgramNode, compiler: Compiler) {
-    this.ast = ast;
     this.compiler = compiler;
+    this.ast = ast;
   }
 
   resolve (): Report<void> {

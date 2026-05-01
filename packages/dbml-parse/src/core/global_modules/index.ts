@@ -47,7 +47,7 @@ import {
 } from './schema';
 import {
   noteModule,
-} from './stickyNote';
+} from './note';
 import {
   tableModule,
 } from './table';

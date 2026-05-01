@@ -156,7 +156,7 @@
                                 "children": {
                                   "name": {
                                     "context": {
-                                      "id": "node@<identifer-stream>@@[L1:C16, L1:C19]",
+                                      "id": "node@<identifier-stream>@@[L1:C16, L1:C19]",
                                       "snippet": "one"
                                     },
                                     "children": {
@@ -196,7 +196,7 @@
                                   },
                                   "name": {
                                     "context": {
-                                      "id": "node@<identifer-stream>@@[L1:C21, L1:C24]",
+                                      "id": "node@<identifier-stream>@@[L1:C21, L1:C24]",
                                       "snippet": "two"
                                     },
                                     "children": {
@@ -265,7 +265,7 @@
                                   },
                                   "name": {
                                     "context": {
-                                      "id": "node@<identifer-stream>@@[L2:C16, L2:C21]",
+                                      "id": "node@<identifier-stream>@@[L2:C16, L2:C21]",
                                       "snippet": "three"
                                     },
                                     "children": {
@@ -325,7 +325,7 @@
                                 "children": {
                                   "name": {
                                     "context": {
-                                      "id": "node@<identifer-stream>@@[L2:C32, L3:C19]",
+                                      "id": "node@<identifier-stream>@@[L2:C32, L3:C19]",
                                       "snippet": "primary \r\n...       key"
                                     },
                                     "children": {
@@ -374,7 +374,7 @@
                                   },
                                   "name": {
                                     "context": {
-                                      "id": "node@<identifer-stream>@@[LNaN:CNaN, LNaN:CNaN]",
+                                      "id": "node@<identifier-stream>@@[LNaN:CNaN, LNaN:CNaN]",
                                       "snippet": ""
                                     },
                                     "fullEnd": null,
@@ -530,7 +530,7 @@
                                   },
                                   "name": {
                                     "context": {
-                                      "id": "node@<identifer-stream>@@[L4:C28, L4:C31]",
+                                      "id": "node@<identifier-stream>@@[L4:C28, L4:C31]",
                                       "snippet": "ref"
                                     },
                                     "children": {

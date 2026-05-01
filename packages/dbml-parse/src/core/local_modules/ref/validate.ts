@@ -9,7 +9,7 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
@@ -189,13 +189,13 @@ function isValidPolicy (value?: SyntaxNode): boolean {
       isExpressionAVariableNode(value)
       && value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
     )
-    && !(value instanceof IdentiferStreamNode)
+    && !(value instanceof IdentifierStreamNode)
   ) {
     return false;
   }
 
   let extractedString: string | undefined;
-  if (value instanceof IdentiferStreamNode) {
+  if (value instanceof IdentifierStreamNode) {
     extractedString = extractStringFromIdentifierStream(value) || '';
   } else {
     extractedString = value.expression.variable.value;

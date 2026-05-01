@@ -14,7 +14,7 @@ import {
   FunctionApplicationNode,
   FunctionExpressionNode,
   GroupExpressionNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -139,7 +139,7 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.bodyColon);
     markInvalid(node.attributeList);
     markInvalid(node.body);
-  } else if (node instanceof IdentiferStreamNode) {
+  } else if (node instanceof IdentifierStreamNode) {
     node.identifiers.forEach(markInvalid);
   } else if (node instanceof AttributeNode) {
     markInvalid(node.name);
@@ -242,7 +242,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
     return filterUndefined(node.name, node.colon, node.value);
   }
 
-  if (node instanceof IdentiferStreamNode) {
+  if (node instanceof IdentifierStreamNode) {
     return node.identifiers;
   }
 

@@ -36,8 +36,8 @@ export default class RecordsBinder {
   private boundColumns: Map<NodeSymbol, SyntaxNode>;
 
   constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
-    this.declarationNode = declarationNode;
     this.compiler = compiler;
+    this.declarationNode = declarationNode;
     this.boundColumns = new Map();
   }
 

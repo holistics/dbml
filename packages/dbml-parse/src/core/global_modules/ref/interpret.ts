@@ -12,7 +12,7 @@ import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
@@ -116,12 +116,12 @@ export class RefInterpreter {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
 
       const deleteSetting = settingMap.delete?.at(0)?.value;
-      this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
+      this.ref.onDelete = deleteSetting instanceof IdentifierStreamNode
         ? extractStringFromIdentifierStream(deleteSetting) ?? undefined
         : extractVariableFromExpression(deleteSetting) ?? undefined;
 
       const updateSetting = settingMap.update?.at(0)?.value;
-      this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
+      this.ref.onUpdate = updateSetting instanceof IdentifierStreamNode
         ? extractStringFromIdentifierStream(updateSetting) ?? undefined
         : extractVariableFromExpression(updateSetting) ?? undefined;
 
