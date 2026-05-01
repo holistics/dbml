@@ -101,13 +101,13 @@ import {
   PhClipboardText, PhCheck,
 } from '@phosphor-icons/vue';
 import {
-  useParser,
+  useParserStore,
 } from '@/stores/parserStore';
 import {
-  useProject,
+  useProjectStore,
 } from '@/stores/projectStore';
 import {
-  useUser,
+  useUserStore,
 } from '@/stores/userStore';
 import {
   Filepath,
@@ -120,9 +120,9 @@ import * as monaco from 'monaco-editor';
 import logger from '@/utils/logger';
 import packageJson from '../package.json';
 
-const parser = useParser();
-const project = useProject();
-const user = useUser();
+const parser = useParserStore();
+const project = useProjectStore();
+const user = useUserStore();
 
 const copySuccess = ref(false);
 

@@ -184,7 +184,7 @@ import {
   PhTrash,
 } from '@phosphor-icons/vue';
 import {
-  useProject,
+  useProjectStore,
 } from '@/stores/projectStore';
 import type {
   TreeNode,
@@ -222,7 +222,7 @@ const emit = defineEmits<{
   'pending-input-mounted': [el: HTMLInputElement];
 }>();
 
-const project = useProject();
+const project = useProjectStore();
 const open = ref(true);
 const confirmingDelete = ref(false);
 const deleteButtonRef = ref<HTMLButtonElement | null>(null);

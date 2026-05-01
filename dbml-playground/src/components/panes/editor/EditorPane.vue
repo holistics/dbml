@@ -60,10 +60,10 @@ import {
 } from '@phosphor-icons/vue';
 import DbmlEditor from '@/components/editor/DbmlEditor.vue';
 import {
-  useUser,
+  useUserStore,
 } from '@/stores/userStore';
 import {
-  useProject,
+  useProjectStore,
 } from '@/stores/projectStore';
 import type * as monaco from 'monaco-editor';
 
@@ -79,8 +79,8 @@ const emit = defineEmits<{
   }];
 }>();
 
-const user = useUser();
-const project = useProject();
+const user = useUserStore();
+const project = useProjectStore();
 const vimModeEnabled = ref(user.prefs.isVim);
 const settingsOpen = ref(false);
 

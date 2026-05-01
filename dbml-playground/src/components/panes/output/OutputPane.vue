@@ -111,16 +111,16 @@ import type {
   SymbolInfo,
 } from '@/stores/parserStore';
 import {
-  useParser,
+  useParserStore,
 } from '@/stores/parserStore';
 import {
-  useProject,
+  useProjectStore,
 } from '@/stores/projectStore';
 import {
   Filepath,
 } from '@dbml/parse';
 import {
-  useUser, OutputTabId,
+  useUserStore, OutputTabId,
 } from '@/stores/userStore';
 import logger from '@/utils/logger';
 import {
@@ -138,9 +138,9 @@ import {
   type DecorationEntry,
 } from './tabs/common/decorations';
 
-const parser = useParser();
-const project = useProject();
-const user = useUser();
+const parser = useParserStore();
+const project = useProjectStore();
+const user = useUserStore();
 
 interface Tab {
   id: OutputTabId;

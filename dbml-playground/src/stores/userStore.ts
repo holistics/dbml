@@ -43,7 +43,7 @@ function load (): UserPreferences {
   };
 }
 
-export const useUser = defineStore('user', () => {
+export const useUserStore = defineStore('user', () => {
   const prefs = ref<UserPreferences>(load());
 
   watch(prefs, (data) => {

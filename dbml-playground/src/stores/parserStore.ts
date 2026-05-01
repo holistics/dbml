@@ -25,7 +25,7 @@ import {
 } from '../utils/monaco';
 import logger from '../utils/logger';
 import {
-  useProject,
+  useProjectStore,
 } from './projectStore';
 
 const DEBOUNCE_MS = 300;
@@ -101,10 +101,10 @@ function toParserError (diagnostic: Diagnostic): ParserError {
   };
 }
 
-export const useParser = defineStore('parser', () => {
+export const useParserStore = defineStore('parser', () => {
   const compiler = new Compiler();
   const diagnosticsProvider = new DBMLDiagnosticsProvider(compiler);
-  const project = useProject();
+  const project = useProjectStore();
 
   const isLoading = ref(false);
   // shallowRef prevents Vue from deeply proxying objects with circular refs

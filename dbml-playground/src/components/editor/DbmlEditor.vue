@@ -40,7 +40,7 @@ import {
   useVimController,
 } from '@/components/editor/useVimController';
 import {
-  useParser,
+  useParserStore,
 } from '@/stores/parserStore';
 
 const {
@@ -275,7 +275,7 @@ const SUGGESTION_TRIGGER_CHARS = [
   ' ', // after `from `
 ];
 
-const parser = useParser();
+const parser = useParserStore();
 let pendingRetrigger = false;
 
 function shouldTriggerSuggestion (_editor: monaco.editor.IStandaloneCodeEditor): boolean {

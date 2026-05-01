@@ -145,14 +145,14 @@ import {
   PhFilePlus, PhFolderPlus, PhFolder, PhFileText, PhArrowClockwise,
 } from '@phosphor-icons/vue';
 import {
-  useProject,
+  useProjectStore,
 } from '@/stores/projectStore';
 import {
   Filepath,
 } from '@dbml/parse';
 import FileTreeNode from './FileTreeNode.vue';
 
-const project = useProject();
+const project = useProjectStore();
 
 export interface TreeNode {
   name: string;

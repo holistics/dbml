@@ -106,7 +106,7 @@ function initProject (): { files: Record<string, string>;
   };
 }
 
-export const useProject = defineStore('project', () => {
+export const useProjectStore = defineStore('project', () => {
   const {
     files: initialFiles, folders: initialFolders, currentFile: initialCurrentFile,
   } = initProject();
