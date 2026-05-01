@@ -73,8 +73,10 @@ const content = defineModel<string>({
 
 const emit = defineEmits<{
   'editor-mounted': [editor: monaco.editor.IStandaloneCodeEditor];
-  'cursor-move': [pos: { line: number;
-    column: number; }];
+  'cursor-move': [position: {
+    line: number;
+    column: number;
+  }];
 }>();
 
 const user = useUser();
