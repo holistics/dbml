@@ -1,5 +1,8 @@
 import Compiler from '@/compiler/index';
 import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import type {
@@ -26,8 +29,14 @@ import type {
   Database, DiagramView, ElementRef, Enum, Note, Project, Ref, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
 import {
-  SchemaSymbol, SymbolKind, UseSymbol,
+  type NodeSymbol, SchemaSymbol, SymbolKind, TableSymbol, UseSymbol,
 } from '@/core/types/symbol';
+import {
+  MetadataKind,
+} from '@/core/types/metadata';
+import type {
+  SymbolMetadata,
+} from '@/core/types/metadata';
 import {
   getBody,
   isElementNode,
@@ -104,16 +113,19 @@ export default class ProgramInterpreter {
     // 2. Collect external references from use/reuse declarations
     this.collectExternals();
 
-    // 3. Extract table aliases
+    // 3. Pull refs and records from imported table symbols via metadata
+    this.collectExternalMetadata();
+
+    // 4. Extract table aliases
     this.collectTableAliases();
 
-    // 4. Convert inline refs from table fields
+    // 5. Convert inline refs from table fields
     this.collectInlineRefs();
 
-    // 5. Validate duplicate records blocks
+    // 6. Validate duplicate records blocks
     this.checkDuplicateRecords();
 
-    // 6. FK validation (unique, not null are handled inside binder of records)
+    // 7. FK validation (unique, not null are handled inside binder of records)
     this.warnings.push(...this.validateRecords());
 
     return new Report(this.db, this.errors, this.warnings);
@@ -136,7 +148,7 @@ export default class ProgramInterpreter {
         }
       }
 
-      // Metadata-based elements (ref, records, project)  -- interpret via metadata or directly
+      // Metadata-based elements (ref, records, project) - interpret via metadata or directly
       const kind = node.getElementKind();
       if (kind === ElementKind.Ref) {
         const result = new RefInterpreter(this.compiler, node).interpret();
@@ -244,6 +256,98 @@ export default class ProgramInterpreter {
             this.pushExternalElement(member, value);
           }
         }
+
+        // Auto-pull partial definitions referenced by imported tables
+        if (member.usedSymbol?.isKind(SymbolKind.Table)) {
+          this.pullTablePartials(original);
+        }
+      }
+    }
+  }
+
+  // If an imported table uses ~partial_name, ensure the partial definition
+  // is in db.tablePartials so dbml-core can expand it.
+  private pullTablePartials (tableSymbol: NodeSymbol) {
+    if (!(tableSymbol instanceof TableSymbol)) return;
+    const existingNames = new Set(this.db.tablePartials.map((p) => p.name));
+
+    for (const partialSymbol of tableSymbol.partialSymbols(this.compiler)) {
+      const canonical = this.compiler.canonicalName(this.filepath, partialSymbol).getValue();
+      const name = canonical?.name ?? partialSymbol.name;
+      if (!name || existingNames.has(name)) continue;
+
+      const result = this.compiler.interpretSymbol(partialSymbol, this.filepath);
+      if (result.hasValue(UNHANDLED)) continue;
+      const partial = result.getValue() as TablePartial | undefined;
+      if (!partial) continue;
+
+      partial.name = name;
+      this.db.tablePartials.push(partial);
+      existingNames.add(name);
+    }
+  }
+
+  // Pull refs and records from external metadata.
+  // Passes this.filepath to interpretMetadata so interpreters can use canonicalName.
+  private collectExternalMetadata () {
+    const normalizeSchema = (s: string | null | undefined): string =>
+      (!s || s === DEFAULT_SCHEMA_NAME) ? '' : s;
+    const inScopeTableNames = new Set(
+      this.db.tables.map((t) => `${normalizeSchema(t.schemaName)}::${t.name}`),
+    );
+
+    // Collect external table symbols from the symbol graph
+    const programSymbol = this.compiler.nodeSymbol(this.programNode).getFiltered(UNHANDLED);
+    if (!programSymbol) return;
+    const externalTableSymbols: NodeSymbol[] = [];
+    for (const schema of this.compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED) ?? []) {
+      if (!(schema instanceof SchemaSymbol)) continue;
+      for (const member of this.compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? []) {
+        if (!member.isKind(SymbolKind.Table)) continue;
+        if (member.originalSymbol.filepath.intern() === this.filepath.intern()) continue;
+        externalTableSymbols.push(member.originalSymbol);
+      }
+    }
+
+    // Targeted lookup: get metadata only for in-scope external table symbols
+    // Dedup refs by declaration id (same ref indexed under both endpoint tables)
+    const refsByDeclaration = new Map<number, SymbolMetadata>();
+
+    for (const tableSymbol of externalTableSymbols) {
+      for (const meta of this.compiler.symbolMetadata(tableSymbol)) {
+        if (meta.kind === MetadataKind.Ref) {
+          refsByDeclaration.set(meta.declaration.id, meta);
+        }
+
+        if (meta.kind === MetadataKind.Record) {
+          const canonical = this.compiler.canonicalName(this.filepath, meta.target).getValue();
+          if (!canonical) continue;
+          if (!inScopeTableNames.has(`${normalizeSchema(canonical.schema)}::${canonical.name}`)) continue;
+
+          const result = this.compiler.interpretMetadata(meta, this.filepath);
+          if (result.hasValue(UNHANDLED)) continue;
+          const record = result.getValue() as TableRecord | undefined;
+          if (!record) continue;
+
+          record.tableName = canonical.name;
+          record.schemaName = canonical.schema || undefined;
+          this.db.records.push(record);
+        }
+      }
+    }
+
+    // Interpret refs — RefInterpreter rewrites endpoints via canonicalName.
+    for (const [, meta] of refsByDeclaration) {
+      const result = this.compiler.interpretMetadata(meta, this.filepath);
+      if (result.hasValue(UNHANDLED)) continue;
+      const ref = result.getValue() as Ref | undefined;
+      if (!ref?.endpoints?.length) continue;
+
+      const allInScope = ref.endpoints.every((ep) =>
+        inScopeTableNames.has(`${normalizeSchema(ep.schemaName)}::${ep.tableName}`),
+      );
+      if (allInScope) {
+        this.db.refs.push(ref);
       }
     }
   }

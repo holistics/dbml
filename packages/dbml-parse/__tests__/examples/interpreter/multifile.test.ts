@@ -817,9 +817,11 @@ use { table orders } from './base.dbml'
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
-  test('cross-file ref declared in source is not pulled into consumer schema', () => {
+  test('cross-file ref is auto-pulled and endpoint uses alias', () => {
     const db = exportDb(compiler, fps['/main.dbml']);
-    expect(db.refs).toHaveLength(0);
+    expect(db.refs).toHaveLength(1);
+    const usersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('id'))!;
+    expect(usersEp.tableName).toBe('u');
   });
 });
 
@@ -877,7 +879,7 @@ TablePartial timestamps {
 Table users {
   id int [pk]
   name varchar
-  =timestamps
+  ~timestamps
 }
 `,
     '/consumer.dbml': `
@@ -890,14 +892,19 @@ use { table users } from './source.dbml'
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
-  test('imported table retains injected partial columns', () => {
+  test('imported table has own columns and partial reference', () => {
     const db = exportDb(compiler, fps['/consumer.dbml']);
     const users = db.tables.find((t) => t.name === 'users')!;
-    const fieldNames = users.fields.map((f) => f.name);
-    expect(fieldNames).toContain('id');
-    expect(fieldNames).toContain('name');
-    expect(fieldNames).toContain('created_at');
-    expect(fieldNames).toContain('updated_at');
+    expect(users.fields.map((f) => f.name)).toEqual(['id', 'name']);
+    expect(users.partials).toHaveLength(1);
+    expect(users.partials[0].name).toBe('timestamps');
+  });
+
+  test('partial auto-pulled to db.tablePartials', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const partial = db.tablePartials.find((p) => p.name === 'timestamps');
+    expect(partial).toBeDefined();
+    expect(partial!.fields.map((f: any) => f.name)).toEqual(['created_at', 'updated_at']);
   });
 });
 
@@ -1014,13 +1021,13 @@ TablePartial timestamps {
 Table users {
   id int [pk]
   name varchar
-  =timestamps
+  ~timestamps
 }
 
 Table posts {
   id int [pk]
   title varchar
-  =timestamps
+  ~timestamps
 }
 
 TableGroup content {
@@ -1038,14 +1045,17 @@ use { tablegroup content } from './base.dbml'
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
-  test('pulled tables retain injected partial columns', () => {
+  test('pulled tables have own columns and partial reference', () => {
     const db = exportDb(compiler, fps['/consumer.dbml']);
     const users = db.tables.find((t) => t.name === 'users')!;
-    const fieldNames = users.fields.map((f) => f.name);
-    expect(fieldNames).toContain('id');
-    expect(fieldNames).toContain('name');
-    expect(fieldNames).toContain('created_at');
-    expect(fieldNames).toContain('updated_at');
+    expect(users.fields.map((f) => f.name)).toEqual(['id', 'name']);
+    expect(users.partials).toHaveLength(1);
+    expect(users.partials[0].name).toBe('timestamps');
+  });
+
+  test('partial auto-pulled to db.tablePartials', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tablePartials.find((p) => p.name === 'timestamps')).toBeDefined();
   });
 });
 
@@ -1087,9 +1097,9 @@ use { tablegroup user_group } from './base.dbml'
     expect(statusField.type.type_name).toBe('status');
   });
 
-  test('enum referenced by pulled table appears in schema', () => {
+  test('non-imported enum does NOT appear in schema', () => {
     const db = exportDb(compiler, fps['/consumer.dbml']);
-    expect(db.enums.find((e) => e.name === 'status')).toBeDefined();
+    expect(db.enums.find((e) => e.name === 'status')).toBeUndefined();
   });
 });
 
@@ -1293,7 +1303,7 @@ TablePartial timestamps {
 Table users {
   id int [pk]
   name varchar
-  =timestamps
+  ~timestamps
 }
 `,
     '/consumer.dbml': `
@@ -1340,7 +1350,7 @@ use { tablepartial audit } from './partials.dbml'
 Table orders {
   id int [pk]
   total decimal
-  =audit
+  ~audit
 }
 `,
     '/consumer.dbml': `
@@ -1368,6 +1378,845 @@ records orders(id, total, created_by, modified_by) {
     const record = db.records.find((r) => r.tableName === 'orders');
     expect(record).toBeDefined();
     expect(record!.values).toHaveLength(2);
+  });
+});
+
+
+describe('[example] multifile interpreter - records defined in source file auto-pulled with imported table', () => {
+  // source defines table + records. Consumer imports table.
+  // Records should be auto-pulled as metadata on the table symbol.
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+
+records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+  3, 'Charlie'
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('records from source file are pulled into consumer schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const record = db.records.find((r) => r.tableName === 'users');
+    expect(record).toBeDefined();
+    expect(record!.values).toHaveLength(3);
+  });
+});
+
+
+describe('[example] multifile interpreter - records auto-pulled with aliased table', () => {
+  // source defines table + records. Consumer imports table with alias.
+  // Records should appear under the alias name.
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+
+records users(id, name) {
+  1, 'Alice'
+}
+`,
+    '/consumer.dbml': `
+use { table users as u } from './source.dbml'
+`,
+  });
+
+  test('records pulled under alias name', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.records.find((r) => r.tableName === 'u')).toBeDefined();
+    expect(db.records.find((r) => r.tableName === 'users')).toBeUndefined();
+  });
+});
+
+
+describe('[example] multifile interpreter - records NOT pulled when table not imported', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table orders {
+  id int [pk]
+}
+
+records users(id, name) {
+  1, 'Alice'
+}
+`,
+    '/consumer.dbml': `
+use { table orders } from './source.dbml'
+`,
+  });
+
+  test('records for non-imported table are not in consumer schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.records).toHaveLength(0);
+  });
+});
+
+
+describe('[example] multifile interpreter - nested records inside imported table definition', () => {
+  // Records nested inside the table block (not standalone).
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+
+  records {
+    1, 'Alice'
+    2, 'Bob'
+  }
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+`,
+  });
+
+  test('nested records are pulled with the imported table', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const record = db.records.find((r) => r.tableName === 'users');
+    expect(record).toBeDefined();
+    expect(record!.values).toHaveLength(2);
+  });
+});
+
+
+describe('[example] multifile interpreter - standalone Ref from source auto-pulled via metadata', () => {
+  // Verifies that refs flow through metadata, not just AST.
+  // Source has two tables and a standalone Ref.
+  // Consumer imports both tables - ref should appear via metadata pulling.
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table departments {
+  id int [pk]
+  name varchar
+}
+
+Table employees {
+  id int [pk]
+  dept_id int
+  name varchar
+}
+
+Ref: employees.dept_id > departments.id
+`,
+    '/consumer.dbml': `
+use { table departments } from './source.dbml'
+use { table employees } from './source.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('ref is auto-pulled because both endpoints are in scope', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+    const ref = db.refs[0];
+    expect(ref.endpoints.find((e) => e.tableName === 'employees')).toBeDefined();
+    expect(ref.endpoints.find((e) => e.tableName === 'departments')).toBeDefined();
+  });
+
+  test('ref is NOT pulled when only one endpoint is imported', () => {
+    const partial = new Compiler();
+    const fp = Filepath.from('/partial.dbml');
+    partial.setSource(Filepath.from('/source.dbml'), `
+Table departments {
+  id int [pk]
+  name varchar
+}
+Table employees {
+  id int [pk]
+  dept_id int
+  name varchar
+}
+Ref: employees.dept_id > departments.id
+`);
+    partial.setSource(fp, `use { table employees } from './source.dbml'`);
+    const result = partial.interpretFile(fp);
+    const db = result.getValue() as Database | undefined;
+    expect(db?.refs ?? []).toHaveLength(0);
+  });
+});
+
+
+// --- Edge case tests for pulling behavior ---
+
+
+describe('[edge] ref in third unreachable file is NOT pulled', () => {
+  // A: users, B: orders, C: Ref between them. Consumer imports from A and B, not C.
+  const { compiler, fps } = makeCompiler({
+    '/a.dbml': `
+Table users {
+  id int [pk]
+}`,
+    '/b.dbml': `
+Table orders {
+  id int [pk]
+  user_id int
+}`,
+    '/c.dbml': `
+use { table users } from './a.dbml'
+use { table orders } from './b.dbml'
+Ref: orders.user_id > users.id
+`,
+    '/consumer.dbml': `
+use { table users } from './a.dbml'
+use { table orders } from './b.dbml'
+`,
+  });
+
+  test('ref from file C is NOT pulled - consumer does not import from C', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(0);
+  });
+});
+
+
+describe('[edge] same partial used by multiple imported tables - deduplicated', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+TablePartial timestamps {
+  created_at timestamp
+  updated_at timestamp
+}
+Table users {
+  id int [pk]
+  ~timestamps
+}
+Table orders {
+  id int [pk]
+  ~timestamps
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+use { table orders } from './source.dbml'
+`,
+  });
+
+  test('partial appears only once in db.tablePartials', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const timestamps = db.tablePartials.filter((p) => p.name === 'timestamps');
+    expect(timestamps).toHaveLength(1);
+  });
+});
+
+
+describe('[edge] aliased table ref endpoint rewriting', () => {
+  // use { table users as u } + use { table orders }
+  // Source: Ref: orders.user_id > users.id
+  // Endpoint 'users' should be rewritten to 'u'
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users { id int [pk] }
+Table orders {
+  id int [pk]
+  user_id int
+}
+Ref: orders.user_id > users.id
+`,
+    '/consumer.dbml': `
+use { table users as u } from './source.dbml'
+use { table orders } from './source.dbml'
+`,
+  });
+
+  test('ref endpoint uses alias name', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+    const usersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('id'))!;
+    expect(usersEp.tableName).toBe('u');
+  });
+
+  test('other endpoint keeps original name', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const ordersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('user_id'))!;
+    expect(ordersEp.tableName).toBe('orders');
+  });
+});
+
+
+describe('[edge] wildcard import + ref auto-pull', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users { id int [pk] }
+Table orders {
+  id int [pk]
+  user_id int
+}
+Ref: orders.user_id > users.id
+`,
+    '/consumer.dbml': `use * from './source.dbml'`,
+  });
+
+  test('ref auto-pulled via wildcard', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+  });
+
+  test('both tables present', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.map((t) => t.name).sort()).toEqual(['orders', 'users']);
+  });
+});
+
+
+describe('[edge] partial with inline ref - target table not in consumer scope', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table categories { id int [pk] }
+TablePartial categorized {
+  category_id int [ref: > categories.id]
+}
+Table products {
+  id int [pk]
+  ~categorized
+}
+`,
+    '/consumer.dbml': `
+use { table products } from './source.dbml'
+`,
+  });
+
+  test('partial is auto-pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tablePartials.find((p) => p.name === 'categorized')).toBeDefined();
+  });
+
+  test('categories table is NOT in consumer scope', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.find((t) => t.name === 'categories')).toBeUndefined();
+  });
+});
+
+
+describe('[edge] two files define same-named partial - first wins', () => {
+  const { compiler, fps } = makeCompiler({
+    '/a.dbml': `
+TablePartial meta { created_at timestamp }
+Table users {
+  id int [pk]
+  ~meta
+}
+`,
+    '/b.dbml': `
+TablePartial meta { updated_at timestamp }
+Table orders {
+  id int [pk]
+  ~meta
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './a.dbml'
+use { table orders } from './b.dbml'
+`,
+  });
+
+  test('only one partial named meta in db.tablePartials', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tablePartials.filter((p) => p.name === 'meta')).toHaveLength(1);
+  });
+});
+
+
+describe('[edge] reuse chain: partial from deeply nested file', () => {
+  // C defines partial, B defines table using it and reuses from C,
+  // A reuses from B, consumer imports from A
+  const { compiler, fps } = makeCompiler({
+    '/c.dbml': `
+TablePartial audit { created_by int }
+`,
+    '/b.dbml': `
+reuse { tablepartial audit } from './c.dbml'
+Table users {
+  id int [pk]
+  ~audit
+}
+`,
+    '/a.dbml': `
+reuse { table users } from './b.dbml'
+`,
+    '/consumer.dbml': `
+use { table users } from './a.dbml'
+`,
+  });
+
+  test('partial from C is auto-pulled through reuse chain', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tablePartials.find((p) => p.name === 'audit')).toBeDefined();
+  });
+
+  test('table has partial reference', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    expect(users.partials).toHaveLength(1);
+  });
+});
+
+
+describe('[edge] record auto-pull when table pulled via tablegroup', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+}
+TableGroup main { users }
+`,
+    '/consumer.dbml': `
+use { tablegroup main } from './source.dbml'
+`,
+  });
+
+  test('records pulled for tablegroup-expanded table', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const record = db.records.find((r) => r.tableName === 'users');
+    expect(record).toBeDefined();
+    expect(record!.values).toHaveLength(2);
+  });
+});
+
+
+describe('[edge] multiple refs between same tables - all pulled', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  email varchar [unique]
+}
+Table orders {
+  id int [pk]
+  user_id int
+  user_email varchar
+}
+Ref r1: orders.user_id > users.id
+Ref r2: orders.user_email > users.email
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+use { table orders } from './source.dbml'
+`,
+  });
+
+  test('both refs are pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(2);
+  });
+});
+
+
+describe('[edge] self-referential ref - single table', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table employees {
+  id int [pk]
+  manager_id int
+}
+Ref: employees.manager_id > employees.id
+`,
+    '/consumer.dbml': `
+use { table employees } from './source.dbml'
+`,
+  });
+
+  test('self-ref is pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+    expect(db.refs[0].endpoints[0].tableName).toBe('employees');
+    expect(db.refs[0].endpoints[1].tableName).toBe('employees');
+  });
+});
+
+
+// --- Stress tests: schemas, canonical names, transitive pulling, wildcards ---
+
+
+describe('[stress] schema-qualified table with ref auto-pull', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table auth.users {
+  id int [pk]
+  name varchar
+}
+Table auth.orders {
+  id int [pk]
+  user_id int
+}
+Ref: auth.orders.user_id > auth.users.id
+`,
+    '/consumer.dbml': `
+use { table auth.users } from './source.dbml'
+use { table auth.orders } from './source.dbml'
+`,
+  });
+
+  test('both schema-qualified tables present', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.find((t) => t.name === 'users' && t.schemaName === 'auth')).toBeDefined();
+    expect(db.tables.find((t) => t.name === 'orders' && t.schemaName === 'auth')).toBeDefined();
+  });
+
+  test('ref between schema-qualified tables is auto-pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+  });
+});
+
+
+describe('[stress] aliased schema-qualified table in ref', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table auth.users {
+  id int [pk]
+}
+Table auth.orders {
+  id int [pk]
+  user_id int
+}
+Ref: auth.orders.user_id > auth.users.id
+`,
+    '/consumer.dbml': `
+use { table auth.users as u } from './source.dbml'
+use { table auth.orders as o } from './source.dbml'
+`,
+  });
+
+  test('ref endpoints use alias names', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+    const usersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('id'))!;
+    const ordersEp = db.refs[0].endpoints.find((e) => e.fieldNames.includes('user_id'))!;
+    expect(usersEp.tableName).toBe('u');
+    expect(ordersEp.tableName).toBe('o');
+  });
+});
+
+
+describe('[stress] composite ref auto-pull', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  org_id int
+}
+Table memberships {
+  user_id int
+  org_id int
+}
+Ref: memberships.(user_id, org_id) > users.(id, org_id)
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+use { table memberships } from './source.dbml'
+`,
+  });
+
+  test('composite ref auto-pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+  });
+
+  test('composite ref has correct field names', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const membershipEp = db.refs[0].endpoints.find((e) => e.tableName === 'memberships')!;
+    expect(membershipEp.fieldNames.sort()).toEqual(['org_id', 'user_id']);
+  });
+});
+
+
+describe('[stress] wildcard import pulls refs, records, and partials', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+TablePartial timestamps {
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table users {
+  id int [pk]
+  name varchar
+  ~timestamps
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+
+Ref: orders.user_id > users.id
+
+records users(id, name) {
+  1, 'Alice'
+  2, 'Bob'
+}
+`,
+    '/consumer.dbml': `use * from './source.dbml'`,
+  });
+
+  test('both tables present', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.map((t) => t.name).sort()).toEqual(['orders', 'users']);
+  });
+
+  test('ref auto-pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+  });
+
+  test('records auto-pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.records.find((r) => r.tableName === 'users')).toBeDefined();
+  });
+
+  test('partial auto-pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tablePartials.find((p) => p.name === 'timestamps')).toBeDefined();
+  });
+});
+
+
+describe('[stress] transitive reuse: A reuses B reuses C, all metadata follows', () => {
+  const { compiler, fps } = makeCompiler({
+    '/c.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+
+Ref: orders.user_id > users.id
+
+records users(id, name) {
+  1, 'Alice'
+}
+`,
+    '/b.dbml': `
+reuse { table users } from './c.dbml'
+reuse { table orders } from './c.dbml'
+`,
+    '/a.dbml': `
+reuse { table users } from './b.dbml'
+reuse { table orders } from './b.dbml'
+`,
+    '/consumer.dbml': `
+use { table users } from './a.dbml'
+use { table orders } from './a.dbml'
+`,
+  });
+
+  test('tables reachable through 3-hop reuse', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.map((t) => t.name).sort()).toEqual(['orders', 'users']);
+  });
+
+  test('ref follows through reuse chain', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+  });
+
+  test('records follow through reuse chain', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.records.find((r) => r.tableName === 'users')).toBeDefined();
+  });
+});
+
+
+describe('[stress] wildcard from two files with overlapping schemas', () => {
+  const { compiler, fps } = makeCompiler({
+    '/a.dbml': `
+Table auth.users {
+  id int [pk]
+  name varchar
+}
+`,
+    '/b.dbml': `
+Table auth.roles {
+  id int [pk]
+  label varchar
+}
+`,
+    '/consumer.dbml': `
+use * from './a.dbml'
+use * from './b.dbml'
+`,
+  });
+
+  test('both tables under auth schema present', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users');
+    const roles = db.tables.find((t) => t.name === 'roles');
+    expect(users).toBeDefined();
+    expect(roles).toBeDefined();
+    expect(users!.schemaName).toBe('auth');
+    expect(roles!.schemaName).toBe('auth');
+  });
+});
+
+
+describe('[stress] table with special characters in name', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table "my-table" {
+  id int [pk]
+  value varchar
+}
+`,
+    '/consumer.dbml': `
+use { table "my-table" } from './source.dbml'
+`,
+  });
+
+  test('quoted table name preserved', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.find((t) => t.name === 'my-table')).toBeDefined();
+  });
+});
+
+
+describe('[stress] ref between imported and local table', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+
+Ref: orders.user_id > users.id
+`,
+  });
+
+  test('local ref with one imported endpoint works', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+    expect(db.refs[0].endpoints.find((e) => e.tableName === 'orders')).toBeDefined();
+    expect(db.refs[0].endpoints.find((e) => e.tableName === 'users')).toBeDefined();
+  });
+});
+
+
+describe('[stress] multiple records blocks for same table across files', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  name varchar
+}
+
+records users(id, name) {
+  1, 'Alice'
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+
+records users(id, name) {
+  2, 'Bob'
+}
+`,
+  });
+
+  test('both local and pulled records present', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const userRecords = db.records.filter((r) => r.tableName === 'users');
+    expect(userRecords).toHaveLength(2);
+  });
+});
+
+
+describe('[stress] enum imported alongside table that uses it', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Enum status {
+  active
+  inactive
+}
+
+Table users {
+  id int [pk]
+  status status
+}
+`,
+    '/consumer.dbml': `
+use { enum status } from './source.dbml'
+use { table users } from './source.dbml'
+`,
+  });
+
+  test('explicitly imported enum in schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.enums.find((e) => e.name === 'status')).toBeDefined();
+  });
+
+  test('column type resolves to imported enum', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    expect(users.fields.find((f) => f.name === 'status')!.type.type_name).toBe('status');
+  });
+});
+
+
+describe('[stress] inline ref on imported table with target in scope', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table categories {
+  id int [pk]
+}
+
+Table products {
+  id int [pk]
+  category_id int [ref: > categories.id]
+}
+`,
+    '/consumer.dbml': `
+use { table categories } from './source.dbml'
+use { table products } from './source.dbml'
+`,
+  });
+
+  test('inline ref preserved on imported table', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const products = db.tables.find((t) => t.name === 'products')!;
+    const catField = products.fields.find((f) => f.name === 'category_id')!;
+    expect(catField.inline_refs).toHaveLength(1);
+    expect(catField.inline_refs[0].tableName).toBe('categories');
   });
 });
 

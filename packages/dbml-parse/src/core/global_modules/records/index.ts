@@ -56,16 +56,28 @@ export const recordsModule: GlobalModule = {
       const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
       if (!tableSymbol) return Report.create(PASS_THROUGH);
 
-      const meta: RecordMetadata = {
+      return Report.create([{
         kind: MetadataKind.Record,
         target: tableSymbol,
         columns: [],
         values: [],
         declaration: node,
-      };
-      return Report.create([
-        meta,
-      ]);
+      } as RecordMetadata]);
+    }
+
+    // Case 2: Standalone records - `records tablename(cols) { ... }`
+    const nameNode = (node as ElementDeclarationNode).name;
+    if (nameNode instanceof CallExpressionNode && nameNode.callee) {
+      const tableSymbol = compiler.nodeReferee(nameNode.callee).getFiltered(UNHANDLED);
+      if (tableSymbol?.isKind(SymbolKind.Table)) {
+        return Report.create([{
+          kind: MetadataKind.Record,
+          target: tableSymbol,
+          columns: [],
+          values: [],
+          declaration: node,
+        } as RecordMetadata]);
+      }
     }
 
     return Report.create(PASS_THROUGH);

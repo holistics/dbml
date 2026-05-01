@@ -2,6 +2,9 @@ import Compiler from '@/compiler';
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import type {
+  Filepath,
+} from '@/core/types/filepath';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -24,6 +27,9 @@ import {
 import {
   extractStringFromIdentifierStream,
 } from '@/core/utils/expression';
+import {
+  type NodeSymbol,
+} from '@/core/types/symbol/symbols';
 import {
   aggregateSettingList,
 } from '@/core/utils/validate';
@@ -52,16 +58,50 @@ function buildRefEndpoint (
   };
 }
 
+export function extractRefSettings (field: FunctionApplicationNode): {
+  onDelete?: string;
+  onUpdate?: string;
+  color?: string;
+} {
+  if (!(field.args[0] instanceof ListExpressionNode)) return {};
+  const settingMap = aggregateSettingList(field.args[0]).getValue();
+
+  const deleteValue = settingMap.delete?.at(0)?.value;
+  const onDelete = deleteValue instanceof IdentifierStreamNode
+    ? extractStringFromIdentifierStream(deleteValue) ?? undefined
+    : extractVariableFromExpression(deleteValue) ?? undefined;
+
+  const updateValue = settingMap.update?.at(0)?.value;
+  const onUpdate = updateValue instanceof IdentifierStreamNode
+    ? extractStringFromIdentifierStream(updateValue) ?? undefined
+    : extractVariableFromExpression(updateValue) ?? undefined;
+
+  const color = settingMap.color?.length
+    ? parseColor(settingMap.color?.at(0)?.value as any)
+    : undefined;
+
+  return { onDelete, onUpdate, color };
+}
+
 export class RefInterpreter {
   private declarationNode: ElementDeclarationNode;
   private compiler: Compiler;
+  private filepath?: Filepath;
+  private tableSymbols?: { left: NodeSymbol; right: NodeSymbol };
   private ref: Partial<Ref>;
   private ownerTable?: string;
   private ownerSchema?: string | null;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
-    this.declarationNode = declarationNode;
+  constructor (
+    compiler: Compiler,
+    declarationNode: ElementDeclarationNode,
+    filepath?: Filepath,
+    tableSymbols?: { left: NodeSymbol; right: NodeSymbol },
+  ) {
     this.compiler = compiler;
+    this.declarationNode = declarationNode;
+    this.filepath = filepath;
+    this.tableSymbols = tableSymbols;
     this.ref = {};
     const parent = this.declarationNode.parent;
     if (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table)) {
@@ -112,21 +152,10 @@ export class RefInterpreter {
       leftExpression, rightExpression,
     } = field.callee as InfixExpressionNode;
 
-    if (field.args[0]) {
-      const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
-
-      const deleteSetting = settingMap.delete?.at(0)?.value;
-      this.ref.onDelete = deleteSetting instanceof IdentifierStreamNode
-        ? extractStringFromIdentifierStream(deleteSetting) ?? undefined
-        : extractVariableFromExpression(deleteSetting) ?? undefined;
-
-      const updateSetting = settingMap.update?.at(0)?.value;
-      this.ref.onUpdate = updateSetting instanceof IdentifierStreamNode
-        ? extractStringFromIdentifierStream(updateSetting) ?? undefined
-        : extractVariableFromExpression(updateSetting) ?? undefined;
-
-      this.ref.color = settingMap.color?.length ? parseColor(settingMap.color?.at(0)?.value as any) : undefined;
-    }
+    const settings = extractRefSettings(field);
+    this.ref.onDelete = settings.onDelete;
+    this.ref.onUpdate = settings.onUpdate;
+    this.ref.color = settings.color;
 
     const multiplicities = getMultiplicities(op);
     if (!multiplicities) return [];
@@ -137,6 +166,19 @@ export class RefInterpreter {
       buildRefEndpoint(leftNames, multiplicities[0], getTokenPosition(leftExpression!)),
       buildRefEndpoint(rightNames, multiplicities[1], getTokenPosition(rightExpression!)),
     ];
+
+    // When interpreting for a consumer file with known table symbols,
+    // rewrite endpoint table names via canonicalName.
+    if (this.filepath && this.tableSymbols) {
+      const symbols = [this.tableSymbols.left, this.tableSymbols.right];
+      for (let i = 0; i < this.ref.endpoints.length; i++) {
+        const canonical = this.compiler.canonicalName(this.filepath, symbols[i]).getValue();
+        if (canonical) {
+          this.ref.endpoints[i].tableName = canonical.name;
+          this.ref.endpoints[i].schemaName = canonical.schema === DEFAULT_SCHEMA_NAME ? null : canonical.schema;
+        }
+      }
+    }
 
     return [];
   }

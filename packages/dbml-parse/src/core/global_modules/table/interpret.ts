@@ -234,10 +234,11 @@ export class TableInterpreter {
   }
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const symbolTableEntries = this.compiler.symbolMembers(
-      this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED)!,
-    ).getFiltered(UNHANDLED) || [];
-    const columnEntries = symbolTableEntries.filter((symbol) => {
+    const tableSymbol = this.symbol ?? this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
+    const symbolMembers = tableSymbol
+      ? this.compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED) ?? []
+      : [];
+    const columnEntries = symbolMembers.filter((symbol) => {
       return symbol.isKind(SymbolKind.Column);
     });
 

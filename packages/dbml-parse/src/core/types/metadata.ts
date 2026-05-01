@@ -15,7 +15,8 @@ export enum MetadataKind {
 
 export interface RefMetadata {
   kind: MetadataKind.Ref;
-  target: NodeSymbol;
+  leftTable: NodeSymbol;
+  rightTable: NodeSymbol;
   relation: '>' | '<' | '-' | '<>';
   onDelete?: string;
   onUpdate?: string;
@@ -66,3 +67,10 @@ export type SymbolMetadata =
   | CheckMetadata
   | IndexMetadata
   | RecordMetadata;
+
+export function metadataTargets (metadata: SymbolMetadata): NodeSymbol[] {
+  if (metadata.kind === MetadataKind.Ref) {
+    return [metadata.leftTable, metadata.rightTable];
+  }
+  return [metadata.target];
+}

@@ -27,5 +27,5 @@ export interface GlobalModule extends Module {
   emitMetadata? (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough>;
   bindNode? (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough>;
   interpretSymbol? (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;
-  interpretMetadata? (compiler: Compiler, metadata: SymbolMetadata): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;
+  interpretMetadata? (compiler: Compiler, metadata: SymbolMetadata, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;
 }

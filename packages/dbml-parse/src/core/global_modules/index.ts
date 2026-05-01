@@ -131,7 +131,7 @@ export function interpretSymbol (this: Compiler, symbol: NodeSymbol, filepath?: 
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function interpretMetadata (this: Compiler, metadata: SymbolMetadata): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
-  const res = dispatch('interpretMetadata', this, metadata);
+export function interpretMetadata (this: Compiler, metadata: SymbolMetadata, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
+  const res = dispatch('interpretMetadata', this, metadata, filepath);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }

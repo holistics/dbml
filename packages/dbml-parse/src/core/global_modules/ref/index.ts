@@ -1,4 +1,7 @@
 import type Compiler from '@/compiler/index';
+import type {
+  Filepath,
+} from '@/core/types/filepath';
 import {
   ElementKind,
 } from '@/core/types/keywords';
@@ -12,7 +15,7 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  AttributeNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, InfixExpressionNode, ListExpressionNode,
+  AttributeNode, ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
@@ -28,20 +31,17 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  extractVariableFromExpression, getBody, isAccessExpression, isElementNode, isExpressionAVariableNode,
+  destructureMemberAccessExpression, getBody, isAccessExpression, isElementNode, isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
-  extractStringFromIdentifierStream, extractVarNameFromPrimaryVariable,
+  extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
 import type {
   GlobalModule,
 } from '../types';
 import {
-  parseColor,
-} from '@/core/utils/interpret';
+  extractRefSettings,
+} from './interpret';
 import {
   nodeRefereeOfLeftExpression,
 } from '../utils';
@@ -89,57 +89,47 @@ export const refModule: GlobalModule = {
     const op = infix.op.value;
     const relation = op as RefMetadata['relation'];
 
-    // Resolve endpoint table symbols
+    // Resolve the table symbol from a ref operand.
+    // e.g. `schema.table.column` -> [schema, table, column] -> TableSymbol
     const resolveTable = (operand: SyntaxNode | undefined): NodeSymbol | undefined => {
-      if (!operand) return undefined;
-      const programNode = compiler.parseFile(node.filepath).getValue().ast;
-      const globalSymbol = compiler.nodeSymbol(programNode).getValue();
-      if (globalSymbol === UNHANDLED) return undefined;
-      return nodeRefereeOfRefEndpoint(compiler, globalSymbol, operand).getValue();
+      const fragments = destructureMemberAccessExpression(operand);
+      if (!fragments) return undefined;
+
+      let resolved: NodeSymbol | undefined;
+      for (const fragment of fragments) {
+        if (resolved) {
+          if (!resolved.isKind(SymbolKind.Schema)) break;
+          const name = isExpressionAVariableNode(fragment)
+            ? extractVarNameFromPrimaryVariable(fragment)
+            : undefined;
+          if (!name) break;
+          const next = compiler.lookupMembers(resolved, [SymbolKind.Table, SymbolKind.Schema], name, true).getValue();
+          if (next?.isKind(SymbolKind.Table)) return next;
+          resolved = next;
+        } else {
+          resolved = compiler.nodeReferee(fragment).getFiltered(UNHANDLED);
+          if (resolved?.isKind(SymbolKind.Table)) return resolved;
+        }
+      }
+      return undefined;
     };
 
     const leftTable = resolveTable(infix.leftExpression);
     const rightTable = resolveTable(infix.rightExpression);
     if (!leftTable || !rightTable) return Report.create(PASS_THROUGH);
 
-    // Extract settings
-    let onDelete: string | undefined;
-    let onUpdate: string | undefined;
-    let color: string | undefined;
-    if (field.args[0]) {
-      const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
-      const del = settingMap.delete?.at(0)?.value;
-      onDelete = del instanceof IdentifierStreamNode
-        ? extractStringFromIdentifierStream(del) ?? undefined
-        : extractVariableFromExpression(del) ?? undefined;
-      const upd = settingMap.update?.at(0)?.value;
-      onUpdate = upd instanceof IdentifierStreamNode
-        ? extractStringFromIdentifierStream(upd) ?? undefined
-        : extractVariableFromExpression(upd) ?? undefined;
-      color = settingMap.color?.length ? parseColor(settingMap.color?.at(0)?.value as any) : undefined;
-    }
+    const { onDelete, onUpdate, color } = extractRefSettings(field);
 
-    const meta: RefMetadata = {
+    return Report.create([{
       kind: MetadataKind.Ref,
-      target: leftTable,
+      leftTable,
+      rightTable,
       relation,
       onDelete,
       onUpdate,
       color,
       declaration: node,
-    };
-
-    // Emit to both endpoint tables
-    const result: SymbolMetadata[] = [
-      meta,
-    ];
-    if (rightTable.intern() !== leftTable.intern()) {
-      result.push({
-        ...meta,
-        target: rightTable,
-      });
-    }
-    return Report.create(result);
+    } as RefMetadata]);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -151,11 +141,16 @@ export const refModule: GlobalModule = {
     );
   },
 
-  interpretMetadata (compiler: Compiler, metadata: SymbolMetadata): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretMetadata (compiler: Compiler, metadata: SymbolMetadata, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (metadata.kind !== MetadataKind.Ref) return Report.create(PASS_THROUGH);
     if (!(metadata.declaration instanceof ElementDeclarationNode)) return Report.create(undefined);
 
-    return new RefInterpreter(compiler, metadata.declaration).interpret();
+    return new RefInterpreter(
+      compiler,
+      metadata.declaration,
+      filepath,
+      { left: metadata.leftTable, right: metadata.rightTable },
+    ).interpret();
   },
 };
 

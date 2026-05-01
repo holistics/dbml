@@ -4,6 +4,9 @@ import {
 import {
   getMemberChain,
 } from '@/core/parser/utils';
+import {
+  metadataTargets,
+} from '@/core/types/metadata';
 import type {
   SymbolMetadata,
 } from '@/core/types/metadata';
@@ -62,10 +65,12 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
   };
 
   const pushMetadata = (m: SymbolMetadata) => {
-    const key = m.target.intern();
-    let arr = metadata.get(key);
-    if (!arr) { arr = []; metadata.set(key, arr); }
-    arr.push(m);
+    for (const sym of metadataTargets(m)) {
+      const key = sym.intern();
+      let arr = metadata.get(key);
+      if (!arr) { arr = []; metadata.set(key, arr); }
+      arr.push(m);
+    }
   };
 
   for (const astReport of astMap.values()) {

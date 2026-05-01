@@ -370,7 +370,7 @@ export class TableSymbol extends NodeSymbol {
   indexes (compiler: Compiler) { return this.metadataOf(compiler, MetadataKind.Index); }
   records (compiler: Compiler) { return this.metadataOf(compiler, MetadataKind.Record); }
 
-  private partialSymbols (compiler: Compiler): NodeSymbol[] {
+  partialSymbols (compiler: Compiler): NodeSymbol[] {
     return this.partialInjections(compiler).flatMap((injection) => {
       if (!(injection.declaration instanceof FunctionApplicationNode)) return [];
       if (!isValidPartialInjection(injection.declaration.callee)) return [];
