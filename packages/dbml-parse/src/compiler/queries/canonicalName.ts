@@ -39,20 +39,20 @@ export function canonicalName (this: Compiler, filepath: Filepath, symbol: NodeS
   const allMembers: NodeSymbol[] = [
     ...members,
   ];
-  for (const m of members) {
-    if (m instanceof SchemaSymbol && m.isKind(SymbolKind.Schema)) {
-      const sub = this.symbolMembers(m).getFiltered(UNHANDLED);
+  for (const member of members) {
+    if (member instanceof SchemaSymbol && member.isKind(SymbolKind.Schema)) {
+      const sub = this.symbolMembers(member).getFiltered(UNHANDLED);
       if (sub) allMembers.push(...sub);
     }
   }
 
   // Find first UseSymbol/AliasSymbol pointing at same original in this file
-  for (const m of allMembers) {
-    if (m.filepath.intern() !== filepath.intern()) continue;
-    if (m.originalSymbol !== original) continue;
+  for (const member of allMembers) {
+    if (member.filepath.intern() !== filepath.intern()) continue;
+    if (member.originalSymbol !== original) continue;
 
-    if (m instanceof UseSymbol || m instanceof AliasSymbol) {
-      const name = m.name;
+    if (member instanceof UseSymbol || member instanceof AliasSymbol) {
+      const name = member.name;
       if (!name) continue;
       const isRenamed = name !== original.name;
       if (isRenamed) {

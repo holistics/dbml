@@ -172,8 +172,10 @@ function generateDiagramViewBlock (
   }
 
   // All Trinity dims are non-null arrays
-  const tablesArr = tables as Array<{ name: string;
-    schemaName: string; }>;
+  const tablesArr = tables as Array<{
+    name: string;
+    schemaName: string;
+  }>;
   const tableGroupsArr = tableGroups as Array<{ name: string }>;
   const schemasArr = schemas as Array<{ name: string }>;
 

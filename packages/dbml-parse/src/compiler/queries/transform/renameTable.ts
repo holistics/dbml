@@ -91,8 +91,10 @@ function checkIfPartOfQualifiedReference (
   node: SyntaxNode,
   oldSchema: string,
   source: string,
-): { start: number;
-  end: number; } | null {
+): {
+  start: number;
+  end: number;
+} | null {
   let i = node.start - 1;
   while (i >= 0 && /\s/.test(source[i])) i--;
   if (i < 0 || source[i] !== '.') return null;
@@ -294,8 +296,10 @@ function renameRealDeclaration (
   const usedQuotes = checkIfDeclarationUsesQuotes(declNode, declSource);
   const newFormatted = formatTableName(newSchema, newTable, usedQuotes);
 
-  const editsByFile = new Map<string, { fp: Filepath;
-    edits: TextEdit[]; }>();
+  const editsByFile = new Map<string, {
+    fp: Filepath;
+    edits: TextEdit[];
+  }>();
   const addEdit = (fp: Filepath, edit: TextEdit): void => {
     const key = fp.absolute;
     let bucket = editsByFile.get(key);

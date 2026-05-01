@@ -202,8 +202,10 @@ export function escapeString (str: string): string {
  * formatRecordValue(42) => '42'
  * formatRecordValue(true) => 'true'
  */
-export function formatRecordValue (recordValue: { value: any;
-  type: string; } | string | number | boolean | null | undefined): string {
+export function formatRecordValue (recordValue: {
+  value: any;
+  type: string;
+} | string | number | boolean | null | undefined): string {
   // Handle undefined and null primitives
   if (recordValue === undefined || recordValue === null) {
     return 'null';
@@ -345,10 +347,10 @@ export function allVisibleMembers (compiler: Compiler): Report<NodeSymbol[]> {
     const top = compiler.symbolMembers(programSymbol);
     errors.push(...top.getErrors());
     warnings.push(...top.getWarnings());
-    for (const m of top.getFiltered(UNHANDLED) ?? []) {
-      members.push(m);
-      if (m instanceof SchemaSymbol && m.isKind(SymbolKind.Schema)) {
-        const sub = compiler.symbolMembers(m);
+    for (const member of top.getFiltered(UNHANDLED) ?? []) {
+      members.push(member);
+      if (member instanceof SchemaSymbol && member.isKind(SymbolKind.Schema)) {
+        const sub = compiler.symbolMembers(member);
         errors.push(...sub.getErrors());
         warnings.push(...sub.getWarnings());
         members.push(...(sub.getFiltered(UNHANDLED) ?? []));

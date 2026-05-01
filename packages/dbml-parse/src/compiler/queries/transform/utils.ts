@@ -22,8 +22,10 @@ export type TableNameInput = string | { schema?: string;
  * Normalizes a table name input to { schema, table } format.
  * Properly handles quoted identifiers with dots inside.
  */
-export function normalizeTableName (input: TableNameInput): { schema: string;
-  table: string; } {
+export function normalizeTableName (input: TableNameInput): {
+  schema: string;
+  table: string;
+} {
   if (typeof input !== 'string') {
     return {
       schema: input.schema ?? DEFAULT_SCHEMA_NAME,

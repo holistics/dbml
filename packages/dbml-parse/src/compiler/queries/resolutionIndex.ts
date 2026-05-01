@@ -91,8 +91,8 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
         }
       }
       // Collect metadata from all modules
-      for (const m of emitMetadata(this, node)) {
-        pushMetadata(m);
+      for (const metadata of emitMetadata(this, node)) {
+        pushMetadata(metadata);
       }
       for (const child of getMemberChain(node)) {
         if (child instanceof SyntaxNode) walk(child);

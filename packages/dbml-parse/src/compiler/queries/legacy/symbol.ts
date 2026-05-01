@@ -14,9 +14,11 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
     return [];
   }
 
-  const res: { symbol: NodeSymbol;
+  const res: {
+    symbol: NodeSymbol;
     kind: SymbolKind;
-    name: string; }[] = [];
+    name: string;
+  }[] = [];
 
   for (
     let currentOwner: ElementDeclarationNode | ProgramNode | undefined = owner;
@@ -37,9 +39,11 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
     }
 
     let currentPossibleSymbols: NodeSymbol[] = membersResult.getValue();
-    let matchedSymbols: { symbol: NodeSymbol;
+    let matchedSymbols: {
+      symbol: NodeSymbol;
       kind: SymbolKind;
-      name: string; }[] = [];
+      name: string;
+    }[] = [];
 
     for (const name of nameStack) {
       matchedSymbols = currentPossibleSymbols
