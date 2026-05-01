@@ -865,3 +865,268 @@ records u(id, name) {
   });
 });
 
+
+describe('[example] multifile interpreter — directly imported table loses partial-injected columns', () => {
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+TablePartial timestamps {
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table users {
+  id int [pk]
+  name varchar
+  =timestamps
+}
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('imported table retains injected partial columns', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    const fieldNames = users.fields.map((f) => f.name);
+    expect(fieldNames).toContain('id');
+    expect(fieldNames).toContain('name');
+    expect(fieldNames).toContain('created_at');
+    expect(fieldNames).toContain('updated_at');
+  });
+});
+
+
+describe('[example] multifile interpreter — imported table with inline ref to unimported table', () => {
+  // source.dbml defines users and orders with an inline ref: orders.user_id > users.id
+  // consumer imports ONLY orders (not users).
+  // The inline ref on orders.user_id references users which is not in scope.
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+  email varchar
+}
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > users.id]
+}
+`,
+    '/consumer.dbml': `
+use { table orders } from './source.dbml'
+`,
+  });
+
+  test('imported table appears in schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.find((t) => t.name === 'orders')).toBeDefined();
+  });
+
+  test('inline ref target (users) is NOT in scope — ref should be dropped or users not present', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    // users was never imported
+    expect(db.tables.find((t) => t.name === 'users')).toBeUndefined();
+  });
+});
+
+
+describe('[example] multifile interpreter — external standalone Ref auto-pulled when both tables imported', () => {
+  // source.dbml defines tables + a standalone Ref between them.
+  // consumer imports both tables.
+  // The Ref should be auto-pulled because both endpoints are in scope.
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+
+Ref: orders.user_id > users.id
+`,
+    '/consumer.dbml': `
+use { table users } from './source.dbml'
+use { table orders } from './source.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('standalone Ref from source is auto-pulled into consumer schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(1);
+    expect(db.refs[0].endpoints.find((e) => e.tableName === 'orders')).toBeDefined();
+    expect(db.refs[0].endpoints.find((e) => e.tableName === 'users')).toBeDefined();
+  });
+});
+
+
+describe('[example] multifile interpreter — external standalone Ref NOT pulled when one table missing', () => {
+  // Only orders is imported, not users. The Ref should NOT be pulled.
+  const { compiler, fps } = makeCompiler({
+    '/source.dbml': `
+Table users {
+  id int [pk]
+}
+
+Table orders {
+  id int [pk]
+  user_id int
+}
+
+Ref: orders.user_id > users.id
+`,
+    '/consumer.dbml': `
+use { table orders } from './source.dbml'
+`,
+  });
+
+  test('ref is not pulled because users is not in scope', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.refs).toHaveLength(0);
+  });
+});
+
+
+describe('[example] multifile interpreter — tablegroup pulls tables that use tablepartials', () => {
+  // base.dbml defines a partial, tables using it, and a tablegroup.
+  // consumer imports the tablegroup. The pulled tables should have
+  // their injected partial columns.
+  const { compiler, fps } = makeCompiler({
+    '/base.dbml': `
+TablePartial timestamps {
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table users {
+  id int [pk]
+  name varchar
+  =timestamps
+}
+
+Table posts {
+  id int [pk]
+  title varchar
+  =timestamps
+}
+
+TableGroup content {
+  users
+  posts
+}
+`,
+    '/consumer.dbml': `
+use { tablegroup content } from './base.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('pulled tables retain injected partial columns', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    const fieldNames = users.fields.map((f) => f.name);
+    expect(fieldNames).toContain('id');
+    expect(fieldNames).toContain('name');
+    expect(fieldNames).toContain('created_at');
+    expect(fieldNames).toContain('updated_at');
+  });
+});
+
+
+describe('[example] multifile interpreter — tablegroup pulls tables that reference enums', () => {
+  // base.dbml defines an enum, tables using it, and a tablegroup.
+  // consumer imports the tablegroup. The enum should also appear in schema
+  // since the pulled table references it.
+  const { compiler, fps } = makeCompiler({
+    '/base.dbml': `
+Enum status {
+  active
+  inactive
+}
+
+Table users {
+  id int [pk]
+  status status
+}
+
+TableGroup user_group {
+  users
+}
+`,
+    '/consumer.dbml': `
+use { tablegroup user_group } from './base.dbml'
+`,
+  });
+
+  test('no binding errors', () => {
+    const ast = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
+    expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
+  });
+
+  test('pulled table has correct enum type on column', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    const users = db.tables.find((t) => t.name === 'users')!;
+    const statusField = users.fields.find((f) => f.name === 'status')!;
+    expect(statusField.type.type_name).toBe('status');
+  });
+
+  test('enum referenced by pulled table appears in schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.enums.find((e) => e.name === 'status')).toBeDefined();
+  });
+});
+
+
+describe('[example] multifile interpreter — tablegroup pulls tables with inline refs to non-imported tables', () => {
+  // base.dbml: Table a has inline ref to Table b. TableGroup g contains only a.
+  // consumer imports tablegroup g. Table a is pulled, but b is not imported.
+  const { compiler, fps } = makeCompiler({
+    '/base.dbml': `
+Table categories {
+  id int [pk]
+  name varchar
+}
+
+Table products {
+  id int [pk]
+  name varchar
+  category_id int [ref: > categories.id]
+}
+
+TableGroup shop {
+  products
+}
+`,
+    '/consumer.dbml': `
+use { tablegroup shop } from './base.dbml'
+`,
+  });
+
+  test('pulled table appears in schema', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.find((t) => t.name === 'products')).toBeDefined();
+  });
+
+  test('categories (not in tablegroup) is not pulled', () => {
+    const db = exportDb(compiler, fps['/consumer.dbml']);
+    expect(db.tables.find((t) => t.name === 'categories')).toBeUndefined();
+  });
+});
+
