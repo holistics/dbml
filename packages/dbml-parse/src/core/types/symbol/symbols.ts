@@ -705,33 +705,6 @@ export class PartialInjectionSymbol extends NodeSymbol {
   }
 }
 
-export class IndexesSymbol extends NodeSymbol {
-  constructor (
-    {
-      declaration,
-      name,
-    }: {
-      declaration?: SyntaxNode;
-      name?: string;
-    },
-    id: NodeSymbolId,
-    filepath: Filepath,
-  ) {
-    super({
-      kind: SymbolKind.Indexes,
-      declaration,
-      name,
-    }, id, filepath);
-  }
-
-  override get canBeImported (): boolean {
-    return false;
-  }
-
-  override get originalSymbol (): NodeSymbol {
-    return this;
-  }
-}
 
 export class DiagramViewSymbol extends NodeSymbol {
   constructor (
