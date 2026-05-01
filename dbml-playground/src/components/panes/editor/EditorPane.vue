@@ -40,11 +40,8 @@
       </VDropdown>
     </div>
     <div class="flex-1 overflow-hidden">
-      <MonacoEditor
+      <DbmlEditor
         v-model="content"
-        language="dbml"
-        :minimap="false"
-        word-wrap="on"
         :vim-mode="vimModeEnabled"
         :filepath="project.currentFile"
         @editor-mounted="emit('editor-mounted', $event)"
@@ -61,7 +58,7 @@ import {
 import {
   PhGear,
 } from '@phosphor-icons/vue';
-import MonacoEditor from '@/components/editor/MonacoEditor.vue';
+import DbmlEditor from '@/components/editor/DbmlEditor.vue';
 import {
   useUser,
 } from '@/stores/userStore';
