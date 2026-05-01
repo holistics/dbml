@@ -67,7 +67,7 @@
     </div>
 
     <div v-if="isExpanded && isExpandable">
-      <RawAstTreeNode
+      <AstTreeNode
         v-for="child in node.children"
         :key="child.id"
         :node="child"
@@ -123,17 +123,17 @@ import {
   tokenIconFor,
 } from '@/components/panes/output/tokenIcons';
 
-export interface RawAstNode {
+export interface AstNode {
   id: string;
   propertyName: string;
   rawData: unknown;
   value?: unknown;
   nameHint?: string;
-  children: RawAstNode[];
+  children: AstNode[];
   accessPath: string;
 }
 
-type RawObj = Record<string, unknown>;
+type AstObj = Record<string, unknown>;
 
 const {
   node,
@@ -142,14 +142,14 @@ const {
   level,
   cursorNodeId,
 } = defineProps<{
-  node: RawAstNode;
-  selectedNode: RawAstNode | null;
+  node: AstNode;
+  selectedNode: AstNode | null;
   expandedNodes: Set<string>;
   level: number;
   cursorNodeId?: string;
 }>();
 const emit = defineEmits<{
-  'node-click': [node: RawAstNode];
+  'node-click': [node: AstNode];
   'node-expand': [{
     id: string;
     expanded: boolean;
@@ -172,8 +172,8 @@ watch(isActive, (active) => {
   }
 });
 
-function asObj (d: unknown): RawObj | null {
-  return d !== null && typeof d === 'object' && !Array.isArray(d) ? d as RawObj : null;
+function asObj (d: unknown): AstObj | null {
+  return d !== null && typeof d === 'object' && !Array.isArray(d) ? d as AstObj : null;
 }
 
 const nodeKind = computed(() => {

@@ -94,8 +94,7 @@ code, pre {
   background-color: rgba(0, 122, 204, 0.15) !important;
 }
 
-/* editor decoration color tokens - keep in sync with icon colors used by the
-   output panel (SymbolRow, RawAstTreeNode, tokenIcons). */
+/* editor decoration color tokens */
 :root {
   --hl-indigo-rgb:       99, 102, 241;   /* indigo-500 */
   --sym-table-rgb:       59, 130, 246;   /* blue-500 */

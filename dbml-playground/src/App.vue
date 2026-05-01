@@ -104,6 +104,9 @@ import {
   useParserStore,
 } from '@/stores/parserStore';
 import {
+  setupDbmlServices,
+} from '@/components/editor/dbml-services';
+import {
   useProjectStore,
 } from '@/stores/projectStore';
 import {
@@ -160,7 +163,7 @@ const outputPaneRef = ref<InstanceType<typeof OutputPane> | null>(null);
 
 const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   dbmlEditorRef.value = editor;
-  parser.setupMonacoServices(editor);
+  setupDbmlServices(parser.compiler);
 
   // Monaco's StandaloneCodeEditorService.findModel returns null when the target URI
   // doesn't match the current model -> cross-file navigation silently fails.

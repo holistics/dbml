@@ -42,6 +42,9 @@ import {
 import {
   useParserStore,
 } from '@/stores/parserStore';
+import {
+  updateDiagnosticMarkers,
+} from '@/components/editor/dbml-services';
 
 const {
   readOnly = false,
@@ -174,9 +177,9 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  const ed = editor.value;
+  const _editor = editor.value;
   editor.value = null;
-  ed?.dispose();
+  _editor?.dispose();
 });
 
 watch(model, (newModel) => {
@@ -302,11 +305,11 @@ watch(() => filepath, () => {
 });
 
 watch([() => parser.errors, () => parser.warnings], () => {
-  const ed = editor.value;
-  if (!ed) return;
-  const edModel = ed.getModel();
-  if (!edModel) return;
-  parser.updateDiagnostics(edModel);
+  const _editor = editor.value;
+  if (!_editor) return;
+  const model = _editor.getModel();
+  if (!model) return;
+  updateDiagnosticMarkers(model);
 });
 
 // After each completed parse the compiler is fully synced - retrigger the

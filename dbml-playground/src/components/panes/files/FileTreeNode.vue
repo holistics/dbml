@@ -6,7 +6,7 @@
       :style="{ paddingLeft: `${4 + node.depth * 10}px` }"
       :class="isActive ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-50'"
       @click="handleClick"
-      @dblclick="emit('start-rename', node.path)"
+      @dblclick="startEditing"
     >
       <!-- Folder chevron / file spacer -->
       <PhCaretRight
@@ -35,14 +35,13 @@
 
       <!-- Rename input / name -->
       <input
-        v-if="renamingPath === node.path"
-        :ref="el => { if (el) emit('rename-input-mounted', el as HTMLInputElement) }"
-        :value="renameValue"
+        v-if="isEditing"
+        ref="editInputEl"
+        v-model="editValue"
         class="flex-1 min-w-0 bg-white border border-blue-400 rounded px-1 text-xs outline-none font-mono"
-        @input="emit('update-rename', ($event.target as HTMLInputElement).value)"
-        @keydown.enter="emit('commit-rename')"
-        @keydown.escape="emit('cancel-rename')"
-        @blur="emit('commit-rename')"
+        @keydown.enter="commitEdit"
+        @keydown.escape="cancelEdit"
+        @blur="commitEdit"
         @click.stop
       >
       <span
@@ -52,21 +51,21 @@
 
       <!-- Actions (visible on hover) -->
       <div
-        v-if="renamingPath !== node.path"
+        v-if="!isEditing"
         :class="['flex items-center flex-shrink-0 transition-opacity', confirmingDelete ? 'opacity-100' : 'opacity-0 group-hover:opacity-100']"
       >
         <button
           v-if="node.type === 'folder'"
           class="p-0.5 rounded text-gray-400 hover:text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
           title="New file in folder"
-          @click.stop="onAddFileInFolder"
+          @click.stop="startPending('file')"
         >
           <PhFilePlus class="w-3 h-3" />
         </button>
 
         <!-- Delete with teleported confirm -->
         <div
-          v-if="node.type === 'folder' || (node.type === 'file' && canDelete)"
+          v-if="canDelete"
           class="relative"
         >
           <button
@@ -119,36 +118,18 @@
         v-for="child in node.children"
         :key="child.path"
         :node="child"
-        :renaming-path="renamingPath"
-        :rename-value="renameValue"
-        :can-delete="canDelete"
-        :pending-node="pendingNode"
-        :pending-value="pendingValue"
-        @select="emit('select', $event)"
-        @start-rename="emit('start-rename', $event)"
-        @update-rename="emit('update-rename', $event)"
-        @commit-rename="emit('commit-rename')"
-        @cancel-rename="emit('cancel-rename')"
-        @delete-file="emit('delete-file', $event)"
-        @delete-folder="emit('delete-folder', $event)"
-        @rename-input-mounted="el => emit('rename-input-mounted', el)"
-        @add-file-in-folder="emit('add-file-in-folder', $event)"
-        @update-pending="emit('update-pending', $event)"
-        @commit-pending="emit('commit-pending')"
-        @cancel-pending="emit('cancel-pending')"
-        @pending-input-mounted="el => emit('pending-input-mounted', el)"
       />
 
       <!-- Inline input for new file/folder inside this folder -->
       <div
-        v-if="pendingNode && pendingNode.parentPath === node.path"
+        v-if="pendingChild"
         class="flex items-center gap-1.5 py-1.5 pr-1"
         :style="{ paddingLeft: `${4 + (node.depth + 1) * 10}px` }"
         @click.stop
       >
         <span class="w-2.5 h-2.5 flex-shrink-0" />
         <PhFileText
-          v-if="pendingNode.type === 'file'"
+          v-if="pendingChild.type === 'file'"
           class="w-3.5 h-3.5 flex-shrink-0 opacity-60"
         />
         <PhFolder
@@ -156,14 +137,13 @@
           class="w-3.5 h-3.5 flex-shrink-0 opacity-70"
         />
         <input
-          :ref="el => { if (el) emit('pending-input-mounted', el as HTMLInputElement) }"
-          :value="pendingValue"
+          ref="pendingInputEl"
+          v-model="pendingChild.value"
           placeholder="name"
           class="flex-1 min-w-0 bg-white border border-blue-400 rounded px-1 text-xs outline-none font-mono"
-          @input="emit('update-pending', ($event.target as HTMLInputElement).value)"
-          @keydown.enter="emit('commit-pending')"
-          @keydown.escape="emit('cancel-pending')"
-          @blur="emit('commit-pending')"
+          @keydown.enter="commitPending"
+          @keydown.escape="cancelPending"
+          @blur="commitPending"
           @click.stop
         >
       </div>
@@ -173,7 +153,7 @@
 
 <script setup lang="ts">
 import {
-  ref, computed, onMounted, onUnmounted,
+  ref, computed, watch, nextTick, inject, onMounted, onUnmounted, type Ref,
 } from 'vue';
 import {
   PhCaretRight,
@@ -186,49 +166,87 @@ import {
 import {
   useProjectStore,
 } from '@/stores/projectStore';
+import {
+  Filepath,
+} from '@dbml/parse';
 import type {
   TreeNode,
 } from './FilesPane.vue';
 
-interface PendingNode {
-  type: 'file' | 'folder';
-  parentPath: string;
-}
-
 const {
   node,
-  renamingPath,
-  renameValue,
-  canDelete,
-  pendingNode,
-  pendingValue,
 } = defineProps<{
   node: TreeNode;
-  renamingPath: string | null;
-  renameValue: string;
-  canDelete: boolean;
-  pendingNode?: PendingNode | null;
-  pendingValue?: string;
-}>();
-
-const emit = defineEmits<{
-  'select': [path: string];
-  'start-rename': [path: string];
-  'update-rename': [value: string];
-  'commit-rename': [];
-  'cancel-rename': [];
-  'delete-file': [path: string];
-  'delete-folder': [path: string];
-  'rename-input-mounted': [el: HTMLInputElement];
-  'add-file-in-folder': [folderPath: string];
-  'update-pending': [value: string];
-  'commit-pending': [];
-  'cancel-pending': [];
-  'pending-input-mounted': [el: HTMLInputElement];
 }>();
 
 const project = useProjectStore();
+const editingPath = inject<Ref<string | null>>('editingPath')!;
+
+// Expansion
+
 const open = ref(true);
+
+// Selection
+
+const isActive = computed(() =>
+  node.type === 'file' && project.currentFile === node.path,
+);
+
+function handleClick () {
+  confirmingDelete.value = false;
+  if (node.type === 'folder') {
+    open.value = !open.value;
+  } else {
+    project.setCurrentFile(node.path);
+  }
+}
+
+// Rename
+
+const isEditing = computed(() => editingPath.value === node.path);
+const editValue = ref('');
+const editInputEl = ref<HTMLInputElement | null>(null);
+
+watch(isEditing, (editing) => {
+  if (editing) {
+    editValue.value = node.name;
+    nextTick(() => editInputEl.value?.select());
+  }
+});
+
+function startEditing () {
+  editingPath.value = node.path;
+}
+
+function commitEdit () {
+  if (!isEditing.value) return;
+  const rawName = editValue.value.trim();
+  editingPath.value = null;
+  if (!rawName || rawName === node.name) return;
+
+  const newName = node.type === 'file' && !Filepath.from('/' + rawName).extname
+    ? rawName + '.dbml'
+    : rawName;
+  const oldFp = Filepath.from(node.path);
+  const newFp = Filepath.from(oldFp.dirname).join(newName);
+
+  if (node.type === 'file') {
+    project.renameFile(oldFp.absolute, newFp.absolute);
+  } else {
+    project.renameFolder(oldFp.absolute, newFp.absolute);
+  }
+}
+
+function cancelEdit () {
+  editingPath.value = null;
+}
+
+// Delete
+
+const canDelete = computed(() =>
+  node.type === 'folder' || Object.keys(project.files).length > 1,
+);
+
 const confirmingDelete = ref(false);
 const deleteButtonRef = ref<HTMLButtonElement | null>(null);
 const popoverStyle = ref<{
@@ -238,10 +256,6 @@ const popoverStyle = ref<{
   top: '0px',
   left: '0px',
 });
-
-const isActive = computed(() =>
-  node.type === 'file' && project.currentFile === node.path,
-);
 
 function toggleConfirm () {
   if (!confirmingDelete.value && deleteButtonRef.value) {
@@ -254,26 +268,12 @@ function toggleConfirm () {
   confirmingDelete.value = !confirmingDelete.value;
 }
 
-function onAddFileInFolder () {
-  open.value = true;
-  emit('add-file-in-folder', node.path);
-}
-
-function handleClick () {
-  confirmingDelete.value = false;
-  if (node.type === 'folder') {
-    open.value = !open.value;
-  } else {
-    emit('select', node.path);
-  }
-}
-
 function confirmDelete () {
   confirmingDelete.value = false;
   if (node.type === 'file') {
-    emit('delete-file', node.path);
+    project.deleteFile(node.path);
   } else {
-    emit('delete-folder', node.path);
+    project.deleteFolder(node.path);
   }
 }
 
@@ -285,4 +285,41 @@ function onClickOutside (e: MouseEvent) {
 
 onMounted(() => document.addEventListener('click', onClickOutside));
 onUnmounted(() => document.removeEventListener('click', onClickOutside));
+
+// Pending create (new file/folder inside this folder)
+
+const pendingChild = ref<{
+  type: 'file' | 'folder';
+  value: string;
+} | null>(null);
+const pendingInputEl = ref<HTMLInputElement | null>(null);
+
+function startPending (type: 'file' | 'folder') {
+  open.value = true;
+  pendingChild.value = {
+    type,
+    value: '',
+  };
+  nextTick(() => pendingInputEl.value?.focus());
+}
+
+function commitPending () {
+  if (!pendingChild.value) return;
+  const rawName = pendingChild.value.value.trim();
+  if (rawName) {
+    const parentFp = Filepath.from(node.path);
+    const childFp = parentFp.join(rawName);
+    if (pendingChild.value.type === 'folder') {
+      project.addFolder(childFp.absolute);
+    } else {
+      const fileFp = childFp.extname ? childFp : Filepath.from(childFp.absolute + '.dbml');
+      project.addFile(fileFp.absolute, '');
+    }
+  }
+  pendingChild.value = null;
+}
+
+function cancelPending () {
+  pendingChild.value = null;
+}
 </script>
