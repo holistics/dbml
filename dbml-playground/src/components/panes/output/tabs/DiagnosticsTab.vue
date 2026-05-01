@@ -77,13 +77,15 @@ import type {
   ParserError,
 } from '@/types';
 
-interface Props {
+const {
+  errors,
+  warnings,
+  currentFile,
+} = defineProps<{
   errors: readonly ParserError[];
   warnings: readonly ParserError[];
   currentFile: string;
-}
-
-const props = defineProps<Props>();
+}>();
 const emit = defineEmits<{
   'position-click': [diag: ParserError];
 }>();
@@ -104,8 +106,8 @@ const groups = computed(() => {
     });
     return map.get(file)!;
   };
-  for (const e of props.errors) getOrCreate(props.currentFile).errors.push(e as ParserError);
-  for (const w of props.warnings) getOrCreate(props.currentFile).warnings.push(w as ParserError);
+  for (const e of errors) getOrCreate(currentFile).errors.push(e as ParserError);
+  for (const w of warnings) getOrCreate(currentFile).warnings.push(w as ParserError);
   return [...map.values()];
 });
 

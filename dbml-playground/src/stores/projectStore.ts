@@ -106,7 +106,7 @@ function initProject (): { files: Record<string, string>;
   };
 }
 
-export const useProject = defineStore('project', () => {
+export const useProjectStore = defineStore('project', () => {
   const {
     files: initialFiles, folders: initialFolders, currentFile: initialCurrentFile,
   } = initProject();
@@ -222,7 +222,7 @@ export const useProject = defineStore('project', () => {
     persistProject();
   }
 
-  function saveNow () {
+  function save () {
     saveProject(files.value, folders.value);
   }
 
@@ -266,7 +266,7 @@ export const useProject = defineStore('project', () => {
     addFolder,
     deleteFolder,
     renameFolder,
-    saveNow,
+    save,
     reset,
     getShareUrl,
   };

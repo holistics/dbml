@@ -1,16 +1,3 @@
-/**
- * DBML Language Support for Monaco Editor
- *
- * A deep module that encapsulates all DBML language definition complexity
- * for Monaco Editor. This module handles syntax highlighting, tokenization,
- * and language configuration while hiding implementation details.
- *
- * Design Principles Applied:
- * - Deep Module: Complex language definition with simple interface
- * - Information Hiding: Monaco-specific details are completely hidden
- * - Single Responsibility: Only handles DBML language support
- * - Pull Complexity Downwards: All Monaco complexity handled internally
- */
 import consoleLogger from '@/utils/logger';
 import {
   dbmlLanguageConfig,
@@ -18,15 +5,10 @@ import {
 } from '@dbml/parse';
 import * as monaco from 'monaco-editor';
 
-// Language config + Monarch token provider live in @dbml/parse so the playground
-// and downstream editors stay in lock-step with the language definition.
 const DBML_LANGUAGE_CONFIG = dbmlLanguageConfig as monaco.languages.LanguageConfiguration;
 
 const DBML_TOKEN_PROVIDER = dbmlMonarchTokensProvider as monaco.languages.IMonarchLanguage;
 
-/**
- * DBML Theme Definition - Extends the default 'vs' theme
- */
 const DBML_THEME: monaco.editor.IStandaloneThemeData = {
   base: 'vs',
   inherit: true,
@@ -103,21 +85,14 @@ const DBML_THEME: monaco.editor.IStandaloneThemeData = {
 };
 
 /**
- * DBML Language Service
- *
- * Provides a simple interface for registering DBML language support
- * in Monaco Editor. All complexity is hidden within this module.
+ * Allow registration of DBML language services to monaco editor
  */
 export class DBMLLanguageService {
   private static readonly LANGUAGE_ID = 'dbml';
   private static readonly THEME_NAME = 'dbml-theme';
   private static isRegistered = false;
 
-  /**
-   * Register DBML language support in Monaco Editor
-   *
-   * This method is idempotent - multiple calls are safe.
-   */
+  // Safe to call multiple times
   public static registerLanguage (): void {
     if (this.isRegistered) {
       return;

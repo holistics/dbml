@@ -17,6 +17,7 @@ export enum OutputTabId {
 export interface UserPreferences {
   isVim: boolean;
   activeOutputTab: OutputTabId;
+  panelSizes: number[];
 }
 
 const STORAGE_KEY = 'USER_DATA';
@@ -24,6 +25,7 @@ const STORAGE_KEY = 'USER_DATA';
 const defaults: UserPreferences = {
   isVim: false,
   activeOutputTab: OutputTabId.Nodes,
+  panelSizes: [15, 42, 43],
 };
 
 function load (): UserPreferences {
@@ -41,7 +43,7 @@ function load (): UserPreferences {
   };
 }
 
-export const useUser = defineStore('user', () => {
+export const useUserStore = defineStore('user', () => {
   const prefs = ref<UserPreferences>(load());
 
   watch(prefs, (data) => {

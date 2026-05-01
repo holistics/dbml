@@ -35,12 +35,13 @@ import type {
   SymbolInfo,
 } from '@/stores/parserStore';
 
-interface Props {
+const {
+  symbols,
+  showDecoration = false,
+} = defineProps<{
   symbols: SymbolInfo[];
   showDecoration?: boolean;
-}
-
-defineProps<Props>();
+}>();
 const emit = defineEmits<{
   'toggle-decoration': [];
   'symbol-click': [sym: SymbolInfo];

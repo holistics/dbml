@@ -25,8 +25,10 @@ import {
   PhQuestion,
 } from '@phosphor-icons/vue';
 
-export interface TokenIconInfo { icon: Component;
-  color: string; }
+export interface TokenIconInfo {
+  icon: Component;
+  color: string;
+}
 
 export const TOKEN_ICON_MAP: Partial<Record<SyntaxTokenKind, TokenIconInfo>> = {
   [SyntaxTokenKind.IDENTIFIER]: {

@@ -160,14 +160,15 @@ import {
   tokenIconFor,
 } from '@/components/panes/output/tokenIcons';
 
-interface Props {
-  tokens: SyntaxToken[];
-  showDecoration?: boolean;
-}
-
 const emit = defineEmits<{ 'toggle-decoration': [] }>();
 
-const props = defineProps<Props>();
+const {
+  tokens,
+  showDecoration = false,
+} = defineProps<{
+  tokens: SyntaxToken[];
+  showDecoration?: boolean;
+}>();
 
 function detailSections (token: SyntaxToken) {
   return [
@@ -194,7 +195,7 @@ function detailSections (token: SyntaxToken) {
   ];
 }
 
-// --- Truncation ---
+// Truncation
 const PREVIEW_CHARS = 8;
 
 function truncateText (text: string | undefined): string {
@@ -210,7 +211,7 @@ function isTruncated (text: string | undefined): boolean {
   return flat.length > PREVIEW_CHARS * 2 + 1;
 }
 
-// --- Editor integration ---
+// Editor integration
 const dbmlEditorRef = inject<Ref<monaco.editor.IStandaloneCodeEditor | null>>('dbmlEditorRef');
 
 const scrollEl = ref<HTMLElement | null>(null);
@@ -221,8 +222,8 @@ const rawTexts = ref<string[]>([]);
 
 function updateRawTexts () {
   const model = dbmlEditorRef?.value?.getModel();
-  if (!model) { rawTexts.value = props.tokens.map((t) => t.value); return; }
-  rawTexts.value = props.tokens.map((t) => model.getValueInRange(toMonacoRange(t.startPos, t.endPos)));
+  if (!model) { rawTexts.value = tokens.map((t) => t.value); return; }
+  rawTexts.value = tokens.map((t) => model.getValueInRange(toMonacoRange(t.startPos, t.endPos)));
 }
 
 const activeIndex = ref(-1);
@@ -231,7 +232,7 @@ const detailCollapsed = ref(false);
 function setRowEl (i: number, el: HTMLElement | null) { rowEls[i] = el; }
 function setDetailEl (i: number, el: HTMLElement | null) { detailEls[i] = el; }
 
-watch(() => props.tokens.length, () => { rowEls.length = 0; detailEls.length = 0; });
+watch(() => tokens.length, () => { rowEls.length = 0; detailEls.length = 0; });
 
 function scrollToVisible (index: number) {
   nextTick(() => {
@@ -260,8 +261,8 @@ function scrollToVisible (index: number) {
 
 function computeActiveIndex (line: number, column: number): number {
   let best = -1;
-  for (let i = 0; i < props.tokens.length; i++) {
-    const t = props.tokens[i];
+  for (let i = 0; i < tokens.length; i++) {
+    const t = tokens[i];
     const sl = t.startPos.line + 1;
     const sc = t.startPos.column + 1;
     if (sl > line || (sl === line && sc > column)) break;
@@ -281,7 +282,7 @@ function updateActiveIndex () {
   if (activeIndex.value >= 0) scrollToVisible(activeIndex.value);
 }
 
-watch(() => props.tokens, () => {
+watch(() => tokens, () => {
   updateRawTexts();
   updateActiveIndex();
 });

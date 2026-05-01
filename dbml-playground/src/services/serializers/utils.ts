@@ -62,7 +62,7 @@ export function getReadableId (value: SyntaxNode | SyntaxToken | SymbolInfo): st
 }
 
 // Smallest `.start` offset found anywhere inside `value`. Used to order the
-// children of a SyntaxNode by source position  -- properties are declared in
+// children of a SyntaxNode by source position - properties are declared in
 // class order, which doesn't match how tokens and child nodes actually
 // appear in the source.
 export function minStart (value: unknown): number {

@@ -11,7 +11,7 @@ import {
   serializeToken,
 } from './token';
 import type {
-  Serializable, SerializeOpts, SerializedValue,
+  Serializable, SerializeOptions, SerializedValue,
 } from './types';
 import {
   isSymbolInfo,
@@ -28,7 +28,7 @@ export {
   serializeToken,
 } from './token';
 
-export function serialize (value: Serializable, opts?: SerializeOpts): SerializedValue {
+export function serialize (value: Serializable, opts?: SerializeOptions): SerializedValue {
   if (Array.isArray(value)) return value.map((v) => serialize(v as Serializable, opts));
   if (value instanceof SyntaxToken) return serializeToken(value, opts);
   if (value instanceof SyntaxNode) return serializeNode(value, opts);

@@ -94,8 +94,7 @@ code, pre {
   background-color: rgba(0, 122, 204, 0.15) !important;
 }
 
-/* editor decoration color tokens — keep in sync with icon colors used by the
-   output panel (SymbolRow, RawAstTreeNode, tokenIcons). */
+/* editor decoration color tokens */
 :root {
   --hl-indigo-rgb:       99, 102, 241;   /* indigo-500 */
   --sym-table-rgb:       59, 130, 246;   /* blue-500 */
@@ -170,7 +169,7 @@ code, pre {
 .hl-node-empty     { outline: 1px solid rgba(var(--gray-300-rgb),   0.30); background: rgba(var(--gray-300-rgb),   0.05); }
 .hl-node-wildcard  { outline: 1px solid rgba(var(--yellow-rgb),     0.30); background: rgba(var(--yellow-rgb),     0.05); }
 
-/* element declaration kind — enum element shows green, table element blue, etc. */
+/* element declaration kind - enum element shows green, table element blue, etc. */
 .hl-element-table      { outline: 1px solid rgba(var(--sym-table-rgb),      0.30); background: rgba(var(--sym-table-rgb),      0.05); }
 .hl-element-partial    { outline: 1px solid rgba(var(--sym-partial-rgb),    0.30); background: rgba(var(--sym-partial-rgb),    0.05); }
 .hl-element-enum       { outline: 1px solid rgba(var(--sym-enum-rgb),       0.30); background: rgba(var(--sym-enum-rgb),       0.05); }

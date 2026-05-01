@@ -53,7 +53,7 @@
         class="h-full"
         @toggle-decoration="toggleDecoration(activeTab)"
       />
-      <AstTab
+      <AstTreeView
         v-if="activeTab === OutputTabId.Nodes"
         :ast="parser.ast"
         :show-decoration="isDecorationEnabled(activeTab)"
@@ -100,27 +100,27 @@ import {
   PhWarningCircle,
 } from '@phosphor-icons/vue';
 import TokensTab from './tabs/TokensTab.vue';
-import AstTab from './tabs/AstTab.vue';
+import AstTreeView from './ast/AstTreeView.vue';
 import SymbolsTab from './tabs/SymbolsTab.vue';
 import DatabaseTab from './tabs/DatabaseTab.vue';
 import DiagnosticsTab from './tabs/DiagnosticsTab.vue';
 import type {
-  RawAstNode,
-} from './ast/RawAstTreeNode.vue';
+  AstNode,
+} from './ast/AstTreeNode.vue';
 import type {
   SymbolInfo,
 } from '@/stores/parserStore';
 import {
-  useParser,
+  useParserStore,
 } from '@/stores/parserStore';
 import {
-  useProject,
+  useProjectStore,
 } from '@/stores/projectStore';
 import {
   Filepath,
 } from '@dbml/parse';
 import {
-  useUser, OutputTabId,
+  useUserStore, OutputTabId,
 } from '@/stores/userStore';
 import logger from '@/utils/logger';
 import {
@@ -138,9 +138,9 @@ import {
   type DecorationEntry,
 } from './tabs/common/decorations';
 
-const parser = useParser();
-const project = useProject();
-const user = useUser();
+const parser = useParserStore();
+const project = useProjectStore();
+const user = useUserStore();
 
 interface Tab {
   id: OutputTabId;
@@ -288,11 +288,17 @@ function navigateTo (range: { startLineNumber: number;
 }
 
 // Reveal and highlight the syntax range a diagnostic points at. ParserError
-// carries start/end line+column  -- translate straight into an editor range.
-function onDiagnosticClick (diag: { location: { line: number;
-  column: number; };
-endLocation: { line: number;
-  column: number; }; }) {
+// carries start/end line+column - translate straight into an editor range.
+function onDiagnosticClick (diag: {
+  location: {
+    line: number;
+    column: number;
+  };
+  endLocation: {
+    line: number;
+    column: number;
+  };
+}) {
   navigateTo({
     startLineNumber: diag.location.line,
     startColumn: diag.location.column,
@@ -334,7 +340,7 @@ function posToRange (sp: Record<string, unknown>, ep?: Record<string, unknown> |
   );
 }
 
-function handleNodeClick (node: RawAstNode) {
+function handleNodeClick (node: AstNode) {
   const data = node.rawData as Record<string, unknown> | null | undefined;
   if (!data) return;
 

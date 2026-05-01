@@ -2,7 +2,7 @@ import type {
   SyntaxToken,
 } from '@dbml/parse';
 import type {
-  SerializedToken, SerializeOpts,
+  SerializedToken, SerializeOptions,
 } from './types';
 import {
   getReadableId,
@@ -10,7 +10,7 @@ import {
 
 export function serializeToken (token: SyntaxToken, {
   simple = false,
-}: SerializeOpts = {}): SerializedToken {
+}: SerializeOptions = {}): SerializedToken {
   const id = getReadableId(token);
   if (simple) {
     const out: SerializedToken = {

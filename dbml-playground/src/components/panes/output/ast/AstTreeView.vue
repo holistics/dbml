@@ -1,14 +1,37 @@
 <template>
-  <div class="raw-ast-tree">
-    <RawAstTreeNode
-      :node="rootNode"
-      :selected-node="selectedNode"
-      :expanded-nodes="expandedNodes"
-      :level="0"
-      :cursor-node-id="cursorNodeId"
-      @node-click="handleNodeClick"
-      @node-expand="handleNodeExpand"
-    />
+  <div class="h-full flex flex-col">
+    <div
+      v-if="ast !== undefined"
+      class="flex-shrink-0 px-3 py-1 border-b border-gray-200 text-xs text-gray-400 flex items-center justify-between"
+    >
+      <span>{{ nodeCount }} nodes</span>
+      <TabSettingsButton
+        :show-decoration="showDecoration"
+        @toggle-decoration="emit('toggle-decoration')"
+      />
+    </div>
+    <div class="flex-1 overflow-auto">
+      <div
+        v-if="ast === undefined"
+        class="text-center text-gray-400 py-8 text-sm"
+      >
+        No AST data
+      </div>
+      <div
+        v-else
+        class="ast-tree"
+      >
+        <AstTreeNode
+          :node="rootNode"
+          :selected-node="selectedNode"
+          :expanded-nodes="expandedNodes"
+          :level="0"
+          :cursor-node-id="cursorNodeId"
+          @node-click="handleNodeClick"
+          @node-expand="handleNodeExpand"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -23,34 +46,61 @@ import {
   SyntaxNode,
   SyntaxToken,
 } from '@dbml/parse';
-import RawAstTreeNode, {
-  type RawAstNode,
-} from './RawAstTreeNode.vue';
+import AstTreeNode, {
+  type AstNode,
+} from './AstTreeNode.vue';
+import TabSettingsButton from '../tabs/common/TabSettingsButton.vue';
 import {
   getNameHint,
 } from '@/services/serializers/utils';
 
-interface Props {
-  readonly rawAst: ProgramNode;
-}
-
-const props = defineProps<Props>();
-
-const emit = defineEmits<{
-  'node-click': [node: RawAstNode];
+const {
+  ast = undefined,
+  showDecoration = false,
+} = defineProps<{
+  ast?: ProgramNode;
+  showDecoration?: boolean;
 }>();
 
-const selectedNode = ref<RawAstNode | null>(null);
+const emit = defineEmits<{
+  'node-click': [node: AstNode];
+  'toggle-decoration': [];
+}>();
+
+// Node count
+
+const COUNT_SKIP = new Set(['parentNode', 'parent', 'symbol', 'referee', 'source', 'filepath']);
+
+function countNodes (obj: unknown, seen = new WeakSet()): number {
+  if (!obj || typeof obj !== 'object') return 0;
+  if (seen.has(obj as object)) return 0;
+  seen.add(obj as object);
+  if (Array.isArray(obj)) return obj.reduce((sum, item) => sum + countNodes(item, seen), 0);
+  const isNode = Object.prototype.hasOwnProperty.call(obj, 'kind');
+  const childSum = Object.entries(obj as Record<string, unknown>)
+    .filter(([k]) => !COUNT_SKIP.has(k))
+    .reduce((sum, [, v]) => sum + countNodes(v, seen), 0);
+  return (isNode ? 1 : 0) + childSum;
+}
+
+const nodeCount = computed(() => countNodes(ast));
+
+// Tree state
+
+const selectedNode = ref<AstNode | null>(null);
 const expandedNodes = ref<Set<string>>(new Set(['root']));
 
-// Reset expanded state when AST changes to avoid stale node IDs accumulating
-watch(() => props.rawAst, () => {
+watch(() => ast, () => {
   expandedNodes.value = new Set(['root']);
 });
-const cursorPos = inject<Ref<{ line: number;
-  column: number; }> | undefined>('dbmlCursorPos', undefined);
 
-// Find AST node id that contains cursor position
+// Cursor tracking
+
+const cursorPos = inject<Ref<{
+  line: number;
+  column: number;
+}> | undefined>('dbmlCursorPos', undefined);
+
 const cursorNodeId = computed(() => {
   if (!cursorPos?.value) return undefined;
   const {
@@ -59,7 +109,7 @@ const cursorNodeId = computed(() => {
   return findNodeAtPosition(rootNode.value, line, column);
 });
 
-function findNodeAtPosition (node: RawAstNode, line: number, col: number): string | undefined {
+function findNodeAtPosition (node: AstNode, line: number, col: number): string | undefined {
   const d = node.rawData as Record<string, unknown> | null | undefined;
   const sp = d?.startPos as Record<string, unknown> | null | undefined;
   const ep = d?.endPos as Record<string, unknown> | null | undefined;
@@ -69,7 +119,6 @@ function findNodeAtPosition (node: RawAstNode, line: number, col: number): strin
     const inside = (line > sl || (line === sl && col >= sc)) && (line < el || (line === el && col <= ec));
     if (!inside) return undefined;
   }
-  // Check children for more specific match
   for (const child of node.children) {
     const found = findNodeAtPosition(child, line, col);
     if (found) return found;
@@ -77,24 +126,23 @@ function findNodeAtPosition (node: RawAstNode, line: number, col: number): strin
   return node.id;
 }
 
-// Transform raw AST into tree structure
+// AST transformation
+
 const rootNode = computed(() => {
-  return transformToRawAstNode(props.rawAst, 'ast', 'ast');
+  if (!ast) {
+    return {
+      id: 'root',
+      propertyName: 'ast',
+      rawData: undefined,
+      children: [],
+      accessPath: 'ast',
+      nameHint: undefined,
+    } as AstNode;
+  }
+  return transformToAstNode(ast, 'ast', 'ast');
 });
 
-// Handle node expansion
-const handleNodeExpand = (event: { id: string;
-  expanded: boolean; }) => {
-  if (event.expanded) {
-    expandedNodes.value.add(event.id);
-  } else {
-    expandedNodes.value.delete(event.id);
-  }
-};
-
-// Smallest byte `.start` found anywhere inside `value`. Arrays of nodes /
-// tokens report the minimum of their items; primitives fall to Infinity.
-function sortStart (n: RawAstNode): number {
+function sortStart (n: AstNode): number {
   const d = n.rawData;
   if (d instanceof SyntaxNode || d instanceof SyntaxToken) return d.start;
   if (Array.isArray(d)) {
@@ -109,16 +157,15 @@ function sortStart (n: RawAstNode): number {
   return Infinity;
 }
 
-// Transform any value into a RawAstNode (with cycle detection via seen WeakSet)
-function transformToRawAstNode (
+function transformToAstNode (
   data: unknown,
   propertyName: string,
   accessPath: string,
   seen = new WeakSet<object>(),
-): RawAstNode {
+): AstNode {
   const nodeId = `${accessPath}_${propertyName}`;
 
-  if (data === null || data === undefined) {
+  if (data === null || data === undefined || typeof data !== 'object') {
     return {
       id: nodeId,
       propertyName,
@@ -130,20 +177,6 @@ function transformToRawAstNode (
     };
   }
 
-  // Handle primitive values
-  if (typeof data !== 'object') {
-    return {
-      id: nodeId,
-      propertyName,
-      rawData: data,
-      value: data,
-      children: [],
-      accessPath,
-      nameHint: undefined,
-    };
-  }
-
-  // Cycle / diamond detection: render already-visited objects as leaf stubs
   if (seen.has(data)) {
     return {
       id: nodeId,
@@ -157,13 +190,12 @@ function transformToRawAstNode (
   }
   seen.add(data);
 
-  // Array of nodes/tokens  -- include both kinds as children
   if (Array.isArray(data)) {
     const items = data.filter((item): item is SyntaxNode | SyntaxToken =>
       item instanceof SyntaxNode || item instanceof SyntaxToken,
     );
-    const children: RawAstNode[] = items.map((item, index) =>
-      transformToRawAstNode(item, `[${index}]`, `${accessPath}[${index}]`, seen),
+    const children: AstNode[] = items.map((item, index) =>
+      transformToAstNode(item, `[${index}]`, `${accessPath}[${index}]`, seen),
     );
     return {
       id: nodeId,
@@ -175,30 +207,23 @@ function transformToRawAstNode (
     };
   }
 
-  // Object  -- recurse into SyntaxNode *and* SyntaxToken properties uniformly.
-  // Tokens used to be split off into `tokenEntries` and rendered as key/value
-  // rows; now they render like nodes so the tree is structurally consistent.
-  const children: RawAstNode[] = [];
+  const children: AstNode[] = [];
   const SKIP = new Set(['parent', 'parentNode', 'symbol', 'referee', 'source', 'filepath', '__proto__']);
 
   for (const [key, value] of Object.entries(data)) {
     if (SKIP.has(key) || value === undefined) continue;
     if (value instanceof SyntaxNode || value instanceof SyntaxToken) {
-      children.push(transformToRawAstNode(value, key, `${accessPath}.${key}`, seen));
+      children.push(transformToAstNode(value, key, `${accessPath}.${key}`, seen));
     } else if (Array.isArray(value)) {
       const items = value.filter((v): v is SyntaxNode | SyntaxToken =>
         v instanceof SyntaxNode || v instanceof SyntaxToken,
       );
       if (items.length > 0) {
-        children.push(transformToRawAstNode(items, key, `${accessPath}.${key}`, seen));
+        children.push(transformToAstNode(items, key, `${accessPath}.${key}`, seen));
       }
     }
   }
 
-  // Sort children by source position so the tree mirrors document order.
-  // For arrays (list of nodes / list of tokens) we use the minimum start of
-  // their contained items  -- otherwise arrays would all fall to the end and
-  // lose their natural interleaving with sibling nodes/tokens.
   children.sort((a, b) => sortStart(a) - sortStart(b));
 
   const nameHint = (data instanceof SyntaxNode || data instanceof SyntaxToken)
@@ -215,7 +240,7 @@ function transformToRawAstNode (
   };
 }
 
-// Auto-expand ancestors when cursorNodeId changes so the active node is visible
+// Auto-expand ancestors when cursor moves
 watch(cursorNodeId, (targetId) => {
   if (!targetId) return;
   const path = findPathToNode(rootNode.value, targetId);
@@ -224,7 +249,7 @@ watch(cursorNodeId, (targetId) => {
   }
 });
 
-function findPathToNode (node: RawAstNode, targetId: string): string[] | null {
+function findPathToNode (node: AstNode, targetId: string): string[] | null {
   if (node.id === targetId) return [node.id];
   for (const child of node.children) {
     const found = findPathToNode(child, targetId);
@@ -233,49 +258,51 @@ function findPathToNode (node: RawAstNode, targetId: string): string[] | null {
   return null;
 }
 
-// Watch for node clicks to update selection
-const handleNodeClick = (node: RawAstNode) => {
+const handleNodeClick = (node: AstNode) => {
   selectedNode.value = node;
   emit('node-click', node);
 };
 
-// Expose methods for external control
+const handleNodeExpand = (event: {
+  id: string;
+  expanded: boolean;
+}) => {
+  if (event.expanded) {
+    expandedNodes.value.add(event.id);
+  } else {
+    expandedNodes.value.delete(event.id);
+  }
+};
+
 defineExpose({
   expandAll: () => {
-    // Find all node IDs and expand them
     const allNodeIds = new Set<string>();
-
-    function collectNodeIds (node: RawAstNode) {
+    function collectNodeIds (node: AstNode) {
       allNodeIds.add(node.id);
       node.children.forEach(collectNodeIds);
     }
-
     collectNodeIds(rootNode.value);
     expandedNodes.value = allNodeIds;
   },
-
   collapseAll: () => {
     expandedNodes.value = new Set(['root']);
   },
-
   expandToLevel: (level: number) => {
-    const expandToLevel = new Set<string>();
-
-    function collectNodeIdsToLevel (node: RawAstNode, currentLevel: number) {
+    const ids = new Set<string>();
+    function collect (node: AstNode, currentLevel: number) {
       if (currentLevel <= level) {
-        expandToLevel.add(node.id);
-        node.children.forEach((child) => collectNodeIdsToLevel(child, currentLevel + 1));
+        ids.add(node.id);
+        node.children.forEach((child) => collect(child, currentLevel + 1));
       }
     }
-
-    collectNodeIdsToLevel(rootNode.value, 0);
-    expandedNodes.value = expandToLevel;
+    collect(rootNode.value, 0);
+    expandedNodes.value = ids;
   },
 });
 </script>
 
 <style scoped>
-.raw-ast-tree {
+.ast-tree {
   font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   font-size: 13px;
   line-height: 1.4;
