@@ -2,7 +2,7 @@ import type {
   SymbolInfo,
 } from '@/stores/parserStore';
 import type {
-  SerializedSymbol, SerializeOpts,
+  SerializedSymbol, SerializeOptions,
 } from './types';
 import {
   getReadableId,
@@ -10,7 +10,7 @@ import {
 
 export function serializeSymbol (symbol: SymbolInfo, {
   simple = false,
-}: SerializeOpts = {}): SerializedSymbol {
+}: SerializeOptions = {}): SerializedSymbol {
   const id = getReadableId(symbol);
   if (simple) return {
     id,

@@ -135,26 +135,32 @@ export interface RawAstNode {
 
 type RawObj = Record<string, unknown>;
 
-interface Props {
+const {
+  node,
+  selectedNode,
+  expandedNodes,
+  level,
+  cursorNodeId,
+} = defineProps<{
   node: RawAstNode;
   selectedNode: RawAstNode | null;
   expandedNodes: Set<string>;
   level: number;
   cursorNodeId?: string;
-}
-
-const props = defineProps<Props>();
+}>();
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
-  'node-expand': [{ id: string;
-    expanded: boolean; }];
+  'node-expand': [{
+    id: string;
+    expanded: boolean;
+  }];
   'scroll-to': [id: string];
 }>();
 
 const rowEl = ref<HTMLElement | null>(null);
-const isExpanded = computed(() => props.expandedNodes.has(props.node.id));
-const isExpandable = computed(() => props.node.children.length > 0);
-const isActive = computed(() => props.node.id === props.cursorNodeId || props.selectedNode?.id === props.node.id);
+const isExpanded = computed(() => expandedNodes.has(node.id));
+const isExpandable = computed(() => node.children.length > 0);
+const isActive = computed(() => node.id === cursorNodeId || selectedNode?.id === node.id);
 
 // Scroll into view when this node becomes the active cursor node
 watch(isActive, (active) => {
@@ -171,16 +177,16 @@ function asObj (d: unknown): RawObj | null {
 }
 
 const nodeKind = computed(() => {
-  const d = asObj(props.node.rawData);
+  const d = asObj(node.rawData);
   return d && typeof d.kind === 'string' ? d.kind : '';
 });
 
 // Tokens get a green hint, nodes blue. EOF tokens use the same red/semibold
 // `<EOF>` presentation as the Tokens tab.
-const isToken = computed(() => props.node.rawData instanceof SyntaxToken);
-const isEof = computed(() => isToken.value && (props.node.rawData as SyntaxToken).kind === SyntaxTokenKind.EOF);
-const tokenValue = computed(() => isToken.value ? (props.node.rawData as SyntaxToken).value ?? '' : '');
-const hintText = computed(() => isEof.value ? '' : (props.node.nameHint ?? ''));
+const isToken = computed(() => node.rawData instanceof SyntaxToken);
+const isEof = computed(() => isToken.value && (node.rawData as SyntaxToken).kind === SyntaxTokenKind.EOF);
+const tokenValue = computed(() => isToken.value ? (node.rawData as SyntaxToken).value ?? '' : '');
+const hintText = computed(() => isEof.value ? '' : (node.nameHint ?? ''));
 const hintClass = computed(() => isToken.value ? 'text-green-700' : 'text-blue-600');
 
 interface IconInfo { icon: typeof PhDiamond;
@@ -316,7 +322,7 @@ const NODE_KIND_ICONS: Partial<Record<SyntaxNodeKind, IconInfo>> = {
 };
 
 const typeIcon = computed((): IconInfo => {
-  const d = props.node.rawData;
+  const d = node.rawData;
   // Tokens use the same per-kind icons the Tokens tab does (flag for EOF,
   // newline/space/tab glyphs for trivia, etc.).
   if (d instanceof SyntaxToken) {
@@ -365,7 +371,7 @@ const typeIcon = computed((): IconInfo => {
 });
 
 const leafValue = computed(() => {
-  const d = props.node.rawData;
+  const d = node.rawData;
   if (d === null) return 'null';
   if (d === undefined) return '';
   if (typeof d !== 'object') return typeof d === 'string' ? `"${d}"` : String(d);
@@ -378,15 +384,15 @@ const leafValue = computed(() => {
 });
 
 const sizeHint = computed(() => {
-  const d = props.node.rawData;
+  const d = node.rawData;
   if (!Array.isArray(d)) return '';
   return d.length === 0 ? '[ ]' : `[ ${d.length} ]`;
 });
 
-function handleNodeClick () { emit('node-click', props.node); }
+function handleNodeClick () { emit('node-click', node); }
 function toggleExpanded () {
   emit('node-expand', {
-    id: props.node.id,
+    id: node.id,
     expanded: !isExpanded.value,
   });
 }

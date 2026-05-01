@@ -39,12 +39,13 @@ import type {
   ProgramNode,
 } from '@dbml/parse';
 
-interface Props {
+const {
+  ast,
+  showDecoration = false,
+} = defineProps<{
   ast: ProgramNode | undefined;
   showDecoration?: boolean;
-}
-
-const props = defineProps<Props>();
+}>();
 
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
@@ -70,5 +71,5 @@ function countNodes (obj: unknown, seen = new WeakSet()): number {
   return (isNode ? 1 : 0) + childSum;
 }
 
-const nodeCount = computed(() => countNodes(props.ast));
+const nodeCount = computed(() => countNodes(ast));
 </script>

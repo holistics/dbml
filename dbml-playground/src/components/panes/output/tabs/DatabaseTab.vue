@@ -431,16 +431,17 @@ type IndexEntry = Database['tables'][number]['indexes'][number];
 import DbSection from './common/DbSection.vue';
 import DbBadge from './common/DbBadge.vue';
 
-interface Props {
+const {
+  database,
+  showDecoration = false,
+} = defineProps<{
   database: Database | undefined;
   showDecoration?: boolean;
-}
-
-const props = defineProps<Props>();
+}>();
 const emit = defineEmits<{ 'toggle-decoration': [] }>();
 
 const totalCount = computed(() => {
-  const db = props.database;
+  const db = database;
   if (!db) return 0;
   const indexCount = db.tables.reduce((n, t) => n + t.indexes.length, 0);
   return db.tables.length + indexCount + db.refs.length + db.enums.length
@@ -493,12 +494,16 @@ function epLabel (ep: RefEndpoint): string {
     : `${ep.tableName}.${cols}`;
 }
 
-function colRefs (table: TableEntry, col: FieldEntry): { arrow: string;
-  otherLabel: string; }[] {
-  const db = props.database;
+function colRefs (table: TableEntry, col: FieldEntry): {
+  arrow: string;
+  otherLabel: string;
+}[] {
+  const db = database;
   if (!db) return [];
-  const result: { arrow: string;
-    otherLabel: string; }[] = [];
+  const result: {
+    arrow: string;
+    otherLabel: string;
+  }[] = [];
   for (const ref of db.refs) {
     for (let i = 0; i < ref.endpoints.length; i++) {
       const ep = ref.endpoints[i];

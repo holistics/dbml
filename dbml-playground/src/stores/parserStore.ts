@@ -219,10 +219,11 @@ export const useParserStore = defineStore('parser', () => {
   // store is not running heavy compilation work before the UI is ready.
   nextTick(() => debouncedParse(project.currentFile));
 
-  // Stable proxy objects whose internal delegates are swapped on each setupMonacoServices call.
-  // Monaco provider registration is permanent (cannot be re-registered), so we register once using
-  // these proxies and update the delegates to point at the current Compiler's services whenever the
-  // store creates a new Compiler instance (e.g. on hot-reload or test teardown).
+  // Stable proxy objects whose internal delegates are swapped on each
+  // setupMonacoServices call. Monaco provider registration is permanent
+  // (cannot be re-registered), so we register once using these proxies
+  // and update the delegates to point at the current Compiler's services
+  // whenever the store creates a new Compiler instance.
   type MonacoServices = Awaited<ReturnType<Compiler['initMonacoServices']>>;
   let currentServices: MonacoServices | undefined;
   let areServicesRegistered = false;

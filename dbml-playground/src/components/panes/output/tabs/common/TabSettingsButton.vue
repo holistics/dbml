@@ -35,10 +35,10 @@ import {
   PhGear, PhEye, PhEyeSlash,
 } from '@phosphor-icons/vue';
 
-interface Props {
+const {
+  showDecoration = false,
+} = defineProps<{
   showDecoration?: boolean;
-}
-
-defineProps<Props>();
+}>();
 const emit = defineEmits<{ 'toggle-decoration': [] }>();
 </script>

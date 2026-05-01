@@ -194,8 +194,10 @@ function buildTree (filePaths: string[], explicitFolders: string[] = []): TreeNo
     return ensureFolder(parentFp, getSiblings(parentFp)).children;
   }
 
-  const allEntries: { fp: Filepath;
-    isFolder: boolean; }[] = [
+  const allEntries: {
+    fp: Filepath;
+    isFolder: boolean;
+  }[] = [
     ...explicitFolders.map((p) => ({
       fp: Filepath.from(p),
       isFolder: true,
@@ -252,8 +254,10 @@ const pendingInputEl = ref<HTMLInputElement | null>(null);
 
 const confirmingReset = ref(false);
 const resetButtonRef = ref<HTMLButtonElement | null>(null);
-const resetPopoverStyle = ref<{ top: string;
-  left: string; }>({
+const resetPopoverStyle = ref<{
+  top: string;
+  left: string;
+}>({
   top: '0px',
   left: '0px',
 });

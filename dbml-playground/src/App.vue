@@ -144,7 +144,7 @@ async function copyShareUrl () {
 function onKeyDown (e: KeyboardEvent) {
   if ((e.ctrlKey || e.metaKey) && e.key === 's') {
     e.preventDefault();
-    project.saveNow();
+    project.save();
   }
 }
 
@@ -163,7 +163,7 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   parser.setupMonacoServices(editor);
 
   // Monaco's StandaloneCodeEditorService.findModel returns null when the target URI
-  // doesn't match the current model → cross-file navigation silently fails.
+  // doesn't match the current model -> cross-file navigation silently fails.
   // registerCodeEditorOpenHandler prepends a handler that runs before the built-in one.
   // We handle cross-file navigation by switching the active project file first.
   const svc = (editor as any)._codeEditorService;
@@ -178,7 +178,7 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
     if (targetFilepath.intern() === new Filepath(project.currentFile).intern()) return null;
 
     project.setCurrentFile(targetFilepath.absolute);
-    // Wait for the filepath watcher → createModel → setModel chain.
+    // Wait for the filepath watcher -> createModel -> setModel chain.
     // onDidChangeModel fires synchronously when setModel is called, which is
     // more reliable than nextTick because it doesn't depend on Vue flush timing.
     await new Promise<void>((resolve) => {

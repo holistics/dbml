@@ -222,7 +222,7 @@ export const useProjectStore = defineStore('project', () => {
     persistProject();
   }
 
-  function saveNow () {
+  function save () {
     saveProject(files.value, folders.value);
   }
 
@@ -266,7 +266,7 @@ export const useProjectStore = defineStore('project', () => {
     addFolder,
     deleteFolder,
     renameFolder,
-    saveNow,
+    save,
     reset,
     getShareUrl,
   };

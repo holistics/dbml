@@ -195,16 +195,21 @@ interface PendingNode {
   parentPath: string;
 }
 
-interface Props {
+const {
+  node,
+  renamingPath,
+  renameValue,
+  canDelete,
+  pendingNode,
+  pendingValue,
+} = defineProps<{
   node: TreeNode;
   renamingPath: string | null;
   renameValue: string;
   canDelete: boolean;
   pendingNode?: PendingNode | null;
   pendingValue?: string;
-}
-
-const props = defineProps<Props>();
+}>();
 
 const emit = defineEmits<{
   'select': [path: string];
@@ -226,14 +231,16 @@ const project = useProjectStore();
 const open = ref(true);
 const confirmingDelete = ref(false);
 const deleteButtonRef = ref<HTMLButtonElement | null>(null);
-const popoverStyle = ref<{ top: string;
-  left: string; }>({
+const popoverStyle = ref<{
+  top: string;
+  left: string;
+}>({
   top: '0px',
   left: '0px',
 });
 
 const isActive = computed(() =>
-  props.node.type === 'file' && project.currentFile === props.node.path,
+  node.type === 'file' && project.currentFile === node.path,
 );
 
 function toggleConfirm () {
@@ -249,24 +256,24 @@ function toggleConfirm () {
 
 function onAddFileInFolder () {
   open.value = true;
-  emit('add-file-in-folder', props.node.path);
+  emit('add-file-in-folder', node.path);
 }
 
 function handleClick () {
   confirmingDelete.value = false;
-  if (props.node.type === 'folder') {
+  if (node.type === 'folder') {
     open.value = !open.value;
   } else {
-    emit('select', props.node.path);
+    emit('select', node.path);
   }
 }
 
 function confirmDelete () {
   confirmingDelete.value = false;
-  if (props.node.type === 'file') {
-    emit('delete-file', props.node.path);
+  if (node.type === 'file') {
+    emit('delete-file', node.path);
   } else {
-    emit('delete-folder', props.node.path);
+    emit('delete-folder', node.path);
   }
 }
 

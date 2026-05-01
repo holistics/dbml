@@ -288,11 +288,17 @@ function navigateTo (range: { startLineNumber: number;
 }
 
 // Reveal and highlight the syntax range a diagnostic points at. ParserError
-// carries start/end line+column — translate straight into an editor range.
-function onDiagnosticClick (diag: { location: { line: number;
-  column: number; };
-endLocation: { line: number;
-  column: number; }; }) {
+// carries start/end line+column - translate straight into an editor range.
+function onDiagnosticClick (diag: {
+  location: {
+    line: number;
+    column: number;
+  };
+  endLocation: {
+    line: number;
+    column: number;
+  };
+}) {
   navigateTo({
     startLineNumber: diag.location.line,
     startColumn: diag.location.column,

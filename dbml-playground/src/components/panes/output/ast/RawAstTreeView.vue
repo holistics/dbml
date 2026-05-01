@@ -30,11 +30,11 @@ import {
   getNameHint,
 } from '@/services/serializers/utils';
 
-interface Props {
-  readonly rawAst: ProgramNode;
-}
-
-const props = defineProps<Props>();
+const {
+  rawAst,
+} = defineProps<{
+  rawAst: ProgramNode;
+}>();
 
 const emit = defineEmits<{
   'node-click': [node: RawAstNode];
@@ -44,11 +44,13 @@ const selectedNode = ref<RawAstNode | null>(null);
 const expandedNodes = ref<Set<string>>(new Set(['root']));
 
 // Reset expanded state when AST changes to avoid stale node IDs accumulating
-watch(() => props.rawAst, () => {
+watch(() => rawAst, () => {
   expandedNodes.value = new Set(['root']);
 });
-const cursorPos = inject<Ref<{ line: number;
-  column: number; }> | undefined>('dbmlCursorPos', undefined);
+const cursorPos = inject<Ref<{
+  line: number;
+  column: number;
+}> | undefined>('dbmlCursorPos', undefined);
 
 // Find AST node id that contains cursor position
 const cursorNodeId = computed(() => {
@@ -79,12 +81,14 @@ function findNodeAtPosition (node: RawAstNode, line: number, col: number): strin
 
 // Transform raw AST into tree structure
 const rootNode = computed(() => {
-  return transformToRawAstNode(props.rawAst, 'ast', 'ast');
+  return transformToRawAstNode(rawAst, 'ast', 'ast');
 });
 
 // Handle node expansion
-const handleNodeExpand = (event: { id: string;
-  expanded: boolean; }) => {
+const handleNodeExpand = (event: {
+  id: string;
+  expanded: boolean;
+}) => {
   if (event.expanded) {
     expandedNodes.value.add(event.id);
   } else {
@@ -157,7 +161,7 @@ function transformToRawAstNode (
   }
   seen.add(data);
 
-  // Array of nodes/tokens — include both kinds as children
+  // Array of nodes/tokens - include both kinds as children
   if (Array.isArray(data)) {
     const items = data.filter((item): item is SyntaxNode | SyntaxToken =>
       item instanceof SyntaxNode || item instanceof SyntaxToken,
@@ -175,7 +179,7 @@ function transformToRawAstNode (
     };
   }
 
-  // Object — recurse into SyntaxNode *and* SyntaxToken properties uniformly.
+  // Object - recurse into SyntaxNode *and* SyntaxToken properties uniformly.
   // Tokens used to be split off into `tokenEntries` and rendered as key/value
   // rows; now they render like nodes so the tree is structurally consistent.
   const children: RawAstNode[] = [];
@@ -197,7 +201,7 @@ function transformToRawAstNode (
 
   // Sort children by source position so the tree mirrors document order.
   // For arrays (list of nodes / list of tokens) we use the minimum start of
-  // their contained items — otherwise arrays would all fall to the end and
+  // their contained items - otherwise arrays would all fall to the end and
   // lose their natural interleaving with sibling nodes/tokens.
   children.sort((a, b) => sortStart(a) - sortStart(b));
 

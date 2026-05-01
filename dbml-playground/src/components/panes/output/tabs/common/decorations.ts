@@ -84,7 +84,7 @@ const ELEMENT_TYPE_CLASS: Record<string, string> = {
   DiagramView: 'hl-element-diagram',
 };
 
-// Properties the walker should never follow — they point outside the
+// Properties the walker should never follow - they point outside the
 // syntax tree (symbols, parents, source text) and would loop forever.
 const AST_WALK_SKIP_KEYS = new Set(['parentNode', 'parent', 'symbol', 'referee', 'source', 'filepath']);
 
@@ -165,7 +165,7 @@ export function collectSymbolDecorations (symbols: SymbolInfo[]): DecorationEntr
   const result: DecorationEntry[] = [];
   function walk (sym: SymbolInfo) {
     // Program covers the entire file so its decoration would blanket
-    // everything underneath — skip it.
+    // everything underneath - skip it.
     if (sym.declarationPosition && sym.kind !== SymbolKind.Program) {
       result.push({
         range: new monaco.Range(sym.declarationPosition.startLine, sym.declarationPosition.startColumn, sym.declarationPosition.endLine, sym.declarationPosition.endColumn),
@@ -178,10 +178,16 @@ export function collectSymbolDecorations (symbols: SymbolInfo[]): DecorationEntr
   return result;
 }
 
-type DbToken = { start: { line: number;
-  column: number; };
-end: { line: number;
-  column: number; }; } | undefined;
+type DbToken = {
+  start: {
+    line: number;
+    column: number;
+  };
+  end: {
+    line: number;
+    column: number;
+  };
+} | undefined;
 
 export function collectDatabaseDecorations (db: Database | undefined): DecorationEntry[] {
   if (!db) return [];

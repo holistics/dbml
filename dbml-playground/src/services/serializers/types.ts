@@ -1,5 +1,5 @@
 // Shared types for the playground's AST/symbol serializers. Shape is the flat
-// form the output-tab UIs render directly — no nested `context` wrapper.
+// form the output-tab UIs render directly - no nested `context` wrapper.
 
 import type {
   SyntaxNode, SyntaxToken,
@@ -52,6 +52,6 @@ export interface SerializedSymbol {
   declaration?: SerializedSymbolDeclaration;
 }
 
-export interface SerializeOpts {
+export interface SerializeOptions {
   simple?: boolean;
 }
