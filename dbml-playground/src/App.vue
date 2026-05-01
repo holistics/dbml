@@ -72,7 +72,7 @@
     </div>
 
     <main class="flex-1 overflow-hidden p-2">
-      <SplitPanel :sizes="[15, 42, 43]">
+      <SplitPanel v-model="user.prefs.panelSizes">
         <template #panel-0>
           <FilesPane />
         </template>
@@ -107,6 +107,9 @@ import {
   useProject,
 } from '@/stores/projectStore';
 import {
+  useUser,
+} from '@/stores/userStore';
+import {
   Filepath,
 } from '@dbml/parse';
 import SplitPanel from '@/components/SplitPanel.vue';
@@ -119,6 +122,7 @@ import packageJson from '../package.json';
 
 const parser = useParser();
 const project = useProject();
+const user = useUser();
 
 const copySuccess = ref(false);
 
