@@ -99,7 +99,7 @@ describe('[example - record] composite primary key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    // One warning per PK column per duplicate row → 2 rows × 2 columns = 4,
+    // One warning per PK column per duplicate row -> 2 rows × 2 columns = 4,
     // each anchored on the offending row's column cell.
     expect(warnings.length).toBe(4);
     for (const w of warnings) {

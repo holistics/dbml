@@ -647,7 +647,7 @@ Ref: posts.user_id > U.id
       expect(result).toContain('U.id');
     });
 
-    test('renaming by inline alias is a no-op — only direct names are renameable', () => {
+    test('renaming by inline alias is a no-op - only direct names are renameable', () => {
       const input = `
 Table users as U {
   id int [pk]
@@ -2006,7 +2006,7 @@ Table accounts { id int [pk] }
     compiler.setSource(fp, source);
 
     const result = compiler.renameTable(fp, 'users', 'accounts').getSource(fp)!;
-    expect(result).toBe(source);  // unchanged — collision detected
+    expect(result).toBe(source);  // unchanged - collision detected
   });
 
   test('renaming with schema qualification updates schema-qualified references', () => {
@@ -2040,7 +2040,7 @@ Table posts {
     const baseAfter = layout.getSource(fps['/base.dbml'])!;
     const mainAfter = layout.getSource(fps['/main.dbml'])!;
 
-    // Original declaration left alone — alias rename never touches the source file.
+    // Original declaration left alone - alias rename never touches the source file.
     expect(baseAfter).toBe('Table users { id int [pk] }');
     expect(mainAfter).toContain('use { table users as member }');
     expect(mainAfter).toContain('ref: > member.id');
@@ -2049,7 +2049,7 @@ Table posts {
   });
 
   test('renaming the source name from the alias-introducing file is a lookup miss', () => {
-    // Only the alias 'u' is visible in main.dbml — 'users' is not in scope there.
+    // Only the alias 'u' is visible in main.dbml - 'users' is not in scope there.
     const { compiler, fps } = makeMultifileCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
       '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
@@ -2076,7 +2076,7 @@ Table posts {
   });
 });
 
-describe('[example] renameTable — alias/use renameability rules', () => {
+describe('[example] renameTable - alias/use renameability rules', () => {
   function makeMultifileCompiler (files: Record<string, string>): {
     compiler: Compiler;
     fps: Record<string, Filepath>;
@@ -2091,7 +2091,7 @@ describe('[example] renameTable — alias/use renameability rules', () => {
     return { compiler, fps };
   }
 
-  describe('inline alias (Table users as U) — rename is ignored', () => {
+  describe('inline alias (Table users as U) - rename is ignored', () => {
     test('renaming by alias single-file is a no-op', () => {
       const input = `
 Table users as U {
@@ -2132,7 +2132,7 @@ Ref: U.id < U.id
     });
   });
 
-  describe('use without alias — renames the real declaration and cascades', () => {
+  describe('use without alias - renames the real declaration and cascades', () => {
     test('rename from the importing file cascades to base + importer', () => {
       const { compiler, fps } = makeMultifileCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
@@ -2166,7 +2166,7 @@ Ref: U.id < U.id
     });
   });
 
-  describe('use with alias — rename only affects the alias scope', () => {
+  describe('use with alias - rename only affects the alias scope', () => {
     test('renaming by the alias only rewrites the alias-introducing file', () => {
       const { compiler, fps } = makeMultifileCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
@@ -2177,7 +2177,7 @@ Ref: U.id < U.id
       const baseAfter = layout.getSource(fps['/base.dbml'])!;
       const mainAfter = layout.getSource(fps['/main.dbml'])!;
 
-      // Base file untouched — alias rename never propagates to the source.
+      // Base file untouched - alias rename never propagates to the source.
       expect(baseAfter).toBe('Table users { id int [pk] }');
       // Only the alias token and its refs change; source-side `users` stays.
       expect(mainAfter).toContain('use { table users as member }');
@@ -2204,7 +2204,7 @@ Ref: U.id < U.id
     });
 
     test('renaming the source name from an alias-introducing file is a lookup miss', () => {
-      // Only `u` is visible in main — `users` is not in scope.
+      // Only `u` is visible in main - `users` is not in scope.
       const { compiler, fps } = makeMultifileCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,

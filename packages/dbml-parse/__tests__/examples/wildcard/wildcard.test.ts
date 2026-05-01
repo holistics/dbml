@@ -18,7 +18,7 @@ function getTokens (source: string) {
 }
 
 describe('[example] wildcard', () => {
-  // ── Sub-Problem 1: Lexer — WildcardToken ──
+  // ── Sub-Problem 1: Lexer - WildcardToken ──
 
   describe('lexer', () => {
     test('should lex * as WILDCARD token, not OP', () => {
@@ -46,7 +46,7 @@ describe('[example] wildcard', () => {
     });
   });
 
-  // ── Sub-Problem 2: Parser — WildcardNode ──
+  // ── Sub-Problem 2: Parser - WildcardNode ──
 
   describe('parser', () => {
     test('should parse * as WildcardNode', () => {
@@ -85,7 +85,7 @@ describe('[example] wildcard', () => {
     });
   });
 
-  // ── Sub-Problem 3: Validators — Reject * outside DiagramView ──
+  // ── Sub-Problem 3: Validators - Reject * outside DiagramView ──
 
   describe('validator: reject * as element name', () => {
     test('should reject * as Table name', () => {

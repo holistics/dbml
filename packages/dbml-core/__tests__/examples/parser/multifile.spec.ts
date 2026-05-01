@@ -200,7 +200,7 @@ Ref: memberships.role_id > roles.id
     test('cross-file index: imported table with composite indexes accessible in @dbml/core model', () => {
       // @dbml/parse exposes the imported `bookings` table via exportSchemaJson's
       // reconciled output, so @dbml/core sees it alongside the locally-defined
-      // `events` table — refs and composite indexes survive the import.
+      // `events` table - refs and composite indexes survive the import.
       const layout = makeLayout({
         '/composite-index-source.dbml': `
 Table bookings {

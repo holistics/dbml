@@ -91,7 +91,7 @@ export class NodeProjectLayout implements DbmlProjectLayout {
         results.add(prefix + entry);
       }
     } catch {
-      // Not a readable directory — ignore
+      // Not a readable directory - ignore
     }
 
     // Overlay additions: non-deleted files directly under base

@@ -114,7 +114,7 @@ Table users {
       // Expected
     }
 
-    // Second call should not throw "Cycle detected" — the COMPUTING
+    // Second call should not throw "Cycle detected" - the COMPUTING
     // sentinel must have been cleared on failure
     expect(() => {
       compiler.setSource(fileA, 'Table users { id int }');

@@ -8,7 +8,7 @@ import { Filepath } from '@/core/types/filepath';
 // Inline project source maps. Each entry maps a filepath (relative to /) onto
 // the file's DBML source. `setupCompiler` mounts every entry on the compiler
 // and returns both the compiler and a `Filepath -> source` map keyed by the
-// canonicalised Filepath instance — so callers can `model.toUri()` the same
+// canonicalised Filepath instance - so callers can `model.toUri()` the same
 // instance that was loaded.
 type ProjectFiles = Record<string, string>;
 

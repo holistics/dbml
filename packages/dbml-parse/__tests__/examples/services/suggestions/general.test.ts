@@ -1001,7 +1001,7 @@ describe('[example] CompletionItemProvider', () => {
       compiler.setSource(DEFAULT_ENTRY, program);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
-      // Line 4: 'Ref: T.id > T.' — cursor after the trailing dot
+      // Line 4: 'Ref: T.id > T.' - cursor after the trailing dot
       const position = createPosition(4, 'Ref: T.id > T.'.length + 1);
       const result = provider.provideCompletionItems(model, position);
 

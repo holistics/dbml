@@ -26,7 +26,7 @@ function exportDb (compiler: Compiler, fp: Filepath): Database {
 }
 
 
-describe('[example] multifile interpreter — enum across files', () => {
+describe('[example] multifile interpreter - enum across files', () => {
   // types.dbml:  Enum job_status { pending running done }
   // main.dbml:   use { enum job_status } from './types.dbml'
   //              Table jobs { id int [pk]; status job_status }
@@ -78,7 +78,7 @@ Table jobs {
 });
 
 
-describe('[example] multifile interpreter — enum alias', () => {
+describe('[example] multifile interpreter - enum alias', () => {
   // types.dbml:  Enum job_status { pending running done }
   // main.dbml:   use { enum job_status as Status } from './types.dbml'
   //              Table jobs { id int [pk]; status Status }
@@ -100,7 +100,7 @@ Table jobs {
 `,
   });
 
-  test('no binding errors — alias is the resolvable name', () => {
+  test('no binding errors - alias is the resolvable name', () => {
     const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
@@ -128,7 +128,7 @@ Table jobs {
 });
 
 
-describe('[example] multifile interpreter — indexes cross-file', () => {
+describe('[example] multifile interpreter - indexes cross-file', () => {
   // tables.dbml: Table bookings { id, user_id, event_id, created_at
   //                indexes { (user_id, event_id) [unique, name: 'unique_booking']; created_at } }
   // main.dbml:   use { table bookings } from './tables.dbml'
@@ -160,7 +160,7 @@ Ref: bookings.event_id > events.id
 `,
   });
 
-  test('no binding errors — cross-file ref resolves', () => {
+  test('no binding errors - cross-file ref resolves', () => {
     const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
@@ -191,7 +191,7 @@ Ref: bookings.event_id > events.id
 });
 
 
-describe('[example] multifile interpreter — schema-alias ref', () => {
+describe('[example] multifile interpreter - schema-alias ref', () => {
   // tables.dbml: Table ecommerce.users as EU { id int [pk]; name varchar }
   // main.dbml:   use { table ecommerce.users as EU } from './tables.dbml'
   //              Table orders { id int [pk]; user_id int [ref: > EU.id] }
@@ -212,7 +212,7 @@ Table orders {
 `,
   });
 
-  test('no binding errors — inline ref binds against the alias', () => {
+  test('no binding errors - inline ref binds against the alias', () => {
     const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
@@ -244,7 +244,7 @@ Table orders {
 });
 
 
-describe('[example] multifile interpreter — imported tablegroup', () => {
+describe('[example] multifile interpreter - imported tablegroup', () => {
   // base.dbml:   Table users { id int [pk]; email varchar }
   //              Table posts { id int [pk]; user_id int }
   //              TableGroup content { users; posts }
@@ -293,7 +293,7 @@ use { tablegroup content } from './base.dbml'
 });
 
 
-describe('[example] multifile interpreter — alias-and-schema-strip', () => {
+describe('[example] multifile interpreter - alias-and-schema-strip', () => {
   // auth-tables.dbml: Table auth.users { id int [pk]; email varchar }
   // main.dbml:        use { table auth.users as u } from './auth-tables.dbml'
   //                   Table orders { id int [pk]; user_id int [ref: > u.id] }
@@ -314,7 +314,7 @@ Table orders {
 `,
   });
 
-  test('no binding errors — inline ref binds against alias u', () => {
+  test('no binding errors - inline ref binds against alias u', () => {
     const ast = compiler.parseFile(fps['/main.dbml']).getValue().ast;
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
@@ -337,14 +337,14 @@ Table orders {
     const db = exportDb(compiler, fps['/main.dbml']);
     const orders = db.tables.find((t) => t.name === 'orders')!;
     const ref = orders.fields.find((f) => f.name === 'user_id')!.inline_refs[0];
-    // expect: [ref: > u.id] — tableName is the alias, not the original
+    // expect: [ref: > u.id] - tableName is the alias, not the original
     expect(ref.tableName).toBe('u');
     expect(ref.fieldNames).toContain('id');
   });
 });
 
 
-describe('[example] multifile interpreter — mixed selective + wildcard from same file', () => {
+describe('[example] multifile interpreter - mixed selective + wildcard from same file', () => {
   // `use { table users } from './shared.dbml'` followed by `use * from
   // './shared.dbml'` exposes the same underlying `users` table twice via two
   // distinct UseSymbol wrappers. schemaModule.symbolMembers dedupes them by
@@ -382,7 +382,7 @@ Table memberships {
 });
 
 
-describe('[example] multifile interpreter — inline ref on imported table carried to consumer', () => {
+describe('[example] multifile interpreter - inline ref on imported table carried to consumer', () => {
   // source.dbml: Table accounts { id int [pk] }
   //              Table users { id int [pk]; account_id int [ref: > accounts.id] }
   // consumer.dbml: use { table accounts } + use { table users }
@@ -423,7 +423,7 @@ use { table users } from './source.dbml'
 });
 
 
-describe('[example] multifile interpreter — standalone Ref between two imported tables', () => {
+describe('[example] multifile interpreter - standalone Ref between two imported tables', () => {
   // Consumer imports both tables and declares a standalone Ref between them.
   // The Ref must appear in the consumer's exported schema.
   const { compiler, fps } = makeCompiler({
@@ -469,7 +469,7 @@ Ref: orders.user_id > users.id
 });
 
 
-describe('[example] multifile interpreter — Ref cardinality preserved across file boundary', () => {
+describe('[example] multifile interpreter - Ref cardinality preserved across file boundary', () => {
   // Verifies that the many-to-one cardinality (< and >) is faithfully preserved
   // when the ref endpoints reference imported tables.
   const { compiler, fps } = makeCompiler({
@@ -513,7 +513,7 @@ Ref many_to_one: players.team_id > teams.id
 });
 
 
-describe('[example] multifile interpreter — schema merging: tables under same named schema', () => {
+describe('[example] multifile interpreter - schema merging: tables under same named schema', () => {
   // File A contributes auth.users; File B contributes auth.posts.
   // Consumer imports from both and both should appear under the auth schema.
   const { compiler, fps } = makeCompiler({
@@ -557,7 +557,7 @@ use { table auth.posts } from './posts-db.dbml'
 });
 
 
-describe('[example] multifile interpreter — TableGroup: member table data preserved', () => {
+describe('[example] multifile interpreter - TableGroup: member table data preserved', () => {
   // Importing a tablegroup auto-expands member tables. Those tables must appear
   // in the exported schema with their full field and index definitions intact.
   const { compiler, fps } = makeCompiler({
@@ -623,16 +623,16 @@ use { tablegroup social } from './base.dbml'
 describe('[example] multifile interpreter - refs with same logical endpoints via different aliases across files', () => {
   // Two Ref declarations target the same pair of columns, but one uses the
   // original table name and the other uses an alias. They are two distinct
-  // textual Refs — the system should include both in the exported schema.
+  // textual Refs - the system should include both in the exported schema.
   //
   // Scenario:
   //   base.dbml:     Table users { id int [pk] }
   //                  Table orders { id int; user_id int }
   //   consumer.dbml: use { table users } from './base.dbml'
-  //                  use { table users as u } from './base.dbml'   ← both names visible
+  //                  use { table users as u } from './base.dbml'   <- both names visible
   //                  use { table orders } from './base.dbml'
   //                  Ref r1: orders.user_id > users.id
-  //                  Ref r2: orders.user_id > u.id                 ← alias endpoint
+  //                  Ref r2: orders.user_id > u.id                 <- alias endpoint
   const { compiler, fps } = makeCompiler({
     '/base.dbml': `
 Table users {
@@ -664,12 +664,12 @@ Ref r2: orders.user_id > u.id
 });
 
 
-describe('[example] multifile binder — TableGroup cannot reference imported table', () => {
+describe('[example] multifile binder - TableGroup cannot reference imported table', () => {
   // base.dbml:   Table users { id int [pk] }
   //              Table posts { id int [pk] }
   // main.dbml:   use { table users } from './base.dbml'
   //              Table local { id int [pk] }
-  //              TableGroup mixed { local; users }   ← users is imported → error
+  //              TableGroup mixed { local; users }   <- users is imported -> error
   const { compiler, fps } = makeCompiler({
     '/base.dbml': `
 Table users {
@@ -711,10 +711,10 @@ TableGroup mixed {
 });
 
 
-describe('[example] multifile binder — TableGroup with all-imported tables emits one error per entry', () => {
+describe('[example] multifile binder - TableGroup with all-imported tables emits one error per entry', () => {
   // base.dbml:   Table a { id int } / Table b { id int }
   // main.dbml:   use { table a } + use { table b } from './base.dbml'
-  //              TableGroup all_imported { a; b }   ← both imported → 2 errors
+  //              TableGroup all_imported { a; b }   <- both imported -> 2 errors
   const { compiler, fps } = makeCompiler({
     '/base.dbml': `
 Table a {
@@ -743,7 +743,7 @@ TableGroup all_imported {
 });
 
 
-describe('[example] multifile interpreter — aliased table renamed in ref endpoints', () => {
+describe('[example] multifile interpreter - aliased table renamed in ref endpoints', () => {
   // base.dbml:   Table users { id int [pk] }
   //              Table orders { id int [pk]; user_id int }
   // main.dbml:   use { table users as u } from './base.dbml'
@@ -790,7 +790,7 @@ Ref: orders.user_id > u.id
 });
 
 
-describe('[example] multifile interpreter — aliased table renamed in cross-file ref endpoints', () => {
+describe('[example] multifile interpreter - aliased table renamed in cross-file ref endpoints', () => {
   // Ref is declared in the source file, not the consumer. The consumer imports
   // both tables (one with alias). The cross-file ref endpoints must be rewritten.
   const { compiler, fps } = makeCompiler({
@@ -824,7 +824,7 @@ use { table orders } from './base.dbml'
 });
 
 
-describe('[example] multifile interpreter — aliased table renamed in records', () => {
+describe('[example] multifile interpreter - aliased table renamed in records', () => {
   const { compiler, fps } = makeCompiler({
     '/base.dbml': `
 Table users {
@@ -866,7 +866,7 @@ records u(id, name) {
 });
 
 
-describe('[example] multifile interpreter — directly imported table loses partial-injected columns', () => {
+describe('[example] multifile interpreter - directly imported table loses partial-injected columns', () => {
   const { compiler, fps } = makeCompiler({
     '/source.dbml': `
 TablePartial timestamps {
@@ -902,7 +902,7 @@ use { table users } from './source.dbml'
 });
 
 
-describe('[example] multifile interpreter — imported table with inline ref to unimported table', () => {
+describe('[example] multifile interpreter - imported table with inline ref to unimported table', () => {
   // source.dbml defines users and orders with an inline ref: orders.user_id > users.id
   // consumer imports ONLY orders (not users).
   // The inline ref on orders.user_id references users which is not in scope.
@@ -928,7 +928,7 @@ use { table orders } from './source.dbml'
     expect(db.tables.find((t) => t.name === 'orders')).toBeDefined();
   });
 
-  test('inline ref target (users) is NOT in scope — ref should be dropped or users not present', () => {
+  test('inline ref target (users) is NOT in scope - ref should be dropped or users not present', () => {
     const db = exportDb(compiler, fps['/consumer.dbml']);
     // users was never imported
     expect(db.tables.find((t) => t.name === 'users')).toBeUndefined();
@@ -936,7 +936,7 @@ use { table orders } from './source.dbml'
 });
 
 
-describe('[example] multifile interpreter — external standalone Ref auto-pulled when both tables imported', () => {
+describe('[example] multifile interpreter - external standalone Ref auto-pulled when both tables imported', () => {
   // source.dbml defines tables + a standalone Ref between them.
   // consumer imports both tables.
   // The Ref should be auto-pulled because both endpoints are in scope.
@@ -973,7 +973,7 @@ use { table orders } from './source.dbml'
 });
 
 
-describe('[example] multifile interpreter — external standalone Ref NOT pulled when one table missing', () => {
+describe('[example] multifile interpreter - external standalone Ref NOT pulled when one table missing', () => {
   // Only orders is imported, not users. The Ref should NOT be pulled.
   const { compiler, fps } = makeCompiler({
     '/source.dbml': `
@@ -1000,7 +1000,7 @@ use { table orders } from './source.dbml'
 });
 
 
-describe('[example] multifile interpreter — tablegroup pulls tables that use tablepartials', () => {
+describe('[example] multifile interpreter - tablegroup pulls tables that use tablepartials', () => {
   // base.dbml defines a partial, tables using it, and a tablegroup.
   // consumer imports the tablegroup. The pulled tables should have
   // their injected partial columns.
@@ -1050,7 +1050,7 @@ use { tablegroup content } from './base.dbml'
 });
 
 
-describe('[example] multifile interpreter — tablegroup pulls tables that reference enums', () => {
+describe('[example] multifile interpreter - tablegroup pulls tables that reference enums', () => {
   // base.dbml defines an enum, tables using it, and a tablegroup.
   // consumer imports the tablegroup. The enum should also appear in schema
   // since the pulled table references it.
@@ -1094,7 +1094,7 @@ use { tablegroup user_group } from './base.dbml'
 });
 
 
-describe('[example] multifile interpreter — tablegroup pulls tables with inline refs to non-imported tables', () => {
+describe('[example] multifile interpreter - tablegroup pulls tables with inline refs to non-imported tables', () => {
   // base.dbml: Table a has inline ref to Table b. TableGroup g contains only a.
   // consumer imports tablegroup g. Table a is pulled, but b is not imported.
   const { compiler, fps } = makeCompiler({

@@ -124,7 +124,7 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 13));
-      // No file to resolve → no name suggestions (may still return import kinds for the kind token)
+      // No file to resolve -> no name suggestions (may still return import kinds for the kind token)
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).not.toContain('users');
     });
