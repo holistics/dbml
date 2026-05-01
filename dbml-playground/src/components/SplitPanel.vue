@@ -25,40 +25,44 @@ import {
   ref, computed,
 } from 'vue';
 
-interface Props {
+// This component creates a resizable set of panes
+
+const {
+  sizes, // Initial size of the panels
+  minSize = 5, // The minimum size in px allowed for a pane
+} = defineProps<{
   sizes: number[];
   minSize?: number;
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  minSize: 5,
-});
+}>();
 
 const containerRef = ref<HTMLElement | null>(null);
-const panelSizes = ref([...props.sizes]);
+const panelSizes = ref([...sizes]);
 
 const gridTemplateColumns = computed(() =>
+  // Interleave the panel sizes with the gap size (8px)
   panelSizes.value.map((s) => `${s}fr`).join(' 8px '),
 );
 
 function startResize (splitterIndex: number, e: MouseEvent) {
   e.preventDefault();
+
   const startX = e.clientX;
-  const startSizes = [...panelSizes.value];
+  const startSizes = [...panelSizes.value]; // clone the panel size first to avoid mutation during calculation
   const total = startSizes.reduce((a, b) => a + b, 0);
+
   const container = containerRef.value;
   if (!container) return;
   const containerWidth = container.getBoundingClientRect().width;
 
-  const leftIdx = splitterIndex;
-  const rightIdx = splitterIndex + 1;
+  const leftIndex = splitterIndex;
+  const rightIndex = splitterIndex + 1;
 
   const onMove = (ev: MouseEvent) => {
-    const dx = ev.clientX - startX;
-    const dFr = (dx / containerWidth) * total;
+    const diffX = ev.clientX - startX;
+    const diffFr = (diffX / containerWidth) * total;
     const newSizes = [...startSizes];
-    newSizes[leftIdx] = Math.max(props.minSize, startSizes[leftIdx] + dFr);
-    newSizes[rightIdx] = Math.max(props.minSize, startSizes[rightIdx] - dFr);
+    newSizes[leftIndex] = Math.max(minSize, startSizes[leftIndex] + diffFr);
+    newSizes[rightIndex] = Math.max(minSize, startSizes[rightIndex] - diffFr);
     panelSizes.value = newSizes;
   };
 
