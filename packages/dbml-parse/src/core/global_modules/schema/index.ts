@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler/index';
 import {
-  shouldBelongToThisSchema,
+  schemaMembership,
 } from '@/compiler/queries/files/usableMembers';
 import {
   CompileError, CompileErrorCode,
@@ -158,21 +158,20 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
 // Resolve a selective use/reuse specifier (e.g. `use { table auth.users as u }`)
 // Returns UseSymbol if direct member, or registers a child schema if nested
 function handleMemberSelectiveUses (compiler: Compiler, symbol: SchemaSymbol, specifier: UseSpecifierNode, childSchemas: Map<string, SchemaSymbol>): Report<NodeSymbol | undefined> {
-  const nestedSchemaName = shouldBelongToThisSchema(compiler, symbol, specifier);
-  if (nestedSchemaName === false) return Report.create(undefined);
-  if (nestedSchemaName === true) {
+  const membership = schemaMembership(compiler, symbol, specifier);
+  if (membership.kind === 'none') return Report.create(undefined);
+  if (membership.kind === 'direct') {
     const usedSymbol = compiler.nodeSymbol(specifier);
     if (usedSymbol.hasValue(UNHANDLED)) return Report.create(undefined);
     return usedSymbol;
   }
-  // Targets a nested schema: ensure the child schema exists
-  if (!childSchemas.has(nestedSchemaName)) {
+  if (!childSchemas.has(membership.schemaName)) {
     childSchemas.set(
-      nestedSchemaName,
+      membership.schemaName,
       compiler.symbolFactory.create(
         SchemaSymbol,
         {
-          name: nestedSchemaName,
+          name: membership.schemaName,
           parent: symbol as SchemaSymbol,
         },
         symbol.filepath,

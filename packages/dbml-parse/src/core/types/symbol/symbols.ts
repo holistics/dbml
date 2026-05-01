@@ -506,7 +506,7 @@ export class ColumnSymbol extends NodeSymbol {
     const referee = compiler.nodeReferee(this.declaration.args[0]).getFiltered(UNHANDLED);
     return {
       name: baseName,
-      symbol: referee?.isKind(SymbolKind.Enum) ? referee as EnumSymbol : undefined,
+      symbol: referee instanceof EnumSymbol ? referee : undefined,
       args: args?.length ? args : undefined,
       schema: raw.schemaName ?? undefined,
       array: arrayParts.length ? arrayParts : undefined,

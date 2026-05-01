@@ -313,22 +313,15 @@ export function collectTransitiveDependencies (
   entrypoints: Filepath[],
 ): Filepath[] {
   const visited = new Set<FilepathId>();
-  const order: Filepath[] = [];
-
-  const collect = (fp: Filepath) => {
-    const id = fp.intern();
-    if (visited.has(id)) return;
-    visited.add(id);
-    order.push(fp);
-
-    for (const dep of compiler.fileDependencies(fp)) {
-      collect(dep);
+  const result: Filepath[] = [];
+  for (const entrypoint of entrypoints) {
+    for (const filepath of compiler.reachableFiles(entrypoint)) {
+      if (visited.has(filepath.intern())) continue;
+      visited.add(filepath.intern());
+      result.push(filepath);
     }
-  };
-  for (const e of entrypoints) {
-    collect(e);
   }
-  return order;
+  return result;
 }
 
 // Canonical enumeration of visible symbols, rooted at each file's programSymbol.

@@ -116,10 +116,9 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
     for (const element of ast.body) {
     // Process element declaration
       if (!(element instanceof ElementDeclarationNode)) continue;
-      const nestedSchemaName = shouldBelongToThisSchema(this, symbol, element);
+      const membership = schemaMembership(this, symbol, element);
       const alias = this.nodeAlias(element).getFiltered(UNHANDLED);
       const elementSymbol = this.nodeSymbol(element).getFiltered(UNHANDLED);
-      // public symbol can still have aliased symbol
       if (alias !== undefined && symbol.isPublicSchema() && elementSymbol) {
         nonSchemaMembers.push(this.symbolFactory.create(
           AliasSymbol,
@@ -132,22 +131,20 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
           symbol.filepath,
         ));
       }
-      if (nestedSchemaName === false) continue;
+      if (membership.kind === 'none') continue;
 
-      if (nestedSchemaName === true) {
-      // Direct member of this schema
+      if (membership.kind === 'direct') {
         const memberSymbol = this.nodeSymbol(element).getFiltered(UNHANDLED);
         if (!memberSymbol) continue;
         nonSchemaMembers.push(memberSymbol);
       } else {
-      // Element belongs to a child schema - create it if not yet seen
-        if (!childSchemas.has(nestedSchemaName)) {
+        if (!childSchemas.has(membership.schemaName)) {
           childSchemas.set(
-            nestedSchemaName,
+            membership.schemaName,
             this.symbolFactory.create(
               SchemaSymbol,
               {
-                name: nestedSchemaName,
+                name: membership.schemaName,
                 parent: symbol as SchemaSymbol,
               },
               symbol.filepath,
@@ -177,40 +174,37 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
   );
 }
 
-// Return if this node introduces a declaration belong to schemaSymbol
-// - Return true if the declaration belongs directly to the schemaSymbol
-// - Return false if the declaration doesn't belong to the schemaSymbol
-// - Return a string for the directly nested schema name that the declaration belongs to
-export function shouldBelongToThisSchema (compiler: Compiler, symbol: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): boolean | string {
-  const qualifiedName = symbol.qualifiedName;
+// Whether a declaration belongs to a given schema.
+// 'direct': element is a direct member (e.g. `Table users` in `public` schema)
+// 'child': element belongs to a nested child schema (e.g. `Table auth.users` -> child 'auth')
+// 'none': element doesn't belong to this schema at all
+export type SchemaMembership =
+  | { kind: 'direct' }
+  | { kind: 'child'; schemaName: string }
+  | { kind: 'none' };
+
+export function schemaMembership (compiler: Compiler, schema: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): SchemaMembership {
+  const qualifiedName = schema.qualifiedName;
   let fullname: string[] | undefined;
 
-  // For use specifier, alias is the real name existing in the scope
   if (element instanceof UseSpecifierNode) {
     fullname = useUtils.visibleName(compiler, element);
   } else {
     fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
   }
-  if (!fullname) return false;
+  if (!fullname) return { kind: 'none' };
 
   // Elements with no name or no schema prefix belong to the default (public) schema
-  // e.g. anonymous Refs, Notes, etc.
-  const elementSchemaChain = !fullname || fullname.length <= 1
-    ? [
-        DEFAULT_SCHEMA_NAME,
-      ]
+  const elementSchemaChain = fullname.length <= 1
+    ? [DEFAULT_SCHEMA_NAME]
     : fullname.slice(0, -1);
 
-  // Must start with this schema's qualified name
-  if (elementSchemaChain.length < qualifiedName.length) return false;
-  if (!qualifiedName.every((seg, i) => seg === elementSchemaChain[i])) return false;
+  if (elementSchemaChain.length < qualifiedName.length) return { kind: 'none' };
+  if (!qualifiedName.every((segment, i) => segment === elementSchemaChain[i])) return { kind: 'none' };
 
   if (elementSchemaChain.length === qualifiedName.length) {
-    // Direct member of this schema
-    return true;
-  } else {
-    // Element belongs to a child schema - create it if not yet seen
-    return elementSchemaChain[qualifiedName.length];
+    return { kind: 'direct' };
   }
+  return { kind: 'child', schemaName: elementSchemaChain[qualifiedName.length] };
 }
 
