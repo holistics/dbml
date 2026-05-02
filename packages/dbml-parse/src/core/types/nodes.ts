@@ -11,8 +11,11 @@ import {
   type Internable,
 } from '@/core/types/internable';
 import {
-  ElementKind, ImportKind,
+  ElementKind,
 } from '@/core/types/keywords';
+import {
+  ImportKind,
+} from '@/core/types/symbol';
 import {
   Position,
 } from '@/core/types/position';

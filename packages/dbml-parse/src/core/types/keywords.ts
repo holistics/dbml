@@ -1,18 +1,3 @@
-import {
-  SymbolKind,
-} from './symbol';
-
-// Allowable import kinds for use declaration
-export const ImportKind = {
-  Table: SymbolKind.Table,
-  Enum: SymbolKind.Enum,
-  TableGroup: SymbolKind.TableGroup,
-  TablePartial: SymbolKind.TablePartial,
-  Note: SymbolKind.Note,
-  Schema: SymbolKind.Schema,
-};
-export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];
-
 export enum ElementKind {
   Table = 'table',
   Enum = 'enum',

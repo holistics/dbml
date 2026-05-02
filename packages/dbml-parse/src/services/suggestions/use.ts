@@ -4,7 +4,7 @@ import {
 } from '@/core/types/filepath';
 import {
   ImportKind,
-} from '@/core/types/keywords';
+} from '@/core/types/symbol';
 import {
   UNHANDLED,
 } from '@/core/types/module';

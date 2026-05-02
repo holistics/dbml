@@ -73,6 +73,17 @@ export enum SymbolKind {
   Program = 'Program',
 }
 
+// Allowable import kinds for use declaration — mapped from SymbolKind
+export const ImportKind = {
+  Table: SymbolKind.Table,
+  Enum: SymbolKind.Enum,
+  TableGroup: SymbolKind.TableGroup,
+  TablePartial: SymbolKind.TablePartial,
+  Note: SymbolKind.Note,
+  Schema: SymbolKind.Schema,
+};
+export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];
+
 declare const __nodeSymbolBrand: unique symbol;
 export type NodeSymbolId = number & { readonly [__nodeSymbolBrand]: true };
 

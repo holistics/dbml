@@ -32,9 +32,11 @@ import {
 } from '@/core/types/tokens';
 import {
   ElementKind,
-  ImportKind,
   SettingName,
 } from '../types/keywords';
+import {
+  ImportKind,
+} from '../types/symbol';
 import {
   isHexChar,
 } from './chars';
