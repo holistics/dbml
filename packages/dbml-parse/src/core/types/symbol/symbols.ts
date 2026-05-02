@@ -9,6 +9,17 @@ import {
 } from './symbolIndex';
 import SymbolTable from './symbolTable';
 
+// Allowable import kinds for use declaration - mapped from SymbolKind
+export const ImportKind = {
+  Table: SymbolKind.Table,
+  Enum: SymbolKind.Enum,
+  TableGroup: SymbolKind.TableGroup,
+  TablePartial: SymbolKind.TablePartial,
+  Note: SymbolKind.StickyNote,
+  Schema: SymbolKind.Schema,
+};
+export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];
+
 export type NodeSymbolId = number;
 export class NodeSymbolIdGenerator {
   private id = 0;
