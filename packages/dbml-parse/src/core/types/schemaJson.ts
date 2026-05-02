@@ -109,6 +109,13 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
+  // These are stripped before going into @dbml/core
+  numericParams?: {
+    precision: number;
+    scale: number;
+  };
+  lengthParam?: { length: number };
+  isEnum?: boolean;
 }
 
 export interface Column {
@@ -221,8 +228,6 @@ export interface Alias {
   name: string;
   kind: AliasKind;
   value: {
-    elementName: string;
-    /** @deprecated Use elementName instead */
     tableName: string;
     schemaName: string | null;
   };

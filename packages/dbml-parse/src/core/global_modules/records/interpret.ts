@@ -135,7 +135,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
     };
   }
 
-  // Case 2: Standalone records  -- table_name(col1, col2) { ... }
+  // Case 2: Standalone records - table_name(col1, col2) { ... }
   const fragments = destructureCallExpression(nameNode!);
   if (!fragments) return undefined;
 

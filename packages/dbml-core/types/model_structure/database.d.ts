@@ -13,6 +13,7 @@ import { NormalizedIndexColumnIdMap } from './indexColumn';
 import { NormalizedIndexIdMap } from './indexes';
 import { NormalizedCheckIdMap } from './check';
 import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
+import { TokenPosition } from '@dbml/parse';
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -24,6 +25,7 @@ export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 
 export interface RecordValue {
     value: any;
     type: RecordValueType;
+    token: TokenPosition;
 }
 
 export interface RawTableRecord {

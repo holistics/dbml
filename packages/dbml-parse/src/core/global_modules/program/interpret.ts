@@ -373,7 +373,6 @@ export default class ProgramInterpreter {
           name: table.alias,
           kind: AliasKind.Table,
           value: {
-            elementName: table.name,
             tableName: table.name,
             schemaName: table.schemaName,
           },
