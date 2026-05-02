@@ -36,7 +36,9 @@ import {
 import {
   SymbolKind,
 } from '@/core/types/symbol';
-import { extractReferee } from '@/core/global_modules/utils';
+import {
+  extractReferee,
+} from '@/core/global_modules/utils';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,
@@ -90,10 +92,7 @@ function suggestRecordRowInTopLevelRecords (
       const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
     })
-    .filter((col) => col !== null) as Array<{
-      name: string;
-      type: string;
-    }>;
+    .filter((col) => col !== null);
 
   if (columns.length === 0) return noSuggestions();
 
