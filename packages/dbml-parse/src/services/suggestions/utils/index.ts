@@ -1,4 +1,3 @@
-import Compiler from '@/compiler';
 import {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/queries/utils';
@@ -6,23 +5,11 @@ import {
   hasTrailingSpaces,
 } from '@/core/lexer/utils';
 import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  FunctionApplicationNode, SyntaxNode, TupleExpressionNode,
-} from '@/core/types/nodes';
-import {
-  NodeSymbol, SymbolKind,
+  SymbolKind,
 } from '@/core/types/symbol';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
-import {
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
-  isValidPartialInjection,
-} from '@/core/utils/validate';
 import {
   CompletionItemInsertTextRule, CompletionItemKind, type CompletionList,
 } from '@/services/types';
@@ -124,79 +111,5 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
       },
       ...completionList.suggestions,
     ],
-  };
-}
-
-/**
- * Checks if the offset is within the element's header
- * (within the element, but outside the body)
- */
-export function isOffsetWithinElementHeader (offset: number, element: SyntaxNode & { body?: SyntaxNode }): boolean {
-  // Check if offset is within the element at all
-  if (offset < element.start || offset > element.end) {
-    return false;
-  }
-
-  // If element has a body, check if offset is outside it
-  if (element.body) {
-    return offset < element.body.start || offset > element.body.end;
-  }
-
-  // Element has no body, so entire element is considered header
-  return true;
-}
-
-export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
-  return tuple.commaList.length + tuple.elementList.length === 0;
-}
-
-/**
- * Get columns from a table symbol
- * @param tableSymbol The table symbol to extract columns from
- * @returns Array of column objects with name and type information
- */
-export function getColumnsFromTableSymbol (
-  compiler: Compiler,
-  tableSymbol: NodeSymbol,
-): Array<{
-  name: string;
-  type: string;
-}> | null {
-  const columns: Array<{
-    name: string;
-    type: string;
-  }> = [];
-
-  const members = compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED) || [];
-  for (const member of members) {
-    if (!member.isKind(SymbolKind.Column)) continue;
-    // Skip partial injection nodes (~PartialName)
-    if (member.declaration instanceof FunctionApplicationNode && isValidPartialInjection(member.declaration.callee)) continue;
-    const columnInfo = extractNameAndTypeOfColumnSymbol(member);
-    if (!columnInfo) continue;
-    columns.push(columnInfo);
-  }
-
-  return columns;
-}
-
-// This function also works with injected columns
-export function extractNameAndTypeOfColumnSymbol (
-  columnSymbol: NodeSymbol,
-): {
-  name: string;
-  type: string;
-} | null {
-  const columnDeclaration = columnSymbol.declaration;
-  if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
-
-  const name = extractVariableFromExpression(columnDeclaration.callee) ?? null;
-  const type = extractVariableFromExpression(columnDeclaration.args[0]) ?? null;
-
-  if (name === null || type === null) return null;
-
-  return {
-    name,
-    type,
   };
 }

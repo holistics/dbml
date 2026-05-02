@@ -122,7 +122,7 @@ export const enumModule: GlobalModule = {
 
     const {
       name, schema: schemaName,
-    } = symbol.resolvedName(compiler, filepath);
+    } = symbol.interpretedName(compiler, filepath);
 
     const fieldSymbols = symbol.members(compiler).filter((m) => m.isKind(SymbolKind.EnumField));
     const values = fieldSymbols.map((f) => {

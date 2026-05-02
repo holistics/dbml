@@ -194,6 +194,8 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof ProgramNode) {
     node.body.forEach(markInvalid);
     markInvalid(node.eof);
+  } else if (node instanceof EmptyNode) {
+    // DummyNode has no children to mark invalid
   } else if (node instanceof UseDeclarationNode) {
     markInvalid(node.useKeyword);
     markInvalid(node.specifiers);
@@ -208,8 +210,6 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.name);
   } else if (node instanceof WildcardNode) {
     markInvalid(node.token);
-  } else if (node instanceof EmptyNode) {
-    // DummyNode has no children to mark invalid
   } else {
     throw new Error('Unreachable case in markInvalidNode');
   }

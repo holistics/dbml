@@ -113,7 +113,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
     const tableSymbol = compiler.nodeSymbol(parent).getFiltered(UNHANDLED);
     if (!(tableSymbol instanceof TableSymbol)) return undefined;
 
-    const allColumns = tableSymbol.columns(compiler);
+    const allColumns = tableSymbol.mergedColumns(compiler);
     const schemaName = tableSymbol.schemaName(compiler);
     const tableName = tableSymbol.name ?? '';
     if (!nameNode) return {
@@ -166,7 +166,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   const resolvedSymbol = tableSymbol.originalSymbol;
   if (!(resolvedSymbol instanceof TableSymbol)) return undefined;
 
-  const allColumns = resolvedSymbol.columns(compiler);
+  const allColumns = resolvedSymbol.mergedColumns(compiler);
   const columns = fragments.args.map((e) => allColumns.find((c) => c.name === extractVariableFromExpression(e))!).filter(Boolean);
   return {
     schemaName: schemaName ?? DEFAULT_SCHEMA_NAME,

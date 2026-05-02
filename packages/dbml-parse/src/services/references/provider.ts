@@ -20,9 +20,6 @@ import {
 import {
   getOffsetFromMonacoPosition,
 } from '@/services/utils';
-import {
-  extractReferee,
-} from '@/core/utils/expression';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;
@@ -54,8 +51,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
           SyntaxNodeKind.PRIMARY_EXPRESSION,
         ].includes(node?.kind)
       ) {
-        // Try nodeSymbol first (for declarations), then nodeReferee (for reference positions)
-        const symbol = this.compiler.nodeSymbol(node).getFiltered(UNHANDLED) ?? extractReferee(this.compiler, node);
+        const symbol = this.compiler.nodeSymbol(node).getFiltered(UNHANDLED) ?? this.compiler.nodeReferee(node).getFiltered(UNHANDLED);
         const references = symbol ? this.compiler.symbolReferences(symbol) : undefined;
         if (references && references.length > 0) {
           return references.map((refNode: SyntaxNode) => {

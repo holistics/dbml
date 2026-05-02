@@ -40,30 +40,6 @@ import {
   DBML_EXT,
 } from '@/constants';
 
-function isTokenInUseDecl (token: SyntaxToken, useDecl: UseDeclarationNode): boolean {
-  if (token === useDecl.useKeyword) return true;
-  if (token === useDecl.fromKeyword) return true;
-  if (token === useDecl.importPath) return true;
-  const specs = useDecl.specifiers;
-  if (specs instanceof WildcardNode) return token === specs.token;
-  if (specs instanceof UseSpecifierListNode) {
-    if (token === specs.openBrace || token === specs.closeBrace) return true;
-    for (const spec of specs.specifiers) {
-      if (token === spec.importKind || token === spec.asKeyword) return true;
-    }
-  }
-  return false;
-}
-
-function isOffsetInUseDeclaration (
-  offset: number,
-  useDecl: UseDeclarationNode,
-  bOcToken: SyntaxToken | undefined,
-): boolean {
-  if (!Number.isNaN(useDecl.start) && offset >= useDecl.start && offset <= useDecl.end) return true;
-  return !!bOcToken && isTokenInUseDecl(bOcToken, useDecl);
-}
-
 // Use-declaration completions. Returns null if cursor not inside a use statement.
 export function suggestUseCompletion (
   compiler: Compiler,
@@ -74,7 +50,7 @@ export function suggestUseCompletion (
 ): CompletionList | null {
   const ast = compiler.parse.ast(filepath);
   for (const node of ast.body) {
-    if (node instanceof UseDeclarationNode && isOffsetInUseDeclaration(offset, node, bOcToken)) {
+    if (node instanceof UseDeclarationNode && node.containsEq(offset)) {
       return suggestInUseDeclaration(compiler, filepath, offset, node, model, bOcToken);
     }
   }
@@ -229,7 +205,7 @@ function suggestUseFilepath (
   currentFilepath: Filepath,
   importPath: SyntaxToken | undefined,
   model: TextModel,
-  useDecl: UseDeclarationNode,
+  useDeclaration: UseDeclarationNode,
 ): CompletionList {
   const currentDir = currentFilepath.dirname;
 
@@ -240,7 +216,7 @@ function suggestUseFilepath (
   const shouldInsertQuoteToImportPath = importPath === undefined;
 
   // Target range between quotes so replacement preserves them.
-  let existingImportPathRange: any = undefined;
+  let existingImportPathRange: any;
   if (importPath) {
     const tokenRange = getEditorRange(model, importPath);
     existingImportPathRange = {
@@ -250,8 +226,6 @@ function suggestUseFilepath (
       endColumn: tokenRange.endColumn - 1,
     };
   }
-
-  const requiredSymbols = extractRequiredSymbols(useDecl);
 
   const pathToCompletionItem = new Map<string, CompletionItem>();
   // Folders containing a matching file sort first.
@@ -309,31 +283,6 @@ function suggestUseFilepath (
       ...pathToCompletionItem.values(),
     ],
   };
-}
-
-// Extract symbol name + kind from each specifier.
-function extractRequiredSymbols (useDecl: UseDeclarationNode): Array<{
-  name: string;
-  kind: SymbolKind;
-}> {
-  if (!(useDecl.specifiers instanceof UseSpecifierListNode)) return [];
-  const required: Array<{ name: string;
-    kind: SymbolKind; }> = [];
-  for (const spec of useDecl.specifiers.specifiers) {
-    const kind = spec.getSymbolKind();
-    if (kind === undefined || kind === SymbolKind.Schema) continue;
-    const nameNode = spec.name;
-    if (!nameNode) continue;
-    const nameValue = (nameNode as any).variable?.value ?? (nameNode as any).value;
-    if (typeof nameValue !== 'string' || !nameValue) continue;
-    // Strip schema-qualifier (`auth.users` -> `users`).
-    const bareName = nameValue.includes('.') ? nameValue.split('.').pop()! : nameValue;
-    required.push({
-      name: bareName,
-      kind,
-    });
-  }
-  return required;
 }
 
 // True when file provides every required specifier by name + kind.

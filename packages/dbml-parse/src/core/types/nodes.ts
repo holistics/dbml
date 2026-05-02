@@ -131,18 +131,41 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
   }
 
   // Return if `otherNode` is strictly contained inside this node
-  strictlyContains (otherNode: SyntaxNode): boolean {
-    const thisSmallerStart = this.start < otherNode.start;
-    const thisSmallerEqStart = thisSmallerStart || this.start === otherNode.start;
-    const thisGreaterEnd = this.end > otherNode.end;
-    const thisGreaterEqEnd = thisGreaterEnd || this.end === otherNode.end;
+  strictlyContains (otherNode: SyntaxNode): boolean;
+  strictlyContains (otherToken: SyntaxToken): boolean;
+  strictlyContains (offset: number): boolean;
+  strictlyContains (other: SyntaxNode | SyntaxToken | number): boolean {
+    if (typeof other === 'number') {
+      return this.start < other
+        && this.end > other;
+    }
+    const {
+      start,
+      end,
+    } = other;
+
+    const thisSmallerStart = this.start < start;
+    const thisSmallerEqStart = thisSmallerStart || this.start === start;
+    const thisGreaterEnd = this.end > end;
+    const thisGreaterEqEnd = thisGreaterEnd || this.end === end;
     return (thisSmallerStart && thisGreaterEqEnd) || (thisSmallerEqStart && thisGreaterEnd);
   }
 
   // Return if `otherNode` is contained inside this node or equals this node
-  containsEq (otherNode: SyntaxNode): boolean {
-    return this.start <= otherNode.start
-      && this.end >= otherNode.end;
+  containsEq (otherNode: SyntaxNode): boolean;
+  containsEq (otherToken: SyntaxToken): boolean;
+  containsEq (offset: number): boolean;
+  containsEq (other: SyntaxNode | SyntaxToken | number): boolean {
+    if (typeof other === 'number') {
+      return this.start <= other
+        && this.end >= other;
+    }
+    const {
+      start,
+      end,
+    } = other;
+
+    return this.start <= start && this.end >= end;
   }
 }
 

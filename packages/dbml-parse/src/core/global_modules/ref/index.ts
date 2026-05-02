@@ -103,7 +103,10 @@ export const refModule: GlobalModule = {
             ? extractVarNameFromPrimaryVariable(fragment)
             : undefined;
           if (!name) break;
-          const next = compiler.lookupMembers(resolved, [SymbolKind.Table, SymbolKind.Schema], name, true).getValue();
+          const next = compiler.lookupMembers(resolved, [
+            SymbolKind.Table,
+            SymbolKind.Schema,
+          ], name, true).getValue();
           if (next?.isKind(SymbolKind.Table)) return next;
           resolved = next;
         } else {
@@ -118,18 +121,22 @@ export const refModule: GlobalModule = {
     const rightTable = resolveTable(infix.rightExpression);
     if (!leftTable || !rightTable) return Report.create(PASS_THROUGH);
 
-    const { onDelete, onUpdate, color } = extractRefSettings(field);
+    const {
+      onDelete, onUpdate, color,
+    } = extractRefSettings(field);
 
-    return Report.create([{
-      kind: MetadataKind.Ref,
-      leftTable,
-      rightTable,
-      relation,
-      onDelete,
-      onUpdate,
-      color,
-      declaration: node,
-    } as RefMetadata]);
+    return Report.create([
+      {
+        kind: MetadataKind.Ref,
+        leftTable,
+        rightTable,
+        relation,
+        onDelete,
+        onUpdate,
+        color,
+        declaration: node,
+      } as RefMetadata,
+    ]);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -149,7 +156,10 @@ export const refModule: GlobalModule = {
       compiler,
       metadata.declaration,
       filepath,
-      { left: metadata.leftTable, right: metadata.rightTable },
+      {
+        left: metadata.leftTable,
+        right: metadata.rightTable,
+      },
     ).interpret();
   },
 };

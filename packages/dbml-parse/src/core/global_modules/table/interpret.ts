@@ -41,7 +41,7 @@ import {
   aggregateSettingList, isValidPartialInjection,
 } from '@/core/utils/validate';
 import {
-  parseColor, extractElementName,
+  extractColor, extractElementName,
   getTokenPosition, normalizeNote,
   processColumnType, processDefaultValue,
 } from '@/core/utils/interpret';
@@ -82,7 +82,7 @@ export class TableInterpreter {
     if (this.symbol) {
       const {
         name, schema,
-      } = this.symbol.resolvedName(this.compiler, this.filepath);
+      } = this.symbol.interpretedName(this.compiler, this.filepath);
       this.table.name = name;
       this.table.schemaName = schema;
     } else {
@@ -168,7 +168,7 @@ export class TableInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     this.table.headerColor = settingMap[SettingName.HeaderColor]?.length
-      ? parseColor(settingMap[SettingName.HeaderColor]?.at(0)?.value as any)
+      ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value as any)
       : undefined;
 
     const [

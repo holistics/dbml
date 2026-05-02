@@ -34,7 +34,7 @@ import {
   aggregateSettingList,
 } from '@/core/utils/validate';
 import {
-  parseColor, getTokenPosition,
+  extractColor, getTokenPosition,
 } from '@/core/utils/interpret';
 import {
   extractNamesFromRefOperand, getMultiplicities,
@@ -77,17 +77,25 @@ export function extractRefSettings (field: FunctionApplicationNode): {
     : extractVariableFromExpression(updateValue) ?? undefined;
 
   const color = settingMap.color?.length
-    ? parseColor(settingMap.color?.at(0)?.value as any)
+    ? extractColor(settingMap.color?.at(0)?.value as any)
     : undefined;
 
-  return { onDelete, onUpdate, color };
+  return {
+    onDelete,
+    onUpdate,
+    color,
+  };
 }
 
 export class RefInterpreter {
   private declarationNode: ElementDeclarationNode;
   private compiler: Compiler;
   private filepath?: Filepath;
-  private tableSymbols?: { left: NodeSymbol; right: NodeSymbol };
+  private tableSymbols?: {
+    left: NodeSymbol;
+    right: NodeSymbol;
+  };
+
   private ref: Partial<Ref>;
   private ownerTable?: string;
   private ownerSchema?: string | null;
@@ -96,7 +104,10 @@ export class RefInterpreter {
     compiler: Compiler,
     declarationNode: ElementDeclarationNode,
     filepath?: Filepath,
-    tableSymbols?: { left: NodeSymbol; right: NodeSymbol },
+    tableSymbols?: {
+      left: NodeSymbol;
+      right: NodeSymbol;
+    },
   ) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
@@ -170,7 +181,10 @@ export class RefInterpreter {
     // When interpreting for a consumer file with known table symbols,
     // rewrite endpoint table names via canonicalName.
     if (this.filepath && this.tableSymbols) {
-      const symbols = [this.tableSymbols.left, this.tableSymbols.right];
+      const symbols = [
+        this.tableSymbols.left,
+        this.tableSymbols.right,
+      ];
       for (let i = 0; i < this.ref.endpoints.length; i++) {
         const canonical = this.compiler.canonicalName(this.filepath, symbols[i]).getValue();
         if (canonical) {

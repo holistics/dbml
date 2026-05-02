@@ -587,8 +587,6 @@ Table y_table {
     });
 
     test('selective use { DiagramView myView } is rejected at validation', () => {
-      // 'diagramview' is not a valid ImportKind - the validator rejects it as an
-      // invalid specifier type; the binder silently ignores unknown kinds.
       const { compiler, fps } = makeCompiler({
         '/base.dbml': `
           Table users { id int [pk] }

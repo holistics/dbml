@@ -40,14 +40,11 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  parseColor,
+  extractColor,
 } from '@/core/utils/interpret';
 import {
   getSymbolSchemaAndName, nodeRefereeOfLeftExpression,
 } from '../utils';
-import {
-  extractReferee,
-} from '@/core/utils/expression';
 import TableGroupBinder from './bind';
 
 // Public utils that other modules can use
@@ -129,14 +126,14 @@ export const tableGroupModule: GlobalModule = {
 
     const {
       name, schema: schemaName,
-    } = symbol.resolvedName(compiler, filepath);
+    } = symbol.interpretedName(compiler, filepath);
 
     // Resolve table fields from symbol members
     const fieldSymbols = symbol.members(compiler).filter((m) => m.isKind(SymbolKind.TableGroupField));
     const tables = fieldSymbols.flatMap((f) => {
       if (!f.declaration) return [];
       const callee = f.declaration instanceof FunctionApplicationNode ? f.declaration.callee : f.declaration;
-      const tableSymbol = extractReferee(compiler, callee ?? f.declaration);
+      const tableSymbol = compiler.nodeReferee(callee ?? f.declaration).getFiltered(UNHANDLED);
       if (!tableSymbol?.isKind(SymbolKind.Table)) return [];
       const resolved = getSymbolSchemaAndName(compiler, tableSymbol);
       return [
@@ -146,7 +143,7 @@ export const tableGroupModule: GlobalModule = {
 
     // Settings
     const settings = symbol.settings(compiler);
-    const color = settings?.color?.length ? parseColor(settings.color.at(0)?.value) : undefined;
+    const color = settings?.color?.length ? extractColor(settings.color.at(0)?.value) : undefined;
 
     // Note: settings note first, sub-element Note overrides
     let note = symbol.note(compiler);

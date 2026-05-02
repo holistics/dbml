@@ -74,7 +74,7 @@ export function extractElementName (nameNode: SyntaxNode): {
   };
 }
 
-export function parseColor (node: unknown): string | undefined {
+export function extractColor (node: unknown): string | undefined {
   if (
     node instanceof PrimaryExpressionNode
     && node.expression instanceof LiteralNode

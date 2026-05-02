@@ -25,7 +25,6 @@ import {
   destructureComplexVariableTuple, destructureMemberAccessExpression, extractVarNameFromPrimaryVariable, isAccessExpression, isExpressionAVariableNode,
 } from '@/core/utils/expression';
 
-
 export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerTable?: string): {
   schemaName: string | null;
   tableName: string;

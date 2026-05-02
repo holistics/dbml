@@ -223,8 +223,8 @@ export default class ProgramInterpreter {
       for (const member of members) {
         if (!member.usedSymbol) continue;
         const original = member.originalSymbol;
-        const originalResolved = original.resolvedName(this.compiler);
-        const memberResolved = member.resolvedName(this.compiler, this.filepath);
+        const originalResolved = original.interpretedName(this.compiler);
+        const memberResolved = member.interpretedName(this.compiler, this.filepath);
 
         const canonicalKey = original.intern();
         const visibleName = {
@@ -337,7 +337,9 @@ export default class ProgramInterpreter {
     }
 
     // Interpret refs — RefInterpreter rewrites endpoints via canonicalName.
-    for (const [, meta] of refsByDeclaration) {
+    for (const [
+      , meta,
+    ] of refsByDeclaration) {
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) continue;
       const ref = result.getValue() as Ref | undefined;

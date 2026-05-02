@@ -40,7 +40,7 @@ import {
   isExpressionASignedNumberExpression,
 } from '@/core/utils/validate';
 import {
-  parseColor, extractElementName, getTokenPosition,
+  extractColor, extractElementName, getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
 import {
@@ -74,7 +74,7 @@ export class TablePartialInterpreter {
     this.tablePartial.token = this.symbol?.token ?? getTokenPosition(this.declarationNode);
 
     if (this.symbol) {
-      this.tablePartial.name = this.symbol.resolvedName(this.compiler, this.filepath).name;
+      this.tablePartial.name = this.symbol.interpretedName(this.compiler, this.filepath).name;
     } else {
       this.interpretName(this.declarationNode.name!);
     }
@@ -134,7 +134,7 @@ export class TablePartialInterpreter {
 
     const firstHeaderColor = head(settingMap[SettingName.HeaderColor]);
     this.tablePartial.headerColor = firstHeaderColor
-      ? parseColor(firstHeaderColor.value as any)
+      ? extractColor(firstHeaderColor.value as any)
       : undefined;
 
     const [

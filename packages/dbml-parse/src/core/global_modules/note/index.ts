@@ -25,7 +25,7 @@ import {
   extractQuotedStringToken, getBody, isElementNode,
 } from '@/core/utils/expression';
 import {
-  parseColor, normalizeNote,
+  extractColor, normalizeNote,
 } from '@/core/utils/interpret';
 import type {
   GlobalModule,
@@ -68,11 +68,11 @@ export const noteModule: GlobalModule = {
 
     const {
       name,
-    } = symbol.resolvedName(compiler, filepath);
+    } = symbol.interpretedName(compiler, filepath);
     const token = symbol.token!;
     const settings = symbol.settings(compiler);
     const headerColor = settings?.[SettingName.HeaderColor]?.length
-      ? parseColor(settings[SettingName.HeaderColor].at(0)?.value)
+      ? extractColor(settings[SettingName.HeaderColor].at(0)?.value)
       : undefined;
 
     const body = getBody(symbol.declaration);

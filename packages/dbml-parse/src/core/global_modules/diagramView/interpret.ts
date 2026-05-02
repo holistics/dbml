@@ -27,9 +27,6 @@ import {
 import {
   destructureComplexVariable, isWildcardExpression,
 } from '@/core/utils/expression';
-import {
-  extractReferee,
-} from '@/core/utils/expression';
 
 export class DiagramViewInterpreter {
   private compiler: Compiler;
@@ -72,7 +69,7 @@ export class DiagramViewInterpreter {
 
     const {
       name: resolvedName, schema: resolvedSchema,
-    } = this.symbol.resolvedName(this.compiler, this.filepath);
+    } = this.symbol.interpretedName(this.compiler, this.filepath);
     this.diagramView.name = resolvedName;
     this.diagramView.schemaName = resolvedSchema;
 
@@ -186,14 +183,16 @@ export class DiagramViewInterpreter {
     }
 
     // Specific items
-    const items: Array<{ name: string;
-      schemaName: string; }> = [];
+    const items: Array<{
+      name: string;
+      schemaName: string;
+    }> = [];
     for (const field of body.body) {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
       // If the field was bound to a symbol (e.g., alias "U" -> Table "users"),
       // resolve the real name from the referee's declaration
-      const referee = extractReferee(this.compiler, field.callee);
+      const referee = field.callee && this.compiler.nodeReferee(field.callee!).getFiltered(UNHANDLED);
       if (referee?.declaration instanceof ElementDeclarationNode) {
         const realFragments = destructureComplexVariable(referee.declaration.name) ?? [];
         if (realFragments.length > 0) {

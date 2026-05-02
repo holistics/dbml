@@ -93,13 +93,20 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
   if (symbolOrFilepath instanceof Filepath) {
     // Collect top-level schemas defined in this file (not from uses/reuses)
     const fileSchemas = new Map<string, SchemaSymbol>([
-      [DEFAULT_SCHEMA_NAME, this.symbolFactory.create(SchemaSymbol, { name: DEFAULT_SCHEMA_NAME }, symbolOrFilepath)],
+      [
+        DEFAULT_SCHEMA_NAME,
+        this.symbolFactory.create(SchemaSymbol, {
+          name: DEFAULT_SCHEMA_NAME,
+        }, symbolOrFilepath),
+      ],
     ]);
     for (const element of ast.declarations) {
       const fullname = this.nodeFullname(element).getFiltered(UNHANDLED) || [];
       const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0];
       if (!fileSchemas.has(schemaName)) {
-        fileSchemas.set(schemaName, this.symbolFactory.create(SchemaSymbol, { name: schemaName }, symbolOrFilepath));
+        fileSchemas.set(schemaName, this.symbolFactory.create(SchemaSymbol, {
+          name: schemaName,
+        }, symbolOrFilepath));
       }
     }
     schemaMembers.push(...fileSchemas.values());
@@ -180,8 +187,9 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
 // 'none': element doesn't belong to this schema at all
 export type SchemaMembership =
   | { kind: 'direct' }
-  | { kind: 'child'; schemaName: string }
-  | { kind: 'none' };
+  | { kind: 'child';
+    schemaName: string; }
+    | { kind: 'none' };
 
 export function schemaMembership (compiler: Compiler, schema: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): SchemaMembership {
   const qualifiedName = schema.qualifiedName;
@@ -192,19 +200,31 @@ export function schemaMembership (compiler: Compiler, schema: SchemaSymbol, elem
   } else {
     fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
   }
-  if (!fullname) return { kind: 'none' };
+  if (!fullname) return {
+    kind: 'none',
+  };
 
   // Elements with no name or no schema prefix belong to the default (public) schema
   const elementSchemaChain = fullname.length <= 1
-    ? [DEFAULT_SCHEMA_NAME]
+    ? [
+        DEFAULT_SCHEMA_NAME,
+      ]
     : fullname.slice(0, -1);
 
-  if (elementSchemaChain.length < qualifiedName.length) return { kind: 'none' };
-  if (!qualifiedName.every((segment, i) => segment === elementSchemaChain[i])) return { kind: 'none' };
+  if (elementSchemaChain.length < qualifiedName.length) return {
+    kind: 'none',
+  };
+  if (!qualifiedName.every((segment, i) => segment === elementSchemaChain[i])) return {
+    kind: 'none',
+  };
 
   if (elementSchemaChain.length === qualifiedName.length) {
-    return { kind: 'direct' };
+    return {
+      kind: 'direct',
+    };
   }
-  return { kind: 'child', schemaName: elementSchemaChain[qualifiedName.length] };
+  return {
+    kind: 'child',
+    schemaName: elementSchemaChain[qualifiedName.length],
+  };
 }
-

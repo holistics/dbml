@@ -70,7 +70,12 @@ export type SymbolMetadata =
 
 export function metadataTargets (metadata: SymbolMetadata): NodeSymbol[] {
   if (metadata.kind === MetadataKind.Ref) {
-    return [metadata.leftTable, metadata.rightTable];
+    return [
+      metadata.leftTable,
+      metadata.rightTable,
+    ];
   }
-  return [metadata.target];
+  return [
+    metadata.target,
+  ];
 }

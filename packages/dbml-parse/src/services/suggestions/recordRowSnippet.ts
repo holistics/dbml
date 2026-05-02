@@ -16,15 +16,9 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  extractReferee,
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
 import {
-  extractNameAndTypeOfColumnSymbol,
-  getColumnsFromTableSymbol,
   noSuggestions,
 } from '@/services/suggestions/utils';
 import {
@@ -35,7 +29,10 @@ import {
   type TextModel,
 } from '@/services/types';
 import {
+  ColumnSymbol,
+  InjectedColumnSymbol,
   SymbolKind,
+  TableSymbol,
 } from '@/core/types/symbol';
 
 export function suggestRecordRowSnippet (
@@ -76,21 +73,26 @@ function suggestRecordRowInTopLevelRecords (
   if (!(recordsElement.name instanceof CallExpressionNode)) return noSuggestions();
 
   const columnElements = recordsElement.name.argumentList?.elementList || [];
-  const columnSymbols = columnElements.map((e) => extractReferee(compiler, e));
+  const columnSymbols = columnElements.map((e) => compiler.nodeReferee(e).getFiltered(UNHANDLED));
   if (!columnSymbols || columnSymbols.length === 0) return noSuggestions();
 
   const columns = columnElements
-    .map((element, index) => {
+    .flatMap((element, index) => {
       const symbol = columnSymbols[index];
-      if (!symbol || !symbol.isKind(SymbolKind.Column)) {
-        return null;
+      if (!(symbol instanceof ColumnSymbol || symbol instanceof InjectedColumnSymbol)) {
+        return [];
       }
-      const columnName = extractVariableFromExpression(element);
-      if (!columnName) return null;
-      const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
-      return result;
-    })
-    .filter((col) => col !== null);
+      const {
+        name,
+      } = symbol.canonicalName(compiler, element.filepath)!;
+      const {
+        name: type,
+      } = symbol.type(compiler)!;
+      return {
+        name,
+        type,
+      };
+    });
 
   if (columns.length === 0) return noSuggestions();
 
@@ -121,7 +123,7 @@ function suggestRecordRowInNestedRecords (
   }
 
   const tableSymbol = compiler.nodeSymbol(parent).getFiltered(UNHANDLED);
-  if (!tableSymbol?.isKind(SymbolKind.Table)) {
+  if (!(tableSymbol instanceof TableSymbol)) {
     return noSuggestions();
   }
 
@@ -134,24 +136,40 @@ function suggestRecordRowInNestedRecords (
     // Explicit columns from tuple: records (col1, col2)
     const columnElements = recordsElement.name.elementList;
     const columnSymbols = columnElements
-      .map((e) => extractReferee(compiler, e))
+      .map((e) => compiler.nodeReferee(e).getFiltered(UNHANDLED))
       .filter((s) => s !== undefined);
 
     columns = columnElements
-      .map((element, index) => {
+      .flatMap((element, index) => {
         const symbol = columnSymbols[index];
-        if (!symbol || !symbol.isKind(SymbolKind.Column)) {
-          return null;
+        if (!(symbol instanceof ColumnSymbol || symbol instanceof InjectedColumnSymbol)) {
+          return [];
         }
-        const columnName = extractVariableFromExpression(element);
-        if (columnName === undefined) return null;
-        return extractNameAndTypeOfColumnSymbol(symbol, columnName);
-      })
-      .filter((col) => col !== null) as Array<{ name: string;
-      type: string; }>;
+        const {
+          name,
+        } = symbol.canonicalName(compiler, element.filepath)!;
+        const {
+          name: type,
+        } = symbol.type(compiler)!;
+        return {
+          name,
+          type,
+        };
+      });
   } else {
-    // Implicit columns - use all columns from parent table
-    const result = getColumnsFromTableSymbol(compiler, tableSymbol);
+    // Implicit columns: use all columns from parent table
+    const result = tableSymbol.mergedColumns(compiler).flatMap((symbol) => {
+      const {
+        name,
+      } = symbol.canonicalName(compiler, symbol.filepath)!;
+      const {
+        name: type,
+      } = symbol.type(compiler)!;
+      return {
+        name,
+        type,
+      };
+    });
     if (!result) {
       return noSuggestions();
     }

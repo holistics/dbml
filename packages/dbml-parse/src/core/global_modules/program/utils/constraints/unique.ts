@@ -41,7 +41,7 @@ export function validateUnique (compiler: Compiler, tableNode: SyntaxNode, recor
   const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
   if (!(tableSymbol instanceof TableSymbol)) return [];
 
-  const columns = tableSymbol.columns(compiler);
+  const columns = tableSymbol.mergedColumns(compiler);
   const columnInfos = columns.map((c) => columnInfoFromSymbol(c, compiler));
   const columnMap = keyBy(columnInfos, 'name');
 

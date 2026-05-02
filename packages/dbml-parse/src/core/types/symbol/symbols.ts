@@ -30,7 +30,7 @@ import {
   isValidPartialInjection,
 } from '@/core/utils/validate';
 import {
-  parseColor, getTokenPosition, normalizeNote, processColumnType, processDefaultValue,
+  extractColor, getTokenPosition, normalizeNote, processColumnType, processDefaultValue,
 } from '@/core/utils/interpret';
 import {
   type AttributeNode,
@@ -134,13 +134,18 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     return false;
   }
 
-  canonicalName (compiler: Compiler, filepath: Filepath): { schema: string;
-    name: string; } | undefined {
+  canonicalName (compiler: Compiler, filepath: Filepath): {
+    schema: string;
+    name: string;
+  } | undefined {
     return compiler.canonicalName(filepath, this).getValue();
   }
 
-  resolvedName (compiler: Compiler, filepath?: Filepath): { schema: string | null;
-    name: string; } {
+  // This function is like canonicalName, but it converted DEFAULT_SCHEMA_NAME back to null to avoid introducing `public` schema unnecessarily
+  interpretedName (compiler: Compiler, filepath?: Filepath): {
+    schema: string | null;
+    name: string;
+  } {
     const canonical = this.canonicalName(compiler, filepath ?? this.filepath);
     const schema = canonical?.schema || null;
     return {
@@ -163,7 +168,7 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     return compiler.nodeAlias(this.declaration).getFiltered(UNHANDLED) ?? undefined;
   }
 
-  settings (compiler: Compiler): Record<string, any> | undefined {
+  settings (compiler: Compiler): Record<string, AttributeNode[]> | undefined {
     if (!this.declaration) return undefined;
     return compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
   }
@@ -173,8 +178,10 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     return getTokenPosition(this.declaration);
   }
 
-  note (compiler: Compiler): { value: string;
-    token: TokenPosition; } | undefined {
+  note (compiler: Compiler): {
+    value: string;
+    token: TokenPosition;
+  } | undefined {
     const s = this.settings(compiler);
     if (!s?.note?.length) return undefined;
     const noteAttr = s.note[0];
@@ -342,16 +349,11 @@ export class TableSymbol extends NodeSymbol {
   }
 
   columns (compiler: Compiler): ColumnSymbol[] {
-    const allColumns = this.members(compiler).filter((m): m is ColumnSymbol => m.isKind(SymbolKind.Column));
-    // Direct columns win over injected; later injected overrides earlier
-    const byName = new Map<string | undefined, ColumnSymbol>();
-    for (const col of allColumns) {
-      const isDirect = !(col instanceof InjectedColumnSymbol);
-      if (isDirect || !byName.has(col.name) || byName.get(col.name) instanceof InjectedColumnSymbol) {
-        byName.set(col.name, col);
-      }
-    }
-    return allColumns.filter((c) => byName.get(c.name) === c);
+    return this.mergedColumns(compiler).filter((m) => !(m instanceof InjectedColumnSymbol));
+  }
+
+  mergedColumns (compiler: Compiler): (ColumnSymbol | InjectedColumnSymbol)[] {
+    return this.members(compiler).filter((m): m is ColumnSymbol => m.isKind(SymbolKind.Column));
   }
 
   partialInjections (compiler: Compiler): NodeSymbol[] {
@@ -361,14 +363,25 @@ export class TableSymbol extends NodeSymbol {
   headerColor (compiler: Compiler): string | undefined {
     const s = this.settings(compiler);
     return s?.[SettingName.HeaderColor]?.length
-      ? parseColor(s[SettingName.HeaderColor].at(0)?.value)
+      ? extractColor(s[SettingName.HeaderColor].at(0)?.value)
       : undefined;
   }
 
-  refs (compiler: Compiler) { return this.metadataOf(compiler, MetadataKind.Ref); }
-  checks (compiler: Compiler) { return this.metadataOf(compiler, MetadataKind.Check); }
-  indexes (compiler: Compiler) { return this.metadataOf(compiler, MetadataKind.Index); }
-  records (compiler: Compiler) { return this.metadataOf(compiler, MetadataKind.Record); }
+  refs (compiler: Compiler) {
+    return this.metadataOf(compiler, MetadataKind.Ref);
+  }
+
+  checks (compiler: Compiler) {
+    return this.metadataOf(compiler, MetadataKind.Check);
+  }
+
+  indexes (compiler: Compiler) {
+    return this.metadataOf(compiler, MetadataKind.Index);
+  }
+
+  records (compiler: Compiler) {
+    return this.metadataOf(compiler, MetadataKind.Record);
+  }
 
   partialSymbols (compiler: Compiler): NodeSymbol[] {
     return this.partialInjections(compiler).flatMap((injection) => {
@@ -401,7 +414,7 @@ export class TableSymbol extends NodeSymbol {
     for (const partial of this.partialSymbols(compiler)) {
       const s = partial.settings(compiler);
       if (s?.[SettingName.HeaderColor]?.length) {
-        color = parseColor(s[SettingName.HeaderColor].at(0)?.value);
+        color = extractColor(s[SettingName.HeaderColor].at(0)?.value);
       }
     }
     return color;
@@ -589,7 +602,7 @@ export class TableGroupSymbol extends NodeSymbol {
 
   color (compiler: Compiler): string | undefined {
     const s = this.settings(compiler);
-    return s?.color?.length ? parseColor(s.color.at(0)?.value) : undefined;
+    return s?.color?.length ? extractColor(s.color.at(0)?.value) : undefined;
   }
 }
 
@@ -704,7 +717,6 @@ export class PartialInjectionSymbol extends NodeSymbol {
     return this;
   }
 }
-
 
 export class DiagramViewSymbol extends NodeSymbol {
   constructor (
