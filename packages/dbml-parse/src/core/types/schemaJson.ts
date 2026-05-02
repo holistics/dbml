@@ -7,10 +7,6 @@ import type {
 
 export enum AliasKind {
   Table = 'table',
-  Enum = 'enum',
-  TableGroup = 'tablegroup',
-  TablePartial = 'tablepartial',
-  Note = 'note',
 }
 
 export interface TokenPosition {
@@ -84,7 +80,6 @@ export interface Database {
 // Multifile project
 export interface MasterDatabase {
   files: Record<string, Database>;
-  items: Database;
 }
 
 export interface Table {
