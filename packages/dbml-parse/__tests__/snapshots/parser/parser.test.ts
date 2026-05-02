@@ -47,7 +47,7 @@ describe('[snapshot] parser', () => {
     const output = serializeParserResult(
       compiler,
       lexer.lex().chain((tokens) => {
-        const parser = new Parser(DEFAULT_ENTRY, program, tokens, nodeIdGenerator);
+        const parser = new Parser(program, tokens, nodeIdGenerator, DEFAULT_ENTRY);
         return parser.parse().map((_) => _.ast);
       }),
     );

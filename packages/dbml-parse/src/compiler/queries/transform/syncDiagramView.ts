@@ -58,7 +58,7 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   if (lexerResult.getErrors().length > 0) return blocks; // malformed  -- cannot tokenize
 
   const tokens = lexerResult.getValue();
-  const ast = new Parser(DEFAULT_ENTRY, source, tokens, new SyntaxNodeIdGenerator()).parse();
+  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
   if (ast.getErrors().length > 0) return blocks; // malformed  -- cannot parse
 
   const program = ast.getValue().ast;

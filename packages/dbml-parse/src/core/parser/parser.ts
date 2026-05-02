@@ -86,7 +86,7 @@ export default class Parser {
 
   private filepath: Filepath;
 
-  constructor (filepath: Filepath, source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator) {
+  constructor (source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator, filepath: Filepath) {
     this.source = source;
     this.tokens = tokens;
     this.nodeFactory = new NodeFactory(nodeIdGenerator, filepath);
