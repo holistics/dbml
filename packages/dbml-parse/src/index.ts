@@ -96,11 +96,7 @@ export {
 // DiagramView types
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
-} from '@/compiler/queries/transform/syncDiagramView';
-export type {
   TextEdit,
-} from '@/compiler/queries/transform';
-export {
   findDiagramViewBlocks,
 } from '@/compiler/queries/transform';
 
