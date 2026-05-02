@@ -16,6 +16,7 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
+  extractReferee,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
@@ -36,9 +37,6 @@ import {
 import {
   SymbolKind,
 } from '@/core/types/symbol';
-import {
-  extractReferee,
-} from '@/core/global_modules/utils';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,

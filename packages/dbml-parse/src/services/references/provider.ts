@@ -22,7 +22,7 @@ import {
 } from '@/services/utils';
 import {
   extractReferee,
-} from '../utils';
+} from '@/core/utils/expression';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;

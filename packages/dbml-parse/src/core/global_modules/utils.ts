@@ -25,17 +25,6 @@ import {
   destructureComplexVariableTuple, destructureMemberAccessExpression, extractVarNameFromPrimaryVariable, isAccessExpression, isExpressionAVariableNode,
 } from '@/core/utils/expression';
 
-// Extract referee from a simple variable (x) or access expression (a.b.c).
-// Walks dot-chains to the rightmost variable and calls compiler.nodeReferee on it.
-export function extractReferee (compiler: Compiler, node: SyntaxNode | undefined): NodeSymbol | undefined {
-  if (!node) return undefined;
-  if (node instanceof InfixExpressionNode && node.op?.value === '.') {
-    return extractReferee(compiler, node.rightExpression);
-  }
-  const result = compiler.nodeReferee(node);
-  if (result.hasValue(UNHANDLED)) return undefined;
-  return result.getValue() ?? undefined;
-}
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerTable?: string): {
   schemaName: string | null;

@@ -164,12 +164,8 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
  * @returns Array of column objects with name and type information
  */
 export function getColumnsFromTableSymbol (
-<<<<<<< HEAD:packages/dbml-parse/src/services/suggestions/utils/index.ts
   compiler: Compiler,
   tableSymbol: NodeSymbol,
-=======
-  tableSymbol: TableSymbol | TablePartialSymbol,
->>>>>>> feat/playground-rewrite:packages/dbml-parse/src/services/suggestions/utils.ts
 ): Array<{
   name: string;
   type: string;

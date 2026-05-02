@@ -1,6 +1,13 @@
 import {
   last,
 } from 'lodash-es';
+import type Compiler from '@/compiler';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  NodeSymbol,
+} from '@/core/types/symbol';
 import type {
   ElementKind, ImportKind, SettingName,
 } from '@/core/types/keywords';
@@ -438,4 +445,16 @@ export function isTerminalAccessFragment (node: SyntaxNode): boolean {
   if (!isAccessExpression(currentAccess)) return false;
   if (currentAccess.rightExpression !== node) return false;
   return !(isAccessExpression(currentAccess.parentNode) && (currentAccess.parentNode as InfixExpressionNode).leftExpression === currentAccess);
+}
+
+// Extract referee from a simple variable (x) or access expression (a.b.c).
+// Walks dot-chains to the rightmost variable and calls compiler.nodeReferee on it.
+export function extractReferee (compiler: Compiler, node: SyntaxNode | undefined): NodeSymbol | undefined {
+  if (!node) return undefined;
+  if (node instanceof InfixExpressionNode && node.op?.value === '.') {
+    return extractReferee(compiler, node.rightExpression);
+  }
+  const result = compiler.nodeReferee(node);
+  if (result.hasValue(UNHANDLED)) return undefined;
+  return result.getValue() ?? undefined;
 }

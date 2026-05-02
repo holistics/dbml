@@ -43,8 +43,11 @@ import {
   parseColor,
 } from '@/core/utils/interpret';
 import {
-  extractReferee, getSymbolSchemaAndName, nodeRefereeOfLeftExpression,
+  getSymbolSchemaAndName, nodeRefereeOfLeftExpression,
 } from '../utils';
+import {
+  extractReferee,
+} from '@/core/utils/expression';
 import TableGroupBinder from './bind';
 
 // Public utils that other modules can use
