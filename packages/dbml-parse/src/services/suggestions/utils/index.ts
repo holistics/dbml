@@ -3,9 +3,6 @@ import {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/queries/utils';
 import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
   hasTrailingSpaces,
 } from '@/core/lexer/utils';
 import {
@@ -130,11 +127,6 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
   };
 }
 
-// Get the source text of a node or a token
-export function getNodeOrTokenSource (compiler: Compiler, filepath: Filepath, tokenOrNode: SyntaxToken | SyntaxNode): string {
-  return (compiler.layout.getSource(filepath) || '').slice(tokenOrNode.start, tokenOrNode.end);
-}
-
 /**
  * Checks if the offset is within the element's header
  * (within the element, but outside the body)
@@ -180,9 +172,7 @@ export function getColumnsFromTableSymbol (
     if (!member.isKind(SymbolKind.Column)) continue;
     // Skip partial injection nodes (~PartialName)
     if (member.declaration instanceof FunctionApplicationNode && isValidPartialInjection(member.declaration.callee)) continue;
-    const columnName = member.name;
-    if (columnName === undefined) continue;
-    const columnInfo = extractNameAndTypeOfColumnSymbol(member, columnName);
+    const columnInfo = extractNameAndTypeOfColumnSymbol(member);
     if (!columnInfo) continue;
     columns.push(columnInfo);
   }
@@ -193,9 +183,10 @@ export function getColumnsFromTableSymbol (
 // This function also works with injected columns
 export function extractNameAndTypeOfColumnSymbol (
   columnSymbol: NodeSymbol,
-  _columnName: string,
-): { name: string;
-  type: string; } | null {
+): {
+  name: string;
+  type: string;
+} | null {
   const columnDeclaration = columnSymbol.declaration;
   if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
 
