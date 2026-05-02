@@ -16,9 +16,6 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  SymbolKind,
-} from '@/core/types/symbol';
-import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
@@ -37,8 +34,9 @@ import {
   type TextModel,
 } from '@/services/types';
 import {
-  extractReferee,
-} from '../utils';
+  SymbolKind,
+} from '@/core/types/symbol';
+import { extractReferee } from '@/core/global_modules/utils';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,
@@ -84,7 +82,7 @@ function suggestRecordRowInTopLevelRecords (
   const columns = columnElements
     .map((element, index) => {
       const symbol = columnSymbols[index];
-      if (!symbol || !(symbol.isKind(SymbolKind.Column) || symbol.isKind(SymbolKind.Column))) {
+      if (!symbol || !symbol.isKind(SymbolKind.Column)) {
         return null;
       }
       const columnName = extractVariableFromExpression(element);
@@ -92,8 +90,10 @@ function suggestRecordRowInTopLevelRecords (
       const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
     })
-    .filter((col) => col !== null) as Array<{ name: string;
-    type: string; }>;
+    .filter((col) => col !== null) as Array<{
+      name: string;
+      type: string;
+    }>;
 
   if (columns.length === 0) return noSuggestions();
 
@@ -141,7 +141,7 @@ function suggestRecordRowInNestedRecords (
     columns = columnElements
       .map((element, index) => {
         const symbol = columnSymbols[index];
-        if (!symbol || !(symbol.isKind(SymbolKind.Column) || symbol.isKind(SymbolKind.Column))) {
+        if (!symbol || !symbol.isKind(SymbolKind.Column)) {
           return null;
         }
         const columnName = extractVariableFromExpression(element);
