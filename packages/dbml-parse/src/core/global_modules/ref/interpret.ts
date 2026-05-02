@@ -50,7 +50,7 @@ function buildRefEndpoint (
   token: TokenPosition,
 ): RefEndpoint {
   return {
-    schemaName: names.schemaName === DEFAULT_SCHEMA_NAME ? null : names.schemaName,
+    schemaName: names.schemaName,
     tableName: names.tableName,
     fieldNames: names.fieldNames,
     relation,

@@ -169,7 +169,7 @@ export function processColumnType (
   if (typeSchemaName.length > 1) {
     return new Report(
       {
-        schemaName: (typeSchemaName[0] === DEFAULT_SCHEMA_NAME ? null : typeSchemaName[0]) ?? null,
+        schemaName: typeSchemaName[0] ?? null,
         type_name: `${typeName}${typeSuffix}`,
         args: typeArgs,
       },
@@ -179,9 +179,8 @@ export function processColumnType (
     );
   }
 
-  const rawTypeSchema = typeSchemaName.length === 0 ? null : typeSchemaName[0];
   return new Report({
-    schemaName: rawTypeSchema === DEFAULT_SCHEMA_NAME ? null : rawTypeSchema,
+    schemaName: typeSchemaName.length === 0 ? null : typeSchemaName[0],
     type_name: `${typeName}${typeSuffix}`,
     args: typeArgs,
   });

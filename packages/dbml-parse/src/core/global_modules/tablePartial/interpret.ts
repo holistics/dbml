@@ -285,7 +285,7 @@ export class TablePartialInterpreter {
             columnName,
           ] = fragments;
           inlineRef = {
-            schemaName: schema === DEFAULT_SCHEMA_NAME ? null : schema,
+            schemaName: schema,
             tableName: table,
             fieldNames: [
               columnName,
@@ -298,7 +298,7 @@ export class TablePartialInterpreter {
           const table = fragments.pop()!;
           const schema = fragments.join('.');
           inlineRef = {
-            schemaName: schema === DEFAULT_SCHEMA_NAME ? null : schema,
+            schemaName: schema,
             tableName: table,
             fieldNames: [
               columnName,

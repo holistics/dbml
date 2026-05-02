@@ -56,7 +56,7 @@ export const enumModule: LocalModule = {
     }
     if (isElementFieldNode(node, ElementKind.Enum)) {
       const name = extractVariableFromExpression(node.callee);
-      return new Report(name
+      return new Report(name !== undefined
         ? [
             name,
           ]
