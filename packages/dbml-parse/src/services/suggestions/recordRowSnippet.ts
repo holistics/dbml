@@ -82,12 +82,12 @@ function suggestRecordRowInTopLevelRecords (
   const columns = columnElements
     .map((element, index) => {
       const symbol = columnSymbols[index];
-      if (!symbol || !symbol.isKind(SymbolKind.Column)) {
+      if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
         return null;
       }
       const columnName = extractVariableFromExpression(element);
       if (!columnName) return null;
-      const result = extractNameAndTypeOfColumnSymbol(symbol as ColumnSymbol | TablePartialInjectedColumnSymbol, columnName);
+      const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
     })
     .filter((col) => col !== null);
@@ -140,15 +140,14 @@ function suggestRecordRowInNestedRecords (
     columns = columnElements
       .map((element, index) => {
         const symbol = columnSymbols[index];
-        if (!symbol || !symbol.isKind(SymbolKind.Column)) {
+        if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
           return null;
         }
         const columnName = extractVariableFromExpression(element);
         if (columnName === undefined) return null;
-        return extractNameAndTypeOfColumnSymbol(symbol as ColumnSymbol | PartialInjectionSymbol, columnName);
+        return extractNameAndTypeOfColumnSymbol(symbol, columnName);
       })
-      .filter((col) => col !== null) as Array<{ name: string;
-      type: string; }>;
+      .filter((col) => col !== null);
   } else {
     // Implicit columns - use all columns from parent table
     const result = getColumnsFromTableSymbol(tableSymbol as TableSymbol);
