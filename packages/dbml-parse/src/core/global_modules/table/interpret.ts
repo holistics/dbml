@@ -25,7 +25,7 @@ import {
   SyntaxNode,
 } from '@/core/types/nodes';
 import {
-    AliasKind,
+  AliasKind,
   Check, Column, Index, InlineRef,
   Table, TablePartialInjection,
 } from '@/core/types/schemaJson';
