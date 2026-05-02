@@ -20,18 +20,8 @@ export {
 
 export {
   type NodeSymbol,
-} from '@/core/types/symbol/symbols';
-
-export {
   SymbolKind,
-} from '@/core/types/symbol/symbolIndex';
-
-export {
-  DBMLDiagnosticsProvider,
-} from '@/services/index';
-export type {
-  Diagnostic,
-} from '@/services/index';
+} from '@/core/types/symbol';
 
 export * from '@/core/global_modules/records/utils';
 
@@ -107,9 +97,6 @@ export {
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
 } from '@/compiler/queries/transform/syncDiagramView';
-export type {
-  TextEdit,
-} from '@/compiler/queries/transform/applyTextEdits';
 
 export {
   dbmlLanguageConfig,
@@ -119,3 +106,5 @@ export {
 export {
   Compiler,
 };
+
+export * from '@/services';
