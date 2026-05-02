@@ -15,13 +15,13 @@ import Report from '@/core/types/report';
 import type {
   SyntaxToken,
 } from '@/core/types/tokens';
-import {
-  isElementNode,
-} from '@/core/utils/expression';
 import type {
   GlobalModule,
 } from '../types';
 import ProjectBinder from './bind';
+import {
+  isElementNode,
+} from '@/core/utils/validate';
 
 export const projectModule: GlobalModule = {
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

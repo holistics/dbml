@@ -46,8 +46,10 @@ import {
 } from '@/core/utils/expression';
 import {
   extractStringFromIdentifierStream,
-  isExpressionAVariableNode,
 } from '@/core/utils/expression';
+import {
+  isExpressionAVariableNode,
+} from '@/core/utils/validate';
 import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
@@ -63,8 +65,6 @@ import {
 import {
   addQuoteToSuggestionIfNeeded,
   addSuggestAllSuggestion,
-  isOffsetWithinElementHeader,
-  isTupleEmpty,
   noSuggestions,
   pickCompletionItemKind,
   prependSpace,
@@ -256,7 +256,7 @@ function suggestOnRelOp (
     ScopeKind.TABLEPARTIAL,
   ].includes(scopeKind)) {
     // Cross-file suggestions are surfaced inside suggestNamesInScope when its
-    // walk reaches ProgramNode  -- no need to append them here.
+    // walk reaches ProgramNode - no need to append them here.
     const res = suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Table,
       SymbolKind.Schema,

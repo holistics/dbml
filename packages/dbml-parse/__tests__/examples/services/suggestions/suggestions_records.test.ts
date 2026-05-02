@@ -7,8 +7,7 @@ import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import {
   createMockTextModel, createPosition,
 } from '@tests/utils';
-import { getColumnsFromTableSymbol } from '@/services/suggestions/utils';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import { NodeSymbol, SymbolKind, TableSymbol } from '@/core/types/symbol';
 import { UNHANDLED } from '@/core/types/module';
 
 describe('[example] CompletionItemProvider - Records', () => {
@@ -195,7 +194,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         // Verify exact column count
         expect(columns).not.toBeNull();
@@ -229,7 +228,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(2);
@@ -259,7 +258,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         // Verify exact column count
         expect(columns).not.toBeNull();
@@ -291,7 +290,7 @@ describe('[example] Suggestions Utils - Records', () => {
       expect(tableSymbol?.isKind(SymbolKind.Table)).toBe(true);
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         // Verify exact column count and properties
         expect(columns).not.toBeNull();
@@ -322,7 +321,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         // Verify exact column count
         expect(columns).not.toBeNull();
@@ -355,7 +354,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         // Verify exact single column
         expect(columns).not.toBeNull();
@@ -380,7 +379,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         // Verify exact columns with special characters
         expect(columns).not.toBeNull();
@@ -406,7 +405,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(0);
@@ -431,7 +430,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         // Verify only columns are extracted, not indexes
         expect(columns).not.toBeNull();
@@ -458,7 +457,7 @@ describe('[example] Suggestions Utils - Records', () => {
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
 
       if (tableSymbol !== undefined) {
-        const columns = getColumnsFromTableSymbol(compiler, tableSymbol);
+        const columns = (tableSymbol as TableSymbol).mergedColumns(compiler);
 
         // Verify schema-qualified table columns
         expect(columns).not.toBeNull();

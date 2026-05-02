@@ -14,8 +14,6 @@ import {
 import Report from '@/core/types/report';
 import {
   isElementNode,
-} from '@/core/utils/expression';
-import {
   Settings,
 } from '@/core/utils/validate';
 import {

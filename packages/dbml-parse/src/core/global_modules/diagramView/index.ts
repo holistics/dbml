@@ -27,8 +27,11 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  extractVarNameFromPrimaryVariable, getBody, isAccessExpression, isElementFieldNode, isElementNode, isInsideSettingList, isTerminalAccessFragment,
+  extractVarNameFromPrimaryVariable, getBody,
 } from '@/core/utils/expression';
+import {
+  isAccessExpression, isElementFieldNode, isElementNode, isInsideSettingList, isTerminalAccessFragment,
+} from '@/core/utils/validate';
 import type {
   GlobalModule,
 } from '../types';

@@ -22,7 +22,7 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  extractQuotedStringToken, getBody, isElementNode,
+  extractQuotedStringToken, getBody,
 } from '@/core/utils/expression';
 import {
   extractColor, normalizeNote,
@@ -32,6 +32,9 @@ import type {
 } from '../types';
 
 import NoteBinder from './bind';
+import {
+  isElementNode,
+} from '@/core/utils/validate';
 
 export const noteModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {

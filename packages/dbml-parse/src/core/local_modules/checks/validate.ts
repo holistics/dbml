@@ -19,8 +19,6 @@ import {
 } from '@/core/types/nodes';
 import {
   isExpressionAQuotedString,
-} from '@/core/utils/expression';
-import {
   aggregateSettingList,
 } from '@/core/utils/validate';
 

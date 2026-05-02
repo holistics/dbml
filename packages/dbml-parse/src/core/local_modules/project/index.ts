@@ -11,13 +11,14 @@ import {
 import Report from '@/core/types/report';
 import {
   destructureComplexVariable,
-  isElementFieldNode, isElementNode,
 } from '@/core/utils/expression';
 import {
   type LocalModule, type Settings,
 } from '../types';
 import ProjectValidator from './validate';
 import {
+  isElementFieldNode,
+  isElementNode,
   isSimpleName,
 } from '@/core/utils/validate';
 import {

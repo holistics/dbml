@@ -14,9 +14,10 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  destructureComplexVariable, extractVariableFromExpression, isUseSpecifier,
+  destructureComplexVariable, extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
+  isUseSpecifier,
   isValidAlias,
 } from '@/core/utils/validate';
 import type {

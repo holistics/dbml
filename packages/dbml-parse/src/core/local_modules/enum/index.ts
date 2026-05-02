@@ -16,19 +16,11 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  isElementFieldNode, isElementNode,
-} from '@/core/utils/expression';
-import {
   destructureComplexVariable,
-} from '@/core/utils/expression';
-import {
-  isExpressionAQuotedString,
-} from '@/core/utils/expression';
-import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
-  aggregateSettingList, isValidName,
+  aggregateSettingList, isElementFieldNode, isElementNode, isExpressionAQuotedString, isValidName,
 } from '@/core/utils/validate';
 import {
   type LocalModule, type Settings,

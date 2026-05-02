@@ -16,10 +16,10 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  destructureComplexVariable, isElementFieldNode, isElementNode,
+  destructureComplexVariable,
 } from '@/core/utils/expression';
 import {
-  Settings, isSimpleName,
+  Settings, isElementFieldNode, isElementNode, isSimpleName,
 } from '@/core/utils/validate';
 import {
   type LocalModule,

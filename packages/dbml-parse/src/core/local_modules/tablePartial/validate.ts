@@ -21,8 +21,11 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  extractVariableFromExpression, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
+  extractVariableFromExpression,
 } from '@/core/utils/expression';
+import {
+  isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
+} from '@/core/utils/validate';
 import {
   Settings,
   aggregateSettingList,

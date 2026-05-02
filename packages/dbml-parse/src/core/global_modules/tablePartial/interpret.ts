@@ -28,16 +28,14 @@ import type {
   TablePartialSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
-} from '@/core/utils/expression';
-import {
   destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
   aggregateSettingList,
   isExpressionASignedNumberExpression,
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
 } from '@/core/utils/validate';
 import {
   extractColor, extractElementName, getTokenPosition,

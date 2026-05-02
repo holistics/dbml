@@ -33,6 +33,8 @@ import type {
 import {
   extractVarNameFromPrimaryVariable,
   getBody,
+} from '@/core/utils/expression';
+import {
   isAccessExpression,
   isElementFieldNode,
   isElementNode,
@@ -40,7 +42,7 @@ import {
   isInsideElementBody,
   isInsideSettingValue,
   isWithinNthArgOfField,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 import {
   tableUtils,
 } from '../table';

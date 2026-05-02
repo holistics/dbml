@@ -33,10 +33,12 @@ import type {
 import {
   destructureMemberAccessExpression,
   extractVarNameFromPrimaryVariable,
+} from '@/core/utils/expression';
+import {
   isAccessExpression,
   isElementNode,
   isExpressionAVariableNode,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 import type {
   GlobalModule,
 } from '../types';

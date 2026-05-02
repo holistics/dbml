@@ -21,7 +21,7 @@ import {
 } from '@/core/types/tokens';
 import {
   isReuseKeyword,
-} from '@/core/utils/expression';
+} from '@/core/utils/tokens';
 import {
   SymbolKind,
 } from './symbol';

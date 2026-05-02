@@ -13,7 +13,7 @@ import {
 } from '@/core/types/nodes';
 import {
   isExpressionAQuotedString,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 
 export default class NoteValidator {
   private compiler: Compiler;

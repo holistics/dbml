@@ -12,9 +12,6 @@ import type {
 import {
   destructureComplexVariable, destructureComplexVariableTuple,
   extractQuotedStringToken, extractVariableFromExpression,
-  isBinaryRelationship,
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
   getTokenPosition,
@@ -22,6 +19,9 @@ import {
 import {
   isExpressionASignedNumberExpression,
   isRelationshipOp,
+  isBinaryRelationship,
+  isExpressionAQuotedString,
+  isExpressionAVariableNode,
 } from '@/core/utils/validate';
 import {
   getNumberTextFromExpression,

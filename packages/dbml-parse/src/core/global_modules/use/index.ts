@@ -23,15 +23,14 @@ import {
 import {
   destructureComplexVariable,
   extractVariableFromExpression,
-  isAccessExpression,
-  isDotDelimitedIdentifier,
-  isExpressionAVariableNode,
-  isUseDeclaration,
-  isUseSpecifier,
 } from '@/core/utils/expression';
 import {
   GlobalModule,
 } from '../types';
+import {
+  isAccessExpression,
+  isDotDelimitedIdentifier, isExpressionAVariableNode, isUseDeclaration, isUseSpecifier,
+} from '@/core/utils/validate';
 
 export const useUtils = {
   // The name that the owning file would see the use specifier as

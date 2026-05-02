@@ -10,8 +10,8 @@ import {
 } from '@/core/types/nodes';
 
 export interface ParsedUseSpecifier {
-  kind?: string; // DBML import keyword: 'table' | 'enum' | ... (undefined if parser couldn't extract)
-  name: string; // bare symbol name, or '*' for wildcard
+  kind?: string;
+  name: string; // FIXME: bare symbol name, or '*' for wildcard
 }
 
 export interface ParsedUseStatement {

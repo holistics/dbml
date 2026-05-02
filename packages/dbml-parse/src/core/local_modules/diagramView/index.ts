@@ -17,7 +17,7 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  destructureComplexVariable, isElementFieldNode, isElementNode,
+  destructureComplexVariable,
 } from '@/core/utils/expression';
 import type {
   LocalModule,
@@ -26,6 +26,7 @@ import DiagramViewValidator from './validate';
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
+import { isElementFieldNode, isElementNode } from '@/core/utils/validate';
 
 export const diagramViewModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

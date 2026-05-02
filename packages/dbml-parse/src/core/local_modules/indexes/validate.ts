@@ -21,7 +21,7 @@ import {
 } from '@/core/types/nodes';
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 import {
   destructureIndexNode,
 } from '@/core/utils/expression';

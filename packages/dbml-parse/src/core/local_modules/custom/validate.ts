@@ -10,7 +10,7 @@ import {
 } from '@/core/types/nodes';
 import {
   isExpressionAQuotedString,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 
 export default class CustomValidator {
   private compiler: Compiler;

@@ -28,8 +28,11 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  extractQuotedStringToken, getBody, isElementFieldNode, isElementNode,
+  extractQuotedStringToken, getBody,
 } from '@/core/utils/expression';
+import {
+  isElementFieldNode, isElementNode,
+} from '@/core/utils/validate';
 import type {
   GlobalModule,
 } from '../types';
@@ -136,7 +139,7 @@ export const enumModule: GlobalModule = {
           ? {
               note: {
                 value: noteText,
-                token: getTokenPosition(noteAttr),
+                token: getTokenPosition(noteAttr!),
               },
             }
           : {}),

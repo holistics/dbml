@@ -10,10 +10,10 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  destructureComplexVariable, isExpressionAQuotedString,
+  destructureComplexVariable,
 } from '@/core/utils/expression';
 import {
-  Settings, aggregateSettingList, isSimpleName, isValidColor,
+  Settings, aggregateSettingList, isSimpleName, isValidColor, isExpressionAQuotedString,
 } from '@/core/utils/validate';
 
 export default class TableGroupValidator {

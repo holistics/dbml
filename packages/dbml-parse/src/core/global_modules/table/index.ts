@@ -34,6 +34,8 @@ import {
   extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
   getBody,
+} from '@/core/utils/expression';
+import {
   isAccessExpression,
   isElementFieldNode,
   isElementNode,
@@ -42,8 +44,6 @@ import {
   isInsideSettingValue,
   isTerminalAccessFragment,
   isWithinNthArgOfField,
-} from '@/core/utils/expression';
-import {
   isValidPartialInjection,
 } from '@/core/utils/validate';
 import type {

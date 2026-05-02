@@ -55,7 +55,7 @@ import {
 } from '@/core/types/tokens';
 import {
   isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword,
-} from '@/core/utils/expression';
+} from '../utils/tokens';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {

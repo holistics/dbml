@@ -31,11 +31,12 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  destructureMemberAccessExpression, getBody, isAccessExpression, isElementNode, isExpressionAVariableNode,
-} from '@/core/utils/expression';
-import {
+  destructureMemberAccessExpression, getBody,
   extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
+import {
+  isAccessExpression, isElementNode, isExpressionAVariableNode,
+} from '@/core/utils/validate';
 import type {
   GlobalModule,
 } from '../types';

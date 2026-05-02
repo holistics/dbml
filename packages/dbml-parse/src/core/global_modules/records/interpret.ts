@@ -29,7 +29,7 @@ import {
   ColumnSymbol, NodeSymbol, SymbolKind, TableSymbol,
 } from '@/core/types/symbol';
 import {
-  destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression, isExpressionAVariableNode,
+  destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
   getTokenPosition,
@@ -57,6 +57,9 @@ import {
 import {
   getEnumMembers, parseLengthParam, parseNumericParams,
 } from './utils/interpret';
+import {
+  isExpressionAVariableNode,
+} from '@/core/utils/validate';
 
 export default class RecordsInterpreter {
   private compiler: Compiler;

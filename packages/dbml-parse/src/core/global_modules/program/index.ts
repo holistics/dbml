@@ -20,7 +20,7 @@ import {
 } from '@/core/types/symbol';
 import {
   isProgramNode,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 import type {
   GlobalModule,
 } from '../types';

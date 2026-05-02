@@ -25,8 +25,11 @@ import {
   DiagramViewSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
-  destructureComplexVariable, isWildcardExpression,
+  destructureComplexVariable,
 } from '@/core/utils/expression';
+import {
+  isWildcardExpression,
+} from '@/core/utils/validate';
 
 export class DiagramViewInterpreter {
   private compiler: Compiler;

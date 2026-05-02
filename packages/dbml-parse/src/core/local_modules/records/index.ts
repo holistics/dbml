@@ -14,12 +14,10 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  isElementFieldNode, isElementNode,
-} from '@/core/utils/expression';
-import {
   destructureComplexVariable,
 } from '@/core/utils/expression';
 import {
+  isElementFieldNode, isElementNode,
   isTupleOfVariables,
   isValidName,
 } from '@/core/utils/validate';

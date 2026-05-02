@@ -22,13 +22,16 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  getBody, isElementNode,
+  getBody,
 } from '@/core/utils/expression';
 import type {
   GlobalModule,
 } from '../types';
 import ChecksBinder from './bind';
 import ChecksInterpreter from './interpret';
+import {
+  isElementNode,
+} from '@/core/utils/validate';
 
 export const checksModule: GlobalModule = {
   emitMetadata (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough> {

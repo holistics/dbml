@@ -25,15 +25,15 @@ import {
 } from '@/core/types/tokens';
 import {
   isRelationshipOp,
+  isBinaryRelationship,
+  isElementNode,
+  isExpressionAVariableNode,
 } from '@/core/utils/validate';
 import {
   destructureComplexVariable,
   destructureMemberAccessExpression,
   extractVariableFromExpression,
   getBody,
-  isBinaryRelationship,
-  isElementNode,
-  isExpressionAVariableNode,
 } from '@/core/utils/expression';
 import {
   checkRefEndpoints,

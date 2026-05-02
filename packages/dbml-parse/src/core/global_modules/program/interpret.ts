@@ -33,14 +33,14 @@ import {
 } from '@/core/types/symbol';
 import {
   MetadataKind,
-} from '@/core/types/metadata';
-import type {
   SymbolMetadata,
 } from '@/core/types/metadata';
 import {
   getBody,
-  isElementNode,
 } from '@/core/utils/expression';
+import {
+  isElementNode,
+} from '@/core/utils/validate';
 import {
   validateForeignKeys, validatePrimaryKey, validateUnique,
 } from './utils/constraints';

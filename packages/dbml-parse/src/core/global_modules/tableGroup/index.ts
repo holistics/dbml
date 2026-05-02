@@ -28,7 +28,7 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  extractQuotedStringToken, getBody, isAccessExpression, isElementFieldNode, isElementNode, isExpressionAVariableNode, isInsideElementBody, isInsideSettingList,
+  extractQuotedStringToken, getBody,
 } from '@/core/utils/expression';
 import {
   getTokenPosition, normalizeNote,
@@ -46,6 +46,10 @@ import {
   getSymbolSchemaAndName, nodeRefereeOfLeftExpression,
 } from '../utils';
 import TableGroupBinder from './bind';
+import {
+  isAccessExpression,
+  isElementFieldNode, isElementNode, isExpressionAVariableNode, isInsideElementBody, isInsideSettingList,
+} from '@/core/utils/validate';
 
 // Public utils that other modules can use
 export const tableGroupUtils = {

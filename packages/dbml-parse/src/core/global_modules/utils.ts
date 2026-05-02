@@ -22,16 +22,17 @@ import {
   NodeSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import {
-  destructureComplexVariableTuple, destructureMemberAccessExpression, extractVarNameFromPrimaryVariable, isAccessExpression, isExpressionAVariableNode,
+  destructureComplexVariableTuple, destructureMemberAccessExpression, extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
+import {
+  isAccessExpression, isExpressionAVariableNode,
+} from '../utils/validate';
 
 export function extractNamesFromRefOperand (operand: SyntaxNode, ownerSchema?: string | null, ownerTable?: string): {
   schemaName: string | null;
   tableName: string;
   fieldNames: string[];
 } {
-  // Sanitize ownerSchema  -- default schema should be null in output
-  if (ownerSchema === DEFAULT_SCHEMA_NAME) ownerSchema = null;
   const {
     variables, tupleElements,
   } = destructureComplexVariableTuple(operand)!;

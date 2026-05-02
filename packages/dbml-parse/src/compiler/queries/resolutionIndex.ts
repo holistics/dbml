@@ -21,7 +21,7 @@ import {
 } from '@/core/types/symbol';
 import {
   isAccessExpression, isExpressionAVariableNode,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 import type Compiler from '../index';
 
 export interface ResolutionIndex {

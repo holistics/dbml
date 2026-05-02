@@ -13,10 +13,10 @@ import {
 } from '@/core/types/tokens';
 import {
   destructureComplexVariable,
-  isWildcardExpression,
 } from '@/core/utils/expression';
 import {
   aggregateSettingList, isSimpleName,
+  isWildcardExpression,
 } from '@/core/utils/validate';
 
 export default class DiagramViewValidator {

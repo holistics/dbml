@@ -18,12 +18,8 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  isElementFieldNode, isElementNode, isExpressionAVariableNode,
-} from '@/core/utils/expression';
-import {
   isExpressionAQuotedString,
-} from '@/core/utils/expression';
-import {
+  isElementFieldNode, isElementNode, isExpressionAVariableNode,
   Settings, aggregateSettingList,
 } from '@/core/utils/validate';
 import {

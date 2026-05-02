@@ -32,13 +32,16 @@ import {
 } from '@/core/types/keywords';
 import {
   destructureIndexNode, extractVarNameFromPrimaryVariable,
-  getBody, isElementNode, isExpressionAVariableNode, isInsideSettingList,
+  getBody,
 } from '@/core/utils/expression';
 import type {
   GlobalModule,
 } from '../types';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
+import {
+  isElementNode, isExpressionAVariableNode, isInsideSettingList,
+} from '@/core/utils/validate';
 
 export const indexesModule: GlobalModule = {
   emitMetadata (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough> {

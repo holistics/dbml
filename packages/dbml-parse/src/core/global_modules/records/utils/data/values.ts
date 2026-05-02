@@ -12,7 +12,7 @@ import {
 } from '@/core/utils/validate';
 import {
   isExpressionAnIdentifierNode,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 import {
   EmptyNode,
   FunctionExpressionNode,

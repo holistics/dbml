@@ -20,7 +20,7 @@ import {
 } from '@/core/utils/expression';
 import {
   isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 import {
   isExpressionASignedNumberExpression, isTupleOfVariables, isValidName,
 } from '@/core/utils/validate';

@@ -21,10 +21,10 @@ import {
 import {
   destructureComplexVariable, destructureMemberAccessExpression,
   extractQuotedStringToken, extractVariableFromExpression,
-  isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode,
 } from './expression';
 import {
   isExpressionASignedNumberExpression,
+  isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode,
 } from './validate';
 import {
   extractNumber,

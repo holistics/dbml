@@ -7,10 +7,10 @@ import {
 import { CompileErrorCode } from '@/core/types/errors';
 import { SyntaxNodeKind, ElementDeclarationNode } from '@/core/types/nodes';
 import { WildcardNode } from '@/core/types/nodes';
-import { isWildcardExpression } from '@/core/utils/expression';
 import {
   lex, parse, analyze,
 } from '@tests/utils';
+import { isWildcardExpression } from '@/core/utils/validate';
 
 // Helper to get non-trivia, non-EOF tokens
 function getTokens (source: string) {
@@ -18,8 +18,6 @@ function getTokens (source: string) {
 }
 
 describe('[example] wildcard', () => {
-  // ── Sub-Problem 1: Lexer - WildcardToken ──
-
   describe('lexer', () => {
     test('should lex * as WILDCARD token, not OP', () => {
       const tokens = getTokens('*');
@@ -207,7 +205,7 @@ describe('[example] wildcard', () => {
     });
   });
 
-  // ── Edge cases ──
+  // Edge cases
 
   describe('edge cases', () => {
     test('should still allow valid table names after wildcard fix', () => {

@@ -13,8 +13,6 @@ import {
 } from '@/core/types/nodes';
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
-} from '@/core/utils/expression';
-import {
   aggregateSettingList, isValidName,
 } from '@/core/utils/validate';
 

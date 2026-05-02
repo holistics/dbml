@@ -16,7 +16,7 @@ import {
 } from '@/core/types/tokens';
 import {
   isWildcardExpression,
-} from '@/core/utils/expression';
+} from '@/core/utils/validate';
 import {
   scanNonListNodeForBinding,
 } from '../utils';

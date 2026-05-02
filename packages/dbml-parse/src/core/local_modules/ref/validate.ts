@@ -16,10 +16,10 @@ import {
   SyntaxTokenKind,
 } from '@/core/types/tokens';
 import {
-  destructureComplexVariableTuple, extractStringFromIdentifierStream, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
+  destructureComplexVariableTuple, extractStringFromIdentifierStream,
 } from '@/core/utils/expression';
 import {
-  Settings, aggregateSettingList, isSimpleName, isValidColor,
+  Settings, aggregateSettingList, isSimpleName, isValidColor, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
 } from '@/core/utils/validate';
 
 export default class RefValidator {

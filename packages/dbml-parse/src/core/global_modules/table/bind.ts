@@ -18,14 +18,13 @@ import {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  destructureComplexVariableTuple, isAccessExpression,
-} from '../../utils/expression';
+  destructureComplexVariableTuple,
+} from '@/core/utils/expression';
 import {
+  isAccessExpression,
   isExpressionAQuotedString, isExpressionAVariableNode,
-} from '../../utils/expression';
-import {
   aggregateSettingList, isValidPartialInjection,
-} from '../../utils/validate';
+} from '@/core/utils/validate';
 import {
   scanNonListNodeForBinding,
 } from '../utils';
