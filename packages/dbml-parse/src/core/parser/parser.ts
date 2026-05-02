@@ -778,10 +778,7 @@ export default class Parser {
     | GroupExpressionNode
     | WildcardNode {
     if (this.check(SyntaxTokenKind.WILDCARD)) {
-      this.advance();
-      return this.nodeFactory.create(WildcardNode, {
-        token: this.previous(),
-      });
+      return this.wildcardExpression();
     }
 
     if (
@@ -850,6 +847,13 @@ export default class Parser {
     }
 
     return this.nodeFactory.create(FunctionExpressionNode, args);
+  }
+
+  private wildcardExpression (): WildcardNode {
+    this.advance();
+    return this.nodeFactory.create(WildcardNode, {
+      token: this.previous(),
+    });
   }
 
   /* Parsing and synchronizing BlockExpression */
