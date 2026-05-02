@@ -966,10 +966,7 @@ export default class Parser {
     | GroupExpressionNode
     | WildcardNode {
     if (this.check(SyntaxTokenKind.WILDCARD)) {
-      this.advance();
-      return this.nodeFactory.create(WildcardNode, {
-        token: this.previous(),
-      });
+      return this.wildcardExpression();
     }
 
     if (
