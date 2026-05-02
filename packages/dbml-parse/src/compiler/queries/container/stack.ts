@@ -12,7 +12,7 @@ import {
   CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
@@ -108,7 +108,7 @@ export function containerStack (
         res.pop();
         popOnce = true;
       }
-    } else if (!(lastContainer instanceof IdentiferStreamNode)) {
+    } else if (!(lastContainer instanceof IdentifierStreamNode)) {
       if (lastContainer.end < offset) {
         res.pop();
         popOnce = true;

@@ -14,7 +14,13 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentiferStreamNode, InfixExpressionNode, ListExpressionNode, SyntaxNode,
+  type BlockExpressionNode,
+  ElementDeclarationNode,
+  FunctionApplicationNode,
+  IdentifierStreamNode,
+  type InfixExpressionNode,
+  type ListExpressionNode,
+  type SyntaxNode,
 } from '@/core/types/nodes';
 import {
   Ref, Table,
@@ -94,12 +100,12 @@ export class RefInterpreter {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
 
       const deleteSetting = settingMap.delete?.at(0)?.value;
-      this.ref.onDelete = deleteSetting instanceof IdentiferStreamNode
+      this.ref.onDelete = deleteSetting instanceof IdentifierStreamNode
         ? extractStringFromIdentifierStream(deleteSetting)
         : extractVariableFromExpression(deleteSetting) as string;
 
       const updateSetting = settingMap.update?.at(0)?.value;
-      this.ref.onUpdate = updateSetting instanceof IdentiferStreamNode
+      this.ref.onUpdate = updateSetting instanceof IdentifierStreamNode
         ? extractStringFromIdentifierStream(updateSetting)
         : extractVariableFromExpression(updateSetting) as string;
 

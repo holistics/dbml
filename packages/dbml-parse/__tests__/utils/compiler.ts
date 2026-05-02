@@ -13,7 +13,7 @@ import {
   SyntaxNodeKind,
   ElementDeclarationNode,
   AttributeNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   PrefixExpressionNode,
   InfixExpressionNode,
   PostfixExpressionNode,
@@ -127,7 +127,7 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.IDENTIFIER_STREAM: {
-        const stream = node as IdentiferStreamNode;
+        const stream = node as IdentifierStreamNode;
         stream.identifiers.forEach(collectTokens);
         break;
       }

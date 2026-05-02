@@ -31,7 +31,7 @@ import {
   FunctionApplicationNode,
   FunctionExpressionNode,
   GroupExpressionNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -1156,9 +1156,9 @@ export default class Parser {
 
   private attribute (): AttributeNode {
     const args: {
-      name?: IdentiferStreamNode | PrimaryExpressionNode;
+      name?: IdentifierStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
-      value?: NormalExpressionNode | IdentiferStreamNode;
+      value?: NormalExpressionNode | IdentifierStreamNode;
     } = {};
 
     if (this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.RBRACKET, SyntaxTokenKind.COMMA)) {
@@ -1168,7 +1168,7 @@ export default class Parser {
         CompileErrorCode.EMPTY_ATTRIBUTE_NAME,
         'Expect a non-empty attribute name',
       );
-      args.name = this.nodeFactory.create(IdentiferStreamNode, {
+      args.name = this.nodeFactory.create(IdentifierStreamNode, {
         identifiers: [],
       });
     } else {
@@ -1209,8 +1209,8 @@ export default class Parser {
     }
   };
 
-  private attributeValue (): NormalExpressionNode | IdentiferStreamNode {
-    let value: NormalExpressionNode | IdentiferStreamNode | undefined;
+  private attributeValue (): NormalExpressionNode | IdentifierStreamNode {
+    let value: NormalExpressionNode | IdentifierStreamNode | undefined;
     try {
       value = this.peek().kind === SyntaxTokenKind.IDENTIFIER
         && this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
@@ -1238,7 +1238,7 @@ export default class Parser {
     }
   };
 
-  private attributeName (): IdentiferStreamNode | PrimaryExpressionNode {
+  private attributeName (): IdentifierStreamNode | PrimaryExpressionNode {
     const identifiers: SyntaxToken[] = [];
 
     if (this.peek().kind !== SyntaxTokenKind.IDENTIFIER) {
@@ -1258,7 +1258,7 @@ export default class Parser {
         }
         throw new PartialParsingError(
           e.token,
-          this.nodeFactory.create(IdentiferStreamNode, {
+          this.nodeFactory.create(IdentifierStreamNode, {
             identifiers,
           }),
           e.handlerContext,
@@ -1266,7 +1266,7 @@ export default class Parser {
       }
     }
 
-    return this.nodeFactory.create(IdentiferStreamNode, {
+    return this.nodeFactory.create(IdentifierStreamNode, {
       identifiers,
     });
   }

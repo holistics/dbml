@@ -27,7 +27,7 @@ import {
   CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
@@ -94,7 +94,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
     const offset = getOffsetFromMonacoPosition(model, position);
 
     // Try to suggest record row snippet first
-    const recordRowSnippet = suggestRecordRowSnippet(this.compiler, model, position, offset);
+    const recordRowSnippet = suggestRecordRowSnippet(this.compiler, model, position, filepath, offset);
     if (recordRowSnippet !== null) {
       return recordRowSnippet;
     }
@@ -403,7 +403,7 @@ function suggestInAttribute (
     return suggestAttributeName(compiler, filepath, offset);
   }
 
-  if (container.name instanceof IdentiferStreamNode) {
+  if (container.name instanceof IdentifierStreamNode) {
     const res = suggestAttributeValue(
       compiler,
       filepath,
