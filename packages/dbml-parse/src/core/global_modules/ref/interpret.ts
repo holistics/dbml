@@ -9,7 +9,7 @@ import {
 } from '@/core/global_modules/utils';
 import {
   extractStringFromIdentifierStream,
-} from '@/core/parser/utils';
+} from '@/core/utils/expression';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';

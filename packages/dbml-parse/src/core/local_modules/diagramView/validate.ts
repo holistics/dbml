@@ -11,7 +11,7 @@ import {
 } from '@/core/utils/validate';
 import {
   isExpressionAVariableNode, isWildcardExpression,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';

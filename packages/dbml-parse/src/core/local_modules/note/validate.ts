@@ -15,7 +15,7 @@ import {
 } from '@/core/local_modules/utils';
 import {
   isExpressionAQuotedString,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';

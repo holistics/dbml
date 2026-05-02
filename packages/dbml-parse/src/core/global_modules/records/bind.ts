@@ -1,6 +1,6 @@
 import {
   getElementNameString,
-} from '@/core/parser/utils';
+} from '@/core/utils/expression';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';

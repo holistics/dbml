@@ -16,8 +16,11 @@ import {
   convertStringToEnum,
 } from '@/core/utils/enum';
 import {
-  getElementNameString, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
+  isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
+} from '@/core/utils/validate';
+import {
+  getElementNameString,
+} from '@/core/utils/expression';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';

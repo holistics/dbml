@@ -8,8 +8,8 @@ import {
   destructureComplexVariable, destructureMemberAccessExpression,
 } from '@/core/utils/expression';
 import {
-  extractStringFromIdentifierStream, isAccessExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
+  extractStringFromIdentifierStream,
+} from '@/core/utils/expression';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -20,6 +20,7 @@ import {
   CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
+  InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
   PrefixExpressionNode,
@@ -27,6 +28,7 @@ import {
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
@@ -304,4 +306,85 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
   });
 
   return new Report(map, errors);
+}
+
+// Return true if an expression node is a primary expression
+// with a nested quoted string (", ' or ''')
+export function isExpressionAQuotedString (value?: unknown): value is PrimaryExpressionNode
+  & (
+    | { expression: VariableNode & { variable: SyntaxToken & { kind: SyntaxTokenKind.QUOTED_STRING } } }
+    | {
+      expression: LiteralNode & {
+        literal: SyntaxToken & { kind: SyntaxTokenKind.STRING_LITERAL };
+      };
+    }
+  ) {
+  return (
+    value instanceof PrimaryExpressionNode
+    && (
+      (
+        value.expression instanceof VariableNode
+        && value.expression.variable instanceof SyntaxToken
+        && value.expression.variable.kind === SyntaxTokenKind.QUOTED_STRING
+      )
+      || (
+        value.expression instanceof LiteralNode
+        && value.expression.literal?.kind === SyntaxTokenKind.STRING_LITERAL
+      )
+    )
+  );
+}
+
+// Return true if an expression node is a primary expression
+// with a variable node (identifier or a double-quoted string)
+export function isExpressionAVariableNode (
+  value?: unknown,
+): value is PrimaryExpressionNode & { expression: VariableNode & { variable: SyntaxToken } } {
+  return (
+    value instanceof PrimaryExpressionNode
+    && value.expression instanceof VariableNode
+    && value.expression.variable instanceof SyntaxToken
+  );
+}
+
+// Return true if an expression node is a wildcard (*)
+export function isWildcardExpression (node: SyntaxNode | undefined): boolean {
+  if (!node) return false;
+  return node instanceof WildcardNode;
+}
+
+// Return true if an expression node is a primary expression
+// with an identifier-like variable node
+export function isExpressionAnIdentifierNode (value?: unknown): value is PrimaryExpressionNode & {
+  expression: VariableNode & { variable: { kind: SyntaxTokenKind.IDENTIFIER } };
+} {
+  return (
+    value instanceof PrimaryExpressionNode
+    && value.expression instanceof VariableNode
+    && value.expression.variable?.kind === SyntaxTokenKind.IDENTIFIER
+  );
+}
+
+type AccessExpression = InfixExpressionNode & {
+  leftExpression: SyntaxNode;
+  rightExpression: SyntaxNode;
+  op: SyntaxToken & { value: '.' };
+};
+
+type DotDelimitedIdentifier = PrimaryExpressionNode | (AccessExpression & {
+  rightExpression: AccessExpression | PrimaryExpressionNode;
+});
+
+export function isAccessExpression (node?: SyntaxNode): node is AccessExpression {
+  return (
+    node instanceof InfixExpressionNode
+    && node.leftExpression instanceof SyntaxNode
+    && node.rightExpression instanceof SyntaxNode
+    && node.op?.value === '.'
+  );
+}
+
+export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimitedIdentifier {
+  if (isExpressionAVariableNode(node)) return true;
+  return isAccessExpression(node) && isExpressionAVariableNode(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
 }

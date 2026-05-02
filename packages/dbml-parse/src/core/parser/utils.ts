@@ -1,9 +1,6 @@
 import {
   last,
 } from 'lodash-es';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -37,6 +34,12 @@ import {
 import {
   isAsKeyword,
 } from '../utils/tokens';
+import {
+  extractVariableNode,
+} from '../utils/expression';
+import {
+  isExpressionAnIdentifierNode,
+} from '../utils/validate';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
@@ -320,113 +323,6 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   }
 
   throw new Error('Unreachable - no other possible cases');
-}
-
-// Return a variable node if it's nested inside a primary expression
-export function extractVariableNode (value?: unknown): SyntaxToken | undefined {
-  if (isExpressionAVariableNode(value)) {
-    return value.expression.variable;
-  }
-
-  return undefined;
-}
-
-// Return true if an expression node is a primary expression
-// with a nested quoted string (", ' or ''')
-export function isExpressionAQuotedString (value?: unknown): value is PrimaryExpressionNode
-  & (
-    | { expression: VariableNode & { variable: SyntaxToken & { kind: SyntaxTokenKind.QUOTED_STRING } } }
-    | {
-      expression: LiteralNode & {
-        literal: SyntaxToken & { kind: SyntaxTokenKind.STRING_LITERAL };
-      };
-    }
-  ) {
-  return (
-    value instanceof PrimaryExpressionNode
-    && (
-      (
-        value.expression instanceof VariableNode
-        && value.expression.variable instanceof SyntaxToken
-        && value.expression.variable.kind === SyntaxTokenKind.QUOTED_STRING
-      )
-      || (
-        value.expression instanceof LiteralNode
-        && value.expression.literal?.kind === SyntaxTokenKind.STRING_LITERAL
-      )
-    )
-  );
-}
-
-// Return true if an expression node is a primary expression
-// with a variable node (identifier or a double-quoted string)
-export function isExpressionAVariableNode (
-  value?: unknown,
-): value is PrimaryExpressionNode & { expression: VariableNode & { variable: SyntaxToken } } {
-  return (
-    value instanceof PrimaryExpressionNode
-    && value.expression instanceof VariableNode
-    && value.expression.variable instanceof SyntaxToken
-  );
-}
-
-// Return true if an expression node is a wildcard (*)
-export function isWildcardExpression (node: SyntaxNode | undefined): boolean {
-  if (!node) return false;
-  return node instanceof WildcardNode;
-}
-
-// Return true if an expression node is a primary expression
-// with an identifier-like variable node
-export function isExpressionAnIdentifierNode (value?: unknown): value is PrimaryExpressionNode & {
-  expression: VariableNode & { variable: { kind: SyntaxTokenKind.IDENTIFIER } };
-} {
-  return (
-    value instanceof PrimaryExpressionNode
-    && value.expression instanceof VariableNode
-    && value.expression.variable?.kind === SyntaxTokenKind.IDENTIFIER
-  );
-}
-
-type AccessExpression = InfixExpressionNode & {
-  leftExpression: SyntaxNode;
-  rightExpression: SyntaxNode;
-  op: SyntaxToken & { value: '.' };
-};
-
-type DotDelimitedIdentifier = PrimaryExpressionNode | (AccessExpression & {
-  rightExpression: AccessExpression | PrimaryExpressionNode;
-});
-
-export function isAccessExpression (node?: SyntaxNode): node is AccessExpression {
-  return (
-    node instanceof InfixExpressionNode
-    && node.leftExpression instanceof SyntaxNode
-    && node.rightExpression instanceof SyntaxNode
-    && node.op?.value === '.'
-  );
-}
-
-export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimitedIdentifier {
-  if (isExpressionAVariableNode(node)) return true;
-  return isAccessExpression(node) && isExpressionAVariableNode(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
-}
-
-export function extractStringFromIdentifierStream (stream?: IdentifierStreamNode): string | undefined {
-  if (stream === undefined) {
-    return undefined;
-  }
-  const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
-  if (name === '') {
-    return undefined;
-  }
-
-  return name;
-}
-
-export function getElementNameString (element?: ElementDeclarationNode): string | undefined {
-  const res = destructureComplexVariable(element?.name);
-  return res !== undefined ? res.join('.') : undefined;
 }
 
 export function alternateLists<T, S> (firstList: T[], secondList: S[]): (T | S)[] {

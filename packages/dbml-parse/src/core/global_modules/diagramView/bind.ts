@@ -10,7 +10,7 @@ import {
 } from '@/core/types/symbol/symbolIndex';
 import {
   isWildcardExpression,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
 } from '@/core/types/nodes';

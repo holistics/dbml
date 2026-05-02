@@ -15,7 +15,7 @@ import {
 } from '@/core/global_modules/utils';
 import {
   isWildcardExpression,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
 import {
   CompileError,
 } from '@/core/types/errors';

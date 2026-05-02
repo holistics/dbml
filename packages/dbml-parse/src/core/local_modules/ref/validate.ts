@@ -13,9 +13,11 @@ import {
   isValidColor,
 } from '@/core/utils/validate';
 import {
-  extractStringFromIdentifierStream,
   isExpressionAVariableNode,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
+import {
+  extractStringFromIdentifierStream,
+} from '@/core/utils/expression';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';

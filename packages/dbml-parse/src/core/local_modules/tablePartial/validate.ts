@@ -21,12 +21,10 @@ import {
   isValidColumnType,
   isValidDefaultValue,
   registerSchemaStack,
-} from '@/core/utils/validate';
-import {
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';

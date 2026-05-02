@@ -3,7 +3,7 @@ import {
 } from '@/core/types/keywords';
 import {
   isExpressionAQuotedString,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
 import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';

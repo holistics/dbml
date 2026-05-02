@@ -2,17 +2,16 @@ import {
   last,
 } from 'lodash-es';
 import {
-  isRelationshipOp, isTupleOfVariables,
-} from '@/core/utils/validate';
-import {
   isAccessExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
-} from '@/core/parser/utils';
+  isRelationshipOp, isTupleOfVariables,
+} from '@/core/utils/validate';
 import {
   CallExpressionNode,
   ElementDeclarationNode,
   FunctionExpressionNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   LiteralNode,
   PrimaryExpressionNode,
@@ -325,4 +324,30 @@ export function findSymbol (
   }
 
   return undefined;
+}
+
+// Return a variable node if it's nested inside a primary expression
+export function extractVariableNode (value?: unknown): SyntaxToken | undefined {
+  if (isExpressionAVariableNode(value)) {
+    return value.expression.variable;
+  }
+
+  return undefined;
+}
+
+export function extractStringFromIdentifierStream (stream?: IdentifierStreamNode): string | undefined {
+  if (stream === undefined) {
+    return undefined;
+  }
+  const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
+  if (name === '') {
+    return undefined;
+  }
+
+  return name;
+}
+
+export function getElementNameString (element?: ElementDeclarationNode): string | undefined {
+  const res = destructureComplexVariable(element?.name);
+  return res !== undefined ? res.join('.') : undefined;
 }

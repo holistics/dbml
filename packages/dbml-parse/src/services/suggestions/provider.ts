@@ -19,8 +19,10 @@ import {
 } from '@/core/lexer/utils';
 import {
   extractStringFromIdentifierStream,
+} from '@/core/utils/expression';
+import {
   isExpressionAVariableNode,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
 import {
   AttributeNode,
   CallExpressionNode,

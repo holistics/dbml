@@ -16,7 +16,7 @@ import {
 } from '@/core/types/symbol/symbols';
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
-} from '@/core/parser/utils';
+} from '@/core/utils/validate';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
