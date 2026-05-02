@@ -42,16 +42,15 @@ import {
 } from '@/core/types/tokens';
 import {
   destructureMemberAccessExpression,
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
   extractStringFromIdentifierStream,
+  extractVariableFromExpression,
+  isTupleEmpty,
 } from '@/core/utils/expression';
 import {
   isExpressionAVariableNode,
 } from '@/core/utils/validate';
 import {
-  isOffsetWithinSpan,
+  isOffsetWithinElementHeader, isOffsetWithinSpan,
 } from '@/core/utils/span';
 import {
   collectCrossFileSuggestions,

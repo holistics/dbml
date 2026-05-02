@@ -9,7 +9,7 @@ import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
-  UseDeclarationNode, UseSpecifierListNode, WildcardNode,
+  UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';
 import {
   SymbolKind,
@@ -17,6 +17,9 @@ import {
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
+import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
 import {
   isOffsetWithinSpan,
 } from '@/core/utils/span';
@@ -252,6 +255,7 @@ function suggestUseFilepath (
     const childAbsolute = Filepath.resolve(currentDir, childLabel);
     const isDir = compiler.layout.isDirectory(childAbsolute);
 
+    const requiredSymbols = extractRequiredSymbols(useDeclaration);
     const fileMatches = fileProvidesAllSpecifiers(compiler, filepath, requiredSymbols);
     if (fileMatches) childContainsMatch.set(childLabel, true);
 
@@ -283,6 +287,24 @@ function suggestUseFilepath (
       ...pathToCompletionItem.values(),
     ],
   };
+}
+
+// Extract { name, kind } pairs from the use declaration's specifier list.
+function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{ name: string;
+  kind: SymbolKind; }> {
+  const specifiers = useDeclaration.specifiers;
+  if (!(specifiers instanceof UseSpecifierListNode)) return [];
+  return specifiers.specifiers.flatMap((spec: UseSpecifierNode) => {
+    const name = extractVariableFromExpression(spec.name);
+    const kind = spec.importKind?.value.toLowerCase() as SymbolKind | undefined;
+    if (!name || !kind) return [];
+    return [
+      {
+        name,
+        kind,
+      },
+    ];
+  });
 }
 
 // True when file provides every required specifier by name + kind.

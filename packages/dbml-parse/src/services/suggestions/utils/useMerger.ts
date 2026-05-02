@@ -8,6 +8,9 @@ import {
 import {
   UseDeclarationNode, UseSpecifierListNode, WildcardNode,
 } from '@/core/types/nodes';
+import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
 
 export interface ParsedUseSpecifier {
   kind?: string;
@@ -73,7 +76,7 @@ export function scanExistingUses (
         if (specifier.name) {
           // Fully formed: `use { table users }`
           kind = specifier.importKind?.value;
-          name = extractSymbolName(specifier.name);
+          name = extractVariableFromExpression(specifier.name);
           if (!name && specifier.name.start !== undefined && specifier.name.end !== undefined) {
             name = fileContent.slice(specifier.name.start, specifier.name.end).trim();
           }

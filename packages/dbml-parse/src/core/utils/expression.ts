@@ -45,6 +45,10 @@ export function getElementNameString (element?: SyntaxNode): string | undefined 
   return ss !== undefined ? ss.join('.') : undefined;
 }
 
+export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
+  return tuple.elementList.length === 0;
+}
+
 export function getBody (node?: ElementDeclarationNode): (FunctionApplicationNode | ElementDeclarationNode)[] {
   if (!node?.body) return [];
   return node.body instanceof BlockExpressionNode
