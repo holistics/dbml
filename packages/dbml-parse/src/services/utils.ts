@@ -8,10 +8,6 @@ import type {
   Position, Range, TextModel,
 } from '@/services/types';
 
-export {
-  extractReferee,
-} from '@/core/global_modules/utils';
-
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {
   return model.getOffsetAt(position);
 }
