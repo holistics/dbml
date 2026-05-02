@@ -537,9 +537,11 @@ export class ColumnSymbol extends NodeSymbol {
     };
   }
 
-  inlineRefs (compiler: Compiler): { target: NodeSymbol;
+  inlineRefs (compiler: Compiler): {
+    target: NodeSymbol;
     relation: string;
-    token: TokenPosition; }[] {
+    token: TokenPosition;
+  }[] {
     const s = this.settings(compiler);
     return (s?.[SettingName.Ref] ?? []).flatMap((attr: AttributeNode) => {
       const prefixExpr = attr.value as PrefixExpressionNode;
