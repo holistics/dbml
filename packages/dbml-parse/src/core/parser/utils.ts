@@ -35,12 +35,14 @@ import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
 import {
+  isAsKeyword,
+} from '../utils/tokens';
+import {
   extractVariableNode,
 } from '../utils/expression';
 import {
   isExpressionAnIdentifierNode,
 } from '../utils/validate';
-import { isAsKeyword } from '../utils/tokens';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
