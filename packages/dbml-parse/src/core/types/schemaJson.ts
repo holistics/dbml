@@ -5,6 +5,10 @@ import type {
   Position,
 } from './position';
 
+export enum AliasKind {
+  Table = 'table',
+}
+
 export interface TokenPosition {
   start: Position;
   end: Position;
@@ -105,6 +109,7 @@ export interface ColumnType {
   schemaName: string | null;
   type_name: string;
   args: string | null;
+  // These are stripped before going into @dbml/core
   numericParams?: {
     precision: number;
     scale: number;
@@ -219,14 +224,10 @@ export interface TableGroupField {
   schemaName: string | null;
 }
 
-export type AliasKind = 'table' | 'enum' | 'tablegroup' | 'tablepartial' | 'note';
-
 export interface Alias {
   name: string;
   kind: AliasKind;
   value: {
-    elementName: string;
-    /** @deprecated Use elementName instead */
     tableName: string;
     schemaName: string | null;
   };
@@ -256,6 +257,7 @@ export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 
 export interface RecordValue {
   value: any;
   type: RecordValueType;
+  token: TokenPosition;
 }
 
 export interface TableRecord {

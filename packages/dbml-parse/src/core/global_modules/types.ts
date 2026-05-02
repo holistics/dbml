@@ -13,6 +13,7 @@ import type {
   Table,
   TableGroup,
   TablePartial,
+  TokenPosition,
 } from '@/core/types/schemaJson';
 
 export type {
@@ -46,6 +47,7 @@ export interface TableRecordRow {
   values: Record<string, {
     value: any;
     type: RecordValueType;
+    token: TokenPosition;
     node?: SyntaxNode; // The specific node for this column value
   }>;
   node: FunctionApplicationNode;

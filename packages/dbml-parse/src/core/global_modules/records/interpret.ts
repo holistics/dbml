@@ -26,6 +26,7 @@ import {
   InterpreterDatabase,
 } from '@/core/global_modules/types';
 import {
+  getTokenPosition,
   mergeTableAndPartials,
 } from '@/core/global_modules/utils';
 import {
@@ -240,6 +241,7 @@ function extractValue (
     return new Report({
       value: node.value?.value || '',
       type: 'expression',
+      token: getTokenPosition(node),
     }, [], []);
   }
 
@@ -251,6 +253,7 @@ function extractValue (
       return new Report({
         value: null,
         type: valueType,
+        token: getTokenPosition(node),
       }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -262,6 +265,7 @@ function extractValue (
     return new Report({
       value: null,
       type: valueType,
+      token: getTokenPosition(node),
     }, [], []);
   }
 
@@ -278,6 +282,7 @@ function extractValue (
       return new Report({
         value: enumValue,
         type: valueType,
+        token: getTokenPosition(node),
       }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -290,6 +295,7 @@ function extractValue (
     return new Report({
       value: enumValue,
       type: valueType,
+      token: getTokenPosition(node),
     }, [], []);
   }
 
@@ -301,6 +307,7 @@ function extractValue (
         {
           value: fallbackValue,
           type: fallbackType,
+          token: getTokenPosition(node),
         },
         [],
         [
@@ -318,6 +325,7 @@ function extractValue (
       return new Report({
         value: Math.floor(numValue),
         type: valueType,
+        token: getTokenPosition(node),
       }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -344,6 +352,7 @@ function extractValue (
         return new Report({
           value: numValue,
           type: valueType,
+          token: getTokenPosition(node),
         }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -357,6 +366,7 @@ function extractValue (
         return new Report({
           value: numValue,
           type: valueType,
+          token: getTokenPosition(node),
         }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -370,6 +380,7 @@ function extractValue (
     return new Report({
       value: numValue,
       type: valueType,
+      token: getTokenPosition(node),
     }, [], []);
   }
 
@@ -381,6 +392,7 @@ function extractValue (
         {
           value: fallbackValue,
           type: fallbackType,
+          token: getTokenPosition(node),
         },
         [],
         [
@@ -395,6 +407,7 @@ function extractValue (
     return new Report({
       value: boolValue,
       type: valueType,
+      token: getTokenPosition(node),
     }, [], []);
   }
 
@@ -406,6 +419,7 @@ function extractValue (
         {
           value: fallbackValue,
           type: fallbackType,
+          token: getTokenPosition(node),
         },
         [],
         [
@@ -420,6 +434,7 @@ function extractValue (
     return new Report({
       value: dtValue,
       type: valueType,
+      token: getTokenPosition(node),
     }, [], []);
   }
 
@@ -431,6 +446,7 @@ function extractValue (
         {
           value: fallbackValue,
           type: fallbackType,
+          token: getTokenPosition(node),
         },
         [],
         [
@@ -455,6 +471,7 @@ function extractValue (
         return new Report({
           value: strValue,
           type: valueType,
+          token: getTokenPosition(node),
         }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -468,6 +485,7 @@ function extractValue (
     return new Report({
       value: strValue,
       type: 'string',
+      token: getTokenPosition(node),
     }, [], []);
   }
 
@@ -475,5 +493,6 @@ function extractValue (
   return new Report({
     value: fallbackValue,
     type: fallbackType,
+    token: getTokenPosition(node),
   }, [], []);
 }

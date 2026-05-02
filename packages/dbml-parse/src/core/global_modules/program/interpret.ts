@@ -126,11 +126,13 @@ function convertEnvToDb (env: InterpreterDatabase, ast: ProgramNode): Database {
             return {
               value: val.value,
               type: val.type,
+              token: val.token,
             };
           }
           return {
             value: null,
             type: 'expression',
+            token: getTokenPosition(r.node), // Fallback cause column does not exist
           };
         });
       }),

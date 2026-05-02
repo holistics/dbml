@@ -25,6 +25,7 @@ import {
   SyntaxNode,
 } from '@/core/types/nodes';
 import {
+    AliasKind,
   Check, Column, Index, InlineRef,
   Table, TablePartialInjection,
 } from '@/core/types/schemaJson';
@@ -138,9 +139,8 @@ export class TableInterpreter {
     if (alias) {
       this.env.aliases.push({
         name: alias,
-        kind: 'table',
+        kind: AliasKind.Table,
         value: {
-          elementName: this.table.name!,
           tableName: this.table.name!,
           schemaName: this.table.schemaName!,
         },
