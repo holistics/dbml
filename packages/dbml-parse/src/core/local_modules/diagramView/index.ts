@@ -33,22 +33,20 @@ import {
 export const diagramViewModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.DiagramView)) return Report.create(PASS_THROUGH);
-    const decl = node as ElementDeclarationNode & { type: SyntaxToken };
     const {
       errors, warnings,
-    } = new DiagramViewValidator(compiler, decl).validate();
+    } = new DiagramViewValidator(compiler, node).validate();
     return Report.create(undefined, errors, warnings);
   },
 
   nodeFullname (_compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.DiagramView)) {
-      const decl = node as ElementDeclarationNode;
-      if (!decl.name) {
+      if (!node.name) {
         return new Report(undefined, [
-          new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A DiagramView must have a name', decl),
+          new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A DiagramView must have a name', node),
         ]);
       }
-      const fragments = destructureComplexVariable(decl.name);
+      const fragments = destructureComplexVariable(node.name);
       if (!fragments) return new Report(undefined);
       return new Report(fragments);
     } else if (

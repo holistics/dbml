@@ -985,10 +985,6 @@ export default class Parser {
       return this.functionExpression();
     }
 
-    if (this.check(SyntaxTokenKind.WILDCARD)) {
-      return this.wildcardExpression();
-    }
-
     if (this.check(SyntaxTokenKind.LBRACKET)) {
       return this.listExpression();
     }

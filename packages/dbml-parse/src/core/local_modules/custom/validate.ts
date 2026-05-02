@@ -32,7 +32,7 @@ export default class CustomValidator {
   }
 
   private validateContext (): CompileError[] {
-    if (this.declarationNode.parent instanceof ProgramNode || !this.declarationNode.parent?.isKind(ElementKind.Project)) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode && this.declarationNode.parent.isKind(ElementKind.Project))) {
       return [
         new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A Custom element can only appear in a Project', this.declarationNode),
       ];

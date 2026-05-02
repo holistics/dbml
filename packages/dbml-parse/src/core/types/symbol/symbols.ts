@@ -79,7 +79,7 @@ export const ImportKind = {
   Enum: SymbolKind.Enum,
   TableGroup: SymbolKind.TableGroup,
   TablePartial: SymbolKind.TablePartial,
-  StickyNote: SymbolKind.StickyNote,
+  Note: SymbolKind.StickyNote,
   Schema: SymbolKind.Schema,
 };
 export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];

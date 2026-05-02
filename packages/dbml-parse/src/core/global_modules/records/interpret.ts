@@ -104,7 +104,7 @@ export default class RecordsInterpreter {
 }
 
 function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler: Compiler): {
-  schemaName: string;
+  schemaName: string | null;
   tableName: string;
   columns: ColumnSymbol[];
 } | undefined {
@@ -172,7 +172,7 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
   const allColumns = resolvedSymbol.mergedColumns(compiler);
   const columns = fragments.args.map((e) => allColumns.find((c) => c.name === extractVariableFromExpression(e))!).filter(Boolean);
   return {
-    schemaName: schemaName ?? DEFAULT_SCHEMA_NAME,
+    schemaName: schemaName === DEFAULT_SCHEMA_NAME ? null : (schemaName ?? null),
     tableName,
     columns,
   };
