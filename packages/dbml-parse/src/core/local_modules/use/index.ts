@@ -68,7 +68,7 @@ export const useModule: LocalModule = {
       );
     }
 
-    if (node.isKind(ImportKind.Note) && name.length > 1) {
+    if (node.isKind(ImportKind.StickyNote) && name.length > 1) {
       return Report.create(
         name,
         [

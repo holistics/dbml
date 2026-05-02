@@ -56,7 +56,7 @@ export enum SymbolKind {
   Enum = 'Enum',
   EnumField = 'Enum field',
 
-  Note = 'Note',
+  StickyNote = 'Note',
 
   TablePartial = 'TablePartial',
   PartialInjection = 'PartialInjection',
@@ -79,7 +79,7 @@ export const ImportKind = {
   Enum: SymbolKind.Enum,
   TableGroup: SymbolKind.TableGroup,
   TablePartial: SymbolKind.TablePartial,
-  Note: SymbolKind.Note,
+  StickyNote: SymbolKind.StickyNote,
   Schema: SymbolKind.Schema,
 };
 export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];
@@ -660,7 +660,7 @@ export class NoteSymbol extends NodeSymbol {
     filepath: Filepath,
   ) {
     super({
-      kind: SymbolKind.Note,
+      kind: SymbolKind.StickyNote,
       declaration,
       name,
     }, id, filepath);

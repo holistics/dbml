@@ -1248,7 +1248,7 @@ function suggestInDiagramViewSubBlock (
     }
     case 'notes': {
       const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
-        SymbolKind.Note,
+        SymbolKind.StickyNote,
       ]);
       return {
         suggestions: [

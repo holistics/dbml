@@ -90,5 +90,5 @@ export function pushExternal (db: Database, member: NodeSymbol, ref: ElementRef)
   else if (member.isKind(SymbolKind.Enum)) db.externals.enums.push(ref);
   else if (member.isKind(SymbolKind.TableGroup)) db.externals.tableGroups.push(ref);
   else if (member.isKind(SymbolKind.TablePartial)) db.externals.tablePartials.push(ref);
-  else if (member.isKind(SymbolKind.Note)) db.externals.notes.push(ref);
+  else if (member.isKind(SymbolKind.StickyNote)) db.externals.notes.push(ref);
 }

@@ -49,7 +49,7 @@ export const noteModule: GlobalModule = {
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (!symbol.isKind(SymbolKind.Note)) {
+    if (!symbol.isKind(SymbolKind.StickyNote)) {
       return Report.create(PASS_THROUGH);
     }
 

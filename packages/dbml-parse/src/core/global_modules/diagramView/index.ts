@@ -115,7 +115,7 @@ export const diagramViewModule: GlobalModule = {
       return nodeRefereeOfDiagramViewTableRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode });
     }
     if (subBlock.isKind(ElementKind.DiagramViewNotes)) {
-      return nodeRefereeOfDiagramViewSimpleRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode }, SymbolKind.Note);
+      return nodeRefereeOfDiagramViewSimpleRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode }, SymbolKind.StickyNote);
     }
     if (subBlock.isKind(ElementKind.DiagramViewTableGroups)) {
       return nodeRefereeOfDiagramViewSimpleRef(compiler, globalSymbol, node as PrimaryExpressionNode & { expression: VariableNode }, SymbolKind.TableGroup);

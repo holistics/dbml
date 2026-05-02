@@ -361,7 +361,7 @@ export default class ProgramInterpreter {
       case SymbolKind.Enum: this.db.enums.push(value as Enum); break;
       case SymbolKind.TableGroup: this.db.tableGroups.push(value as TableGroup); break;
       case SymbolKind.TablePartial: this.db.tablePartials.push(value as TablePartial); break;
-      case SymbolKind.Note: this.db.notes.push(value as Note); break;
+      case SymbolKind.StickyNote: this.db.notes.push(value as Note); break;
       default: break;
     }
   }
