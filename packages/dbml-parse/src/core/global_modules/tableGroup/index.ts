@@ -2,9 +2,6 @@ import type Compiler from '@/compiler/index';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
 import {
   ElementKind,
 } from '@/core/types/keywords';
@@ -12,14 +9,16 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, PrimaryExpressionNode, VariableNode,
+  ElementDeclarationNode,
+  PrimaryExpressionNode,
+  VariableNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  SchemaElement, TableGroup,
+  SchemaElement,
 } from '@/core/types/schemaJson';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind, TableGroupFieldSymbol, TableGroupSymbol,
@@ -28,28 +27,29 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  extractQuotedStringToken, getBody,
-} from '@/core/utils/expression';
-import {
-  getTokenPosition, normalizeNote,
-} from '@/core/utils/interpret';
-import {
   extractVarNameFromPrimaryVariable,
+  getBody,
 } from '@/core/utils/expression';
 import type {
   GlobalModule,
 } from '../types';
 import {
-  extractColor,
-} from '@/core/utils/interpret';
-import {
-  getSymbolSchemaAndName, nodeRefereeOfLeftExpression,
+  nodeRefereeOfLeftExpression, shouldInterpretNode,
 } from '../utils';
 import TableGroupBinder from './bind';
 import {
+  TableGroupInterpreter,
+} from './interpret';
+import {
   isAccessExpression,
-  isElementFieldNode, isElementNode, isExpressionAVariableNode, isInsideElementBody, isInsideSettingList,
+  isElementFieldNode, isElementNode,
+  isExpressionAVariableNode,
+  isInsideElementBody,
+  isInsideSettingList,
 } from '@/core/utils/validate';
+import type {
+  Filepath,
+} from '@/core/types';
 
 // Public utils that other modules can use
 export const tableGroupUtils = {
@@ -94,6 +94,29 @@ export const tableGroupModule: GlobalModule = {
         members.push(symbol);
         errors.push(...res.getErrors());
       }
+      // Duplicate checking
+      const seen = new Map<string, SyntaxNode>();
+      for (const member of members) {
+        if (!member.isKind(SymbolKind.TableGroupField) || !member.declaration) continue;
+        const key = `${member.kind}:${member.name}`;
+
+        if (member.name !== undefined) {
+          const errorNode = (
+            member.declaration instanceof ElementDeclarationNode && member.declaration.name
+          )
+            ? member.declaration.name
+            : member.declaration;
+
+          const firstNode = seen.get(key);
+          if (firstNode) {
+            errors.push(tableGroupUtils.getFieldDuplicateError(member.name, firstNode));
+            errors.push(tableGroupUtils.getFieldDuplicateError(member.name, errorNode));
+          } else {
+            seen.set(key, errorNode);
+          }
+        }
+      }
+
       return new Report(members, errors);
     }
     if (symbol.isKind(SymbolKind.TableGroupField)) {
@@ -125,58 +148,13 @@ export const tableGroupModule: GlobalModule = {
     return Report.create(undefined, errors);
   },
 
-  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
-    if (!(symbol instanceof TableGroupSymbol)) return Report.create(PASS_THROUGH);
+  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+    const node = symbol.declaration;
+    if (!isElementNode(node, ElementKind.TableGroup) || !(symbol instanceof TableGroupSymbol)) return Report.create(PASS_THROUGH);
 
-    const {
-      name, schema: schemaName,
-    } = symbol.interpretedName(compiler, filepath);
+    if (!shouldInterpretNode(compiler, node)) return Report.create(undefined);
 
-    // Resolve table fields from symbol members
-    const fieldSymbols = symbol.members(compiler).filter((m) => m.isKind(SymbolKind.TableGroupField));
-    const tables = fieldSymbols.flatMap((f) => {
-      if (!f.declaration) return [];
-      const callee = f.declaration instanceof FunctionApplicationNode ? f.declaration.callee : f.declaration;
-      const tableSymbol = compiler.nodeReferee(callee ?? f.declaration).getFiltered(UNHANDLED);
-      if (!tableSymbol?.isKind(SymbolKind.Table)) return [];
-      const resolved = getSymbolSchemaAndName(compiler, tableSymbol);
-      return [
-        resolved,
-      ];
-    });
-
-    // Settings
-    const settings = symbol.settings(compiler);
-    const color = settings?.color?.length ? extractColor(settings.color.at(0)?.value) : undefined;
-
-    // Note: settings note first, sub-element Note overrides
-    let note = symbol.note(compiler);
-    if (symbol.declaration) {
-      for (const sub of getBody(symbol.declaration as ElementDeclarationNode)) {
-        if (sub instanceof ElementDeclarationNode && sub.isKind(ElementKind.Note)) {
-          const noteBody = sub.body instanceof BlockExpressionNode
-            ? (sub.body.body[0] as FunctionApplicationNode)?.callee
-            : (sub.body as FunctionApplicationNode)?.callee;
-          const noteContent = noteBody ? extractQuotedStringToken(noteBody) : undefined;
-          if (noteContent) {
-            note = {
-              value: normalizeNote(noteContent),
-              token: getTokenPosition(sub),
-            };
-          }
-          break;
-        }
-      }
-    }
-
-    return Report.create({
-      name,
-      schemaName,
-      tables,
-      token: symbol.token!,
-      color,
-      note,
-    } as TableGroup);
+    return new TableGroupInterpreter(compiler, symbol, filepath).interpret();
   },
 };
 
@@ -190,9 +168,10 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
     if (schemasList) {
       for (const schema of schemasList) {
         if (!(schema instanceof SchemaSymbol)) continue;
-        // lookupMember checks aliases only for public schemas; for non-public, also check aliases explicitly
-        const result = compiler.lookupMembers(schema, SymbolKind.Table, name, true, node);
-        if (result.getValue()) return result;
+        // lookupMembers checks aliases only for public schemas; for non-public, also check aliases explicitly
+        const result = compiler.lookupMembers(schema, SymbolKind.Table, name);
+        if (result) return Report.create(result);
+
         if (!schema.isPublicSchema()) {
           const membersList = compiler.symbolMembers(schema).getFiltered(UNHANDLED);
           if (membersList) {
@@ -205,21 +184,33 @@ function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSym
         }
       }
     }
-    return compiler.lookupMembers(globalSymbol, SymbolKind.Table, name, false, node);
+    const sym = compiler.lookupMembers(globalSymbol, SymbolKind.Table, name);
+    if (sym) return Report.create(sym);
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Table '${name}' does not exist in Schema 'public'`, node),
+    ]);
   }
 
   // Right side of access: resolve via left sibling
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return compiler.lookupMembers(left, [
+      const sym = compiler.lookupMembers(left, [
         SymbolKind.Table,
         SymbolKind.Schema,
       ], name);
+      if (sym) return Report.create(sym);
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Table or schema '${name}' does not exist`, node),
+      ]);
     }
     return new Report(undefined);
   }
 
   // Left side of access: look up as Schema
-  return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+  const sym = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+  if (sym) return Report.create(sym);
+  return new Report(undefined, [
+    new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist`, node),
+  ]);
 }

@@ -6,7 +6,7 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import {
   isExpressionAQuotedString,

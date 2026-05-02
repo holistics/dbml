@@ -9,9 +9,6 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
   destructureComplexVariable,
 } from '@/core/utils/expression';
 import {

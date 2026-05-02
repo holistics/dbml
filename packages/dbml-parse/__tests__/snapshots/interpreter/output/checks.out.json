@@ -158,6 +158,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "email",
             "pk": false,
             "token": {
@@ -216,6 +217,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "balance",
             "pk": false,
             "token": {

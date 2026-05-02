@@ -18,6 +18,7 @@ import {
   ListExpressionNode,
   PrimaryExpressionNode,
   SyntaxNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
@@ -76,6 +77,11 @@ export default class TablePartialValidator {
           'A TablePartial must have a name',
           this.declarationNode,
         ),
+      ];
+    }
+    if (nameNode instanceof WildcardNode) {
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a TablePartial name', nameNode),
       ];
     }
     if (!isSimpleName(nameNode)) {

@@ -92,7 +92,7 @@ export function interpret (source: string): Report<Readonly<Database> | undefine
   const bindResult = compiler.bindNode(ast);
 
   const symbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
-  const interpretResult = symbol ? compiler.interpretSymbol(symbol) : Report.create(UNHANDLED);
+  const interpretResult = symbol ? compiler.interpretSymbol(symbol, DEFAULT_ENTRY) : Report.create(UNHANDLED);
   const db = interpretResult.getFiltered(UNHANDLED);
 
   return new Report(

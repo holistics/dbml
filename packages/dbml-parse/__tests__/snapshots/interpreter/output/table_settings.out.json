@@ -142,6 +142,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -283,6 +284,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -384,6 +386,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "user_id",
             "pk": false,
             "token": {
@@ -405,6 +408,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "product_id",
             "pk": false,
             "token": {
@@ -426,6 +430,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "address",
             "pk": false,
             "token": {

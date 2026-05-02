@@ -1,9 +1,6 @@
 import {
   head, last, partition,
 } from 'lodash-es';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
 import Compiler from '@/compiler/index';
 import {
   CompileError,
@@ -12,50 +9,52 @@ import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  ArrayNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
+  BlockExpressionNode,
+  ElementDeclarationNode,
   FunctionApplicationNode,
-  FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode, SyntaxNode,
+  FunctionExpressionNode,
+  ListExpressionNode,
+  SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Check, Column, ColumnType, Index, InlineRef,
+  Check, Column, Index, InlineRef, Ref,
   SchemaElement, TablePartial,
 } from '@/core/types/schemaJson';
 import type {
   Filepath,
 } from '@/core/types/filepath';
 import type {
-  TablePartialSymbol,
+  ColumnSymbol, TablePartialSymbol,
 } from '@/core/types/symbol/symbols';
 import {
-  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
-  extractVariableFromExpression,
+  extractQuotedStringToken, extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
 import {
   aggregateSettingList,
-  isExpressionASignedNumberExpression,
-  isExpressionAQuotedString,
-  isExpressionAVariableNode,
 } from '@/core/utils/validate';
 import {
   extractColor, extractElementName, getTokenPosition,
-  normalizeNote,
+  normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
 import {
-  getNumberTextFromExpression, extractNumber,
-} from '@/core/utils/numbers';
+  UNHANDLED,
+} from '@/core/types/module';
+import type {
+  PartialRefMetadata,
+} from '@/core/types/symbol/metadata';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;
   private compiler: Compiler;
   private symbol?: TablePartialSymbol;
-  private filepath?: Filepath;
+  private filepath: Filepath;
   private tablePartial: Partial<TablePartial>;
   private pkColumns: Column[];
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, symbol?: TablePartialSymbol, filepath?: Filepath) {
+  constructor (compiler: Compiler, symbol: TablePartialSymbol, filepath: Filepath) {
     this.compiler = compiler;
-    this.declarationNode = declarationNode;
+    this.declarationNode = symbol.declaration as ElementDeclarationNode;
     this.symbol = symbol;
     this.filepath = filepath;
     this.tablePartial = {
@@ -191,286 +190,98 @@ export class TablePartialInterpreter {
 
   private interpretColumn (field: FunctionApplicationNode): CompileError[] {
     const errors: CompileError[] = [];
-
     const column: Partial<Column> = {};
+    const columnSymbol = this.compiler.nodeSymbol(field).getFiltered(UNHANDLED) as ColumnSymbol | undefined;
 
     column.name = extractVarNameFromPrimaryVariable(field.callee as any) ?? '';
-
-    const columnType = this.interpretColumnType(field);
-    column.type = columnType;
-
     column.token = getTokenPosition(field);
-    column.inline_refs = [];
 
-    const settings = field.args.slice(1);
-    if (last(settings) instanceof ListExpressionNode) {
-      const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
+    const typeReport = processColumnType(this.compiler, field.args[0]);
+    column.type = typeReport.getValue();
+    errors.push(...typeReport.getErrors());
 
-      column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PrimaryKey]?.length;
-      column.increment = !!settingMap[SettingName.Increment]?.length;
-      column.unique = !!settingMap[SettingName.Unique]?.length;
+    column.pk = columnSymbol?.pk(this.compiler) ?? false;
+    column.unique = columnSymbol?.unique(this.compiler) ?? false;
+    column.increment = columnSymbol?.increment(this.compiler) ?? false;
+    const nullable = columnSymbol?.nullable(this.compiler);
+    column.not_null = nullable === undefined ? undefined : !nullable;
+    column.dbdefault = columnSymbol?.default(this.compiler);
+    column.note = columnSymbol?.note(this.compiler);
 
-      column.not_null = settingMap[SettingName.NotNull]?.length
-        ? true
-        : (
-            settingMap[SettingName.Null]?.length
-              ? false
-              : undefined
-          );
+    const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
 
-      const defaultSetting = settingMap[SettingName.Default]?.at(0)?.value;
-      if (defaultSetting) {
-        if (isExpressionAQuotedString(defaultSetting)) {
-          column.dbdefault = {
-            value: extractQuotedStringToken(defaultSetting) ?? '',
-            type: 'string',
-          };
-        } else if (isExpressionASignedNumberExpression(defaultSetting)) {
-          column.dbdefault = {
-            type: 'number',
-            value: extractNumber(defaultSetting),
-          };
-        } else if (defaultSetting instanceof FunctionExpressionNode) {
-          column.dbdefault = {
-            value: defaultSetting.value?.value ?? '',
-            type: 'expression',
-          };
-        } else if (isExpressionAVariableNode(defaultSetting)) {
-          const val = defaultSetting.expression.variable.value.toLowerCase();
-          column.dbdefault = {
-            value: val,
-            type: 'boolean',
-          };
-        } else {
-          const fragments = destructureComplexVariable(defaultSetting);
-          if (fragments && fragments.length > 0) {
-            column.dbdefault = {
-              value: fragments.at(-1) ?? '',
-              type: 'string',
-            };
-          }
-        }
-      }
+    const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
+    const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
 
-      const noteNode = settingMap[SettingName.Note]?.at(0);
-      column.note = noteNode && {
-        value: extractQuotedStringToken(noteNode.value) ? normalizeNote(extractQuotedStringToken(noteNode.value)!) : '',
-        token: getTokenPosition(noteNode),
+    const refs = settingMap[SettingName.Ref] || [];
+    column.inline_refs = refs.flatMap((ref) => {
+      const meta = this.compiler.nodeMetadata(ref).getFiltered(UNHANDLED);
+      if (!meta) return [];
+
+      const owners = meta.owners(this.compiler);
+      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+
+      const result = this.compiler.interpretMetadata(meta, this.filepath);
+      if (result.hasValue(UNHANDLED)) return [];
+
+      errors.push(...result.getErrors());
+      const value = result.getValue() as Ref | undefined;
+
+      if (!value?.endpoints?.[1]) return [];
+      const ep = value.endpoints[1];
+      const op = (meta as PartialRefMetadata).op(this.compiler);
+      if (!op) return [];
+
+      const inlineRef: InlineRef = {
+        schemaName: ep.schemaName,
+        tableName: ep.tableName,
+        fieldNames: ep.fieldNames,
+        relation: op,
+        token: ep.token,
       };
+      return inlineRef;
+    });
 
-      const refs = settingMap[SettingName.Ref] || [];
-      column.inline_refs = refs.flatMap((ref) => {
-        const op = (ref.value as PrefixExpressionNode).op!;
-        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression) ?? [];
+    const checkNodes = settingMap[SettingName.Check] || [];
+    column.checks = checkNodes.map((checkNode) => {
+      const token = getTokenPosition(checkNode);
+      const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
+      return {
+        token,
+        expression,
+      } as Check;
+    });
 
-        let inlineRef: InlineRef | undefined;
-        if (fragments.length === 2) {
-          const [
-            table,
-            columnName,
-          ] = fragments;
-          inlineRef = {
-            schemaName: null,
-            tableName: table,
-            fieldNames: [
-              columnName,
-            ],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        } else if (fragments.length === 3) {
-          const [
-            schema,
-            table,
-            columnName,
-          ] = fragments;
-          inlineRef = {
-            schemaName: schema,
-            tableName: table,
-            fieldNames: [
-              columnName,
-            ],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        } else {
-          const columnName = fragments.pop()!;
-          const table = fragments.pop()!;
-          const schema = fragments.join('.');
-          inlineRef = {
-            schemaName: schema,
-            tableName: table,
-            fieldNames: [
-              columnName,
-            ],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        }
-
-        return inlineRef
-          ? [
-              inlineRef,
-            ]
-          : [];
-      });
-
-      const checkNodes = settingMap[SettingName.Check] || [];
-      column.checks = checkNodes.map((checkNode) => {
-        const token = getTokenPosition(checkNode);
-        const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
-        return {
-          token,
-          expression,
-        } as Check;
-      });
-    }
-
-    column.pk ||= settings.some((setting) => (extractVariableFromExpression(setting) ?? '').toLowerCase() === 'pk');
-    column.unique ||= settings.some((setting) => (extractVariableFromExpression(setting) ?? '').toLowerCase() === 'unique');
-
-    this.tablePartial.fields!.push(column as Column);
+    this.tablePartial.fields?.push(column as Column);
     if (column.pk) {
       this.pkColumns.push(column as Column);
     }
     return errors;
   }
 
-  private interpretColumnType (field: FunctionApplicationNode): ColumnType {
-    let rawTypeNode: SyntaxNode | undefined = field.args[0];
-    let columnType: ColumnType = {
-      schemaName: null,
-      type_name: '',
-      args: null,
-    };
-
-    if (!rawTypeNode) return columnType;
-
-    let typeSuffix = '';
-    let typeArgs: string | null = null;
-
-    if (rawTypeNode instanceof CallExpressionNode && rawTypeNode.argumentList) {
-      typeArgs = rawTypeNode.argumentList.elementList.map((e) => {
-        if (isExpressionASignedNumberExpression(e)) return getNumberTextFromExpression(e);
-        if (isExpressionAQuotedString(e)) return extractQuotedStringToken(e) ?? '';
-        if (isExpressionAVariableNode(e)) return e.expression.variable.value;
-        return '';
-      }).join(',');
-      typeSuffix = `(${typeArgs})`;
-      rawTypeNode = rawTypeNode.callee;
-    }
-
-    while (rawTypeNode instanceof CallExpressionNode || rawTypeNode instanceof ArrayNode) {
-      if (rawTypeNode instanceof CallExpressionNode) {
-        const args = rawTypeNode.argumentList?.elementList.map((e) => {
-          if (isExpressionASignedNumberExpression(e)) return getNumberTextFromExpression(e);
-          if (isExpressionAQuotedString(e)) return extractQuotedStringToken(e) ?? '';
-          if (isExpressionAVariableNode(e)) return e.expression.variable.value;
-          return '';
-        }).join(',') ?? '';
-        typeSuffix = `(${args})${typeSuffix}`;
-        rawTypeNode = rawTypeNode.callee;
-      } else {
-        const indexer = `[${rawTypeNode.indexer?.elementList.map((e: any) => e?.name?.expression?.literal?.value ?? '').join(',') ?? ''}]`;
-        typeSuffix = `${indexer}${typeSuffix}`;
-        rawTypeNode = rawTypeNode.array;
-      }
-    }
-
-    const typeFragments = rawTypeNode ? destructureComplexVariable(rawTypeNode) : undefined;
-    if (typeFragments && typeFragments.length > 0) {
-      const typeName = typeFragments.at(-1) ?? '';
-      const typeSchema = typeFragments.length > 1 ? typeFragments.slice(0, -1).join('.') : null;
-      columnType = {
-        schemaName: typeSchema,
-        type_name: `${typeName}${typeSuffix}`,
-        args: typeArgs,
-      };
-    }
-
-    return columnType;
-  }
-
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
-    this.tablePartial.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = {
-        columns: [],
-      };
+    const meta = this.compiler.nodeMetadata(indexes).getFiltered(UNHANDLED);
+    if (!meta) return [];
 
-      const indexField = _indexField as FunctionApplicationNode;
-      index.token = getTokenPosition(indexField);
-      const args = [
-        indexField.callee!,
-        ...indexField.args,
-      ];
-      if (last(args) instanceof ListExpressionNode) {
-        const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
-        index.pk = !!settingMap[SettingName.PK]?.length;
-        index.unique = !!settingMap[SettingName.Unique]?.length;
-        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value);
-        const noteNode = settingMap[SettingName.Note]?.at(0);
-        index.note = noteNode && {
-          value: extractQuotedStringToken(noteNode.value)!,
-          token: getTokenPosition(noteNode),
-        };
-        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value);
-      }
+    const result = this.compiler.interpretMetadata(meta, this.filepath);
+    if (result.hasValue(UNHANDLED)) return [];
 
-      args.flatMap((arg) => {
-        // This is to deal with indexes fields such as
-        // (id, name) (age, weight)
-        // which is a call expression
-        if (!(arg instanceof CallExpressionNode)) return arg;
-
-        const fragments: SyntaxNode[] = [];
-        let argPtr = arg;
-
-        while (argPtr instanceof CallExpressionNode) {
-          fragments.push(argPtr.argumentList!);
-          argPtr = argPtr.callee!;
-        }
-        fragments.push(argPtr);
-        return fragments;
-      }).forEach((arg) => {
-        const {
-          functional, nonFunctional,
-        } = destructureIndexNode(arg)!;
-        index.columns!.push(
-          ...functional.map((s) => ({
-            value: s.value!.value,
-            type: 'expression',
-            token: getTokenPosition(s),
-          })),
-          ...nonFunctional.map((s) => ({
-            value: extractVarNameFromPrimaryVariable(s) ?? '',
-            type: 'column',
-            token: getTokenPosition(s),
-          })),
-        );
-      });
-
-      return index as Index;
-    }));
-
-    return [];
+    const index = result.getValue();
+    if (Array.isArray(index)) this.tablePartial.indexes?.push(...index as Index[]);
+    else if (index) this.tablePartial.indexes?.push(index as Index);
+    return result.getErrors();
   }
 
   private interpretChecks (checks: ElementDeclarationNode): CompileError[] {
-    this.tablePartial.checks!.push(...(checks.body as BlockExpressionNode).body.map((_checkField) => {
-      const check: Partial<Check> = {};
-      const checkField = _checkField as FunctionApplicationNode;
-      check.token = getTokenPosition(checkField);
+    const meta = this.compiler.nodeMetadata(checks).getFiltered(UNHANDLED);
+    if (!meta) return [];
 
-      if (checkField.args[0] instanceof ListExpressionNode) {
-        const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();
-        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value);
-      }
+    const result = this.compiler.interpretMetadata(meta, this.filepath);
+    if (result.hasValue(UNHANDLED)) return [];
 
-      check.expression = (checkField.callee as FunctionExpressionNode).value!.value!;
-
-      return check as Check;
-    }));
-
-    return [];
+    const check = result.getValue();
+    if (Array.isArray(check)) this.tablePartial.checks?.push(...check as Check[]);
+    else if (check) this.tablePartial.checks?.push(check as Check);
+    return result.getErrors();
   }
 }

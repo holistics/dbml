@@ -31,7 +31,6 @@ import {
 import {
   ColumnSymbol,
   InjectedColumnSymbol,
-  SymbolKind,
   TableSymbol,
 } from '@/core/types/symbol';
 

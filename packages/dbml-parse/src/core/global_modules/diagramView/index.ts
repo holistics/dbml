@@ -9,8 +9,11 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
-  PrimaryExpressionNode, VariableNode,
+  BlockExpressionNode,
+  ElementDeclarationNode,
+  FunctionApplicationNode,
+  type PrimaryExpressionNode,
+  type VariableNode,
   WildcardNode,
 } from '@/core/types/nodes';
 import type {
@@ -21,7 +24,14 @@ import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  DiagramViewNoteSymbol, DiagramViewSchemaSymbol, DiagramViewSymbol, DiagramViewTableGroupSymbol, DiagramViewTableSymbol, DiagramViewTopLevelWildcardSymbol, NodeSymbol, SymbolKind,
+  DiagramViewNoteSymbol,
+  DiagramViewSchemaSymbol,
+  DiagramViewSymbol,
+  DiagramViewTableGroupSymbol,
+  DiagramViewTableSymbol,
+  DiagramViewTopLevelWildcardSymbol,
+  type NodeSymbol,
+  SymbolKind,
 } from '@/core/types/symbol';
 import type {
   SyntaxToken,
@@ -36,7 +46,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  lookupInDefaultSchema, nodeRefereeOfLeftExpression,
+  nodeRefereeOfLeftExpression,
 } from '../utils';
 import DiagramViewBinder from './bind';
 import {
@@ -185,7 +195,7 @@ export const diagramViewModule: GlobalModule = {
     return Report.create(undefined, errors);
   },
 
-  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!(symbol instanceof DiagramViewSymbol)) return Report.create(PASS_THROUGH);
     if (!(symbol.declaration instanceof ElementDeclarationNode)) return Report.create(undefined);
 
@@ -245,12 +255,27 @@ function nodeRefereeOfDiagramViewTableRef (
     if (left) {
       if (left.isKind(SymbolKind.Schema)) {
         const isTerminal = isTerminalAccessFragment(node);
-        return compiler.lookupMembers(left, isTerminal ? SymbolKind.Table : SymbolKind.Schema, name, false, node);
+        const symbol = compiler.lookupMembers(left, isTerminal ? SymbolKind.Table : SymbolKind.Schema, name);
+        if (symbol) {
+          return Report.create(symbol);
+        }
+
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.BINDING_ERROR, `Could not find ${isTerminal ? 'table' : 'schema'} '${name}'`, node),
+        ]);
       }
+
       return new Report(undefined);
     }
     // Left side of access: always a Schema
-    return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
+    const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Could not find schema '${name}'`, node),
+    ]);
   }
 
   // Standalone reference
@@ -260,7 +285,14 @@ function nodeRefereeOfDiagramViewTableRef (
     if (member.isKind(SymbolKind.Table) && name === memberName) return Report.create(member);
   }
 
-  return compiler.lookupMembers(globalSymbol, SymbolKind.Table, name, false, node);
+  const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Table, name);
+  if (symbol) {
+    return Report.create(symbol);
+  }
+
+  return new Report(undefined, [
+    new CompileError(CompileErrorCode.BINDING_ERROR, `Could not find table '${name}'`, node),
+  ]);
 }
 
 /**
@@ -276,12 +308,14 @@ function nodeRefereeOfDiagramViewSimpleRef (
   if (name === undefined) {
     return Report.create(undefined);
   }
-  return lookupInDefaultSchema(compiler, globalSymbol, name, {
-    kinds: [
-      kind,
-    ],
-    errorNode: node,
-  });
+  const symbol = compiler.lookupMembers(globalSymbol, kind, name);
+  if (symbol) {
+    return Report.create(symbol);
+  }
+
+  return new Report(undefined, [
+    new CompileError(CompileErrorCode.BINDING_ERROR, `Could not find ${kind === SymbolKind.StickyNote ? 'note' : 'tablegroup'} '${name}'`, node),
+  ]);
 }
 
 /**
@@ -296,5 +330,12 @@ function nodeRefereeOfDiagramViewSchemaRef (
   if (name === undefined) {
     return Report.create(undefined);
   }
-  return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
+  const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+  if (symbol) {
+    return Report.create(symbol);
+  }
+
+  return new Report(undefined, [
+    new CompileError(CompileErrorCode.BINDING_ERROR, `Could not find schema '${name}'`, node),
+  ]);
 }

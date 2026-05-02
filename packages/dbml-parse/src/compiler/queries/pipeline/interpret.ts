@@ -21,7 +21,7 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
   const ast = this.parseFile(filepath).getValue().ast;
   const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!symbol) return Report.create(undefined);
-  return this.interpretSymbol(symbol).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
+  return this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
 }
 
 // Interpret all files. Returns raw MasterDatabase
@@ -49,7 +49,7 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     warnings.push(...parseResult.getWarnings());
     const ast = parseResult.getValue().ast;
     const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
-    const result = symbol ? this.interpretSymbol(symbol) : Report.create(UNHANDLED);
+    const result = symbol ? this.interpretSymbol(symbol, file) : Report.create(UNHANDLED);
     const db = result.getFiltered(UNHANDLED);
     if (db) {
       perFile.set(file.absolute, db as Database);

@@ -9,14 +9,10 @@ import type {
   SyntaxNode,
 } from '@/core/types/nodes';
 import type {
+  Index,
   RecordValue,
-} from '@/core/types/schemaJson';
-import type {
   TableRecord,
 } from '@/core/types/schemaJson';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
 import {
   TableSymbol,
 } from '@/core/types/symbol';
@@ -36,11 +32,8 @@ const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';
 
 // Validate primary key constraints for a table's records.
-export function validatePrimaryKey (compiler: Compiler, tableNode: SyntaxNode, recordBlock: SyntaxNode, record: TableRecord): CompileWarning[] {
+export function validatePrimaryKey (compiler: Compiler, tableSymbol: TableSymbol, recordBlock: SyntaxNode, record: TableRecord): CompileWarning[] {
   if (isEmpty(record.values)) return [];
-
-  const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
-  if (!(tableSymbol instanceof TableSymbol)) return [];
 
   const columns = tableSymbol.mergedColumns(compiler);
   const columnInfos = columns.map((c) => columnInfoFromSymbol(c, compiler));
@@ -65,7 +58,7 @@ function validatePkConstraint (
   columnMap: Record<string, ColumnInfo>,
   record: TableRecord,
 ): CompileWarning[] {
-  const schemaName = tableSymbol.schemaName(compiler);
+  const schemaName = tableSymbol.schema(compiler);
   const tableName = tableSymbol.name ?? '';
 
   const missingErrors = checkMissingPkColumns(recordBlock, pkColumns, availableColumns, columnMap, schemaName, tableName, record);
@@ -172,6 +165,10 @@ function collectPkConstraints (tableSymbol: TableSymbol, columnInfos: ColumnInfo
     ...columnInfos.filter((col) => col.pk).map((col) => [
       col.name,
     ]),
-    ...tableSymbol.mergedIndexes(compiler).filter((index) => index.pk).map((index) => index.columns.map((c) => c.value)),
+    ...tableSymbol.mergedIndexes(compiler).flatMap((index) => {
+      const result = compiler.interpretMetadata(index, index.declaration.filepath).getValue();
+      if (!Array.isArray(result)) return [];
+      return (result as Index[]).filter((e) => e.pk).map((e) => e.columns.map((c) => c.value));
+    }),
   ];
 }

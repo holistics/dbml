@@ -115,7 +115,7 @@ export const programModule: GlobalModule = {
     return new Binder(node, compiler).resolve();
   },
 
-  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!(symbol instanceof ProgramSymbol)) return Report.create(PASS_THROUGH);
     if (!(symbol.declaration instanceof ProgramNode)) return Report.create(undefined);
 
@@ -126,6 +126,6 @@ export const programModule: GlobalModule = {
       ]);
     }
 
-    return new ProgramInterpreter(compiler, symbol.declaration, filepath).interpret() as Report<SchemaElement | SchemaElement[] | undefined>;
+    return new ProgramInterpreter(compiler, symbol, filepath).interpret() as Report<SchemaElement | SchemaElement[] | undefined>;
   },
 };

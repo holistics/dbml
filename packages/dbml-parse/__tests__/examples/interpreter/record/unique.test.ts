@@ -102,7 +102,7 @@ describe('[example - record] composite unique constraints', () => {
     // One warning per UNIQUE column per duplicate row -> 2 rows × 2 columns = 4.
     expect(warnings.length).toBe(4);
     for (const w of warnings) {
-      expect(w.diagnostic).toBe('Duplicate Composite UNIQUE: (public.user_profiles.user_id, public.user_profiles.profile_type) = (1, "work")');
+      expect(w.diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
     }
   });
 
@@ -332,12 +332,12 @@ describe('[example - record] simple unique constraints', () => {
     expect(warnings.length).toBeGreaterThan(0);
 
     // Verify users.email duplicate warnings
-    const userWarnings = warnings.filter((w) => w.diagnostic.includes('public.users.email') && w.diagnostic.includes('alice@example.com'));
+    const userWarnings = warnings.filter((w) => w.diagnostic.includes('users.email') && w.diagnostic.includes('alice@example.com'));
     expect(userWarnings.length).toBeGreaterThan(0);
     expect(userWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
 
     // Verify products.sku duplicate warnings
-    const productWarnings = warnings.filter((w) => w.diagnostic.includes('public.products.sku') && w.diagnostic.includes('PROD-001'));
+    const productWarnings = warnings.filter((w) => w.diagnostic.includes('products.sku') && w.diagnostic.includes('PROD-001'));
     expect(productWarnings.length).toBeGreaterThan(0);
     expect(productWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
   });
@@ -409,7 +409,7 @@ describe('[example - record] simple unique constraints', () => {
 
     // Should have warnings for duplicate PK
     expect(warnings.length).toBeGreaterThan(0);
-    expect(warnings.every((w) => w.diagnostic.includes('Duplicate PK') && w.diagnostic.includes('public.users.id'))).toBe(true);
+    expect(warnings.every((w) => w.diagnostic.includes('Duplicate PK') && w.diagnostic.includes('users.id'))).toBe(true);
   });
 
   test('should validate multiple unique columns on same table', () => {
@@ -433,8 +433,8 @@ describe('[example - record] simple unique constraints', () => {
     // username "alice" is duplicate (rows 1 and 3) and phone "111-111" is duplicate (rows 1 and 4)
     // Each duplicate generates one warning per affected row
     expect(warnings.length).toBeGreaterThan(0);
-    expect(warnings.some((w) => w.diagnostic.includes('public.users.username') && w.diagnostic.includes('alice'))).toBe(true);
-    expect(warnings.some((w) => w.diagnostic.includes('public.users.phone') && w.diagnostic.includes('111-111'))).toBe(true);
+    expect(warnings.some((w) => w.diagnostic.includes('users.username') && w.diagnostic.includes('alice'))).toBe(true);
+    expect(warnings.some((w) => w.diagnostic.includes('users.phone') && w.diagnostic.includes('111-111'))).toBe(true);
   });
 
   test('should report error for duplicate records blocks', () => {
@@ -456,8 +456,8 @@ describe('[example - record] simple unique constraints', () => {
 
     expect(errors.length).toBe(2);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
+    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
+    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
   });
 });

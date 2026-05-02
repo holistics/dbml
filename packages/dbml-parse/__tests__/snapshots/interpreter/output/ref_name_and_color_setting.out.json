@@ -124,6 +124,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -145,6 +146,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "c_id",
             "pk": false,
             "token": {
@@ -185,6 +187,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -206,6 +209,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "b_id",
             "pk": false,
             "token": {

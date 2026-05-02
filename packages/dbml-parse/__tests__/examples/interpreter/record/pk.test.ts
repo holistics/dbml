@@ -103,7 +103,7 @@ describe('[example - record] composite primary key constraints', () => {
     // each anchored on the offending row's column cell.
     expect(warnings.length).toBe(4);
     for (const w of warnings) {
-      expect(w.diagnostic).toBe('Duplicate Composite PK: (public.order_items.order_id, public.order_items.product_id) = (1, 100)');
+      expect(w.diagnostic).toBe('Duplicate Composite PK: (order_items.order_id, order_items.product_id) = (1, 100)');
     }
   });
 
@@ -128,10 +128,10 @@ describe('[example - record] composite primary key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(4);
-    expect(warnings[0].diagnostic).toBe('NULL in Composite PK: (public.order_items.order_id, public.order_items.product_id) cannot be NULL');
-    expect(warnings[1].diagnostic).toBe('NULL in Composite PK: (public.order_items.order_id, public.order_items.product_id) cannot be NULL');
-    expect(warnings[2].diagnostic).toBe('NULL in Composite PK: (public.order_items.order_id, public.order_items.product_id) cannot be NULL');
-    expect(warnings[3].diagnostic).toBe('NULL in Composite PK: (public.order_items.order_id, public.order_items.product_id) cannot be NULL');
+    expect(warnings[0].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
+    expect(warnings[1].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
+    expect(warnings[2].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
+    expect(warnings[3].diagnostic).toBe('NULL in Composite PK: (order_items.order_id, order_items.product_id) cannot be NULL');
   });
 });
 
@@ -256,12 +256,12 @@ describe('[example - record] simple primary key constraints', () => {
     expect(warnings.length).toBeGreaterThan(0);
 
     // Verify users.id duplicate warnings
-    const userWarnings = warnings.filter((w) => w.diagnostic.includes('public.users.id'));
+    const userWarnings = warnings.filter((w) => w.diagnostic.includes('users.id'));
     expect(userWarnings.length).toBeGreaterThan(0);
     expect(userWarnings.every((w) => w.diagnostic.includes('Duplicate PK'))).toBe(true);
 
     // Verify countries.code duplicate warnings
-    const countryWarnings = warnings.filter((w) => w.diagnostic.includes('public.countries.code'));
+    const countryWarnings = warnings.filter((w) => w.diagnostic.includes('countries.code'));
     expect(countryWarnings.length).toBeGreaterThan(0);
     expect(countryWarnings.every((w) => w.diagnostic.includes('Duplicate PK'))).toBe(true);
   });
@@ -281,7 +281,7 @@ describe('[example - record] simple primary key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(1);
-    expect(warnings[0].diagnostic).toBe('NULL in PK: public.users.id cannot be NULL');
+    expect(warnings[0].diagnostic).toBe('NULL in PK: users.id cannot be NULL');
   });
 
   test('should validate PK alias syntax (primary key)', () => {
@@ -364,8 +364,8 @@ describe('[example - record] simple primary key constraints', () => {
 
     expect(errors.length).toBe(2);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
+    expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'public.users' - A Table can only have one Records block");
+    expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
   });
 });

@@ -3,11 +3,14 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import type {
-  RecordMetadata, SymbolMetadata,
-} from '@/core/types/metadata';
+  Filepath,
+} from '@/core/types/filepath';
 import {
-  MetadataKind,
-} from '@/core/types/metadata';
+  RecordsMetadata,
+} from '@/core/types/symbol/metadata';
+import type {
+  NodeMetadata,
+} from '@/core/types/symbol/metadata';
 import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
@@ -39,51 +42,32 @@ import {
   isElementNode,
   isExpressionAVariableNode,
 } from '@/core/utils/validate';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types';
 import type {
   GlobalModule,
 } from '../types';
 import {
-  lookupInDefaultSchema, nodeRefereeOfLeftExpression,
+  nodeRefereeOfLeftExpression,
 } from '../utils';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
 
 export const recordsModule: GlobalModule = {
-  emitMetadata (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough> {
+  nodeMetadata (compiler: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<PassThrough> {
     if (!isElementNode(node, ElementKind.Records)) return Report.create(PASS_THROUGH);
 
     // Case 1: Nested records inside a table element
     const tableNode = node.parent;
     if (tableNode && isElementNode(tableNode, ElementKind.Table)) {
-      const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
-      if (!tableSymbol) return Report.create(PASS_THROUGH);
-
-      return Report.create([
-        {
-          kind: MetadataKind.Record,
-          target: tableSymbol,
-          columns: [],
-          values: [],
-          declaration: node,
-        } as RecordMetadata,
-      ]);
+      return Report.create(new RecordsMetadata(node));
     }
 
     // Case 2: Standalone records - `records tablename(cols) { ... }`
     const nameNode = (node as ElementDeclarationNode).name;
     if (nameNode instanceof CallExpressionNode && nameNode.callee) {
-      const tableSymbol = compiler.nodeReferee(nameNode.callee).getFiltered(UNHANDLED);
-      if (tableSymbol?.isKind(SymbolKind.Table)) {
-        return Report.create([
-          {
-            kind: MetadataKind.Record,
-            target: tableSymbol,
-            columns: [],
-            values: [],
-            declaration: node,
-          } as RecordMetadata,
-        ]);
-      }
+      return Report.create(new RecordsMetadata(node));
     }
 
     return Report.create(PASS_THROUGH);
@@ -129,11 +113,11 @@ export const recordsModule: GlobalModule = {
     );
   },
 
-  interpretMetadata (compiler: Compiler, metadata: SymbolMetadata): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
-    if (metadata.kind !== MetadataKind.Record) return Report.create(PASS_THROUGH);
+  interpretMetadata (compiler: Compiler, metadata: NodeMetadata, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+    if (!(metadata instanceof RecordsMetadata)) return Report.create(PASS_THROUGH);
     if (!(metadata.declaration instanceof ElementDeclarationNode)) return Report.create(undefined);
 
-    return new RecordsInterpreter(compiler, metadata.declaration).interpret();
+    return new RecordsInterpreter(compiler, metadata, filepath).interpret();
   },
 };
 
@@ -177,22 +161,7 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
   if (!isAccessExpression(node.parentNode)) {
-    return lookupInDefaultSchema(
-      compiler,
-      globalSymbol,
-      name,
-      {
-        kinds: [
-          SymbolKind.Table,
-          SymbolKind.Schema,
-        ],
-      },
-    );
-  }
-
-  const left = nodeRefereeOfLeftExpression(compiler, node);
-  if (!left) {
-    return compiler.lookupMembers(
+    const symbol = compiler.lookupMembers(
       globalSymbol,
       [
         SymbolKind.Table,
@@ -200,10 +169,36 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
       ],
       name,
     );
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table '${name}' does not exist in Schema 'public'`, node),
+    ]);
+  }
+
+  const left = nodeRefereeOfLeftExpression(compiler, node);
+  if (!left) {
+    const symbol = compiler.lookupMembers(
+      globalSymbol,
+      [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+      ],
+      name,
+    );
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table or schema '${name}' does not exist`, node),
+    ]);
   }
 
   if (left.isKind(SymbolKind.Schema)) {
-    return compiler.lookupMembers(
+    const symbol = compiler.lookupMembers(
       left,
       [
         SymbolKind.Table,
@@ -211,6 +206,13 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
       ],
       name,
     );
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table or schema '${name}' does not exist`, node),
+    ]);
   }
 
   return new Report(undefined);
@@ -223,11 +225,18 @@ function nodeRefereeOfRecordsColumn (compiler: Compiler, tableSymbol: NodeSymbol
 
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
-  return compiler.lookupMembers(
+  const symbol = compiler.lookupMembers(
     tableSymbol,
     SymbolKind.Column,
     name,
   );
+  if (symbol) {
+    return Report.create(symbol);
+  }
+
+  return new Report(undefined, [
+    new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${name}' does not exist in Table 'public.${tableSymbol.name}'`, node),
+  ]);
 }
 
 // Records body enum value: enum.field or schema.enum.field
@@ -245,14 +254,29 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return compiler.lookupMembers(left, [
+      const symbol = compiler.lookupMembers(left, [
         SymbolKind.Enum,
         SymbolKind.Schema,
       ], name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum or schema '${name}' does not exist`, node),
+      ]);
     }
     if (left.isKind(SymbolKind.Enum)) {
-      return compiler.lookupMembers(left, SymbolKind.EnumField, name);
+      const symbol = compiler.lookupMembers(left, SymbolKind.EnumField, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Enum field '${name}' does not exist in Enum 'public.${left.name}'`, node),
+      ]);
     }
+
     return new Report(undefined);
   }
 
@@ -261,19 +285,28 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
   if (parent.leftExpression === node) {
     // If our parent is also the left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+      const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Schema '${name}' does not exist in Schema 'public'`, node),
+      ]);
     }
     // Look up as Enum in default (public) schema
-    return lookupInDefaultSchema(
-      compiler,
+    const symbol = compiler.lookupMembers(
       globalSymbol,
+      SymbolKind.Enum,
       name,
-      {
-        kinds: [
-          SymbolKind.Enum,
-        ],
-      },
     );
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Enum '${name}' does not exist in Schema 'public'`, node),
+    ]);
   }
 
   return new Report(undefined);

@@ -53,7 +53,7 @@ export function suggestUseCompletion (
 ): CompletionList | null {
   const ast = compiler.parse.ast(filepath);
   for (const node of ast.body) {
-    if (node instanceof UseDeclarationNode && node.containsEq(offset)) {
+    if (node instanceof UseDeclarationNode && offset >= node.start && offset <= node.fullEnd) {
       return suggestInUseDeclaration(compiler, filepath, offset, node, model, bOcToken);
     }
   }
@@ -125,9 +125,9 @@ function suggestInUseSpecifierList (
 
 function suggestImportKinds (): CompletionList {
   return {
-    suggestions: Object.values(ImportKind).map((k) => ({
-      label: k,
-      insertText: `${k} `,
+    suggestions: Object.keys(ImportKind).map((k) => ({
+      label: k.toLowerCase(),
+      insertText: `${k.toLowerCase()} `,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
       kind: CompletionItemKind.Keyword,
       range: undefined as any,

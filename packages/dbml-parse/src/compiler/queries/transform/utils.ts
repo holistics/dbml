@@ -83,27 +83,24 @@ export function lookupTableSymbol (
       astSymbol,
       SymbolKind.Table,
       table,
-      true,
     );
-    return symbol.getValue() ?? null;
+    return symbol ?? null;
   }
 
   const schemaSymbol = compiler.lookupMembers(
     astSymbol,
     SymbolKind.Schema,
     schema,
-    true,
-  ).getValue();
+  );
   if (!schemaSymbol) return null;
 
   const tableSymbol = compiler.lookupMembers(
     schemaSymbol,
     SymbolKind.Table,
     table,
-    true,
   );
 
-  return tableSymbol.getValue() ?? null;
+  return tableSymbol ?? null;
 }
 
 /**

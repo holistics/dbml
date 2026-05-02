@@ -5,15 +5,12 @@ import type {
 import type {
   ElementDeclarationNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
 
 export default class ChecksBinder {
   private compiler: Compiler;
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
   }

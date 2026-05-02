@@ -6,6 +6,9 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
+  ElementKind,
+} from '@/core/types/keywords';
+import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
@@ -193,7 +196,7 @@ export default class TableGroupValidator {
       return this.compiler.validateNode(sub).getErrors();
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    const notes = subs.filter((sub) => sub.isKind(ElementKind.Note));
     if (notes.length > 1) errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     return errors;
   }

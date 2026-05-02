@@ -15,5 +15,5 @@ export function isOffsetWithinElementHeader (offset: number, element: ElementDec
   if (bodyStart !== undefined) {
     return offset >= element.start && offset < bodyStart;
   }
-  return offset >= element.start && offset < element.end;
+  return offset >= element.start && offset <= element.end;
 }

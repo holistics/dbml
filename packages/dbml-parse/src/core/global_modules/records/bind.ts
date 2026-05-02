@@ -1,4 +1,4 @@
-import Compiler from '@/compiler';
+import type Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -6,16 +6,19 @@ import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
-  BlockExpressionNode, CommaExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode,
+  CommaExpressionNode,
+  ElementDeclarationNode,
+  FunctionApplicationNode,
+  ProgramNode,
+  type SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
 import {
   getElementNameString,
 } from '@/core/utils/expression';
 import {
-  ElementKind, NodeSymbol,
+  ElementKind,
+  type NodeSymbol,
 } from '../../types';
 import {
   destructureCallExpression,
@@ -30,12 +33,12 @@ import {
 
 export default class RecordsBinder {
   private compiler: Compiler;
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+  private declarationNode: ElementDeclarationNode;
   // A mapping from bound column symbols to the referencing primary expressions nodes of column
   // Example: Records (col1, col2) -> Map symbol of `col1` to the `col1` in `Records (col1, col2)``
   private boundColumns: Map<NodeSymbol, SyntaxNode>;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.boundColumns = new Map();

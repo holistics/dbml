@@ -4,6 +4,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -25,6 +26,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "secret",
             "pk": false,
             "token": {
@@ -47,6 +49,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -69,6 +72,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "code",
             "pk": false,
             "token": {
@@ -91,6 +95,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "ssid",
             "pk": false,
             "token": {

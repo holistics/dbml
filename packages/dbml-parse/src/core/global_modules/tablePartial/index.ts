@@ -15,7 +15,8 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  ElementDeclarationNode, InfixExpressionNode,
+  ElementDeclarationNode,
+  InfixExpressionNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
@@ -25,7 +26,10 @@ import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  ColumnSymbol, NodeSymbol, SymbolKind, TablePartialSymbol,
+  ColumnSymbol,
+  NodeSymbol,
+  SymbolKind,
+  TablePartialSymbol,
 } from '@/core/types/symbol';
 import type {
   SyntaxToken,
@@ -50,7 +54,7 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  lookupInDefaultSchema, nodeRefereeOfLeftExpression,
+  nodeRefereeOfLeftExpression,
 } from '../utils';
 import TablePartialBinder from './bind';
 import {
@@ -156,11 +160,11 @@ export const tablePartialModule: GlobalModule = {
     return Report.create(undefined, errors);
   },
 
-  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!(symbol instanceof TablePartialSymbol)) return Report.create(PASS_THROUGH);
     if (!(symbol.declaration instanceof ElementDeclarationNode)) return Report.create(undefined);
 
-    return new TablePartialInterpreter(compiler, symbol.declaration, symbol, filepath).interpret();
+    return new TablePartialInterpreter(compiler, symbol, filepath).interpret();
   },
 };
 
@@ -171,31 +175,40 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
 
   // Standalone: try as enum in default schema, ignore if not found (could be a raw type like varchar)
   if (!isAccessExpression(node.parentNode)) {
-    return lookupInDefaultSchema(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Enum,
-      ],
-      ignoreNotFound: true,
-      errorNode: node,
-    });
+    return Report.create(compiler.lookupMembers(globalSymbol, SymbolKind.Enum, name));
   }
 
   // Right side of access - resolve via left sibling
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return compiler.lookupMembers(left, [
+      const symbol = compiler.lookupMembers(left, [
         SymbolKind.Enum,
         SymbolKind.Schema,
-      ], name, false, node);
+      ], name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum or schema '${name}' does not exist`, node),
+      ]);
     }
+
     return new Report(undefined);
   }
 
   // Left side of access - look up as Schema in program scope
   const parent = node.parentNode as InfixExpressionNode;
   if (parent.leftExpression === node) {
-    return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, true, node);
+    const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Schema '${name}' does not exist in Schema 'public'`, node),
+    ]);
   }
 
   return new Report(undefined);
@@ -213,24 +226,53 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
     if (enclosingTablePartial instanceof ElementDeclarationNode && enclosingTablePartial.isKind(ElementKind.TablePartial)) {
       const tableSymbol = compiler.nodeSymbol(enclosingTablePartial).getFiltered(UNHANDLED);
       if (tableSymbol) {
-        return compiler.lookupMembers(tableSymbol, SymbolKind.Column, name, false, node);
+        const symbol = compiler.lookupMembers(tableSymbol, SymbolKind.Column, name);
+        if (symbol) {
+          return Report.create(symbol);
+        }
+
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${name}' does not exist in TablePartial '${tableSymbol.name}'`, node),
+        ]);
       }
     }
-    return compiler.lookupMembers(globalSymbol, SymbolKind.Column, name, true, node);
+    const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Column, name);
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${name}' does not exist`, node),
+    ]);
   }
 
   // Right side of access expression - resolve via left sibling
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return compiler.lookupMembers(left, [
+      const symbol = compiler.lookupMembers(left, [
         SymbolKind.Table,
         SymbolKind.Schema,
-      ], name, false, node);
+      ], name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table or schema '${name}' does not exist`, node),
+      ]);
     }
     if (left.isKind(SymbolKind.Table)) {
-      return compiler.lookupMembers(left, SymbolKind.Column, name, false, node);
+      const symbol = compiler.lookupMembers(left, SymbolKind.Column, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${name}' does not exist in Table 'public.${left.name}'`, node),
+      ]);
     }
+
     return new Report(undefined);
   }
 
@@ -239,23 +281,24 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
   if (parent.leftExpression === node) {
     // If our parent is also a left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
+      const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Schema '${name}' does not exist in Schema 'public'`, node),
+      ]);
     }
     // First try by table name, then by alias
-    const tableResult = lookupInDefaultSchema(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Table,
-      ],
-      ignoreNotFound: true,
-      errorNode: node,
-    });
-    if (tableResult.getValue()) return tableResult;
-    return lookupInDefaultSchema(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Table,
-      ],
-      errorNode: node,
-    });
+    const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Table, name);
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table '${name}' does not exist in Schema 'public'`, node),
+    ]);
   }
 
   return new Report(undefined);
@@ -271,27 +314,36 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
     if (KEYWORDS_OF_DEFAULT_SETTING.includes(name.toLowerCase())) {
       return new Report(undefined);
     }
-    return lookupInDefaultSchema(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Enum,
-      ],
-      ignoreNotFound: true,
-      errorNode: node,
-    });
+    return Report.create(compiler.lookupMembers(globalSymbol, SymbolKind.Enum, name));
   }
 
   // Right side of access - resolve via left sibling
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return compiler.lookupMembers(left, [
+      const symbol = compiler.lookupMembers(left, [
         SymbolKind.Enum,
         SymbolKind.Schema,
-      ], name, false, node);
+      ], name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum or schema '${name}' does not exist`, node),
+      ]);
     }
     if (left.isKind(SymbolKind.Enum)) {
-      return compiler.lookupMembers(left, SymbolKind.EnumField, name, false, node);
+      const symbol = compiler.lookupMembers(left, SymbolKind.EnumField, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum field '${name}' does not exist in Enum 'public.${left.name}'`, node),
+      ]);
     }
+
     return new Report(undefined);
   }
 
@@ -300,14 +352,23 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
   if (parent.leftExpression === node) {
     // If parent is also left of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
+      const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Schema '${name}' does not exist in Schema 'public'`, node),
+      ]);
     }
-    return lookupInDefaultSchema(compiler, globalSymbol, name, {
-      kinds: [
-        SymbolKind.Enum,
-      ],
-      errorNode: node,
-    });
+    const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Enum, name);
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum '${name}' does not exist in Schema 'public'`, node),
+    ]);
   }
 
   return new Report(undefined);

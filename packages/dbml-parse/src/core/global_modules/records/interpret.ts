@@ -1,8 +1,5 @@
 import Compiler from '@/compiler/index';
 import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
   CompileError, CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
 import {
@@ -12,21 +9,28 @@ import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
-  BlockExpressionNode,
+  type BlockExpressionNode,
   CommaExpressionNode,
   ElementDeclarationNode,
-  FunctionApplicationNode,
   FunctionExpressionNode,
-  SyntaxNode,
-  TupleExpressionNode,
+  type FunctionApplicationNode,
+  type SyntaxNode,
+  type TupleExpressionNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
   RecordValue,
   TableRecord,
 } from '@/core/types/schemaJson';
+import type {
+  Filepath,
+} from '@/core/types/filepath';
 import {
-  ColumnSymbol, NodeSymbol, SymbolKind, TableSymbol,
+  type ColumnSymbol,
+  type NodeSymbol,
+  type RecordsMetadata,
+  SymbolKind,
+  TableSymbol,
 } from '@/core/types/symbol';
 import {
   destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression,
@@ -34,9 +38,6 @@ import {
 import {
   getTokenPosition,
 } from '@/core/utils/interpret';
-import {
-  lookupInDefaultSchema,
-} from '../utils';
 import {
   getRecordValueType,
   isBooleanType,
@@ -55,25 +56,26 @@ import {
   tryExtractString,
 } from './utils/data/values';
 import {
-  getEnumMembers, parseLengthParam, parseNumericParams,
-} from './utils/interpret';
-import {
   isExpressionAVariableNode,
 } from '@/core/utils/validate';
 
 export default class RecordsInterpreter {
   private compiler: Compiler;
   private element: ElementDeclarationNode;
+  private metadata: RecordsMetadata;
+  private filepath: Filepath;
 
-  constructor (compiler: Compiler, element: ElementDeclarationNode) {
+  constructor (compiler: Compiler, metadata: RecordsMetadata, filepath: Filepath) {
     this.compiler = compiler;
-    this.element = element;
+    this.metadata = metadata;
+    this.element = metadata.declaration as ElementDeclarationNode;
+    this.filepath = filepath;
   }
 
   interpret (): Report<TableRecord | undefined> {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
-    const result = getTableAndColumnsOfRecords(this.element, this.compiler);
+    const result = getTableAndColumnsOfRecords(this.element, this.compiler, this.filepath);
 
     if (!result || result.columns.length === 0) {
       return new Report<TableRecord | undefined>(undefined, errors);
@@ -92,7 +94,7 @@ export default class RecordsInterpreter {
 
     const token = getTokenPosition(this.element);
     const tableRecord: TableRecord = {
-      schemaName: result.schemaName ?? undefined,
+      schemaName: result.schemaName,
       tableName: result.tableName,
       columns: result.columns.map((c) => c.name ?? ''),
       values,
@@ -103,7 +105,7 @@ export default class RecordsInterpreter {
   }
 }
 
-function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler: Compiler): {
+function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler: Compiler, filepath: Filepath): {
   schemaName: string | null;
   tableName: string;
   columns: ColumnSymbol[];
@@ -117,8 +119,9 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
     if (!(tableSymbol instanceof TableSymbol)) return undefined;
 
     const allColumns = tableSymbol.mergedColumns(compiler);
-    const schemaName = tableSymbol.schemaName(compiler);
-    const tableName = tableSymbol.name ?? '';
+    const resolved = tableSymbol.interpretedName(compiler, filepath);
+    const schemaName = resolved.schema;
+    const tableName = resolved.name;
     if (!nameNode) return {
       schemaName,
       tableName,
@@ -149,18 +152,13 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
 
   let tableSymbol: NodeSymbol | undefined;
   if (schemaName) {
-    const schemaResult = compiler.lookupMembers(programSymbolValue, SymbolKind.Schema, schemaName, true);
-    if (schemaResult.getValue()) {
-      tableSymbol = compiler.lookupMembers(schemaResult.getValue()!, SymbolKind.Table, tableName, true).getValue() ?? undefined;
+    const schemaResult = compiler.lookupMembers(programSymbolValue, SymbolKind.Schema, schemaName);
+    if (schemaResult) {
+      tableSymbol = compiler.lookupMembers(schemaResult, SymbolKind.Table, tableName);
     }
   }
   if (!tableSymbol) {
-    tableSymbol = lookupInDefaultSchema(compiler, programSymbolValue, tableName, {
-      kinds: [
-        SymbolKind.Table,
-      ],
-      ignoreNotFound: true,
-    }).getValue() ?? undefined;
+    tableSymbol = compiler.lookupMembers(programSymbolValue, SymbolKind.Table, tableName);
   }
 
   if (!tableSymbol) return undefined;
@@ -171,9 +169,10 @@ function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler:
 
   const allColumns = resolvedSymbol.mergedColumns(compiler);
   const columns = fragments.args.map((e) => allColumns.find((c) => c.name === extractVariableFromExpression(e))!).filter(Boolean);
+  const resolved = resolvedSymbol.interpretedName(compiler, filepath);
   return {
-    schemaName: schemaName === DEFAULT_SCHEMA_NAME ? null : (schemaName ?? null),
-    tableName,
+    schemaName: resolved.schema,
+    tableName: resolved.name,
     columns,
   };
 }
@@ -246,7 +245,7 @@ function extractValue (
   const token = getTokenPosition(node);
   const typeInfo = colSymbol.type(compiler);
   const typeName = (typeInfo?.name ?? '').split('(')[0];
-  const isEnum = !!typeInfo?.symbol;
+  const isEnum = !!typeInfo?.enumSymbol;
   const increment = colSymbol.increment(compiler);
   const notNull = colSymbol.nullable(compiler) === false;
   const dbdefault = colSymbol.default(compiler);
@@ -290,7 +289,10 @@ function extractValue (
 
   // Enum type
   if (isEnum) {
-    const enumMembers = getEnumMembers(colSymbol, compiler);
+    const enumSymbol = colSymbol.type(compiler)?.enumSymbol;
+    const enumMembers = enumSymbol
+      ? enumSymbol.members(compiler).filter((f) => f.isKind(SymbolKind.EnumField)).map((f) => f.name).filter(Boolean) as string[]
+      : [];
     let enumValue = extractQuotedStringToken(node);
     if (enumValue === undefined) {
       enumValue = isExpressionAVariableNode(node) ? node.expression.variable.value : undefined;
@@ -353,7 +355,12 @@ function extractValue (
     }
 
     // Decimal/numeric type: validate precision and scale
-    const numericParams = isFloatType(typeName) && typeInfo ? parseNumericParams(typeInfo) : undefined;
+    const numericParams = isFloatType(typeName) && typeInfo?.args?.length
+      ? {
+          precision: Number(typeInfo.args[0]),
+          scale: typeInfo.args.length >= 2 ? Number(typeInfo.args[1]) : 0,
+        }
+      : undefined;
     if (isFloatType(typeName) && numericParams) {
       const {
         precision, scale,
@@ -478,11 +485,9 @@ function extractValue (
     }
 
     // Validate string length (using UTF-8 byte length like SQL engines)
-    const lengthParam = typeInfo ? parseLengthParam(typeInfo) : undefined;
-    if (lengthParam) {
-      const {
-        length,
-      } = lengthParam;
+    const maxLength = typeInfo?.args?.length ? Number(typeInfo.args[0]) : undefined;
+    if (maxLength && !Number.isNaN(maxLength)) {
+      const length = maxLength;
       // Calculate byte length in UTF-8 encoding (matching SQL behavior)
       const actualByteLength = new TextEncoder().encode(strValue).length;
 

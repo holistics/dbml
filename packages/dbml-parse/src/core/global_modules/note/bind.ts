@@ -1,19 +1,18 @@
-import Compiler from '@/compiler';
-import {
+import type Compiler from '@/compiler';
+import type {
   CompileError,
 } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
+  ElementDeclarationNode,
+  type BlockExpressionNode,
+  FunctionApplicationNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
 
 export default class NoteBinder {
   private compiler: Compiler;
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
   }

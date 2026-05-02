@@ -35,6 +35,9 @@ import NoteBinder from './bind';
 import {
   isElementNode,
 } from '@/core/utils/validate';
+import {
+  StickyNoteInterpreter,
+} from './interpret';
 
 export const noteModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
@@ -65,30 +68,9 @@ export const noteModule: GlobalModule = {
     );
   },
 
-  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<Note | undefined> | Report<PassThrough> {
+  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<Note | undefined> | Report<PassThrough> {
     if (!(symbol instanceof NoteSymbol)) return Report.create(PASS_THROUGH);
     if (!(symbol.declaration instanceof ElementDeclarationNode)) return Report.create(undefined);
-
-    const {
-      name,
-    } = symbol.interpretedName(compiler, filepath);
-    const token = symbol.token!;
-    const settings = symbol.settings(compiler);
-    const headerColor = settings?.[SettingName.HeaderColor]?.length
-      ? extractColor(settings[SettingName.HeaderColor].at(0)?.value)
-      : undefined;
-
-    const body = getBody(symbol.declaration);
-    const field = body[0];
-    const content = (field instanceof FunctionApplicationNode)
-      ? normalizeNote(extractQuotedStringToken(field.callee) ?? '')
-      : '';
-
-    return Report.create({
-      name,
-      content,
-      token,
-      headerColor,
-    } as Note);
+    return new StickyNoteInterpreter(compiler, symbol, filepath).interpret();
   },
 };

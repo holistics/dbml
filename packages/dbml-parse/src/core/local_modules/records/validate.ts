@@ -12,7 +12,16 @@ import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode,
+  CallExpressionNode,
+  CommaExpressionNode,
+  ElementDeclarationNode,
+  EmptyNode,
+  FunctionApplicationNode,
+  FunctionExpressionNode,
+  ListExpressionNode,
+  ProgramNode,
+  SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
 import {

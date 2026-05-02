@@ -122,7 +122,14 @@ export const useModule: GlobalModule = {
       const parentSymbol = compiler.nodeReferee(leftNode).getFiltered(UNHANDLED);
       if (!parentSymbol) return Report.create(undefined);
 
-      return compiler.lookupMembers(parentSymbol, symbolKind, name, false, node);
+      const symbol = compiler.lookupMembers(parentSymbol, symbolKind, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Could not find ${symbolKind} '${name}'`, node),
+      ]);
     }
 
     const found = lookupMemberInFilepath(compiler, importPath, name, symbolKind);
@@ -176,7 +183,7 @@ export const useModule: GlobalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!(symbol instanceof UseSymbol)) return Report.create(PASS_THROUGH);
     if (!symbol.usedSymbol) return Report.create(undefined);
 

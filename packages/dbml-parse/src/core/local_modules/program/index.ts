@@ -18,7 +18,7 @@ import ProgramValidator from './validate';
 export const programModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isProgramNode(node)) return Report.create(PASS_THROUGH);
-    return Report.create(undefined, new ProgramValidator(node as ProgramNode, compiler).validate().getErrors());
+    return Report.create(undefined, new ProgramValidator(compiler, node as ProgramNode).validate().getErrors());
   },
 
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {

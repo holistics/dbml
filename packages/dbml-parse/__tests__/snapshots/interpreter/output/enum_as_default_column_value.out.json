@@ -222,6 +222,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -243,6 +244,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {

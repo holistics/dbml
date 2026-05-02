@@ -10,8 +10,8 @@ import type {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  SymbolMetadata,
-} from '@/core/types/metadata';
+  NodeMetadata,
+} from '@/core/types/symbol/metadata';
 import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
@@ -121,17 +121,17 @@ export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Repo
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function emitMetadata (compiler: Compiler, node: SyntaxNode): SymbolMetadata[] {
-  const res = dispatch('emitMetadata', compiler, node);
-  return res.hasValue(PASS_THROUGH) ? [] : res.getValue() as SymbolMetadata[];
+export function nodeMetadata (this: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<Unhandled> {
+  const res = dispatch('nodeMetadata', this, node);
+  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function interpretSymbol (this: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
+export function interpretSymbol (this: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
   const res = dispatch('interpretSymbol', this, symbol, filepath);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
-export function interpretMetadata (this: Compiler, metadata: SymbolMetadata, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
+export function interpretMetadata (this: Compiler, metadata: NodeMetadata, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
   const res = dispatch('interpretMetadata', this, metadata, filepath);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }

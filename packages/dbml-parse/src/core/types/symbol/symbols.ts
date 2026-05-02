@@ -13,10 +13,10 @@ import {
 import type Compiler from '@/compiler';
 import {
   MetadataKind,
-} from '@/core/types/metadata';
+} from '@/core/types/symbol/metadata';
 import type {
-  CheckMetadata, IndexMetadata, SymbolMetadata,
-} from '@/core/types/metadata';
+  TableChecksMetadata, NodeMetadata, IndexesMetadata,
+} from '@/core/types/symbol/metadata';
 import type {
   TokenPosition,
 } from '@/core/types/schemaJson';
@@ -29,19 +29,21 @@ import {
 import {
   isValidPartialInjection,
 } from '@/core/utils/validate';
+import type {
+  Settings,
+} from '@/core/utils/validate';
 import {
   extractColor, getTokenPosition, normalizeNote, processColumnType, processDefaultValue,
 } from '@/core/utils/interpret';
 import {
-  type AttributeNode,
   FunctionApplicationNode,
-  type FunctionExpressionNode,
   type PrefixExpressionNode,
+  type ProgramNode,
   type SyntaxNode,
   UseDeclarationNode,
   type UseSpecifierNode,
   type WildcardNode,
-  ElementDeclarationNode,
+  type ElementDeclarationNode,
 } from '@/core/types/nodes';
 
 export enum SymbolKind {
@@ -61,8 +63,6 @@ export enum SymbolKind {
   TablePartial = 'TablePartial',
   PartialInjection = 'PartialInjection',
 
-  Indexes = 'Indexes',
-
   DiagramView = 'DiagramView',
   DiagramViewTopLevelWildcard = 'DiagramView top-level wildcard',
   DiagramViewTable = 'DiagramView table',
@@ -73,7 +73,7 @@ export enum SymbolKind {
   Program = 'Program',
 }
 
-// Allowable import kinds for use declaration - mapped from SymbolKind
+// Allowable import kinds for use declaration
 export const ImportKind = {
   Table: SymbolKind.Table,
   Enum: SymbolKind.Enum,
@@ -102,7 +102,7 @@ export class NodeSymbolIdGenerator {
   }
 }
 
-// Base class for all symbols in the symbol graph.
+// Base class for all symbols in the symbol graph
 export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
   id: NodeSymbolId;
   kind: SymbolKind;
@@ -141,10 +141,7 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     return kinds.includes(this.kind);
   }
 
-  isPublicSchema (): this is SchemaSymbol & { name: typeof DEFAULT_SCHEMA_NAME } {
-    return false;
-  }
-
+  // Return the canonical name from the file's perspective
   canonicalName (compiler: Compiler, filepath: Filepath): {
     schema: string;
     name: string;
@@ -152,34 +149,28 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     return compiler.canonicalName(filepath, this).getValue();
   }
 
-  // This function is like canonicalName, but it converted DEFAULT_SCHEMA_NAME back to null to avoid introducing `public` schema unnecessarily
-  interpretedName (compiler: Compiler, filepath?: Filepath): {
+  // Return the interpreted name: canonical name with DEFAULT_SCHEMA_NAME converted to null.
+  interpretedName (compiler: Compiler, filepath: Filepath): {
     schema: string | null;
     name: string;
   } {
-    const canonical = this.canonicalName(compiler, filepath ?? this.filepath);
-    const schema = canonical?.schema || null;
+    if (!filepath) return {
+      schema: null,
+      name: this.name ?? '',
+    };
+    const canonical = this.canonicalName(compiler, filepath);
+    if (!canonical) return {
+      schema: null,
+      name: this.name ?? '',
+    };
     return {
-      schema: schema === DEFAULT_SCHEMA_NAME ? null : schema,
-      name: canonical?.name ?? this.name ?? '',
+      schema: canonical.schema === DEFAULT_SCHEMA_NAME ? null : canonical.schema,
+      name: canonical.name,
     };
   }
 
-  fullname (compiler: Compiler): string[] | undefined {
-    if (!this.declaration) return this.name
-      ? [
-          this.name,
-        ]
-      : undefined;
-    return compiler.nodeFullname(this.declaration).getFiltered(UNHANDLED);
-  }
-
-  alias (compiler: Compiler): string | undefined {
-    if (!this.declaration) return undefined;
-    return compiler.nodeAlias(this.declaration).getFiltered(UNHANDLED) ?? undefined;
-  }
-
-  settings (compiler: Compiler): Record<string, AttributeNode[]> | undefined {
+  // Return parsed settings for this symbol's declaration node.
+  settings (compiler: Compiler): Settings | undefined {
     if (!this.declaration) return undefined;
     return compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
   }
@@ -189,33 +180,12 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     return getTokenPosition(this.declaration);
   }
 
-  note (compiler: Compiler): {
-    value: string;
-    token: TokenPosition;
-  } | undefined {
-    const s = this.settings(compiler);
-    if (!s?.note?.length) return undefined;
-    const noteAttr = s.note[0];
-    const raw = noteAttr?.value;
-    if (!raw) return undefined;
-    const text = normalizeNote(extractQuotedStringToken(raw)!);
-    if (!text) return undefined;
-    return {
-      value: text,
-      token: getTokenPosition(noteAttr),
-    };
-  }
-
   references (compiler: Compiler): SyntaxNode[] {
     return compiler.symbolReferences(this);
   }
 
-  metadata (compiler: Compiler): SymbolMetadata[] {
+  metadata (compiler: Compiler): NodeMetadata[] {
     return compiler.symbolMetadata(this);
-  }
-
-  metadataOf<K extends SymbolMetadata['kind']> (compiler: Compiler, kind: K): Extract<SymbolMetadata, { kind: K }>[] {
-    return this.metadata(compiler).filter((m): m is Extract<SymbolMetadata, { kind: K }> => m.kind === kind);
   }
 
   members (compiler: Compiler): NodeSymbol[] {
@@ -225,9 +195,11 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
   }
 }
 
-// Schema namespace. Nestable via `parent`.
+// Schema namespace
+// Nestable via `parent`
 export class SchemaSymbol extends NodeSymbol {
   declare kind: SymbolKind.Schema;
+
   name: string;
   parent?: SchemaSymbol;
 
@@ -267,8 +239,18 @@ export class SchemaSymbol extends NodeSymbol {
     ];
   }
 
-  override isPublicSchema (): this is SchemaSymbol & { name: typeof DEFAULT_SCHEMA_NAME } {
+  isPublicSchema (): this is SchemaSymbol & { name: typeof DEFAULT_SCHEMA_NAME } {
     return this.qualifiedName.join('.') === DEFAULT_SCHEMA_NAME;
+  }
+
+  // Whether a symbol is in some nested schema
+  inNestedSchema (compiler: Compiler, nodeSymbol: NodeSymbol): boolean {
+    const members = this.members(compiler);
+    if (members.some((m) => m.originalSymbol === nodeSymbol.originalSymbol)) return true;
+    for (const m of members) {
+      if (m instanceof SchemaSymbol && m.inNestedSchema(compiler, nodeSymbol)) return true;
+    }
+    return false;
   }
 }
 
@@ -326,6 +308,24 @@ export class EnumFieldSymbol extends NodeSymbol {
   override get originalSymbol (): NodeSymbol {
     return this;
   }
+
+  note (compiler: Compiler): {
+    value: string;
+    token: TokenPosition;
+  } | undefined {
+    if (!this.declaration) return undefined;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+    if (!s?.note?.length) return undefined;
+    const noteAttr = s.note[0];
+    const raw = noteAttr?.value;
+    if (!raw) return undefined;
+    const text = normalizeNote(extractQuotedStringToken(raw)!);
+    if (!text) return undefined;
+    return {
+      value: text,
+      token: getTokenPosition(noteAttr),
+    };
+  }
 }
 
 export class TableSymbol extends NodeSymbol {
@@ -355,8 +355,10 @@ export class TableSymbol extends NodeSymbol {
     return this;
   }
 
-  schemaName (compiler: Compiler): string {
-    return this.canonicalName(compiler, this.filepath)?.schema ?? DEFAULT_SCHEMA_NAME;
+  schema (compiler: Compiler): string | null {
+    const canonical = this.canonicalName(compiler, this.filepath);
+    if (!canonical) return null;
+    return canonical.schema === DEFAULT_SCHEMA_NAME ? null : canonical.schema;
   }
 
   columns (compiler: Compiler): ColumnSymbol[] {
@@ -371,30 +373,49 @@ export class TableSymbol extends NodeSymbol {
     return this.members(compiler).filter((m) => m.isKind(SymbolKind.PartialInjection));
   }
 
-  headerColor (compiler: Compiler): string | undefined {
-    const s = this.settings(compiler);
+  note (compiler: Compiler): {
+    value: string;
+    token: TokenPosition;
+  } | undefined {
+    if (!this.declaration) return undefined;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+    if (!s?.note?.length) return undefined;
+    const noteAttr = s.note[0];
+    const raw = noteAttr?.value;
+    if (!raw) return undefined;
+    const text = normalizeNote(extractQuotedStringToken(raw)!);
+    if (!text) return undefined;
+    return {
+      value: text,
+      token: getTokenPosition(noteAttr),
+    };
+  }
+
+  headercolor (compiler: Compiler): string | undefined {
+    if (!this.declaration) return undefined;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
     return s?.[SettingName.HeaderColor]?.length
       ? extractColor(s[SettingName.HeaderColor].at(0)?.value)
       : undefined;
   }
 
   refs (compiler: Compiler) {
-    return this.metadataOf(compiler, MetadataKind.Ref);
+    return this.metadata(compiler).filter((m): m is Extract<NodeMetadata, { kind: MetadataKind.Ref }> => m.kind === MetadataKind.Ref);
   }
 
   checks (compiler: Compiler) {
-    return this.metadataOf(compiler, MetadataKind.Check);
+    return this.metadata(compiler).filter((m): m is Extract<NodeMetadata, { kind: MetadataKind.TableChecks }> => m.kind === MetadataKind.TableChecks);
   }
 
   indexes (compiler: Compiler) {
-    return this.metadataOf(compiler, MetadataKind.Index);
+    return this.metadata(compiler).filter((m): m is Extract<NodeMetadata, { kind: MetadataKind.Indexes }> => m.kind === MetadataKind.Indexes);
   }
 
   records (compiler: Compiler) {
-    return this.metadataOf(compiler, MetadataKind.Record);
+    return this.metadata(compiler).filter((m): m is Extract<NodeMetadata, { kind: MetadataKind.Records }> => m.kind === MetadataKind.Records);
   }
 
-  partialSymbols (compiler: Compiler): NodeSymbol[] {
+  resolvedPartials (compiler: Compiler): NodeSymbol[] {
     return this.partialInjections(compiler).flatMap((injection) => {
       if (!(injection.declaration instanceof FunctionApplicationNode)) return [];
       if (!isValidPartialInjection(injection.declaration.callee)) return [];
@@ -408,22 +429,31 @@ export class TableSymbol extends NodeSymbol {
     });
   }
 
-  private mergedMetadataOf<K extends SymbolMetadata['kind']> (compiler: Compiler, kind: K): Extract<SymbolMetadata, { kind: K }>[] {
-    const own = this.metadataOf(compiler, kind);
-    const fromPartials = this.partialSymbols(compiler).flatMap((p) => p.metadataOf(compiler, kind));
+  mergedIndexes (compiler: Compiler): IndexesMetadata[] {
+    const own = this.indexes(compiler);
+    const fromPartials = this.resolvedPartials(compiler).flatMap((p) =>
+      p.metadata(compiler).filter((m): m is IndexesMetadata => m.kind === MetadataKind.Indexes));
     return [
       ...own,
       ...fromPartials,
     ];
   }
 
-  mergedIndexes (compiler: Compiler): IndexMetadata[] { return this.mergedMetadataOf(compiler, MetadataKind.Index); }
-  mergedChecks (compiler: Compiler): CheckMetadata[] { return this.mergedMetadataOf(compiler, MetadataKind.Check); }
+  mergedChecks (compiler: Compiler): TableChecksMetadata[] {
+    const own = this.checks(compiler);
+    const fromPartials = this.resolvedPartials(compiler).flatMap((p) =>
+      p.metadata(compiler).filter((m): m is TableChecksMetadata => m.kind === MetadataKind.TableChecks));
+    return [
+      ...own,
+      ...fromPartials,
+    ];
+  }
 
-  mergedHeaderColor (compiler: Compiler): string | undefined {
-    let color = this.headerColor(compiler);
-    for (const partial of this.partialSymbols(compiler)) {
-      const s = partial.settings(compiler);
+  mergedHeadercolor (compiler: Compiler): string | undefined {
+    let color = this.headercolor(compiler);
+    for (const partial of this.resolvedPartials(compiler)) {
+      if (!partial.declaration) continue;
+      const s = compiler.nodeSettings(partial.declaration).getFiltered(UNHANDLED);
       if (s?.[SettingName.HeaderColor]?.length) {
         color = extractColor(s[SettingName.HeaderColor].at(0)?.value);
       }
@@ -435,12 +465,24 @@ export class TableSymbol extends NodeSymbol {
     value: string;
     token: TokenPosition;
   } | undefined {
-    let note = this.note(compiler);
-    for (const partial of this.partialSymbols(compiler)) {
-      const partialNote = partial.note(compiler);
-      if (partialNote) {
-        note = partialNote;
-      }
+    const extractNote = (sym: NodeSymbol) => {
+      if (!sym.declaration) return undefined;
+      const s = compiler.nodeSettings(sym.declaration).getFiltered(UNHANDLED);
+      if (!s?.note?.length) return undefined;
+      const noteAttr = s.note[0];
+      const raw = noteAttr?.value;
+      if (!raw) return undefined;
+      const text = normalizeNote(extractQuotedStringToken(raw)!);
+      if (!text) return undefined;
+      return {
+        value: text,
+        token: getTokenPosition(noteAttr),
+      };
+    };
+    let note = extractNote(this);
+    for (const partial of this.resolvedPartials(compiler)) {
+      const partialNote = extractNote(partial);
+      if (partialNote) note = partialNote;
     }
     return note;
   }
@@ -474,51 +516,65 @@ export class ColumnSymbol extends NodeSymbol {
   }
 
   pk (compiler: Compiler): boolean {
-    const s = this.settings(compiler);
+    if (!this.declaration) return false;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+
     return !!(s?.[SettingName.PK]?.length || s?.[SettingName.PrimaryKey]?.length);
   }
 
   unique (compiler: Compiler): boolean {
-    const s = this.settings(compiler);
+    if (!this.declaration) return false;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+
     return !!s?.[SettingName.Unique]?.length;
   }
 
   nullable (compiler: Compiler): boolean | undefined {
-    const s = this.settings(compiler);
+    if (!this.declaration) return undefined;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+
     if (s?.[SettingName.NotNull]?.length) return false;
     if (s?.[SettingName.Null]?.length) return true;
     return undefined;
   }
 
   increment (compiler: Compiler): boolean {
-    const s = this.settings(compiler);
+    if (!this.declaration) return false;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+
     return !!s?.[SettingName.Increment]?.length;
   }
 
-  default (compiler: Compiler): { type: 'number' | 'string' | 'boolean' | 'expression';
-    value: string | number; } | undefined {
-    const s = this.settings(compiler);
+  default (compiler: Compiler): {
+    type: 'number' | 'string' | 'boolean' | 'expression';
+    value: string | number;
+  } | undefined {
+    if (!this.declaration) return undefined;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+
     const val = s?.[SettingName.Default]?.at(0)?.value;
     if (!val) return undefined;
     return processDefaultValue(val);
   }
 
-  type (compiler: Compiler): ColumnTypeInfo | undefined {
+  type (compiler: Compiler): {
+    name: string;
+    enumSymbol?: EnumSymbol;
+    args?: (string | number)[];
+    schema?: string;
+    array?: (string | number | undefined)[];
+  } | undefined {
     if (!(this.declaration instanceof FunctionApplicationNode)) return undefined;
     const raw = processColumnType(compiler, this.declaration.args[0]).getValue();
     if (!raw) return undefined;
 
-    // Parse args: "10,2" -> [10, 2], "a,b" -> ["a", "b"]
     const args = raw.args
       ? raw.args.split(',').map((a) => { const n = Number(a); return Number.isNaN(n) ? a : n; })
       : undefined;
 
-    // Parse array from type_name: "int[]" -> baseName "int", array [undefined]
-    //                              "int[256]" -> baseName "int", array [256]
-    //                              "int[][]" -> baseName "int", array [undefined, undefined]
     const arrayParts: (string | number | undefined)[] = [];
     const bracketRegex = /\[([^\]]*)\]/g;
-    let match;
+    let match: RegExpExecArray | null;
     const typeName = raw.type_name;
     while ((match = bracketRegex.exec(typeName)) !== null) {
       const inner = match[1];
@@ -530,56 +586,34 @@ export class ColumnSymbol extends NodeSymbol {
     const referee = compiler.nodeReferee(this.declaration.args[0]).getFiltered(UNHANDLED);
     return {
       name: baseName,
-      symbol: referee instanceof EnumSymbol ? referee : undefined,
+      enumSymbol: referee instanceof EnumSymbol ? referee : undefined,
       args: args?.length ? args : undefined,
       schema: raw.schemaName ?? undefined,
       array: arrayParts.length ? arrayParts : undefined,
     };
   }
 
-  inlineRefs (compiler: Compiler): {
-    target: NodeSymbol;
-    relation: string;
+  checks (compiler: Compiler): TableChecksMetadata[] {
+    return this.metadata(compiler).filter((m): m is TableChecksMetadata => m.kind === MetadataKind.TableChecks);
+  }
+
+  note (compiler: Compiler): {
+    value: string;
     token: TokenPosition;
-  }[] {
-    const s = this.settings(compiler);
-    return (s?.[SettingName.Ref] ?? []).flatMap((attr: AttributeNode) => {
-      const prefixExpr = attr.value as PrefixExpressionNode;
-      if (!prefixExpr?.expression) return [];
-      const target = compiler.nodeReferee(prefixExpr.expression).getFiltered(UNHANDLED);
-      if (!target) return [];
-      return [
-        {
-          target,
-          relation: prefixExpr.op?.value ?? '',
-          token: getTokenPosition(attr),
-        },
-      ];
-    });
+  } | undefined {
+    if (!this.declaration) return undefined;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+    if (!s?.note?.length) return undefined;
+    const noteAttr = s.note[0];
+    const raw = noteAttr?.value;
+    if (!raw) return undefined;
+    const text = normalizeNote(extractQuotedStringToken(raw)!);
+    if (!text) return undefined;
+    return {
+      value: text,
+      token: getTokenPosition(noteAttr),
+    };
   }
-
-  checks (compiler: Compiler): { expression: string;
-    token: TokenPosition; }[] {
-    const s = this.settings(compiler);
-    return (s?.[SettingName.Check] ?? []).flatMap((attr: AttributeNode) => {
-      const funcExpr = attr.value as FunctionExpressionNode;
-      if (!funcExpr?.value?.value) return [];
-      return [
-        {
-          expression: funcExpr.value.value,
-          token: getTokenPosition(attr),
-        },
-      ];
-    });
-  }
-}
-
-export interface ColumnTypeInfo {
-  name: string;
-  symbol?: EnumSymbol;
-  args?: (string | number)[];
-  schema?: string;
-  array?: (string | number | undefined)[]; // e.g. [undefined] for [], [256] for [256], [undefined, undefined] for [][]
 }
 
 export class TableGroupSymbol extends NodeSymbol {
@@ -614,8 +648,27 @@ export class TableGroupSymbol extends NodeSymbol {
   }
 
   color (compiler: Compiler): string | undefined {
-    const s = this.settings(compiler);
+    if (!this.declaration) return undefined;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
     return s?.color?.length ? extractColor(s.color.at(0)?.value) : undefined;
+  }
+
+  note (compiler: Compiler): {
+    value: string;
+    token: TokenPosition;
+  } | undefined {
+    if (!this.declaration) return undefined;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+    if (!s?.note?.length) return undefined;
+    const noteAttr = s.note[0];
+    const raw = noteAttr?.value;
+    if (!raw) return undefined;
+    const text = normalizeNote(extractQuotedStringToken(raw)!);
+    if (!text) return undefined;
+    return {
+      value: text,
+      token: getTokenPosition(noteAttr),
+    };
   }
 }
 
@@ -900,6 +953,8 @@ export class DiagramViewSchemaSymbol extends NodeSymbol {
 }
 
 export class ProgramSymbol extends NodeSymbol {
+  declare declaration: ProgramNode;
+
   constructor (
     {
       declaration,
@@ -925,9 +980,19 @@ export class ProgramSymbol extends NodeSymbol {
   override get originalSymbol (): NodeSymbol {
     return this;
   }
+
+  // Whether a symbol is in this program or some nested schema
+  inNestedSchema (compiler: Compiler, nodeSymbol: NodeSymbol): boolean {
+    const members = this.members(compiler);
+    if (members.some((m) => m.originalSymbol === nodeSymbol.originalSymbol)) return true;
+    for (const m of members) {
+      if (m instanceof SchemaSymbol && m.inNestedSchema(compiler, nodeSymbol)) return true;
+    }
+    return false;
+  }
 }
 
-// `as` alias (e.g. `Table users as u`). Delegates to aliasedSymbol.
+// `as` alias (e.g. `Table users as u`)
 export class AliasSymbol extends NodeSymbol {
   declare declaration: ElementDeclarationNode;
   declare name: string;
@@ -961,7 +1026,7 @@ export class AliasSymbol extends NodeSymbol {
   }
 }
 
-// `use`/`reuse` import. Only `reuse` is re-exportable.
+// `use`/`reuse` import. Only `reuse` is re-exportable
 export class UseSymbol extends NodeSymbol {
   useSpecifierDeclaration: UseSpecifierNode | WildcardNode | undefined;
   usedSymbol?: NodeSymbol;
@@ -1000,7 +1065,7 @@ export class UseSymbol extends NodeSymbol {
   }
 }
 
-// Column injected from a TablePartial. Carries own name to avoid scope mismatch.
+// Column injected from a TablePartial
 export class InjectedColumnSymbol extends ColumnSymbol {
   declare name: string;
   injectionDeclaration: SyntaxNode;

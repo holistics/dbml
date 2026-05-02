@@ -4,7 +4,7 @@ import {
 import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
-import Compiler from '@/compiler';
+import type Compiler from '@/compiler';
 import type {
   Filepath,
 } from '@/core/types/filepath';
@@ -13,7 +13,7 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
 } from '@/core/types/nodes';
-import {
+import type {
   CompileError,
   DiagramView,
 } from '@/core/types';
@@ -22,7 +22,8 @@ import {
 } from '@/core/types/module';
 import Report from '@/core/types/report';
 import {
-  DiagramViewSymbol, SymbolKind,
+  type DiagramViewSymbol,
+  SymbolKind,
 } from '@/core/types/symbol';
 import {
   destructureComplexVariable,
@@ -51,7 +52,7 @@ export class DiagramViewInterpreter {
     | 'schemas'
   > = new Set();
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, symbol: DiagramViewSymbol, filepath?: Filepath) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, symbol: DiagramViewSymbol, filepath: Filepath) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
     this.symbol = symbol;

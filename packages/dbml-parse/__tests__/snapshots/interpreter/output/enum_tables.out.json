@@ -328,6 +328,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -349,6 +350,7 @@
             "unique": true
           },
           {
+            "increment": false,
             "name": "status",
             "pk": false,
             "token": {
@@ -370,6 +372,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {

@@ -4,6 +4,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "full_name",
             "pk": false,
             "token": {
@@ -47,6 +48,7 @@
             "unique": true
           },
           {
+            "increment": false,
             "name": "gender",
             "pk": false,
             "token": {
@@ -68,6 +70,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "date_of_birth",
             "pk": false,
             "token": {
@@ -89,6 +92,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -110,6 +114,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "country_code",
             "pk": false,
             "token": {
@@ -318,6 +323,7 @@
                 "value": "now()"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 12,
@@ -330,7 +336,8 @@
                 "line": 14,
                 "offset": 308
               }
-            }
+            },
+            "unique": false
           },
           {
             "columns": [
@@ -369,6 +376,7 @@
                 "value": "lower(full_name)"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 33,
@@ -381,7 +389,8 @@
                 "line": 15,
                 "offset": 320
               }
-            }
+            },
+            "unique": false
           },
           {
             "columns": [
@@ -420,6 +429,7 @@
                 "value": "upper(gender)"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 35,
@@ -432,7 +442,8 @@
                 "line": 16,
                 "offset": 353
               }
-            }
+            },
+            "unique": false
           },
           {
             "columns": [
@@ -454,6 +465,7 @@
                 "value": "reverse(country_code)"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 30,
@@ -466,7 +478,8 @@
                 "line": 17,
                 "offset": 388
               }
-            }
+            },
+            "unique": false
           }
         ],
         "name": "user_partial",

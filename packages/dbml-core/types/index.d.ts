@@ -41,11 +41,4 @@ export {
   addDoubleQuoteIfNeeded,
   formatRecordValue,
 } from '@dbml/parse';
-export type {
-  AliasKind,
-  DiagramView,
-  FilterConfig,
-  DiagramViewSyncOperation,
-  DiagramViewBlock,
-  TextEdit,
-} from '@dbml/parse';
+export type { DiagramView, DiagramViewSyncOperation, DiagramViewBlock, FilterConfig, TextEdit } from '@dbml/parse';

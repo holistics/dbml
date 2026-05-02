@@ -202,7 +202,7 @@ describe('[example] Suggestions Utils - Records', () => {
 
         // Verify all expected columns are present with correct types
         // Note: Column order follows declaration order in table, not injection order
-        const columnMap = new Map(columns!.map((col) => [col.name, col.type]));
+        const columnMap = new Map(columns!.map((col) => [col.name, col.type(compiler)?.name]));
         expect(columnMap.get('id')).toBe('int');
         expect(columnMap.get('name')).toBe('varchar');
         expect(columnMap.get('created_at')).toBe('timestamp');
@@ -233,9 +233,9 @@ describe('[example] Suggestions Utils - Records', () => {
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(2);
         expect(columns![0].name).toBe('id');
-        expect(columns![0].type).toBe('int');
+        expect(columns![0].type(compiler)?.name).toBe('int');
         expect(columns![1].name).toBe('created_at');
-        expect(columns![1].type).toBe('timestamp');
+        expect(columns![1].type(compiler)?.name).toBe('timestamp');
       }
     });
 
@@ -265,7 +265,7 @@ describe('[example] Suggestions Utils - Records', () => {
         expect(columns!.length).toBe(3);
 
         // Verify all expected columns are present with correct types
-        const columnMap = new Map(columns!.map((col) => [col.name, col.type]));
+        const columnMap = new Map(columns!.map((col) => [col.name, col.type(compiler)?.name]));
         expect(columnMap.get('product_id')).toBe('int');
         expect(columnMap.get('version')).toBe('int');
         expect(columnMap.get('name')).toBe('varchar');
@@ -296,11 +296,11 @@ describe('[example] Suggestions Utils - Records', () => {
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(3);
         expect(columns![0].name).toBe('id');
-        expect(columns![0].type).toBe('int');
+        expect(columns![0].type(compiler)?.name).toBe('int');
         expect(columns![1].name).toBe('name');
-        expect(columns![1].type).toBe('varchar');
+        expect(columns![1].type(compiler)?.name).toBe('varchar');
         expect(columns![2].name).toBe('email');
-        expect(columns![2].type).toBe('varchar');
+        expect(columns![2].type(compiler)?.name).toBe('varchar');
       }
     });
 
@@ -329,15 +329,15 @@ describe('[example] Suggestions Utils - Records', () => {
 
         // Verify all columns in exact order with exact types
         expect(columns![0].name).toBe('product_id');
-        expect(columns![0].type).toBe('int');
+        expect(columns![0].type(compiler)?.name).toBe('int');
         expect(columns![1].name).toBe('product_name');
-        expect(columns![1].type).toBe('varchar');
+        expect(columns![1].type(compiler)?.name).toBe('varchar');
         expect(columns![2].name).toBe('price');
-        expect(columns![2].type).toBe('decimal');
+        expect(columns![2].type(compiler)?.name).toBe('decimal');
         expect(columns![3].name).toBe('in_stock');
-        expect(columns![3].type).toBe('boolean');
+        expect(columns![3].type(compiler)?.name).toBe('boolean');
         expect(columns![4].name).toBe('created_at');
-        expect(columns![4].type).toBe('timestamp');
+        expect(columns![4].type(compiler)?.name).toBe('timestamp');
       }
     });
 
@@ -360,7 +360,7 @@ describe('[example] Suggestions Utils - Records', () => {
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(1);
         expect(columns![0].name).toBe('count');
-        expect(columns![0].type).toBe('int');
+        expect(columns![0].type(compiler)?.name).toBe('int');
       }
     });
 
@@ -385,11 +385,11 @@ describe('[example] Suggestions Utils - Records', () => {
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(3);
         expect(columns![0].name).toBe('column-1');
-        expect(columns![0].type).toBe('int');
+        expect(columns![0].type(compiler)?.name).toBe('int');
         expect(columns![1].name).toBe('column 2');
-        expect(columns![1].type).toBe('varchar');
+        expect(columns![1].type(compiler)?.name).toBe('varchar');
         expect(columns![2].name).toBe('column.3');
-        expect(columns![2].type).toBe('boolean');
+        expect(columns![2].type(compiler)?.name).toBe('boolean');
       }
     });
 
@@ -436,9 +436,9 @@ describe('[example] Suggestions Utils - Records', () => {
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(2);
         expect(columns![0].name).toBe('id');
-        expect(columns![0].type).toBe('int');
+        expect(columns![0].type(compiler)?.name).toBe('int');
         expect(columns![1].name).toBe('name');
-        expect(columns![1].type).toBe('varchar');
+        expect(columns![1].type(compiler)?.name).toBe('varchar');
       }
     });
 
@@ -463,11 +463,11 @@ describe('[example] Suggestions Utils - Records', () => {
         expect(columns).not.toBeNull();
         expect(columns!.length).toBe(3);
         expect(columns![0].name).toBe('id');
-        expect(columns![0].type).toBe('int');
+        expect(columns![0].type(compiler)?.name).toBe('int');
         expect(columns![1].name).toBe('username');
-        expect(columns![1].type).toBe('varchar');
+        expect(columns![1].type(compiler)?.name).toBe('varchar');
         expect(columns![2].name).toBe('password_hash');
-        expect(columns![2].type).toBe('varchar');
+        expect(columns![2].type(compiler)?.name).toBe('varchar');
       }
     });
   });

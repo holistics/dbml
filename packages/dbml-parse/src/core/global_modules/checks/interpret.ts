@@ -10,9 +10,6 @@ import type {
   SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
   extractQuotedStringToken,
 } from '@/core/utils/expression';
 import {
@@ -24,9 +21,9 @@ import {
 
 export default class ChecksInterpreter {
   private compiler: Compiler;
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
   }

@@ -1,23 +1,23 @@
 import {
-  emitMetadata, nodeReferee,
+  nodeReferee,
 } from '@/core/global_modules';
 import {
   getMemberChain,
 } from '@/core/parser/utils';
-import {
-  metadataTargets,
-} from '@/core/types/metadata';
 import type {
-  SymbolMetadata,
-} from '@/core/types/metadata';
+  NodeMetadata,
+} from '@/core/types/symbol/metadata';
 import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
-  InfixExpressionNode, SyntaxNode, TupleExpressionNode,
+  SyntaxNode,
+  type InfixExpressionNode,
+  TupleExpressionNode,
 } from '@/core/types/nodes';
-import {
-  type InternedNodeSymbol, NodeSymbol,
+import type {
+  InternedNodeSymbol,
+  NodeSymbol,
 } from '@/core/types/symbol';
 import {
   isAccessExpression, isExpressionAVariableNode,
@@ -26,7 +26,7 @@ import type Compiler from '../index';
 
 export interface ResolutionIndex {
   references: Map<InternedNodeSymbol, SyntaxNode[]>;
-  metadata: Map<InternedNodeSymbol, SymbolMetadata[]>;
+  metadata: Map<InternedNodeSymbol, NodeMetadata[]>;
 }
 
 function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
@@ -41,7 +41,7 @@ function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
 // Build full resolution index: references + metadata. One scan of all files.
 export function resolutionIndex (this: Compiler): ResolutionIndex {
   const references = new Map<InternedNodeSymbol, SyntaxNode[]>();
-  const metadata = new Map<InternedNodeSymbol, SymbolMetadata[]>();
+  const metadata = new Map<InternedNodeSymbol, NodeMetadata[]>();
 
   const astMap = this.parseProject();
   this.bindProject();
@@ -52,23 +52,32 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
     seen.add(node);
     const key = symbol.intern();
     let arr = references.get(key);
-    if (!arr) { arr = []; references.set(key, arr); }
+    if (!arr) {
+      arr = [];
+      references.set(key, arr);
+    }
     arr.push(node);
 
     const original = symbol.originalSymbol;
     if (original !== symbol) {
       const origKey = original.intern();
       let origArr = references.get(origKey);
-      if (!origArr) { origArr = []; references.set(origKey, origArr); }
+      if (!origArr) {
+        origArr = [];
+        references.set(origKey, origArr);
+      }
       origArr.push(node);
     }
   };
 
-  const pushMetadata = (m: SymbolMetadata) => {
-    for (const sym of metadataTargets(m)) {
-      const key = sym.intern();
+  const pushMetadata = (m: NodeMetadata) => {
+    for (const symbol of m.owners(this)) {
+      const key = symbol.intern();
       let arr = metadata.get(key);
-      if (!arr) { arr = []; metadata.set(key, arr); }
+      if (!arr) {
+        arr = [];
+        metadata.set(key, arr);
+      }
       arr.push(m);
     }
   };
@@ -96,7 +105,8 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
         }
       }
       // Collect metadata from all modules
-      for (const metadata of emitMetadata(this, node)) {
+      const metadata = this.nodeMetadata(node).getFiltered(UNHANDLED);
+      if (metadata) {
         pushMetadata(metadata);
       }
       for (const child of getMemberChain(node)) {
@@ -119,7 +129,7 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): SyntaxNod
 }
 
 // Lookup metadata for a symbol from the cached index
-export function symbolMetadata (this: Compiler, symbol: NodeSymbol): SymbolMetadata[] {
+export function symbolMetadata (this: Compiler, symbol: NodeSymbol): NodeMetadata[] {
   const index = this.resolutionIndex();
   return index.metadata.get(symbol.intern()) ?? [];
 }

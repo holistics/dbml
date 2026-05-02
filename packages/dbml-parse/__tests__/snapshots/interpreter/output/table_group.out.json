@@ -37,7 +37,7 @@
               "id"
             ],
             "relation": "1",
-            "tableName": "U",
+            "tableName": "users",
             "token": {
               "end": {
                 "column": 28,
@@ -99,6 +99,7 @@
         "alias": "U",
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -120,6 +121,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "full_name",
             "pk": false,
             "token": {
@@ -141,6 +143,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -162,6 +165,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "country_code",
             "pk": false,
             "token": {
@@ -201,6 +205,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -222,6 +227,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "merchant_name",
             "pk": false,
             "token": {
@@ -243,6 +249,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "country_code",
             "pk": false,
             "token": {
@@ -264,6 +271,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created at",
             "pk": false,
             "token": {
@@ -292,7 +300,7 @@
                   "id"
                 ],
                 "relation": ">",
-                "tableName": "U",
+                "tableName": "users",
                 "token": {
                   "end": {
                     "column": 28,

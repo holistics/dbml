@@ -123,6 +123,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "order_id",
             "pk": false,
             "token": {
@@ -144,6 +145,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "product_id",
             "pk": false,
             "token": {
@@ -165,6 +167,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "quantity",
             "pk": false,
             "token": {

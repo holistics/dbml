@@ -33,8 +33,7 @@ import {
 } from '@/core/types/nodes';
 import {
   type NodeSymbol,
-} from '@/core/types/symbol';
-import {
+  SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
 import {
@@ -280,7 +279,7 @@ function suggestMembersOfSymbol (
       .filter((member) => acceptedKinds.includes(member.kind))
       .filter((member) => {
         // Also exclude the default 'public' schema since it's implicit.
-        if (member.isPublicSchema()) return false;
+        if (member instanceof SchemaSymbol && member.isPublicSchema()) return false;
         return true;
       })
       .flatMap((member) => {
@@ -1023,7 +1022,7 @@ function suggestInTableGroupField (compiler: Compiler, filepath: Filepath): Comp
           const name = member.name;
           if (name === undefined) return [];
           // Skip the default 'public' schema
-          if (member.isPublicSchema()) return [];
+          if (member instanceof SchemaSymbol && member.isPublicSchema()) return [];
 
           return {
             label: name,

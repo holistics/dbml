@@ -42,7 +42,7 @@ export function rawDb (this: Compiler, filepath: Filepath): Readonly<Database> |
   const ast = this.parseFile(filepath).getValue().ast;
   const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!symbol) return undefined;
-  return this.interpretSymbol(symbol).getFiltered(UNHANDLED) as Database | undefined;
+  return this.interpretSymbol(symbol, filepath).getFiltered(UNHANDLED) as Database | undefined;
 }
 
 export function publicSymbolTable (this: Compiler, filepath: Filepath): readonly Readonly<NodeSymbol>[] | undefined {

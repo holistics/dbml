@@ -6,7 +6,7 @@ import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  SettingName,
+  ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
   ArrayNode,
@@ -63,7 +63,7 @@ export default class TableValidator {
     ];
   }
 
-  validateContext (): CompileError[] {
+  private validateContext (): CompileError[] {
     if (this.declarationNode.parent instanceof ElementDeclarationNode) {
       return [
         new CompileError(CompileErrorCode.INVALID_TABLE_CONTEXT, 'Table must appear top-level', this.declarationNode),
@@ -72,7 +72,7 @@ export default class TableValidator {
     return [];
   }
 
-  validateName (nameNode?: SyntaxNode): CompileError[] {
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (!nameNode) {
       return [
         new CompileError(CompileErrorCode.NAME_NOT_FOUND, 'A Table must have a name', this.declarationNode),
@@ -232,7 +232,7 @@ export default class TableValidator {
 
     parts.forEach((part) => {
       const name = (extractVariableFromExpression(part) ?? '').toLowerCase();
-      if (name !== 'pk' && name !== 'unique') {
+      if (name !== SettingName.PK && name !== SettingName.Unique) {
         errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
         return;
       }
@@ -384,7 +384,7 @@ export default class TableValidator {
       return this.compiler.validateNode(sub).getErrors();
     });
 
-    const notes = subs.filter((sub) => sub.type?.value.toLowerCase() === 'note');
+    const notes = subs.filter((sub) => sub.isKind(ElementKind.Note));
     if (notes.length > 1) {
       errors.push(...notes.map((note) => new CompileError(CompileErrorCode.NOTE_REDEFINED, 'Duplicate notes are defined', note)));
     }
@@ -447,7 +447,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
 
   parts.forEach((part) => {
     const name = (extractVariableFromExpression(part) ?? '').toLowerCase();
-    if (name !== 'pk' && name !== 'unique') {
+    if (name !== SettingName.PK && name !== SettingName.Unique) {
       errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
       return;
     }

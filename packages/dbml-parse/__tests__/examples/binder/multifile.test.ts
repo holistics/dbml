@@ -27,8 +27,8 @@ describe('[example] multifile binder', () => {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const usersInMain = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const usersInMain = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
       expect(usersInMain).toBeInstanceOf(UseSymbol);
     });
 
@@ -39,13 +39,13 @@ describe('[example] multifile binder', () => {
       });
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
 
-      const usersInMain = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
+      const usersInMain = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
       expect(usersInMain).toBeInstanceOf(UseSymbol);
 
       // orders was not imported - not visible
-      const ordersInMain = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'orders').getValue();
+      const ordersInMain = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'orders');
       expect(ordersInMain).toBeUndefined();
     });
 
@@ -84,15 +84,15 @@ describe('[example] multifile binder', () => {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
 
       // 'u' is visible
-      const uSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue();
+      const uSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u');
       expect(uSymbol).toBeInstanceOf(UseSymbol);
       expect(uSymbol?.name).toBe('u');
 
       // 'users' is NOT visible under its original name
-      const usersSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
+      const usersSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
       expect(usersSymbol).toBeUndefined();
     });
 
@@ -106,8 +106,8 @@ describe('[example] multifile binder', () => {
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
       // 'u' must be in the default (public) schema - no schema prefix
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const uSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue();
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const uSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u');
       expect(uSymbol).toBeInstanceOf(UseSymbol);
     });
 
@@ -137,9 +137,9 @@ describe('[example] multifile binder', () => {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const uSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue();
-      const memberSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'member').getValue();
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const uSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u');
+      const memberSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'member');
       expect(uSym).toBeInstanceOf(UseSymbol);
       expect(memberSym).toBeInstanceOf(UseSymbol);
     });
@@ -219,9 +219,9 @@ Table posts { id int [pk] }`,
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const usersSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
-      const postsSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts').getValue();
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const usersSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
+      const postsSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts');
       expect(usersSymbol).toBeInstanceOf(UseSymbol);
       expect(postsSymbol).toBeInstanceOf(UseSymbol);
     });
@@ -250,8 +250,8 @@ Table posts { id int [pk] }`,
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const usersInConsumer = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const usersInConsumer = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
       expect(usersInConsumer).toBeInstanceOf(UseSymbol);
     });
 
@@ -264,10 +264,10 @@ Table posts { id int [pk] }`,
       });
 
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
 
       // 'users' should NOT appear in consumer's scope - use does not re-export
-      const usersInConsumer = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue() as UseSymbol;
+      const usersInConsumer = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users') as UseSymbol;
       // There's still a use symbol, but its used symbol is undefined!
       expect(usersInConsumer).toBeInstanceOf(UseSymbol);
       expect(usersInConsumer.usedSymbol).toBeUndefined();
@@ -335,8 +335,8 @@ Table y_table {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const enumSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Enum, 'job_status').getValue();
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const enumSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Enum, 'job_status');
       expect(enumSymbol).toBeInstanceOf(UseSymbol);
     });
 
@@ -381,8 +381,8 @@ Table y_table {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const groupSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.TableGroup, 'content').getValue();
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const groupSymbol = compiler.lookupMembers(schemaSymbol, SymbolKind.TableGroup, 'content');
       expect(groupSymbol).toBeInstanceOf(UseSymbol);
     });
   });
@@ -402,9 +402,9 @@ Table y_table {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const u1 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u1').getValue();
-      const u2 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u2').getValue();
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const u1 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u1');
+      const u2 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u2');
       expect(u1).toBeInstanceOf(UseSymbol);
       expect(u2).toBeInstanceOf(UseSymbol);
       // Both point to the same original declaration (users in base.dbml)
@@ -461,10 +461,10 @@ Table y_table {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
       // products comes through the reuse chain; categories is defined directly in hub
-      const products = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'products').getValue();
-      const categories = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'categories').getValue();
+      const products = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'products');
+      const categories = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'categories');
       expect(products).toBeInstanceOf(UseSymbol);
       expect(categories).toBeInstanceOf(UseSymbol);
     });
@@ -491,9 +491,9 @@ Table y_table {
       const bindErrors = compiler.bindNode(mainAst).getErrors();
       expect(bindErrors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
-      const roles = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'roles').getValue();
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
+      const roles = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'roles');
       // expect: both tables reachable - selective import does not conflict with wildcard re-exposure
       expect(users).toBeInstanceOf(UseSymbol);
       expect(roles).toBeInstanceOf(UseSymbol);
@@ -515,7 +515,7 @@ Table y_table {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView').getValue();
+      const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView');
       expect(dvInMain).toBeUndefined();
     });
 
@@ -534,7 +534,7 @@ Table y_table {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
 
-      const dvInConsumer = compiler.lookupMembers(consumerAst, SymbolKind.DiagramView, 'myView').getValue();
+      const dvInConsumer = compiler.lookupMembers(consumerAst, SymbolKind.DiagramView, 'myView');
       expect(dvInConsumer).toBeUndefined();
     });
 
@@ -551,7 +551,7 @@ Table y_table {
       const baseAst = compiler.parseFile(fps['/base.dbml']).getValue().ast;
       expect(compiler.bindNode(baseAst).getErrors()).toHaveLength(0);
 
-      const dvInBase = compiler.lookupMembers(baseAst, SymbolKind.DiagramView, 'myView').getValue();
+      const dvInBase = compiler.lookupMembers(baseAst, SymbolKind.DiagramView, 'myView');
       expect(dvInBase).toBeDefined();
       expect(dvInBase!.isKind(SymbolKind.DiagramView)).toBe(true);
     });
@@ -602,7 +602,7 @@ Table y_table {
       expect(validationErrors.some((e) => e.code === CompileErrorCode.INVALID_USE_SPECIFIER_KIND)).toBe(true);
 
       // DiagramView must NOT appear in consumer scope
-      const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView').getValue();
+      const dvInMain = compiler.lookupMembers(mainAst, SymbolKind.DiagramView, 'myView');
       expect(dvInMain).toBeUndefined();
     });
   });
@@ -623,9 +623,9 @@ Table y_table {
       const errors = compiler.bindNode(mainAst).getErrors();
       expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue()).toBeInstanceOf(UseSymbol);
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u')).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
     });
 
     test('both aliases point to the same underlying declaration', () => {
@@ -638,9 +638,9 @@ Table y_table {
       });
 
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const uSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue() as UseSymbol;
-      const usersSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue() as UseSymbol;
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const uSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u') as UseSymbol;
+      const usersSym = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users') as UseSymbol;
       // Both should wrap the same original table declaration
       expect(uSym.originalSymbol).toBe(usersSym.originalSymbol);
     });
@@ -660,9 +660,9 @@ Table y_table {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u').getValue()).toBeInstanceOf(UseSymbol);
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeUndefined();
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u')).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeUndefined();
     });
   });
 
@@ -680,9 +680,9 @@ Table y_table {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'member').getValue()).toBeInstanceOf(UseSymbol);
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeUndefined();
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'member')).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeUndefined();
     });
   });
 
@@ -704,10 +704,10 @@ Table y_table {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const u1 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u1').getValue() as UseSymbol;
-      const u2 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u2').getValue() as UseSymbol;
-      const u3 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u3').getValue() as UseSymbol;
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const u1 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u1') as UseSymbol;
+      const u2 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u2') as UseSymbol;
+      const u3 = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'u3') as UseSymbol;
       expect(u1).toBeInstanceOf(UseSymbol);
       expect(u2).toBeInstanceOf(UseSymbol);
       expect(u3).toBeInstanceOf(UseSymbol);
@@ -735,8 +735,8 @@ Table y_table {
       const errors = compiler.bindNode(consumerAst).getErrors();
       expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
     });
   });
 
@@ -758,9 +758,9 @@ Table y_table {
       const errors = compiler.bindNode(consumerAst).getErrors();
       expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'local_u').getValue()).toBeInstanceOf(UseSymbol);
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'local_u')).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
     });
   });
 
@@ -776,8 +776,8 @@ Table y_table {
       const dAst = compiler.parseFile(fps['/d.dbml']).getValue().ast;
       expect(compiler.bindNode(dAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(dAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'a_table').getValue()).toBeInstanceOf(UseSymbol);
+      const schemaSymbol = compiler.lookupMembers(dAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'a_table')).toBeInstanceOf(UseSymbol);
     });
 
     test('4-hop selective reuse chain works and alias at any intermediate hop propagates', () => {
@@ -792,8 +792,8 @@ Table y_table {
       const leafAst = compiler.parseFile(fps['/leaf.dbml']).getValue().ast;
       expect(compiler.bindNode(leafAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(leafAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'root').getValue()).toBeInstanceOf(UseSymbol);
+      const schemaSymbol = compiler.lookupMembers(leafAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'root')).toBeInstanceOf(UseSymbol);
     });
   });
 
@@ -846,10 +846,10 @@ Table y_table {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
       // both member tables should be auto-expanded into consumer scope
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts').getValue()).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts')).toBeInstanceOf(UseSymbol);
     });
 
     test('consumer can write a Ref between two member tables of an imported tablegroup', () => {
@@ -889,10 +889,10 @@ Table y_table {
       // 'users' is a member of both groups - expansion must deduplicate it
       expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts').getValue()).toBeInstanceOf(UseSymbol);
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'comments').getValue()).toBeInstanceOf(UseSymbol);
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts')).toBeInstanceOf(UseSymbol);
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'comments')).toBeInstanceOf(UseSymbol);
     });
   });
 
@@ -952,8 +952,8 @@ Table y_table {
       const mainAst = compiler.parseFile(fps['/main.dbml']).getValue().ast;
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
     });
   });
 
@@ -969,8 +969,8 @@ Table y_table {
       const selfAst = compiler.parseFile(fps['/self.dbml']).getValue().ast;
       expect(() => compiler.bindNode(selfAst)).not.toThrow();
       // local table is still accessible in its own scope
-      const schemaSymbol = compiler.lookupMembers(selfAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'local').getValue()).toBeDefined();
+      const schemaSymbol = compiler.lookupMembers(selfAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'local')).toBeDefined();
     });
   });
 
@@ -997,8 +997,8 @@ Table y_table {
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
       expect(compiler.bindNode(consumerAst).getErrors()).toHaveLength(0);
 
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
       expect(users).toBeInstanceOf(UseSymbol);
     });
 
@@ -1013,14 +1013,14 @@ Table y_table {
       });
 
       const consumerAst = compiler.parseFile(fps['/consumer.dbml']).getValue().ast;
-      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
+      const schemaSymbol = compiler.lookupMembers(consumerAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
 
       // 'users' was reused selectively - must be visible downstream
-      const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue();
+      const users = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users');
       expect(users).toBeInstanceOf(UseSymbol);
 
       // 'posts' was only use * (not reuse) - must NOT be visible downstream
-      const posts = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts').getValue();
+      const posts = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'posts');
       expect(posts).toBeUndefined();
     });
 
@@ -1070,8 +1070,8 @@ Table y_table {
       const errors = compiler.bindNode(mainAst).getErrors();
       expect(errors.some((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toBe(false);
 
-      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME).getValue()!;
-      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users').getValue()).toBeInstanceOf(UseSymbol);
+      const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
+      expect(compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'users')).toBeInstanceOf(UseSymbol);
     });
 
     test('selective use of same symbol from different reuse paths - no DUPLICATE_NAME', () => {

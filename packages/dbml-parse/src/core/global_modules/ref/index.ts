@@ -4,48 +4,55 @@ import type {
 } from '@/core/types/filepath';
 import {
   ElementKind,
+  SettingName,
 } from '@/core/types/keywords';
-import type {
-  RefMetadata, SymbolMetadata,
-} from '@/core/types/metadata';
 import {
   MetadataKind,
-} from '@/core/types/metadata';
+  PartialRefMetadata,
+  RefMetadata,
+} from '@/core/types/symbol/metadata';
+import type {
+  NodeMetadata,
+} from '@/core/types/symbol/metadata';
 import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  AttributeNode, ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode,
+  AttributeNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, InfixExpressionNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  SchemaElement,
+  Ref, SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  NodeSymbol, SymbolKind,
+  NodeSymbol, SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  destructureMemberAccessExpression, getBody,
+  extractStringFromIdentifierStream, getBody,
   extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
 import {
   isAccessExpression, isElementNode, isExpressionAVariableNode,
 } from '@/core/utils/validate';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types';
 import type {
   GlobalModule,
 } from '../types';
 import {
-  extractRefSettings,
-} from './interpret';
-import {
+  getMultiplicities,
   nodeRefereeOfLeftExpression,
 } from '../utils';
+import {
+  getTokenPosition,
+} from '@/core/utils/interpret';
 import RefBinder from './bind';
 import {
   RefInterpreter,
@@ -79,65 +86,31 @@ export const refModule: GlobalModule = {
     return nodeRefereeOfRefEndpoint(compiler, globalSymbol, node);
   },
 
-  emitMetadata (compiler: Compiler, node: SyntaxNode): Report<SymbolMetadata[]> | Report<PassThrough> {
-    if (!isElementNode(node, ElementKind.Ref)) return Report.create(PASS_THROUGH);
+  nodeMetadata (compiler: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<PassThrough> {
+    // Standalone ref: `Ref name: a.x > b.y`
+    if (isElementNode(node, ElementKind.Ref)) {
+      const field = getBody(node)[0];
+      if (!(field instanceof FunctionApplicationNode) || !field.callee) return Report.create(PASS_THROUGH);
+      const infix = field.callee;
+      if (!(infix instanceof InfixExpressionNode) || !infix.op) return Report.create(PASS_THROUGH);
+      return Report.create(new RefMetadata(node));
+    }
 
-    const field = getBody(node)[0];
-    if (!(field instanceof FunctionApplicationNode) || !field.callee) return Report.create(PASS_THROUGH);
-    const infix = field.callee;
-    if (!(infix instanceof InfixExpressionNode) || !infix.op) return Report.create(PASS_THROUGH);
+    // Inline ref: column setting `[ref: > b.y]`
+    if (node instanceof AttributeNode) {
+      if (!(node.name instanceof IdentifierStreamNode)) return Report.create(PASS_THROUGH);
+      const name = extractStringFromIdentifierStream(node.name)?.toLowerCase();
+      if (name !== SettingName.Ref) return Report.create(PASS_THROUGH);
 
-    const op = infix.op.value;
-    const relation = op as RefMetadata['relation'];
-
-    // Resolve the table symbol from a ref operand.
-    // e.g. `schema.table.column` -> [schema, table, column] -> TableSymbol
-    const resolveTable = (operand: SyntaxNode | undefined): NodeSymbol | undefined => {
-      const fragments = destructureMemberAccessExpression(operand);
-      if (!fragments) return undefined;
-
-      let resolved: NodeSymbol | undefined;
-      for (const fragment of fragments) {
-        if (resolved) {
-          if (!resolved.isKind(SymbolKind.Schema)) break;
-          const name = isExpressionAVariableNode(fragment)
-            ? extractVarNameFromPrimaryVariable(fragment)
-            : undefined;
-          if (!name) break;
-          const next = compiler.lookupMembers(resolved, [
-            SymbolKind.Table,
-            SymbolKind.Schema,
-          ], name, true).getValue();
-          if (next?.isKind(SymbolKind.Table)) return next;
-          resolved = next;
-        } else {
-          resolved = compiler.nodeReferee(fragment).getFiltered(UNHANDLED);
-          if (resolved?.isKind(SymbolKind.Table)) return resolved;
-        }
+      // Check if inside TablePartial vs Table
+      const parentElement = node.parent;
+      if (parentElement instanceof ElementDeclarationNode && parentElement.isKind(ElementKind.TablePartial)) {
+        return Report.create(new PartialRefMetadata(node));
       }
-      return undefined;
-    };
+      return Report.create(new RefMetadata(node));
+    }
 
-    const leftTable = resolveTable(infix.leftExpression);
-    const rightTable = resolveTable(infix.rightExpression);
-    if (!leftTable || !rightTable) return Report.create(PASS_THROUGH);
-
-    const {
-      onDelete, onUpdate, color,
-    } = extractRefSettings(field);
-
-    return Report.create([
-      {
-        kind: MetadataKind.Ref,
-        leftTable,
-        rightTable,
-        relation,
-        onDelete,
-        onUpdate,
-        color,
-        declaration: node,
-      } as RefMetadata,
-    ]);
+    return Report.create(PASS_THROUGH);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -149,19 +122,16 @@ export const refModule: GlobalModule = {
     );
   },
 
-  interpretMetadata (compiler: Compiler, metadata: SymbolMetadata, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
-    if (metadata.kind !== MetadataKind.Ref) return Report.create(PASS_THROUGH);
-    if (!(metadata.declaration instanceof ElementDeclarationNode)) return Report.create(undefined);
+  interpretMetadata (compiler: Compiler, metadata: NodeMetadata, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+    if (metadata instanceof RefMetadata) {
+      return new RefInterpreter(
+        compiler,
+        metadata,
+        filepath,
+      ).interpret();
+    }
 
-    return new RefInterpreter(
-      compiler,
-      metadata.declaration,
-      filepath,
-      {
-        left: metadata.leftTable,
-        right: metadata.rightTable,
-      },
-    ).interpret();
+    return Report.create(PASS_THROUGH);
   },
 };
 
@@ -170,7 +140,7 @@ function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): 
   if (!membersList) return undefined;
 
   return membersList.find((m: NodeSymbol) =>
-    m.isPublicSchema(),
+    m instanceof SchemaSymbol && m.isPublicSchema(),
   );
 }
 
@@ -186,9 +156,23 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
     const tupleParent = node.parentNode;
     if (tupleParent && isAccessExpression(tupleParent.parentNode) && (tupleParent.parentNode as InfixExpressionNode).rightExpression === tupleParent) {
       const leftExpr = (tupleParent.parentNode as InfixExpressionNode).leftExpression!;
-      const tableSymbol = compiler.nodeReferee(leftExpr).getFiltered(UNHANDLED);
+      // If leftExpr is an access expression (e.g. schema.table), use its rightmost variable
+      const tableNode = isAccessExpression(leftExpr)
+        ? (leftExpr as InfixExpressionNode).rightExpression ?? leftExpr
+        : leftExpr;
+      const tableSymbol = compiler.nodeReferee(tableNode).getFiltered(UNHANDLED);
       if (tableSymbol?.isKind(SymbolKind.Table)) {
-        return compiler.lookupMembers(tableSymbol, SymbolKind.Column, name, false, node);
+        const symbol = compiler.lookupMembers(tableSymbol, SymbolKind.Column, name);
+        if (symbol) {
+          return Report.create(symbol);
+        }
+
+        const fullname = tableSymbol.declaration
+          ? compiler.nodeFullname(tableSymbol.declaration).getFiltered(UNHANDLED)?.join('.') ?? tableSymbol.name
+          : tableSymbol.name;
+        return new Report(undefined, [
+          new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${name}' does not exist in Table '${fullname}'`, node),
+        ]);
       }
     }
 
@@ -199,14 +183,29 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left) {
     if (left.isKind(SymbolKind.Schema)) {
-      return compiler.lookupMembers(left, [
+      const symbol = compiler.lookupMembers(left, [
         SymbolKind.Table,
         SymbolKind.Schema,
-      ], name, false, node);
+      ], name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Table or schema '${name}' does not exist`, node),
+      ]);
     }
     if (left.isKind(SymbolKind.Table)) {
-      return compiler.lookupMembers(left, SymbolKind.Column, name, false, node);
+      const symbol = compiler.lookupMembers(left, SymbolKind.Column, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${name}' does not exist in Table '${left.declaration ? compiler.nodeFullname(left.declaration).getFiltered(UNHANDLED)?.join('.') ?? left.name : left.name}'`, node),
+      ]);
     }
+
     return new Report(undefined);
   }
 
@@ -215,15 +214,29 @@ export function nodeRefereeOfRefEndpoint (compiler: Compiler, globalSymbol: Node
   if (parent.leftExpression === node) {
     // If parent is also left side of another access, this is a schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
-      return compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name, false, node);
+      const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+      if (symbol) {
+        return Report.create(symbol);
+      }
+
+      return new Report(undefined, [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist`, node),
+      ]);
     }
     // Otherwise look up as Table (by name or alias) in public schema, then program scope
     const schemaSymbol = getDefaultSchemaSymbol(compiler, globalSymbol);
     if (schemaSymbol) {
-      const result = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, name, true, node);
-      if (result.getValue()) return result;
+      const symbol = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, name);
+      if (symbol) return Report.create(symbol);
     }
-    return compiler.lookupMembers(globalSymbol, SymbolKind.Table, name, false, node);
+    const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Table, name);
+    if (symbol) {
+      return Report.create(symbol);
+    }
+
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Table '${name}' does not exist in Schema 'public'`, node),
+    ]);
   }
 
   return new Report(undefined);

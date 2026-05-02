@@ -25,7 +25,7 @@
       }
     },
     {
-      "code": "BINDING_ERROR",
+      "code": "NAME_NOT_FOUND",
       "diagnostic": "Schema 'field1' does not exist in Schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",
@@ -37,7 +37,7 @@
       }
     },
     {
-      "code": "BINDING_ERROR",
+      "code": "NAME_NOT_FOUND",
       "diagnostic": "Enum 'invalid_enum' does not exist in Schema 'public'",
       "filepath": "/main.dbml",
       "level": "error",

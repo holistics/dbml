@@ -3,12 +3,14 @@ import {
   Filepath, type FilepathId,
 } from '@/core/types/filepath';
 
-export function reachableFiles (this: Compiler, entry: Filepath): Filepath[] {
+export function reachableFiles (this: Compiler, entry?: Filepath): Filepath[] {
   const visited = new Set<FilepathId>();
   const results: Filepath[] = [];
-  const queue = [
-    entry,
-  ];
+  const queue = entry
+    ? [
+        entry,
+      ]
+    : this.layout.getEntryPoints();
   let head = 0;
 
   while (head < queue.length) {

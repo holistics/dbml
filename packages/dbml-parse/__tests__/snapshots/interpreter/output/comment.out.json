@@ -365,6 +365,7 @@
                 "value": "created_at"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 15,
@@ -377,7 +378,8 @@
                 "line": 25,
                 "offset": 399
               }
-            }
+            },
+            "unique": false
           }
         ],
         "name": "orders",

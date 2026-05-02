@@ -15,6 +15,7 @@ import {
   PrefixExpressionNode,
   ProgramNode,
   SyntaxNode,
+  TupleExpressionNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
@@ -35,10 +36,57 @@ import {
   extractVariableFromExpression,
   getBody,
 } from '@/core/utils/expression';
-import {
-  checkRefEndpoints,
-  getColumnSymbolIds,
-} from './utils';
+
+function resolveColumnSymbols (compiler: Compiler, node: SyntaxNode): NodeSymbol[] | undefined {
+  const fragments = destructureMemberAccessExpression(node);
+  if (!fragments || fragments.length === 0) return undefined;
+
+  const lastFragment = fragments[fragments.length - 1];
+  if (lastFragment instanceof TupleExpressionNode) {
+    const symbols: NodeSymbol[] = [];
+    for (const elem of lastFragment.elementList) {
+      const sym = compiler.nodeReferee(elem).getFiltered(UNHANDLED);
+      if (!sym) return undefined;
+      symbols.push(sym.originalSymbol);
+    }
+    return symbols;
+  }
+
+  const last = fragments[fragments.length - 1];
+  if (!last || last instanceof TupleExpressionNode) return undefined;
+  const sym = compiler.nodeReferee(last).getFiltered(UNHANDLED);
+  if (!sym) return undefined;
+  return [
+    sym.originalSymbol,
+  ];
+}
+
+function checkRefEndpoints (
+  left: NodeSymbol[],
+  right: NodeSymbol[],
+  errorNode: SyntaxNode,
+  seenRefIds: Map<string, SyntaxNode>,
+): CompileError[] {
+  const leftKey = left.map((s) => s.intern()).sort().join(',');
+  const rightKey = right.map((s) => s.intern()).sort().join(',');
+
+  if (leftKey === rightKey) {
+    return [
+      new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', errorNode),
+    ];
+  }
+
+  const refId = leftKey < rightKey ? `${leftKey}-${rightKey}` : `${rightKey}-${leftKey}`;
+  const existing = seenRefIds.get(refId);
+  if (existing) {
+    return [
+      new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', errorNode),
+      new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', existing),
+    ];
+  }
+  seenRefIds.set(refId, errorNode);
+  return [];
+}
 
 export default class Binder {
   private ast: ProgramNode;
@@ -82,8 +130,7 @@ export default class Binder {
       }
     }
 
-    // Check 3: Trigger symbolMembers on schemas (possibly nested) to detect duplicate names
-    // Element-level duplicates (columns, enum fields) are handled by each module's bindNode
+    // Detect duplicate members of schemas
     const programSymbol = this.compiler.nodeSymbol(this.ast).getFiltered(UNHANDLED);
     if (programSymbol) {
       errors.push(...checkDuplicateSchemaMembers(this.compiler, programSymbol));
@@ -138,11 +185,11 @@ export default class Binder {
       const infix = field.callee as InfixExpressionNode;
       if (!infix.leftExpression || !infix.rightExpression) continue;
 
-      const leftIds = getColumnSymbolIds(this.compiler, infix.leftExpression);
-      const rightIds = getColumnSymbolIds(this.compiler, infix.rightExpression);
-      if (!leftIds || !rightIds) continue;
+      const leftSymbols = resolveColumnSymbols(this.compiler, infix.leftExpression);
+      const rightSymbols = resolveColumnSymbols(this.compiler, infix.rightExpression);
+      if (!leftSymbols || !rightSymbols) continue;
 
-      errors.push(...checkRefEndpoints(leftIds, rightIds, declaration, seenRefIds));
+      errors.push(...checkRefEndpoints(leftSymbols, rightSymbols, declaration, seenRefIds));
     }
     return errors;
   }
@@ -167,13 +214,13 @@ export default class Binder {
         if (!refValue.op || !isRelationshipOp(refValue.op.value)) continue;
         if (!refValue.expression) continue;
 
-        const rightIds = getColumnSymbolIds(this.compiler, refValue.expression);
-        if (!rightIds) continue;
-        const leftIds = [
-          colSym.originalSymbol.intern(),
+        const rightSymbols = resolveColumnSymbols(this.compiler, refValue.expression);
+        if (!rightSymbols) continue;
+        const leftSymbols = [
+          colSym.originalSymbol,
         ];
 
-        errors.push(...checkRefEndpoints(leftIds, rightIds, attr, seenRefIds));
+        errors.push(...checkRefEndpoints(leftSymbols, rightSymbols, attr, seenRefIds));
       }
     }
     return errors;
@@ -273,8 +320,6 @@ export default class Binder {
 }
 
 // Recursively trigger symbolMembers on schemas to collect duplicate name errors
-// Only recurses into SchemaSymbol children (nested schemas); element-level
-// duplicates (columns, enum fields) are handled by each module's bindNode
 function checkDuplicateSchemaMembers (compiler: Compiler, symbol: NodeSymbol, visited = new Set<number>()): CompileError[] {
   if (visited.has(symbol.id)) return [];
   visited.add(symbol.id);

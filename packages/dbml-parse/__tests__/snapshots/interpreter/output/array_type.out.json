@@ -4,6 +4,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -89,6 +90,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "squares",
             "pk": false,
             "token": {

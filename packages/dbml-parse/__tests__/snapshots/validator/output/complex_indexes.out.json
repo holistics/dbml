@@ -462,7 +462,13 @@
                                           }
                                         },
                                         "fullEnd": 131,
-                                        "fullStart": 129
+                                        "fullStart": 129,
+                                        "referee": {
+                                          "context": {
+                                            "id": "symbol@Column@id@[L1:C2, L1:C12]",
+                                            "snippet": "id integer"
+                                          }
+                                        }
                                       },
                                       {
                                         "context": {
@@ -491,7 +497,13 @@
                                           }
                                         },
                                         "fullEnd": 140,
-                                        "fullStart": 133
+                                        "fullStart": 133,
+                                        "referee": {
+                                          "context": {
+                                            "id": "symbol@Column@country@[L2:C2, L2:C17]",
+                                            "snippet": "country varchar"
+                                          }
+                                        }
                                       }
                                     ],
                                     "tupleCloseParen": {
@@ -734,7 +746,13 @@
                                     }
                                   },
                                   "fullEnd": 188,
-                                  "fullStart": 173
+                                  "fullStart": 173,
+                                  "referee": {
+                                    "context": {
+                                      "id": "symbol@Column@created_at@[L4:C2, L4:C22]",
+                                      "snippet": "created_at timestamp"
+                                    }
+                                  }
                                 }
                               },
                               "fullEnd": 230,
@@ -773,7 +791,13 @@
                                     }
                                   },
                                   "fullEnd": 248,
-                                  "fullStart": 230
+                                  "fullStart": 230,
+                                  "referee": {
+                                    "context": {
+                                      "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
+                                      "snippet": "booking_date date"
+                                    }
+                                  }
                                 }
                               },
                               "fullEnd": 248,
@@ -893,7 +917,13 @@
                                           }
                                         },
                                         "fullEnd": 260,
-                                        "fullStart": 253
+                                        "fullStart": 253,
+                                        "referee": {
+                                          "context": {
+                                            "id": "symbol@Column@country@[L2:C2, L2:C17]",
+                                            "snippet": "country varchar"
+                                          }
+                                        }
                                       },
                                       {
                                         "context": {
@@ -922,7 +952,13 @@
                                           }
                                         },
                                         "fullEnd": 274,
-                                        "fullStart": 262
+                                        "fullStart": 262,
+                                        "referee": {
+                                          "context": {
+                                            "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
+                                            "snippet": "booking_date date"
+                                          }
+                                        }
                                       }
                                     ],
                                     "tupleCloseParen": {
@@ -1085,7 +1121,13 @@
                                     }
                                   },
                                   "fullEnd": 303,
-                                  "fullStart": 286
+                                  "fullStart": 286,
+                                  "referee": {
+                                    "context": {
+                                      "id": "symbol@Column@booking_date@[L3:C2, L3:C19]",
+                                      "snippet": "booking_date date"
+                                    }
+                                  }
                                 }
                               },
                               "fullEnd": 317,
@@ -1309,7 +1351,13 @@
                                           }
                                         },
                                         "fullEnd": 371,
-                                        "fullStart": 369
+                                        "fullStart": 369,
+                                        "referee": {
+                                          "context": {
+                                            "id": "symbol@Column@id@[L1:C2, L1:C12]",
+                                            "snippet": "id integer"
+                                          }
+                                        }
                                       }
                                     ],
                                     "tupleCloseParen": {

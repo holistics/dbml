@@ -50,7 +50,7 @@ export default async function exportHandler (program: Command): Promise<void> {
   let hasErrors = false;
 
   for (const filepath of entryPoints) {
-    const result = compiler.exportSchemaJson(filepath);
+    const result = compiler.interpretFile(filepath);
     const errors = result.getErrors();
 
     if (errors.length > 0) {

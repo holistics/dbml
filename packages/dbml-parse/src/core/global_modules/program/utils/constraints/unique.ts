@@ -6,17 +6,10 @@ import type {
   CompileWarning,
 } from '@/core/types/errors';
 import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import type {
+  Index,
   RecordValue,
-} from '@/core/types/schemaJson';
-import type {
   TableRecord,
 } from '@/core/types/schemaJson';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
 import {
   TableSymbol,
 } from '@/core/types/symbol';
@@ -35,18 +28,15 @@ const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';
 
 // Validate unique constraints for a table's records.
-export function validateUnique (compiler: Compiler, tableNode: SyntaxNode, record: TableRecord): CompileWarning[] {
+export function validateUnique (compiler: Compiler, tableSymbol: TableSymbol, record: TableRecord): CompileWarning[] {
   if (isEmpty(record.values)) return [];
-
-  const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
-  if (!(tableSymbol instanceof TableSymbol)) return [];
 
   const columns = tableSymbol.mergedColumns(compiler);
   const columnInfos = columns.map((c) => columnInfoFromSymbol(c, compiler));
   const columnMap = keyBy(columnInfos, 'name');
 
   const rows = toKeyedRows(record);
-  const schemaName = tableSymbol.schemaName(compiler);
+  const schemaName = tableSymbol.schema(compiler);
   const tableName = tableSymbol.name ?? '';
   const uniqueConstraints = collectUniqueConstraints(tableSymbol, columnInfos, compiler);
 
@@ -61,7 +51,11 @@ function collectUniqueConstraints (tableSymbol: TableSymbol, columnInfos: Column
     ...columnInfos.filter((col) => col.unique).map((col) => [
       col.name,
     ]),
-    ...tableSymbol.mergedIndexes(compiler).filter((index) => index.unique).map((index) => index.columns.map((c) => c.value)),
+    ...tableSymbol.mergedIndexes(compiler).flatMap((index) => {
+      const result = compiler.interpretMetadata(index, index.declaration.filepath).getValue();
+      if (!Array.isArray(result)) return [];
+      return (result as Index[]).filter((e) => e.unique).map((e) => e.columns.map((c) => c.value));
+    }),
   ];
 }
 

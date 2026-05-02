@@ -14,9 +14,6 @@ import {
   FunctionApplicationNode,
 } from '@/core/types/nodes';
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
@@ -28,9 +25,9 @@ import {
 
 export default class IndexesBinder {
   private compiler: Compiler;
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.compiler = compiler;
     this.declarationNode = declarationNode;
   }

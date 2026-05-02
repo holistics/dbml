@@ -10,12 +10,9 @@ import {
   PassThrough,
 } from '@/core/types/module';
 import {
-  ElementDeclarationNode, SyntaxNode,
+  SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
 import {
   destructureComplexVariable,
 } from '@/core/utils/expression';

@@ -19,16 +19,19 @@ import type {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Enum, SchemaElement,
+  SchemaElement,
 } from '@/core/types/schemaJson';
 import {
-  EnumFieldSymbol, EnumSymbol, NodeSymbol, SymbolKind,
+  EnumFieldSymbol,
+  EnumSymbol,
+  type NodeSymbol,
+  SymbolKind,
 } from '@/core/types/symbol';
 import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {
-  extractQuotedStringToken, getBody,
+  getBody,
 } from '@/core/utils/expression';
 import {
   isElementFieldNode, isElementNode,
@@ -36,10 +39,10 @@ import {
 import type {
   GlobalModule,
 } from '../types';
-import {
-  getTokenPosition, normalizeNote,
-} from '@/core/utils/interpret';
 import EnumBinder from './bind';
+import {
+  EnumInterpreter,
+} from './interpret';
 
 // Public utils that other modules can use
 export const enumUtils = {
@@ -120,37 +123,9 @@ export const enumModule: GlobalModule = {
     return Report.create(undefined, errors);
   },
 
-  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath?: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+  interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (!(symbol instanceof EnumSymbol)) return Report.create(PASS_THROUGH);
 
-    const {
-      name, schema: schemaName,
-    } = symbol.interpretedName(compiler, filepath);
-
-    const fieldSymbols = symbol.members(compiler).filter((m) => m.isKind(SymbolKind.EnumField));
-    const values = fieldSymbols.map((f) => {
-      const fieldSettings = f.settings(compiler);
-      const noteAttr = fieldSettings?.note?.at(0);
-      const noteText = noteAttr?.value ? normalizeNote(extractQuotedStringToken(noteAttr.value)!) : undefined;
-      return {
-        name: f.name ?? '',
-        token: f.token!,
-        ...(noteText
-          ? {
-              note: {
-                value: noteText,
-                token: getTokenPosition(noteAttr!),
-              },
-            }
-          : {}),
-      };
-    });
-
-    return Report.create({
-      name,
-      schemaName,
-      token: symbol.token!,
-      values,
-    } as Enum);
+    return new EnumInterpreter(compiler, symbol, filepath).interpret();
   },
 };

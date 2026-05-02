@@ -1,17 +1,19 @@
 import {
   partition,
 } from 'lodash-es';
-import Compiler from '@/compiler';
-import {
+import type Compiler from '@/compiler';
+import type {
   CompileError,
 } from '@/core/types/errors';
 import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
+  BlockExpressionNode,
+  type ElementDeclarationNode,
+  FunctionApplicationNode,
 } from '@/core/types/nodes';
-import {
+import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import {

@@ -2,12 +2,13 @@ import {
   bindNode,
   interpretMetadata,
   interpretSymbol,
+  nodeMetadata,
   nodeReferee,
   nodeSymbol,
   symbolMembers,
 } from '@/core/global_modules';
 import {
-  nodeFullname as fullname, nodeAlias, nodeSettings, validateNode,
+  nodeFullname, nodeAlias, nodeSettings, validateNode,
 } from '@/core/local_modules';
 import {
   Filepath,
@@ -252,7 +253,7 @@ export default class Compiler {
   // A local query
   // Return the fully-qualified name segments of an AST node (e.g. ['public', 'users'])
   // Signature: (node: SyntaxNode) => Report<string[] | undefined> | Report<Unhandled>
-  nodeFullname = this.localQuery(fullname);
+  nodeFullname = this.localQuery(nodeFullname);
   // A local query
   // Return the alias string of an AST node if one is declared
   // Signature: (node: SyntaxNode) => Report<string | undefined> | Report<Unhandled>
@@ -302,19 +303,32 @@ export default class Compiler {
   // Signature: (node: SyntaxNode) => Report<NodeSymbol> | Report<Unhandled>
   nodeSymbol = this.globalQuery(nodeSymbol);
   // A global query
+  // Return the NodeMetadata for a single SyntaxNode
+  // Signature: (node: SyntaxNode) => Report<NodeMetadata> | Report<Unhandled>
+  nodeMetadata = this.globalQuery(nodeMetadata);
+  // A global query
   // Return all direct child symbols of a symbol
   // Signature: (symbol: NodeSymbol) => Report<NodeSymbol[]> | Report<Unhandled>
   symbolMembers = this.globalQuery(symbolMembers);
   // A global query
   // Look up a member by kind and name inside a symbol or node scope
-  // Signature: (symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string) => Report<NodeSymbol | undefined>
+  // Signature: (symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string) => NodeSymbol | undefined
   lookupMembers = this.globalQuery(lookupMembers);
   // A global query
   // Resolve what symbol a reference node points to. Related: nodeSymbol, symbolReferences.
   // Signature: (node: SyntaxNode) => Report<NodeSymbol | undefined> | Report<Unhandled>
   nodeReferee = this.globalQuery(nodeReferee);
+  // A global query
+  // Build an index for fast symbol references and symbol metadata lookup.
+  // Signature: () => Report<ResolutionIndex> | Report<Unhandled>
   resolutionIndex = this.globalQuery(resolutionIndex);
+  // A global query
+  // Return all nodes that refer to this symbol.
+  // Signature: (symbol: NodeSymbol) => Report<SyntaxNode[]> | Report<Unhandled>
   symbolReferences = this.globalQuery(symbolReferences);
+  // A global query
+  // Return all metadata that attaches to this symbol.
+  // Signature: (symbol: NodeSymbol) => Report<NodeMetadata[]> | Report<Unhandled>
   symbolMetadata = this.globalQuery(symbolMetadata);
   // A global query
   // Return all AliasSymbols across the project whose originalSymbol is the given symbol (transitive).
@@ -329,10 +343,10 @@ export default class Compiler {
   // Return the direct import filepath IDs declared by use statements in a file. Related: reachableFiles.
   // Signature: (filepath: Filepath) => Filepath[]
   fileDependencies = this.localQuery(fileDependencies);
-  // A local query
+  // A global query
   // BFS-traverse imports from an entry filepath and return all reachable files. Related: fileDependencies.
   // Signature: (entry: Filepath) => Filepath[]
-  reachableFiles = this.localQuery(reachableFiles);
+  reachableFiles = this.globalQuery(reachableFiles);
   // A global query
   // Return the importable members (non-schema, schema, reuses, uses) of a schema symbol or file. Related: topLevelSchemaMembers.
   // Signature: (symbolOrFilepath: SchemaSymbol | Filepath) => Report<{ nonSchemaMembers, schemaMembers, reuses, uses }>

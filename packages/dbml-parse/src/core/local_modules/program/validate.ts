@@ -1,6 +1,6 @@
 import Compiler from '@/compiler';
-import {
-  CompileError,
+import type {
+  CompileError, CompileWarning,
 } from '@/core/types/errors';
 import {
   ProgramNode,
@@ -12,19 +12,21 @@ export default class ProgramValidator {
 
   private compiler: Compiler;
 
-  constructor (ast: ProgramNode, compiler: Compiler) {
+  constructor (compiler: Compiler, ast: ProgramNode) {
     this.ast = ast;
     this.compiler = compiler;
   }
 
   validate (): Report<ProgramNode> {
     const errors: CompileError[] = [];
+    const warnings: CompileWarning[] = [];
 
-    // Validate all body elements (declarations + use statements)
     for (const element of this.ast.body) {
-      errors.push(...this.compiler.validateNode(element).getErrors());
+      const result = this.compiler.validateNode(element);
+      errors.push(...result.getErrors());
+      warnings.push(...result.getWarnings());
     }
 
-    return new Report(this.ast, errors);
+    return new Report(this.ast, errors, warnings);
   }
 }

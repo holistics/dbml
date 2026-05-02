@@ -175,6 +175,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "status",
             "pk": false,
             "token": {
@@ -196,6 +197,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -251,6 +253,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -272,6 +275,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "country",
             "pk": false,
             "token": {
@@ -293,6 +297,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "booking_date",
             "pk": false,
             "token": {
@@ -314,6 +319,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -462,6 +468,7 @@
                 "value": "booking_date"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -474,7 +481,8 @@
                 "line": 31,
                 "offset": 546
               }
-            }
+            },
+            "unique": false
           },
           {
             "columns": [
@@ -586,6 +594,7 @@
                 "value": "id*2"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 15,
@@ -598,7 +607,8 @@
                 "line": 34,
                 "offset": 636
               }
-            }
+            },
+            "unique": false
           },
           {
             "columns": [
@@ -637,6 +647,7 @@
                 "value": "getdate()"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 27,
@@ -649,7 +660,8 @@
                 "line": 35,
                 "offset": 651
               }
-            }
+            },
+            "unique": false
           },
           {
             "columns": [
@@ -688,6 +700,7 @@
                 "value": "id"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 18,
@@ -700,7 +713,8 @@
                 "line": 36,
                 "offset": 678
               }
-            }
+            },
+            "unique": false
           }
         ],
         "name": "bookings",

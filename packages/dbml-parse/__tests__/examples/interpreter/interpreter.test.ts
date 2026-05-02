@@ -609,8 +609,9 @@ describe('[example] interpreter', () => {
       const field = db.tables[0].fields[0];
 
       expect(field.name).toBe('col');
+      // Explicit 'public' schema qualifier is preserved in output
       expect(field.type.type_name).toBe('custom_type');
-      expect(field.type.schemaName).toBeNull();
+      expect(field.type.schemaName).toBe('public');
       expect(field.type.args).toBeNull();
     });
 

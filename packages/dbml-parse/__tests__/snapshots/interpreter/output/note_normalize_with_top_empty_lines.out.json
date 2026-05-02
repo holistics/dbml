@@ -177,6 +177,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "following_user_id",
             "pk": false,
             "token": {
@@ -198,6 +199,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "followed_user_id",
             "pk": false,
             "token": {
@@ -219,6 +221,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -296,6 +299,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "username",
             "pk": false,
             "token": {
@@ -317,6 +321,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "role",
             "pk": false,
             "token": {
@@ -338,6 +343,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -415,6 +421,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "title",
             "pk": false,
             "token": {
@@ -474,6 +481,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "user_id",
             "pk": false,
             "token": {
@@ -495,6 +503,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "status",
             "pk": false,
             "token": {
@@ -516,6 +525,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {

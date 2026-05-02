@@ -5,7 +5,7 @@ import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';
 import {
-  NodeSymbol, SymbolKind,
+  NodeSymbol, SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type Compiler from '../../index';
 
@@ -50,7 +50,7 @@ export function symbolOfName (this: Compiler, nameStack: string[], owner: Elemen
         .filter((s) =>
           s.name === name || (
             (ownerSymbol.isKind(SymbolKind.Program)
-              || (ownerSymbol.isPublicSchema()))
+              || (ownerSymbol instanceof SchemaSymbol && ownerSymbol.isPublicSchema()))
             && s.declaration
             && this.nodeAlias(s.declaration).getFiltered(UNHANDLED) === name),
         )

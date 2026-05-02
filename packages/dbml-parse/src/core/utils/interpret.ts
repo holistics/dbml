@@ -1,8 +1,5 @@
 import type Compiler from '@/compiler';
 import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import type {

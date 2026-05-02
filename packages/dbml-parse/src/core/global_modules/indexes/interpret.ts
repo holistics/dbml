@@ -1,7 +1,7 @@
 import {
   last,
 } from 'lodash-es';
-import Compiler from '@/compiler/index';
+import type Compiler from '@/compiler/index';
 import {
   SettingName,
 } from '@/core/types/keywords';
@@ -9,7 +9,11 @@ import {
   UNHANDLED,
 } from '@/core/types/module';
 import {
-  BlockExpressionNode, CallExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
+  BlockExpressionNode,
+  CallExpressionNode,
+  type ElementDeclarationNode,
+  FunctionApplicationNode,
+  ListExpressionNode,
 } from '@/core/types/nodes';
 import type {
   SyntaxNode,
@@ -19,7 +23,10 @@ import type {
   Index, SchemaElement, TokenPosition,
 } from '@/core/types/schemaJson';
 import {
-  destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable, extractVariableFromExpression,
+  destructureIndexNode,
+  extractQuotedStringToken,
+  extractVarNameFromPrimaryVariable,
+  extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
   getTokenPosition,

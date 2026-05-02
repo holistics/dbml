@@ -577,6 +577,7 @@
             "unique": true
           },
           {
+            "increment": false,
             "name": "status",
             "pk": false,
             "token": {
@@ -598,6 +599,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -638,6 +640,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "order_id",
             "pk": false,
             "token": {
@@ -659,6 +662,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "product_id",
             "pk": false,
             "token": {
@@ -746,6 +750,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -790,6 +795,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "price",
             "pk": false,
             "token": {
@@ -811,6 +817,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "status",
             "pk": false,
             "token": {
@@ -991,6 +998,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "full_name",
             "pk": false,
             "token": {
@@ -1034,6 +1042,7 @@
             "unique": true
           },
           {
+            "increment": false,
             "name": "gender",
             "pk": false,
             "token": {
@@ -1055,6 +1064,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "date_of_birth",
             "pk": false,
             "token": {
@@ -1076,6 +1086,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -1097,6 +1108,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "country_code",
             "pk": false,
             "token": {
@@ -1158,6 +1170,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "merchant_name",
             "pk": false,
             "token": {
@@ -1179,6 +1192,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "country_code",
             "pk": false,
             "token": {
@@ -1200,6 +1214,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -1221,6 +1236,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "admin_id",
             "pk": false,
             "token": {
@@ -1282,6 +1298,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -1303,6 +1320,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "continent_name",
             "pk": false,
             "token": {

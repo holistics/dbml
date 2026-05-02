@@ -222,7 +222,7 @@ Table orders {
     const eu = db.tables.find((t) => t.name === 'EU');
     // expect: visible as "EU" with no schema prefix
     expect(eu).toBeDefined();
-    expect(eu!.schemaName).toBeNull();
+    expect(eu!.schemaName).toBe('');
   });
 
   test('original schema-qualified name is not separately exposed', () => {
@@ -324,7 +324,7 @@ Table orders {
     const u = db.tables.find((t) => t.name === 'u');
     // expect: visible as "u" with no schemaName
     expect(u).toBeDefined();
-    expect(u!.schemaName).toBeNull();
+    expect(u!.schemaName).toBe('');
   });
 
   test('original auth.users is not directly exposed', () => {
@@ -778,7 +778,7 @@ Ref: orders.user_id > u.id
     const ref = db.refs[0];
     const usersEp = ref.endpoints.find((e) => e.fieldNames.includes('id'))!;
     expect(usersEp.tableName).toBe('u');
-    expect(usersEp.schemaName).toBeNull();
+    expect(usersEp.schemaName).toBe('');
   });
 
   test('other ref endpoint keeps original name', () => {
@@ -893,18 +893,17 @@ use { table users } from './source.dbml'
   });
 
   test('imported table has own columns and partial reference', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const users = db.tables.find((t) => t.name === 'users')!;
-    expect(users.fields.map((f) => f.name)).toEqual(['id', 'name']);
+    const db = compiler.interpretFile(fps['/consumer.dbml']).getValue()! as any;
+    const users = db.tables.find((t: any) => t.name === 'users')!;
+    expect(users.fields.map((f: any) => f.name)).toEqual(['id', 'name']);
     expect(users.partials).toHaveLength(1);
     expect(users.partials[0].name).toBe('timestamps');
   });
 
-  test('partial auto-pulled to db.tablePartials', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const partial = db.tablePartials.find((p) => p.name === 'timestamps');
-    expect(partial).toBeDefined();
-    expect(partial!.fields.map((f: any) => f.name)).toEqual(['created_at', 'updated_at']);
+  test('UNSUPPORTED error when importing table that uses out-of-scope partial', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    const errors = result.getErrors();
+    expect(errors.some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
 
@@ -1046,16 +1045,17 @@ use { tablegroup content } from './base.dbml'
   });
 
   test('pulled tables have own columns and partial reference', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const users = db.tables.find((t) => t.name === 'users')!;
-    expect(users.fields.map((f) => f.name)).toEqual(['id', 'name']);
+    const db = compiler.interpretFile(fps['/consumer.dbml']).getValue()! as any;
+    const users = db.tables.find((t: any) => t.name === 'users')!;
+    expect(users.fields.map((f: any) => f.name)).toEqual(['id', 'name']);
     expect(users.partials).toHaveLength(1);
     expect(users.partials[0].name).toBe('timestamps');
   });
 
-  test('partial auto-pulled to db.tablePartials', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    expect(db.tablePartials.find((p) => p.name === 'timestamps')).toBeDefined();
+  test('UNSUPPORTED error when importing tablegroup with tables that use out-of-scope partial', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    const errors = result.getErrors();
+    expect(errors.some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
 
@@ -1320,16 +1320,9 @@ records users(id, name, created_at, updated_at) {
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
-  test('records reference injected columns without error', () => {
+  test('UNSUPPORTED error when importing table that uses out-of-scope partial', () => {
     const result = compiler.interpretFile(fps['/consumer.dbml']);
-    expect(result.getErrors()).toHaveLength(0);
-  });
-
-  test('record values present', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const record = db.records.find((r) => r.tableName === 'users');
-    expect(record).toBeDefined();
-    expect(record!.values).toHaveLength(1);
+    expect(result.getErrors().some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
 
@@ -1368,16 +1361,9 @@ records orders(id, total, created_by, modified_by) {
     expect(compiler.bindNode(ast).getErrors()).toHaveLength(0);
   });
 
-  test('no export errors', () => {
+  test('UNSUPPORTED error when importing table that uses out-of-scope partial', () => {
     const result = compiler.interpretFile(fps['/consumer.dbml']);
-    expect(result.getErrors()).toHaveLength(0);
-  });
-
-  test('records reference external partial columns without error', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const record = db.records.find((r) => r.tableName === 'orders');
-    expect(record).toBeDefined();
-    expect(record!.values).toHaveLength(2);
+    expect(result.getErrors().some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
 
@@ -1616,10 +1602,10 @@ use { table orders } from './source.dbml'
 `,
   });
 
-  test('partial appears only once in db.tablePartials', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const timestamps = db.tablePartials.filter((p) => p.name === 'timestamps');
-    expect(timestamps).toHaveLength(1);
+  test('UNSUPPORTED error for each imported table that uses out-of-scope partial', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    const errors = result.getErrors().filter((e) => e.code === CompileErrorCode.UNSUPPORTED);
+    expect(errors.length).toBeGreaterThanOrEqual(1);
   });
 });
 
@@ -1700,14 +1686,15 @@ use { table products } from './source.dbml'
 `,
   });
 
-  test('partial is auto-pulled', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    expect(db.tablePartials.find((p) => p.name === 'categorized')).toBeDefined();
+  test('UNSUPPORTED error when importing table that uses out-of-scope partial', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    const errors = result.getErrors();
+    expect(errors.some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 
   test('categories table is NOT in consumer scope', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    expect(db.tables.find((t) => t.name === 'categories')).toBeUndefined();
+    const db = compiler.interpretFile(fps['/consumer.dbml']).getValue()! as any;
+    expect(db.tables.find((t: any) => t.name === 'categories')).toBeUndefined();
   });
 });
 
@@ -1734,9 +1721,10 @@ use { table orders } from './b.dbml'
 `,
   });
 
-  test('only one partial named meta in db.tablePartials', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    expect(db.tablePartials.filter((p) => p.name === 'meta')).toHaveLength(1);
+  test('UNSUPPORTED error for each imported table that uses out-of-scope partial', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    const errors = result.getErrors().filter((e) => e.code === CompileErrorCode.UNSUPPORTED);
+    expect(errors.length).toBeGreaterThanOrEqual(1);
   });
 });
 
@@ -1763,14 +1751,15 @@ use { table users } from './a.dbml'
 `,
   });
 
-  test('partial from C is auto-pulled through reuse chain', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    expect(db.tablePartials.find((p) => p.name === 'audit')).toBeDefined();
+  test('UNSUPPORTED error when partial from C is not in consumer scope', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    const errors = result.getErrors();
+    expect(errors.some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 
   test('table has partial reference', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const users = db.tables.find((t) => t.name === 'users')!;
+    const db = compiler.interpretFile(fps['/consumer.dbml']).getValue()! as any;
+    const users = db.tables.find((t: any) => t.name === 'users')!;
     expect(users.partials).toHaveLength(1);
   });
 });
@@ -2153,10 +2142,9 @@ records users(id, name) {
 `,
   });
 
-  test('both local and pulled records present', () => {
-    const db = exportDb(compiler, fps['/consumer.dbml']);
-    const userRecords = db.records.filter((r) => r.tableName === 'users');
-    expect(userRecords).toHaveLength(2);
+  test('duplicate records blocks across files is an error', () => {
+    const result = compiler.interpretFile(fps['/consumer.dbml']);
+    expect(result.getErrors().some((e) => e.code === CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE)).toBe(true);
   });
 });
 

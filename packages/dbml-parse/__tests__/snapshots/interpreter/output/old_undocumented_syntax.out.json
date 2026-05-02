@@ -294,6 +294,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "country_id",
             "pk": false,
             "token": {
@@ -349,6 +350,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -370,6 +372,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "cities",
             "pk": false,
             "token": {
@@ -409,6 +412,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -430,6 +434,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -489,6 +494,7 @@
                 "value": "name"
               }
             ],
+            "pk": false,
             "token": {
               "end": {
                 "column": 10,
@@ -501,7 +507,8 @@
                 "line": 29,
                 "offset": 620
               }
-            }
+            },
+            "unique": false
           }
         ],
         "name": "citites",

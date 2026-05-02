@@ -200,28 +200,6 @@
           },
           {
             "increment": false,
-            "inline_refs": [
-              {
-                "fieldNames": [
-                  "id"
-                ],
-                "relation": ">",
-                "tableName": "user",
-                "token": {
-                  "end": {
-                    "column": 37,
-                    "line": 3,
-                    "offset": 126
-                  },
-                  "filepath": "/main.dbml",
-                  "start": {
-                    "column": 23,
-                    "line": 3,
-                    "offset": 112
-                  }
-                }
-              }
-            ],
             "name": "to_table_ref",
             "pk": false,
             "token": {
@@ -364,6 +342,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "email",
             "pk": false,
             "token": {
@@ -405,6 +384,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -645,6 +625,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -760,6 +741,7 @@
       {
         "fields": [
           {
+            "increment": false,
             "name": "user_id",
             "pk": false,
             "token": {
@@ -781,6 +763,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "product_id",
             "pk": false,
             "token": {
@@ -802,6 +785,7 @@
             "unique": false
           },
           {
+            "increment": false,
             "name": "address",
             "pk": false,
             "token": {
