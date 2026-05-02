@@ -151,10 +151,14 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
  */
 export function getColumnsFromTableSymbol (
   tableSymbol: TableSymbol | TablePartialSymbol,
-): Array<{ name: string;
-  type: string; }> | null {
-  const columns: Array<{ name: string;
-    type: string; }> = [];
+): Array<{
+  name: string;
+  type: string;
+}> | null {
+  const columns: Array<{
+    name: string;
+    type: string;
+  }> = [];
 
   for (const [
     index,

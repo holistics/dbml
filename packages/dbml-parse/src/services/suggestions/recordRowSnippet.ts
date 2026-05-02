@@ -1,8 +1,5 @@
 import Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
   Filepath,
 } from '@/core/types/filepath';
 import {
@@ -20,7 +17,7 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
+  ColumnSymbol, PartialInjectionSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
 } from '@/core/types/symbol/symbols';
 import {
   isOffsetWithinSpan,
@@ -37,14 +34,17 @@ import {
   type Position,
   type TextModel,
 } from '@/services/types';
+import {
+  SymbolKind,
+} from '@/core/types';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,
   model: TextModel,
   position: Position,
+  filepath: Filepath,
   offset: number,
 ): CompletionList | null {
-  const filepath = model.uri ? Filepath.fromUri(String(model.uri)) : DEFAULT_ENTRY;
   const element = compiler.container.element(filepath, offset);
 
   // If not in an ElementDeclarationNode, fallthrough
@@ -82,16 +82,15 @@ function suggestRecordRowInTopLevelRecords (
   const columns = columnElements
     .map((element, index) => {
       const symbol = columnSymbols[index];
-      if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
+      if (!symbol || !symbol.isKind(SymbolKind.Column)) {
         return null;
       }
       const columnName = extractVariableFromExpression(element);
       if (!columnName) return null;
-      const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
+      const result = extractNameAndTypeOfColumnSymbol(symbol as ColumnSymbol | TablePartialInjectedColumnSymbol, columnName);
       return result;
     })
-    .filter((col) => col !== null) as Array<{ name: string;
-    type: string; }>;
+    .filter((col) => col !== null);
 
   if (columns.length === 0) return noSuggestions();
 
@@ -122,12 +121,14 @@ function suggestRecordRowInNestedRecords (
   }
 
   const tableSymbol = parent.symbol;
-  if (!(tableSymbol instanceof TableSymbol)) {
+  if (!tableSymbol?.isKind(SymbolKind.Table)) {
     return noSuggestions();
   }
 
-  let columns: Array<{ name: string;
-    type: string; }>;
+  let columns: Array<{
+    name: string;
+    type: string;
+  }>;
 
   if (recordsElement.name instanceof TupleExpressionNode) {
     // Explicit columns from tuple: records (col1, col2)
@@ -139,18 +140,18 @@ function suggestRecordRowInNestedRecords (
     columns = columnElements
       .map((element, index) => {
         const symbol = columnSymbols[index];
-        if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
+        if (!symbol || !symbol.isKind(SymbolKind.Column)) {
           return null;
         }
         const columnName = extractVariableFromExpression(element);
         if (columnName === undefined) return null;
-        return extractNameAndTypeOfColumnSymbol(symbol, columnName);
+        return extractNameAndTypeOfColumnSymbol(symbol as ColumnSymbol | PartialInjectionSymbol, columnName);
       })
       .filter((col) => col !== null) as Array<{ name: string;
       type: string; }>;
   } else {
     // Implicit columns - use all columns from parent table
-    const result = getColumnsFromTableSymbol(tableSymbol);
+    const result = getColumnsFromTableSymbol(tableSymbol as TableSymbol);
     if (!result) {
       return noSuggestions();
     }
