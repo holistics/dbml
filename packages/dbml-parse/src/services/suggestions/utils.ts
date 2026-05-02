@@ -179,8 +179,10 @@ export function getColumnsFromTableSymbol (
 export function extractNameAndTypeOfColumnSymbol (
   columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
   columnName: string,
-): { name: string;
-  type: string; } | null {
+): {
+  name: string;
+  type: string;
+} | null {
   const columnIndex = createColumnSymbolIndex(columnName);
   const columnDeclaration = columnSymbol instanceof TablePartialInjectedColumnSymbol
     ? columnSymbol.tablePartialSymbol.symbolTable.get(columnIndex)?.declaration
