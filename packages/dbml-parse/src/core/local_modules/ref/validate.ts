@@ -2,13 +2,15 @@ import {
   last, partition,
 } from 'lodash-es';
 import {
-  destructureComplexVariableTuple, isBinaryRelationship, isEqualTupleOperands,
+  destructureComplexVariableTuple,
 } from '@/core/utils/expression';
 import {
   pickValidator,
 } from '@/core/local_modules/utils';
 import {
   aggregateSettingList,
+  isBinaryRelationship,
+  isEqualTupleOperands,
   isSimpleName,
   isValidColor,
 } from '@/core/utils/validate';

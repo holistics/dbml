@@ -5,7 +5,7 @@ import {
   NUMERIC_LITERAL_PREFIX,
 } from '@/constants';
 import {
-  destructureComplexVariable, destructureMemberAccessExpression,
+  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression,
 } from '@/core/utils/expression';
 import {
   extractStringFromIdentifierStream,
@@ -387,4 +387,50 @@ export function isAccessExpression (node?: SyntaxNode): node is AccessExpression
 export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimitedIdentifier {
   if (isExpressionAVariableNode(node)) return true;
   return isAccessExpression(node) && isExpressionAVariableNode(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
+}
+
+export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {
+  if (!(value instanceof InfixExpressionNode)) {
+    return false;
+  }
+
+  if (!isRelationshipOp(value.op?.value)) {
+    return false;
+  }
+
+  return (
+    destructureComplexVariableTuple(value.leftExpression) !== undefined
+    && destructureComplexVariableTuple(value.rightExpression) !== undefined
+  );
+}
+
+export function isEqualTupleOperands (value: InfixExpressionNode): value is InfixExpressionNode {
+  const leftRes = destructureComplexVariableTuple(value.leftExpression);
+  const rightRes = destructureComplexVariableTuple(value.rightExpression);
+
+  if (leftRes === undefined || rightRes === undefined) {
+    return false;
+  }
+
+  const {
+    tupleElements: leftTuple,
+  } = leftRes;
+  const {
+    tupleElements: rightTuple,
+  } = rightRes;
+
+  if (leftTuple?.length !== rightTuple?.length) {
+    return false;
+  }
+
+  return true;
+}
+
+export function isValidIndexName (
+  value?: SyntaxNode,
+): value is (PrimaryExpressionNode & { expression: VariableNode }) | FunctionExpressionNode {
+  return (
+    (value instanceof PrimaryExpressionNode && value.expression instanceof VariableNode)
+    || value instanceof FunctionExpressionNode
+  );
 }

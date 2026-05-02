@@ -5,7 +5,8 @@ import {
   isAccessExpression,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
-  isRelationshipOp, isTupleOfVariables,
+  isTupleOfVariables,
+  isValidIndexName,
 } from '@/core/utils/validate';
 import {
   CallExpressionNode,
@@ -200,53 +201,6 @@ export function extractReferee (node?: SyntaxNode): NodeSymbol | undefined {
 
   return node.referee;
 }
-
-export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {
-  if (!(value instanceof InfixExpressionNode)) {
-    return false;
-  }
-
-  if (!isRelationshipOp(value.op?.value)) {
-    return false;
-  }
-
-  return (
-    destructureComplexVariableTuple(value.leftExpression) !== undefined
-    && destructureComplexVariableTuple(value.rightExpression) !== undefined
-  );
-}
-
-export function isEqualTupleOperands (value: InfixExpressionNode): value is InfixExpressionNode {
-  const leftRes = destructureComplexVariableTuple(value.leftExpression);
-  const rightRes = destructureComplexVariableTuple(value.rightExpression);
-
-  if (leftRes === undefined || rightRes === undefined) {
-    return false;
-  }
-
-  const {
-    tupleElements: leftTuple,
-  } = leftRes;
-  const {
-    tupleElements: rightTuple,
-  } = rightRes;
-
-  if (leftTuple?.length !== rightTuple?.length) {
-    return false;
-  }
-
-  return true;
-}
-
-export function isValidIndexName (
-  value?: SyntaxNode,
-): value is (PrimaryExpressionNode & { expression: VariableNode }) | FunctionExpressionNode {
-  return (
-    (value instanceof PrimaryExpressionNode && value.expression instanceof VariableNode)
-    || value instanceof FunctionExpressionNode
-  );
-}
-
 export function extractIndexName (
   value:
     | (PrimaryExpressionNode & { expression: VariableNode & { variable: SyntaxToken } })
