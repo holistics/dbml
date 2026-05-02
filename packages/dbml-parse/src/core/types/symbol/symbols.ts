@@ -73,7 +73,7 @@ export enum SymbolKind {
   Program = 'Program',
 }
 
-// Allowable import kinds for use declaration — mapped from SymbolKind
+// Allowable import kinds for use declaration - mapped from SymbolKind
 export const ImportKind = {
   Table: SymbolKind.Table,
   Enum: SymbolKind.Enum,

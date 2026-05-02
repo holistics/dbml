@@ -3,9 +3,9 @@ import {
 } from '@/core/types/filepath';
 import {
   NodeSymbol, NodeSymbolId, NodeSymbolIdGenerator,
-} from './symbols';
+} from '@/core/types/symbol';
 
-export class SymbolFactory {
+export default class SymbolFactory {
   private generator: NodeSymbolIdGenerator;
 
   constructor (generator: NodeSymbolIdGenerator) {
