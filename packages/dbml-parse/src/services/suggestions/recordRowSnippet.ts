@@ -123,12 +123,14 @@ function suggestRecordRowInNestedRecords (
   }
 
   const tableSymbol = compiler.nodeSymbol(parent).getFiltered(UNHANDLED);
-  if (!tableSymbol || !(tableSymbol.isKind(SymbolKind.Table))) {
+  if (!tableSymbol?.isKind(SymbolKind.Table)) {
     return noSuggestions();
   }
 
-  let columns: Array<{ name: string;
-    type: string; }>;
+  let columns: Array<{
+    name: string;
+    type: string;
+  }>;
 
   if (recordsElement.name instanceof TupleExpressionNode) {
     // Explicit columns from tuple: records (col1, col2)
