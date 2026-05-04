@@ -74,9 +74,11 @@ async function loadFromUrl (): Promise<ProjectData | undefined> {
   }
 }
 
-function initProject (): { files: Record<string, string>;
+function initProject (): {
+  files: Record<string, string>;
   folders: string[];
-  currentFile: string; } {
+  currentFile: string;
+} {
   try {
     const raw = localStorage.getItem(PROJECT_KEY);
     if (raw) {

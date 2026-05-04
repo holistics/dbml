@@ -36,7 +36,7 @@
       <!-- Rename input / name -->
       <input
         v-if="isEditing"
-        ref="editInputEl"
+        ref="editInputElement"
         v-model="editValue"
         class="flex-1 min-w-0 bg-white border border-blue-400 rounded px-1 text-xs outline-none font-mono"
         @keydown.enter="commitEdit"
@@ -205,12 +205,19 @@ function handleClick () {
 
 const isEditing = computed(() => editingPath.value === node.path);
 const editValue = ref('');
-const editInputEl = ref<HTMLInputElement | null>(null);
+const editInputElement = ref<HTMLInputElement | null>(null);
 
 watch(isEditing, (editing) => {
   if (editing) {
     editValue.value = node.name;
-    nextTick(() => editInputEl.value?.select());
+    nextTick(() => editInputElement.value?.select());
+  }
+});
+
+onMounted(async () => {
+  await nextTick();
+  if (editInputElement.value) {
+    editInputElement.value.focus();
   }
 });
 
