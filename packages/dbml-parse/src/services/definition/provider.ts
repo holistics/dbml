@@ -1,8 +1,5 @@
 import Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
   Filepath,
 } from '@/core/types/filepath';
 import {
@@ -10,6 +7,7 @@ import {
 } from '@/core/types/nodes';
 import {
   Definition, DefinitionProvider, Position, TextModel,
+  Uri,
 } from '@/services/types';
 import {
   getOffsetFromMonacoPosition,
@@ -61,7 +59,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
               endColumn: endPos.column + 1,
               endLineNumber: endPos.line + 1,
             },
-            uri,
+            uri: Uri.parse(filepath.toUri()),
           },
         ];
       }

@@ -39,7 +39,11 @@ Ref: posts.user_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -83,7 +87,11 @@ Ref: posts.user_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -116,7 +124,11 @@ Table posts {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -151,7 +163,11 @@ Ref: posts.user_id < users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -192,7 +208,11 @@ Ref: users.referrer_id > users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -229,7 +249,11 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -269,7 +293,11 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 6,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -302,7 +330,11 @@ Table posts {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -339,7 +371,11 @@ Ref: (orders.merchant_id, orders.country) > (merchants.id, merchants.country_cod
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -382,7 +418,11 @@ Table orders {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -415,7 +455,11 @@ Table orders {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -455,7 +499,11 @@ Table orders {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -493,7 +541,11 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -532,7 +584,11 @@ Table users {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -609,7 +665,11 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -644,7 +704,11 @@ Ref: ecommerce.orders.user_id > ecommerce.users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -678,7 +742,11 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -728,7 +796,11 @@ TableGroup ecommerce {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -761,7 +833,11 @@ TableGroup group1 {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -797,7 +873,11 @@ TableGroup group1 {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -854,7 +934,11 @@ TableGroup group1 {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -891,7 +975,11 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -938,7 +1026,11 @@ Ref: users.created_at > logs.timestamp`;
               "startColumn": 3,
               "startLineNumber": 8,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1232,7 +1324,11 @@ Ref: schema1.orders.id > schema2.orders.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1255,11 +1351,15 @@ Ref: schema1.orders.id > schema2.orders.id`;
           {
             "range": {
               "endColumn": 2,
-              "endLineNumber": 3,
+              "endLineNumber": 7,
               "startColumn": 1,
-              "startLineNumber": 1,
+              "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1296,7 +1396,11 @@ Ref: users.created_at > logs.timestamp`;
               "startColumn": 3,
               "startLineNumber": 7,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1331,7 +1435,11 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1421,7 +1529,11 @@ Ref: users.id > posts.user_id`;
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1453,7 +1565,11 @@ Ref: users.email > logs.email_col`;
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1487,7 +1603,11 @@ Table users {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1525,7 +1645,11 @@ Ref: posts.user_id > users.id`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1563,7 +1687,11 @@ Table posts {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1603,7 +1731,11 @@ Ref: users.id < posts.user_id`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1649,7 +1781,11 @@ Ref: posts.(author_first, author_last) > users.(first_name, last_name)`;
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1707,7 +1843,11 @@ Ref: posts.user_id >`;
               "startColumn": 1,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -1820,7 +1960,11 @@ TableGroup my_group {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -2792,7 +2936,11 @@ Records users(id, name, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -2863,7 +3011,11 @@ Records public.orders(id, customer_name) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -2904,7 +3056,11 @@ Records orders(id, status) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -2945,7 +3101,11 @@ Records orders(id, status) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -2987,7 +3147,11 @@ Records orders(id, status) {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);

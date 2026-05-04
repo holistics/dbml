@@ -104,8 +104,7 @@ export const useParserStore = defineStore('parser', () => {
   const project = useProjectStore();
 
   const isLoading = ref(false);
-  // shallowRef prevents Vue from deeply proxying objects with circular refs
-  // (SyntaxNode.parentNode, NodeSymbol.declaration)
+
   const tokens = shallowRef<SyntaxToken[]>([]);
   const ast = shallowRef<ProgramNode>();
   const database = shallowRef<Database>();

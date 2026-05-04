@@ -42,7 +42,11 @@ records users(id, name) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -88,7 +92,11 @@ records auth.users(id, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -139,7 +147,11 @@ records auth.users(id, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -187,7 +199,11 @@ records users(id, name) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -228,7 +244,11 @@ records users(id, name) {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -276,7 +296,11 @@ records users(id, status) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -327,7 +351,11 @@ records users(id, status) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -373,7 +401,11 @@ records auth.users(id, role) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
