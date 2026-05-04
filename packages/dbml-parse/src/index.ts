@@ -97,6 +97,9 @@ export {
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
   TextEdit,
+} from '@/compiler/queries/transform';
+
+export {
   findDiagramViewBlocks,
 } from '@/compiler/queries/transform';
 

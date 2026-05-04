@@ -1,5 +1,6 @@
 import { Compiler, DEFAULT_ENTRY } from '@dbml/parse';
 import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit } from '@dbml/parse';
+export { findDiagramViewBlocks } from '@dbml/parse';
 
 type TableName = string | { schema?: string; table: string };
 
@@ -17,10 +18,4 @@ export function syncDiagramView (
   const compiler = new Compiler();
   compiler.setSource(DEFAULT_ENTRY, dbmlCode);
   return compiler.syncDiagramView(DEFAULT_ENTRY, operations, blocks);
-}
-
-export function findDiagramViewBlocks (dbmlCode: string): DiagramViewBlock[] {
-  const compiler = new Compiler();
-  compiler.setSource(DEFAULT_ENTRY, dbmlCode);
-  return compiler.findDiagramViewBlocks(DEFAULT_ENTRY);
 }

@@ -78,11 +78,15 @@ import {
   symbolUses,
 } from './queries/symbol/symbolUses';
 import {
+  findDiagramViewBlocks,
   renameTable, syncDiagramView,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
 } from './queries/utils';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
 
 // Re-export types
 export {
@@ -94,6 +98,7 @@ export type {
 // Re-export utilities
 export {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+  findDiagramViewBlocks,
 };
 
 // Sentinel placed in the cache while a query is being computed.
@@ -370,12 +375,12 @@ export default class Compiler {
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
     source: (filepath: Filepath) => this.layout.getSource(filepath) || '',
-    ast: this.localQuery(ast),
-    errors: this.globalQuery(errors),
-    warnings: this.globalQuery(warnings),
-    tokens: this.localQuery(tokens),
-    rawDb: this.globalQuery(rawDb),
-    publicSymbolTable: this.globalQuery(publicSymbolTable),
+    ast: (filepath = DEFAULT_ENTRY) => ast.call(this, filepath),
+    errors: (filepath = DEFAULT_ENTRY) => errors.call(this, filepath),
+    warnings: (filepath = DEFAULT_ENTRY) => warnings.call(this, filepath),
+    tokens: (filepath = DEFAULT_ENTRY) => tokens.call(this, filepath),
+    rawDb: (filepath = DEFAULT_ENTRY) => rawDb.call(this, filepath),
+    publicSymbolTable: (filepath = DEFAULT_ENTRY) => publicSymbolTable.call(this, filepath),
   };
 
   // @deprecated - legacy APIs for services compatibility
@@ -387,7 +392,7 @@ export default class Compiler {
     scopeKind: this.localQuery(containerScopeKind),
   };
 
-  async initMonacoServices (options?: {
+  initMonacoServices (options?: {
     autocompletion?: {
       triggerCharacters?: string[];
     };

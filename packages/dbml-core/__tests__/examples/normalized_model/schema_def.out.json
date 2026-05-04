@@ -595,7 +595,6 @@
       "unique": false,
       "pk": true,
       "note": null,
-      "increment": false,
       "endpointIds": [
         1,
         6,
@@ -690,7 +689,6 @@
       "unique": false,
       "pk": true,
       "note": null,
-      "increment": false,
       "endpointIds": [
         3,
         5
@@ -786,7 +784,6 @@
       "unique": false,
       "pk": true,
       "note": null,
-      "increment": false,
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -817,7 +814,6 @@
       "unique": false,
       "pk": true,
       "note": null,
-      "increment": false,
       "endpointIds": [],
       "tableId": 4,
       "enumId": null
@@ -833,7 +829,6 @@
       "unique": false,
       "pk": false,
       "note": null,
-      "increment": false,
       "endpointIds": [
         2
       ],
@@ -851,7 +846,6 @@
       "unique": false,
       "pk": true,
       "note": null,
-      "increment": false,
       "endpointIds": [],
       "tableId": 5,
       "enumId": null
@@ -867,7 +861,6 @@
       "unique": false,
       "pk": false,
       "note": null,
-      "increment": false,
       "endpointIds": [
         4
       ],
@@ -956,7 +949,6 @@
         "type": "number",
         "value": -2
       },
-      "increment": false,
       "endpointIds": [],
       "tableId": 8,
       "enumId": null
@@ -976,7 +968,6 @@
         "type": "number",
         "value": -2
       },
-      "increment": false,
       "endpointIds": [],
       "tableId": 8,
       "enumId": null
@@ -996,7 +987,6 @@
         "type": "number",
         "value": 7.2225
       },
-      "increment": false,
       "endpointIds": [],
       "tableId": 8,
       "enumId": null
@@ -1024,14 +1014,11 @@
         "type_name": "int(--1)",
         "args": "--1"
       },
-      "unique": false,
-      "pk": false,
       "note": null,
       "dbdefault": {
         "type": "number",
         "value": -2
       },
-      "increment": false,
       "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 9,
@@ -1045,14 +1032,11 @@
         "type_name": "int(+-+---+0.1)",
         "args": "+-+---+0.1"
       },
-      "unique": false,
-      "pk": false,
       "note": null,
       "dbdefault": {
         "type": "number",
         "value": -7.2225
       },
-      "increment": false,
       "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 9,
@@ -1086,9 +1070,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "dbdefault": {
             "type": "number",
             "value": -2
@@ -1114,9 +1095,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "dbdefault": {
             "type": "number",
             "value": -2
@@ -1142,9 +1120,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "dbdefault": {
             "type": "number",
             "value": -7.2225

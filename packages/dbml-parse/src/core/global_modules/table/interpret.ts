@@ -289,8 +289,8 @@ export class TableInterpreter {
     column.type = typeReport.getValue();
     errors.push(...typeReport.getErrors());
 
-    column.pk = columnSymbol?.pk(this.compiler) || undefined;
-    column.unique = columnSymbol?.unique(this.compiler) || undefined;
+    column.pk = columnSymbol?.pk(this.compiler) || false;
+    column.unique = columnSymbol?.unique(this.compiler) || false;
     column.increment = columnSymbol?.increment(this.compiler) || undefined;
     const nullable = columnSymbol?.nullable(this.compiler);
     column.not_null = nullable === undefined ? undefined : !nullable;

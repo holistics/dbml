@@ -18,7 +18,7 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Check, Column, Index, InlineRef, Ref,
+  Check, Column, Index, InlineRef,
   SchemaElement, TablePartial,
 } from '@/core/types/schemaJson';
 import type {
@@ -40,7 +40,7 @@ import {
 import {
   UNHANDLED,
 } from '@/core/types/module';
-import type {
+import {
   PartialRefMetadata,
 } from '@/core/types/symbol/metadata';
 
@@ -216,28 +216,25 @@ export class TablePartialInterpreter {
     const refs = settingMap[SettingName.Ref] || [];
     column.inline_refs = refs.flatMap((ref) => {
       const meta = this.compiler.nodeMetadata(ref).getFiltered(UNHANDLED);
-      if (!meta) return [];
+      if (!(meta instanceof PartialRefMetadata)) return [];
 
       const owners = meta.owners(this.compiler);
       if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
 
-      const result = this.compiler.interpretMetadata(meta, this.filepath);
-      if (result.hasValue(UNHANDLED)) return [];
-
-      errors.push(...result.getErrors());
-      const value = result.getValue() as Ref | undefined;
-
-      if (!value?.endpoints?.[1]) return [];
-      const ep = value.endpoints[0];
-      const op = (meta as PartialRefMetadata).op(this.compiler);
+      const op = meta.op(this.compiler);
       if (!op) return [];
 
+      const rightTable = meta.rightTable(this.compiler);
+      const rightColumns = meta.rightColumns(this.compiler);
+      if (!rightTable || rightColumns.length === 0) return [];
+
+      const rightName = rightTable.interpretedName(this.compiler, this.filepath);
       const inlineRef: InlineRef = {
-        schemaName: ep.schemaName,
-        tableName: ep.tableName,
-        fieldNames: ep.fieldNames,
+        schemaName: rightName.schema,
+        tableName: rightName.name,
+        fieldNames: rightColumns.map((c) => c.name ?? ''),
         relation: op,
-        token: ep.token,
+        token: getTokenPosition(meta.rightToken()),
       };
       return inlineRef;
     });

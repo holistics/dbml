@@ -38,6 +38,7 @@ import type {
   InternedNodeSymbol,
 } from '@/core/types/symbol/symbols';
 import {
+  InjectedColumnSymbol,
   UseSymbol,
 } from '@/core/types/symbol/symbols';
 import {
@@ -324,8 +325,10 @@ export default class ProgramInterpreter {
     }
 
     const partialRefs = this.collectPartialRefs(fkTableMap);
-    this.db.refs.push(...partialRefs);
-    warnings.push(...validateForeignKeys(this.compiler, this.db.refs, fkTableMap, this.filepath));
+    warnings.push(...validateForeignKeys(this.compiler, [
+      ...this.db.refs,
+      ...partialRefs,
+    ], fkTableMap, this.filepath));
     return warnings;
   }
 
@@ -348,6 +351,14 @@ export default class ProgramInterpreter {
           const rightColumns = meta.rightColumns(this.compiler);
           const op = meta.op(this.compiler);
           if (!rightTable || !op || leftColumns.length === 0 || rightColumns.length === 0) continue;
+
+          // Skip if the column from the partial was not actually injected into this table
+          // (e.g., overridden by a column defined earlier in the table)
+          const mergedCols = tableSymbol.mergedColumns(this.compiler);
+          const anyInjected = leftColumns.some((lc) =>
+            mergedCols.some((mc) => mc instanceof InjectedColumnSymbol && mc.declaration === lc.declaration),
+          );
+          if (!anyInjected) continue;
 
           const multiplicities = getMultiplicities(op);
           if (!multiplicities) continue;

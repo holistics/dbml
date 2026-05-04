@@ -3,9 +3,6 @@ import {
 } from '@/services/types';
 import Compiler from '@/compiler';
 import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
   Filepath,
 } from '@/core/types/filepath';
 import {
