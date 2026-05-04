@@ -54,7 +54,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 9,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
         ]
       `);
@@ -94,7 +94,7 @@ Table posts {
               "startColumn": 23,
               "startLineNumber": 6,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
         ]
       `);
@@ -139,7 +139,7 @@ TableGroup my_group {
               "startColumn": 3,
               "startLineNumber": 10,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
         ]
       `);
@@ -177,7 +177,7 @@ Ref: posts.user_id > myschema.users.id`;
               "startColumn": 31,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
         ]
       `);
@@ -221,7 +221,7 @@ Ref: posts.user_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 9,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
         ]
       `);
@@ -265,7 +265,7 @@ Ref: posts.author_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 10,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
           {
             "range": {
@@ -274,7 +274,7 @@ Ref: posts.author_id > users.id`;
               "startColumn": 24,
               "startLineNumber": 11,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
         ]
       `);
@@ -317,7 +317,7 @@ Table users {
               "startColumn": 15,
               "startLineNumber": 7,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
         ]
       `);
@@ -358,7 +358,7 @@ Table users {
               "startColumn": 24,
               "startLineNumber": 7,
             },
-            "uri": "",
+            "uri": "/main.dbml",
           },
         ]
       `);

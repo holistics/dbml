@@ -15,6 +15,20 @@ import {
   DEFAULT_ENTRY,
 } from '@dbml/parse';
 
+const PROJECT_KEY = 'PROJECT_DATA';
+const CURRENT_FILE_KEY = 'PROJECT_CURRENT_FILE';
+const DEFAULT_FILE = DEFAULT_ENTRY.absolute;
+
+const MAX_SHARE_SIZE = 15000;
+
+interface ProjectData {
+  files: Record<string, string>;
+  folders: string[];
+}
+
+/* Compress and decompress project content to url-encoded content */
+
+// So we can share projects without a backend
 async function compressToBase64 (input: string): Promise<string> {
   const encoder = new TextEncoder();
   const stream = new Blob([encoder.encode(input)]).stream().pipeThrough(new CompressionStream('deflate-raw'));
@@ -34,28 +48,6 @@ async function decompressFromBase64 (encoded: string): Promise<string> {
   return new Response(stream).text();
 }
 
-const PROJECT_KEY = 'PROJECT_DATA';
-const CURRENT_FILE_KEY = 'PROJECT_CURRENT_FILE';
-const DEFAULT_FILE = DEFAULT_ENTRY.absolute;
-const MAX_SHARE_SIZE = 15000;
-
-interface ProjectData {
-  files: Record<string, string>;
-  folders: string[];
-}
-
-function saveProject (files: Record<string, string>, folders: string[]): void {
-  try {
-    const data: ProjectData = {
-      files,
-      folders,
-    };
-    localStorage.setItem(PROJECT_KEY, JSON.stringify(data));
-  } catch (_err) {
-    logger.warn('Failed to persist project');
-  }
-}
-
 async function loadFromUrl (): Promise<ProjectData | undefined> {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -72,6 +64,16 @@ async function loadFromUrl (): Promise<ProjectData | undefined> {
   } catch {
     return undefined;
   }
+}
+
+// Local storage
+
+function saveProject (files: Record<string, string>, folders: string[]): void {
+  const data: ProjectData = {
+    files,
+    folders,
+  };
+  localStorage.setItem(PROJECT_KEY, JSON.stringify(data));
 }
 
 function initProject (): {
@@ -117,8 +119,9 @@ export const useProjectStore = defineStore('project', () => {
   const folders = ref<string[]>(initialFolders);
   const currentFile = ref<string>(initialCurrentFile);
 
-  // Load from URL asynchronously (decompression is async).
-  // Overwrites the sync localStorage init if a ?code= param is present.
+  // Load from URL asynchronously
+  // If ?code= is present, the project is shared
+  // We load from there and overwrite the project state
   loadFromUrl().then((fromUrl) => {
     if (!fromUrl || Object.keys(fromUrl.files).length === 0) return;
     files.value = fromUrl.files;
@@ -136,8 +139,6 @@ export const useProjectStore = defineStore('project', () => {
   });
 
   // Warn when the total project size is large enough that sharing will fail.
-  // MAX_SHARE_SIZE is the compressed limit; uncompressed content >50 KB is a
-  // good heuristic that compression will likely exceed it.
   const LOCAL_SIZE_WARN_BYTES = 50_000;
   const totalSize = computed(() => Object.values(files.value).reduce((sum, v) => sum + v.length, 0));
   const isLarge = computed(() => totalSize.value > LOCAL_SIZE_WARN_BYTES);
