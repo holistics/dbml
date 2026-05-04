@@ -26,7 +26,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     const {
       uri,
     } = model;
-    const filepath = uri ? Filepath.fromUri(String(uri)) : DEFAULT_ENTRY;
+    const filepath = Filepath.fromUri(String(model.uri));
     const offset = getOffsetFromMonacoPosition(model, position);
     const containers = [
       ...this.compiler.container.stack(filepath, offset),

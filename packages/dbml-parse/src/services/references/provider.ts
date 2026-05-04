@@ -3,6 +3,9 @@ import {
   DEFAULT_ENTRY,
 } from '@/constants';
 import {
+  Filepath,
+} from '@/core/types';
+import {
   SyntaxNodeKind,
 } from '@/core/types/nodes';
 import {
@@ -23,7 +26,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
     const {
       uri,
     } = model;
-    const filepath = DEFAULT_ENTRY; // FIXME: Currently just default filepath to DEFAULT_ENTRY
+    const filepath = Filepath.fromUri(String(model.uri));
     const offset = getOffsetFromMonacoPosition(model, position);
 
     const containers = [
