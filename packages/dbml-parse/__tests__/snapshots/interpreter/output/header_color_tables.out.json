@@ -4,9 +4,7 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
-            "pk": false,
             "token": {
               "end": {
                 "column": 8,
@@ -22,13 +20,10 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "user_id",
-            "pk": false,
             "token": {
               "end": {
                 "column": 13,
@@ -44,13 +39,10 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "status",
-            "pk": false,
             "token": {
               "end": {
                 "column": 16,
@@ -66,13 +58,10 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "create_at",
-            "pk": false,
             "token": {
               "end": {
                 "column": 21,
@@ -88,8 +77,7 @@
             },
             "type": {
               "type_name": "date_time"
-            },
-            "unique": false
+            }
           }
         ],
         "headerColor": "#0065ab",

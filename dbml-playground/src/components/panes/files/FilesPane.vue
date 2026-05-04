@@ -97,15 +97,9 @@
 import {
   ref, computed, provide, onMounted, onUnmounted,
 } from 'vue';
-import {
-  PhFilePlus, PhFolderPlus, PhArrowClockwise,
-} from '@phosphor-icons/vue';
-import {
-  useProjectStore,
-} from '@/stores/projectStore';
-import {
-  Filepath,
-} from '@dbml/parse';
+import { PhFilePlus, PhFolderPlus, PhArrowClockwise } from '@phosphor-icons/vue';
+import { useProjectStore } from '@/stores/projectStore';
+import { Filepath } from '@dbml/parse';
 import FileTreeNode from './FileTreeNode.vue';
 
 const project = useProjectStore();

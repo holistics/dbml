@@ -104,22 +104,41 @@ export class RefInterpreter {
     const leftToken = getTokenPosition(this.metadata.leftToken());
     const rightToken = getTokenPosition(this.metadata.rightToken());
 
-    this.ref.endpoints = [
-      {
-        schemaName: leftTableName?.schema ?? null,
-        tableName: leftTableName?.name ?? '',
-        fieldNames: leftColumnSymbols.map((c) => c.name ?? ''),
-        relation: multiplicities[0],
-        token: leftToken,
-      },
-      {
-        schemaName: rightTableName?.schema ?? null,
-        tableName: rightTableName?.name ?? '',
-        fieldNames: rightColumnSymbols.map((c) => c.name ?? ''),
-        relation: multiplicities[1],
-        token: rightToken,
-      },
-    ];
+    // For inline refs: left = container (FK side), right = target (referenced side)
+    // We need to swap endpoints to match the standalone FK convention
+    this.ref.endpoints = !(this.declarationNode instanceof ElementDeclarationNode)
+      ? [
+          {
+            schemaName: rightTableName?.schema ?? null,
+            tableName: rightTableName?.name ?? '',
+            fieldNames: rightColumnSymbols.map((c) => c.name ?? ''),
+            relation: multiplicities[1],
+            token: rightToken,
+          },
+          {
+            schemaName: leftTableName?.schema ?? null,
+            tableName: leftTableName?.name ?? '',
+            fieldNames: leftColumnSymbols.map((c) => c.name ?? ''),
+            relation: multiplicities[0],
+            token: leftToken,
+          },
+        ]
+      : [
+          {
+            schemaName: leftTableName?.schema ?? null,
+            tableName: leftTableName?.name ?? '',
+            fieldNames: leftColumnSymbols.map((c) => c.name ?? ''),
+            relation: multiplicities[0],
+            token: leftToken,
+          },
+          {
+            schemaName: rightTableName?.schema ?? null,
+            tableName: rightTableName?.name ?? '',
+            fieldNames: rightColumnSymbols.map((c) => c.name ?? ''),
+            relation: multiplicities[1],
+            token: rightToken,
+          },
+        ];
 
     // Inline refs have no other settings
     if (!(this.declarationNode instanceof ElementDeclarationNode)) return [];

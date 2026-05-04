@@ -97,24 +97,12 @@
 import {
   ref, shallowRef, provide, onMounted, onBeforeUnmount,
 } from 'vue';
-import {
-  PhClipboardText, PhCheck,
-} from '@phosphor-icons/vue';
-import {
-  useParserStore,
-} from '@/stores/parserStore';
-import {
-  setupDbmlServices,
-} from '@/components/editor/dbml-services';
-import {
-  useProjectStore,
-} from '@/stores/projectStore';
-import {
-  useUserStore,
-} from '@/stores/userStore';
-import {
-  Filepath,
-} from '@dbml/parse';
+import { PhClipboardText, PhCheck } from '@phosphor-icons/vue';
+import { useParserStore } from '@/stores/parserStore';
+import { setupDbmlServices } from '@/components/editor/dbml-services';
+import { useProjectStore } from '@/stores/projectStore';
+import { useUserStore } from '@/stores/userStore';
+import { Filepath } from '@dbml/parse';
 import SplitPanel from '@/components/SplitPanel.vue';
 import FilesPane from '@/components/panes/files/FilesPane.vue';
 import EditorPane from '@/components/panes/editor/EditorPane.vue';
@@ -170,8 +158,10 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   // registerCodeEditorOpenHandler prepends a handler that runs before the built-in one.
   // We handle cross-file navigation by switching the active project file first.
   const svc = (editor as any)._codeEditorService;
-  svc?.registerCodeEditorOpenHandler?.(async (input: { resource?: monaco.Uri;
-    options?: { selection?: monaco.IRange }; }) => {
+  svc?.registerCodeEditorOpenHandler?.(async (input: {
+    resource?: monaco.Uri;
+    options?: { selection?: monaco.IRange };
+  }) => {
     const resource = input?.resource;
     if (!resource) return null;
 

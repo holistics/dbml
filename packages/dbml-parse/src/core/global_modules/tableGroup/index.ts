@@ -1,5 +1,8 @@
 import type Compiler from '@/compiler/index';
 import {
+  addDoubleQuoteIfNeeded,
+} from '@/compiler/queries/utils';
+import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
@@ -63,7 +66,8 @@ export const tableGroupUtils = {
 
 export const tableGroupModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
-    const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
+    const fullname = compiler.nodeFullname(node).getFiltered(UNHANDLED);
+    const name = fullname?.at(-1);
     if (isElementNode(node, ElementKind.TableGroup)) {
       return new Report(compiler.symbolFactory.create(TableGroupSymbol, {
         declaration: node,
@@ -73,7 +77,7 @@ export const tableGroupModule: GlobalModule = {
     if (isElementFieldNode(node, ElementKind.TableGroup)) {
       return new Report(compiler.symbolFactory.create(TableGroupFieldSymbol, {
         declaration: node,
-        name,
+        name: fullname?.map(addDoubleQuoteIfNeeded).join('.'),
       }, node.filepath));
     }
     return Report.create(PASS_THROUGH);

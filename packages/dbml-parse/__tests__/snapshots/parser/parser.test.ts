@@ -27,7 +27,7 @@ function serializeParserResult (compiler: Compiler, report: Report<ProgramNode>)
     program: value,
     errors,
     warnings,
-  }), null, 2);
+  }, { includeSymbols: false, includeReferee: false }), null, 2);
 }
 
 describe('[snapshot] parser', () => {

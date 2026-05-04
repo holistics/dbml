@@ -1,32 +1,14 @@
-import {
-  SyntaxNode, SyntaxToken,
-} from '@dbml/parse';
-import {
-  serializeNode,
-} from './node';
-import {
-  serializeSymbol,
-} from './symbol';
-import {
-  serializeToken,
-} from './token';
-import type {
-  Serializable, SerializeOptions, SerializedValue,
-} from './types';
-import {
-  isSymbolInfo,
-} from './utils';
+import { SyntaxNode, SyntaxToken } from '@dbml/parse';
+import { serializeNode } from './node';
+import { serializeSymbol } from './symbol';
+import { serializeToken } from './token';
+import type { Serializable, SerializeOptions, SerializedValue } from './types';
+import { isSymbolInfo } from './utils';
 
 export * from './types';
-export {
-  serializeNode,
-} from './node';
-export {
-  serializeSymbol,
-} from './symbol';
-export {
-  serializeToken,
-} from './token';
+export { serializeNode } from './node';
+export { serializeSymbol } from './symbol';
+export { serializeToken } from './token';
 
 export function serialize (value: Serializable, opts?: SerializeOptions): SerializedValue {
   if (Array.isArray(value)) return value.map((v) => serialize(v as Serializable, opts));

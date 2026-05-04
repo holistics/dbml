@@ -461,8 +461,8 @@ describe('[example] validator', () => {
       `;
       const errors = analyze(source).getErrors();
       expect(errors.length).toBe(2);
-      expect(errors[0].diagnostic).toBe('Duplicate partial injection \'p1\'');
-      expect(errors[1].diagnostic).toBe('Duplicate partial injection \'p1\'');
+      expect(errors[0].diagnostic).toBe('Duplicate table partial injection \'p1\'');
+      expect(errors[1].diagnostic).toBe('Duplicate table partial injection \'p1\'');
     });
 
     test('should detect unknown tablepartial reference with precise error', () => {

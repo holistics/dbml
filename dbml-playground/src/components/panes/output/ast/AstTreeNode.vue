@@ -84,9 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed, ref, watch,
-} from 'vue';
+import { computed, ref, watch } from 'vue';
 import {
   PhCaretRight,
   PhDiamond,
@@ -119,9 +117,7 @@ import {
   SyntaxTokenKind,
   SyntaxNodeKind,
 } from '@dbml/parse';
-import {
-  tokenIconFor,
-} from '@/components/panes/output/tokenIcons';
+import { tokenIconFor } from '@/components/panes/output/tokenIcons';
 
 export interface AstNode {
   id: string;
@@ -189,9 +185,11 @@ const tokenValue = computed(() => isToken.value ? (node.rawData as SyntaxToken).
 const hintText = computed(() => isEof.value ? '' : (node.nameHint ?? ''));
 const hintClass = computed(() => isToken.value ? 'text-green-700' : 'text-blue-600');
 
-interface IconInfo { icon: typeof PhDiamond;
+interface IconInfo {
+  icon: typeof PhDiamond;
   color: string;
-  label: string; }
+  label: string;
+}
 
 // Every kind gets a visually distinct icon so users can scan the Nodes tab at
 // a glance. Keys come from SyntaxNodeKind so they stay in sync with the

@@ -31,9 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  PhGear, PhEye, PhEyeSlash,
-} from '@phosphor-icons/vue';
+import { PhGear, PhEye, PhEyeSlash } from '@phosphor-icons/vue';
 
 const {
   showDecoration = false,

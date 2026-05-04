@@ -1,12 +1,126 @@
 {
   "database": {
+    "refs": [
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "col1"
+            ],
+            "relation": "*",
+            "tableName": "T",
+            "token": {
+              "end": {
+                "column": 28,
+                "line": 2,
+                "offset": 44
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 19
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "col1"
+            ],
+            "relation": "1",
+            "tableName": "T",
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 2,
+                "offset": 43
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 14,
+                "line": 2,
+                "offset": 30
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 27,
+            "line": 2,
+            "offset": 43
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 14,
+            "line": 2,
+            "offset": 30
+          }
+        }
+      },
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "col3"
+            ],
+            "relation": "*",
+            "tableName": "T",
+            "token": {
+              "end": {
+                "column": 28,
+                "line": 3,
+                "offset": 72
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 47
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "col2"
+            ],
+            "relation": "1",
+            "tableName": "T",
+            "token": {
+              "end": {
+                "column": 27,
+                "line": 3,
+                "offset": 71
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 14,
+                "line": 3,
+                "offset": 58
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 27,
+            "line": 3,
+            "offset": 71
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 14,
+            "line": 3,
+            "offset": 58
+          }
+        }
+      }
+    ],
     "tablePartials": [
       {
         "fields": [
           {
-            "increment": false,
             "name": "col1",
-            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -22,13 +136,10 @@
             },
             "type": {
               "type_name": "type"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "col3",
-            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -44,8 +155,7 @@
             },
             "type": {
               "type_name": "type"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "T",
@@ -68,7 +178,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [
@@ -92,7 +201,6 @@
               }
             ],
             "name": "col2",
-            "pk": false,
             "token": {
               "end": {
                 "column": 26,
@@ -108,8 +216,7 @@
             },
             "type": {
               "type_name": "type"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "T",

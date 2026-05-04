@@ -1,9 +1,5 @@
-import type {
-  Component,
-} from 'vue';
-import {
-  SyntaxTokenKind,
-} from '@dbml/parse';
+import type { Component } from 'vue';
+import { SyntaxTokenKind } from '@dbml/parse';
 import {
   PhIdentificationCard,
   PhQuotes,

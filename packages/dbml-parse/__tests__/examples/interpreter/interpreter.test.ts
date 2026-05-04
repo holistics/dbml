@@ -331,6 +331,26 @@ describe('[example] interpreter', () => {
 
       expect(db.tableGroups[0].color).toBe('#ff0000');
     });
+
+    test('should not report duplicate for schema-qualified tablegroup fields with same base name', () => {
+      const source = `
+        Table public.users { id int }
+        Table ecommerce.users { id int }
+        TableGroup mixed {
+          public.users
+          ecommerce.users
+        }
+      `;
+      const report = interpret(source);
+      const db = report.getValue()!;
+
+      expect(report.getErrors()).toHaveLength(0);
+      expect(db.tableGroups[0].tables).toHaveLength(2);
+      expect(db.tableGroups[0].tables[0].name).toBe('users');
+      expect(db.tableGroups[0].tables[0].schemaName).toBe('public');
+      expect(db.tableGroups[0].tables[1].name).toBe('users');
+      expect(db.tableGroups[0].tables[1].schemaName).toBe('ecommerce');
+    });
   });
 
   describe('tablepartial interpretation', () => {

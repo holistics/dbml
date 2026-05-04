@@ -6,6 +6,12 @@ import {
   extractQuotedStringToken,
 } from '@/core/utils/expression';
 import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
+import {
   aggregateSettingList,
 } from '@/core/utils/validate';
 import {
@@ -121,12 +127,22 @@ export class TableGroupInterpreter {
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     this.tableGroup.tables = fields.map((field) => {
-      const fragments = destructureComplexVariable((field as FunctionApplicationNode).callee)!;
+      const tableSymbol = field.callee ? this.compiler.nodeReferee(field.callee).getFiltered(UNHANDLED) : undefined;
+      if (tableSymbol?.isKind(SymbolKind.Table)) {
+        const {
+          name, schema,
+        } = tableSymbol.interpretedName(this.compiler, this.filepath);
+        return {
+          name,
+          schemaName: schema,
+        };
+      }
 
+      // Fallback: parse from syntax if symbol not resolved
+      const fragments = destructureComplexVariable(field.callee)!;
       if (fragments.length > 2) {
         errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', field));
       }
-
       return {
         name: fragments.pop()!,
         schemaName: fragments.join('.') || null,

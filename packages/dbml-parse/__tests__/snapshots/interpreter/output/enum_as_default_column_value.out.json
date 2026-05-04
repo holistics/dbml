@@ -222,9 +222,7 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "name",
-            "pk": false,
             "token": {
               "end": {
                 "column": 12,
@@ -240,13 +238,10 @@
             },
             "type": {
               "type_name": "text"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "id",
-            "pk": false,
             "token": {
               "end": {
                 "column": 9,
@@ -262,17 +257,14 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "string",
               "value": "active"
             },
-            "increment": false,
             "name": "status",
-            "pk": false,
             "token": {
               "end": {
                 "column": 41,
@@ -288,17 +280,14 @@
             },
             "type": {
               "type_name": "status"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "string",
               "value": "male"
             },
-            "increment": false,
             "name": "gender",
-            "pk": false,
             "token": {
               "end": {
                 "column": 63,
@@ -315,17 +304,14 @@
             "type": {
               "schemaName": "demographic",
               "type_name": "gender"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "string",
               "value": "young_adult"
             },
-            "increment": false,
             "name": "age_type",
-            "pk": false,
             "token": {
               "end": {
                 "column": 86,
@@ -342,8 +328,7 @@
             "type": {
               "schemaName": "demographic",
               "type_name": "age segment"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "user",

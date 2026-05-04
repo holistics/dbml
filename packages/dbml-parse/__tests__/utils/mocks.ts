@@ -1,3 +1,4 @@
+import { DEFAULT_ENTRY } from '@/constants';
 import {
   type Position, type TextModel,
 } from '@/services';
@@ -14,7 +15,7 @@ export class MockTextModel {
   private content: string;
   public uri: any;
 
-  constructor (content: string, uri: string = '') {
+  constructor (content: string, uri: string = DEFAULT_ENTRY.toUri()) {
     this.content = content;
     this.uri = uri;
   }
@@ -23,10 +24,12 @@ export class MockTextModel {
     // Split on all line ending types while preserving them for accurate offset calculation
     const lineEndingRegex = /\r\n|\r|\n/g;
     let lastIndex = 0;
-    const lines: Array<{ text: string;
-      ending: string; }> = [];
+    const lines: Array<{
+      text: string;
+      ending: string;
+    }> = [];
 
-    let match;
+    let match: RegExpExecArray | null;
     while ((match = lineEndingRegex.exec(this.content)) !== null) {
       lines.push({
         text: this.content.slice(lastIndex, match.index),
@@ -71,7 +74,7 @@ export class MockTextModel {
   }
 }
 
-export function createMockTextModel (content: string, uri: string = ''): TextModel {
+export function createMockTextModel (content: string, uri: string = DEFAULT_ENTRY.toUri()): TextModel {
   return new MockTextModel(content, uri) as unknown as TextModel;
 }
 

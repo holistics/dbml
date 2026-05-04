@@ -4,7 +4,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -22,13 +21,10 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "full_name",
-            "pk": false,
             "token": {
               "end": {
                 "column": 20,
@@ -44,13 +40,10 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "email",
-            "pk": false,
             "token": {
               "end": {
                 "column": 25,
@@ -70,9 +63,7 @@
             "unique": true
           },
           {
-            "increment": false,
             "name": "gender",
-            "pk": false,
             "token": {
               "end": {
                 "column": 17,
@@ -88,13 +79,10 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "date_of_birth",
-            "pk": false,
             "token": {
               "end": {
                 "column": 24,
@@ -110,13 +98,10 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "created_at",
-            "pk": false,
             "token": {
               "end": {
                 "column": 21,
@@ -132,13 +117,10 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "country_code",
-            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -154,14 +136,11 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "active",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -177,8 +156,7 @@
             },
             "type": {
               "type_name": "boolean"
-            },
-            "unique": false
+            }
           }
         ],
         "indexes": [
@@ -218,7 +196,6 @@
               },
               "value": "index note"
             },
-            "pk": false,
             "token": {
               "end": {
                 "column": 38,
@@ -255,7 +232,6 @@
               }
             ],
             "name": "User Name",
-            "pk": false,
             "token": {
               "end": {
                 "column": 34,
@@ -268,8 +244,7 @@
                 "line": 13,
                 "offset": 249
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -308,7 +283,6 @@
                 "value": "created_at"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 36,
@@ -322,8 +296,7 @@
                 "offset": 283
               }
             },
-            "type": "hash",
-            "unique": false
+            "type": "hash"
           },
           {
             "columns": [
@@ -345,7 +318,6 @@
                 "value": "now()"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 12,
@@ -358,8 +330,7 @@
                 "line": 15,
                 "offset": 319
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -398,7 +369,6 @@
                 "value": "lower(full_name)"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 33,
@@ -411,8 +381,7 @@
                 "line": 16,
                 "offset": 331
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -451,7 +420,6 @@
                 "value": "upper(gender)"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 35,
@@ -464,8 +432,7 @@
                 "line": 17,
                 "offset": 364
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -487,7 +454,6 @@
                 "value": "reverse(country_code)"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 30,
@@ -500,8 +466,7 @@
                 "line": 18,
                 "offset": 399
               }
-            },
-            "unique": false
+            }
           }
         ],
         "name": "users",

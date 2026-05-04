@@ -137,7 +137,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "note": {
               "token": {
@@ -171,13 +170,10 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "status",
-            "pk": false,
             "token": {
               "end": {
                 "column": 24,
@@ -193,13 +189,10 @@
             },
             "type": {
               "type_name": "order status"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "created_at",
-            "pk": false,
             "token": {
               "end": {
                 "column": 21,
@@ -215,8 +208,7 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "orders",
@@ -253,9 +245,7 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
-            "pk": false,
             "token": {
               "end": {
                 "column": 13,
@@ -271,13 +261,10 @@
             },
             "type": {
               "type_name": "integer"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "country",
-            "pk": false,
             "token": {
               "end": {
                 "column": 18,
@@ -293,13 +280,10 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "booking_date",
-            "pk": false,
             "token": {
               "end": {
                 "column": 20,
@@ -315,13 +299,10 @@
             },
             "type": {
               "type_name": "date"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "created_at",
-            "pk": false,
             "token": {
               "end": {
                 "column": 23,
@@ -337,8 +318,7 @@
             },
             "type": {
               "type_name": "timestamp"
-            },
-            "unique": false
+            }
           }
         ],
         "indexes": [
@@ -392,8 +372,7 @@
                 "line": 29,
                 "offset": 438
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -432,7 +411,6 @@
               },
               "value": "Date"
             },
-            "pk": false,
             "token": {
               "end": {
                 "column": 58,
@@ -445,8 +423,7 @@
                 "line": 30,
                 "offset": 488
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -468,7 +445,6 @@
                 "value": "booking_date"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -481,8 +457,7 @@
                 "line": 31,
                 "offset": 546
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -521,7 +496,6 @@
                 "value": "booking_date"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 39,
@@ -557,7 +531,6 @@
                 "value": "booking_date"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 32,
@@ -571,8 +544,7 @@
                 "offset": 604
               }
             },
-            "type": "hash",
-            "unique": false
+            "type": "hash"
           },
           {
             "columns": [
@@ -594,7 +566,6 @@
                 "value": "id*2"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 15,
@@ -607,8 +578,7 @@
                 "line": 34,
                 "offset": 636
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -647,7 +617,6 @@
                 "value": "getdate()"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 27,
@@ -660,8 +629,7 @@
                 "line": 35,
                 "offset": 651
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -700,7 +668,6 @@
                 "value": "id"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 18,
@@ -713,8 +680,7 @@
                 "line": 36,
                 "offset": 678
               }
-            },
-            "unique": false
+            }
           }
         ],
         "name": "bookings",

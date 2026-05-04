@@ -6,22 +6,12 @@
 // alpha values are rounded to the nearest Tailwind-supported steps (/5 for
 // backgrounds, /20 for outlines).
 
-import {
-  SymbolKind, SyntaxNodeKind,
-} from '@dbml/parse';
-import type {
-  Database, ProgramNode, SyntaxToken,
-} from '@dbml/parse';
+import { SymbolKind, SyntaxNodeKind } from '@dbml/parse';
+import type { Database, ProgramNode, SyntaxToken } from '@dbml/parse';
 import * as monaco from 'monaco-editor';
-import type {
-  SymbolInfo,
-} from '@/stores/parserStore';
-import {
-  tokenKindClass,
-} from '@/components/panes/output/tokenIcons';
-import {
-  toMonacoRange,
-} from '@/utils/monaco';
+import type { SymbolInfo } from '@/stores/parserStore';
+import { tokenKindClass } from '@/components/panes/output/tokenIcons';
+import { toMonacoRange } from '@/utils/monaco';
 
 export interface DecorationEntry {
   range: monaco.IRange;

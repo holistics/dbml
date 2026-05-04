@@ -105,17 +105,7 @@
                       }
                     },
                     "fullEnd": 28,
-                    "fullStart": 15,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@id@[L1:C1, L1:C11]",
-                        "snippet": "id integer"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@id@[L1:C1, L1:C11]",
-                        "snippet": "id integer"
-                      }
-                    }
+                    "fullStart": 15
                   },
                   {
                     "context": {
@@ -157,12 +147,7 @@
                                 }
                               },
                               "fullEnd": 41,
-                              "fullStart": 39,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
-                                }
-                              }
+                              "fullStart": 39
                             },
                             "op": {
                               "context": {
@@ -200,13 +185,7 @@
                                 }
                               },
                               "fullEnd": 49,
-                              "fullStart": 42,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
-                                  "snippet": "enum v2.st...loyee']\r\n}"
-                                }
-                              }
+                              "fullStart": 42
                             }
                           },
                           "fullEnd": 49,
@@ -294,12 +273,7 @@
                                               }
                                             },
                                             "fullEnd": 61,
-                                            "fullStart": 59,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
-                                              }
-                                            }
+                                            "fullStart": 59
                                           },
                                           "op": {
                                             "context": {
@@ -337,13 +311,7 @@
                                               }
                                             },
                                             "fullEnd": 68,
-                                            "fullStart": 62,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
-                                                "snippet": "enum v2.st...loyee']\r\n}"
-                                              }
-                                            }
+                                            "fullStart": 62
                                           }
                                         },
                                         "fullEnd": 68,
@@ -385,13 +353,7 @@
                                           }
                                         },
                                         "fullEnd": 72,
-                                        "fullStart": 69,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Enum field@new@[L9:C4, L9:C40]",
-                                            "snippet": "new [note:...employee']"
-                                          }
-                                        }
+                                        "fullStart": 69
                                       }
                                     },
                                     "fullEnd": 72,
@@ -456,17 +418,7 @@
                       }
                     },
                     "fullEnd": 75,
-                    "fullStart": 28,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@status@[L2:C4, L2:C45]",
-                        "snippet": "status v2....tatus.new]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@status@[L2:C4, L2:C45]",
-                        "snippet": "status v2....tatus.new]"
-                      }
-                    }
+                    "fullStart": 28
                   },
                   {
                     "context": {
@@ -580,13 +532,7 @@
                                           }
                                         },
                                         "fullEnd": 111,
-                                        "fullStart": 109,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Column@id@[L1:C1, L1:C11]",
-                                            "snippet": "id integer"
-                                          }
-                                        }
+                                        "fullStart": 109
                                       },
                                       "op": {
                                         "context": {
@@ -660,17 +606,7 @@
                       }
                     },
                     "fullEnd": 114,
-                    "fullStart": 75,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Column@referrer@[L4:C4, L4:C31]",
-                        "snippet": "referrer i...[ref: -id]"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
-                        "snippet": "referrer i...[ref: -id]"
-                      }
-                    }
+                    "fullStart": 75
                   }
                 ]
               },
@@ -717,37 +653,7 @@
             }
           },
           "fullEnd": 117,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Users@[L0:C0, L5:C1]",
-              "snippet": "Table User...f: -id]\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L0:C0, L5:C1]",
-              "snippet": "Table User...f: -id]\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Column@id@[L1:C1, L1:C11]",
-                  "snippet": "id integer"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@referrer@[L4:C4, L4:C31]",
-                  "snippet": "referrer i...[ref: -id]"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Column@status@[L2:C4, L2:C45]",
-                  "snippet": "status v2....tatus.new]"
-                }
-              }
-            ]
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -817,17 +723,7 @@
                       }
                     },
                     "fullEnd": 145,
-                    "fullStart": 137,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@churn@[L8:C1, L8:C6]",
-                        "snippet": "churn"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@churn@[L8:C1, L8:C6]",
-                        "snippet": "churn"
-                      }
-                    }
+                    "fullStart": 137
                   },
                   {
                     "context": {
@@ -967,17 +863,7 @@
                       }
                     },
                     "fullEnd": 187,
-                    "fullStart": 145,
-                    "symbol": {
-                      "context": {
-                        "id": "symbol@Enum field@new@[L9:C4, L9:C40]",
-                        "snippet": "new [note:...employee']"
-                      },
-                      "declaration": {
-                        "id": "node@<function-application>@new@[L9:C4, L9:C40]",
-                        "snippet": "new [note:...employee']"
-                      }
-                    }
+                    "fullStart": 145
                   }
                 ]
               },
@@ -1072,31 +958,7 @@
             }
           },
           "fullEnd": 188,
-          "fullStart": 118,
-          "symbol": {
-            "context": {
-              "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
-              "snippet": "enum v2.st...loyee']\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@v2.status@[L7:C0, L10:C1]",
-              "snippet": "enum v2.st...loyee']\r\n}"
-            },
-            "members": [
-              {
-                "context": {
-                  "id": "symbol@Enum field@churn@[L8:C1, L8:C6]",
-                  "snippet": "churn"
-                }
-              },
-              {
-                "context": {
-                  "id": "symbol@Enum field@new@[L9:C4, L9:C40]",
-                  "snippet": "new [note:...employee']"
-                }
-              }
-            ]
-          }
+          "fullStart": 118
         }
       ],
       "eof": {
@@ -1110,29 +972,6 @@
       }
     },
     "fullEnd": 188,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L10:C1]",
-        "snippet": "Table User...loyee']\r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L10:C1]",
-        "snippet": "Table User...loyee']\r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L0:C0, L5:C1]",
-            "snippet": "Table User...f: -id]\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

@@ -104,23 +104,28 @@ export default class ProgramInterpreter {
   }
 
   private interpretAllSymbols () {
+    // 1a. Local declarations in source order
+    for (const node of this.programSymbol.declaration.declarations) {
+      const symbol = this.compiler.nodeSymbol(node).getFiltered(UNHANDLED);
+      if (!symbol) continue;
+      if (symbol instanceof UseSymbol) continue; // handled below
+      const result = this.compiler.interpretSymbol(symbol, this.filepath);
+      if (result.hasValue(UNHANDLED)) continue;
+      this.errors.push(...result.getErrors());
+      this.warnings.push(...result.getWarnings());
+      const value = result.getValue();
+      if (value) this.pushElement(symbol, value);
+    }
+
+    // 1b. UseSymbols (imports) from schema members
     const schemas = this.compiler.symbolMembers(this.programSymbol).getFiltered(UNHANDLED) ?? [];
     for (const schema of schemas) {
-      // Only interpret schemas
       if (!(schema instanceof SchemaSymbol)) continue;
-
       const members = this.compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
       for (const member of members) {
         if (member instanceof UseSymbol) {
           this.interpretUseSymbol(member);
-          continue;
         }
-        const result = this.compiler.interpretSymbol(member, this.filepath);
-        if (result.hasValue(UNHANDLED)) continue;
-        this.errors.push(...result.getErrors());
-        this.warnings.push(...result.getWarnings());
-        const value = result.getValue();
-        if (value) this.pushElement(member, value);
       }
     }
   }
@@ -319,10 +324,8 @@ export default class ProgramInterpreter {
     }
 
     const partialRefs = this.collectPartialRefs(fkTableMap);
-    warnings.push(...validateForeignKeys(this.compiler, [
-      ...this.db.refs,
-      ...partialRefs,
-    ], fkTableMap, this.filepath));
+    this.db.refs.push(...partialRefs);
+    warnings.push(...validateForeignKeys(this.compiler, this.db.refs, fkTableMap, this.filepath));
     return warnings;
   }
 

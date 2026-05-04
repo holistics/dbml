@@ -186,7 +186,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -204,14 +203,11 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "user_id",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 33,
@@ -231,7 +227,6 @@
             "unique": true
           },
           {
-            "increment": false,
             "name": "status",
             "note": {
               "token": {
@@ -249,7 +244,6 @@
               },
               "value": "Status of an order"
             },
-            "pk": false,
             "token": {
               "end": {
                 "column": 46,
@@ -265,11 +259,9 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "created_at",
             "note": {
               "token": {
@@ -287,7 +279,6 @@
               },
               "value": "When order created"
             },
-            "pk": false,
             "token": {
               "end": {
                 "column": 50,
@@ -303,8 +294,7 @@
             },
             "type": {
               "type_name": "varchar"
-            },
-            "unique": false
+            }
           }
         ],
         "indexes": [
@@ -328,7 +318,6 @@
                 "value": "id"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 20,
@@ -342,8 +331,7 @@
                 "offset": 372
               }
             },
-            "type": "hash",
-            "unique": false
+            "type": "hash"
           },
           {
             "columns": [
@@ -365,7 +353,6 @@
                 "value": "created_at"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 15,
@@ -378,8 +365,7 @@
                 "line": 25,
                 "offset": 399
               }
-            },
-            "unique": false
+            }
           }
         ],
         "name": "orders",

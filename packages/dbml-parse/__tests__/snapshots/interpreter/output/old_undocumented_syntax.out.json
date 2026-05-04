@@ -23,14 +23,11 @@
             },
             "type": {
               "type_name": "SMALLINT"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "store_id",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 32,
@@ -46,14 +43,11 @@
             },
             "type": {
               "type_name": "TINYINT"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "first_name",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 38,
@@ -70,18 +64,15 @@
             "type": {
               "args": "45",
               "type_name": "VARCHAR(45)"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "boolean",
               "value": "false"
             },
-            "increment": false,
             "name": "last_name",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 53,
@@ -98,17 +89,14 @@
             "type": {
               "args": "45",
               "type_name": "VARCHAR(45)"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "boolean",
               "value": "null"
             },
-            "increment": false,
             "name": "email",
-            "pk": false,
             "token": {
               "end": {
                 "column": 38,
@@ -125,14 +113,11 @@
             "type": {
               "args": "50",
               "type_name": "VARCHAR(50)"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "address_id",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 35,
@@ -148,18 +133,15 @@
             },
             "type": {
               "type_name": "SMALLINT"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "boolean",
               "value": "true"
             },
-            "increment": false,
             "name": "active",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 45,
@@ -175,14 +157,11 @@
             },
             "type": {
               "type_name": "BOOLEAN"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "create_date",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 36,
@@ -198,17 +177,14 @@
             },
             "type": {
               "type_name": "DATETIME"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "expression",
               "value": "CURRENT_TIMESTAMP"
             },
-            "increment": false,
             "name": "last_update",
-            "pk": false,
             "token": {
               "end": {
                 "column": 57,
@@ -224,8 +200,7 @@
             },
             "type": {
               "type_name": "TIMESTAMP"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "customer",
@@ -246,7 +221,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -264,17 +238,14 @@
             },
             "type": {
               "type_name": "integer"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "string",
               "value": "hello"
             },
-            "increment": false,
             "name": "name",
-            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -290,13 +261,10 @@
             },
             "type": {
               "type_name": "e"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "country_id",
-            "pk": false,
             "token": {
               "end": {
                 "column": 21,
@@ -312,8 +280,7 @@
             },
             "type": {
               "type_name": "integer"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "cities",
@@ -350,9 +317,7 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
-            "pk": false,
             "token": {
               "end": {
                 "column": 12,
@@ -368,13 +333,10 @@
             },
             "type": {
               "type_name": "integer"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "cities",
-            "pk": false,
             "token": {
               "end": {
                 "column": 17,
@@ -390,8 +352,7 @@
             },
             "type": {
               "type_name": "string[]"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "country",
@@ -412,9 +373,7 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
-            "pk": false,
             "token": {
               "end": {
                 "column": 12,
@@ -430,13 +389,10 @@
             },
             "type": {
               "type_name": "integer"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "name",
-            "pk": false,
             "token": {
               "end": {
                 "column": 13,
@@ -452,8 +408,7 @@
             },
             "type": {
               "type_name": "string"
-            },
-            "unique": false
+            }
           }
         ],
         "indexes": [
@@ -494,7 +449,6 @@
                 "value": "name"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 10,
@@ -507,8 +461,7 @@
                 "line": 29,
                 "offset": 620
               }
-            },
-            "unique": false
+            }
           }
         ],
         "name": "citites",

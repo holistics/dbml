@@ -40,7 +40,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -58,14 +57,11 @@
             },
             "type": {
               "type_name": "integer"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "username",
             "not_null": true,
-            "pk": false,
             "token": {
               "end": {
                 "column": 43,

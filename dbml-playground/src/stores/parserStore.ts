@@ -1,29 +1,17 @@
 import {
   ref, shallowRef, computed, watch, nextTick,
 } from 'vue';
-import {
-  defineStore,
-} from 'pinia';
-import {
-  debounce,
-} from 'lodash-es';
+import { defineStore } from 'pinia';
+import { debounce } from 'lodash-es';
 import * as monaco from 'monaco-editor';
-import {
-  Compiler, DBMLDiagnosticsProvider, Filepath,
-} from '@dbml/parse';
+import { Compiler, DBMLDiagnosticsProvider, Filepath } from '@dbml/parse';
 import type {
   Diagnostic, SyntaxToken, ProgramNode, Database, NodeSymbol,
 } from '@dbml/parse';
-import type {
-  ParserError,
-} from '../types';
-import {
-  toMonacoRange,
-} from '../utils/monaco';
+import type { ParserError } from '../types';
+import { toMonacoRange } from '../utils/monaco';
 import logger from '../utils/logger';
-import {
-  useProjectStore,
-} from './projectStore';
+import { useProjectStore } from './projectStore';
 
 const DEBOUNCE_MS = 300;
 
@@ -104,8 +92,7 @@ export const useParserStore = defineStore('parser', () => {
   const project = useProjectStore();
 
   const isLoading = ref(false);
-  // shallowRef prevents Vue from deeply proxying objects with circular refs
-  // (SyntaxNode.parentNode, NodeSymbol.declaration)
+
   const tokens = shallowRef<SyntaxToken[]>([]);
   const ast = shallowRef<ProgramNode>();
   const database = shallowRef<Database>();

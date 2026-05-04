@@ -73,8 +73,8 @@ export default class IndexesInterpreter {
 
       const settingsMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED);
       if (settingsMap) {
-        pk = !!settingsMap[SettingName.PK]?.length;
-        unique = !!settingsMap[SettingName.Unique]?.length;
+        pk = !!settingsMap[SettingName.PK]?.length || undefined;
+        unique = !!settingsMap[SettingName.Unique]?.length || undefined;
 
         name = extractQuotedStringToken(settingsMap[SettingName.Name]?.at(0)?.value);
         const noteNode = settingsMap[SettingName.Note]?.at(0);

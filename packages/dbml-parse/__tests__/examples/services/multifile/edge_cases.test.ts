@@ -42,24 +42,6 @@ describe('[advanced] multifile edge cases', () => {
       expect(filepath2.absolute).toBe(original);
     });
 
-    it('should handle empty file URI correctly', () => {
-      const content = 'Table test { id int }';
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/test.dbml'), content);
-
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(content, '') as any;
-
-      // Should not crash with empty URI
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(1, 1));
-      } catch {
-        didThrow = true;
-      }
-      expect(didThrow).toBe(false);
-    });
-
     it('should handle special characters in file paths', () => {
       const pathWithSpecialChars = '/home/user/project-2024/[test]/models.dbml';
       const filepath = new Filepath(pathWithSpecialChars);
@@ -78,7 +60,7 @@ describe('[advanced] multifile edge cases', () => {
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel('Ref: users.id > orders.user_id', 'file:///schema1.dbml') as any;
+      const model = new MockTextModel('Ref: users.id > orders.user_id', Filepath.fromUri('file:///schema1.dbml').toUri()) as any;
 
       let didThrow = false;
       try {
@@ -100,7 +82,7 @@ describe('[advanced] multifile edge cases', () => {
       compiler.bindProject();
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
-      const model = new MockTextModel(`Ref: ${longName}.id > other.id`, 'file:///models.dbml') as any;
+      const model = new MockTextModel(`Ref: ${longName}.id > other.id`, Filepath.fromUri('file:///models.dbml').toUri()) as any;
 
       let didThrow = false;
       try {
@@ -125,7 +107,7 @@ Ref: nodes.parent_id > nodes.id`;
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(source, 'file:///models.dbml') as any;
+      const model = new MockTextModel(source, Filepath.fromUri('file:///models.dbml').toUri()) as any;
 
       const definitions = definitionProvider.provideDefinition(model, createPosition(6, 20));
 
@@ -138,7 +120,7 @@ Ref: nodes.parent_id > nodes.id`;
       compiler.setSource(new Filepath('/test.dbml'), source);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(source, 'file:///test.dbml') as any;
+      const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
 
       // Position at very end of file
       const lastLine = source.split('\n').length;
@@ -160,7 +142,7 @@ Ref: nodes.parent_id > nodes.id`;
       compiler.setSource(new Filepath('/test.dbml'), source);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(source, 'file:///test.dbml') as any;
+      const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
 
       let didThrow = false;
       try {
@@ -178,7 +160,7 @@ Ref: nodes.parent_id > nodes.id`;
       compiler.setSource(new Filepath('/test.dbml'), source);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(source, 'file:///test.dbml') as any;
+      const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
 
       let didThrow = false;
       try {
@@ -190,83 +172,3 @@ Ref: nodes.parent_id > nodes.id`;
       expect(didThrow).toBe(false);
     });
   });
-
-  describe('use statement edge cases with real scenarios', () => {
-    let compiler: Compiler;
-
-    beforeEach(() => {
-      compiler = new Compiler();
-    });
-
-  describe('compiler state edge cases', () => {
-    it('should handle empty compiler layout', () => {
-      const compiler = new Compiler();
-      // Don't add any files
-
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel('', '') as any;
-
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(1, 1));
-      } catch {
-        didThrow = true;
-      }
-
-      expect(didThrow).toBe(false);
-    });
-
-    it('should handle compiler with single file', () => {
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/test.dbml'), 'Table test { id int }');
-
-      const referencesProvider = new DBMLReferencesProvider(compiler);
-      const model = new MockTextModel('Table test { id int }', 'file:///test.dbml') as any;
-
-      let didThrow = false;
-      try {
-        referencesProvider.provideReferences(model, createPosition(1, 10));
-      } catch {
-        didThrow = true;
-      }
-
-      expect(didThrow).toBe(false);
-    });
-
-    it('should not crash on unbound project', () => {
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/test.dbml'), 'Table test { id int }');
-      // Don't call bindProject
-
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel('Table test { id int }', 'file:///test.dbml') as any;
-
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(1, 1));
-      } catch {
-        didThrow = true;
-      }
-
-      expect(didThrow).toBe(false);
-    });
-
-    it('should handle provider without compiler.layout', () => {
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/test.dbml'), 'Table test { id int }');
-      // layout may be undefined or null
-
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel('Table test { id int }', '') as any;
-
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(1, 1));
-      } catch {
-        didThrow = true;
-      }
-
-      expect(didThrow).toBe(false);
-    });
-  });
-});

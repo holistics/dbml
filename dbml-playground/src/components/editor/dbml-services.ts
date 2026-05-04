@@ -1,15 +1,10 @@
 import * as monaco from 'monaco-editor';
-import {
-  Compiler, Filepath,
-} from '@dbml/parse';
-import {
-  DBMLLanguageService,
-} from './dbml-language';
-import logger from '@/utils/logger';
+import { Compiler, Filepath } from '@dbml/parse';
+import { DBMLLanguageService } from './dbml-language';
 
 type MonacoServices = Awaited<ReturnType<Compiler['initMonacoServices']>>;
 
-let currentServices: MonacoServices | undefined;
+let services: MonacoServices | undefined;
 let registered = false;
 
 const languageId = DBMLLanguageService.getLanguageId();
@@ -20,40 +15,36 @@ function syncModelToCompiler (compiler: Compiler, model: monaco.editor.ITextMode
 }
 
 export async function setupDbmlServices (compiler: Compiler): Promise<void> {
-  try {
-    currentServices = await compiler.initMonacoServices();
-    if (registered) return;
-    registered = true;
+  services = await compiler.initMonacoServices();
+  if (registered) return;
+  registered = true;
 
-    monaco.languages.registerDefinitionProvider(languageId, {
-      provideDefinition: (model, position, token) => {
-        syncModelToCompiler(compiler, model);
-        return (currentServices!.definitionProvider as any).provideDefinition(model, position, token);
-      },
-    });
-    monaco.languages.registerReferenceProvider(languageId, {
-      provideReferences: (model, position, context, token) => {
-        syncModelToCompiler(compiler, model);
-        return (currentServices!.referenceProvider as any).provideReferences(model, position, context, token);
-      },
-    });
-    monaco.languages.registerCompletionItemProvider(languageId, {
-      triggerCharacters: (currentServices.autocompletionProvider as any).triggerCharacters,
-      provideCompletionItems: (model, position, context, token) => {
-        syncModelToCompiler(compiler, model);
-        return (currentServices!.autocompletionProvider as any).provideCompletionItems(model, position, context, token);
-      },
-    });
-  } catch (_err) {
-    logger.warn('Failed to register Monaco language services');
-  }
+  monaco.languages.registerDefinitionProvider(languageId, {
+    provideDefinition: (model, position) => {
+      syncModelToCompiler(compiler, model);
+      return services?.definitionProvider.provideDefinition(model as any, position);
+    },
+  });
+  monaco.languages.registerReferenceProvider(languageId, {
+    provideReferences: (model, position) => {
+      syncModelToCompiler(compiler, model);
+      return services?.referenceProvider.provideReferences(model as any, position);
+    },
+  });
+  monaco.languages.registerCompletionItemProvider(languageId, {
+    triggerCharacters: services.autocompletionProvider.triggerCharacters,
+    provideCompletionItems: (model, position) => {
+      syncModelToCompiler(compiler, model);
+      return services?.autocompletionProvider.provideCompletionItems(model as any, position);
+    },
+  });
 }
 
 export function updateDiagnosticMarkers (model: monaco.editor.ITextModel): void {
-  if (!currentServices) return;
+  if (!services) return;
   const filepath = model.uri ? Filepath.fromUri(String(model.uri)) : undefined;
-  const markers = (currentServices.diagnosticsProvider as {
-    provideMarkers(f?: Filepath): monaco.editor.IMarkerData[];
-  }).provideMarkers(filepath);
-  monaco.editor.setModelMarkers(model, languageId, markers);
+  if (filepath) {
+    const markers = services.diagnosticsProvider.provideMarkers(filepath);
+    monaco.editor.setModelMarkers(model, languageId, markers);
+  }
 }

@@ -1,12 +1,6 @@
-import type {
-  SyntaxToken,
-} from '@dbml/parse';
-import type {
-  SerializedToken, SerializeOptions,
-} from './types';
-import {
-  getReadableId,
-} from './utils';
+import type { SyntaxToken } from '@dbml/parse';
+import type { SerializedToken, SerializeOptions } from './types';
+import { getReadableId } from './utils';
 
 export function serializeToken (token: SyntaxToken, {
   simple = false,

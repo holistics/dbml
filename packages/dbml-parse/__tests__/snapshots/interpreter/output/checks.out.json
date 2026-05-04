@@ -41,9 +41,7 @@
                 }
               }
             ],
-            "increment": false,
             "name": "balance",
-            "pk": false,
             "token": {
               "end": {
                 "column": 37,
@@ -59,8 +57,7 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "WithMoney",
@@ -136,9 +133,7 @@
                 }
               }
             ],
-            "increment": false,
             "name": "name",
-            "pk": false,
             "token": {
               "end": {
                 "column": 37,
@@ -154,13 +149,10 @@
             },
             "type": {
               "type_name": "TEXT"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "name": "email",
-            "pk": false,
             "token": {
               "end": {
                 "column": 13,
@@ -176,8 +168,7 @@
             },
             "type": {
               "type_name": "TEXT"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "User",
@@ -217,9 +208,7 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "balance",
-            "pk": false,
             "token": {
               "end": {
                 "column": 14,
@@ -235,8 +224,7 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "User2",
@@ -310,9 +298,7 @@
                 }
               }
             ],
-            "increment": false,
             "name": "balance",
-            "pk": false,
             "token": {
               "end": {
                 "column": 66,
@@ -328,8 +314,7 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "User3",

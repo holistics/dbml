@@ -51,17 +51,7 @@
             }
           },
           "fullEnd": 14,
-          "fullStart": 0,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@@[L0:C0, L2:C1]",
-              "snippet": "Table {\r\n\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@@[L0:C0, L2:C1]",
-              "snippet": "Table {\r\n\r\n}"
-            }
-          }
+          "fullStart": 0
         },
         {
           "context": {
@@ -137,17 +127,7 @@
             }
           },
           "fullEnd": 41,
-          "fullStart": 15,
-          "symbol": {
-            "context": {
-              "id": "symbol@TableGroup@group@[L4:C0, L6:C1]",
-              "snippet": "TableGroup...oup {\r\n\r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@group@[L4:C0, L6:C1]",
-              "snippet": "TableGroup...oup {\r\n\r\n}"
-            }
-          }
+          "fullStart": 15
         },
         {
           "context": {
@@ -261,17 +241,7 @@
             }
           },
           "fullEnd": 81,
-          "fullStart": 56,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@@[L12:C0, L12:C22]",
-              "snippet": "Note: 'Thi...is a note'"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@@[L12:C0, L12:C22]",
-              "snippet": "Note: 'Thi...is a note'"
-            }
-          }
+          "fullStart": 56
         },
         {
           "context": {
@@ -338,17 +308,7 @@
             }
           },
           "fullEnd": 119,
-          "fullStart": 82,
-          "symbol": {
-            "context": {
-              "id": "symbol@Note@@[L14:C0, L15:C15]",
-              "snippet": "Note: '''T...er note'''"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@@[L14:C0, L15:C15]",
-              "snippet": "Note: '''T...er note'''"
-            }
-          }
+          "fullStart": 82
         },
         {
           "context": {
@@ -462,17 +422,7 @@
             }
           },
           "fullEnd": 148,
-          "fullStart": 120,
-          "symbol": {
-            "context": {
-              "id": "symbol@Table@Users@[L17:C0, L19:C1]",
-              "snippet": "Table User...{\r\n    \r\n}"
-            },
-            "declaration": {
-              "id": "node@<element-declaration>@Users@[L17:C0, L19:C1]",
-              "snippet": "Table User...{\r\n    \r\n}"
-            }
-          }
+          "fullStart": 120
         }
       ],
       "eof": {
@@ -486,36 +436,6 @@
       }
     },
     "fullEnd": 148,
-    "fullStart": 0,
-    "symbol": {
-      "context": {
-        "id": "symbol@Schema@@[L0:C0, L19:C1]",
-        "snippet": "Table {\r\n\r...{\r\n    \r\n}"
-      },
-      "declaration": {
-        "id": "node@<program>@@[L0:C0, L19:C1]",
-        "snippet": "Table {\r\n\r...{\r\n    \r\n}"
-      },
-      "members": [
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L17:C0, L19:C1]",
-            "snippet": "Table User...{\r\n    \r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@Table@Users@[L17:C0, L19:C1]",
-            "snippet": "Table User...{\r\n    \r\n}"
-          }
-        },
-        {
-          "context": {
-            "id": "symbol@TableGroup@group@[L4:C0, L6:C1]",
-            "snippet": "TableGroup...oup {\r\n\r\n}"
-          }
-        }
-      ]
-    }
+    "fullStart": 0
   }
 }

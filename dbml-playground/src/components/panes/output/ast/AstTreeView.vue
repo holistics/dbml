@@ -39,20 +39,14 @@
 import {
   computed, ref, inject, watch, type Ref,
 } from 'vue';
-import type {
-  ProgramNode,
-} from '@dbml/parse';
+import type { ProgramNode } from '@dbml/parse';
 import {
   SyntaxNode,
   SyntaxToken,
 } from '@dbml/parse';
-import AstTreeNode, {
-  type AstNode,
-} from './AstTreeNode.vue';
+import AstTreeNode, { type AstNode } from './AstTreeNode.vue';
 import TabSettingsButton from '../tabs/common/TabSettingsButton.vue';
-import {
-  getNameHint,
-} from '@/services/serializers/utils';
+import { getNameHint } from '@/services/serializers/utils';
 
 const {
   ast = undefined,

@@ -72,7 +72,7 @@ export const tableUtils = {
     return new CompileError(CompileErrorCode.DUPLICATE_COLUMN_NAME, `Duplicate column '${name}'`, errorNode);
   },
   getPartialInjectionDuplicateError (name: string, errorNode: SyntaxNode): CompileError {
-    return new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate partial injection '${name}'`, errorNode);
+    return new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_INJECTION_NAME, `Duplicate table partial injection '${name}'`, errorNode);
   },
 };
 

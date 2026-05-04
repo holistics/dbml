@@ -50,7 +50,11 @@ Ref: posts.user_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 9,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -90,7 +94,11 @@ Table posts {
               "startColumn": 23,
               "startLineNumber": 6,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -135,7 +143,11 @@ TableGroup my_group {
               "startColumn": 3,
               "startLineNumber": 10,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -173,7 +185,11 @@ Ref: posts.user_id > myschema.users.id`;
               "startColumn": 31,
               "startLineNumber": 5,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -217,7 +233,11 @@ Ref: posts.user_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 9,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -261,7 +281,11 @@ Ref: posts.author_id > users.id`;
               "startColumn": 22,
               "startLineNumber": 10,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
           {
             "range": {
@@ -270,7 +294,11 @@ Ref: posts.author_id > users.id`;
               "startColumn": 24,
               "startLineNumber": 11,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -313,7 +341,11 @@ Table users {
               "startColumn": 15,
               "startLineNumber": 7,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -354,7 +386,11 @@ Table users {
               "startColumn": 24,
               "startLineNumber": 7,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);

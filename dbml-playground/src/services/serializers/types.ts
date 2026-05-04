@@ -1,12 +1,8 @@
 // Shared types for the playground's AST/symbol serializers. Shape is the flat
 // form the output-tab UIs render directly - no nested `context` wrapper.
 
-import type {
-  SyntaxNode, SyntaxToken,
-} from '@dbml/parse';
-import type {
-  SymbolInfo, DeclarationPosition,
-} from '@/stores/parserStore';
+import type { SyntaxNode, SyntaxToken } from '@dbml/parse';
+import type { SymbolInfo, DeclarationPosition } from '@/stores/parserStore';
 
 export type Serializable =
   | string | number | null | undefined | boolean | bigint | symbol
