@@ -1,9 +1,5 @@
-import {
-  ref, watch,
-} from 'vue';
-import {
-  defineStore,
-} from 'pinia';
+import { ref, watch } from 'vue';
+import { defineStore } from 'pinia';
 import logger from '../utils/logger';
 
 export enum OutputTabId {

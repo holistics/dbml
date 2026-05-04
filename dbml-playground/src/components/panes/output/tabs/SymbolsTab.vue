@@ -31,9 +31,7 @@
 <script setup lang="ts">
 import TabSettingsButton from './common/TabSettingsButton.vue';
 import SymbolRow from './SymbolRow.vue';
-import type {
-  SymbolInfo,
-} from '@/stores/parserStore';
+import type { SymbolInfo } from '@/stores/parserStore';
 
 const {
   symbols,

@@ -9,9 +9,7 @@ import {
   ElementDeclarationNode,
   ProgramNode,
 } from '@dbml/parse';
-import type {
-  SymbolInfo,
-} from '@/stores/parserStore';
+import type { SymbolInfo } from '@/stores/parserStore';
 
 // Short human-readable label for a node/token, used both as the `name` segment
 // of a readable id and for inline rendering in the AST output tab.

@@ -104,28 +104,14 @@ import AstTreeView from './ast/AstTreeView.vue';
 import SymbolsTab from './tabs/SymbolsTab.vue';
 import DatabaseTab from './tabs/DatabaseTab.vue';
 import DiagnosticsTab from './tabs/DiagnosticsTab.vue';
-import type {
-  AstNode,
-} from './ast/AstTreeNode.vue';
-import type {
-  SymbolInfo,
-} from '@/stores/parserStore';
-import {
-  useParserStore,
-} from '@/stores/parserStore';
-import {
-  useProjectStore,
-} from '@/stores/projectStore';
-import {
-  Filepath,
-} from '@dbml/parse';
-import {
-  useUserStore, OutputTabId,
-} from '@/stores/userStore';
+import type { AstNode } from './ast/AstTreeNode.vue';
+import type { SymbolInfo } from '@/stores/parserStore';
+import { useParserStore } from '@/stores/parserStore';
+import { useProjectStore } from '@/stores/projectStore';
+import { Filepath } from '@dbml/parse';
+import { useUserStore, OutputTabId } from '@/stores/userStore';
 import logger from '@/utils/logger';
-import {
-  toMonacoRange,
-} from '@/utils/monaco';
+import { toMonacoRange } from '@/utils/monaco';
 import * as monaco from 'monaco-editor';
 
 // Per-tab decoration logic lives in ./tabs/common/decorations.ts so each tab's
@@ -263,10 +249,12 @@ onBeforeUnmount(() => {
   navDecorations?.clear();
 });
 
-function navigateTo (range: { startLineNumber: number;
+function navigateTo (range: {
+  startLineNumber: number;
   startColumn: number;
   endLineNumber: number;
-  endColumn: number; }) {
+  endColumn: number;
+}) {
   const editor = dbmlEditorRef?.value;
   if (!editor) return;
   try {
@@ -308,10 +296,12 @@ function onDiagnosticClick (diag: {
 }
 
 // Navigate to a declaration that may be in a different file.
-async function navigateToDeclaration (targetFilepath: string | null, range: { startLineNumber: number;
+async function navigateToDeclaration (targetFilepath: string | null, range: {
+  startLineNumber: number;
   startColumn: number;
   endLineNumber: number;
-  endColumn: number; }) {
+  endColumn: number;
+}) {
   const editor = dbmlEditorRef?.value;
   if (!editor) return;
   if (targetFilepath && new Filepath(targetFilepath).intern() !== new Filepath(project.currentFile).intern()) {

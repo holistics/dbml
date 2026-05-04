@@ -1,9 +1,7 @@
 import {
   ref, watch, onBeforeUnmount, type ShallowRef,
 } from 'vue';
-import {
-  initVimMode, type VimAdapterInstance,
-} from 'monaco-vim';
+import { initVimMode, type VimAdapterInstance } from 'monaco-vim';
 import type * as monaco from 'monaco-editor';
 import logger from '@/utils/logger';
 
@@ -21,8 +19,7 @@ export function useVimController (editor: ShallowRef<monaco.editor.IStandaloneCo
       });
       modeStatus.value = 'NORMAL';
 
-      vimAdapter.on('vim-mode-change', (mode: { mode: string;
-        subMode?: string; }) => {
+      vimAdapter.on('vim-mode-change', (mode: { mode: string }) => {
         modeStatus.value = (mode.mode || 'NORMAL').toUpperCase();
       });
     } catch (error) {

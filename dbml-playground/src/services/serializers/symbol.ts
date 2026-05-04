@@ -1,12 +1,6 @@
-import type {
-  SymbolInfo,
-} from '@/stores/parserStore';
-import type {
-  SerializedSymbol, SerializeOptions,
-} from './types';
-import {
-  getReadableId,
-} from './utils';
+import type { SymbolInfo } from '@/stores/parserStore';
+import type { SerializedSymbol, SerializeOptions } from './types';
+import { getReadableId } from './utils';
 
 export function serializeSymbol (symbol: SymbolInfo, {
   simple = false,

@@ -52,19 +52,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref, watch,
-} from 'vue';
-import {
-  PhGear,
-} from '@phosphor-icons/vue';
+import { ref, watch } from 'vue';
+import { PhGear } from '@phosphor-icons/vue';
 import DbmlEditor from '@/components/editor/DbmlEditor.vue';
-import {
-  useUserStore,
-} from '@/stores/userStore';
-import {
-  useProjectStore,
-} from '@/stores/projectStore';
+import { useUserStore } from '@/stores/userStore';
+import { useProjectStore } from '@/stores/projectStore';
 import type * as monaco from 'monaco-editor';
 
 const content = defineModel<string>({

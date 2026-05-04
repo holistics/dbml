@@ -1,19 +1,9 @@
-import {
-  ref, computed, watch,
-} from 'vue';
-import {
-  defineStore,
-} from 'pinia';
-import {
-  debounce,
-} from 'lodash-es';
-import {
-  DEFAULT_SAMPLE_CONTENT,
-} from '@/services/sample-content';
+import { ref, computed, watch } from 'vue';
+import { defineStore } from 'pinia';
+import { debounce } from 'lodash-es';
+import { DEFAULT_SAMPLE_CONTENT } from '@/services/sample-content';
 import logger from '../utils/logger';
-import {
-  DEFAULT_ENTRY,
-} from '@dbml/parse';
+import { DEFAULT_ENTRY } from '@dbml/parse';
 
 const PROJECT_KEY = 'PROJECT_DATA';
 const CURRENT_FILE_KEY = 'PROJECT_CURRENT_FILE';

@@ -402,9 +402,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref, computed,
-} from 'vue';
+import { ref, computed } from 'vue';
 import {
   PhCaretRight,
   PhTable,
@@ -421,9 +419,7 @@ import {
   PhPuzzlePiece,
 } from '@phosphor-icons/vue';
 import TabSettingsButton from './common/TabSettingsButton.vue';
-import type {
-  Database,
-} from '@dbml/parse';
+import type { Database } from '@dbml/parse';
 
 type RefEndpoint = Database['refs'][number]['endpoints'][number];
 type IndexEntry = Database['tables'][number]['indexes'][number];
