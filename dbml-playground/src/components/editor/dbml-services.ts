@@ -19,7 +19,7 @@ function syncModelToCompiler (compiler: Compiler, model: monaco.editor.ITextMode
 }
 
 export async function setupDbmlServices (compiler: Compiler): Promise<void> {
-  services = await compiler.initMonacoServices();
+  services = compiler.initMonacoServices();
   if (registered) return;
   registered = true;
 
