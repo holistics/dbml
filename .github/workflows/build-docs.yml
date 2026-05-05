@@ -37,6 +37,9 @@ jobs:
       - name: Build the @dbml/parse package
         run: yarn workspace @dbml/parse build
 
+      - name: Build the @dbml/core package
+        run: yarn workspace @dbml/core build
+
       - name: Build playground
         run: yarn workspace @dbml/playground build
 
