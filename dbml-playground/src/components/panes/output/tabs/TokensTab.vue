@@ -43,9 +43,9 @@
             class="flex-shrink-0"
           >
             <component
-              :is="tokenIconFor(token.kind).icon"
+              :is="getTokenIcon(token.kind).icon"
               class="w-3.5 h-3.5"
-              :class="token.kind === SyntaxTokenKind.EOF ? 'text-red-400' : tokenIconFor(token.kind).color"
+              :class="token.kind === SyntaxTokenKind.EOF ? 'text-red-400' : getTokenIcon(token.kind).color"
             />
             <template #popper>
               <span class="text-xs font-mono">{{ token.kind }}</span>
@@ -157,7 +157,7 @@ import type {
   SyntaxToken,
 } from '@dbml/parse';
 import {
-  tokenIconFor,
+  getTokenIcon,
 } from '@/components/panes/output/tokenIcons';
 
 const emit = defineEmits<{ 'toggle-decoration': [] }>();
