@@ -257,7 +257,7 @@ export class DiagramViewInterpreter {
    *
    * Expands when:
    * 1. The user wrote `TableGroups { * }` (tracked via diagramViewWildcards)
-   * 2. NOT a body-level `{ * }`  -- body-level wildcard sets ALL dims to [] simultaneously,
+   * 2. NOT a body-level `{ * }` - body-level wildcard sets ALL dims to [] simultaneously,
    *    which is a different semantic (show everything) that doesn't need expansion.
    *    We detect body-level by checking if all four dims are in the wildcards set.
    *

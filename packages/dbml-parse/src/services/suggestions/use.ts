@@ -247,7 +247,7 @@ function suggestUseFilepath (
 
     if (existingIncompleteImportPath && !relativePathToCurrentDir.startsWith(existingIncompleteImportPath)) continue;
 
-    // Take next segment only  -- deeper entries collapse onto their folder.
+    // Take next segment only - deeper entries collapse onto their folder.
     const tail = relativePathToCurrentDir.slice(existingIncompleteImportPath.length);
     const childLabel = `${existingIncompleteImportPath}${tail.split('/')[0]}`;
 

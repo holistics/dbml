@@ -17,7 +17,7 @@ import {
   pickCompletionItemKind,
 } from './utils';
 
-// Cross-file completion suggestions  -- when the cursor is at a global-scope
+// Cross-file completion suggestions - when the cursor is at a global-scope
 // lookup point, surface symbols declared in other project files. Accepted
 // suggestions insert a matching `use { ... } from './...'` via
 // additionalTextEdits.

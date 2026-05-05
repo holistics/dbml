@@ -145,7 +145,7 @@ function findReplacements (
   const newText = buildReplacementText(newFormatted);
 
   for (const node of nodes) {
-    // Skip refs whose source text is not the renamed table  -- handles inline
+    // Skip refs whose source text is not the renamed table - handles inline
     // table aliases (`Table users as U`) where `symbolReferences` returns both
     // `users.id` and `U.id` against the same underlying symbol but only
     // `users.id` should be rewritten when renaming the source name.
@@ -179,14 +179,14 @@ function findReplacements (
  *
  *   1. **Alias rename.** `filepath` introduces a use specifier with an alias
  *      whose name matches `oldName` (e.g. `use { table users as u }` and
- *      `oldName === 'u'`). Only `filepath` is rewritten  -- the alias token is
+ *      `oldName === 'u'`). Only `filepath` is rewritten - the alias token is
  *      replaced and every reference to the alias inside `filepath` is updated.
  *      The original declaration in another file is left alone.
  *
  *   2. **Real-declaration rename.** Otherwise the resolved symbol is the real
  *      table (or a `UseSymbol` that imports the source name without an alias).
  *      Both the declaring file and every file that imports the table by its
- *      direct name are rewritten  -- declaration name, in-scope refs, use
+ *      direct name are rewritten - declaration name, in-scope refs, use
  *      specifier source-name tokens, and refs that flow through unaliased
  *      imports.
  *
@@ -214,7 +214,7 @@ export function renameTable (
   if (!tableSymbol) return newLayout;
 
   // Inline table aliases (e.g. `Table users as U`) resolve to an AliasSymbol.
-  // Renaming via the alias name is a no-op  -- aliases are not renameable handles;
+  // Renaming via the alias name is a no-op - aliases are not renameable handles;
   // only the direct declaration name (or a use-specifier alias) can be renamed.
   if (tableSymbol instanceof AliasSymbol) return newLayout;
 
@@ -251,7 +251,7 @@ function renameAlias (
   if (!spec.alias) return newLayout;
   const aliasText = source.substring(spec.alias.start, spec.alias.end);
   const usedQuotes = aliasText.includes('"');
-  // Aliases live in the default schema  -- schema prefix is ignored for the alias text itself.
+  // Aliases live in the default schema - schema prefix is ignored for the alias text itself.
   const newFormatted = formatTableName(newSchema, newTable, usedQuotes);
 
   const edits: TextEdit[] = [];
@@ -326,7 +326,7 @@ function renameRealDeclaration (
   // 2. All references to the original symbol across the project. symbolReferences
   //    is transitive: it unions refs to `original`, to any AliasSymbol wrapping it,
   //    and to any UseSymbol importing it. findReplacements then filters by source
-  //    text  -- alias-side refs (e.g. `u.id` when `oldTable === 'users'`) are
+  //    text - alias-side refs (e.g. `u.id` when `oldTable === 'users'`) are
   //    skipped automatically, while source-name refs (inside use specifiers and
   //    unaliased importers) are rewritten.
   const directRefs = compiler.symbolReferences(original);
