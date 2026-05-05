@@ -38,10 +38,10 @@ jobs:
         run: yarn workspace @dbml/parse build
 
       - name: Build the @dbml/core package
-        run: yarn workspace @dbml/core build
+        run: NODE_OPTIONS="--max-old-space-size=8192" yarn workspace @dbml/core build
 
       - name: Build playground
-        run: yarn workspace @dbml/playground build
+        run: NODE_OPTIONS="--max-old-space-size=8192" yarn workspace @dbml/playground build
 
       - name: Clean up old playground build
         run: rm -rf dbml-homepage/static/playground
