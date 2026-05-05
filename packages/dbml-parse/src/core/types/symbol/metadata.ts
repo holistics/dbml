@@ -12,7 +12,6 @@ import type {
   ColumnSymbol,
   NodeSymbol,
   ProgramSymbol,
-  SchemaSymbol,
   TablePartialSymbol,
   TableSymbol,
 } from '../symbol';
@@ -88,33 +87,6 @@ export class RefMetadata extends NodeMetadata {
     return undefined;
   }
 
-  leftSchemas (compiler: Compiler): SchemaSymbol[] {
-    if (this.declaration instanceof ElementDeclarationNode) {
-      const field = getBody(this.declaration)[0];
-      if (!(field instanceof FunctionApplicationNode)) return [];
-      const infix = field.callee;
-      if (!(infix instanceof InfixExpressionNode)) return [];
-      return extractSchemasFromEndpoint(compiler, infix.leftExpression);
-    }
-    return [];
-  }
-
-  rightSchemas (compiler: Compiler): SchemaSymbol[] {
-    if (this.declaration instanceof ElementDeclarationNode) {
-      const field = getBody(this.declaration)[0];
-      if (!(field instanceof FunctionApplicationNode)) return [];
-      const infix = field.callee;
-      if (!(infix instanceof InfixExpressionNode)) return [];
-      return extractSchemasFromEndpoint(compiler, infix.rightExpression);
-    }
-    if (this.declaration instanceof AttributeNode) {
-      const prefix = this.declaration.value;
-      if (!(prefix instanceof PrefixExpressionNode)) return [];
-      return extractSchemasFromEndpoint(compiler, prefix.expression);
-    }
-    return [];
-  }
-
   leftColumns (compiler: Compiler): ColumnSymbol[] {
     if (this.declaration instanceof ElementDeclarationNode) {
       const field = getBody(this.declaration)[0];
@@ -177,7 +149,7 @@ export class RefMetadata extends NodeMetadata {
     if (this.declaration instanceof AttributeNode) {
       const prefix = this.declaration.value;
       if (!(prefix instanceof PrefixExpressionNode)) return undefined;
-      return extractTableFromEndpoint(compiler, prefix.expression);
+      return extractTableFromEndpoint(compiler, prefix.expression) ?? this.container(compiler);
     }
     return undefined;
   }
@@ -269,17 +241,6 @@ export class PartialRefMetadata extends NodeMetadata {
     return undefined;
   }
 
-  leftSchemas (_compiler: Compiler): SchemaSymbol[] {
-    return [];
-  }
-
-  rightSchemas (compiler: Compiler): SchemaSymbol[] {
-    if (!(this.declaration instanceof AttributeNode)) return [];
-    const prefix = this.declaration.value;
-    if (!(prefix instanceof PrefixExpressionNode)) return [];
-    return extractSchemasFromEndpoint(compiler, prefix.expression);
-  }
-
   leftColumns (compiler: Compiler): ColumnSymbol[] {
     if (!(this.declaration instanceof AttributeNode)) return [];
     const colNode = this.declaration.parentOfKind(FunctionApplicationNode);
@@ -304,11 +265,11 @@ export class PartialRefMetadata extends NodeMetadata {
     return this.container(compiler);
   }
 
-  rightTable (compiler: Compiler): TableSymbol | undefined {
+  rightTable (compiler: Compiler): TableSymbol | TablePartialSymbol | undefined {
     if (!(this.declaration instanceof AttributeNode)) return undefined;
     const prefix = this.declaration.value;
     if (!(prefix instanceof PrefixExpressionNode)) return undefined;
-    return extractTableFromEndpoint(compiler, prefix.expression);
+    return extractTableFromEndpoint(compiler, prefix.expression) ?? this.container(compiler);
   }
 
   op (_compiler: Compiler): '>' | '<' | '-' | '<>' | undefined {
@@ -447,23 +408,6 @@ export class ProjectMetadata extends NodeMetadata {
         ]
       : [];
   }
-}
-
-function extractSchemasFromEndpoint (compiler: Compiler, expr: SyntaxNode | undefined): SchemaSymbol[] {
-  if (!expr) return [];
-  const fragments = destructureComplexVariableTuple(expr);
-  if (!fragments) return [];
-  const schemaNodes = fragments.tupleElements.length > 0
-    ? fragments.variables.slice(0, -1)
-    : fragments.variables.slice(0, -2);
-  return schemaNodes.flatMap((n) => {
-    const sym = compiler.nodeReferee(n).getFiltered(UNHANDLED) as SchemaSymbol | undefined;
-    return sym
-      ? [
-          sym,
-        ]
-      : [];
-  });
 }
 
 function extractColumnsFromEndpoint (compiler: Compiler, expr: SyntaxNode | undefined): ColumnSymbol[] {

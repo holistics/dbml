@@ -1,5 +1,64 @@
 {
   "database": {
+    "refs": [
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "col2"
+            ],
+            "relation": "*",
+            "tableName": "T",
+            "token": {
+              "end": {
+                "column": 26,
+                "line": 8,
+                "offset": 116
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 93
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "col3"
+            ],
+            "relation": "1",
+            "tableName": "T",
+            "token": {
+              "end": {
+                "column": 25,
+                "line": 8,
+                "offset": 115
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 14,
+                "line": 8,
+                "offset": 104
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 25,
+            "line": 8,
+            "offset": 115
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 14,
+            "line": 8,
+            "offset": 104
+          }
+        }
+      }
+    ],
     "tablePartials": [
       {
         "fields": [
@@ -112,7 +171,7 @@
                   "col3"
                 ],
                 "relation": ">",
-                "tableName": "",
+                "tableName": "T",
                 "token": {
                   "end": {
                     "column": 25,

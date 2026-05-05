@@ -14,6 +14,42 @@
           </span>
         </div>
         <div class="flex items-center gap-4">
+          <!-- Import SQL -->
+          <button
+            class="inline-flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 text-xs font-medium leading-none border border-gray-300 rounded transition-colors cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
+            @click="importModalOpen = true"
+          >
+            <PhUploadSimple class="w-3.5 h-3.5 flex-shrink-0" />
+            Import SQL
+          </button>
+
+          <!-- Export SQL -->
+          <VDropdown
+            :distance="6"
+            placement="bottom-end"
+            :arrow-padding="0"
+            no-auto-focus
+          >
+            <button
+              class="inline-flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 text-xs font-medium leading-none border border-gray-300 rounded transition-colors cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
+            >
+              <PhDownloadSimple class="w-3.5 h-3.5 flex-shrink-0" />
+              Export SQL
+            </button>
+            <template #popper>
+              <div class="py-1 min-w-[10rem]">
+                <button
+                  v-for="fmt in EXPORT_FORMATS"
+                  :key="fmt.value"
+                  class="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer"
+                  @click="exportSql(fmt.value)"
+                >
+                  {{ fmt.label }}
+                </button>
+              </div>
+            </template>
+          </VDropdown>
+
           <button
             class="inline-flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 text-xs font-medium leading-none border rounded transition-colors cursor-pointer"
             :class="copySuccess
@@ -91,13 +127,21 @@
       </SplitPanel>
     </main>
   </div>
+
+  <ImportSqlModal
+    v-model="importModalOpen"
+    @import="onImportSql"
+  />
 </template>
 
 <script setup lang="ts">
 import {
   ref, shallowRef, provide, onMounted, onBeforeUnmount,
 } from 'vue';
-import { PhClipboardText, PhCheck } from '@phosphor-icons/vue';
+import {
+  PhClipboardText, PhCheck, PhUploadSimple, PhDownloadSimple,
+} from '@phosphor-icons/vue';
+import { Parser, ModelExporter, importer } from '@dbml/core';
 import { useParserStore } from '@/stores/parserStore';
 import { setupDbmlServices } from '@/components/editor/dbml-services';
 import { useProjectStore } from '@/stores/projectStore';
@@ -107,15 +151,53 @@ import SplitPanel from '@/components/SplitPanel.vue';
 import FilesPane from '@/components/panes/files/FilesPane.vue';
 import EditorPane from '@/components/panes/editor/EditorPane.vue';
 import OutputPane from '@/components/panes/output/OutputPane.vue';
+import ImportSqlModal from '@/components/ImportSqlModal.vue';
 import * as monaco from 'monaco-editor';
 import logger from '@/utils/logger';
 import packageJson from '../package.json';
+
+const EXPORT_FORMATS = [
+  { value: 'postgres', label: 'PostgreSQL' },
+  { value: 'mysql', label: 'MySQL' },
+  { value: 'mssql', label: 'SQL Server' },
+  { value: 'oracle', label: 'Oracle' },
+] as const;
+
+type ExportFormat = typeof EXPORT_FORMATS[number]['value'];
 
 const parser = useParserStore();
 const project = useProjectStore();
 const user = useUserStore();
 
 const copySuccess = ref(false);
+const importModalOpen = ref(false);
+
+function exportSql (format: ExportFormat) {
+  try {
+    const filepath = Filepath.fromUri(monaco.Uri.file(project.currentFile).toString());
+    const rawDb = parser.compiler.parse.rawDb(filepath);
+    if (!rawDb) return;
+    const database = Parser.parseJSONToDatabase(rawDb as any);
+    const sql = ModelExporter.export(database.normalize(), format);
+    const blob = new Blob([sql], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `schema.${format}.sql`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    logger.warn('Export SQL failed:', e);
+  }
+}
+
+function onImportSql (dbml: string) {
+  const existing = new Set(Object.keys(project.files));
+  let path = '/imported.dbml';
+  let n = 1;
+  while (existing.has(path)) path = `/imported-${n++}.dbml`;
+  project.addFile(path, dbml);
+}
 
 async function copyShareUrl () {
   const url = await project.getShareUrl();

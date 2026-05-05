@@ -14,7 +14,7 @@ import {
 
 export interface ParsedUseSpecifier {
   kind?: string;
-  name: string; // FIXME: bare symbol name, or '*' for wildcard
+  name: string;
 }
 
 export interface ParsedUseStatement {
@@ -31,7 +31,6 @@ export interface UseStatementMergeResult {
     startOffset: number;
     endOffset: number;
   };
-  hint?: string; // 'merged into existing' | 'created new' | 'symbol already imported'
 }
 
 export function scanExistingUses (
@@ -132,16 +131,16 @@ export function scanExistingUses (
   */
 export function mergeSymbolIntoUses (
   compiler: Compiler,
-  filepath: Filepath,
-  fileContent: string,
-  symbolKind: SymbolKind,
   symbolName: string,
-  sourceFile: Filepath,
+  symbolKind: SymbolKind,
+  sourceFilepath: Filepath,
+  currentFilepath: Filepath,
+  fileContent: string,
 ): UseStatementMergeResult {
-  const existingUses = scanExistingUses(compiler, filepath, fileContent);
+  const existingUses = scanExistingUses(compiler, currentFilepath, fileContent);
 
-  // Normalize source file path: '/path/to/common' -> './common'
-  const sourceFileStr = normalizeSourcePath(sourceFile);
+  // Normalize source file path relative to the current file's directory
+  const sourceFileStr = normalizeSourcePath(sourceFilepath, currentFilepath);
 
   // Look for existing use from this source file
   const existingUseIndex = existingUses.findIndex((u) => u.sourceFile === sourceFileStr);
@@ -156,7 +155,6 @@ export function mergeSymbolIntoUses (
     if (existingUse.specifiers.some((s) => s.name === symbolName)) {
       return {
         topInsert: '',
-        hint: 'symbol already imported',
       };
     }
 
@@ -171,7 +169,6 @@ export function mergeSymbolIntoUses (
     return {
       topInsert,
       removeRange: expandToFullLines(fileContent, existingUse.startOffset, existingUse.endOffset),
-      hint: 'merged into existing',
     };
   }
 
@@ -179,7 +176,6 @@ export function mergeSymbolIntoUses (
     topInsert: buildUseStatement([
       newSpecifier,
     ], sourceFileStr, lineEnd),
-    hint: 'created new',
   };
 }
 
@@ -225,13 +221,10 @@ function detectLineEnding (source: string): string {
 }
 
 /**
-  * Normalize a Filepath to a relative source path like './common'
+  * Normalize a source Filepath to a relative path as seen from the current file's directory,
+  * with the .dbml extension stripped.
+  * e.g. source=/a/b/common.dbml, current=/a/c/main.dbml -> '../b/common'
   */
-function normalizeSourcePath (filepath: Filepath): string {
-  // Get filename without extension: /path/to/common.dbml -> common
-  const basename = filepath.basename;
-  const name = basename.replace(/\.dbml$/, '');
-
-  // Return relative path: ./name
-  return `./${name}`;
+function normalizeSourcePath (filepath: Filepath, currentFilepath: Filepath): string {
+  return filepath.relativeTo(currentFilepath.dirname).replace(/\.dbml$/, '');
 }

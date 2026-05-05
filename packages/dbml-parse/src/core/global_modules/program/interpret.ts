@@ -39,6 +39,7 @@ import type {
 } from '@/core/types/symbol/symbols';
 import {
   InjectedColumnSymbol,
+  TablePartialSymbol,
   UseSymbol,
 } from '@/core/types/symbol/symbols';
 import {
@@ -341,27 +342,33 @@ export default class ProgramInterpreter {
       tableSymbol,
     } of fkTableMap.values()) {
       for (const partialSymbol of tableSymbol.resolvedPartials(this.compiler)) {
-        const partialIntern = partialSymbol.originalSymbol.intern();
         for (const meta of partialMetas) {
           const container = meta.leftTablePartial(this.compiler);
-          if (container?.originalSymbol.intern() !== partialIntern) continue;
+          if (container?.originalSymbol !== partialSymbol.originalSymbol) continue;
 
           const leftColumns = meta.leftColumns(this.compiler);
-          const rightTable = meta.rightTable(this.compiler);
+          const rightTableOrPartial = meta.rightTable(this.compiler);
           const rightColumns = meta.rightColumns(this.compiler);
           const op = meta.op(this.compiler);
-          if (!rightTable || !op || leftColumns.length === 0 || rightColumns.length === 0) continue;
+          if (!rightTableOrPartial || !op || leftColumns.length === 0 || rightColumns.length === 0) continue;
 
           // Skip if the column from the partial was not actually injected into this table
           // (e.g., overridden by a column defined earlier in the table)
           const mergedCols = tableSymbol.mergedColumns(this.compiler);
-          const anyInjected = leftColumns.some((lc) =>
-            mergedCols.some((mc) => mc instanceof InjectedColumnSymbol && mc.declaration === lc.declaration),
+          const anyInjected = leftColumns.some((leftColumn) =>
+            mergedCols.some((mergedColumns) => mergedColumns instanceof InjectedColumnSymbol && mergedColumns.declaration === leftColumn.declaration),
           );
           if (!anyInjected) continue;
 
           const multiplicities = getMultiplicities(op);
           if (!multiplicities) continue;
+
+          // When rightTable is the partial itself (inline self-reference with bare column and no table prefix),
+          // resolve it to the concrete table being expanded.
+          const rightTable = rightTableOrPartial instanceof TablePartialSymbol
+            && rightTableOrPartial.originalSymbol === partialSymbol.originalSymbol
+            ? tableSymbol
+            : rightTableOrPartial;
 
           const leftName = tableSymbol.interpretedName(this.compiler, this.filepath);
           const rightName = rightTable.interpretedName(this.compiler, this.filepath);

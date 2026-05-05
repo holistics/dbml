@@ -293,7 +293,7 @@ export default class Binder {
 
           // Get the last resolved symbol (the table)
           const lastFragment = fragments[fragments.length - 1];
-          const tableSym = this.compiler.nodeReferee(lastFragment).getFiltered(UNHANDLED);
+          const tableSym = this.compiler.nodeReferee(lastFragment).getFiltered(UNHANDLED)?.originalSymbol;
           if (!tableSym) continue;
 
           const existing = tableOwner.get(tableSym.id);

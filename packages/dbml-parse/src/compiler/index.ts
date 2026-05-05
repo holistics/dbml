@@ -78,6 +78,7 @@ import {
   symbolUses,
 } from './queries/symbol/symbolUses';
 import {
+  type DiagramViewBlock,
   findDiagramViewBlocks,
   renameTable, syncDiagramView,
 } from './queries/transform';
@@ -93,7 +94,7 @@ export {
   ScopeKind,
 } from './types';
 export type {
-  TableNameInput, TextEdit,
+  DiagramViewBlock, TableNameInput, TextEdit,
 } from './queries/transform';
 // Re-export utilities
 export {
@@ -365,6 +366,9 @@ export default class Compiler {
   // transform queries
   renameTable = renameTable.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
+  findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
+    return findDiagramViewBlocks(this.layout.getSource(filepath) ?? '');
+  }
 
   // @deprecated - legacy APIs for services compatibility
   readonly token = {

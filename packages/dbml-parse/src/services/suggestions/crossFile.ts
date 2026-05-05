@@ -58,18 +58,20 @@ export function buildCrossFileCompletionItem (
 ): CompletionItem {
   const mergeResult = mergeSymbolIntoUses(
     compiler,
+    symbolName,
+    symbolKind,
+    sourceFilepath,
     currentFilepath,
     currentFileContent,
-    symbolKind,
-    symbolName,
-    sourceFilepath,
   );
 
   const additionalTextEdits: Array<{
-    range: { startLineNumber: number;
+    range: {
+      startLineNumber: number;
       startColumn: number;
       endLineNumber: number;
-      endColumn: number; };
+      endColumn: number;
+    };
     text: string;
   }> = [];
 

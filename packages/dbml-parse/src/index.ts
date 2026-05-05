@@ -100,10 +100,6 @@ export type {
 } from '@/compiler/queries/transform';
 
 export {
-  findDiagramViewBlocks,
-} from '@/compiler/queries/transform';
-
-export {
   dbmlLanguageConfig,
   dbmlMonarchTokensProvider,
 } from '@/services/monarch';
