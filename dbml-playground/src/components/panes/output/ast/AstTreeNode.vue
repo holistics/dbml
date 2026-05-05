@@ -120,7 +120,7 @@ import {
   SyntaxNodeKind,
 } from '@dbml/parse';
 import {
-  tokenIconFor,
+  getTokenIcon,
 } from '@/components/panes/output/tokenIcons';
 
 export interface AstNode {
@@ -326,7 +326,7 @@ const typeIcon = computed((): IconInfo => {
   // Tokens use the same per-kind icons the Tokens tab does (flag for EOF,
   // newline/space/tab glyphs for trivia, etc.).
   if (d instanceof SyntaxToken) {
-    const info = tokenIconFor(d.kind);
+    const info = getTokenIcon(d.kind);
     return {
       icon: info.icon as typeof PhDiamond,
       color: d.kind === SyntaxTokenKind.EOF ? 'text-red-400' : info.color,

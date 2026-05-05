@@ -81,11 +81,13 @@ const {
 } = useMonacoModel(monacoUri);
 
 setLanguage(DBML_LANGUAGE_ID);
-setContent(content.value);
 
 // Sync model <-> v-model
 watch(model, (m, _, onCleanup) => {
-  content.value = m.getValue();
+  // On model switch, parent content is authoritative - write it into the model.
+  if (m.getValue() !== content.value) {
+    m.setValue(content.value);
+  }
   const disposable = m.onDidChangeContent(() => {
     content.value = m.getValue();
   });
