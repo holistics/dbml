@@ -9,6 +9,20 @@
         >
           <button
             class="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer"
+            @click="importModalOpen = true"
+          >
+            <PhUploadSimple class="w-3.5 h-3.5" />
+          </button>
+          <template #popper>
+            <span class="text-xs">Import SQL</span>
+          </template>
+        </VTooltip>
+        <VTooltip
+          placement="bottom"
+          :distance="6"
+        >
+          <button
+            class="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer"
             @click="createFile"
           >
             <PhFilePlus class="w-3.5 h-3.5" />
@@ -91,6 +105,11 @@
       />
     </div>
   </div>
+
+  <ImportSqlModal
+    v-model="importModalOpen"
+    @import="onImportSql"
+  />
 </template>
 
 <script setup lang="ts">
@@ -98,17 +117,21 @@ import {
   ref, computed, provide, onMounted, onUnmounted,
 } from 'vue';
 import {
-  PhFilePlus, PhFolderPlus, PhArrowClockwise,
+  PhFilePlus, PhFolderPlus, PhArrowClockwise, PhUploadSimple,
 } from '@phosphor-icons/vue';
-import {
-  useProjectStore,
-} from '@/stores/projectStore';
-import {
-  Filepath,
-} from '@dbml/parse';
+import { useProjectStore } from '@/stores/projectStore';
+import { Filepath } from '@dbml/parse';
 import FileTreeNode from './FileTreeNode.vue';
+import ImportSqlModal from '@/components/ImportSqlModal.vue';
 
 const project = useProjectStore();
+
+const importModalOpen = ref(false);
+
+function onImportSql (dbml: string) {
+  const path = uniquePath('/imported', '.dbml');
+  project.addFile(path, dbml);
+}
 
 export interface TreeNode {
   name: string;

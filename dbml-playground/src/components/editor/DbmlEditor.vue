@@ -30,21 +30,11 @@ import {
   ref, shallowRef, computed, useTemplateRef, watch, nextTick, onMounted, onBeforeUnmount,
 } from 'vue';
 import * as monaco from 'monaco-editor';
-import {
-  DBMLLanguageService,
-} from '@/components/editor/dbml-language';
-import {
-  useMonacoModel,
-} from '@/components/editor/useMonacoModel';
-import {
-  useVimController,
-} from '@/components/editor/useVimController';
-import {
-  useParserStore,
-} from '@/stores/parserStore';
-import {
-  updateDiagnosticMarkers,
-} from '@/components/editor/dbml-services';
+import { DBMLLanguageService } from '@/components/editor/dbml-language';
+import { useMonacoModel } from '@/components/editor/useMonacoModel';
+import { useVimController } from '@/components/editor/useVimController';
+import { useParserStore } from '@/stores/parserStore';
+import { updateDiagnosticMarkers } from '@/components/editor/dbml-services';
 
 const {
   readOnly = false,

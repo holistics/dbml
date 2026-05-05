@@ -45,9 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref, computed, type Component,
-} from 'vue';
+import { ref, computed, type Component } from 'vue';
 import {
   PhCaretRight,
   PhTable,
@@ -60,12 +58,8 @@ import {
   PhPuzzlePiece,
   PhFile,
 } from '@phosphor-icons/vue';
-import {
-  SymbolKind,
-} from '@dbml/parse';
-import type {
-  SymbolInfo,
-} from '@/stores/parserStore';
+import { SymbolKind } from '@dbml/parse';
+import type { SymbolInfo } from '@/stores/parserStore';
 
 const {
   symbol,

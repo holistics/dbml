@@ -25,6 +25,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@dbml/core": "^7.1.2",
     "@dbml/parse": "^7.1.2",
     "@phosphor-icons/vue": "^2.2.0",
     "floating-vue": "^5.2.2",

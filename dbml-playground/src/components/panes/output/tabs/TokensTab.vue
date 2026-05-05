@@ -142,23 +142,15 @@ import {
   ref, watch, nextTick, onMounted, onUnmounted, inject, type Ref,
 } from 'vue';
 import * as monaco from 'monaco-editor';
-import {
-  toMonacoRange,
-} from '@/utils/monaco';
+import { toMonacoRange } from '@/utils/monaco';
 import {
   PhKeyReturn,
   PhArrowsHorizontal,
 } from '@phosphor-icons/vue';
 import TabSettingsButton from './common/TabSettingsButton.vue';
-import {
-  SyntaxTokenKind,
-} from '@dbml/parse';
-import type {
-  SyntaxToken,
-} from '@dbml/parse';
-import {
-  getTokenIcon,
-} from '@/components/panes/output/tokenIcons';
+import { SyntaxTokenKind } from '@dbml/parse';
+import type { SyntaxToken } from '@dbml/parse';
+import { getTokenIcon } from '@/components/panes/output/tokenIcons';
 
 const emit = defineEmits<{ 'toggle-decoration': [] }>();
 

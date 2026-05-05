@@ -67,15 +67,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed, ref, watch,
-} from 'vue';
+import { computed, ref, watch } from 'vue';
 import {
   PhCheckCircle, PhWarningCircle, PhWarning, PhCaretRight,
 } from '@phosphor-icons/vue';
-import type {
-  ParserError,
-} from '@/types';
+import type { ParserError } from '@/types';
 
 const {
   errors,

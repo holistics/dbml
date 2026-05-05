@@ -1,9 +1,7 @@
 import {
   ref, watch, onBeforeUnmount, type ShallowRef,
 } from 'vue';
-import {
-  initVimMode, type VimAdapterInstance,
-} from 'monaco-vim';
+import { initVimMode, type VimAdapterInstance } from 'monaco-vim';
 import type * as monaco from 'monaco-editor';
 import logger from '@/utils/logger';
 

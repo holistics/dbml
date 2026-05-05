@@ -163,15 +163,9 @@ import {
   PhFilePlus,
   PhTrash,
 } from '@phosphor-icons/vue';
-import {
-  useProjectStore,
-} from '@/stores/projectStore';
-import {
-  Filepath,
-} from '@dbml/parse';
-import type {
-  TreeNode,
-} from './FilesPane.vue';
+import { useProjectStore } from '@/stores/projectStore';
+import { Filepath } from '@dbml/parse';
+import type { TreeNode } from './FilesPane.vue';
 
 const {
   node,

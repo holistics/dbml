@@ -22,12 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref, type Component,
-} from 'vue';
-import {
-  PhCaretRight,
-} from '@phosphor-icons/vue';
+import { ref, type Component } from 'vue';
+import { PhCaretRight } from '@phosphor-icons/vue';
 
 const {
   label,

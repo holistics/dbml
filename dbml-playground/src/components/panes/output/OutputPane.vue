@@ -104,28 +104,14 @@ import AstTreeView from './ast/AstTreeView.vue';
 import SymbolsTab from './tabs/SymbolsTab.vue';
 import DatabaseTab from './tabs/DatabaseTab.vue';
 import DiagnosticsTab from './tabs/DiagnosticsTab.vue';
-import type {
-  AstNode,
-} from './ast/AstTreeNode.vue';
-import type {
-  SymbolInfo,
-} from '@/stores/parserStore';
-import {
-  useParserStore,
-} from '@/stores/parserStore';
-import {
-  useProjectStore,
-} from '@/stores/projectStore';
-import {
-  Filepath,
-} from '@dbml/parse';
-import {
-  useUserStore, OutputTabId,
-} from '@/stores/userStore';
+import type { AstNode } from './ast/AstTreeNode.vue';
+import type { SymbolInfo } from '@/stores/parserStore';
+import { useParserStore } from '@/stores/parserStore';
+import { useProjectStore } from '@/stores/projectStore';
+import { Filepath } from '@dbml/parse';
+import { useUserStore, OutputTabId } from '@/stores/userStore';
 import logger from '@/utils/logger';
-import {
-  toMonacoRange,
-} from '@/utils/monaco';
+import { toMonacoRange } from '@/utils/monaco';
 import * as monaco from 'monaco-editor';
 
 // Per-tab decoration logic lives in ./tabs/common/decorations.ts so each tab's

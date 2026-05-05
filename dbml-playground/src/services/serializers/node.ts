@@ -1,15 +1,9 @@
-import {
-  ProgramNode, SyntaxNode,
-} from '@dbml/parse';
-import {
-  serialize,
-} from './index';
+import { ProgramNode, SyntaxNode } from '@dbml/parse';
+import { serialize } from './index';
 import type {
   Serializable, SerializedNode, SerializedValue, SerializeOptions,
 } from './types';
-import {
-  getReadableId, minStart,
-} from './utils';
+import { getReadableId, minStart } from './utils';
 
 export function serializeNode (node: SyntaxNode, {
   simple = false,
