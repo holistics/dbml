@@ -182,7 +182,7 @@ export default class Compiler {
     scopeKind: this.query(containerScopeKind),
   };
 
-  async initMonacoServices (options?: {
+  initMonacoServices (options?: {
     autocompletion?: {
       triggerCharacters?: string[];
     };
