@@ -13,14 +13,14 @@
             {{ displayVersion === 'development' ? 'development' : `v${displayVersion}` }}
           </span>
         </div>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2">
           <!-- Import SQL -->
           <button
-            class="inline-flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 text-xs font-medium leading-none border border-gray-300 rounded transition-colors cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
+            class="inline-flex items-center gap-1.5 p-1 text-xs font-medium leading-none border border-gray-300 rounded transition-colors cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
             @click="importModalOpen = true"
           >
             <PhUploadSimple class="w-3.5 h-3.5 flex-shrink-0" />
-            Import SQL
+            <span class="hidden md:inline">Import SQL</span>
           </button>
 
           <!-- Export SQL -->
@@ -31,10 +31,10 @@
             no-auto-focus
           >
             <button
-              class="inline-flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 text-xs font-medium leading-none border border-gray-300 rounded transition-colors cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
+              class="inline-flex items-center gap-1.5 p-1 text-xs font-medium leading-none border border-gray-300 rounded transition-colors cursor-pointer text-gray-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
             >
               <PhDownloadSimple class="w-3.5 h-3.5 flex-shrink-0" />
-              Export SQL
+              <span class="hidden md:inline">Export SQL</span>
             </button>
             <template #popper>
               <div class="py-1 min-w-[10rem]">
@@ -51,7 +51,7 @@
           </VDropdown>
 
           <button
-            class="inline-flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 text-xs font-medium leading-none border rounded transition-colors cursor-pointer"
+            class="inline-flex items-center gap-1.5 p-1 text-xs font-medium leading-none border rounded transition-colors cursor-pointer"
             :class="copySuccess
               ? 'text-blue-700 border-blue-300 bg-blue-50'
               : 'text-gray-600 border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400'"
@@ -65,7 +65,7 @@
               v-else
               class="w-3.5 h-3.5 flex-shrink-0"
             />
-            {{ copySuccess ? 'Copied!' : 'Copy link' }}
+            <span class="hidden md:inline">{{ copySuccess ? 'Copied!' : 'Copy link' }}</span>
           </button>
           <a
             href="https://dbml.dbdiagram.io"

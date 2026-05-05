@@ -24,6 +24,7 @@ export interface Diagnostic {
   endRow: number;
   endColumn: number;
   code?: string | number;
+  filepath: Filepath;
 }
 
 export default class DBMLDiagnosticsProvider {
@@ -68,8 +69,8 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Convert Monaco markers format (for editor integration)
    */
-  provideMarkers (filepath?: Filepath): MarkerData[] {
-    const diagnostics = this.provideDiagnostics(filepath);
+  provideMarkers (filepath: Filepath): MarkerData[] {
+    const diagnostics = this.provideDiagnostics(filepath).filter((diag) => diag.filepath.equals(filepath)); // only provide markers for this file
     return diagnostics.map((diag) => {
       const severity = this.getSeverityValue(diag.type);
       return {
@@ -104,6 +105,7 @@ export default class DBMLDiagnosticsProvider {
       endRow: endPos.line + 1,
       endColumn: endPos.column + 1,
       code: errorOrWarning.code,
+      filepath: errorOrWarning.filepath,
     };
   }
 

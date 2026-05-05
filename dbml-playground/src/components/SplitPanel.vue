@@ -26,7 +26,7 @@ import { ref, computed } from 'vue';
 // This component creates a resizable set of panes
 
 const {
-  minSize = 40, // The minimum size in fr allowed for a pane
+  minSize = 20, // The minimum size in fr allowed for a pane
 } = defineProps<{
   minSize?: number;
 }>();
@@ -65,7 +65,7 @@ function startResize (splitterIndex: number, e: MouseEvent) {
   const onMove = (ev: MouseEvent) => {
     const diffX = ev.clientX - startX;
     const diffFr = (diffX / pairPx) * pairFr;
-    const newLeft = Math.max(minSize, Math.min(pairFr - minSize, startSizes[leftIndex] + diffFr));
+    const newLeft = Math.max(minSize, startSizes[leftIndex] + diffFr);
     const newSizes = [...startSizes];
     newSizes[leftIndex] = newLeft;
     newSizes[rightIndex] = pairFr - newLeft;
