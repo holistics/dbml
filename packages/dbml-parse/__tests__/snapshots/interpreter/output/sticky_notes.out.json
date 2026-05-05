@@ -57,11 +57,13 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "username",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 43,

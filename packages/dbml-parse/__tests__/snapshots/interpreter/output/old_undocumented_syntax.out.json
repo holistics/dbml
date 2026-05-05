@@ -23,11 +23,13 @@
             },
             "type": {
               "type_name": "SMALLINT"
-            }
+            },
+            "unique": false
           },
           {
             "name": "store_id",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 32,
@@ -43,11 +45,13 @@
             },
             "type": {
               "type_name": "TINYINT"
-            }
+            },
+            "unique": false
           },
           {
             "name": "first_name",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 38,
@@ -64,7 +68,8 @@
             "type": {
               "args": "45",
               "type_name": "VARCHAR(45)"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -73,6 +78,7 @@
             },
             "name": "last_name",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 53,
@@ -89,7 +95,8 @@
             "type": {
               "args": "45",
               "type_name": "VARCHAR(45)"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -97,6 +104,7 @@
               "value": "null"
             },
             "name": "email",
+            "pk": false,
             "token": {
               "end": {
                 "column": 38,
@@ -113,11 +121,13 @@
             "type": {
               "args": "50",
               "type_name": "VARCHAR(50)"
-            }
+            },
+            "unique": false
           },
           {
             "name": "address_id",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 35,
@@ -133,7 +143,8 @@
             },
             "type": {
               "type_name": "SMALLINT"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -142,6 +153,7 @@
             },
             "name": "active",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 45,
@@ -157,11 +169,13 @@
             },
             "type": {
               "type_name": "BOOLEAN"
-            }
+            },
+            "unique": false
           },
           {
             "name": "create_date",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 36,
@@ -177,7 +191,8 @@
             },
             "type": {
               "type_name": "DATETIME"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -185,6 +200,7 @@
               "value": "CURRENT_TIMESTAMP"
             },
             "name": "last_update",
+            "pk": false,
             "token": {
               "end": {
                 "column": 57,
@@ -200,7 +216,8 @@
             },
             "type": {
               "type_name": "TIMESTAMP"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "customer",
@@ -238,7 +255,8 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -246,6 +264,7 @@
               "value": "hello"
             },
             "name": "name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -261,10 +280,12 @@
             },
             "type": {
               "type_name": "e"
-            }
+            },
+            "unique": false
           },
           {
             "name": "country_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 21,
@@ -280,7 +301,8 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "cities",
@@ -318,6 +340,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 12,
@@ -333,10 +356,12 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "cities",
+            "pk": false,
             "token": {
               "end": {
                 "column": 17,
@@ -352,7 +377,8 @@
             },
             "type": {
               "type_name": "string[]"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "country",
@@ -374,6 +400,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 12,
@@ -389,10 +416,12 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 13,
@@ -408,7 +437,8 @@
             },
             "type": {
               "type_name": "string"
-            }
+            },
+            "unique": false
           }
         ],
         "indexes": [

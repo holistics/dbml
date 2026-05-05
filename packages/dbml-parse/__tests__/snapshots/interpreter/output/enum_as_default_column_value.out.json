@@ -223,6 +223,7 @@
         "fields": [
           {
             "name": "name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 12,
@@ -238,10 +239,12 @@
             },
             "type": {
               "type_name": "text"
-            }
+            },
+            "unique": false
           },
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 9,
@@ -257,7 +260,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -265,6 +269,7 @@
               "value": "active"
             },
             "name": "status",
+            "pk": false,
             "token": {
               "end": {
                 "column": 41,
@@ -280,7 +285,8 @@
             },
             "type": {
               "type_name": "status"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -288,6 +294,7 @@
               "value": "male"
             },
             "name": "gender",
+            "pk": false,
             "token": {
               "end": {
                 "column": 63,
@@ -304,7 +311,8 @@
             "type": {
               "schemaName": "demographic",
               "type_name": "gender"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -312,6 +320,7 @@
               "value": "young_adult"
             },
             "name": "age_type",
+            "pk": false,
             "token": {
               "end": {
                 "column": 86,
@@ -328,7 +337,8 @@
             "type": {
               "schemaName": "demographic",
               "type_name": "age segment"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "user",

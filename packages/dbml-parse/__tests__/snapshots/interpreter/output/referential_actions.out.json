@@ -321,6 +321,7 @@
           {
             "name": "user_id",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 35,
@@ -341,6 +342,7 @@
           },
           {
             "name": "status",
+            "pk": false,
             "token": {
               "end": {
                 "column": 30,
@@ -356,10 +358,12 @@
             },
             "type": {
               "type_name": "orders_status_enum"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -376,7 +380,8 @@
             "type": {
               "args": "255",
               "type_name": "varchar(255)"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "orders",
@@ -417,6 +422,7 @@
         "fields": [
           {
             "name": "order_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 17,
@@ -432,10 +438,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "product_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -451,10 +459,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "product_name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 30,
@@ -471,7 +481,8 @@
             "type": {
               "args": "255",
               "type_name": "varchar(255)"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -479,6 +490,7 @@
               "value": 1
             },
             "name": "quantity",
+            "pk": false,
             "token": {
               "end": {
                 "column": 30,
@@ -494,7 +506,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "order_items",
@@ -516,6 +529,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 11,
@@ -531,10 +545,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "price",
+            "pk": false,
             "token": {
               "end": {
                 "column": 24,
@@ -551,7 +567,8 @@
             "type": {
               "args": "10,4",
               "type_name": "decimal(10,4)"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -559,6 +576,7 @@
               "value": "now()"
             },
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 43,
@@ -574,7 +592,8 @@
             },
             "type": {
               "type_name": "datetime"
-            }
+            },
+            "unique": false
           }
         ],
         "indexes": [
@@ -669,6 +688,7 @@
         "fields": [
           {
             "name": "email",
+            "pk": false,
             "token": {
               "end": {
                 "column": 32,
@@ -690,6 +710,7 @@
           },
           {
             "name": "date_of_birth",
+            "pk": false,
             "token": {
               "end": {
                 "column": 27,
@@ -705,7 +726,8 @@
             },
             "type": {
               "type_name": "datetime"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -713,6 +735,7 @@
               "value": "now()"
             },
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 43,
@@ -728,11 +751,13 @@
             },
             "type": {
               "type_name": "datetime"
-            }
+            },
+            "unique": false
           },
           {
             "name": "country_code",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 32,
@@ -748,7 +773,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "users",
@@ -822,10 +848,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "continent_name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 32,
@@ -842,7 +870,8 @@
             "type": {
               "args": "255",
               "type_name": "varchar(255)"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "countries",

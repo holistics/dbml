@@ -170,10 +170,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "status",
+            "pk": false,
             "token": {
               "end": {
                 "column": 24,
@@ -189,10 +191,12 @@
             },
             "type": {
               "type_name": "order status"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 21,
@@ -208,7 +212,8 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "orders",
@@ -246,6 +251,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 13,
@@ -261,10 +267,12 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "country",
+            "pk": false,
             "token": {
               "end": {
                 "column": 18,
@@ -280,10 +288,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "booking_date",
+            "pk": false,
             "token": {
               "end": {
                 "column": 20,
@@ -299,10 +309,12 @@
             },
             "type": {
               "type_name": "date"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 23,
@@ -318,7 +330,8 @@
             },
             "type": {
               "type_name": "timestamp"
-            }
+            },
+            "unique": false
           }
         ],
         "indexes": [

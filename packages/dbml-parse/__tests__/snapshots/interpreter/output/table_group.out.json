@@ -100,6 +100,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 9,
@@ -115,10 +116,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "full_name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -134,10 +137,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 23,
@@ -153,10 +158,12 @@
             },
             "type": {
               "type_name": "timestamp"
-            }
+            },
+            "unique": false
           },
           {
             "name": "country_code",
+            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -172,7 +179,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "users",
@@ -194,6 +202,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 9,
@@ -209,10 +218,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "merchant_name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 24,
@@ -228,10 +239,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "country_code",
+            "pk": false,
             "token": {
               "end": {
                 "column": 18,
@@ -247,10 +260,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 23,
@@ -266,7 +281,8 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "inline_refs": [
@@ -292,6 +308,7 @@
               }
             ],
             "name": "admin_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 29,
@@ -307,7 +324,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "merchants",

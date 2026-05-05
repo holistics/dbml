@@ -125,6 +125,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 9,
@@ -140,10 +141,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "c_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 11,
@@ -159,7 +162,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "headerColor": "#aaaaaa",
@@ -182,6 +186,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 9,
@@ -197,10 +202,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "b_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 11,
@@ -216,7 +223,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "c",

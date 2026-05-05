@@ -25,11 +25,13 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "user_id",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 33,
@@ -54,6 +56,7 @@
               "value": "Completed"
             },
             "name": "status",
+            "pk": false,
             "token": {
               "end": {
                 "column": 40,
@@ -69,7 +72,8 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -77,6 +81,7 @@
               "value": "now()"
             },
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 40,
@@ -92,7 +97,8 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "orders",
@@ -114,6 +120,7 @@
         "fields": [
           {
             "name": "order_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 15,
@@ -129,10 +136,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "product_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 17,
@@ -148,10 +157,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "quantity",
+            "pk": false,
             "token": {
               "end": {
                 "column": 15,
@@ -167,7 +178,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "order_items",
@@ -205,7 +217,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -213,6 +226,7 @@
               "value": "null"
             },
             "name": "name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 31,
@@ -228,7 +242,8 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -237,6 +252,7 @@
             },
             "name": "merchant_id",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 42,
@@ -252,7 +268,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -260,6 +277,7 @@
               "value": -123.12
             },
             "name": "price",
+            "pk": false,
             "token": {
               "end": {
                 "column": 33,
@@ -275,7 +293,8 @@
             },
             "type": {
               "type_name": "float"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -283,6 +302,7 @@
               "value": "true"
             },
             "name": "stock",
+            "pk": false,
             "token": {
               "end": {
                 "column": 32,
@@ -298,7 +318,8 @@
             },
             "type": {
               "type_name": "boolean"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -306,6 +327,7 @@
               "value": "current_date + interval 1 year"
             },
             "name": "expiration",
+            "pk": false,
             "token": {
               "end": {
                 "column": 61,
@@ -321,7 +343,8 @@
             },
             "type": {
               "type_name": "date"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "products",

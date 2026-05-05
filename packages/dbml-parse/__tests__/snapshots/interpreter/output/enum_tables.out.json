@@ -267,7 +267,8 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "status",
@@ -287,6 +288,7 @@
               },
               "value": "This is a column note"
             },
+            "pk": false,
             "token": {
               "end": {
                 "column": 52,
@@ -302,7 +304,8 @@
             },
             "type": {
               "type_name": "job_status"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "jobs",
@@ -345,6 +348,7 @@
           },
           {
             "name": "status",
+            "pk": false,
             "token": {
               "end": {
                 "column": 24,
@@ -360,10 +364,12 @@
             },
             "type": {
               "type_name": "order status"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 21,
@@ -379,7 +385,8 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "orders",

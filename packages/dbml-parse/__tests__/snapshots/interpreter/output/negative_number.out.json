@@ -101,6 +101,7 @@
               "value": -2
             },
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 27,
@@ -117,7 +118,8 @@
             "type": {
               "args": "-1",
               "type_name": "int(-1)"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -125,6 +127,7 @@
               "value": -2
             },
             "name": "id2",
+            "pk": false,
             "token": {
               "end": {
                 "column": 30,
@@ -141,7 +144,8 @@
             "type": {
               "args": "--1",
               "type_name": "int(--1)"
-            }
+            },
+            "unique": false
           },
           {
             "dbdefault": {
@@ -149,6 +153,7 @@
               "value": 7.2225
             },
             "name": "id3",
+            "pk": false,
             "token": {
               "end": {
                 "column": 45,
@@ -165,7 +170,8 @@
             "type": {
               "args": "+-+---+0.1",
               "type_name": "int(+-+---+0.1)"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "a",
@@ -187,6 +193,7 @@
         "fields": [
           {
             "name": "id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 9,
@@ -202,7 +209,8 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "b",

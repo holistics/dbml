@@ -178,6 +178,7 @@
         "fields": [
           {
             "name": "following_user_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -193,10 +194,12 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "followed_user_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 27,
@@ -212,10 +215,12 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 23,
@@ -231,7 +236,8 @@
             },
             "type": {
               "type_name": "timestamp"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "follows",
@@ -285,10 +291,12 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "username",
+            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -304,10 +312,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "role",
+            "pk": false,
             "token": {
               "end": {
                 "column": 15,
@@ -323,10 +333,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 23,
@@ -342,7 +354,8 @@
             },
             "type": {
               "type_name": "timestamp"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "users",
@@ -396,10 +409,12 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "title",
+            "pk": false,
             "token": {
               "end": {
                 "column": 16,
@@ -415,7 +430,8 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "body",
@@ -435,6 +451,7 @@
               },
               "value": "# Heading 1\n    code block\n# Heading 2\n  * 1\n  * 2\n  "
             },
+            "pk": false,
             "token": {
               "end": {
                 "column": 7,
@@ -450,10 +467,12 @@
             },
             "type": {
               "type_name": "text"
-            }
+            },
+            "unique": false
           },
           {
             "name": "user_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 18,
@@ -469,10 +488,12 @@
             },
             "type": {
               "type_name": "integer"
-            }
+            },
+            "unique": false
           },
           {
             "name": "status",
+            "pk": false,
             "token": {
               "end": {
                 "column": 17,
@@ -488,10 +509,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 23,
@@ -507,7 +530,8 @@
             },
             "type": {
               "type_name": "timestamp"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "posts",

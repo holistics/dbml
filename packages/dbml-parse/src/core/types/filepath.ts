@@ -29,7 +29,7 @@ export class Filepath implements Internable<FilepathId> {
 
   intern (): FilepathId {
     if (!this.protocol) return `filepath@${this.path}` as FilepathId;
-    return `filepath@${this.protocol}://${this.path}` as FilepathId;
+    return `filepath@${this.path}` as FilepathId;
   }
 
   static from (absolutePath: string): Filepath {

@@ -21,10 +21,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "full_name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 20,
@@ -40,10 +42,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "email",
+            "pk": false,
             "token": {
               "end": {
                 "column": 25,
@@ -64,6 +68,7 @@
           },
           {
             "name": "gender",
+            "pk": false,
             "token": {
               "end": {
                 "column": 17,
@@ -79,10 +84,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "date_of_birth",
+            "pk": false,
             "token": {
               "end": {
                 "column": 24,
@@ -98,10 +105,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "created_at",
+            "pk": false,
             "token": {
               "end": {
                 "column": 21,
@@ -117,10 +126,12 @@
             },
             "type": {
               "type_name": "varchar"
-            }
+            },
+            "unique": false
           },
           {
             "name": "country_code",
+            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -136,11 +147,13 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "active",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -156,7 +169,8 @@
             },
             "type": {
               "type_name": "boolean"
-            }
+            },
+            "unique": false
           }
         ],
         "indexes": [

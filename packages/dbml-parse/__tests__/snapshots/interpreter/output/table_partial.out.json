@@ -5,234 +5,6 @@
         "endpoints": [
           {
             "fieldNames": [
-              "to_table_ref"
-            ],
-            "relation": "*",
-            "tableName": "user",
-            "token": {
-              "end": {
-                "column": 38,
-                "line": 3,
-                "offset": 127
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 3,
-                "offset": 92
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "user",
-            "token": {
-              "end": {
-                "column": 37,
-                "line": 3,
-                "offset": 126
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 23,
-                "line": 3,
-                "offset": 112
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 37,
-            "line": 3,
-            "offset": 126
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 23,
-            "line": 3,
-            "offset": 112
-          }
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
-              "to_table_ref"
-            ],
-            "relation": "*",
-            "tableName": "country",
-            "token": {
-              "end": {
-                "column": 38,
-                "line": 3,
-                "offset": 127
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 3,
-                "offset": 92
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "user",
-            "token": {
-              "end": {
-                "column": 37,
-                "line": 3,
-                "offset": 126
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 23,
-                "line": 3,
-                "offset": 112
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 37,
-            "line": 3,
-            "offset": 126
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 23,
-            "line": 3,
-            "offset": 112
-          }
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
-              "to_table_ref"
-            ],
-            "relation": "*",
-            "tableName": "product",
-            "token": {
-              "end": {
-                "column": 38,
-                "line": 3,
-                "offset": 127
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 3,
-                "offset": 92
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "user",
-            "token": {
-              "end": {
-                "column": 37,
-                "line": 3,
-                "offset": 126
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 23,
-                "line": 3,
-                "offset": 112
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 37,
-            "line": 3,
-            "offset": 126
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 23,
-            "line": 3,
-            "offset": 112
-          }
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
-              "to_table_ref"
-            ],
-            "relation": "*",
-            "tableName": "merchant",
-            "token": {
-              "end": {
-                "column": 38,
-                "line": 3,
-                "offset": 127
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 3,
-                "line": 3,
-                "offset": 92
-              }
-            }
-          },
-          {
-            "fieldNames": [
-              "id"
-            ],
-            "relation": "1",
-            "tableName": "user",
-            "token": {
-              "end": {
-                "column": 37,
-                "line": 3,
-                "offset": 126
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 23,
-                "line": 3,
-                "offset": 112
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 37,
-            "line": 3,
-            "offset": 126
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 23,
-            "line": 3,
-            "offset": 112
-          }
-        }
-      },
-      {
-        "endpoints": [
-          {
-            "fieldNames": [
               "email"
             ],
             "relation": "1",
@@ -425,6 +197,28 @@
             }
           },
           {
+            "inline_refs": [
+              {
+                "fieldNames": [
+                  "id"
+                ],
+                "relation": ">",
+                "tableName": "user",
+                "token": {
+                  "end": {
+                    "column": 37,
+                    "line": 3,
+                    "offset": 126
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 23,
+                    "line": 3,
+                    "offset": 112
+                  }
+                }
+              }
+            ],
             "name": "to_table_ref",
             "token": {
               "end": {
@@ -603,6 +397,7 @@
         "fields": [
           {
             "name": "name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 16,
@@ -618,7 +413,8 @@
             },
             "type": {
               "type_name": "string"
-            }
+            },
+            "unique": false
           }
         ],
         "indexes": [
@@ -746,6 +542,7 @@
           {
             "name": "name",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 30,
@@ -762,7 +559,8 @@
             "type": {
               "args": "255",
               "type_name": "char(255)"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "country",
@@ -836,6 +634,7 @@
         "fields": [
           {
             "name": "name",
+            "pk": false,
             "token": {
               "end": {
                 "column": 16,
@@ -851,11 +650,13 @@
             },
             "type": {
               "type_name": "string"
-            }
+            },
+            "unique": false
           },
           {
             "name": "price",
             "not_null": true,
+            "pk": false,
             "token": {
               "end": {
                 "column": 29,
@@ -871,7 +672,8 @@
             },
             "type": {
               "type_name": "decimal"
-            }
+            },
+            "unique": false
           }
         ],
         "headerColor": "#17DACC",
@@ -946,6 +748,7 @@
         "fields": [
           {
             "name": "user_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 16,
@@ -961,10 +764,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "product_id",
+            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -980,10 +785,12 @@
             },
             "type": {
               "type_name": "int"
-            }
+            },
+            "unique": false
           },
           {
             "name": "address",
+            "pk": false,
             "token": {
               "end": {
                 "column": 19,
@@ -999,7 +806,8 @@
             },
             "type": {
               "type_name": "string"
-            }
+            },
+            "unique": false
           }
         ],
         "headerColor": "#08DAFF",
@@ -1112,6 +920,7 @@
               },
               "value": "the ref of this column should be bound and interpret successfully"
             },
+            "pk": false,
             "token": {
               "end": {
                 "column": 112,
@@ -1127,7 +936,8 @@
             },
             "type": {
               "type_name": "string"
-            }
+            },
+            "unique": false
           }
         ],
         "name": "customer",
