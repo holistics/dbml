@@ -1,9 +1,10 @@
 import { ref, computed, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { debounce } from 'lodash-es';
-import { DEFAULT_SAMPLE_CONTENT } from '@/services/sample-content';
-import logger from '../utils/logger';
 import { DEFAULT_ENTRY } from '@dbml/parse';
+import { DEFAULT_SAMPLE_CONTENT } from '@/services/sample-content';
+import { compressToBase64, decompressFromBase64 } from '../utils/compression';
+import logger from '../utils/logger';
 
 const PROJECT_KEY = 'PROJECT_DATA';
 const CURRENT_FILE_KEY = 'PROJECT_CURRENT_FILE';
@@ -15,48 +16,6 @@ interface ProjectData {
   files: Record<string, string>;
   folders: string[];
 }
-
-/* Compress and decompress project content to url-encoded content */
-
-// So we can share projects without a backend
-async function compressToBase64 (input: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const stream = new Blob([encoder.encode(input)]).stream().pipeThrough(new CompressionStream('deflate-raw'));
-  const compressed = await new Response(stream).arrayBuffer();
-  const bytes = new Uint8Array(compressed);
-  let binary = '';
-  for (const b of bytes) binary += String.fromCharCode(b);
-  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-}
-
-async function decompressFromBase64 (encoded: string): Promise<string> {
-  const padded = encoded.replace(/-/g, '+').replace(/_/g, '/');
-  const binary = atob(padded);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
-  return new Response(stream).text();
-}
-
-async function loadFromUrl (): Promise<ProjectData | undefined> {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    if (!code) return undefined;
-    const json = await decompressFromBase64(code);
-    const decoded = JSON.parse(json);
-    if (decoded && typeof decoded === 'object' && 'files' in decoded) return decoded as ProjectData;
-    if (decoded && typeof decoded === 'object') return {
-      files: decoded as Record<string, string>,
-      folders: [],
-    };
-    return undefined;
-  } catch {
-    return undefined;
-  }
-}
-
-// Local storage
 
 function saveProject (files: Record<string, string>, folders: string[]): void {
   const data: ProjectData = {
@@ -98,6 +57,24 @@ function initProject (): {
     folders: [],
     currentFile: DEFAULT_FILE,
   };
+}
+
+async function loadFromUrl (): Promise<ProjectData | undefined> {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (!code) return undefined;
+    const json = await decompressFromBase64(code);
+    const decoded = JSON.parse(json);
+    if (decoded && typeof decoded === 'object' && 'files' in decoded) return decoded as ProjectData;
+    if (decoded && typeof decoded === 'object') return {
+      files: decoded as Record<string, string>,
+      folders: [],
+    };
+    return undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export const useProjectStore = defineStore('project', () => {

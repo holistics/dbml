@@ -134,7 +134,7 @@ const FALLBACK: TokenIconInfo = {
   color: 'text-gray-400',
 };
 
-export function tokenIconFor (kind: SyntaxTokenKind): TokenIconInfo {
+export function getTokenIcon (kind: SyntaxTokenKind): TokenIconInfo {
   return TOKEN_ICON_MAP[kind] ?? FALLBACK;
 }
 
