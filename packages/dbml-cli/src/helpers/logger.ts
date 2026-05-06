@@ -69,7 +69,7 @@ const logger = {
     consoleLogger.warn(msg);
   },
 
-  error (msg: any) {
+  error (msg: Error | string) {
     consoleLogger.error(msg);
     fileLogger.error(msg);
   },
