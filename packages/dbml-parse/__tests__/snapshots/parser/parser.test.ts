@@ -37,10 +37,9 @@ describe('[snapshot] parser', () => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
     const compiler = new Compiler();
-    compiler.setSource(program);
+    compiler.setSource(DEFAULT_ENTRY, program);
 
     const {
-      // @ts-expect-error "Current workaround to use compiler but only trigger validator"
       nodeIdGenerator,
     } = compiler;
 

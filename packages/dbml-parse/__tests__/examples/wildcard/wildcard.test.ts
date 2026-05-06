@@ -14,11 +14,9 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import {
-  isWildcardExpression,
-} from '@/core/parser/utils';
-import {
   lex, parse, analyze,
 } from '@tests/utils';
+import { isWildcardExpression } from '@/core/utils/validate';
 
 // Helper to get non-trivia, non-EOF tokens
 function getTokens (source: string) {
@@ -26,8 +24,6 @@ function getTokens (source: string) {
 }
 
 describe('[example] wildcard', () => {
-  // ── Sub-Problem 1: Lexer — WildcardToken ──
-
   describe('lexer', () => {
     test('should lex * as WILDCARD token, not OP', () => {
       const tokens = getTokens('*');

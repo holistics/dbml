@@ -1,26 +1,39 @@
 import Compiler from '@/compiler/index';
-import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
 export {
-  ElementKind,
-} from '@/core/analyzer/types';
-
-export * from '@/core/interpreter/records/utils';
+  DEFAULT_ENTRY,
+} from '@/constants';
 
 export {
-  // Core AST node types
-  SyntaxNode,
-  ElementDeclarationNode,
-  ProgramNode,
-  SyntaxNodeKind,
-  type SyntaxNodeId,
-} from '@/core/types/nodes';
+  Filepath,
+} from '@/core/types/filepath';
+
+export {
+  UNHANDLED,
+  type Unhandled,
+} from '@/core/types/module';
+
+export {
+  ElementKind,
+} from '@/core/types/keywords';
+
+export {
+  type NodeSymbol,
+  SymbolKind,
+} from '@/core/types/symbol';
+
+export * from '@/core/global_modules/records/utils';
+
+export * from '@/core/types/nodes';
 
 export {
   // Token types
   SyntaxToken,
   SyntaxTokenKind,
+  isTriviaToken,
+  isOp,
+  isOpToken,
 } from '@/core/types/tokens';
 
 export {
@@ -44,6 +57,7 @@ export {
   formatRecordValue,
   isValidIdentifier,
   addDoubleQuoteIfNeeded,
+  type TextEdit,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data
@@ -80,18 +94,18 @@ export {
   type DiagramView,
 } from '@/core/types/schemaJson';
 
-// DiagramView types (methods exposed via Compiler)
+// DiagramView types
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
 } from '@/compiler/queries/transform/syncDiagramView';
-export type {
-  TextEdit,
-} from '@/compiler/queries/transform/applyTextEdits';
 
 export {
+  dbmlLanguageConfig,
   dbmlMonarchTokensProvider,
 } from '@/services/monarch';
 
 export {
-  Compiler, services,
+  Compiler,
 };
+
+export * from '@/services';

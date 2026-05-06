@@ -95,8 +95,8 @@ DiagramView "New View" {
 }
 `;
     const compiler = new Compiler();
-    compiler.setSource(source);
-    expect(compiler.parse.errors()).toHaveLength(0);
+    compiler.setSource(DEFAULT_ENTRY, source);
+    expect(compiler.parse.errors(DEFAULT_ENTRY)).toHaveLength(0);
   });
 });
 
@@ -992,8 +992,8 @@ describe('syncDiagramView - entity name quoting', () => {
       },
     ]);
     const compiler = new Compiler();
-    compiler.setSource(newDbml);
-    expect(compiler.parse.errors()).toHaveLength(0);
+    compiler.setSource(DEFAULT_ENTRY, newDbml);
+    expect(compiler.parse.errors(DEFAULT_ENTRY)).toHaveLength(0);
   });
 
   it('round-trip: all entity types with special names produce correct DBML output', () => {

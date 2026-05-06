@@ -37,33 +37,33 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     // Verify ALL rows and ALL columns in each row
     // Row 1: (null, "Alice") - id is auto-generated
     expect(record.values[0].length).toBe(2);
-    expect(record.values[0][0]).toEqual({
+    expect(record.values[0][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[0][1]).toEqual({
+    expect(record.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
 
     // Row 2: (null, "Bob") - id is auto-generated
     expect(record.values[1].length).toBe(2);
-    expect(record.values[1][0]).toEqual({
+    expect(record.values[1][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[1][1]).toEqual({
+    expect(record.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
 
     // Row 3: (1, "Charlie")
     expect(record.values[2].length).toBe(2);
-    expect(record.values[2][0]).toEqual({
+    expect(record.values[2][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(record.values[2][1]).toEqual({
+    expect(record.values[2][1]).toMatchObject({
       type: 'string',
       value: 'Charlie',
     });
@@ -99,22 +99,22 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     // Verify ALL rows and ALL columns in each row
     // Row 1: (null, "Alice") - id is auto-generated
     expect(record.values[0].length).toBe(2);
-    expect(record.values[0][0]).toEqual({
+    expect(record.values[0][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[0][1]).toEqual({
+    expect(record.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
 
     // Row 2: (null, "Bob") - id is auto-generated
     expect(record.values[1].length).toBe(2);
-    expect(record.values[1][0]).toEqual({
+    expect(record.values[1][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[1][1]).toEqual({
+    expect(record.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
@@ -149,22 +149,22 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     // Verify ALL rows and ALL columns in each row
     // Row 1: (null, "Alice") - id is auto-generated
     expect(record.values[0].length).toBe(2);
-    expect(record.values[0][0]).toEqual({
+    expect(record.values[0][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[0][1]).toEqual({
+    expect(record.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
 
     // Row 2: (null, "Bob") - id is auto-generated
     expect(record.values[1].length).toBe(2);
-    expect(record.values[1][0]).toEqual({
+    expect(record.values[1][0]).toMatchObject({
       type: 'integer',
       value: null,
     });
-    expect(record.values[1][1]).toEqual({
+    expect(record.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });

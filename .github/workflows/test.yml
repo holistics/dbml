@@ -96,7 +96,7 @@ jobs:
     - name: Install dependencies
       run: yarn install --frozen-lockfile
     - name: Build packages
-      run: yarn build
+      run: NODE_OPTIONS="--max-old-space-size=8192" yarn build
     - name: Run coverage test
       run: yarn coverage
     - name: Generate coverage report

@@ -3,10 +3,10 @@ import {
 } from '@/constants';
 import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   destructureComplexVariable,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import {
