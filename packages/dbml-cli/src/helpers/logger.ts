@@ -22,7 +22,7 @@ const fileFormat = printf((info) => {
   const {
     timestamp: ts, stack, rootError,
   } = info as any;
-  let logContent = `${ts}\n${stack}\n`;
+  let logContent = `${ts}\n${stack ?? info}\n`;
   if (rootError) {
     logContent += '\nROOT_ERROR:';
     logContent += `\n${rootError.stack}`;
