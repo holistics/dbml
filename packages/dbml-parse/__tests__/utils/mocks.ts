@@ -58,7 +58,7 @@ export class MockTextModel {
   getValue (): string {
     return this.content;
   }
-
+  
   getPositionAt (offset: number): Position {
     const text = this.content.slice(0, Math.min(offset, this.content.length));
     const lines = text.split('\n');
@@ -79,10 +79,12 @@ export function createMockTextModel (content: string, uri: string = DEFAULT_ENTR
 }
 
 // Extract source text from a range in the program
-export function extractTextFromRange (program: string, range: { startLineNumber: number;
+export function extractTextFromRange (program: string, range: {
+  startLineNumber: number;
   startColumn: number;
   endLineNumber: number;
-  endColumn: number; }): string {
+  endColumn: number;
+}): string {
   const mockModel = new MockTextModel(program);
 
   const startOffset = mockModel.getOffsetAt({

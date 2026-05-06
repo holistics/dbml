@@ -81,9 +81,7 @@ export function destructureComplexVariable (node?: SyntaxNode): string[] | undef
 
   const fragments = destructureMemberAccessExpression(node);
 
-  if (!fragments) {
-    return undefined;
-  }
+  if (!fragments) return undefined;
 
   const variables: string[] = [];
 
@@ -168,7 +166,7 @@ export function destructureIndexNode (node?: SyntaxNode): {
 export function extractQuotedStringToken (value?: SyntaxNode): string | undefined {
   if (!isExpressionAQuotedString(value)) return undefined;
 
-  if (value?.expression instanceof VariableNode) {
+  if (value.expression instanceof VariableNode) {
     return value?.expression?.variable?.value;
   }
 
