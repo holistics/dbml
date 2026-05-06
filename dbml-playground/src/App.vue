@@ -116,7 +116,7 @@
           <EditorPane
             v-model="project.currentContent"
             @editor-mounted="onDbmlEditorMounted"
-            @cursor-move="(pos) => { dbmlCursorPos.value = pos }"
+            @cursor-move="onEditorCursorMove"
           />
         </template>
         <template #panel-2>
@@ -221,6 +221,13 @@ function onKeyDown (e: KeyboardEvent) {
   }
 }
 
+function onEditorCursorMove (pos: {
+  line: number;
+  column: number;
+}) {
+  dbmlCursorPos.value = pos;
+}
+
 onMounted(() => window.addEventListener('keydown', onKeyDown));
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeyDown));
 
@@ -235,13 +242,12 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
   dbmlEditorRef.value = editor;
   setupDbmlServices(parser.compiler);
 
-  // Monaco's StandaloneCodeEditorService.findModel returns null when the target URI
-  // doesn't match the current model -> cross-file navigation silently fails.
-  // registerCodeEditorOpenHandler prepends a handler that runs before the built-in one.
-  // We handle cross-file navigation by switching the active project file first.
-  const svc = (editor as any)._codeEditorService;
-  svc?.registerCodeEditorOpenHandler?.(async (input: { resource?: monaco.Uri;
-    options?: { selection?: monaco.IRange }; }) => {
+  // This ensures the text model exists before switching to that model
+  const codeEditorService = (editor as any)._codeEditorService;
+  codeEditorService?.registerCodeEditorOpenHandler?.(async (input: {
+    resource?: monaco.Uri;
+    options?: { selection?: monaco.IRange };
+  }) => {
     const resource = input?.resource;
     if (!resource) return null;
 
@@ -252,22 +258,27 @@ const onDbmlEditorMounted = (editor: monaco.editor.IStandaloneCodeEditor) => {
 
     project.setCurrentFile(targetFilepath.absolute);
     // Wait for the filepath watcher -> createModel -> setModel chain.
-    // onDidChangeModel fires synchronously when setModel is called, which is
-    // more reliable than nextTick because it doesn't depend on Vue flush timing.
+    // onDidChangeModel fires synchronously when setModel is called
     await new Promise<void>((resolve) => {
-      const d = editor.onDidChangeModel(() => { d.dispose(); resolve(); });
+      const d = editor.onDidChangeModel(() => {
+        d.dispose();
+        resolve();
+      });
       setTimeout(resolve, 500);
     });
 
-    const sel = input.options?.selection;
-    if (sel) {
-      if (typeof sel.endLineNumber === 'number' && typeof sel.endColumn === 'number') {
-        editor.setSelection(sel);
-        editor.revealRangeInCenter(sel);
+    const selection = input.options?.selection;
+    if (selection) {
+      if (
+        typeof selection.endLineNumber === 'number'
+        && typeof selection.endColumn === 'number'
+      ) {
+        editor.setSelection(selection);
+        editor.revealRangeInCenter(selection);
       } else {
         const pos = {
-          lineNumber: sel.startLineNumber,
-          column: sel.startColumn,
+          lineNumber: selection.startLineNumber,
+          column: selection.startColumn,
         };
         editor.setPosition(pos);
         editor.revealPositionInCenter(pos);
