@@ -249,10 +249,12 @@ onBeforeUnmount(() => {
   navDecorations?.clear();
 });
 
-function navigateTo (range: { startLineNumber: number;
+function navigateTo (range: {
+  startLineNumber: number;
   startColumn: number;
   endLineNumber: number;
-  endColumn: number; }) {
+  endColumn: number;
+}) {
   const editor = dbmlEditorRef?.value;
   if (!editor) return;
   try {
@@ -294,10 +296,12 @@ function onDiagnosticClick (diag: {
 }
 
 // Navigate to a declaration that may be in a different file.
-async function navigateToDeclaration (targetFilepath: string | null, range: { startLineNumber: number;
+async function navigateToDeclaration (targetFilepath: string | null, range: {
+  startLineNumber: number;
   startColumn: number;
   endLineNumber: number;
-  endColumn: number; }) {
+  endColumn: number;
+}) {
   const editor = dbmlEditorRef?.value;
   if (!editor) return;
   if (targetFilepath && new Filepath(targetFilepath).intern() !== new Filepath(project.currentFile).intern()) {

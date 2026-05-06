@@ -19,8 +19,7 @@ export function useVimController (editor: ShallowRef<monaco.editor.IStandaloneCo
       });
       modeStatus.value = 'NORMAL';
 
-      vimAdapter.on('vim-mode-change', (mode: { mode: string;
-        subMode?: string; }) => {
+      vimAdapter.on('vim-mode-change', (mode: { mode: string }) => {
         modeStatus.value = (mode.mode || 'NORMAL').toUpperCase();
       });
     } catch (error) {
