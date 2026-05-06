@@ -48,22 +48,24 @@ export default class DBMLDiagnosticsProvider {
    * Get only errors from the current compilation
    */
   provideErrors (filepath?: Filepath): Diagnostic[] {
-    if (filepath) {
-      const errors = this.compiler.interpretFile(filepath).getErrors();
+    if (!filepath) {
+      const errors = this.compiler.interpretProject().getErrors();
       return errors.map((error) => this.createDiagnostic(error, 'error'));
     }
-    return this.compiler.interpretProject().getErrors().map((error) => this.createDiagnostic(error, 'error'));
+    const errors = this.compiler.parse.errors(filepath);
+    return errors.map((error) => this.createDiagnostic(error, 'error'));
   }
 
   /**
    * Get only warnings from the current compilation
    */
   provideWarnings (filepath?: Filepath): Diagnostic[] {
-    if (filepath) {
-      const errors = this.compiler.interpretFile(filepath).getWarnings();
-      return errors.map((error) => this.createDiagnostic(error, 'warning'));
+    if (!filepath) {
+      const warnings = this.compiler.interpretProject().getWarnings();
+      return warnings.map((warning) => this.createDiagnostic(warning, 'warning'));
     }
-    return this.compiler.interpretProject().getWarnings().map((error) => this.createDiagnostic(error, 'warning'));
+    const warnings = this.compiler.parse.warnings(filepath);
+    return warnings.map((warning) => this.createDiagnostic(warning, 'warning'));
   }
 
   /**
