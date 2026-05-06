@@ -141,9 +141,9 @@ import {
 import {
   PhClipboardText, PhCheck, PhUploadSimple, PhDownloadSimple,
 } from '@phosphor-icons/vue';
-import { Parser, ModelExporter, importer } from '@dbml/core';
+import { Parser, ModelExporter } from '@dbml/core';
 import { useParserStore } from '@/stores/parserStore';
-import { setupDbmlServices } from '@/components/editor/dbml-services';
+import { setupDbmlServices } from '@/components/editor/dbml_services';
 import { useProjectStore } from '@/stores/projectStore';
 import { useUserStore } from '@/stores/userStore';
 import { Filepath } from '@dbml/parse';

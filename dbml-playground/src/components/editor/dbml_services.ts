@@ -1,6 +1,6 @@
 import * as monaco from 'monaco-editor';
 import { Compiler, Filepath } from '@dbml/parse';
-import { DBMLLanguageService } from './dbml-language';
+import { DBMLLanguageService } from './dbml_language';
 
 type MonacoServices = Awaited<ReturnType<Compiler['initMonacoServices']>>;
 
