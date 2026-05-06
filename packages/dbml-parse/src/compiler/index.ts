@@ -53,6 +53,9 @@ import {
 import {
   DbmlProjectLayout, MemoryProjectLayout,
 } from './projectLayout';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
 
 // Re-export types
 export {
@@ -162,13 +165,13 @@ export default class Compiler {
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: (filepath: Filepath) => this.layout.getSource(filepath) || '',
-    ast: this.query(ast),
-    errors: this.query(errors),
-    warnings: this.query(warnings),
-    tokens: this.query(tokens),
-    rawDb: this.query(rawDb),
-    publicSymbolTable: this.query(publicSymbolTable),
+    source: (filepath = DEFAULT_ENTRY) => this.layout.getSource(filepath) || '',
+    ast: (filepath = DEFAULT_ENTRY) => ast.call(this, filepath),
+    errors: (filepath = DEFAULT_ENTRY) => errors.call(this, filepath),
+    warnings: (filepath = DEFAULT_ENTRY) => warnings.call(this, filepath),
+    tokens: (filepath = DEFAULT_ENTRY) => tokens.call(this, filepath),
+    rawDb: (filepath = DEFAULT_ENTRY) => rawDb.call(this, filepath),
+    publicSymbolTable: (filepath = DEFAULT_ENTRY) => publicSymbolTable.call(this, filepath),
   };
 
   symbolMembers = this.query(symbolMembers);
