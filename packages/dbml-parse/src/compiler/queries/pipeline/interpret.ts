@@ -58,27 +58,6 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     warnings.push(...result.getWarnings());
   }
 
-  // Merge all per-file databases into a flat MasterDatabase
-  const merged: Database = {
-    schemas: [],
-    tables: [],
-    notes: [],
-    refs: [],
-    enums: [],
-    tableGroups: [],
-    aliases: [],
-    tablePartials: [],
-    records: [],
-    externals: {
-      tables: [],
-      enums: [],
-      tableGroups: [],
-      tablePartials: [],
-      notes: [],
-    },
-    diagramViews: [],
-  };
-
   const files: Record<string, Database> = {};
 
   for (const [
@@ -86,22 +65,9 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     db,
   ] of perFile) {
     files[fileId] = db;
-
-    // Merge into flat items (only local elements, not externals)
-    merged.tables.push(...db.tables);
-    merged.notes.push(...db.notes);
-    merged.refs.push(...db.refs);
-    merged.enums.push(...db.enums);
-    merged.tableGroups.push(...db.tableGroups);
-    merged.aliases.push(...db.aliases);
-    merged.tablePartials.push(...db.tablePartials);
-    merged.records.push(...db.records);
-    merged.diagramViews.push(...db.diagramViews);
-    if (db.project && !merged.project) merged.project = db.project;
   }
 
   return new Report({
     files,
-    items: merged,
   }, errors, warnings);
 }
