@@ -104,6 +104,8 @@ export {
   dbmlMonarchTokensProvider,
 } from '@/services/monarch';
 
+export * from '@/compiler/projectLayout/layout';
+
 export {
   Compiler,
 };

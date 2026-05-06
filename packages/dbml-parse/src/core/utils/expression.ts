@@ -58,9 +58,7 @@ export function destructureComplexVariable (node?: SyntaxNode): string[] | undef
 
   const fragments = destructureMemberAccessExpression(node);
 
-  if (!fragments) {
-    return undefined;
-  }
+  if (!fragments) return undefined;
 
   const variables: string[] = [];
 
@@ -78,8 +76,10 @@ export function destructureComplexVariable (node?: SyntaxNode): string[] | undef
 
 export function destructureComplexVariableTuple (
   node?: SyntaxNode,
-): { variables: (PrimaryExpressionNode & { expression: VariableNode })[];
-  tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[]; } | undefined {
+): {
+  variables: (PrimaryExpressionNode & { expression: VariableNode })[];
+  tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[];
+} | undefined {
   if (node === undefined) {
     return undefined;
   }
@@ -169,7 +169,7 @@ export function extractQuotedStringToken (value?: SyntaxNode): string | undefine
   }
 
   if (value.expression instanceof VariableNode) {
-    return value.expression.variable!.value;
+    return value?.expression?.variable?.value;
   }
 
   return value.expression.literal.value;
@@ -220,8 +220,10 @@ export function extractIndexName (
 //   table()                  => { variables: [table], args: [] }
 export function destructureCallExpression (
   node?: SyntaxNode,
-): { variables: (PrimaryExpressionNode & { expression: VariableNode })[];
-  args: (PrimaryExpressionNode & { expression: VariableNode })[]; } | undefined {
+): {
+  variables: (PrimaryExpressionNode & { expression: VariableNode })[];
+  args: (PrimaryExpressionNode & { expression: VariableNode })[];
+} | undefined {
   if (!(node instanceof CallExpressionNode) || !node.callee) {
     return undefined;
   }
