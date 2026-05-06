@@ -6,7 +6,7 @@ type TableName = string | { schema?: string; table: string };
 export function renameTable (oldName: TableName, newName: TableName, dbmlCode: string): string {
   const compiler = new Compiler();
   compiler.setSource(DEFAULT_ENTRY, dbmlCode);
-  return compiler.renameTable(DEFAULT_ENTRY, oldName, newName);
+  return compiler.renameTable(DEFAULT_ENTRY, oldName, newName).getSource(DEFAULT_ENTRY) || dbmlCode;
 }
 
 export function syncDiagramView (
