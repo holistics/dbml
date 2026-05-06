@@ -77,7 +77,7 @@ export const useModule: LocalModule = {
       );
     }
 
-    if (name.length === 1) {
+    if (name.length === 1 && !node.isKind(ImportKind.Schema)) {
       name.unshift(DEFAULT_SCHEMA_NAME);
     }
     return new Report(name);
