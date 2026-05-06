@@ -37,6 +37,6 @@ export default async function connectionHandler (program: Command) {
       console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection: ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
-    logger.error(error);
+    logger.error(error as Error | string);
   }
 }
