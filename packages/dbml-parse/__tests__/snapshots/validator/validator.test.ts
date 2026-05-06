@@ -26,6 +26,8 @@ function serializeValidatorResult (compiler: Compiler, ast: ProgramNode): string
     warnings,
   }, {
     includeSymbols: false,
+    includeReferee: false,
+    includeReferences: false,
   }), null, 2);
 }
 

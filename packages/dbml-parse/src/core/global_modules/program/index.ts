@@ -57,40 +57,18 @@ export const programModule: GlobalModule = {
     const ast = symbol.declaration;
     if (!(ast instanceof ProgramNode)) return Report.create([]);
 
-    // Collect and create schemas
-    const schemaMembers = new Map<string, SchemaSymbol>([
-      [
-        DEFAULT_SCHEMA_NAME,
-        compiler.symbolFactory.create(SchemaSymbol, {
-          name: DEFAULT_SCHEMA_NAME,
-        }, symbol.filepath),
-      ],
-    ]);
+    // Collect schemas from all reachable files (including entry file).
+    // Reuse the canonical SchemaSymbol instances from usableMembers to ensure
+    // a single schema identity per name - symbolMembers results are memoized per instance.
+    const schemaMembers = new Map<string, SchemaSymbol>();
 
-    for (const element of ast.declarations) {
-      const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED) || [];
-
-      const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0]; // When fullname doesn't have a schema name, `public` is assumed
-      if (!schemaMembers.has(schemaName)) {
-        schemaMembers.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, {
-          name: schemaName,
-        }, symbol.filepath));
-      }
-    }
-
-    // Create all schemas in reachable files
     for (const filepath of compiler.reachableFiles(symbol.filepath)) {
       const {
         schemaMembers: schemas,
       } = compiler.usableMembers(filepath).getValue();
       for (const schema of schemas) {
-        const {
-          name,
-        } = schema;
-        if (!schemaMembers.has(name)) {
-          schemaMembers.set(name, compiler.symbolFactory.create(SchemaSymbol, {
-            name,
-          }, symbol.filepath));
+        if (!schemaMembers.has(schema.name)) {
+          schemaMembers.set(schema.name, schema);
         }
       }
     }

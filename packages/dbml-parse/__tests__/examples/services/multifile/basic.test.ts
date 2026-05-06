@@ -1,33 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import { createMockTextModel, createPosition } from '../../../utils';
 import { Filepath } from '@/core/types/filepath';
+import { setupCompiler as setupCompilerBase } from '../../interpreter/multifile/utils';
 
-// Inline project source maps. Each entry maps a filepath (relative to /) onto
-// the file's DBML source. `setupCompiler` mounts every entry on the compiler
-// and returns both the compiler and a `Filepath -> source` map keyed by the
-// canonicalised Filepath instance - so callers can `model.toUri()` the same
-// instance that was loaded.
 type ProjectFiles = Record<string, string>;
 
-function setupCompiler (project: ProjectFiles): {
-  compiler: Compiler;
-  files: Map<Filepath, string>;
-} {
-  const compiler = new Compiler();
-  const files = new Map<Filepath, string>();
-  for (const [path, content] of Object.entries(project)) {
-    const fp = Filepath.from(path);
-    compiler.setSource(fp, content);
-    files.set(fp, content);
-  }
+function setupCompiler (project: ProjectFiles) {
+  const { compiler, sources } = setupCompilerBase(project);
   compiler.bindProject();
-  return {
-    compiler,
-    files,
-  };
+  return { compiler, files: sources };
 }
 
 const ENUM_IMPORTS: ProjectFiles = {

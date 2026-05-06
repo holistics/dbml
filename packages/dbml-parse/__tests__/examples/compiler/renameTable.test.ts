@@ -5,6 +5,7 @@ import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler/index';
 import { TableNameInput } from '@/compiler/queries/transform';
 import { Filepath } from '@/core/types/filepath';
+import { setupCompiler, fp } from '../interpreter/multifile/utils';
 
 function renameTable (
   oldName: TableNameInput,
@@ -1903,19 +1904,6 @@ Table Users {
 
 
 describe('[example] renameTable cross-file', () => {
-  function makeMultifileCompiler (files: Record<string, string>): {
-    compiler: Compiler;
-    fps: Record<string, Filepath>;
-  } {
-    const compiler = new Compiler();
-    const fps: Record<string, Filepath> = {};
-    for (const [path, src] of Object.entries(files)) {
-      const fp = Filepath.from(path);
-      fps[path] = fp;
-      compiler.setSource(fp, src);
-    }
-    return { compiler, fps };
-  }
 
   test('renaming a table updates declaration and same-file references', () => {
     // The table 'users' is defined in base.dbml and has a self-referencing FK
@@ -1940,14 +1928,14 @@ Table users {
     // base.dbml defines 'users'; consumer.dbml imports it (no alias) and adds a ref.
     // Cross-file rename: invoking renameTable through the consumer's UseSymbol
     // resolves to the original declaration and rewrites every file that touches it.
-    const { compiler, fps } = makeMultifileCompiler({
+    const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
       '/consumer.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
     });
 
-    const layout = compiler.renameTable(fps['/consumer.dbml'], 'users', 'accounts');
-    const baseAfter = layout.getSource(fps['/base.dbml'])!;
-    const consumerAfter = layout.getSource(fps['/consumer.dbml'])!;
+    const layout = compiler.renameTable(fp('/consumer.dbml'), 'users', 'accounts');
+    const baseAfter = layout.getSource(fp('/base.dbml'))!;
+    const consumerAfter = layout.getSource(fp('/consumer.dbml'))!;
 
     expect(baseAfter).toContain('Table accounts');
     expect(baseAfter).not.toContain('Table users');
@@ -1957,7 +1945,7 @@ Table users {
   });
 
   test('renaming a table in the declaring file updates declaration, inline refs, and importers', () => {
-    const { compiler, fps } = makeMultifileCompiler({
+    const { compiler } = setupCompiler({
       '/base.dbml': `
 Table users {
   id int [pk]
@@ -1970,9 +1958,9 @@ Table posts {
       '/main.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
     });
 
-    const layout = compiler.renameTable(fps['/base.dbml'], 'users', 'accounts');
-    const baseAfter = layout.getSource(fps['/base.dbml'])!;
-    const mainAfter = layout.getSource(fps['/main.dbml'])!;
+    const layout = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+    const baseAfter = layout.getSource(fp('/base.dbml'))!;
+    const mainAfter = layout.getSource(fp('/main.dbml'))!;
 
     expect(baseAfter).toContain('Table accounts');
     expect(baseAfter).toContain('accounts.id');   // ref in same file updated
@@ -2031,14 +2019,14 @@ Table posts {
   });
 
   test('renaming an alias only rewrites the alias-introducing file', () => {
-    const { compiler, fps } = makeMultifileCompiler({
+    const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
       '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
     });
 
-    const layout = compiler.renameTable(fps['/main.dbml'], 'u', 'member');
-    const baseAfter = layout.getSource(fps['/base.dbml'])!;
-    const mainAfter = layout.getSource(fps['/main.dbml'])!;
+    const layout = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
+    const baseAfter = layout.getSource(fp('/base.dbml'))!;
+    const mainAfter = layout.getSource(fp('/main.dbml'))!;
 
     // Original declaration left alone - alias rename never touches the source file.
     expect(baseAfter).toBe('Table users { id int [pk] }');
@@ -2050,24 +2038,24 @@ Table posts {
 
   test('renaming the source name from the alias-introducing file is a lookup miss', () => {
     // Only the alias 'u' is visible in main.dbml - 'users' is not in scope there.
-    const { compiler, fps } = makeMultifileCompiler({
+    const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
       '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
     });
 
-    const layout = compiler.renameTable(fps['/main.dbml'], 'users', 'accounts');
-    expect(layout.getSource(fps['/base.dbml'])).toBe('Table users { id int [pk] }');
-    expect(layout.getSource(fps['/main.dbml'])).toBe(compiler.layout.getSource(fps['/main.dbml']));
+    const layout = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+    expect(layout.getSource(fp('/base.dbml'))).toBe('Table users { id int [pk] }');
+    expect(layout.getSource(fp('/main.dbml'))).toBe(compiler.layout.getSource(fp('/main.dbml')));
   });
 
   test('cross-file rename with alias: source-name token in the use specifier flips, alias stays', () => {
-    const { compiler, fps } = makeMultifileCompiler({
+    const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
       '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
     });
 
-    const layout = compiler.renameTable(fps['/base.dbml'], 'users', 'accounts');
-    const mainAfter = layout.getSource(fps['/main.dbml'])!;
+    const layout = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+    const mainAfter = layout.getSource(fp('/main.dbml'))!;
 
     // The source-side token gets the new name; the local alias `u` is preserved
     // because alias-side refs do not resolve to the original symbol.
@@ -2077,19 +2065,6 @@ Table posts {
 });
 
 describe('[example] renameTable - alias/use renameability rules', () => {
-  function makeMultifileCompiler (files: Record<string, string>): {
-    compiler: Compiler;
-    fps: Record<string, Filepath>;
-  } {
-    const compiler = new Compiler();
-    const fps: Record<string, Filepath> = {};
-    for (const [path, src] of Object.entries(files)) {
-      const fp = Filepath.from(path);
-      fps[path] = fp;
-      compiler.setSource(fp, src);
-    }
-    return { compiler, fps };
-  }
 
   describe('inline alias (Table users as U) - rename is ignored', () => {
     test('renaming by alias single-file is a no-op', () => {
@@ -2134,14 +2109,14 @@ Ref: U.id < U.id
 
   describe('use without alias - renames the real declaration and cascades', () => {
     test('rename from the importing file cascades to base + importer', () => {
-      const { compiler, fps } = makeMultifileCompiler({
+      const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
       });
 
-      const layout = compiler.renameTable(fps['/main.dbml'], 'users', 'accounts');
-      const baseAfter = layout.getSource(fps['/base.dbml'])!;
-      const mainAfter = layout.getSource(fps['/main.dbml'])!;
+      const layout = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      const baseAfter = layout.getSource(fp('/base.dbml'))!;
+      const mainAfter = layout.getSource(fp('/main.dbml'))!;
 
       expect(baseAfter).toContain('Table accounts');
       expect(baseAfter).not.toContain('Table users');
@@ -2151,31 +2126,31 @@ Ref: U.id < U.id
     });
 
     test('rename from the declaring file cascades to all unaliased importers', () => {
-      const { compiler, fps } = makeMultifileCompiler({
+      const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/a.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
         '/b.dbml': `use { table users } from './base.dbml'\nTable carts { user_id int [ref: > users.id] }`,
       });
 
-      const layout = compiler.renameTable(fps['/base.dbml'], 'users', 'accounts');
-      expect(layout.getSource(fps['/base.dbml'])!).toContain('Table accounts');
-      expect(layout.getSource(fps['/a.dbml'])!).toContain('use { table accounts }');
-      expect(layout.getSource(fps['/a.dbml'])!).toContain('ref: > accounts.id');
-      expect(layout.getSource(fps['/b.dbml'])!).toContain('use { table accounts }');
-      expect(layout.getSource(fps['/b.dbml'])!).toContain('ref: > accounts.id');
+      const layout = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+      expect(layout.getSource(fp('/base.dbml'))!).toContain('Table accounts');
+      expect(layout.getSource(fp('/a.dbml'))!).toContain('use { table accounts }');
+      expect(layout.getSource(fp('/a.dbml'))!).toContain('ref: > accounts.id');
+      expect(layout.getSource(fp('/b.dbml'))!).toContain('use { table accounts }');
+      expect(layout.getSource(fp('/b.dbml'))!).toContain('ref: > accounts.id');
     });
   });
 
   describe('use with alias - rename only affects the alias scope', () => {
     test('renaming by the alias only rewrites the alias-introducing file', () => {
-      const { compiler, fps } = makeMultifileCompiler({
+      const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
       });
 
-      const layout = compiler.renameTable(fps['/main.dbml'], 'u', 'member');
-      const baseAfter = layout.getSource(fps['/base.dbml'])!;
-      const mainAfter = layout.getSource(fps['/main.dbml'])!;
+      const layout = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
+      const baseAfter = layout.getSource(fp('/base.dbml'))!;
+      const mainAfter = layout.getSource(fp('/main.dbml'))!;
 
       // Base file untouched - alias rename never propagates to the source.
       expect(baseAfter).toBe('Table users { id int [pk] }');
@@ -2185,15 +2160,15 @@ Ref: U.id < U.id
     });
 
     test('aliased importer is insulated when renaming the original declaration', () => {
-      const { compiler, fps } = makeMultifileCompiler({
+      const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/aliased.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
         '/unaliased.dbml': `use { table users } from './base.dbml'\nTable carts { user_id int [ref: > users.id] }`,
       });
 
-      const layout = compiler.renameTable(fps['/base.dbml'], 'users', 'accounts');
-      const aliasedAfter = layout.getSource(fps['/aliased.dbml'])!;
-      const unaliasedAfter = layout.getSource(fps['/unaliased.dbml'])!;
+      const layout = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+      const aliasedAfter = layout.getSource(fp('/aliased.dbml'))!;
+      const unaliasedAfter = layout.getSource(fp('/unaliased.dbml'))!;
 
       // Aliased importer: source-name token in specifier flips, alias + refs preserved.
       expect(aliasedAfter).toContain('use { table accounts as u }');
@@ -2205,14 +2180,14 @@ Ref: U.id < U.id
 
     test('renaming the source name from an alias-introducing file is a lookup miss', () => {
       // Only `u` is visible in main - `users` is not in scope.
-      const { compiler, fps } = makeMultifileCompiler({
+      const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
       });
 
-      const layout = compiler.renameTable(fps['/main.dbml'], 'users', 'accounts');
-      expect(layout.getSource(fps['/base.dbml'])!).toBe('Table users { id int [pk] }');
-      expect(layout.getSource(fps['/main.dbml'])!).toBe(compiler.layout.getSource(fps['/main.dbml'])!);
+      const layout = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      expect(layout.getSource(fp('/base.dbml'))!).toBe('Table users { id int [pk] }');
+      expect(layout.getSource(fp('/main.dbml'))!).toBe(compiler.layout.getSource(fp('/main.dbml'))!);
     });
   });
 });

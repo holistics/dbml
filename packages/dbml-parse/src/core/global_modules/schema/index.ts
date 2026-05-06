@@ -72,6 +72,7 @@ export const schemaModule: GlobalModule = {
       errors.push(...useSymbolResult.getErrors());
       const useSymbol = useSymbolResult.getFiltered(UNHANDLED);
       if (useSymbol) members.push(useSymbol);
+      members.push(...mergeImportedSchema(compiler, symbol, specifier));
     }
     for (const {
       importPath, node,
@@ -85,6 +86,7 @@ export const schemaModule: GlobalModule = {
       errors.push(...useSymbolResult.getErrors());
       const useSymbol = useSymbolResult.getFiltered(UNHANDLED);
       if (useSymbol) members.push(useSymbol);
+      members.push(...mergeImportedSchema(compiler, symbol, specifier));
     }
     for (const {
       importPath, node,
@@ -179,6 +181,55 @@ function handleMemberSelectiveUses (compiler: Compiler, symbol: SchemaSymbol, sp
     );
   }
   return Report.create(undefined);
+}
+
+// Merge importable members of an imported schema into the current scope.
+// Only activates for schema-kind specifiers. Uses usableMembers to avoid circular queries.
+// - Public schema: skip (schemas are file-level members, not public schema members)
+// - Schema x: find external schema x matching by name and merge its direct members
+// - Schema x.y: find external schema x.y and merge its direct members (nested schemas)
+function mergeImportedSchema (
+  compiler: Compiler,
+  symbol: SchemaSymbol,
+  specifier: UseSpecifierNode,
+  visited: Set<string> = new Set(),
+): NodeSymbol[] {
+  if (specifier.getSymbolKind() !== SymbolKind.Schema) return [];
+  if (symbol.isPublicSchema()) return [];
+  if (!specifier.name) return [];
+
+  // Find the external schema matching this schema's name in the import file
+  const externalSchema = compiler.nodeReferee(specifier.name).getFiltered(UNHANDLED) as SchemaSymbol;
+  if (!externalSchema || !externalSchema.isKind(SymbolKind.Schema)) return [];
+
+  // Only merge if the external schema name matches the current schema name
+  if (externalSchema.name !== symbol.name) return [];
+
+  const key = externalSchema.intern();
+  if (visited.has(key)) return [];
+  visited.add(key);
+
+  const usable = compiler.usableMembers(externalSchema).getFiltered(UNHANDLED);
+  if (!usable) return [];
+
+  // Wrap directly declared importable members as UseSymbols.
+  // useSpecifierDeclaration is undefined so lookupMembers uses m.name (not the schema specifier's name).
+  const members: NodeSymbol[] = usable.nonSchemaMembers
+    .filter((m) => m.canBeImported)
+    .map((m) => compiler.symbolFactory.create(UseSymbol, {
+      kind: m.kind,
+      declaration: m.originalSymbol.declaration,
+      usedSymbol: m.originalSymbol,
+      useSpecifierDeclaration: undefined,
+      name: m.name,
+    }, symbol.filepath));
+
+  // Recursively follow reuse chains only (use is local-only, not transitive)
+  for (const s of usable.reuses.selective) {
+    members.push(...mergeImportedSchema(compiler, symbol, s, visited));
+  }
+
+  return members;
 }
 
 // Resolve a wildcard use/reuse (e.g. `use * from './base.dbml'`)

@@ -50,10 +50,10 @@ import type {
 } from '@/core/types/schemaJson';
 import {
   validateForeignKeys, validatePrimaryKey, validateUnique,
-} from './utils/constraints';
+} from '../records/utils/constraints';
 import type {
   TableInfo,
-} from './utils/constraints/fk';
+} from '../records/utils/constraints/fk';
 import {
   getTokenPosition,
 } from '@/core/utils/interpret';

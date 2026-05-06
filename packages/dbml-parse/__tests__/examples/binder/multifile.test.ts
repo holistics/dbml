@@ -5,7 +5,7 @@ import { NodeSymbol, UseSymbol, SymbolKind } from '@/core/types';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 // Build a multi-file compiler from a record of absolute filepath -> source.
-function makeCompiler (files: Record<string, string>): { compiler: Compiler; fps: Record<string, Filepath> } {
+function setupCompiler (files: Record<string, string>): { compiler: Compiler; fps: Record<string, Filepath> } {
   const compiler = new Compiler();
   const fps: Record<string, Filepath> = {};
   for (const [path, src] of Object.entries(files)) {
@@ -19,7 +19,7 @@ function makeCompiler (files: Record<string, string>): { compiler: Compiler; fps
 describe('[example] multifile binder', () => {
   describe('selective use - basic visibility', () => {
     test('imported table is visible in the consumer file scope', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': "use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }",
       });
@@ -33,7 +33,7 @@ describe('[example] multifile binder', () => {
     });
 
     test('non-imported table from source file is NOT visible in consumer', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int }\nTable orders { id int }',
         '/main.dbml': "use { table users } from './base.dbml'",
       });
@@ -52,7 +52,7 @@ describe('[example] multifile binder', () => {
     test('import of nonexistent element kind is rejected', () => {
       // 'table' is a valid import kind; using the wrong kind for an existing symbol
       // (e.g. importing a table as an enum) should produce a binding error
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int }',
         '/main.dbml': "use { enum users } from './base.dbml'",
       });
@@ -64,7 +64,7 @@ describe('[example] multifile binder', () => {
     });
 
     test('use from nonexistent file produces NONEXISTENT_MODULE error', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/main.dbml': "use { table users } from './missing.dbml'",
       });
 
@@ -76,7 +76,7 @@ describe('[example] multifile binder', () => {
 
   describe('aliases (as keyword)', () => {
     test('aliased use replaces the table name in consumer scope', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': "use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }",
       });
@@ -97,7 +97,7 @@ describe('[example] multifile binder', () => {
     });
 
     test('aliased schema-qualified import is visible under the alias (no schema prefix)', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/auth.dbml': 'Table auth.users { id int [pk] }',
         '/main.dbml': "use { table auth.users as u } from './auth.dbml'\nTable orders { user_id int [ref: > u.id] }",
       });
@@ -112,7 +112,7 @@ describe('[example] multifile binder', () => {
     });
 
     test('inline ref to original name fails when the table was imported under an alias', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': "use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }",
       });
@@ -126,7 +126,7 @@ describe('[example] multifile binder', () => {
     test('two specifiers of the same element under different aliases are both resolvable', () => {
       // Importing the same table twice under different names is valid.
       // Each alias should resolve independently.
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': [
           "use { table users as u } from './base.dbml'",
@@ -146,7 +146,7 @@ describe('[example] multifile binder', () => {
 
     test('two symbols of the same kind and same local name is an error', () => {
       // Both specifiers result in a local name 'u' - duplicate in the same scope
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int }\nTable accounts { id int }',
         '/main.dbml': [
           "use { table users as u } from './base.dbml'",
@@ -162,7 +162,7 @@ describe('[example] multifile binder', () => {
 
   describe('schema-qualified import', () => {
     test('schema-qualified use has no binding errors', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/auth.dbml': 'Table auth.users { id int [pk] }',
         '/main.dbml': "use { table auth.users } from './auth.dbml'",
       });
@@ -172,7 +172,7 @@ describe('[example] multifile binder', () => {
     });
 
     test('the UseSymbol for a schema-qualified import points to the original declaration', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/auth.dbml': 'Table auth.users { id int [pk] }',
         '/main.dbml': "use { table auth.users } from './auth.dbml'",
       });
@@ -187,7 +187,7 @@ describe('[example] multifile binder', () => {
     });
 
     test('reuse with schema-qualified source and alias produces a no-schema local name', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/auth.dbml': 'Table auth.users { id int [pk] }',
         '/main.dbml': "reuse { table auth.users as u } from './auth.dbml'\nTable orders { user_id int [ref: > u.id] }",
       });
@@ -197,7 +197,7 @@ describe('[example] multifile binder', () => {
     });
 
     test('importing a nonexistent schema-qualified name produces a binding error', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/auth.dbml': 'Table auth.users { id int [pk] }',
         '/main.dbml': "use { table auth.nonexistent } from './auth.dbml'",
       });
@@ -210,7 +210,7 @@ describe('[example] multifile binder', () => {
 
   describe('wildcard use', () => {
     test('wildcard use brings all public tables from source into consumer scope', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': `Table users { id int [pk] }
 Table posts { id int [pk] }`,
         '/main.dbml': "use * from './base.dbml'",
@@ -229,7 +229,7 @@ Table posts { id int [pk] }`,
     test('wildcard use with schema-qualified tables has no binding errors', () => {
       // Tables from auth schema are pulled in; the auth schema is visible transitively
       // but not as a named member of the public scope (known limitation).
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/auth.dbml': 'Table auth.users { id int [pk] }\nTable auth.roles { id int [pk] }',
         '/main.dbml': "use * from './auth.dbml'",
       });
@@ -241,7 +241,7 @@ Table posts { id int [pk] }`,
 
   describe('reuse (transitive re-export)', () => {
     test('reused table is visible to downstream importers', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': "reuse { table users } from './base.dbml'",
         '/consumer.dbml': "use { table users } from './middle.dbml'",
@@ -257,7 +257,7 @@ Table posts { id int [pk] }`,
 
     test('use (non-reuse) does NOT re-export to downstream importers', () => {
       // middle.dbml uses (not reuses) users; consumer importing from middle should not see it
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': "use { table users } from './base.dbml'",
         '/consumer.dbml': "use { table users } from './middle.dbml'",
@@ -276,7 +276,7 @@ Table posts { id int [pk] }`,
 
   describe('circular dependencies', () => {
     test('circular use does not infinite loop or crash during binding', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/x.dbml': `
 use { table y_table } from './y.dbml'
 Table x_table {
@@ -299,7 +299,7 @@ Table y_table {
     });
 
     test('circular reuse chain does not infinite loop or crash', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/a.dbml': "reuse * from './b.dbml'\nTable a_table { id int [pk] }",
         '/b.dbml': "reuse * from './a.dbml'\nTable b_table { id int [pk] }",
       });
@@ -313,7 +313,7 @@ Table y_table {
     test('circular selective reuse of same symbol does not throw query cycle', () => {
       // a reuses c from b, b reuses c from a, neither defines c
       // nodeReferee -> lookupMemberInFilepath -> nodeSymbol -> nodeReferee cycle
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/a.dbml': "reuse { table c } from './b.dbml'",
         '/b.dbml': "reuse { table c } from './a.dbml'",
       });
@@ -327,7 +327,7 @@ Table y_table {
 
   describe('enum import', () => {
     test('imported enum is visible in consumer scope', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/types.dbml': 'Enum job_status { pending running done }',
         '/main.dbml': "use { enum job_status } from './types.dbml'\nTable jobs { id int [pk]\n  status job_status }",
       });
@@ -341,7 +341,7 @@ Table y_table {
     });
 
     test('importing a table as an enum produces a binding error', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int }',
         '/main.dbml': "use { enum users } from './base.dbml'",
       });
@@ -355,7 +355,7 @@ Table y_table {
       // `Enum auth.roles` is declared with an explicit schema prefix.
       // `use { enum auth.roles }` must resolve the specifier without errors,
       // and the resulting UseSymbol must point to the original enum declaration.
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/types.dbml': 'Enum auth.roles { admin member }',
         '/main.dbml': "use { enum auth.roles } from './types.dbml'",
       });
@@ -373,7 +373,7 @@ Table y_table {
 
   describe('tablegroup import', () => {
     test('imported tablegroup is visible in consumer scope', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }\nTable posts { id int [pk] }\nTableGroup content { users\n  posts }',
         '/main.dbml': "use { tablegroup content } from './base.dbml'",
       });
@@ -390,7 +390,7 @@ Table y_table {
   describe('multiple import paths for the same symbol', () => {
     test('same element imported from two different paths resolves independently', () => {
       // base -> middle (reuses users) -> consumer imports users from both base and middle
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': "reuse { table users } from './base.dbml'",
         '/consumer.dbml': [
@@ -416,7 +416,7 @@ Table y_table {
     test('importing a symbol under an alias that matches a locally-defined table produces DUPLICATE_NAME', () => {
       // `use { table accounts as users }` creates a local name 'users'.
       // The file also defines `Table users` - these two collide.
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table accounts { id int [pk] }',
         '/main.dbml': [
           "use { table accounts as users } from './base.dbml'",
@@ -432,7 +432,7 @@ Table y_table {
 
   describe('wildcard import from two files with overlapping names', () => {
     test('use * from two files with the same table name produces DUPLICATE_NAME', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/a.dbml': 'Table users { id int [pk] }',
         '/b.dbml': 'Table users { id int [pk] }',
         '/main.dbml': [
@@ -449,7 +449,7 @@ Table y_table {
 
   describe('file with both element declarations and reuse', () => {
     test('file with elements AND reuse * still exposes all symbols correctly', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table products { id int [pk] }',
         '/hub.dbml': [
           "reuse * from './base.dbml'",
@@ -478,7 +478,7 @@ Table y_table {
     // wrappers around the same underlying table collapse into a single entry
     // instead of colliding as DUPLICATE_NAME.
     test('selective + wildcard from the same file is idempotent (no DUPLICATE_NAME)', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/shared.dbml': 'Table users { id int [pk] }\nTable roles { id int [pk] }',
         '/main.dbml': [
           "use { table users } from './shared.dbml'",
@@ -502,7 +502,7 @@ Table y_table {
 
   describe('DiagramView - non-importable', () => {
     test('wildcard use does NOT pull DiagramView into consumer scope', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': `
           Table users { id int [pk] }
           DiagramView myView {
@@ -520,7 +520,7 @@ Table y_table {
     });
 
     test('reuse wildcard does NOT re-export DiagramView to downstream importers', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': `
           Table users { id int [pk] }
           DiagramView myView {
@@ -539,7 +539,7 @@ Table y_table {
     });
 
     test('DiagramView is still visible in its own file scope', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': `
           Table users { id int [pk] }
           DiagramView myView {
@@ -557,7 +557,7 @@ Table y_table {
     });
 
     test('DiagramView can reference a table imported from another file', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': `
           use { table users } from './base.dbml'
@@ -572,7 +572,7 @@ Table y_table {
     });
 
     test('DiagramView can reference a table from a wildcard import', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }\nTable posts { id int [pk] }',
         '/main.dbml': `
           use * from './base.dbml'
@@ -587,7 +587,7 @@ Table y_table {
     });
 
     test('selective use { DiagramView myView } is rejected at validation', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': `
           Table users { id int [pk] }
           DiagramView myView {
@@ -611,7 +611,7 @@ Table y_table {
     // Importing the same table once with an alias and once without produces two
     // distinct local names - deduplication by (originalSymbol, name) keeps both.
     test('both alias and original name are visible, no DUPLICATE_NAME', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': [
           "use { table users as u } from './base.dbml'",
@@ -629,7 +629,7 @@ Table y_table {
     });
 
     test('both aliases point to the same underlying declaration', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': [
           "use { table users as u } from './base.dbml'",
@@ -651,7 +651,7 @@ Table y_table {
     // consumer.dbml: use * from './middle.dbml'
     // -> consumer sees 'u', not 'users'
     test('consumer via use * sees the alias name, not the original name', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': "reuse { table users as u } from './base.dbml'",
         '/consumer.dbml': "use * from './middle.dbml'",
@@ -671,7 +671,7 @@ Table y_table {
     // consumer.dbml: use { table users as member } from './middle.dbml'
     // -> consumer sees 'member', not 'users'
     test('consumer alias overrides the reuse chain name', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': "reuse { table users } from './base.dbml'",
         '/consumer.dbml': "use { table users as member } from './middle.dbml'",
@@ -690,7 +690,7 @@ Table y_table {
     // base declares users; mid-a and mid-b both reuse from base.
     // Consumer imports users from all three sources under three different aliases.
     test('all three aliases resolve independently with no errors', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/mid-a.dbml': "reuse { table users } from './base.dbml'",
         '/mid-b.dbml': "reuse { table users } from './base.dbml'",
@@ -722,7 +722,7 @@ Table y_table {
     // recursively unwraps through the chain, so both resolve to the same id ->
     // the dedup key is identical -> collapsed to one entry -> no DUPLICATE_NAME.
     test('same symbol reached via two wildcard paths is deduplicated, no DUPLICATE_NAME', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/mid.dbml': "reuse * from './base.dbml'",
         '/consumer.dbml': [
@@ -745,7 +745,7 @@ Table y_table {
     // mid (wildcard, which reuses base). The wildcard exposes 'users' under its
     // original name. Two distinct local names -> both survive, no conflict.
     test('selective alias and wildcard produce two distinct local names, both visible', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/mid.dbml': "reuse * from './base.dbml'",
         '/consumer.dbml': [
@@ -766,7 +766,7 @@ Table y_table {
 
   describe('deep transitive reuse chain (3 hops)', () => {
     test('symbol declared in A is visible in D via A -> reuse -> B -> reuse -> C -> use D', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/a.dbml': 'Table a_table { id int [pk] }',
         '/b.dbml': "reuse * from './a.dbml'",
         '/c.dbml': "reuse * from './b.dbml'",
@@ -781,7 +781,7 @@ Table y_table {
     });
 
     test('4-hop selective reuse chain works and alias at any intermediate hop propagates', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/origin.dbml': 'Table root { id int [pk] }',
         '/hop1.dbml': "reuse { table root } from './origin.dbml'",
         '/hop2.dbml': "reuse { table root } from './hop1.dbml'",
@@ -802,7 +802,7 @@ Table y_table {
     // consumer imports both tables. The Ref is NOT in ImportKind and thus does
     // NOT appear in the consumer's schema - refs must be redeclared locally.
     test('consumer with both tables imported has zero binding errors', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/source.dbml': [
           'Table users { id int [pk] }',
           'Table orders {\n  id int [pk]\n  user_id int\n}',
@@ -821,7 +821,7 @@ Table y_table {
 
   describe('Records - not importable', () => {
     test('"records" is not a valid use specifier kind and is rejected at validation', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/source.dbml': 'Table users { id int [pk]; name varchar }',
         '/consumer.dbml': "use { records users } from './source.dbml'",
       });
@@ -834,7 +834,7 @@ Table y_table {
 
   describe('TableGroup import expands member tables into consumer scope', () => {
     test('member tables are reachable after tablegroup import without explicit table imports', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': [
           'Table users { id int [pk] }',
           'Table posts {\n  id int [pk]\n  user_id int\n}',
@@ -853,7 +853,7 @@ Table y_table {
     });
 
     test('consumer can write a Ref between two member tables of an imported tablegroup', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': [
           'Table users { id int [pk] }',
           'Table posts {\n  id int [pk]\n  user_id int\n}',
@@ -870,7 +870,7 @@ Table y_table {
     });
 
     test('two TableGroups sharing a member table produce no DUPLICATE_NAME for the shared table', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': [
           'Table users { id int [pk] }',
           'Table posts { id int [pk] }',
@@ -898,7 +898,7 @@ Table y_table {
 
   describe('schema merging across files', () => {
     test('importing auth.users from one file and auth.posts from another has no binding errors', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/users.dbml': 'Table auth.users { id int [pk] }',
         '/posts.dbml': 'Table auth.posts {\n  id int [pk]\n  user_id int\n}',
         '/consumer.dbml': [
@@ -912,7 +912,7 @@ Table y_table {
     });
 
     test('Ref between two tables from different files under the same schema resolves without errors', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/users.dbml': 'Table auth.users { id int [pk] }',
         '/posts.dbml': 'Table auth.posts {\n  id int [pk]\n  user_id int\n}',
         '/consumer.dbml': [
@@ -927,7 +927,7 @@ Table y_table {
     });
 
     test('wildcard from two files each contributing to the same named schema has no collision if names differ', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/users.dbml': 'Table auth.users { id int [pk] }',
         '/roles.dbml': 'Table auth.roles { id int [pk] }',
         '/consumer.dbml': [
@@ -944,7 +944,7 @@ Table y_table {
 
   describe('import path without .dbml extension', () => {
     test('use from path without .dbml resolves correctly', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': "use { table users } from './base'",
       });
@@ -959,7 +959,7 @@ Table y_table {
 
   describe('self-import', () => {
     test('use * from self does not throw or infinite loop', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/self.dbml': [
           "use * from './self.dbml'",
           'Table local { id int [pk] }',
@@ -981,7 +981,7 @@ Table y_table {
     // The reuse wildcard must NOT be silently dropped - downstream consumers
     // must still see 'users' via the reuse chain.
     test('reuse * transitivity is preserved even when selective use imports the same symbol', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': [
           "use { table users } from './base.dbml'",
@@ -1003,7 +1003,7 @@ Table y_table {
     });
 
     test('reuse { table X } transitivity survives alongside use * bringing the same symbol', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }\nTable posts { id int [pk] }',
         '/middle.dbml': [
           "reuse { table users } from './base.dbml'",
@@ -1026,7 +1026,7 @@ Table y_table {
 
     test('selective use + wildcard reuse: middle scope has the symbol regardless', () => {
       // Even if dedup drops one variant, 'users' must still be resolvable in middle.
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': [
           "use { table users } from './base.dbml'",
@@ -1042,7 +1042,7 @@ Table y_table {
 
   describe('same symbol imported twice via same or different paths', () => {
     test('use { table users } twice from the same file collapses - no DUPLICATE_NAME', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': [
           "use { table users } from './base.dbml'",
@@ -1056,7 +1056,7 @@ Table y_table {
     });
 
     test('use * twice from files that reuse the same symbol collapses - no DUPLICATE_NAME', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/a.dbml': "reuse * from './base.dbml'",
         '/b.dbml': "reuse * from './base.dbml'",
@@ -1075,7 +1075,7 @@ Table y_table {
     });
 
     test('selective use of same symbol from different reuse paths - no DUPLICATE_NAME', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/a.dbml': "reuse { table users } from './base.dbml'",
         '/b.dbml': "reuse { table users } from './base.dbml'",
@@ -1091,7 +1091,7 @@ Table y_table {
     });
 
     test('DIFFERENT symbols with same name from different files still produce DUPLICATE_NAME', () => {
-      const { compiler, fps } = makeCompiler({
+      const { compiler, fps } = setupCompiler({
         '/a.dbml': 'Table users { id int [pk] }',
         '/b.dbml': 'Table users { id int [pk] }',
         '/main.dbml': [
@@ -1107,7 +1107,7 @@ Table y_table {
   });
 
   describe('import from non-existent file', () => {
-    const { compiler, fps } = makeCompiler({
+    const { compiler, fps } = setupCompiler({
       '/main.dbml': `
 use { table users } from './does-not-exist.dbml'
 `,
@@ -1121,7 +1121,7 @@ use { table users } from './does-not-exist.dbml'
   });
 
   describe('import non-existent symbol from valid file', () => {
-    const { compiler, fps } = makeCompiler({
+    const { compiler, fps } = setupCompiler({
       '/source.dbml': `
 Table users {
   id int [pk]

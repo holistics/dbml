@@ -354,8 +354,9 @@ export default class Compiler {
   // Signature: (entry: Filepath) => Filepath[]
   reachableFiles = this.globalQuery(reachableFiles);
   // A global query
-  // Return the importable members (non-schema, schema, reuses, uses) of a schema symbol or file. Related: topLevelSchemaMembers.
-  // Signature: (symbolOrFilepath: SchemaSymbol | Filepath) => Report<{ nonSchemaMembers, schemaMembers, reuses, uses }>
+  // Return the importable members (non-schema, schema, reuses, uses) of a schema symbol, program symbol, or file.
+  // Filepath delegates to ProgramSymbol for canonical schema ownership.
+  // Signature: (symbolOrFilepath: SchemaSymbol | ProgramSymbol | Filepath) => Report<{ nonSchemaMembers, schemaMembers, reuses, uses }>
   usableMembers = this.globalQuery(usableMembers);
 
   // A local query

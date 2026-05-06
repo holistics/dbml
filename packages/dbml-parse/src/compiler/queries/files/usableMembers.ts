@@ -16,51 +16,123 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  type NodeSymbol, SchemaSymbol,
+  type NodeSymbol, SchemaSymbol, ProgramSymbol,
   AliasSymbol,
+  SymbolKind,
 } from '@/core/types/symbol';
 
-// This does not perform duplicate checks
-export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | Filepath): Report<{
+type UsableResult = {
   nonSchemaMembers: NodeSymbol[];
   schemaMembers: SchemaSymbol[];
-  // reuses are transitive (re-exported to importers)
   reuses: {
     selective: UseSpecifierNode[];
-    wildcard: {
-      importPath: Filepath;
-      node: WildcardNode;
-    }[];
+    wildcard: { importPath: Filepath;
+      node: WildcardNode; }[];
   };
-  // uses are local only (not re-exported)
   uses: {
     selective: UseSpecifierNode[];
-    wildcard: {
-      importPath: Filepath;
-      node: WildcardNode;
-    }[];
+    wildcard: { importPath: Filepath;
+      node: WildcardNode; }[];
   };
-}> {
-  const nonSchemaMembers: NodeSymbol[] = [];
-  const childSchemas = new Map<string, SchemaSymbol>();
+};
 
-  const wildcardReuses: {
-    importPath: Filepath;
-    node: WildcardNode;
-  }[] = [];
-  const selectiveReuses: UseSpecifierNode[] = [];
-  const wildcardUses: {
-    importPath: Filepath;
-    node: WildcardNode;
-  }[] = [];
-  const selectiveUses: UseSpecifierNode[] = [];
+// This does not perform duplicate checks
+export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | ProgramSymbol | Filepath): Report<UsableResult> {
+  // Filepath -> delegate to ProgramSymbol for canonical schema ownership
+  if (symbolOrFilepath instanceof Filepath) {
+    const {
+      ast,
+    } = this.parseFile(symbolOrFilepath).getValue();
+    const programSymbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
+    return this.usableMembers(programSymbol as ProgramSymbol);
+  }
 
-  const filepath = symbolOrFilepath instanceof Filepath ? symbolOrFilepath : symbolOrFilepath.filepath;
+  const filepath = symbolOrFilepath.filepath;
+  const imports = collectImports(this, filepath);
 
-  const parseResult = this.parseFile(filepath);
+  const {
+    nonSchemaMembers, schemaMembers,
+  } = symbolOrFilepath instanceof ProgramSymbol
+    ? usableMembersForProgram(this, symbolOrFilepath, imports)
+    : usableMembersForSchema(this, symbolOrFilepath, imports);
+
+  return new Report(
+    {
+      nonSchemaMembers,
+      schemaMembers,
+      reuses: {
+        selective: imports.selectiveReuses,
+        wildcard: imports.wildcardReuses,
+      },
+      uses: {
+        selective: imports.selectiveUses,
+        wildcard: imports.wildcardUses,
+      },
+    },
+    imports.parseResult.getErrors(),
+    imports.parseResult.getWarnings(),
+  );
+}
+
+export type SchemaMembership =
+  | { kind: 'direct' }
+  | {
+    kind: 'child';
+    schemaName: string;
+  }
+  | { kind: 'none' };
+
+export function schemaMembership (compiler: Compiler, schema: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): SchemaMembership {
+  const qualifiedName = schema.qualifiedName;
+  let fullname: string[] | undefined;
+
+  if (element instanceof UseSpecifierNode) {
+    fullname = useUtils.visibleName(compiler, element);
+  } else {
+    fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
+  }
+  if (!fullname) return {
+    kind: 'none',
+  };
+
+  const elementSchemaChain = fullname.length <= 1
+    ? [
+        DEFAULT_SCHEMA_NAME,
+      ]
+    : fullname.slice(0, -1);
+
+  if (elementSchemaChain.length < qualifiedName.length) return {
+    kind: 'none',
+  };
+  if (!qualifiedName.every((segment, i) => segment === elementSchemaChain[i])) return {
+    kind: 'none',
+  };
+
+  if (elementSchemaChain.length === qualifiedName.length) {
+    return {
+      kind: 'direct',
+    };
+  }
+  return {
+    kind: 'child',
+    schemaName: elementSchemaChain[qualifiedName.length],
+  };
+}
+
+// Helpers
+
+function collectImports (compiler: Compiler, filepath: Filepath) {
+  const parseResult = compiler.parseFile(filepath);
   const {
     ast,
   } = parseResult.getValue();
+
+  const wildcardReuses: { importPath: Filepath;
+    node: WildcardNode; }[] = [];
+  const selectiveReuses: UseSpecifierNode[] = [];
+  const wildcardUses: { importPath: Filepath;
+    node: WildcardNode; }[] = [];
+  const selectiveUses: UseSpecifierNode[] = [];
 
   for (const element of ast.body) {
     if (!(element instanceof UseDeclarationNode) || !element.specifiers || !element.importPath) continue;
@@ -88,143 +160,280 @@ export function usableMembers (this: Compiler, symbolOrFilepath: SchemaSymbol | 
     }
   }
 
-  const schemaMembers: SchemaSymbol[] = [];
-
-  if (symbolOrFilepath instanceof Filepath) {
-    // Collect top-level schemas defined in this file (not from uses/reuses)
-    const fileSchemas = new Map<string, SchemaSymbol>([
-      [
-        DEFAULT_SCHEMA_NAME,
-        this.symbolFactory.create(SchemaSymbol, {
-          name: DEFAULT_SCHEMA_NAME,
-        }, symbolOrFilepath),
-      ],
-    ]);
-    for (const element of ast.declarations) {
-      const fullname = this.nodeFullname(element).getFiltered(UNHANDLED) || [];
-      const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0];
-      if (!fileSchemas.has(schemaName)) {
-        fileSchemas.set(schemaName, this.symbolFactory.create(SchemaSymbol, {
-          name: schemaName,
-        }, symbolOrFilepath));
-      }
-    }
-    schemaMembers.push(...fileSchemas.values());
-    // Also collect non-schema members from the public schema
-    const publicSchema = schemaMembers.find((s) => s.isPublicSchema());
-    if (publicSchema) {
-      const publicUsable = this.usableMembers(publicSchema).getFiltered(UNHANDLED);
-      if (publicUsable) {
-        nonSchemaMembers.push(...publicUsable.nonSchemaMembers);
-      }
-    }
-  } else {
-    const symbol = symbolOrFilepath;
-    for (const element of ast.body) {
-    // Process element declaration
-      if (!(element instanceof ElementDeclarationNode)) continue;
-      const membership = schemaMembership(this, symbol, element);
-      const alias = this.nodeAlias(element).getFiltered(UNHANDLED);
-      const elementSymbol = this.nodeSymbol(element).getFiltered(UNHANDLED);
-      if (alias !== undefined && symbol.isPublicSchema() && elementSymbol) {
-        nonSchemaMembers.push(this.symbolFactory.create(
-          AliasSymbol,
-          {
-            kind: elementSymbol.kind,
-            declaration: element,
-            aliasedSymbol: elementSymbol,
-            name: alias,
-          },
-          symbol.filepath,
-        ));
-      }
-      if (membership.kind === 'none') continue;
-
-      if (membership.kind === 'direct') {
-        const memberSymbol = this.nodeSymbol(element).getFiltered(UNHANDLED);
-        if (!memberSymbol) continue;
-        nonSchemaMembers.push(memberSymbol);
-      } else {
-        if (!childSchemas.has(membership.schemaName)) {
-          childSchemas.set(
-            membership.schemaName,
-            this.symbolFactory.create(
-              SchemaSymbol,
-              {
-                name: membership.schemaName,
-                parent: symbol as SchemaSymbol,
-              },
-              symbol.filepath,
-            ),
-          );
-        }
-      }
-    }
-    schemaMembers.push(...childSchemas.values());
-  }
-
-  return new Report(
-    {
-      nonSchemaMembers,
-      schemaMembers,
-      reuses: {
-        selective: selectiveReuses,
-        wildcard: wildcardReuses,
-      },
-      uses: {
-        selective: selectiveUses,
-        wildcard: wildcardUses,
-      },
-    },
-    parseResult.getErrors(),
-    parseResult.getWarnings(),
-  );
+  return {
+    ast,
+    parseResult,
+    selectiveReuses,
+    wildcardReuses,
+    selectiveUses,
+    wildcardUses,
+  };
 }
 
-// Whether a declaration belongs to a given schema.
-// 'direct': element is a direct member (e.g. `Table users` in `public` schema)
-// 'child': element belongs to a nested child schema (e.g. `Table auth.users` -> child 'auth')
-// 'none': element doesn't belong to this schema at all
-export type SchemaMembership =
-  | { kind: 'direct' }
-  | { kind: 'child';
-    schemaName: string; }
-    | { kind: 'none' };
+function usableMembersForProgram (
+  compiler: Compiler,
+  symbol: ProgramSymbol,
+  imports: ReturnType<typeof collectImports>,
+): { nonSchemaMembers: NodeSymbol[];
+  schemaMembers: SchemaSymbol[]; } {
+  const {
+    ast, selectiveUses, selectiveReuses,
+  } = imports;
+  const filepath = symbol.filepath;
 
-export function schemaMembership (compiler: Compiler, schema: SchemaSymbol, element: ElementDeclarationNode | UseSpecifierNode): SchemaMembership {
-  const qualifiedName = schema.qualifiedName;
-  let fullname: string[] | undefined;
+  const fileSchemas = new Map<string, SchemaSymbol>([
+    [
+      DEFAULT_SCHEMA_NAME,
+      compiler.symbolFactory.create(SchemaSymbol, {
+        name: DEFAULT_SCHEMA_NAME,
+      }, filepath),
+    ],
+  ]);
 
-  if (element instanceof UseSpecifierNode) {
-    fullname = useUtils.visibleName(compiler, element);
-  } else {
-    fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED);
+  for (const element of ast.declarations) {
+    const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED) || [];
+    const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0];
+    if (!fileSchemas.has(schemaName)) {
+      fileSchemas.set(schemaName, compiler.symbolFactory.create(SchemaSymbol, {
+        name: schemaName,
+      }, filepath));
+    }
   }
-  if (!fullname) return {
-    kind: 'none',
-  };
 
-  // Elements with no name or no schema prefix belong to the default (public) schema
-  const elementSchemaChain = fullname.length <= 1
-    ? [
-        DEFAULT_SCHEMA_NAME,
-      ]
-    : fullname.slice(0, -1);
+  registerProgramSchemas(compiler, [
+    ...selectiveUses,
+    ...selectiveReuses,
+  ], fileSchemas, filepath);
 
-  if (elementSchemaChain.length < qualifiedName.length) return {
-    kind: 'none',
-  };
-  if (!qualifiedName.every((segment, i) => segment === elementSchemaChain[i])) return {
-    kind: 'none',
-  };
-
-  if (elementSchemaChain.length === qualifiedName.length) {
-    return {
-      kind: 'direct',
-    };
+  // Visit all reachable files to ensure every program has the same set of schema names
+  for (const reachable of compiler.reachableFiles(filepath)) {
+    for (const name of collectTopLevelSchemaNames(compiler, reachable)) {
+      if (!fileSchemas.has(name)) {
+        fileSchemas.set(name, compiler.symbolFactory.create(SchemaSymbol, {
+          name,
+        }, filepath));
+      }
+    }
   }
+
+  const schemaMembers = [
+    ...fileSchemas.values(),
+  ];
+  const nonSchemaMembers: NodeSymbol[] = [];
+
+  const publicSchema = schemaMembers.find((s) => s.isPublicSchema());
+  if (publicSchema) {
+    const publicUsable = compiler.usableMembers(publicSchema).getFiltered(UNHANDLED);
+    if (publicUsable) {
+      nonSchemaMembers.push(...publicUsable.nonSchemaMembers);
+    }
+  }
+
   return {
-    kind: 'child',
-    schemaName: elementSchemaChain[qualifiedName.length],
+    nonSchemaMembers,
+    schemaMembers,
   };
+}
+
+function usableMembersForSchema (
+  compiler: Compiler,
+  symbol: SchemaSymbol,
+  imports: ReturnType<typeof collectImports>,
+): {
+  nonSchemaMembers: NodeSymbol[];
+  schemaMembers: SchemaSymbol[];
+} {
+  const {
+    ast, selectiveUses, selectiveReuses,
+  } = imports;
+  const nonSchemaMembers: NodeSymbol[] = [];
+  const childSchemas = new Map<string, SchemaSymbol>();
+
+  for (const element of ast.body) {
+    if (!(element instanceof ElementDeclarationNode)) continue;
+    const membership = schemaMembership(compiler, symbol, element);
+    const alias = compiler.nodeAlias(element).getFiltered(UNHANDLED);
+    const elementSymbol = compiler.nodeSymbol(element).getFiltered(UNHANDLED);
+    if (alias !== undefined && symbol.isPublicSchema() && elementSymbol) {
+      nonSchemaMembers.push(compiler.symbolFactory.create(
+        AliasSymbol,
+        {
+          kind: elementSymbol.kind,
+          declaration: element,
+          aliasedSymbol: elementSymbol,
+          name: alias,
+        },
+        symbol.filepath,
+      ));
+    }
+    if (membership.kind === 'none') continue;
+
+    if (membership.kind === 'direct') {
+      const memberSymbol = compiler.nodeSymbol(element).getFiltered(UNHANDLED);
+      if (!memberSymbol) continue;
+      nonSchemaMembers.push(memberSymbol);
+    } else {
+      if (!childSchemas.has(membership.schemaName)) {
+        childSchemas.set(
+          membership.schemaName,
+          compiler.symbolFactory.create(
+            SchemaSymbol,
+            {
+              name: membership.schemaName,
+              parent: symbol,
+            },
+            symbol.filepath,
+          ),
+        );
+      }
+    }
+  }
+
+  registerSchemaChildren(compiler, [
+    ...selectiveUses,
+    ...selectiveReuses,
+  ], symbol, childSchemas);
+
+  // Visit all reachable files to ensure every schema has the same set of child schema names
+  const qualifiedName = symbol.qualifiedName;
+  for (const reachable of compiler.reachableFiles(symbol.filepath)) {
+    for (const name of collectChildSchemaNames(compiler, reachable, qualifiedName)) {
+      if (!childSchemas.has(name)) {
+        childSchemas.set(
+          name,
+          compiler.symbolFactory.create(
+            SchemaSymbol,
+            {
+              name,
+              parent: symbol,
+            },
+            symbol.filepath,
+          ),
+        );
+      }
+    }
+  }
+
+  return {
+    nonSchemaMembers,
+    schemaMembers: [
+      ...childSchemas.values(),
+    ],
+  };
+}
+
+// Register schemas from use/reuse { schema ... } specifiers at the program level.
+// `use { schema x.a }` -> registers top-level `x`.
+// `use { schema x.a as b }` -> registers top-level `b` (aliased).
+function registerProgramSchemas (
+  compiler: Compiler,
+  specifiers: UseSpecifierNode[],
+  fileSchemas: Map<string, SchemaSymbol>,
+  filepath: Filepath,
+) {
+  for (const specifier of specifiers) {
+    if (specifier.getSymbolKind() !== SymbolKind.Schema) continue;
+    const parts = useUtils.visibleName(compiler, specifier);
+    const name = parts?.at(0);
+    if (name !== undefined && !fileSchemas.has(name)) {
+      fileSchemas.set(name, compiler.symbolFactory.create(SchemaSymbol, {
+        name,
+      }, filepath));
+    }
+  }
+}
+
+// Register child schemas from use/reuse { schema ... } specifiers at a schema level.
+// `usableMembers(schema_x)` with `use { schema x.a }` -> registers child `a` under `x`.
+// Aliased specifiers (e.g. `use { schema x.a as b }`) have visibleName `['b']`,
+// which won't match the schema chain - registered at the program level instead.
+function registerSchemaChildren (
+  compiler: Compiler,
+  specifiers: UseSpecifierNode[],
+  symbol: SchemaSymbol,
+  childSchemas: Map<string, SchemaSymbol>,
+) {
+  const qualifiedName = symbol.qualifiedName;
+  for (const specifier of specifiers) {
+    if (specifier.getSymbolKind() !== SymbolKind.Schema) continue;
+    const parts = useUtils.visibleName(compiler, specifier);
+    if (!parts || parts.length <= qualifiedName.length) continue;
+    if (!qualifiedName.every((s, i) => s === parts[i])) continue;
+    const childName = parts[qualifiedName.length];
+    if (childName && !childSchemas.has(childName)) {
+      childSchemas.set(
+        childName,
+        compiler.symbolFactory.create(
+          SchemaSymbol,
+          {
+            name: childName,
+            parent: symbol,
+          },
+          symbol.filepath,
+        ),
+      );
+    }
+  }
+}
+
+// Collect top-level schema names from a file's declarations and use/reuse specifiers.
+function collectTopLevelSchemaNames (compiler: Compiler, filepath: Filepath): string[] {
+  const {
+    ast,
+  } = compiler.parseFile(filepath).getValue();
+  const names: string[] = [];
+
+  for (const element of ast.declarations) {
+    const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED) || [];
+    const schemaName = fullname.length <= 1 ? DEFAULT_SCHEMA_NAME : fullname[0];
+    names.push(schemaName);
+  }
+
+  const imports = collectImports(compiler, filepath);
+  for (const specifier of [
+    ...imports.selectiveUses,
+    ...imports.selectiveReuses,
+  ]) {
+    if (specifier.getSymbolKind() !== SymbolKind.Schema) continue;
+    const parts = useUtils.visibleName(compiler, specifier);
+    const name = parts?.at(0);
+    if (name !== undefined) names.push(name);
+  }
+
+  return names;
+}
+
+// Collect child schema names under a given qualified name from a file's declarations and use/reuse specifiers.
+function collectChildSchemaNames (compiler: Compiler, filepath: Filepath, parentQualifiedName: string[]): string[] {
+  const {
+    ast,
+  } = compiler.parseFile(filepath).getValue();
+  const names: string[] = [];
+
+  for (const element of ast.declarations) {
+    const fullname = compiler.nodeFullname(element).getFiltered(UNHANDLED) || [];
+    const schemaChain = fullname.length <= 1
+      ? [
+          DEFAULT_SCHEMA_NAME,
+        ]
+      : fullname.slice(0, -1);
+    if (schemaChain.length > parentQualifiedName.length
+      && parentQualifiedName.every((s, i) => s === schemaChain[i])) {
+      names.push(schemaChain[parentQualifiedName.length]);
+    }
+  }
+
+  const imports = collectImports(compiler, filepath);
+  for (const specifier of [
+    ...imports.selectiveUses,
+    ...imports.selectiveReuses,
+  ]) {
+    if (specifier.getSymbolKind() !== SymbolKind.Schema) continue;
+    const parts = useUtils.visibleName(compiler, specifier);
+    if (!parts || parts.length <= parentQualifiedName.length) continue;
+    if (!parentQualifiedName.every((s, i) => s === parts[i])) continue;
+    names.push(parts[parentQualifiedName.length]);
+  }
+
+  return names;
 }

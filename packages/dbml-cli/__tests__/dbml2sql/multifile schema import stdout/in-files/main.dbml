@@ -1,0 +1,7 @@
+use { schema public } from './shared.dbml'
+
+Table posts {
+  id int [pk]
+  author_id int [ref: > public.users.id]
+  title varchar
+}

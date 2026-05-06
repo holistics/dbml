@@ -1,0 +1,9 @@
+Table public.users {
+  id int [pk]
+  email varchar
+}
+
+Table public.tags {
+  id int [pk]
+  name varchar
+}

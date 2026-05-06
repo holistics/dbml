@@ -991,12 +991,7 @@
                                 }
                               },
                               "fullEnd": 341,
-                              "fullStart": 339,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
-                                }
-                              }
+                              "fullStart": 339
                             },
                             "op": {
                               "context": {
@@ -1034,13 +1029,7 @@
                                 }
                               },
                               "fullEnd": 349,
-                              "fullStart": 342,
-                              "referee": {
-                                "context": {
-                                  "id": "symbol@Enum@v2.status@[L14:C0, L19:C1]",
-                                  "snippet": "Enum v2.st... tenant\r\n}"
-                                }
-                              }
+                              "fullStart": 342
                             }
                           },
                           "fullEnd": 349,
@@ -1128,12 +1117,7 @@
                                               }
                                             },
                                             "fullEnd": 361,
-                                            "fullStart": 359,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
-                                              }
-                                            }
+                                            "fullStart": 359
                                           },
                                           "op": {
                                             "context": {
@@ -1171,13 +1155,7 @@
                                               }
                                             },
                                             "fullEnd": 368,
-                                            "fullStart": 362,
-                                            "referee": {
-                                              "context": {
-                                                "id": "symbol@Enum@v2.status@[L14:C0, L19:C1]",
-                                                "snippet": "Enum v2.st... tenant\r\n}"
-                                              }
-                                            }
+                                            "fullStart": 362
                                           }
                                         },
                                         "fullEnd": 368,
@@ -1219,13 +1197,7 @@
                                           }
                                         },
                                         "fullEnd": 372,
-                                        "fullStart": 369,
-                                        "referee": {
-                                          "context": {
-                                            "id": "symbol@Enum field@new@[L16:C4, L16:C7]",
-                                            "snippet": "new"
-                                          }
-                                        }
+                                        "fullStart": 369
                                       }
                                     },
                                     "fullEnd": 372,
