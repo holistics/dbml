@@ -2,11 +2,11 @@ import fs from 'node:fs';
 import { NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
-import { getElementNameString } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types';
 import { isEmpty } from 'lodash-es';
+import { getElementNameString } from '@/core/utils/expression';
 
 export function scanTestNames (path: string) {
   const files = fs.readdirSync(path);
@@ -62,7 +62,7 @@ function getCodeSnippet (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol, co
 
   if (!node) return undefined;
 
-  const source = compiler.parse.source();
+  const source = compiler.layout.getSource(node.filepath) || '';
   const text = source.slice(node.start, node.end);
   if (text.length <= 20) {
     return text;

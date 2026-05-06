@@ -1,3 +1,4 @@
+import { DEFAULT_ENTRY } from '@/constants';
 import {
   type Position, type TextModel,
 } from '@/services';
@@ -14,7 +15,7 @@ export class MockTextModel {
   private content: string;
   public uri: any;
 
-  constructor (content: string, uri: string = '') {
+  constructor (content: string, uri: string = DEFAULT_ENTRY.absolute) {
     this.content = content;
     this.uri = uri;
   }
@@ -62,7 +63,7 @@ export class MockTextModel {
   }
 }
 
-export function createMockTextModel (content: string, uri: string = ''): TextModel {
+export function createMockTextModel (content: string, uri: string = DEFAULT_ENTRY.absolute): TextModel {
   return new MockTextModel(content, uri) as unknown as TextModel;
 }
 

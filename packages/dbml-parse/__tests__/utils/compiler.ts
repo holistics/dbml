@@ -3,7 +3,9 @@ import Parser from '@/core/parser/parser';
 import {
   DEFAULT_ENTRY,
 } from '@/constants';
-import Analyzer from '@/core/analyzer/analyzer';
+import Binder from '@/core/global_modules/program/bind';
+import Validator from '@/core/local_modules/program/validate';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
   ProgramNode,
   SyntaxNode,
@@ -11,7 +13,7 @@ import {
   SyntaxNodeKind,
   ElementDeclarationNode,
   AttributeNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   PrefixExpressionNode,
   InfixExpressionNode,
   PostfixExpressionNode,
@@ -51,15 +53,18 @@ export function parse (source: string): Report<{ ast: ProgramNode;
 export function analyze (source: string): Report<ProgramNode> {
   return parse(source).chain(({
     ast,
-  }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
+  }) => {
+    const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
+    return new Validator(ast, symbolFactory).validate().chain((program) => {
+      return new Binder(program, symbolFactory).resolve();
+    });
+  });
 }
 
-export function interpret (source: string): Report<Database | undefined> {
+export function interpret (source: string): Report<Readonly<Database> | undefined> {
   const compiler = new Compiler();
-  compiler.setSource(source);
-  return compiler.parse._().map(({
-    rawDb,
-  }) => rawDb);
+  compiler.setSource(DEFAULT_ENTRY, source);
+  return compiler.interpretFile(DEFAULT_ENTRY);
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
@@ -122,7 +127,7 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.IDENTIFIER_STREAM: {
-        const stream = node as IdentiferStreamNode;
+        const stream = node as IdentifierStreamNode;
         stream.identifiers.forEach(collectTokens);
         break;
       }

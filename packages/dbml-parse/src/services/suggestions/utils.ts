@@ -1,10 +1,9 @@
-import Compiler from '@/compiler';
 import {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/queries/utils';
 import {
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   hasTrailingSpaces,
 } from '@/core/lexer/utils';
@@ -122,11 +121,6 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
   };
 }
 
-// Get the source text of a node or a token
-export function getNodeOrTokenSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
-  return compiler.parse.source().slice(tokenOrNode.start, tokenOrNode.end);
-}
-
 /**
  * Checks if the offset is within the element's header
  * (within the element, but outside the body)
@@ -157,10 +151,14 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
  */
 export function getColumnsFromTableSymbol (
   tableSymbol: TableSymbol | TablePartialSymbol,
-): Array<{ name: string;
-  type: string; }> | null {
-  const columns: Array<{ name: string;
-    type: string; }> = [];
+): Array<{
+  name: string;
+  type: string;
+}> | null {
+  const columns: Array<{
+    name: string;
+    type: string;
+  }> = [];
 
   for (const [
     index,
@@ -181,8 +179,10 @@ export function getColumnsFromTableSymbol (
 export function extractNameAndTypeOfColumnSymbol (
   columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
   columnName: string,
-): { name: string;
-  type: string; } | null {
+): {
+  name: string;
+  type: string;
+} | null {
   const columnIndex = createColumnSymbolIndex(columnName);
   const columnDeclaration = columnSymbol instanceof TablePartialInjectedColumnSymbol
     ? columnSymbol.tablePartialSymbol.symbolTable.get(columnIndex)?.declaration

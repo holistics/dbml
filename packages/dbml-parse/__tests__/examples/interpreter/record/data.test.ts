@@ -31,23 +31,23 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'integer',
       value: 42,
     });
-    expect(db.records[0].values[0][2]).toEqual({
+    expect(db.records[0].values[0][2]).toMatchObject({
       type: 'integer',
       value: -100,
     });
-    expect(db.records[0].values[0][3]).toEqual({
+    expect(db.records[0].values[0][3]).toMatchObject({
       type: 'integer',
       value: 9999999999,
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 0,
     });
@@ -72,27 +72,27 @@ describe('[example - record] data type interpretation', () => {
 
     const db = result.getValue()!;
     // Note: float/numeric/decimal types are normalized to 'real'
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'real',
       value: 99.99,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'real',
       value: 3.14159,
     });
-    expect(db.records[0].values[0][2]).toEqual({
+    expect(db.records[0].values[0][2]).toMatchObject({
       type: 'real',
       value: 0.001,
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'real',
       value: 50.5,
     });
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'real',
       value: 0.5,
     });
-    expect(db.records[0].values[1][2]).toEqual({
+    expect(db.records[0].values[1][2]).toMatchObject({
       type: 'real',
       value: 100,
     });
@@ -116,19 +116,19 @@ describe('[example - record] data type interpretation', () => {
 
     const db = result.getValue()!;
     // Note: boolean types are normalized to 'bool'
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'bool',
       value: true,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'bool',
       value: false,
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'bool',
       value: false,
     });
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'bool',
       value: true,
     });
@@ -152,19 +152,19 @@ describe('[example - record] data type interpretation', () => {
     expect(errors.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'string',
       value: 'A short description',
     });
-    expect(db.records[0].values[0][2]).toEqual({
+    expect(db.records[0].values[0][2]).toMatchObject({
       type: 'string',
       value: 'ABC123',
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });

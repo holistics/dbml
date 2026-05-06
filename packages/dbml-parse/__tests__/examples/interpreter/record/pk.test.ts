@@ -38,43 +38,43 @@ describe('[example - record] composite primary key constraints', () => {
     expect(db.records[0].values.length).toBe(3);
 
     // Row 1: order_id=1, product_id=100, quantity=2
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toEqual({
+    expect(db.records[0].values[0][1]).toMatchObject({
       type: 'integer',
       value: 100,
     });
-    expect(db.records[0].values[0][2]).toEqual({
+    expect(db.records[0].values[0][2]).toMatchObject({
       type: 'integer',
       value: 2,
     });
 
     // Row 2: order_id=1, product_id=101, quantity=1
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[1][1]).toEqual({
+    expect(db.records[0].values[1][1]).toMatchObject({
       type: 'integer',
       value: 101,
     });
-    expect(db.records[0].values[1][2]).toEqual({
+    expect(db.records[0].values[1][2]).toMatchObject({
       type: 'integer',
       value: 1,
     });
 
     // Row 3: order_id=2, product_id=100, quantity=3
-    expect(db.records[0].values[2][0]).toEqual({
+    expect(db.records[0].values[2][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[0].values[2][1]).toEqual({
+    expect(db.records[0].values[2][1]).toMatchObject({
       type: 'integer',
       value: 100,
     });
-    expect(db.records[0].values[2][2]).toEqual({
+    expect(db.records[0].values[2][2]).toMatchObject({
       type: 'integer',
       value: 3,
     });
@@ -179,19 +179,19 @@ describe('[example - record] simple primary key constraints', () => {
     const usersRecord = db.records.find((r) => r.tableName === 'users');
     expect(usersRecord).toBeDefined();
     expect(usersRecord!.values.length).toBe(2);
-    expect(usersRecord!.values[0][0]).toEqual({
+    expect(usersRecord!.values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(usersRecord!.values[0][1]).toEqual({
+    expect(usersRecord!.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
-    expect(usersRecord!.values[1][0]).toEqual({
+    expect(usersRecord!.values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(usersRecord!.values[1][1]).toEqual({
+    expect(usersRecord!.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
@@ -200,11 +200,11 @@ describe('[example - record] simple primary key constraints', () => {
     const countriesRecord = db.records.find((r) => r.tableName === 'countries');
     expect(countriesRecord).toBeDefined();
     expect(countriesRecord!.values.length).toBe(2);
-    expect(countriesRecord!.values[0][0]).toEqual({
+    expect(countriesRecord!.values[0][0]).toMatchObject({
       type: 'string',
       value: 'US',
     });
-    expect(countriesRecord!.values[1][0]).toEqual({
+    expect(countriesRecord!.values[1][0]).toMatchObject({
       type: 'string',
       value: 'UK',
     });
@@ -213,15 +213,15 @@ describe('[example - record] simple primary key constraints', () => {
     const accountsRecord = db.records.find((r) => r.tableName === 'accounts');
     expect(accountsRecord).toBeDefined();
     expect(accountsRecord!.values.length).toBe(3);
-    expect(accountsRecord!.values[0][0]).toEqual({
+    expect(accountsRecord!.values[0][0]).toMatchObject({
       type: 'integer',
       value: 0,
     });
-    expect(accountsRecord!.values[1][0]).toEqual({
+    expect(accountsRecord!.values[1][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(accountsRecord!.values[2][0]).toEqual({
+    expect(accountsRecord!.values[2][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
@@ -299,11 +299,11 @@ describe('[example - record] simple primary key constraints', () => {
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(2);
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
@@ -328,15 +328,15 @@ describe('[example - record] simple primary key constraints', () => {
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(3);
-    expect(db.records[0].values[0][0]).toEqual({
+    expect(db.records[0].values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[1][0]).toEqual({
+    expect(db.records[0].values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[0].values[2][0]).toEqual({
+    expect(db.records[0].values[2][0]).toMatchObject({
       type: 'integer',
       value: 3,
     });

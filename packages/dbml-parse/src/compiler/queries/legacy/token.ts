@@ -1,20 +1,29 @@
 import {
-  isInvalidToken,
-} from '@/core/parser/utils';
+  type Filepath,
+} from '@/core/types';
 import type {
   SyntaxToken,
 } from '@/core/types/tokens';
+import {
+  isInvalidToken,
+} from '@/core/utils/tokens';
 import type Compiler from '../../index';
 
-export function flatStream (this: Compiler): readonly SyntaxToken[] {
-  return this.parse.tokens()
-    .flatMap((token) => [
+export function flatStream (
+  this: Compiler,
+  filepath: Filepath,
+): readonly SyntaxToken[] {
+  return (this.parseFile(filepath).getValue().tokens)
+    .flatMap((token: SyntaxToken) => [
       ...token.leadingInvalid,
       token,
       ...token.trailingInvalid,
     ]);
 }
 
-export function invalidStream (this: Compiler): readonly SyntaxToken[] {
-  return this.parse.tokens().filter(isInvalidToken);
+export function invalidStream (
+  this: Compiler,
+  filepath: Filepath,
+): readonly SyntaxToken[] {
+  return (this.parseFile(filepath).getValue().tokens).filter(isInvalidToken);
 }

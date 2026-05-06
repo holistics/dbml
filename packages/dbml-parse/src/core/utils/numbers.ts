@@ -9,11 +9,11 @@ export function getNumberTextFromExpression (node: PrimaryExpressionNode | Prefi
   return (node.expression as LiteralNode).literal!.value;
 }
 
-export function parseNumber (node: PrefixExpressionNode | PrimaryExpressionNode): number {
+export function extractNumber (node: PrefixExpressionNode | PrimaryExpressionNode): number {
   if (node instanceof PrefixExpressionNode) {
     const op = node.op?.value;
-    if (op === '-') return -parseNumber(node.expression!);
-    return parseNumber(node.expression!);
+    if (op === '-') return -extractNumber(node.expression!);
+    return extractNumber(node.expression!);
   }
   return Number.parseFloat((node.expression as LiteralNode).literal!.value);
 }

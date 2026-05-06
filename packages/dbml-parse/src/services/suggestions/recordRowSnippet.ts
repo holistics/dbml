@@ -1,11 +1,14 @@
 import Compiler from '@/compiler';
 import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
   ElementKind,
-} from '@/core/analyzer/types';
+} from '@/core/types/keywords';
 import {
   extractReferee,
   extractVariableFromExpression,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -14,7 +17,7 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import {
-  ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
+  ColumnSymbol, PartialInjectionSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
 } from '@/core/types/symbol/symbols';
 import {
   isOffsetWithinSpan,
@@ -31,14 +34,18 @@ import {
   type Position,
   type TextModel,
 } from '@/services/types';
+import {
+  SymbolKind,
+} from '@/core/types';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,
   model: TextModel,
   position: Position,
+  filepath: Filepath,
   offset: number,
 ): CompletionList | null {
-  const element = compiler.container.element(offset);
+  const element = compiler.container.element(filepath, offset);
 
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;
@@ -83,8 +90,7 @@ function suggestRecordRowInTopLevelRecords (
       const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
     })
-    .filter((col) => col !== null) as Array<{ name: string;
-    type: string; }>;
+    .filter((col) => col !== null);
 
   if (columns.length === 0) return noSuggestions();
 
@@ -115,12 +121,14 @@ function suggestRecordRowInNestedRecords (
   }
 
   const tableSymbol = parent.symbol;
-  if (!(tableSymbol instanceof TableSymbol)) {
+  if (!tableSymbol?.isKind(SymbolKind.Table)) {
     return noSuggestions();
   }
 
-  let columns: Array<{ name: string;
-    type: string; }>;
+  let columns: Array<{
+    name: string;
+    type: string;
+  }>;
 
   if (recordsElement.name instanceof TupleExpressionNode) {
     // Explicit columns from tuple: records (col1, col2)
@@ -139,11 +147,10 @@ function suggestRecordRowInNestedRecords (
         if (columnName === undefined) return null;
         return extractNameAndTypeOfColumnSymbol(symbol, columnName);
       })
-      .filter((col) => col !== null) as Array<{ name: string;
-      type: string; }>;
+      .filter((col) => col !== null);
   } else {
     // Implicit columns - use all columns from parent table
-    const result = getColumnsFromTableSymbol(tableSymbol);
+    const result = getColumnsFromTableSymbol(tableSymbol as TableSymbol);
     if (!result) {
       return noSuggestions();
     }
