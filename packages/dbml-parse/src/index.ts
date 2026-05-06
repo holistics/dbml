@@ -57,7 +57,6 @@ export {
   formatRecordValue,
   isValidIdentifier,
   addDoubleQuoteIfNeeded,
-  type TextEdit,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data
