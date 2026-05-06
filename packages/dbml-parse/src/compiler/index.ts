@@ -27,6 +27,7 @@ import {
 } from './queries/pipeline/bind';
 import {
   interpretFile,
+  interpretProject,
 } from './queries/pipeline/interpret';
 import {
   validateFile, validateNode,
@@ -157,6 +158,7 @@ export default class Compiler {
   bindFile = this.query(bindFile);
 
   interpretFile = this.query(interpretFile);
+  interpretProject = this.query(interpretProject);
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
