@@ -20,9 +20,9 @@ const consoleFormat = printf((info) => {
 
 const fileFormat = printf((info) => {
   const {
-    timestamp: ts, stack, rootError,
+    timestamp: ts, message, stack, rootError,
   } = info as any;
-  let logContent = `${ts}\n${stack ?? info}\n`;
+  let logContent = `${ts}\n${stripAnsi(stack ?? message ?? '')}\n`;
   if (rootError) {
     logContent += '\nROOT_ERROR:';
     logContent += `\n${rootError.stack}`;
