@@ -195,7 +195,6 @@ function mergeImportedSchema (
   visited: Set<string> = new Set(),
 ): NodeSymbol[] {
   if (specifier.getSymbolKind() !== SymbolKind.Schema) return [];
-  if (symbol.isPublicSchema()) return [];
   if (!specifier.name) return [];
 
   // Find the external schema matching this schema's name in the import file

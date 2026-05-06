@@ -253,6 +253,52 @@ Ref: x.b.id > x.c.id
   });
 });
 
+describe('[example] use { schema public } pulls tables and records from external file', () => {
+  const { compiler } = setupCompiler({
+    '/a.dbml': `
+Table "v" {
+  id int
+  abc CLOB
+
+  indexes {
+    id
+  }
+}
+
+Records "v"(id) {
+  1
+  2
+  3
+}
+`,
+    '/main.dbml': `
+use { schema public } from './a.dbml'
+`,
+  });
+
+  test('table v is pulled into main', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    expect(db.tables.find((t) => t.name === 'v')).toBeDefined();
+  });
+
+  test('table v has correct fields', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    const v = db.tables.find((t) => t.name === 'v')!;
+    expect(v.fields.map((f) => f.name)).toEqual(['id', 'abc']);
+  });
+
+  test('records for v are present', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    expect(db.records.length).toBeGreaterThan(0);
+  });
+
+  test('indexes on v are present', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    const v = db.tables.find((t) => t.name === 'v')!;
+    expect(v.indexes.length).toBeGreaterThan(0);
+  });
+});
+
 
 describe('[stress] schema-qualified table with ref auto-pull', () => {
   const { compiler } = setupCompiler({

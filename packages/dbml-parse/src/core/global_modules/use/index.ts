@@ -73,7 +73,7 @@ export const useModule: GlobalModule = {
       node.filepath,
     ), originalSymbol === undefined
       ? [
-          new CompileError(CompileErrorCode.BINDING_ERROR, `Failed to resolve the import of ${symbolKind} '${(compiler.nodeFullname(node).getFiltered(UNHANDLED) || []).map(addDoubleQuoteIfNeeded).join('.')}'`, node),
+          new CompileError(CompileErrorCode.BINDING_ERROR, `Failed to resolve the import of ${symbolKind} '${(destructureComplexVariable(node.name) || []).map(addDoubleQuoteIfNeeded).join('.')}'`, node),
         ]
       : []);
   },
