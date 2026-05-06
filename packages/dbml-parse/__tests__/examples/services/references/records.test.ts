@@ -1,6 +1,7 @@
 import {
   describe, expect, it,
 } from 'vitest';
+import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
 import DBMLReferencesProvider from '@/services/references/provider';
 import {
@@ -23,7 +24,7 @@ records users(id, name) {
   2, "Bob"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -49,7 +50,7 @@ records auth.users(id, email) {
   1, "alice@example.com"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -73,7 +74,7 @@ records public.orders(id, total) {
   1, 99.99
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -104,7 +105,7 @@ records users(id, name) {
   2, "Bob"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -130,7 +131,7 @@ records users(id, name) {
   1, "Alice"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -162,7 +163,7 @@ records users(id, status) {
   2, status.inactive
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -190,7 +191,7 @@ records auth.users(id, role) {
   1, auth.role.admin
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -224,7 +225,7 @@ records tasks(id, status) {
   4, status.pending
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -256,7 +257,7 @@ records users(id, status) {
   1, status.active
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);
@@ -286,7 +287,7 @@ records auth.users(id, role) {
   2, auth.role.user
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
       const model = createMockTextModel(program);

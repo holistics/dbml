@@ -1,9 +1,13 @@
 import Compiler from '@/compiler';
 import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
   SyntaxNode, SyntaxNodeKind,
 } from '@/core/types/nodes';
 import {
   Definition, DefinitionProvider, Position, TextModel,
+  Uri,
 } from '@/services/types';
 import {
   getOffsetFromMonacoPosition,
@@ -20,9 +24,10 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     const {
       uri,
     } = model;
+    const filepath = Filepath.fromUri(String(model.uri));
     const offset = getOffsetFromMonacoPosition(model, position);
     const containers = [
-      ...this.compiler.container.stack(offset),
+      ...this.compiler.container.stack(filepath, offset),
     ];
     while (containers.length !== 0) {
       const node = containers.pop();
@@ -54,7 +59,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
               endColumn: endPos.column + 1,
               endLineNumber: endPos.line + 1,
             },
-            uri,
+            uri: Uri.parse(filepath.toUri()),
           },
         ];
       }

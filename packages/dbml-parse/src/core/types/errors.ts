@@ -1,12 +1,12 @@
 import {
+  Filepath,
+} from './filepath';
+import {
   SyntaxNode,
 } from '@/core/types/nodes';
 import {
   SyntaxToken,
 } from '@/core/types/tokens';
-import {
-  Filepath,
-} from './filepath';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -122,12 +122,17 @@ export enum CompileErrorCode {
   DUPLICATE_COLUMN_REFERENCES_IN_RECORDS,
   DUPLICATE_RECORDS_FOR_TABLE,
 
+  INVALID_USE_CONTEXT,
+  INVALID_USE_SPECIFIER_KIND,
+  INVALID_USE_SPECIFIER_NAME,
+
   INVALID_DIAGRAMVIEW_CONTEXT,
   DUPLICATE_DIAGRAMVIEW_NAME,
   INVALID_DIAGRAMVIEW_FIELD,
   DUPLICATE_DIAGRAMVIEW_FIELD,
 
   BINDING_ERROR = 4000,
+  NONEXISTENT_MODULE,
 
   UNSUPPORTED = 5000,
   CIRCULAR_REF,

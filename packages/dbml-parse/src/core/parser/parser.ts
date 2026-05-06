@@ -10,7 +10,7 @@ import {
 import NodeFactory from '@/core/parser/factory';
 import {
   convertFuncAppToElem,
-  isAsKeyword,
+  getMemberChain,
   markInvalid,
 } from '@/core/parser/utils';
 import {
@@ -31,7 +31,7 @@ import {
   FunctionApplicationNode,
   FunctionExpressionNode,
   GroupExpressionNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -50,6 +50,9 @@ import Report from '@/core/types/report';
 import {
   SyntaxToken, SyntaxTokenKind, isOpToken,
 } from '@/core/types/tokens';
+import {
+  isAsKeyword,
+} from '../utils/tokens';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
 class PartialParsingError<T extends SyntaxNode> {
@@ -200,11 +203,21 @@ export default class Parser {
       source: this.source,
     });
     this.gatherInvalid();
+    this.assignParents(program);
 
     return new Report({
       ast: program,
       tokens: this.tokens,
     }, this.errors);
+  }
+
+  private assignParents (node: SyntaxNode) {
+    getMemberChain(node).forEach((child) => {
+      if (child instanceof SyntaxNode) {
+        child.parentNode = node;
+        this.assignParents(child);
+      }
+    });
   }
 
   /* Parsing and synchronizing ProgramNode */
@@ -765,10 +778,7 @@ export default class Parser {
     | GroupExpressionNode
     | WildcardNode {
     if (this.check(SyntaxTokenKind.WILDCARD)) {
-      this.advance();
-      return this.nodeFactory.create(WildcardNode, {
-        token: this.previous(),
-      });
+      return this.wildcardExpression();
     }
 
     if (
@@ -837,6 +847,13 @@ export default class Parser {
     }
 
     return this.nodeFactory.create(FunctionExpressionNode, args);
+  }
+
+  private wildcardExpression (): WildcardNode {
+    this.advance();
+    return this.nodeFactory.create(WildcardNode, {
+      token: this.previous(),
+    });
   }
 
   /* Parsing and synchronizing BlockExpression */
@@ -1143,9 +1160,9 @@ export default class Parser {
 
   private attribute (): AttributeNode {
     const args: {
-      name?: IdentiferStreamNode | PrimaryExpressionNode;
+      name?: IdentifierStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
-      value?: NormalExpressionNode | IdentiferStreamNode;
+      value?: NormalExpressionNode | IdentifierStreamNode;
     } = {};
 
     if (this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.RBRACKET, SyntaxTokenKind.COMMA)) {
@@ -1155,7 +1172,7 @@ export default class Parser {
         CompileErrorCode.EMPTY_ATTRIBUTE_NAME,
         'Expect a non-empty attribute name',
       );
-      args.name = this.nodeFactory.create(IdentiferStreamNode, {
+      args.name = this.nodeFactory.create(IdentifierStreamNode, {
         identifiers: [],
       });
     } else {
@@ -1196,8 +1213,8 @@ export default class Parser {
     }
   };
 
-  private attributeValue (): NormalExpressionNode | IdentiferStreamNode {
-    let value: NormalExpressionNode | IdentiferStreamNode | undefined;
+  private attributeValue (): NormalExpressionNode | IdentifierStreamNode {
+    let value: NormalExpressionNode | IdentifierStreamNode | undefined;
     try {
       value = this.peek().kind === SyntaxTokenKind.IDENTIFIER
         && this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
@@ -1225,7 +1242,7 @@ export default class Parser {
     }
   };
 
-  private attributeName (): IdentiferStreamNode | PrimaryExpressionNode {
+  private attributeName (): IdentifierStreamNode | PrimaryExpressionNode {
     const identifiers: SyntaxToken[] = [];
 
     if (this.peek().kind !== SyntaxTokenKind.IDENTIFIER) {
@@ -1245,7 +1262,7 @@ export default class Parser {
         }
         throw new PartialParsingError(
           e.token,
-          this.nodeFactory.create(IdentiferStreamNode, {
+          this.nodeFactory.create(IdentifierStreamNode, {
             identifiers,
           }),
           e.handlerContext,
@@ -1253,7 +1270,7 @@ export default class Parser {
       }
     }
 
-    return this.nodeFactory.create(IdentiferStreamNode, {
+    return this.nodeFactory.create(IdentifierStreamNode, {
       identifiers,
     });
   }
