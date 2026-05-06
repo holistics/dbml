@@ -57,7 +57,6 @@ export {
   formatRecordValue,
   isValidIdentifier,
   addDoubleQuoteIfNeeded,
-  type TextEdit,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data
@@ -97,7 +96,8 @@ export {
 // DiagramView types
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
-} from '@/compiler/queries/transform/syncDiagramView';
+  TextEdit,
+} from '@/compiler/queries/transform';
 
 export {
   dbmlLanguageConfig,
