@@ -11,7 +11,8 @@ import {
  * in-memory overlay (e.g. for unsaved edits) without touching the real FS.
  */
 export class NodeProjectLayout implements DbmlProjectLayout {
-  // null = explicitly deleted in overlay, string = overridden content
+  // Overlay is an overriding map of file absolute paths to file content
+  // `null`: The file is deleted
   private overlay = new Map<string, string | null>();
   private entryPoints: Filepath[];
 
@@ -24,13 +25,16 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   }
 
   getSource (filePath: Filepath): string | undefined {
-    const abs = filePath.absolute;
-    if (this.overlay.has(abs)) {
-      const val = this.overlay.get(abs);
-      return val ?? undefined; // null (deleted) -> undefined
+    const absolutePath = filePath.absolute;
+
+    // If overlay already has the file,
+    // return its content
+    if (this.overlay.has(absolutePath)) {
+      const value = this.overlay.get(absolutePath);
+      return value ?? undefined; // null (deleted) -> undefined
     }
     try {
-      return readFileSync(abs, 'utf-8');
+      return readFileSync(absolutePath, 'utf-8');
     } catch {
       return undefined;
     }
@@ -46,49 +50,47 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   }
 
   exists (filePath: Filepath): boolean {
-    const abs = filePath.absolute;
-    if (this.overlay.has(abs)) {
-      return this.overlay.get(abs) !== null;
-    }
-    return existsSync(abs);
+    return this.isFile(filePath) || this.isDirectory(filePath);
   }
 
   isFile (filePath: Filepath): boolean {
-    const abs = filePath.absolute;
-    if (this.overlay.has(abs)) return this.overlay.get(abs) !== null;
-    // `statSync` (not lstatSync) so symlinks resolve to their target, matching
-    // how node reads the file on disk.
+    const absolutePath = filePath.absolute;
+
+    if (this.overlay.has(absolutePath)) return this.overlay.get(absolutePath) !== null;
+
     try {
-      return statSync(abs).isFile();
+      // `statSync` (not lstatSync) so symlinks resolve to their target, matching
+      // how node reads the file on disk.
+      return statSync(absolutePath).isFile();
     } catch {
       return false;
     }
   }
 
   isDirectory (filePath: Filepath): boolean {
-    const abs = filePath.absolute;
+    const absolutePath = filePath.absolute;
+
     try {
-      if (statSync(abs).isDirectory()) return true;
+      // Exist in filesystem
+      if (statSync(absolutePath).isDirectory()) return true;
     } catch {
       // fall through: the path may exist only in the overlay
     }
-    const prefix = abs.endsWith('/') ? abs : `${abs}/`;
-    for (const [over, content] of this.overlay) {
+    for (const [overlayPath, content] of this.overlay) {
       if (content === null) continue;
-      if (over.startsWith(prefix)) return true;
+      if (overlayPath.startsWith(absolutePath)) return true;
     }
     return false;
   }
 
   listDirectory (dirPath?: Filepath): Filepath[] {
-    const base = dirPath?.absolute ?? '/';
-    const prefix = base.endsWith('/') ? base : base + '/';
+    const basePath = dirPath?.absolute ?? '/';
     const results = new Set<string>();
 
-    // Filesystem entries
     try {
-      for (const entry of readdirSync(base)) {
-        results.add(prefix + entry);
+      // Filesystem entries
+      for (const entry of readdirSync(basePath)) {
+        results.add(basePath + entry);
       }
     } catch {
       // Not a readable directory - ignore
@@ -97,13 +99,13 @@ export class NodeProjectLayout implements DbmlProjectLayout {
     // Overlay additions: non-deleted files directly under base
     for (const [abs, content] of this.overlay) {
       if (content === null) continue;
-      if (!abs.startsWith(prefix)) continue;
-      if (!abs.slice(prefix.length).includes('/')) results.add(abs);
+      if (!abs.startsWith(basePath)) continue;
+      if (!abs.slice(basePath.length).includes('/')) results.add(abs);
     }
 
     // Remove overlay-deleted paths
-    for (const [abs, content] of this.overlay) {
-      if (content === null) results.delete(abs);
+    for (const [overlayPath, content] of this.overlay) {
+      if (content === null) results.delete(overlayPath);
     }
 
     return [...results].sort().map(Filepath.from);
@@ -115,8 +117,8 @@ export class NodeProjectLayout implements DbmlProjectLayout {
 
   clone (): NodeProjectLayout {
     const copy = new NodeProjectLayout([...this.entryPoints]);
-    for (const [abs, content] of this.overlay) {
-      copy.overlay.set(abs, content);
+    for (const [overlayPath, content] of this.overlay) {
+      copy.overlay.set(overlayPath, content);
     }
     return copy;
   }
