@@ -191,8 +191,10 @@ export function escapeString (str: string): string {
  * formatRecordValue(42) => '42'
  * formatRecordValue(true) => 'true'
  */
-export function formatRecordValue (recordValue: { value: any;
-  type: string; } | string | number | boolean | null | undefined): string {
+export function formatRecordValue (recordValue: {
+  value: any;
+  type: string;
+} | string | number | boolean | null | undefined): string {
   // Handle undefined and null primitives
   if (recordValue === undefined || recordValue === null) {
     return 'null';
