@@ -62,10 +62,9 @@ export default async function exportHandler (program: Command): Promise<void> {
             const pos = e.nodeOrToken.startPos;
             const line = pos.line + 1;
             const col = pos.column + 1;
-            if (isMultifile) {
-              return `${e.filepath.basename}(${line},${col}): ${e.message}`;
-            }
-            return `You have a syntax error at "${e.filepath.basename}" line ${line} column ${col}. ${e.message}`;
+            const location = chalk.cyan(isMultifile ? e.filepath.relativeTo(process.cwd()) : e.filepath.basename);
+            const position = chalk.yellow(`(${line},${col})`);
+            return `${location}${position}: ${e.message}`;
           })
           .join('\n    ')}`,
       );
