@@ -9,7 +9,7 @@ import {
   type Filepath,
 } from '@/core/types/filepath';
 import {
-  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol, AliasSymbol,
+  NodeSymbol, SchemaSymbol, SymbolKind
 } from '@/core/types/symbol';
 import type Compiler from '../index';
 
@@ -24,7 +24,7 @@ export function canonicalName (this: Compiler, filepath: Filepath, symbol: NodeS
   const original = symbol.originalSymbol;
 
   // 1. If symbol is declared in this file, use its fullname directly
-  if (original.filepath.intern() === filepath.intern()) {
+  if (original.filepath.equals(filepath)) {
     return Report.create(fullnameToCanonical(this, original));
   }
 
