@@ -81,7 +81,7 @@ export function scanExistingUses (
             name = fileContent.slice(specifier.name.start, specifier.name.end).trim();
           }
         } else if (specifier.importKind) {
-          // Parse recovery: `use { User }`  -- "kind slot" holds the symbol name.
+          // Parse recovery: `use { User }` - "kind slot" holds the symbol name.
           const val = specifier.importKind.value ?? undefined;
           if (val && !IMPORT_KIND_KEYWORDS.has(val.toLowerCase())) {
             name = val;
