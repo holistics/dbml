@@ -115,7 +115,12 @@ export const useModule: GlobalModule = {
     if (useDeclaration?.importPath?.value === undefined) return Report.create(undefined);
 
     const importPath = resolveImportFilepath(node.filepath, useDeclaration.importPath.value);
-    if (!importPath) return Report.create(undefined);
+    if (!importPath) return Report.create(
+      undefined,
+      [
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Import path must be relative, got '${useDeclaration.importPath.value}'`, node),
+      ],
+    );
 
     if (!compiler.layout.exists(importPath)) return Report.create(
       undefined,
@@ -155,7 +160,13 @@ export const useModule: GlobalModule = {
       const errors: CompileError[] = [];
       if (node.importPath?.value) {
         const importPath = resolveImportFilepath(node.filepath, node.importPath.value);
-        if (importPath && !compiler.layout.exists(importPath)) {
+        if (!importPath) {
+          errors.push(new CompileError(
+            CompileErrorCode.BINDING_ERROR,
+            `Import path must be relative, got '${node.importPath.value}'`,
+            node.importPath,
+          ));
+        } else if (!compiler.layout.exists(importPath)) {
           errors.push(new CompileError(
             CompileErrorCode.NONEXISTENT_MODULE,
             `Failed to resolve the non-existent file '${node.importPath.value}'`,

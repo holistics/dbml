@@ -79,3 +79,16 @@ TableGroup all_imported {
     expect(errors).toHaveLength(2);
   });
 });
+
+describe('[example] multifile binder - absolute import path produces error', () => {
+  const { compiler } = setupCompiler({
+    '/a.dbml': 'Table users { id int [pk] }',
+    '/main.dbml': "use { table users } from '/a.dbml'",
+  });
+
+  test('binding error for absolute import path', () => {
+    const ast = compiler.parseFile(fp('/main.dbml')).getValue().ast;
+    const errors = compiler.bindNode(ast).getErrors();
+    expect(errors.some((e) => e.message.includes('Import path must be relative'))).toBe(true);
+  });
+});
