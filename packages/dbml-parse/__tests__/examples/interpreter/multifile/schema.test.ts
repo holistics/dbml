@@ -513,3 +513,37 @@ Ref: a.g.t_id > a.t.id
     expect(result.getValue()!.refs).toHaveLength(1);
   });
 });
+
+describe('[example] same symbol in multiple schemas via wildcard + aliased schema import, no duplicates', () => {
+  const { compiler } = setupCompiler({
+    '/nested.dbml': `
+Enum status {
+  active
+  inactive
+}
+Table t { id int [pk]\n  s status }
+`,
+    '/direct.dbml': "reuse { schema public } from './nested.dbml'",
+    '/main.dbml': `
+use * from './direct.dbml'
+use { schema public as nested } from './nested.dbml'
+`,
+  });
+
+  test('no errors', () => {
+    const result = compiler.interpretFile(fp('/main.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('enum appears only once in output', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    const statuses = db.enums.filter((e) => e.name === 'status');
+    expect(statuses).toHaveLength(1);
+  });
+
+  test('table appears only once in output', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    const tables = db.tables.filter((t) => t.name === 't');
+    expect(tables).toHaveLength(1);
+  });
+});

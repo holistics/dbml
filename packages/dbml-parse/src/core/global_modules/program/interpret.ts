@@ -119,19 +119,20 @@ export default class ProgramInterpreter {
       if (value) this.pushElement(symbol, value);
     }
 
-    // 1b. UseSymbols (imports) from schema members
-    // FIXME: If a symbol is imported via two paths and one path aliases the schema
-    // (e.g. `use * from './direct'` + `use { schema public as nested } from './nested'`),
-    // the symbol exists in two schemas, which is correct, but both resolve to the same
-    // canonicalName, causing duplicate entries in the interpreted output.
+    // 1b. UseSymbols (imports) from schema members.
+    // The same original symbol can appear in multiple schemas (e.g. imported via
+    // wildcard and also via aliased schema). Only interpret each original once.
+    const interpretedOriginals = new Set<string>();
     const schemas = this.compiler.symbolMembers(this.programSymbol).getFiltered(UNHANDLED) ?? [];
     for (const schema of schemas) {
       if (!(schema instanceof SchemaSymbol)) continue;
       const members = this.compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
       for (const member of members) {
-        if (member instanceof UseSymbol) {
-          this.interpretUseSymbol(member);
-        }
+        if (!(member instanceof UseSymbol)) continue;
+        const originalKey = member.originalSymbol.intern();
+        if (interpretedOriginals.has(originalKey)) continue;
+        interpretedOriginals.add(originalKey);
+        this.interpretUseSymbol(member);
       }
     }
   }
