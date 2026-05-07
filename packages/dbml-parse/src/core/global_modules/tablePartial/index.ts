@@ -191,7 +191,7 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum or schema '${name}' does not exist`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Enum or schema '${name}' does not exist`, node),
       ]);
     }
 
@@ -207,7 +207,7 @@ function nodeRefereeOfEnumType (compiler: Compiler, globalSymbol: NodeSymbol, no
     }
 
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Schema '${name}' does not exist in Schema 'public'`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist in Schema 'public'`, node),
     ]);
   }
 
@@ -232,7 +232,7 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
         }
 
         return new Report(undefined, [
-          new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${name}' does not exist in TablePartial '${tableSymbol.name}'`, node),
+          new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${name}' does not exist in TablePartial '${tableSymbol.name}'`, node),
         ]);
       }
     }
@@ -242,7 +242,7 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
     }
 
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${name}' does not exist`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${name}' does not exist`, node),
     ]);
   }
 
@@ -259,7 +259,7 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table or schema '${name}' does not exist`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Table or schema '${name}' does not exist`, node),
       ]);
     }
     if (left.isKind(SymbolKind.Table)) {
@@ -269,7 +269,7 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${name}' does not exist in Table 'public.${left.name}'`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${name}' does not exist in Table 'public.${left.name}'`, node),
       ]);
     }
 
@@ -287,7 +287,7 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Schema '${name}' does not exist in Schema 'public'`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist in Schema 'public'`, node),
       ]);
     }
     // First try by table name, then by alias
@@ -297,7 +297,7 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
     }
 
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table '${name}' does not exist in Schema 'public'`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Table '${name}' does not exist in Schema 'public'`, node),
     ]);
   }
 
@@ -330,7 +330,7 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum or schema '${name}' does not exist`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Enum or schema '${name}' does not exist`, node),
       ]);
     }
     if (left.isKind(SymbolKind.Enum)) {
@@ -340,7 +340,7 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum field '${name}' does not exist in Enum 'public.${left.name}'`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Enum field '${name}' does not exist in Enum 'public.${left.name}'`, node),
       ]);
     }
 
@@ -358,7 +358,7 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Schema '${name}' does not exist in Schema 'public'`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist in Schema 'public'`, node),
       ]);
     }
     const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Enum, name);
@@ -367,7 +367,7 @@ function nodeRefereeOfEnumDefault (compiler: Compiler, globalSymbol: NodeSymbol,
     }
 
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum '${name}' does not exist in Schema 'public'`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Enum '${name}' does not exist in Schema 'public'`, node),
     ]);
   }
 

@@ -77,7 +77,7 @@ export const indexesModule: GlobalModule = {
 
     const containerKind = isElementNode(tableNode, ElementKind.TablePartial) ? 'TablePartial' : 'Table';
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${varName}' does not exist in ${containerKind} 'public.${tableSymbol.name}'`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${varName}' does not exist in ${containerKind} 'public.${tableSymbol.name}'`, node),
     ]);
   },
 

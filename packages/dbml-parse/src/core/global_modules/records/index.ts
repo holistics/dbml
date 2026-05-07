@@ -174,7 +174,7 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
     }
 
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table '${name}' does not exist in Schema 'public'`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Table '${name}' does not exist in Schema 'public'`, node),
     ]);
   }
 
@@ -193,7 +193,7 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
     }
 
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table or schema '${name}' does not exist`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Table or schema '${name}' does not exist`, node),
     ]);
   }
 
@@ -211,7 +211,7 @@ function nodeRefereeOfRecordsName (compiler: Compiler, globalSymbol: NodeSymbol,
     }
 
     return new Report(undefined, [
-      new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Table or schema '${name}' does not exist`, node),
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Table or schema '${name}' does not exist`, node),
     ]);
   }
 
@@ -235,7 +235,7 @@ function nodeRefereeOfRecordsColumn (compiler: Compiler, tableSymbol: NodeSymbol
   }
 
   return new Report(undefined, [
-    new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Column '${name}' does not exist in Table 'public.${tableSymbol.name}'`, node),
+    new CompileError(CompileErrorCode.BINDING_ERROR, `Column '${name}' does not exist in Table 'public.${tableSymbol.name}'`, node),
   ]);
 }
 
@@ -263,7 +263,7 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Enum or schema '${name}' does not exist`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Enum or schema '${name}' does not exist`, node),
       ]);
     }
     if (left.isKind(SymbolKind.Enum)) {
@@ -291,7 +291,7 @@ function nodeRefereeOfEnumValue (compiler: Compiler, globalSymbol: NodeSymbol, n
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Schema '${name}' does not exist in Schema 'public'`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist in Schema 'public'`, node),
       ]);
     }
     // Look up as Enum in default (public) schema

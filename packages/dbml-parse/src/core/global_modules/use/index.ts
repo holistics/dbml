@@ -140,7 +140,7 @@ export const useModule: GlobalModule = {
       }
 
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.NAME_NOT_FOUND, `Could not find ${symbolKind} '${name}'`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Could not find ${symbolKind} '${name}'`, node),
       ]);
     }
 
