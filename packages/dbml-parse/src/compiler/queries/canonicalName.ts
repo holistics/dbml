@@ -9,7 +9,7 @@ import {
   type Filepath,
 } from '@/core/types/filepath';
 import {
-  NodeSymbol, SchemaSymbol, SymbolKind
+  NodeSymbol, SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
 import type Compiler from '../index';
 
