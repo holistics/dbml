@@ -26,13 +26,17 @@ type UsableResult = {
   schemaMembers: SchemaSymbol[];
   reuses: {
     selective: UseSpecifierNode[];
-    wildcard: { importPath: Filepath;
-      node: WildcardNode; }[];
+    wildcard: {
+      importPath: Filepath;
+      node: WildcardNode;
+    }[];
   };
   uses: {
     selective: UseSpecifierNode[];
-    wildcard: { importPath: Filepath;
-      node: WildcardNode; }[];
+    wildcard: {
+      importPath: Filepath;
+      node: WildcardNode;
+    }[];
   };
 };
 
