@@ -299,6 +299,41 @@ use { schema public } from './a.dbml'
   });
 });
 
+describe('[example] wildcard import pulls tables from reuse { schema public } chain', () => {
+  const { compiler } = setupCompiler({
+    '/nested.dbml': `
+Table R [note: 'this is R'] {
+  id int
+  r BFILE
+}
+Table G [note: 'this is G'] {
+  id int
+  g CLOB
+}
+`,
+    '/direct.dbml': `
+reuse { schema public } from './nested.dbml'
+use { schema public } from './nested.dbml'
+`,
+    '/main.dbml': `
+use * from './direct.dbml'
+
+Ref: R.id > R.r
+`,
+  });
+
+  test('tables R and G pulled into main via wildcard + reuse schema chain', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    expect(db.tables.find((t) => t.name === 'R')).toBeDefined();
+    expect(db.tables.find((t) => t.name === 'G')).toBeDefined();
+  });
+
+  test('ref between R columns resolves', () => {
+    const result = compiler.interpretFile(fp('/main.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+});
+
 
 describe('[stress] schema-qualified table with ref auto-pull', () => {
   const { compiler } = setupCompiler({

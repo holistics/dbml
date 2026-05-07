@@ -973,6 +973,20 @@ describe('[example] binder', () => {
       const result = analyze(source);
       expect(result.getErrors()).toHaveLength(0);
     });
+
+    test('bare name in TableGroup should not resolve schema-qualified table', () => {
+      const source = `
+        Table R { id int }
+        Table v.G { id int }
+        TableGroup a {
+          R
+          G
+        }
+      `;
+      const result = analyze(source);
+      const errors = result.getErrors();
+      expect(errors.some((e) => e.message.includes("'G'") && e.message.includes('does not exist'))).toBe(true);
+    });
   });
 
   describe('Project', () => {

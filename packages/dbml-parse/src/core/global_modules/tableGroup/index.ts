@@ -166,26 +166,14 @@ export const tableGroupModule: GlobalModule = {
 function nodeRefereeOfTableGroupField (compiler: Compiler, globalSymbol: NodeSymbol, node: PrimaryExpressionNode & { expression: VariableNode }): Report<NodeSymbol | undefined> {
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
-  // Standalone: lookup as Table (by name or alias) in all schemas
+  // Standalone: lookup as Table (by name or alias) in public schema only
   if (!isAccessExpression(node.parentNode)) {
     const schemasList = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
     if (schemasList) {
-      for (const schema of schemasList) {
-        if (!(schema instanceof SchemaSymbol)) continue;
-        // lookupMembers checks aliases only for public schemas; for non-public, also check aliases explicitly
-        const result = compiler.lookupMembers(schema, SymbolKind.Table, name);
+      const publicSchema = schemasList.find((s): s is SchemaSymbol => s instanceof SchemaSymbol && s.isPublicSchema());
+      if (publicSchema) {
+        const result = compiler.lookupMembers(publicSchema, SymbolKind.Table, name);
         if (result) return Report.create(result);
-
-        if (!schema.isPublicSchema()) {
-          const membersList = compiler.symbolMembers(schema).getFiltered(UNHANDLED);
-          if (membersList) {
-            const match = membersList.find((m) => {
-              if (!m.isKind(SymbolKind.Table) || !m.declaration) return false;
-              return compiler.nodeAlias(m.declaration).getFiltered(UNHANDLED) === name;
-            });
-            if (match) return new Report(match);
-          }
-        }
       }
     }
     const sym = compiler.lookupMembers(globalSymbol, SymbolKind.Table, name);

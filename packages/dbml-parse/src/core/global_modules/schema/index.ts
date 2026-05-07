@@ -289,6 +289,7 @@ function handleMemberWildcardUses (
   for (const s of selective) {
     const externalSymbol = handleMemberSelectiveUses(compiler, symbol, s, childSchemas).getFiltered(UNHANDLED);
     if (externalSymbol) members.push(externalSymbol);
+    members.push(...mergeImportedSchema(compiler, symbol, s));
   }
 
   for (const {
