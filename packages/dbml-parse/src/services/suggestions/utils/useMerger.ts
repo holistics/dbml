@@ -15,6 +15,7 @@ import {
 export interface ParsedUseSpecifier {
   kind?: string;
   name: string;
+  alias?: string;
 }
 
 export interface ParsedUseStatement {
@@ -73,7 +74,7 @@ export function scanExistingUses (
         let name: string | undefined;
 
         if (specifier.name) {
-          // Fully formed: `use { table users }`
+          // Fully formed: `use { table users }` or `use { table users as u }`
           kind = specifier.importKind?.value;
           name = extractVariableFromExpression(specifier.name);
           if (!name && specifier.name.start !== undefined && specifier.name.end !== undefined) {
@@ -88,9 +89,11 @@ export function scanExistingUses (
         }
 
         if (name && name.toLowerCase() !== 'from') {
+          const alias = specifier.alias ? extractVariableFromExpression(specifier.alias) : undefined;
           specifiers.push({
             kind,
             name,
+            alias,
           });
         }
       }
@@ -161,7 +164,7 @@ export function mergeSymbolIntoUses (
     const allSpecifiers = uniqueInOrder([
       ...existingUse.specifiers
         .filter((s) => s.name !== '*')
-        .map((s) => `${s.kind ?? symbolKind} ${s.name}`),
+        .map((s) => `${s.kind ?? symbolKind} ${s.name}${s.alias ? ` as ${s.alias}` : ''}`),
       newSpecifier,
     ]);
     const topInsert = buildUseStatement(allSpecifiers, sourceFileStr, lineEnd);
