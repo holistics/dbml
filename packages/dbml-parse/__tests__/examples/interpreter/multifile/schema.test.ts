@@ -472,3 +472,44 @@ Ref: auth.users.id > auth.users.id
     expect(result.getErrors().length).toBeGreaterThan(0);
   });
 });
+
+describe('[example] two schema aliases to same name merge into one schema', () => {
+  const { compiler } = setupCompiler({
+    '/a.dbml': `
+Table t { id int [pk] }
+Table x.g { id int [pk] }
+`,
+    '/main.dbml': `
+use { schema public as a } from './a.dbml'
+use { schema x as a } from './a.dbml'
+`,
+  });
+
+  test('no errors', () => {
+    const result = compiler.interpretFile(fp('/main.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('schema a contains tables from both public and x', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    expect(db.tables.find((t) => t.name === 't' && t.schemaName === 'a')).toBeDefined();
+    expect(db.tables.find((t) => t.name === 'g' && t.schemaName === 'a')).toBeDefined();
+  });
+
+  test('refs work across merged schemas', () => {
+    const { compiler: c2 } = setupCompiler({
+      '/a.dbml': `
+Table t { id int [pk] }
+Table x.g { id int [pk]\n  t_id int }
+`,
+      '/main.dbml': `
+use { schema public as a } from './a.dbml'
+use { schema x as a } from './a.dbml'
+Ref: a.g.t_id > a.t.id
+`,
+    });
+    const result = c2.interpretFile(fp('/main.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+    expect(result.getValue()!.refs).toHaveLength(1);
+  });
+});

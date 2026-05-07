@@ -62,10 +62,13 @@ export const useModule: GlobalModule = {
     const symbolKind = node.getSymbolKind();
     if (symbolKind === undefined) return Report.create(PASS_THROUGH);
 
+    // Schema imports are not represented as UseSymbols in symbolMembers, they are merged
+    if (symbolKind === SymbolKind.Schema) return Report.create(PASS_THROUGH);
+
     const originalSymbol = compiler.nodeReferee(node.name).getFiltered(UNHANDLED);
 
-    // Non-importable symbols (e.g. DiagramView) must not produce a UseSymbol, except for Schema symbols (which are handled specially in symbolMembers of schema)
-    if (originalSymbol && !originalSymbol.canBeImported && symbolKind !== SymbolKind.Schema) return Report.create(PASS_THROUGH);
+    // Non-importable symbols (e.g. DiagramView) must not produce a UseSymbol
+    if (originalSymbol && !originalSymbol.canBeImported) return Report.create(PASS_THROUGH);
 
     return Report.create(compiler.symbolFactory.create(
       UseSymbol,

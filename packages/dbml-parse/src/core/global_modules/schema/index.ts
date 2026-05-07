@@ -15,7 +15,7 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, WildcardNode,
+  ElementDeclarationNode, FunctionApplicationNode, WildcardNode,
 } from '@/core/types/nodes';
 import {
   SyntaxNode, UseSpecifierNode,
@@ -129,9 +129,14 @@ export const schemaModule: GlobalModule = {
     // 5. Dedup by (originalSymbol, localName); reuse wins (added first in 2a.)
     const dedupKeys = new Set<string>();
     const uniqueExpandedMembers = membersWithExpansions.filter((m) => {
+      // Filter out UseSymbols wrapping schemas, as schemas are merged, not "imported" technically
+      if (m instanceof UseSymbol && m.isKind(SymbolKind.Schema)) return false;
+
       const key = `${m.originalSymbol.intern()}:${m.name ?? ''}`;
+
       if (dedupKeys.has(key)) return false;
       dedupKeys.add(key);
+
       return true;
     });
 
@@ -141,6 +146,8 @@ export const schemaModule: GlobalModule = {
       const key = `${member.kind}:${member.name}`;
       const existing = seen.get(key);
       if (existing) {
+        // Schemas with the same name merge (e.g. two schema aliases to the same name)
+        if (member.isKind(SymbolKind.Schema)) continue;
         // Error points at the use specifier in the current file, not the original declaration
         const errorNode = member instanceof UseSymbol
           ? (member.useSpecifierDeclaration ?? member.declaration)
