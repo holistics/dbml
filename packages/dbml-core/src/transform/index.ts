@@ -1,23 +1,26 @@
-import { Compiler } from '@dbml/parse';
+import { Compiler, DEFAULT_ENTRY } from '@dbml/parse';
+import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit } from '@dbml/parse';
 
-/**
- * Renames a table in DBML code using symbol table and token-based replacement.
- * @example
- * // String format
- * renameTable('users', 'customers', dbmlCode);
- * renameTable('public.users', 'auth.customers', dbmlCode);
- *
- * @example
- * // Object format
- * renameTable({ table: 'users' }, { table: 'customers' }, dbmlCode);
- * renameTable({ schema: 'auth', table: 'users' }, { schema: 'auth', table: 'customers' }, dbmlCode);
- */
-export function renameTable (
-  oldName:string | { schema?: string; table: string },
-  newName: string | { schema?: string; table: string },
-  dbmlCode: string,
-): string {
+type TableName = string | { schema?: string; table: string };
+
+export function renameTable (oldName: TableName, newName: TableName, dbmlCode: string): string {
   const compiler = new Compiler();
-  compiler.setSource(dbmlCode);
-  return compiler.renameTable(oldName, newName);
+  compiler.setSource(DEFAULT_ENTRY, dbmlCode);
+  return compiler.renameTable(DEFAULT_ENTRY, oldName, newName);
+}
+
+export function syncDiagramView (
+  dbmlCode: string,
+  operations: DiagramViewSyncOperation[],
+  blocks?: DiagramViewBlock[],
+): { newDbml: string; edits: TextEdit[] } {
+  const compiler = new Compiler();
+  compiler.setSource(DEFAULT_ENTRY, dbmlCode);
+  return compiler.syncDiagramView(DEFAULT_ENTRY, operations, blocks);
+}
+
+export function findDiagramViewBlocks (dbmlCode: string): DiagramViewBlock[] {
+  const compiler = new Compiler();
+  compiler.setSource(DEFAULT_ENTRY, dbmlCode);
+  return compiler.findDiagramViewBlocks(DEFAULT_ENTRY);
 }

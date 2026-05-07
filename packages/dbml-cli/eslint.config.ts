@@ -43,6 +43,13 @@ export default defineConfig(
         '@stylistic': stylistic,
       },
       rules: {
+        '@stylistic/object-curly-newline': ['error', {
+          ObjectExpression: { multiline: true, minProperties: 1 },
+          ObjectPattern: { multiline: true, minProperties: 1 },
+          ImportDeclaration: { multiline: true, minProperties: 1 },
+          ExportDeclaration: { multiline: true, minProperties: 1 },
+        }],
+        '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: false }],
         '@typescript-eslint/no-explicit-any': 'off',
         'no-use-before-define': 'off',
         'no-continue': 'off',
@@ -59,17 +66,9 @@ export default defineConfig(
         '@typescript-eslint/consistent-return': [
           'error',
         ],
-        '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+        '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
         '@stylistic/max-statements-per-line': 'off',
         '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
-      },
-      settings: {
-        'import/resolver': {
-          typescript: {
-            alwaysTryTypes: true,
-            project: 'packages/*/{ts,js}config.json',
-          },
-        },
       },
     },
     {

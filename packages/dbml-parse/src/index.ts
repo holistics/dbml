@@ -1,37 +1,50 @@
 import Compiler from '@/compiler/index';
-import * as services from '@/services/index';
 
 // Export the types that playground and other consumers need
 export {
-  ElementKind,
-} from '@/core/analyzer/types';
-
-export * from '@/core/interpreter/records/utils';
+  DEFAULT_ENTRY,
+} from '@/constants';
 
 export {
-  // Core AST node types
-  SyntaxNode,
-  ElementDeclarationNode,
-  ProgramNode,
-  SyntaxNodeKind,
-  type SyntaxNodeId,
-} from '@/core/parser/nodes';
+  Filepath,
+} from '@/core/types/filepath';
+
+export {
+  UNHANDLED,
+  type Unhandled,
+} from '@/core/types/module';
+
+export {
+  ElementKind,
+} from '@/core/types/keywords';
+
+export {
+  type NodeSymbol,
+  SymbolKind,
+} from '@/core/types/symbol';
+
+export * from '@/core/global_modules/records/utils';
+
+export * from '@/core/types/nodes';
 
 export {
   // Token types
   SyntaxToken,
   SyntaxTokenKind,
-} from '@/core/lexer/tokens';
+  isTriviaToken,
+  isOp,
+  isOpToken,
+} from '@/core/types/tokens';
 
 export {
   // Error types
   CompileError,
   CompileErrorCode,
-} from '@/core/errors';
+} from '@/core/types/errors';
 
-export {
+export type {
   // Position interface
-  type Position,
+  Position,
 } from '@/core/types';
 
 export {
@@ -49,13 +62,52 @@ export {
 // Export interpreted types for structured data
 export {
   type Database,
+  type MasterDatabase,
   type Table,
+  type Note,
   type Column,
-  type Enum,
+  type ColumnType,
+  type Index,
+  type Check,
+  type InlineRef,
   type Ref,
-  type Project,
+  type RefEndpointPair,
+  type RefEndpoint,
+  type RelationCardinality,
+  type Enum,
+  type EnumField,
   type TableGroup,
+  type TableGroupField,
+  type Alias,
+  type AliasKind,
   type TablePartial,
-} from '@/core/interpreter/types';
+  type TablePartialInjection,
+  type RecordValue,
+  type RecordValueType,
+  type TableRecord,
+  type Project,
+  type SchemaElement,
+  type TokenPosition,
+  type ElementRef,
+  type FilterConfig,
+  type DiagramView,
+} from '@/core/types/schemaJson';
 
-export { Compiler, services };
+// DiagramView types
+export type {
+  DiagramViewSyncOperation, DiagramViewBlock,
+  TextEdit,
+} from '@/compiler/queries/transform';
+
+export {
+  dbmlLanguageConfig,
+  dbmlMonarchTokensProvider,
+} from '@/services/monarch';
+
+export * from '@/compiler/projectLayout/layout';
+
+export {
+  Compiler,
+};
+
+export * from '@/services';

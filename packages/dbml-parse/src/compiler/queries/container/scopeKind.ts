@@ -1,9 +1,16 @@
+import {
+  type Filepath,
+} from '@/core/types/filepath';
+import {
+  ElementDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
 import type Compiler from '../../index';
-import { ScopeKind } from '../../types';
-import { ElementDeclarationNode, ProgramNode } from '@/core/parser/nodes';
+import {
+  ScopeKind,
+} from '../../types';
 
-export function containerScopeKind (this: Compiler, offset: number): ScopeKind {
-  const elem = this.container.element(offset);
+export function containerScopeKind (this: Compiler, filepath: Filepath, offset: number): ScopeKind {
+  const elem = this.container.element(filepath, offset);
 
   if (elem instanceof ProgramNode) {
     return ScopeKind.TOPLEVEL;
@@ -30,6 +37,8 @@ export function containerScopeKind (this: Compiler, offset: number): ScopeKind {
       return ScopeKind.CHECKS;
     case 'records':
       return ScopeKind.RECORDS;
+    case 'diagramview':
+      return ScopeKind.DIAGRAMVIEW;
     default:
       return ScopeKind.CUSTOM;
   }

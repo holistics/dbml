@@ -2,11 +2,11 @@ import {
   first, flatten, flattenDepth, last, nth,
 } from 'lodash-es';
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
-import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
-import { getOriginalText } from '../helpers';
 import {
   Field, Index, Table, TableRecord,
 } from '../AST';
+import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
+import { getOriginalText } from '../helpers';
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
 

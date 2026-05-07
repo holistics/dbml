@@ -1,18 +1,31 @@
-import { last } from 'lodash-es';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
+import {
+  last,
+} from 'lodash-es';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
 
 export function hasTrailingNewLines (token: SyntaxToken): boolean {
-  return token.trailingTrivia.find(({ kind }) => kind === SyntaxTokenKind.NEWLINE) !== undefined;
+  return token.trailingTrivia.find(({
+    kind,
+  }) => kind === SyntaxTokenKind.NEWLINE) !== undefined;
 }
 
 export function isAtStartOfLine (previous: SyntaxToken, token: SyntaxToken): boolean {
-  const hasLeadingNewLines = token.leadingTrivia.find(({ kind }) => kind === SyntaxTokenKind.NEWLINE) !== undefined;
+  const hasLeadingNewLines = token.leadingTrivia.find(({
+    kind,
+  }) => kind === SyntaxTokenKind.NEWLINE) !== undefined;
 
   return hasLeadingNewLines || hasTrailingNewLines(previous);
 }
 
 export function hasTrailingSpaces (token: SyntaxToken): boolean {
-  return token.trailingTrivia.find(({ kind }) => [SyntaxTokenKind.SPACE, SyntaxTokenKind.TAB].includes(kind)) !== undefined;
+  return token.trailingTrivia.find(({
+    kind,
+  }) => [
+    SyntaxTokenKind.SPACE,
+    SyntaxTokenKind.TAB,
+  ].includes(kind)) !== undefined;
 }
 
 export function getTokenFullEnd (token: SyntaxToken): number {
@@ -26,7 +39,10 @@ export function getTokenFullStart (token: SyntaxToken): number {
 }
 
 export function isComment (token: SyntaxToken): boolean {
-  return [SyntaxTokenKind.SINGLE_LINE_COMMENT, SyntaxTokenKind.MULTILINE_COMMENT].includes(
+  return [
+    SyntaxTokenKind.SINGLE_LINE_COMMENT,
+    SyntaxTokenKind.MULTILINE_COMMENT,
+  ].includes(
     token.kind,
   );
 }

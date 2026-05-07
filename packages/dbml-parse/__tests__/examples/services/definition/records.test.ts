@@ -1,7 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
+import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
+import {
+  createMockTextModel, createPosition, extractTextFromRange,
+} from '../../../utils';
 
 describe('[example - records] DefinitionProvider - Records', () => {
   describe('should find table definition from records', () => {
@@ -15,7 +20,7 @@ records users(id, name) {
   1, "Alice"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -37,7 +42,11 @@ records users(id, name) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -61,7 +70,7 @@ records auth.users(id, email) {
   1, "alice@example.com"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -83,7 +92,11 @@ records auth.users(id, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -112,7 +125,7 @@ records auth.users(id, email) {
   1, "alice@example.com"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -134,7 +147,11 @@ records auth.users(id, email) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -160,7 +177,7 @@ records users(id, name) {
   1, "Alice"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -182,7 +199,11 @@ records users(id, name) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -201,7 +222,7 @@ records users(id, name) {
   1, "Alice"
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -223,7 +244,11 @@ records users(id, name) {
               "startColumn": 3,
               "startLineNumber": 3,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -249,7 +274,7 @@ records users(id, status) {
   1, status.active
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -271,7 +296,11 @@ records users(id, status) {
               "startColumn": 1,
               "startLineNumber": 1,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -300,7 +329,7 @@ records users(id, status) {
   1, status.active
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -322,7 +351,11 @@ records users(id, status) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);
@@ -346,7 +379,7 @@ records auth.users(id, role) {
   1, auth.role.admin
 }`;
       const compiler = new Compiler();
-      compiler.setSource(program);
+      compiler.setSource(DEFAULT_ENTRY, program);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -368,7 +401,11 @@ records auth.users(id, role) {
               "startColumn": 3,
               "startLineNumber": 2,
             },
-            "uri": "",
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
           },
         ]
       `);

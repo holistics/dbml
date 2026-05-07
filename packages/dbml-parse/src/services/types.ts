@@ -1,6 +1,16 @@
 import {
-  IPosition, editor, languages, IRange, IDisposable, CancellationToken as ICancellationToken,
+  CancellationToken as ICancellationToken, IDisposable, IPosition, IRange, editor, languages,
 } from 'monaco-editor-core';
+import {
+  URI as Uri,
+  // @ts-expect-error "We need to export from the untyped uri.js file because we cannot import directly from monaco-editor-core for a portable library"
+} from 'monaco-editor-core/esm/vs/base/common/uri.js';
+export {
+  Uri,
+};
+
+export type LanguageConfiguration = languages.LanguageConfiguration;
+export type MonarchLanguage = languages.IMonarchLanguage;
 
 export type Position = IPosition;
 export type TextModel = editor.ITextModel;

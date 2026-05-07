@@ -1,7 +1,15 @@
-import { describe, expect, test } from 'vitest';
-import { SyntaxTokenKind, isTriviaToken } from '@/core/lexer/tokens';
-import { CompileErrorCode } from '@/core/errors';
-import { lex } from '@tests/utils';
+import {
+  describe, expect, test,
+} from 'vitest';
+import {
+  SyntaxTokenKind, isTriviaToken,
+} from '@/core/types/tokens';
+import {
+  CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  lex,
+} from '@tests/utils';
 
 // Helper to get non-trivia, non-EOF tokens
 function getTokens (source: string) {
@@ -16,10 +24,22 @@ describe('[example] lexer - scientific notation', () => {
 
       expect(tokens).toHaveLength(4);
 
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e2' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1E2' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e+2' });
-      expect(tokens[3]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e-2' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e2',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1E2',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e+2',
+      });
+      expect(tokens[3]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e-2',
+      });
     });
 
     test('should tokenize decimal with exponent', () => {
@@ -28,9 +48,18 @@ describe('[example] lexer - scientific notation', () => {
 
       expect(tokens).toHaveLength(3);
 
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '3.14e10' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '2.5E-3' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1.0e+5' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '3.14e10',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '2.5E-3',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1.0e+5',
+      });
     });
 
     test('should tokenize scientific notation at end of input', () => {
@@ -38,7 +67,10 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(1);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e2' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e2',
+      });
     });
 
     test('should tokenize scientific notation followed by delimiter', () => {
@@ -46,9 +78,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e2' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.COMMA, value: ',' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '3e4' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e2',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.COMMA,
+        value: ',',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '3e4',
+      });
     });
 
     test('should tokenize large exponents', () => {
@@ -56,8 +97,14 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(2);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e100' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '2.5e-50' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e100',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '2.5e-50',
+      });
     });
 
     test('should tokenize scientific notation in DBML context', () => {
@@ -65,9 +112,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: 'default' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.COLON, value: ':' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e-5' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: 'default',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.COLON,
+        value: ':',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e-5',
+      });
     });
 
     test('should tokenize zero exponent', () => {
@@ -75,8 +131,14 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(2);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e0' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '5.5e0' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e0',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '5.5e0',
+      });
     });
   });
 
@@ -86,9 +148,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '3.14' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '0.5' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '123.456' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '3.14',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '0.5',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '123.456',
+      });
     });
 
     test('should tokenize floating point at end of input', () => {
@@ -96,7 +167,10 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(1);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '3.14' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '3.14',
+      });
     });
 
     test('should tokenize floating point followed by delimiter', () => {
@@ -104,9 +178,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '3.14' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.COMMA, value: ',' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '2.71' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '3.14',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.COMMA,
+        value: ',',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '2.71',
+      });
     });
   });
 
@@ -116,9 +199,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1abc' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '2test' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '3rd' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1abc',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '2test',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '3rd',
+      });
     });
 
     test('should tokenize digit-letter-digit as identifier', () => {
@@ -126,7 +218,10 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(1);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1a2b3c' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1a2b3c',
+      });
     });
 
     test('should tokenize 1e as identifier (incomplete exponent)', () => {
@@ -134,7 +229,10 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(1);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1e' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1e',
+      });
     });
 
     test('should tokenize 1ea as identifier', () => {
@@ -142,7 +240,10 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(1);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1ea' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1ea',
+      });
     });
 
     test('should tokenize 1e2abc as identifier (valid exponent followed by letters)', () => {
@@ -150,7 +251,10 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(1);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1e2abc' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1e2abc',
+      });
     });
 
     test('should tokenize 5e10abcbd as identifier', () => {
@@ -158,7 +262,10 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(1);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '5e10abcbd' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '5e10abcbd',
+      });
     });
   });
 
@@ -169,8 +276,14 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(2);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1e' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.OP, value: '+' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1e',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.OP,
+        value: '+',
+      });
     });
 
     test('should tokenize 1e- as identifier and operator', () => {
@@ -178,8 +291,14 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(2);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1e' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.OP, value: '-' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1e',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.OP,
+        value: '-',
+      });
     });
 
     test('should tokenize 1e+a as identifier, operator, identifier', () => {
@@ -187,9 +306,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1e' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.OP, value: '+' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: 'a' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1e',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.OP,
+        value: '+',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: 'a',
+      });
     });
 
     test('should tokenize 1e-b as identifier, operator, identifier', () => {
@@ -197,9 +325,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: '1e' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.OP, value: '-' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: 'b' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: '1e',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.OP,
+        value: '-',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: 'b',
+      });
     });
   });
 
@@ -228,9 +365,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1.5e2' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.OP, value: '.' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '5' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1.5e2',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.OP,
+        value: '.',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '5',
+      });
     });
 
     test('should report error for decimal with letters', () => {
@@ -259,9 +405,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '1e2' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.OP, value: '.' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '5' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '1e2',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.OP,
+        value: '.',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '5',
+      });
     });
 
     test('should tokenize 5e10.method as number, dot, identifier', () => {
@@ -269,9 +424,18 @@ describe('[example] lexer - scientific notation', () => {
       const tokens = getTokens(source);
 
       expect(tokens).toHaveLength(3);
-      expect(tokens[0]).toMatchObject({ kind: SyntaxTokenKind.NUMERIC_LITERAL, value: '5e10' });
-      expect(tokens[1]).toMatchObject({ kind: SyntaxTokenKind.OP, value: '.' });
-      expect(tokens[2]).toMatchObject({ kind: SyntaxTokenKind.IDENTIFIER, value: 'method' });
+      expect(tokens[0]).toMatchObject({
+        kind: SyntaxTokenKind.NUMERIC_LITERAL,
+        value: '5e10',
+      });
+      expect(tokens[1]).toMatchObject({
+        kind: SyntaxTokenKind.OP,
+        value: '.',
+      });
+      expect(tokens[2]).toMatchObject({
+        kind: SyntaxTokenKind.IDENTIFIER,
+        value: 'method',
+      });
     });
   });
 });

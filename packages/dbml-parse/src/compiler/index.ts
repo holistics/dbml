@@ -1,44 +1,99 @@
-import { SyntaxNodeIdGenerator, ProgramNode } from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { Database } from '@/core/interpreter/types';
-import Report from '@/core/report';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
-import Interpreter from '@/core/interpreter/interpreter';
-import { DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLReferencesProvider, DBMLDiagnosticsProvider } from '@/services/index';
-import { ast, errors, warnings, tokens, rawDb, publicSymbolTable } from './queries/parse';
-import { invalidStream, flatStream } from './queries/token';
-import { symbolOfName, symbolOfNameToKey, symbolMembers } from './queries/symbol';
-import { containerStack, containerToken, containerElement, containerScope, containerScopeKind } from './queries/container';
 import {
-  renameTable,
-  applyTextEdits,
-  type TextEdit,
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  SyntaxNodeIdGenerator,
+} from '@/core/types/nodes';
+import {
+  NodeSymbolIdGenerator,
+} from '@/core/types/symbol/symbols';
+import {
+  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
+} from '@/services/index';
+import {
+  containerElement, containerScope, containerScopeKind, containerStack, containerToken,
+} from './queries/container';
+import {
+  ast, errors, publicSymbolTable, rawDb, tokens, warnings,
+} from './queries/legacy/parse';
+import {
+  symbolMembers, symbolOfName, symbolOfNameToKey,
+} from './queries/legacy/symbol';
+import {
+  flatStream, invalidStream,
+} from './queries/legacy/token';
+import {
+  bindFile, bindNode,
+} from './queries/pipeline/bind';
+import {
+  interpretFile,
+  interpretProject,
+} from './queries/pipeline/interpret';
+import {
+  validateFile, validateNode,
+} from './queries/pipeline/validate';
+import {
+  parseFile,
+} from './queries/pipeline/parse';
+import {
+  type DiagramViewBlock,
+  type DiagramViewSyncOperation,
   type TableNameInput,
+  type TextEdit,
+  findDiagramViewBlocks,
+  renameTable,
+  syncDiagramView,
 } from './queries/transform';
-import { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded } from './queries/utils';
+import {
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+} from './queries/utils';
+import {
+  SymbolFactory,
+} from '@/core/types';
+import {
+  DbmlProjectLayout, MemoryProjectLayout,
+} from './projectLayout';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
 
 // Re-export types
-export { ScopeKind } from './types';
-export type { TextEdit, TableNameInput };
+export {
+  ScopeKind,
+} from './types';
+export type {
+  TextEdit, TableNameInput, DiagramViewSyncOperation, DiagramViewBlock,
+};
 
 // Re-export utilities
-export { splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded };
+export {
+  splitQualifiedIdentifier, unescapeString, escapeString, formatRecordValue, isValidIdentifier, addDoubleQuoteIfNeeded,
+};
 
 export default class Compiler {
-  private source = '';
-  private cache = new Map<symbol, any>();
-  private nodeIdGenerator = new SyntaxNodeIdGenerator();
-  private symbolIdGenerator = new NodeSymbolIdGenerator();
+  readonly nodeIdGenerator = new SyntaxNodeIdGenerator();
+  readonly symbolIdGenerator = new NodeSymbolIdGenerator();
+  readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  setSource (source: string) {
-    this.source = source;
+  // The structure of the DbmlProject
+  layout: DbmlProjectLayout = new MemoryProjectLayout();
+
+  setSource (filepath: Filepath, source: string) {
+    this.layout.setSource(filepath, source);
     this.cache.clear();
-    this.nodeIdGenerator.reset();
-    this.symbolIdGenerator.reset();
   }
+
+  clearSource () {
+    this.layout = new MemoryProjectLayout();
+    this.cache.clear();
+  }
+
+  deleteSource (filepath: Filepath) {
+    this.layout.deleteSource(filepath);
+    this.cache.clear();
+  }
+
+  private cache = new Map<symbol, any>();
 
   private query<Args extends unknown[], Return> (
     fn: (this: Compiler, ...args: Args) => Return,
@@ -67,30 +122,27 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  private interpret (): Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }> {
-    const parseRes: Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> = new Lexer(this.source)
-      .lex()
-      .chain((lexedTokens) => new Parser(this.source, lexedTokens as SyntaxToken[], this.nodeIdGenerator).parse())
-      .chain(({ ast, tokens }) => new Analyzer(ast, this.symbolIdGenerator).analyze().map(() => ({ ast, tokens })));
-
-    if (parseRes.getErrors().length > 0) {
-      return parseRes as Report<{ ast: ProgramNode; tokens: SyntaxToken[]; rawDb?: Database }>;
-    }
-
-    return parseRes.chain(({ ast, tokens }) =>
-      new Interpreter(ast).interpret().map((rawDb) => ({ ast, tokens, rawDb })),
-    );
-  }
-
   renameTable (
+    filepath: Filepath,
     oldName: TableNameInput,
     newName: TableNameInput,
   ): string {
-    return renameTable.call(this, oldName, newName);
+    return renameTable.call(this, filepath, oldName, newName);
   }
 
-  applyTextEdits (edits: TextEdit[]): string {
-    return applyTextEdits(this.parse.source(), edits);
+  syncDiagramView (
+    filepath: Filepath,
+    operations: DiagramViewSyncOperation[],
+    blocks?: DiagramViewBlock[],
+  ): {
+    newDbml: string;
+    edits: TextEdit[];
+  } {
+    return syncDiagramView(this.layout.getSource(filepath) ?? '', operations, blocks);
+  }
+
+  findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
+    return findDiagramViewBlocks(this.layout.getSource(filepath) ?? '');
   }
 
   readonly token = {
@@ -98,17 +150,35 @@ export default class Compiler {
     flatStream: this.query(flatStream),
   };
 
+  parseFile = this.query(parseFile);
+
+  validateNode = this.query(validateNode);
+
+  bindNode = this.query(bindNode);
+
+  validateFile = this.query(validateFile);
+
+  bindFile = this.query(bindFile);
+
+  interpretFile = this.query(interpretFile);
+  interpretProject = this.query(interpretProject);
+
+  // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: () => this.source as Readonly<string>,
-    _: this.query(this.interpret),
-    ast: this.query(ast),
-    errors: this.query(errors),
-    warnings: this.query(warnings),
-    tokens: this.query(tokens),
-    rawDb: this.query(rawDb),
-    publicSymbolTable: this.query(publicSymbolTable),
+    source: (filepath = DEFAULT_ENTRY) => this.layout.getSource(filepath) || '',
+    ast: (filepath = DEFAULT_ENTRY) => ast.call(this, filepath),
+    errors: (filepath = DEFAULT_ENTRY) => errors.call(this, filepath),
+    warnings: (filepath = DEFAULT_ENTRY) => warnings.call(this, filepath),
+    tokens: (filepath = DEFAULT_ENTRY) => tokens.call(this, filepath),
+    rawDb: (filepath = DEFAULT_ENTRY) => rawDb.call(this, filepath),
+    publicSymbolTable: (filepath = DEFAULT_ENTRY) => publicSymbolTable.call(this, filepath),
   };
 
+  symbolMembers = this.query(symbolMembers);
+
+  symbolOfName = this.query(symbolOfName, symbolOfNameToKey);
+
+  // @deprecated - legacy APIs for services compatibility
   readonly container = {
     stack: this.query(containerStack),
     token: this.query(containerToken),
@@ -117,16 +187,33 @@ export default class Compiler {
     scopeKind: this.query(containerScopeKind),
   };
 
-  readonly symbol = {
-    ofName: this.query(symbolOfName, symbolOfNameToKey),
-    members: this.query(symbolMembers),
-  };
+  initMonacoServices (options?: {
+    autocompletion?: {
+      triggerCharacters?: string[];
+    };
+  }) {
+    const triggerCharacters = options?.autocompletion?.triggerCharacters ?? [
+      '.',
+      ',',
+      '[',
+      '(',
+      ':',
+      '>',
+      '<',
+      '-',
+      '~',
+      '\'',
+      '"',
+      '/',
+      ' ',
+    ];
 
-  initMonacoServices () {
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
       referenceProvider: new DBMLReferencesProvider(this),
-      autocompletionProvider: new DBMLCompletionItemProvider(this),
+      autocompletionProvider: new DBMLCompletionItemProvider(this, {
+        triggerCharacters,
+      }),
       diagnosticsProvider: new DBMLDiagnosticsProvider(this),
     };
   }

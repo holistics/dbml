@@ -16,6 +16,7 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
 - [TableGroup](#tablegroup)
   - [TableGroup Notes](#tablegroup-notes-1)
   - [TableGroup Settings](#tablegroup-settings)
+- [DiagramView](#diagramview)
 - [Colors](#colors)
 
 ## Note Definition
@@ -35,7 +36,7 @@ Table users {
 }
 ```
 
-Note's value is a string. If your note spans over multiple lines, you can use [multi-line string](./language-reference.md#multi-line-string) to define your note.
+Note's value is a string. If your note spans over multiple lines, you can use [multi-line string](./language-basics.md#multi-line-string) to define your note.
 
 ### Project Notes
 
@@ -169,6 +170,51 @@ Each table group can take optional settings, defined within square brackets: `[s
 The list of table group settings you can use:
 - `note: 'string to add notes'`: add a note to this table group.
 - `color: <color_code>`: change the table group color. See [Colors](#colors) for accepted color formats.
+
+## DiagramView
+
+`DiagramView` allows users to define multiple views of a database diagram, each focusing on different tables, notes, table groups, or schemas.
+
+
+Each view can include one or more of the following categories:
+
+- `Tables`: specific tables to include
+- `Notes`: specific sticky notes to include
+- `TableGroups`: specific table groups to include
+- `Schemas`: specific schemas to include
+
+Use `{ * }` to include all items in a category, or specify a line-separated list of names:
+
+```text
+// Show all items in all categories
+DiagramView full_view {
+  Tables { * }
+  Notes { * }
+  TableGroups { * }
+  Schemas { * }
+}
+
+// Show nothing (empty view)
+DiagramView empty_view {
+}
+
+// Select specific tables
+DiagramView sales_view {
+  Tables {
+    users
+    orders
+    products
+  }
+}
+
+// Mixed filtering with all items in some categories
+DiagramView mixed_view {
+  Tables { * }
+  Notes { reminder_note }
+  TableGroups { group_2 }
+  Schemas { core }
+}
+```
 
 ## Colors
 

@@ -1,6 +1,9 @@
-import { describe, expect, test } from 'vitest';
-import { CompileErrorCode } from '@/index';
-import { interpret, analyze } from '@tests/utils';
+import {
+  describe, expect, test,
+} from 'vitest';
+import {
+  interpret, analyze,
+} from '@tests/utils';
 
 describe('[example] interpreter', () => {
   describe('table interpretation', () => {
@@ -444,17 +447,75 @@ describe('[example] interpreter', () => {
   describe('detailed field type verification', () => {
     test('should interpret simple types with exact matching', () => {
       const testCases = [
-        { type: 'int', expected: { type_name: 'int', args: null, schemaName: null } },
-        { type: 'integer', expected: { type_name: 'integer', args: null, schemaName: null } },
-        { type: 'bigint', expected: { type_name: 'bigint', args: null, schemaName: null } },
-        { type: 'varchar', expected: { type_name: 'varchar', args: null, schemaName: null } },
-        { type: 'text', expected: { type_name: 'text', args: null, schemaName: null } },
-        { type: 'boolean', expected: { type_name: 'boolean', args: null, schemaName: null } },
-        { type: 'timestamp', expected: { type_name: 'timestamp', args: null, schemaName: null } },
-        { type: 'uuid', expected: { type_name: 'uuid', args: null, schemaName: null } },
+        {
+          type: 'int',
+          expected: {
+            type_name: 'int',
+            args: null,
+            schemaName: null,
+          },
+        },
+        {
+          type: 'integer',
+          expected: {
+            type_name: 'integer',
+            args: null,
+            schemaName: null,
+          },
+        },
+        {
+          type: 'bigint',
+          expected: {
+            type_name: 'bigint',
+            args: null,
+            schemaName: null,
+          },
+        },
+        {
+          type: 'varchar',
+          expected: {
+            type_name: 'varchar',
+            args: null,
+            schemaName: null,
+          },
+        },
+        {
+          type: 'text',
+          expected: {
+            type_name: 'text',
+            args: null,
+            schemaName: null,
+          },
+        },
+        {
+          type: 'boolean',
+          expected: {
+            type_name: 'boolean',
+            args: null,
+            schemaName: null,
+          },
+        },
+        {
+          type: 'timestamp',
+          expected: {
+            type_name: 'timestamp',
+            args: null,
+            schemaName: null,
+          },
+        },
+        {
+          type: 'uuid',
+          expected: {
+            type_name: 'uuid',
+            args: null,
+            schemaName: null,
+          },
+        },
       ];
 
-      testCases.forEach(({ type, expected }) => {
+      testCases.forEach(({
+        type, expected,
+      }) => {
         const db = interpret(`Table t { col ${type} }`).getValue()!;
         const field = db.tables[0].fields[0];
         expect(field.type.type_name).toBe(expected.type_name);
@@ -466,13 +527,43 @@ describe('[example] interpreter', () => {
     test('should interpret parameterized types with exact matching', () => {
       // For parameterized types, type_name includes the full type string with args
       const testCases = [
-        { type: 'varchar(255)', expected: { type_name: 'varchar(255)', args: '255', schemaName: null } },
-        { type: 'char(10)', expected: { type_name: 'char(10)', args: '10', schemaName: null } },
-        { type: 'decimal(10,2)', expected: { type_name: 'decimal(10,2)', args: '10,2', schemaName: null } },
-        { type: 'numeric(5)', expected: { type_name: 'numeric(5)', args: '5', schemaName: null } },
+        {
+          type: 'varchar(255)',
+          expected: {
+            type_name: 'varchar(255)',
+            args: '255',
+            schemaName: null,
+          },
+        },
+        {
+          type: 'char(10)',
+          expected: {
+            type_name: 'char(10)',
+            args: '10',
+            schemaName: null,
+          },
+        },
+        {
+          type: 'decimal(10,2)',
+          expected: {
+            type_name: 'decimal(10,2)',
+            args: '10,2',
+            schemaName: null,
+          },
+        },
+        {
+          type: 'numeric(5)',
+          expected: {
+            type_name: 'numeric(5)',
+            args: '5',
+            schemaName: null,
+          },
+        },
       ];
 
-      testCases.forEach(({ type, expected }) => {
+      testCases.forEach(({
+        type, expected,
+      }) => {
         const db = interpret(`Table t { col ${type} }`).getValue()!;
         const field = db.tables[0].fields[0];
         expect(field.type.type_name).toBe(expected.type_name);
@@ -629,14 +720,31 @@ describe('[example] interpreter', () => {
 
     test('should interpret ref delete actions', () => {
       const testCases = [
-        { action: 'cascade', expected: 'cascade' },
-        { action: 'no action', expected: 'no action' },
-        { action: 'set null', expected: 'set null' },
-        { action: 'set default', expected: 'set default' },
-        { action: 'restrict', expected: 'restrict' },
+        {
+          action: 'cascade',
+          expected: 'cascade',
+        },
+        {
+          action: 'no action',
+          expected: 'no action',
+        },
+        {
+          action: 'set null',
+          expected: 'set null',
+        },
+        {
+          action: 'set default',
+          expected: 'set default',
+        },
+        {
+          action: 'restrict',
+          expected: 'restrict',
+        },
       ];
 
-      testCases.forEach(({ action, expected }) => {
+      testCases.forEach(({
+        action, expected,
+      }) => {
         const source = `
           Table a { id int }
           Table b { a_id int }
@@ -649,14 +757,31 @@ describe('[example] interpreter', () => {
 
     test('should interpret ref update actions', () => {
       const testCases = [
-        { action: 'cascade', expected: 'cascade' },
-        { action: 'no action', expected: 'no action' },
-        { action: 'set null', expected: 'set null' },
-        { action: 'set default', expected: 'set default' },
-        { action: 'restrict', expected: 'restrict' },
+        {
+          action: 'cascade',
+          expected: 'cascade',
+        },
+        {
+          action: 'no action',
+          expected: 'no action',
+        },
+        {
+          action: 'set null',
+          expected: 'set null',
+        },
+        {
+          action: 'set default',
+          expected: 'set default',
+        },
+        {
+          action: 'restrict',
+          expected: 'restrict',
+        },
       ];
 
-      testCases.forEach(({ action, expected }) => {
+      testCases.forEach(({
+        action, expected,
+      }) => {
         const source = `
           Table a { id int }
           Table b { a_id int }
@@ -982,6 +1107,841 @@ describe('[example] interpreter', () => {
         const group = db.tableGroups[0];
         expect(group.name).toBeDefined();
       }
+    });
+  });
+
+  describe('DiagramView interpretation (Trinity omit rule)', () => {
+    test('should apply Trinity rule: Tables explicit → tableGroups and schemas default to []', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.diagramViews).toHaveLength(1);
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: Tables {*} → tableGroups and schemas default to []', () => {
+      const source = `
+        DiagramView myView {
+          Tables { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: Tables explicit + Notes explicit → tableGroups/schemas default to [], stickyNotes is []', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+          Notes { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('should produce all null when body is empty (no Trinity non-null)', () => {
+      const source = `
+        DiagramView myView {
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should produce all [] when body-level wildcard {*} is used', () => {
+      const source = `
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('should NOT apply Trinity rule when Tables {} is explicitly empty (null stays null)', () => {
+      const source = `
+        DiagramView myView {
+          Tables {}
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should apply Trinity rule: TableGroups {*} as sole trigger → tables and schemas default to []', () => {
+      const source = `
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+  });
+
+  describe('DiagramView wildcard expansion for TableGroups', () => {
+    test('should expand explicit TableGroups {*} to concrete group names', () => {
+      const source = `
+        Table users { id int }
+        Table posts { id int }
+        TableGroup auth_tables { users }
+        TableGroup content_tables { posts }
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tableGroups).toEqual([
+        {
+          name: 'auth_tables',
+        },
+        {
+          name: 'content_tables',
+        },
+      ]);
+      // Trinity rule still applies for tables/schemas (promoted to [])
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should NOT expand TableGroups {*} in body-level wildcard {*} (all dims are set)', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // Body-level {*} sets all dims — Tables/Schemas are also set, so no expansion
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('should NOT expand tableGroups [] from Trinity promotion', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // tableGroups [] comes from Trinity promotion, not explicit wildcard — should stay []
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
+      expect(ve.schemas).toEqual([]);
+    });
+
+    test('should ALWAYS expand TableGroups {*} even when Tables is also explicitly set', () => {
+      const source = `
+        Table users { id int }
+        TableGroup auth_tables { users }
+        DiagramView myView {
+          Tables { users }
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      // TableGroups {*} expands to concrete names, Tables stays as-is
+      expect(ve.tableGroups).toEqual([{ name: 'auth_tables' }]);
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.schemas).toEqual([]);
+    });
+
+    test('should return empty list when TableGroups {*} but no groups exist', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tableGroups).toEqual([]);
+    });
+  });
+
+  describe('DiagramView union semantics (TableGroups {*} always expands)', () => {
+    test('should expand TableGroups {*} alongside Tables with items', () => {
+      const source = `
+        Table users { id int }
+        Table orders { id int }
+        TableGroup Inventory { users }
+        TableGroup Reporting { orders }
+        DiagramView myView {
+          Tables {
+            users
+            orders
+          }
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.diagramViews).toHaveLength(1);
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toEqual([
+        { name: 'users', schemaName: 'public' },
+        { name: 'orders', schemaName: 'public' },
+      ]);
+      expect(ve.tableGroups).toEqual([
+        { name: 'Inventory' },
+        { name: 'Reporting' },
+      ]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should expand TableGroups {*} alongside Schemas * → Schemas * triggers all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView {
+          TableGroups { * }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Schemas {*} → union covers everything → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('should expand TableGroups {*} with Notes', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        Note MyNote { 'hello' }
+        DiagramView myView {
+          TableGroups { * }
+          Notes { MyNote }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tableGroups).toEqual([{ name: 'Inventory' }]);
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([{ name: 'MyNote' }]);
+    });
+
+    test('body-level {*} should NOT expand tableGroups (uses body-level wildcard set)', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.tables).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('empty Tables {} should produce all null (same as empty body)', () => {
+      const source = `
+        DiagramView myView {
+          Tables { }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('only Notes set → no Trinity omit (Trinity dims stay null)', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Notes { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Notes is set (to [] = show all), but no Trinity dims set → Trinity omit doesn't apply
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toEqual([]);
+    });
+  });
+
+  describe('DiagramView parser — dbml-filter-examples.md full coverage', () => {
+    // Group D: Sub-block with specific items
+
+    test('D3: Schemas only → Trinity omit promotes tables and tableGroups to []', () => {
+      const source = `
+        DiagramView myView {
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('D4: Tables + Schemas wildcard → Schemas * triggers all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Schemas {*} → union covers everything → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('D6: TableGroups + Schemas wildcard → Schemas * triggers all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView {
+          TableGroups { Inventory }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Schemas {*} → union covers everything → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('D7: All three Trinity dims with Schemas * → all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView {
+          Tables { users }
+          TableGroups { Inventory }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Schemas {*} → union covers everything → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    // Group E: Wildcard sub-blocks
+
+    test('E1: Wildcard TableGroups + explicit tables + schemas wildcard → Schemas * triggers all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        Table orders { id int }
+        TableGroup Inventory { users }
+        TableGroup Reporting { orders }
+        DiagramView myView {
+          Tables {
+            users
+            orders
+          }
+          TableGroups { * }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Schemas {*} → union covers everything → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    // Mixed wildcard + specific items in sibling Trinity dims
+
+    test('Mixed: Tables { items } + Schemas { * } → Schemas * means show all, union = all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        Table orders { id int }
+        DiagramView myView {
+          Tables {
+            users
+            orders
+          }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Schemas {*} → union covers everything → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('Mixed: Tables { * } + TableGroups { Inv } → Tables * means show all, union = all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView {
+          Tables { * }
+          TableGroups { Inventory }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Tables {*} → union covers everything → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('Mixed: TableGroups { Inv } + Schemas { * } → Schemas * means show all, union = all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView {
+          TableGroups { Inventory }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Schemas {*} → union covers everything → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('Mixed: Tables { * } + Schemas { * } → both show all, all Trinity []', () => {
+      const source = `
+        DiagramView myView {
+          Tables { * }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('Mixed: TableGroups { Inv } + Tables { * } + Schemas { * } → Tables/Schemas * → all Trinity []', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inventory { users }
+        DiagramView myView {
+          Tables { * }
+          TableGroups { Inventory }
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // Tables {*} or Schemas {*} → all Trinity []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('Mixed: Tables { items } + TableGroups { * } → TableGroups * expands, Tables preserved', () => {
+      const source = `
+        Table users { id int }
+        Table orders { id int }
+        TableGroup Inventory { users }
+        TableGroup Reporting { orders }
+        DiagramView myView {
+          Tables {
+            users
+            orders
+          }
+          TableGroups { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // TableGroups {*} expands to concrete names, Tables preserved
+      expect(ve.tables).toEqual([
+        { name: 'users', schemaName: 'public' },
+        { name: 'orders', schemaName: 'public' },
+      ]);
+      expect(ve.tableGroups).toEqual([{ name: 'Inventory' }, { name: 'Reporting' }]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('E3: Wildcard Schemas only → [] + Trinity omit', () => {
+      const source = `
+        DiagramView myView {
+          Schemas { * }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.schemas).toEqual([]);
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    // Group F: Body-level wildcard + Notes
+
+    test('F2: Tables {*} + Notes → Trinity omit for tableGroups/schemas, notes has items', () => {
+      const source = `
+        Note MyNote { 'hello' }
+        DiagramView myView {
+          Tables { * }
+          Notes { MyNote }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([{ name: 'MyNote' }]);
+    });
+
+    // Group G: Empty blocks
+
+    test('G2: Empty TableGroups block → same as empty body (all null)', () => {
+      const source = `
+        DiagramView myView {
+          TableGroups { }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('G2: Empty Schemas block → same as empty body (all null)', () => {
+      const source = `
+        DiagramView myView {
+          Schemas { }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('G2: Empty Notes block → same as empty body (all null)', () => {
+      const source = `
+        DiagramView myView {
+          Notes { }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    // Group H: No Trinity dims, only Notes
+
+    test('H1: Only Notes with items → no Trinity omit', () => {
+      const source = `
+        Note Note1 { 'hello' }
+        Note Note2 { 'world' }
+        DiagramView myView {
+          Notes {
+            Note1
+            Note2
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toEqual([{ name: 'Note1' }, { name: 'Note2' }]);
+    });
+
+    // Round-trip verification: DBML → FC → DBML stability
+
+    test('Round-trip: Tables { users } → FC → generates same DBML', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // FC: [users], [], [], null
+      // Should generate: Tables { users } (no TableGroups/Schemas/Notes)
+      expect(ve.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('Round-trip: TableGroups { Inv } → FC → generates same DBML', () => {
+      const source = `
+        Table users { id int }
+        TableGroup Inv { users }
+        DiagramView myView {
+          TableGroups { Inv }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // FC: [], [Inv], [], null
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([{ name: 'Inv' }]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toBeNull();
+    });
+
+    test('Round-trip: { *} → FC → generates same { * }', () => {
+      const source = `
+        DiagramView myView { * }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // FC: [], [], [], []
+      expect(ve.tables).toEqual([]);
+      expect(ve.tableGroups).toEqual([]);
+      expect(ve.schemas).toEqual([]);
+      expect(ve.stickyNotes).toEqual([]);
+    });
+
+    test('Round-trip: { } (empty) → FC → generates same { }', () => {
+      const source = `
+        DiagramView myView {
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+
+      // FC: null, null, null, null
+      expect(ve.tables).toBeNull();
+      expect(ve.tableGroups).toBeNull();
+      expect(ve.schemas).toBeNull();
+      expect(ve.stickyNotes).toBeNull();
+    });
+  });
+
+  describe('DiagramView alias resolution', () => {
+    test('should resolve table alias to real name', () => {
+      const source = `
+        Table users as U { id int }
+        DiagramView myView {
+          Tables { U }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
+    });
+
+    test('should resolve schema-qualified table alias', () => {
+      const source = `
+        Table public.articles as A { id int }
+        DiagramView myView {
+          Tables { A }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        {
+          name: 'articles',
+          schemaName: 'public',
+        },
+      ]);
+    });
+
+    test('should keep real name when no alias is used', () => {
+      const source = `
+        Table users { id int }
+        DiagramView myView {
+          Tables { users }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+      ]);
+    });
+
+    test('should resolve multiple aliases in same block', () => {
+      const source = `
+        Table users as U { id int }
+        Table posts as P { id int }
+        DiagramView myView {
+          Tables {
+            U
+            P
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+        {
+          name: 'posts',
+          schemaName: 'public',
+        },
+      ]);
+    });
+
+    test('should resolve mixed aliases and real names', () => {
+      const source = `
+        Table users as U { id int }
+        Table posts { id int }
+        DiagramView myView {
+          Tables {
+            U
+            posts
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        {
+          name: 'users',
+          schemaName: 'public',
+        },
+        {
+          name: 'posts',
+          schemaName: 'public',
+        },
+      ]);
     });
   });
 

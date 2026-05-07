@@ -1,17 +1,17 @@
-name: Run unit test and collect coverage
+name: Run unit test & coverage
 on:
   push:
     branches: [master]
     paths-ignore:
-      - 'dbml-homepage/**'
+      - "dbml-homepage/**"
   pull_request:
     branches: [master]
     types: [opened, synchronize]
     paths-ignore:
-      - 'dbml-homepage/**'
+      - "dbml-homepage/**"
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-2vcpu-ubuntu-2204
     timeout-minutes: 20
     strategy:
       matrix:
@@ -92,19 +92,38 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
+        cache: "yarn"
     - name: Install dependencies
       run: yarn install --frozen-lockfile
     - name: Build packages
-      run: yarn build
-    - name: Run unit test and coverage
+      run: NODE_OPTIONS="--max-old-space-size=8192" yarn build
+    - name: Run coverage test
       run: yarn coverage
     - name: Generate coverage report
       id: coverage
       run: node .github/workflows/scripts/collect-coverage.js
+    - name: Upload coverage test
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report.md
+        path: ./coverage-report.md
+        include-hidden-files: true
+
+  comment-coverage:
+    runs-on: blacksmith-2vcpu-ubuntu-2204
+    timeout-minutes: 5
+    continue-on-error: true
+    needs: build
+    steps:
+    - name: Download test coverage
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-report.md
+        path: ./coverage-report.md
     - name: Comment PR with coverage report
       uses: marocchino/sticky-pull-request-comment@v2
       if: github.event_name == 'pull_request'
       with:
         recreate: true
-        path: coverage-report.md
+        path: ./coverage-report.md

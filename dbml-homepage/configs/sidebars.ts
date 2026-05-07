@@ -32,9 +32,9 @@ const SidebarConfigs: SidebarsConfig = {
           label: 'Enrichment & Visualization',
         },
         {
-          id: 'syntax/language-reference',
+          id: 'syntax/language-basics',
           type: 'doc',
-          label: 'Language Reference',
+          label: 'Language Basics',
         },
       ],
     },

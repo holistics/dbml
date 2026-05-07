@@ -1,11 +1,22 @@
 import type Compiler from '@/compiler';
-import type { CompileError, CompileWarning } from '@/core/errors';
-import { MarkerSeverity, MarkerData } from '@/services/types';
-import type { SyntaxNode } from '@/core/parser/nodes';
-import type { SyntaxToken } from '@/core/lexer/tokens';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import type {
+  CompileError, CompileWarning,
+} from '@/core/types/errors';
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  MarkerData, MarkerSeverity,
+} from '@/services/types';
 
 // This is the same format that dbdiagram-frontend uses
-interface Diagnostic {
+export interface Diagnostic {
   type: 'error' | 'warning';
   text: string;
   startRow: number;
@@ -13,6 +24,7 @@ interface Diagnostic {
   endRow: number;
   endColumn: number;
   code?: string | number;
+  filepath: Filepath;
 }
 
 export default class DBMLDiagnosticsProvider {
@@ -25,18 +37,15 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get all diagnostics (errors and warnings) from the current compilation
    */
-  provideDiagnostics (): Diagnostic[] {
+  provideDiagnostics (filepath: Filepath): Diagnostic[] {
     const diagnostics: Diagnostic[] = [];
-    const report = this.compiler.parse._();
 
-    // Add errors
-    const errors = report.getErrors();
+    const errors = this.compiler.parse.errors(filepath);
     for (const error of errors) {
       diagnostics.push(this.createDiagnostic(error, 'error'));
     }
 
-    // Add warnings
-    const warnings = report.getWarnings();
+    const warnings = this.compiler.parse.warnings(filepath);
     for (const warning of warnings) {
       diagnostics.push(this.createDiagnostic(warning, 'warning'));
     }
@@ -47,24 +56,32 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get only errors from the current compilation
    */
-  provideErrors (): Diagnostic[] {
-    const errors = this.compiler.parse._().getErrors();
+  provideErrors (filepath?: Filepath): Diagnostic[] {
+    if (!filepath) {
+      const errors = this.compiler.interpretProject().getErrors();
+      return errors.map((error) => this.createDiagnostic(error, 'error'));
+    }
+    const errors = this.compiler.parse.errors(filepath);
     return errors.map((error) => this.createDiagnostic(error, 'error'));
   }
 
   /**
    * Get only warnings from the current compilation
    */
-  provideWarnings (): Diagnostic[] {
-    const warnings = this.compiler.parse._().getWarnings();
+  provideWarnings (filepath?: Filepath): Diagnostic[] {
+    if (!filepath) {
+      const warnings = this.compiler.interpretProject().getWarnings();
+      return warnings.map((warning) => this.createDiagnostic(warning, 'warning'));
+    }
+    const warnings = this.compiler.parse.warnings(filepath);
     return warnings.map((warning) => this.createDiagnostic(warning, 'warning'));
   }
 
   /**
    * Convert Monaco markers format (for editor integration)
    */
-  provideMarkers (): MarkerData[] {
-    const diagnostics = this.provideDiagnostics();
+  provideMarkers (filepath: Filepath): MarkerData[] {
+    const diagnostics = this.provideDiagnostics(filepath).filter((diag) => diag.filepath.equals(filepath)); // only provide markers for this file
     return diagnostics.map((diag) => {
       const severity = this.getSeverityValue(diag.type);
       return {
@@ -99,6 +116,7 @@ export default class DBMLDiagnosticsProvider {
       endRow: endPos.line + 1,
       endColumn: endPos.column + 1,
       code: errorOrWarning.code,
+      filepath: errorOrWarning.filepath,
     };
   }
 

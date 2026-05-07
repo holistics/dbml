@@ -1,3 +1,70 @@
+## v7.1.2 (2026-04-28)
+
+#### :robot: Dependencies Update
+* `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#885](https://github.com/holistics/dbml/pull/885) misc(dbml-parse): upgrade lodash-es to v4.18.1 ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 1
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
+## v7.1.1 (2026-04-17)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#877](https://github.com/holistics/dbml/pull/877) Fix no double quote when syncing diagram view ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-core`, `dbml-parse`
+  * [#876](https://github.com/holistics/dbml/pull/876) Missing model_structure exports in @dbml/core ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v7.1.0 (2026-04-16)
+
+#### :memo: Documentation
+* [#858](https://github.com/holistics/dbml/pull/858) Docs: DiagramView block ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#873](https://github.com/holistics/dbml/pull/873) DBX-6689 Fix wrong union in DiagramView ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#856](https://github.com/holistics/dbml/pull/856) Test/make snapshot more robust ([@huydo862003](https://github.com/huydo862003))
+* `dbml-connector`
+  * [#867](https://github.com/holistics/dbml/pull/867) DBX-6748 Bump fast-xml-parser to 5.5.7 ([@huydo862003](https://github.com/huydo862003))
+* `dbml-parse`
+  * [#787](https://github.com/holistics/dbml/pull/787) DBX-6749 chore(deps): bump node-forge from 1.3.1 to 1.3.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* Other
+  * [#813](https://github.com/holistics/dbml/pull/813) DBX-6751 chore(deps): bump @isaacs/brace-expansion from 5.0.0 to 5.0.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v7.0.0 (2026-04-10)
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#849](https://github.com/holistics/dbml/pull/849) DBX-6689 Support Diagram View as code syntax ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 2
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v6.6.0 (2026-04-02)
+
+#### :memo: Documentation
+* [#848](https://github.com/holistics/dbml/pull/848) Add Jetbrains plugin to README.md ([@LiamClarkeNZ](https://github.com/LiamClarkeNZ))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#850](https://github.com/holistics/dbml/pull/850) feat: add token position to TableRecord for source location tracking ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 2
+- Liam Clarke-Hutchinson ([@LiamClarkeNZ](https://github.com/LiamClarkeNZ))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
 ## v6.5.0 (2026-03-24)
 
 #### :memo: Documentation

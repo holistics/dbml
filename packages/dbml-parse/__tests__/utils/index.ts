@@ -9,10 +9,7 @@ export {
 } from './mocks';
 
 // Test helpers for snapshot testing
-export {
-  scanTestNames,
-  serialize,
-} from './testHelpers';
+export * from './testHelpers';
 
 // Compiler utilities for property testing
 export {

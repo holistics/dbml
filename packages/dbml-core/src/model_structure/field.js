@@ -1,7 +1,7 @@
 import { get } from 'lodash-es';
-import Element from './element';
-import { DEFAULT_SCHEMA_NAME } from './config';
 import Check from './check';
+import { DEFAULT_SCHEMA_NAME } from './config';
+import Element from './element';
 
 class Field extends Element {
   /**

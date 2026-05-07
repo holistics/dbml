@@ -1,12 +1,27 @@
-import { SymbolKind, destructureIndex, createColumnSymbolIndex } from '@/core/analyzer/symbol/symbolIndex';
-import { CompletionItemKind, CompletionItemInsertTextRule, type CompletionList } from '@/services/types';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { hasTrailingSpaces } from '@/core/lexer/utils';
-import { SyntaxNode, TupleExpressionNode, FunctionApplicationNode } from '@/core/parser/nodes';
-import Compiler from '@/compiler';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { extractVariableFromExpression } from '@/core/analyzer/utils';
-import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
+import {
+  addDoubleQuoteIfNeeded,
+} from '@/compiler/queries/utils';
+import {
+  extractVariableFromExpression,
+} from '@/core/utils/expression';
+import {
+  hasTrailingSpaces,
+} from '@/core/lexer/utils';
+import {
+  FunctionApplicationNode, SyntaxNode, TupleExpressionNode,
+} from '@/core/types/nodes';
+import {
+  SymbolKind, createColumnSymbolIndex, destructureIndex,
+} from '@/core/types/symbol';
+import {
+  ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  CompletionItemInsertTextRule, CompletionItemKind, type CompletionList,
+} from '@/services/types';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -106,11 +121,6 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
   };
 }
 
-// Get the source text of a node or a token
-export function getNodeOrTokenSource (compiler: Compiler, tokenOrNode: SyntaxToken | SyntaxNode): string {
-  return compiler.parse.source().slice(tokenOrNode.start, tokenOrNode.end);
-}
-
 /**
  * Checks if the offset is within the element's header
  * (within the element, but outside the body)
@@ -141,11 +151,20 @@ export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
  */
 export function getColumnsFromTableSymbol (
   tableSymbol: TableSymbol | TablePartialSymbol,
-): Array<{ name: string; type: string }> | null {
-  const columns: Array<{ name: string; type: string }> = [];
+): Array<{
+  name: string;
+  type: string;
+}> | null {
+  const columns: Array<{
+    name: string;
+    type: string;
+  }> = [];
 
-  for (const [index, columnSymbol] of tableSymbol.symbolTable.entries()) {
-    const res = destructureIndex(index).unwrap_or(undefined);
+  for (const [
+    index,
+    columnSymbol,
+  ] of tableSymbol.symbolTable.entries()) {
+    const res = destructureIndex(index);
     if (res === undefined || res.kind !== SymbolKind.Column) continue;
     if (!(columnSymbol instanceof ColumnSymbol || columnSymbol instanceof TablePartialInjectedColumnSymbol)) continue;
     const columnInfo = extractNameAndTypeOfColumnSymbol(columnSymbol, res.name);
@@ -160,17 +179,23 @@ export function getColumnsFromTableSymbol (
 export function extractNameAndTypeOfColumnSymbol (
   columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
   columnName: string,
-): { name: string; type: string } | null {
+): {
+  name: string;
+  type: string;
+} | null {
   const columnIndex = createColumnSymbolIndex(columnName);
   const columnDeclaration = columnSymbol instanceof TablePartialInjectedColumnSymbol
     ? columnSymbol.tablePartialSymbol.symbolTable.get(columnIndex)?.declaration
     : columnSymbol.declaration;
   if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
 
-  const name = extractVariableFromExpression(columnDeclaration.callee).unwrap_or(null);
-  const type = extractVariableFromExpression(columnDeclaration.args[0]).unwrap_or(null);
+  const name = extractVariableFromExpression(columnDeclaration.callee) ?? null;
+  const type = extractVariableFromExpression(columnDeclaration.args[0]) ?? null;
 
   if (name === null || type === null) return null;
 
-  return { name, type };
+  return {
+    name,
+    type,
+  };
 }

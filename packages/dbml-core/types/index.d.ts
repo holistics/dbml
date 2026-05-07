@@ -2,7 +2,15 @@ import ModelExporter from './export/ModelExporter';
 import Parser from './parse/Parser';
 import importer from './import';
 import exporter from './export';
+import {
+  renameTable,
+  syncDiagramView,
+  findDiagramViewBlocks,
+} from './transform';
 export {
+  renameTable,
+  syncDiagramView,
+  findDiagramViewBlocks,
   importer,
   exporter,
   ModelExporter,
@@ -12,9 +20,9 @@ export type { ExportFormat, ExportOptions } from './export/index';
 export type { DbmlExporterOptions } from './export/DbmlExporter';
 export type { JsonExporterOptions } from './export/JsonExporter';
 export type { ImportFormat, ImportOptions } from './import/index';
-export { CompilerDiagnostic, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel } from './parse/error';
-
+export { CompilerDiagnostic, CompilerError, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel } from './parse/error';
 export * from './model_structure';
+
 export {
   isIntegerType,
   isFloatType,
@@ -33,3 +41,4 @@ export {
   addDoubleQuoteIfNeeded,
   formatRecordValue,
 } from '@dbml/parse';
+export type { DiagramView, DiagramViewSyncOperation, DiagramViewBlock, FilterConfig, TextEdit } from '@dbml/parse';

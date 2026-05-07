@@ -1,12 +1,12 @@
-import { Compiler } from '@dbml/parse';
+import { Compiler, DEFAULT_ENTRY } from '@dbml/parse';
 import Database from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
-import { CompilerError } from './error';
+import dbmlParser from './deprecated/dbmlParser.cjs';
+import mssqlParser from './deprecated/mssqlParser.cjs';
 import mysqlParser from './deprecated/mysqlParser.cjs';
 import postgresParser from './deprecated/postgresParser.cjs';
-import dbmlParser from './deprecated/dbmlParser.cjs';
 import schemarbParser from './deprecated/schemarbParser.cjs';
-import mssqlParser from './deprecated/mssqlParser.cjs';
+import { CompilerError } from './error';
 
 class Parser {
   constructor (dbmlCompiler) {
@@ -43,9 +43,9 @@ class Parser {
   static parseDBMLToJSONv2 (str, dbmlCompiler) {
     const compiler = dbmlCompiler || new Compiler();
 
-    compiler.setSource(str);
+    compiler.setSource(DEFAULT_ENTRY, str);
 
-    const diags = compiler.parse.errors().map((error) => ({
+    const diags = compiler.parse.errors(DEFAULT_ENTRY).map((error) => ({
       message: error.diagnostic,
       location: {
         start: {
@@ -62,7 +62,7 @@ class Parser {
 
     if (diags.length > 0) throw CompilerError.create(diags);
 
-    return compiler.parse.rawDb();
+    return compiler.parse.rawDb(DEFAULT_ENTRY);
   }
 
   /**

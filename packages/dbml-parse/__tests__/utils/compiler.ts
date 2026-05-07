@@ -1,6 +1,11 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
+import {
+  DEFAULT_ENTRY,
+} from '@/constants';
+import Binder from '@/core/global_modules/program/bind';
+import Validator from '@/core/local_modules/program/validate';
+import SymbolFactory from '@/core/types/symbol/factory';
 import {
   ProgramNode,
   SyntaxNode,
@@ -8,7 +13,7 @@ import {
   SyntaxNodeKind,
   ElementDeclarationNode,
   AttributeNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   PrefixExpressionNode,
   InfixExpressionNode,
   PostfixExpressionNode,
@@ -23,28 +28,43 @@ import {
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
-} from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import Report from '@/core/report';
-import { Compiler, SyntaxToken } from '@/index';
-import { Database } from '@/core/interpreter/types';
+  WildcardNode,
+} from '@/core/types/nodes';
+import {
+  NodeSymbolIdGenerator,
+} from '@/core/types/symbol/symbols';
+import Report from '@/core/types/report';
+import {
+  Compiler, SyntaxToken,
+} from '@/index';
+import {
+  Database,
+} from '@/core/types/schemaJson';
 
 export function lex (source: string): Report<SyntaxToken[]> {
-  return new Lexer(source).lex();
+  return new Lexer(source, DEFAULT_ENTRY).lex();
 }
 
-export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator()).parse());
+export function parse (source: string): Report<{ ast: ProgramNode;
+  tokens: SyntaxToken[]; }> {
+  return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse());
 }
 
 export function analyze (source: string): Report<ProgramNode> {
-  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
+  return parse(source).chain(({
+    ast,
+  }) => {
+    const symbolFactory = new SymbolFactory(new NodeSymbolIdGenerator());
+    return new Validator(ast, symbolFactory).validate().chain((program) => {
+      return new Binder(program, symbolFactory).resolve();
+    });
+  });
 }
 
-export function interpret (source: string): Report<Database | undefined> {
+export function interpret (source: string): Report<Readonly<Database> | undefined> {
   const compiler = new Compiler();
-  compiler.setSource(source);
-  return compiler.parse._().map(({ rawDb }) => rawDb);
+  compiler.setSource(DEFAULT_ENTRY, source);
+  return compiler.interpretFile(DEFAULT_ENTRY);
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
@@ -107,7 +127,7 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.IDENTIFIER_STREAM: {
-        const stream = node as IdentiferStreamNode;
+        const stream = node as IdentifierStreamNode;
         stream.identifiers.forEach(collectTokens);
         break;
       }
@@ -210,6 +230,12 @@ export function print (source: string, ast: SyntaxNode): string {
         const arr = node as ArrayNode;
         if (arr.array) collectTokens(arr.array);
         if (arr.indexer) collectTokens(arr.indexer);
+        break;
+      }
+
+      case SyntaxNodeKind.WILDCARD: {
+        const wildcard = node as WildcardNode;
+        if (wildcard.token) collectTokens(wildcard.token);
         break;
       }
 

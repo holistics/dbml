@@ -54,17 +54,9 @@ export default defineConfig(
         ],
         'consistent-return': 'off',
         '@typescript-eslint/consistent-return': ['error'],
-        '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+        '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
         '@stylistic/max-statements-per-line': 'off',
         '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
-      },
-      settings: {
-        'import/resolver': {
-          typescript: {
-            alwaysTryTypes: true,
-            project: 'packages/*/{ts,js}config.json',
-          },
-        },
       },
     },
   ],

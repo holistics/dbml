@@ -1,6 +1,6 @@
+import { DEFAULT_SCHEMA_NAME } from './config';
 import Element from './element';
 import Endpoint from './endpoint';
-import { DEFAULT_SCHEMA_NAME } from './config';
 
 /**
  * Compare two pairs of objects

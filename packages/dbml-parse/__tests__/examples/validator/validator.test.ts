@@ -1,7 +1,15 @@
-import { describe, expect } from 'vitest';
-import { CompileErrorCode } from '@/core/errors';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { analyze } from '@tests/utils';
+import {
+  describe, expect,
+} from 'vitest';
+import {
+  CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  analyze,
+} from '@tests/utils';
 
 describe('[example] validator', () => {
   describe('table validation', () => {
@@ -21,7 +29,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_NAME);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'public'");
 
       // Error should point to the SECOND (duplicate) table, not the first
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).toBe(2);
@@ -214,7 +222,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_NAME);
-      expect(errors[0].diagnostic).toBe("Enum name status already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Enum 'status' already exists in schema 'public'");
 
       // Error should be on second enum
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).toBe(2);
@@ -957,7 +965,9 @@ Table users { name varchar }`;
     });
 
     test('should handle table with many columns', () => {
-      const columns = Array.from({ length: 100 }, (_, i) => `col${i} int`).join('\n');
+      const columns = Array.from({
+        length: 100,
+      }, (_, i) => `col${i} int`).join('\n');
       const source = `Table big_table { ${columns} }`;
       const errors = analyze(source).getErrors();
 
@@ -965,7 +975,9 @@ Table users { name varchar }`;
     });
 
     test('should handle many tables', () => {
-      const tables = Array.from({ length: 50 }, (_, i) => `Table t${i} { id int }`).join('\n');
+      const tables = Array.from({
+        length: 50,
+      }, (_, i) => `Table t${i} { id int }`).join('\n');
       const errors = analyze(tables).getErrors();
 
       expect(errors).toHaveLength(0);
@@ -1018,6 +1030,50 @@ Table users { name varchar }`;
     });
   });
 
+  describe('DiagramView validation', () => {
+    test('should accept DiagramView with body-level wildcard {*}', () => {
+      const source = 'DiagramView name { * }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept DiagramView with Tables sub-block', () => {
+      const source = `
+        Table users { id int }
+        DiagramView name {
+          Tables {
+            users
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should reject DiagramView body-level non-wildcard field', () => {
+      const source = `
+        Table users { id int }
+        DiagramView name {
+          users
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD);
+    });
+
+    test('should reject DiagramView without a name', () => {
+      const source = 'DiagramView { * }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.NAME_NOT_FOUND);
+    });
+  });
+
   describe('error message quality', () => {
     test('should include entity name in duplicate error messages', () => {
       const source = `
@@ -1027,7 +1083,7 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'public'");
     });
 
     test('should include schema context in error messages when relevant', () => {
@@ -1038,7 +1094,7 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'auth'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'auth'");
     });
 
     test('should provide actionable error messages for unknown references', () => {

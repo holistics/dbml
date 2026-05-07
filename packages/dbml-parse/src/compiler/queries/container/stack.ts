@@ -1,36 +1,57 @@
-import type Compiler from '../../index';
-import { findLastIndex, last } from 'lodash-es';
 import {
-  SyntaxNode,
+  findLastIndex, last,
+} from 'lodash-es';
+import {
+  type Filepath,
+} from '@/core/types/filepath';
+import {
+  getMemberChain,
+} from '@/core/parser/utils';
+import {
+  BlockExpressionNode,
+  CommaExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  PrefixExpressionNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
+  PrefixExpressionNode,
+  SyntaxNode,
   TupleExpressionNode,
-  CommaExpressionNode,
-  BlockExpressionNode,
-  IdentiferStreamNode,
-} from '@/core/parser/nodes';
-import { SyntaxToken, SyntaxTokenKind } from '@/core/lexer/tokens';
-import { isOffsetWithinSpan } from '@/core/utils';
-import { getMemberChain } from '@/core/parser/utils';
+} from '@/core/types/nodes';
+import {
+  SyntaxToken, SyntaxTokenKind,
+} from '@/core/types/tokens';
+import {
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import type Compiler from '../../index';
 
-export function containerStack (this: Compiler, offset: number): readonly Readonly<SyntaxNode>[] {
-  const tokens = this.token.flatStream();
-  const { index: startIndex, token } = this.container.token(offset);
+export function containerStack (
+  this: Compiler,
+  filepath: Filepath,
+  offset: number,
+): readonly Readonly<SyntaxNode>[] {
+  const tokens = this.token.flatStream(filepath);
+  const {
+    index: startIndex, token,
+  } = this.container.token(filepath, offset);
   const validIndex = startIndex === undefined
     ? -1
     : findLastIndex(tokens, (t) => !t.isInvalid, startIndex);
 
   if (validIndex === -1) {
-    return [this.parse.ast()];
+    return [
+      this.parse.ast(filepath),
+    ];
   }
 
   const searchOffset = tokens[validIndex].start;
 
-  let curNode: Readonly<SyntaxNode> = this.parse.ast();
-  const res: SyntaxNode[] = [curNode];
+  let curNode: Readonly<SyntaxNode> = this.parse.ast(filepath);
+  const res: SyntaxNode[] = [
+    curNode,
+  ];
 
   while (true) {
     const memberChain = getMemberChain(curNode);
@@ -51,7 +72,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.parse.source();
+      const source = this.layout.getSource(filepath) || '';
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();
@@ -62,7 +83,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
       lastContainer instanceof PrefixExpressionNode
       || lastContainer instanceof InfixExpressionNode
     ) {
-      if (this.container.token(offset).token !== lastContainer.op) {
+      if (this.container.token(filepath, offset).token !== lastContainer.op) {
         res.pop();
         popOnce = true;
       }
@@ -87,7 +108,7 @@ export function containerStack (this: Compiler, offset: number): readonly Readon
         res.pop();
         popOnce = true;
       }
-    } else if (!(lastContainer instanceof IdentiferStreamNode)) {
+    } else if (!(lastContainer instanceof IdentifierStreamNode)) {
       if (lastContainer.end < offset) {
         res.pop();
         popOnce = true;

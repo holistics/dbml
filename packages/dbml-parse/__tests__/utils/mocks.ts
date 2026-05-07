@@ -1,4 +1,7 @@
-import { type Position, type TextModel } from '@/services';
+import { DEFAULT_ENTRY } from '@/constants';
+import {
+  type Position, type TextModel,
+} from '@/services';
 
 export function createPosition (lineNumber: number, column: number): Position {
   return {
@@ -12,7 +15,7 @@ export class MockTextModel {
   private content: string;
   public uri: any;
 
-  constructor (content: string, uri: string = '') {
+  constructor (content: string, uri: string = DEFAULT_ENTRY.toUri()) {
     this.content = content;
     this.uri = uri;
   }
@@ -21,9 +24,12 @@ export class MockTextModel {
     // Split on all line ending types while preserving them for accurate offset calculation
     const lineEndingRegex = /\r\n|\r|\n/g;
     let lastIndex = 0;
-    const lines: Array<{ text: string; ending: string }> = [];
+    const lines: Array<{
+      text: string;
+      ending: string;
+    }> = [];
 
-    let match;
+    let match: RegExpExecArray | null;
     while ((match = lineEndingRegex.exec(this.content)) !== null) {
       lines.push({
         text: this.content.slice(lastIndex, match.index),
@@ -32,7 +38,10 @@ export class MockTextModel {
       lastIndex = match.index + match[0].length;
     }
     // Add remaining content after last line ending
-    lines.push({ text: this.content.slice(lastIndex), ending: '' });
+    lines.push({
+      text: this.content.slice(lastIndex),
+      ending: '',
+    });
 
     let offset = 0;
     for (let i = 0; i < position.lineNumber - 1 && i < lines.length; i++) {
@@ -49,6 +58,15 @@ export class MockTextModel {
   getValue (): string {
     return this.content;
   }
+  
+  getPositionAt (offset: number): Position {
+    const text = this.content.slice(0, Math.min(offset, this.content.length));
+    const lines = text.split('\n');
+    return {
+      lineNumber: lines.length,
+      column: lines[lines.length - 1].length + 1,
+    } as Position;
+  }
 
   getLineContent (lineNumber: number): string {
     const lines = this.content.split(/\r\n|\r|\n/);
@@ -56,12 +74,17 @@ export class MockTextModel {
   }
 }
 
-export function createMockTextModel (content: string, uri: string = ''): TextModel {
+export function createMockTextModel (content: string, uri: string = DEFAULT_ENTRY.toUri()): TextModel {
   return new MockTextModel(content, uri) as unknown as TextModel;
 }
 
 // Extract source text from a range in the program
-export function extractTextFromRange (program: string, range: { startLineNumber: number; startColumn: number; endLineNumber: number; endColumn: number }): string {
+export function extractTextFromRange (program: string, range: {
+  startLineNumber: number;
+  startColumn: number;
+  endLineNumber: number;
+  endColumn: number;
+}): string {
   const mockModel = new MockTextModel(program);
 
   const startOffset = mockModel.getOffsetAt({

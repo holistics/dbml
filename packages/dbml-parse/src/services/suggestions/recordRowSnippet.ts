@@ -1,46 +1,57 @@
+import Compiler from '@/compiler';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  ElementKind,
+} from '@/core/types/keywords';
 import {
   extractReferee,
   extractVariableFromExpression,
-  getElementKind,
-} from '@/core/analyzer/utils';
+} from '@/core/utils/expression';
 import {
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
   ProgramNode,
   TupleExpressionNode,
-} from '@/core/parser/nodes';
+} from '@/core/types/nodes';
 import {
-  type CompletionList,
-  type TextModel,
-  type Position,
-  CompletionItemKind,
-  CompletionItemInsertTextRule,
-} from '@/services/types';
-import { ColumnSymbol, TablePartialInjectedColumnSymbol, TableSymbol } from '@/core/analyzer/symbol/symbols';
-import { ElementKind } from '@/core/analyzer/types';
-import Compiler from '@/compiler';
+  ColumnSymbol, PartialInjectionSymbol, TablePartialInjectedColumnSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
 import {
-  noSuggestions,
-  getColumnsFromTableSymbol,
+  isOffsetWithinSpan,
+} from '@/core/utils/span';
+import {
   extractNameAndTypeOfColumnSymbol,
+  getColumnsFromTableSymbol,
+  noSuggestions,
 } from '@/services/suggestions/utils';
-import { isOffsetWithinSpan } from '@/core/utils';
+import {
+  CompletionItemInsertTextRule,
+  CompletionItemKind,
+  type CompletionList,
+  type Position,
+  type TextModel,
+} from '@/services/types';
+import {
+  SymbolKind,
+} from '@/core/types';
 
 export function suggestRecordRowSnippet (
   compiler: Compiler,
   model: TextModel,
   position: Position,
+  filepath: Filepath,
   offset: number,
 ): CompletionList | null {
-  const element = compiler.container.element(offset);
+  const element = compiler.container.element(filepath, offset);
 
   // If not in an ElementDeclarationNode, fallthrough
   if (!(element instanceof ElementDeclarationNode)) return null;
 
-  const elementKind = getElementKind(element).unwrap_or(undefined);
   // If not in a Records element, fallthrough
-  if (elementKind !== ElementKind.Records || !(element.body instanceof BlockExpressionNode)) return null;
+  if (!element.isKind(ElementKind.Records) || !(element.body instanceof BlockExpressionNode)) return null;
 
   // If we're not within the body, fallthrough
   if (!element.body || !isOffsetWithinSpan(offset, element.body)) return null;
@@ -74,12 +85,12 @@ function suggestRecordRowInTopLevelRecords (
       if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
         return null;
       }
-      const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+      const columnName = extractVariableFromExpression(element);
       if (!columnName) return null;
       const result = extractNameAndTypeOfColumnSymbol(symbol, columnName);
       return result;
     })
-    .filter((col) => col !== null) as Array<{ name: string; type: string }>;
+    .filter((col) => col !== null);
 
   if (columns.length === 0) return noSuggestions();
 
@@ -110,11 +121,14 @@ function suggestRecordRowInNestedRecords (
   }
 
   const tableSymbol = parent.symbol;
-  if (!(tableSymbol instanceof TableSymbol)) {
+  if (!tableSymbol?.isKind(SymbolKind.Table)) {
     return noSuggestions();
   }
 
-  let columns: Array<{ name: string; type: string }>;
+  let columns: Array<{
+    name: string;
+    type: string;
+  }>;
 
   if (recordsElement.name instanceof TupleExpressionNode) {
     // Explicit columns from tuple: records (col1, col2)
@@ -129,14 +143,14 @@ function suggestRecordRowInNestedRecords (
         if (!symbol || !(symbol instanceof ColumnSymbol || symbol instanceof TablePartialInjectedColumnSymbol)) {
           return null;
         }
-        const columnName = extractVariableFromExpression(element).unwrap_or(undefined);
+        const columnName = extractVariableFromExpression(element);
         if (columnName === undefined) return null;
         return extractNameAndTypeOfColumnSymbol(symbol, columnName);
       })
-      .filter((col) => col !== null) as Array<{ name: string; type: string }>;
+      .filter((col) => col !== null);
   } else {
     // Implicit columns - use all columns from parent table
-    const result = getColumnsFromTableSymbol(tableSymbol);
+    const result = getColumnsFromTableSymbol(tableSymbol as TableSymbol);
     if (!result) {
       return noSuggestions();
     }

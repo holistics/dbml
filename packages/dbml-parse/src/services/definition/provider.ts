@@ -1,9 +1,17 @@
-import {
-  Definition, DefinitionProvider, TextModel, Position,
-} from '@/services/types';
-import { getOffsetFromMonacoPosition } from '@/services/utils';
 import Compiler from '@/compiler';
-import { SyntaxNode, SyntaxNodeKind } from '@/core/parser/nodes';
+import {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  SyntaxNode, SyntaxNodeKind,
+} from '@/core/types/nodes';
+import {
+  Definition, DefinitionProvider, Position, TextModel,
+  Uri,
+} from '@/services/types';
+import {
+  getOffsetFromMonacoPosition,
+} from '@/services/utils';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;
@@ -13,9 +21,14 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
   }
 
   provideDefinition (model: TextModel, position: Position): Definition {
-    const { uri } = model;
+    const {
+      uri,
+    } = model;
+    const filepath = Filepath.fromUri(String(model.uri));
     const offset = getOffsetFromMonacoPosition(model, position);
-    const containers = [...this.compiler.container.stack(offset)];
+    const containers = [
+      ...this.compiler.container.stack(filepath, offset),
+    ];
     while (containers.length !== 0) {
       const node = containers.pop();
 
@@ -29,11 +42,15 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
           SyntaxNodeKind.VARIABLE,
         ].includes(node?.kind)
       ) {
-        ({ declaration } = node.referee);
+        ({
+          declaration,
+        } = node.referee);
       }
 
       if (declaration) {
-        const { startPos, endPos } = declaration;
+        const {
+          startPos, endPos,
+        } = declaration;
         return [
           {
             range: {
@@ -42,7 +59,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
               endColumn: endPos.column + 1,
               endLineNumber: endPos.line + 1,
             },
-            uri,
+            uri: Uri.parse(filepath.toUri()),
           },
         ];
       }
