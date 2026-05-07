@@ -4,7 +4,6 @@ import {
 import {
   SyntaxNode,
 } from '@/core/types/nodes';
-import Report from '@/core/types/report';
 import {
   NodeSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';

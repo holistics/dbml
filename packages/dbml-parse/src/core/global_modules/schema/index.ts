@@ -212,16 +212,24 @@ function mergeImportedSchema (
   if (!usable) return [];
 
   // Wrap directly declared importable members as UseSymbols.
-  // useSpecifierDeclaration is undefined so lookupMembers uses m.name (not the schema specifier's name).
   const members: NodeSymbol[] = usable.nonSchemaMembers
     .filter((m) => m.canBeImported)
     .map((m) => compiler.symbolFactory.create(UseSymbol, {
       kind: m.kind,
       declaration: m.originalSymbol.declaration,
       usedSymbol: m.originalSymbol,
-      useSpecifierDeclaration: undefined,
+      useSpecifierDeclaration: specifier,
       name: m.name,
     }, symbol.filepath));
+
+  // Expand TableGroups to pull their member tables into scope
+  for (const member of [
+    ...members,
+  ]) {
+    if (member.isKind(SymbolKind.TableGroup)) {
+      members.push(...expandTableGroup(compiler, member));
+    }
+  }
 
   // Recursively follow reuse chains only (use is local-only, not transitive)
   for (const s of usable.reuses.selective) {

@@ -35,12 +35,18 @@ import {
 export const useUtils = {
   // The name that the owning file would see the use specifier as
   visibleName (compiler: Compiler, nodeOrSymbol: UseSpecifierNode | UseSymbol): string[] | undefined {
-    const node =
+    let node =
       nodeOrSymbol instanceof SyntaxNode
         ? nodeOrSymbol
         : nodeOrSymbol.useSpecifierDeclaration instanceof UseSpecifierNode
           ? nodeOrSymbol.useSpecifierDeclaration
           : nodeOrSymbol.declaration;
+    if (node instanceof UseSpecifierNode && nodeOrSymbol instanceof NodeSymbol) {
+      // Ignore implicitly pulled via tablegroup or schema
+      if (node.getSymbolKind() !== nodeOrSymbol.kind) {
+        node = nodeOrSymbol.declaration;
+      }
+    }
     if (!node) return undefined;
     return compiler.nodeAlias(node).mapFiltered((a) => [
       a,
