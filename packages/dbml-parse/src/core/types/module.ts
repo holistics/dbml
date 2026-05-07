@@ -1,6 +1,7 @@
 import type Compiler from '@/compiler';
+import Report from './report';
 
-// Sentinel returned by a module when it does not handle a dispatched call  --
+// Sentinel returned by a module when it does not handle a dispatched call -
 // lets the dispatcher fall through to the next candidate module.
 export const PASS_THROUGH = Symbol('PASS_THROUGH');
 export type PassThrough = typeof PASS_THROUGH;
@@ -10,5 +11,5 @@ export const UNHANDLED = Symbol('UNHANDLED');
 export type Unhandled = typeof UNHANDLED;
 
 export interface Module {
-  [index: string]: undefined | ((compiler: Compiler, ...args: any[]) => any);
+  [index: string]: undefined | ((compiler: Compiler, ...args: any[]) => Report<unknown> | Report<PassThrough>);
 }
