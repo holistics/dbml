@@ -1,5 +1,8 @@
 import type Compiler from '@/compiler/index';
 import {
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
+import {
   schemaMembership,
 } from '@/compiler/queries/files/usableMembers';
 import {
@@ -12,7 +15,7 @@ import {
   PASS_THROUGH, type PassThrough, UNHANDLED,
 } from '@/core/types/module';
 import {
-  ElementDeclarationNode, FunctionApplicationNode, WildcardNode,
+  ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, WildcardNode,
 } from '@/core/types/nodes';
 import {
   SyntaxNode, UseSpecifierNode,
@@ -97,13 +100,29 @@ export const schemaModule: GlobalModule = {
     // 3. Add child schemas discovered during import processing
     members.push(...childSchemas.values());
 
-    // 4. Expand TableGroups (inject member tables into scope)
+    // 4. Expand TableGroups (inject member tables belonging to current schema).
+    // TableGroups live in public schema but can reference tables in other schemas (e.g. v.G).
+    // Non-public schemas also process public schema's TableGroups (both declared and imported).
     const membersWithExpansions: NodeSymbol[] = [
       ...members,
     ];
-    for (const member of members) {
-      if (member.isKind(SymbolKind.TableGroup)) {
-        membersWithExpansions.push(...expandTableGroup(compiler, member));
+    {
+      // Collect TableGroups: from current schema's members + public schema's raw members and imports
+      const tableGroups = members.filter((m) => m.isKind(SymbolKind.TableGroup));
+      if (!symbol.isPublicSchema()) {
+        // Public schema's symbolMembers includes all TableGroups (declared + imported).
+        // It's safe to call here because public schema is always computed first by the program module.
+        const publicSchema = compiler.usableMembers(symbol.filepath).getFiltered(UNHANDLED)
+          ?.schemaMembers.find((s) => s.isPublicSchema());
+        if (publicSchema) {
+          const publicMembers = compiler.symbolMembers(publicSchema).getFiltered(UNHANDLED);
+          if (publicMembers) {
+            tableGroups.push(...publicMembers.filter((m) => m.isKind(SymbolKind.TableGroup)));
+          }
+        }
+      }
+      for (const tg of tableGroups) {
+        membersWithExpansions.push(...expandTableGroup(compiler, symbol as SchemaSymbol, tg));
       }
     }
 
@@ -222,12 +241,12 @@ function mergeImportedSchema (
       name: m.name,
     }, symbol.filepath));
 
-  // Expand TableGroups to pull their member tables into scope
+  // Expand TableGroups: pull member tables belonging to current schema
   for (const member of [
     ...members,
   ]) {
     if (member.isKind(SymbolKind.TableGroup)) {
-      members.push(...expandTableGroup(compiler, member));
+      members.push(...expandTableGroup(compiler, symbol, member));
     }
   }
 
@@ -338,15 +357,20 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
   return currentSchema;
 }
 
-// Inject a TableGroup's member tables into scope
-function expandTableGroup (compiler: Compiler, tableGroupSymbol: NodeSymbol): NodeSymbol[] {
+// Expand an imported TableGroup's member tables that belong to the given schema.
+// TableGroups can only reference tables in the same file, so we look up each
+// field in the source file via usableMembers (not nodeReferee, to avoid cycles).
+function expandTableGroup (compiler: Compiler, currentSchema: SchemaSymbol, tableGroupSymbol: NodeSymbol): NodeSymbol[] {
   if (!tableGroupSymbol.isKind(SymbolKind.TableGroup)) return [];
+  if (!(tableGroupSymbol instanceof UseSymbol)) return [];
 
   const originalTableGroup = tableGroupSymbol.originalSymbol;
   const members = compiler.symbolMembers(originalTableGroup).getFiltered(UNHANDLED);
   if (!members) return [];
 
+  const qualifiedName = currentSchema.qualifiedName;
   const extraSymbols: NodeSymbol[] = [];
+
   for (const field of members) {
     if (!field.isKind(SymbolKind.TableGroupField) || !field.declaration) continue;
 
@@ -356,28 +380,33 @@ function expandTableGroup (compiler: Compiler, tableGroupSymbol: NodeSymbol): No
     const nameParts = destructureComplexVariable(callee);
     if (!nameParts || nameParts.length === 0) continue;
 
+    // Only include tables belonging to current schema
+    const schemaChain = nameParts.length <= 1
+      ? [
+          DEFAULT_SCHEMA_NAME,
+        ]
+      : nameParts.slice(0, -1);
+    if (schemaChain.length !== qualifiedName.length) continue;
+    if (!qualifiedName.every((s, i) => s === schemaChain[i])) continue;
+
     const sourceFilepath = field.declaration.filepath;
     const originalTable = lookupTableInFile(compiler, sourceFilepath, nameParts);
     if (!originalTable) continue;
 
-    if (tableGroupSymbol instanceof UseSymbol) {
-      // Imported TableGroup: wrap table as UseSymbol to bring into scope
-      extraSymbols.push(compiler.symbolFactory.create(UseSymbol, {
-        kind: SymbolKind.Table,
-        declaration: originalTable.declaration,
-        usedSymbol: originalTable,
-        useSpecifierDeclaration: undefined,
-        name: originalTable.name,
-      }, tableGroupSymbol.filepath));
-    }
-    // Local TableGroup: member tables are already declared in scope, no injection needed.
+    extraSymbols.push(compiler.symbolFactory.create(UseSymbol, {
+      kind: SymbolKind.Table,
+      declaration: originalTable.declaration,
+      usedSymbol: originalTable,
+      useSpecifierDeclaration: undefined,
+      name: originalTable.name,
+    }, tableGroupSymbol.filepath));
   }
 
   return extraSymbols;
 }
 
 // Look up a table by qualified name from a file's raw declarations.
-// Uses usableMembers to avoid cycles (called from expandTableGroup).
+// Uses usableMembers to avoid cycles.
 function lookupTableInFile (compiler: Compiler, filepath: Filepath, nameParts: string[]): NodeSymbol | undefined {
   if (nameParts.length === 1) {
     const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
@@ -385,13 +414,8 @@ function lookupTableInFile (compiler: Compiler, filepath: Filepath, nameParts: s
     return usable.nonSchemaMembers.find((m) => m.isKind(SymbolKind.Table) && m.name === nameParts[0]);
   }
 
-  const [
-    schemaName,
-    tableName,
-  ] = [
-    nameParts[0],
-    nameParts[nameParts.length - 1],
-  ];
+  const schemaName = nameParts[0];
+  const tableName = nameParts[nameParts.length - 1];
   const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
   if (!usable) return undefined;
   const schema = usable.schemaMembers.find((s) => s.name === schemaName);
