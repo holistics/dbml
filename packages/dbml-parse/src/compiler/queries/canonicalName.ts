@@ -9,7 +9,7 @@ import {
   type Filepath,
 } from '@/core/types/filepath';
 import {
-  AliasSymbol, NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
+  NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol, AliasSymbol,
 } from '@/core/types/symbol';
 import type Compiler from '../index';
 
@@ -28,55 +28,57 @@ export function canonicalName (this: Compiler, filepath: Filepath, symbol: NodeS
     return Report.create(fullnameToCanonical(this, original));
   }
 
-  // 2. Look for a UseSymbol or AliasSymbol in this file's scope that points at the same original
-  const ast = this.parseFile(filepath).getValue().ast;
-  const programSymbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
-  if (!programSymbol) return Report.create(fullnameToCanonical(this, original));
+  // 2. Find UseSymbol/AliasSymbol in this file pointing at the same original
+  const candidates = [
+    ...this.symbolUses(original).getValue(),
+    ...this.symbolAliases(original).getValue(),
+  ].filter((m) => m.filepath.equals(filepath));
 
-  const members = this.symbolMembers(programSymbol).getFiltered(UNHANDLED) ?? [];
-
-  // Also check schema members (elements live inside schemas)
-  const allMembers: NodeSymbol[] = [
-    ...members,
-  ];
-  for (const member of members) {
-    if (member instanceof SchemaSymbol && member.isKind(SymbolKind.Schema)) {
-      const sub = this.symbolMembers(member).getFiltered(UNHANDLED);
-      if (sub) allMembers.push(...sub);
-    }
-  }
-
-  // Find first UseSymbol/AliasSymbol pointing at same original in this file
-  for (const member of allMembers) {
-    if (member.filepath.intern() !== filepath.intern()) continue;
-    if (member.originalSymbol !== original) continue;
-
-    if (member instanceof UseSymbol || member instanceof AliasSymbol) {
-      const name = member.name;
-      if (!name) continue;
-      const isRenamed = name !== original.name;
-      if (isRenamed) {
-        // Aliased import  -- strip schema
-        return Report.create({
-          schema: '',
-          name,
-        });
-      }
-      // Non-aliased import  -- preserve original schema
-      const originalCanonical = fullnameToCanonical(this, original);
-      if (originalCanonical) return Report.create({
-        ...originalCanonical,
-        name,
-      });
+  for (const member of candidates) {
+    const name = member.name;
+    if (!name) continue;
+    if (name !== original.name) {
       return Report.create({
-        schema: DEFAULT_SCHEMA_NAME,
+        schema: '',
         name,
       });
     }
+    const schemaChain = getSchemaChain(this, member);
+    if (schemaChain.length > 0) {
+      return Report.create({
+        schema: schemaChain.join('.'),
+        name,
+      });
+    }
+    const originalCanonical = fullnameToCanonical(this, original);
+    if (originalCanonical) return Report.create({
+      ...originalCanonical,
+      name,
+    });
+    return Report.create({
+      schema: DEFAULT_SCHEMA_NAME,
+      name,
+    });
   }
 
   // 3. Fallback: original name
   return Report.create(fullnameToCanonical(this, original));
+}
+
+// Walk up symbolParent chain to build the schema qualified name, excluding public
+function getSchemaChain (compiler: Compiler, symbol: NodeSymbol): string[] {
+  const chain: string[] = [];
+  let cur: NodeSymbol | undefined = symbol;
+  while (cur) {
+    const parents = compiler.symbolParent(cur);
+    const schemaParent = parents.find(
+      (p): p is SchemaSymbol => p instanceof SchemaSymbol && p.isKind(SymbolKind.Schema),
+    );
+    if (!schemaParent || schemaParent.isPublicSchema()) break;
+    chain.unshift(schemaParent.name ?? '');
+    cur = schemaParent;
+  }
+  return chain;
 }
 
 function fullnameToCanonical (compiler: Compiler, symbol: NodeSymbol): CanonicalName | undefined {

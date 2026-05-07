@@ -128,3 +128,15 @@ describe('canonicalName - chained selective use', () => {
     expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'public', name: 'users' });
   });
 });
+
+describe('canonicalName - schema alias', () => {
+  const { compiler } = setupCompiler({
+    '/base.dbml': 'Table auth.users { id int [pk] }\nTable auth.posts { id int [pk] }',
+    '/main.dbml': "use { schema auth as a } from './base'",
+  });
+
+  test('table under aliased schema uses alias as schema name', () => {
+    expect(canonicalName(compiler, '/main.dbml', 'users')).toEqual({ schema: 'a', name: 'users' });
+    expect(canonicalName(compiler, '/main.dbml', 'posts')).toEqual({ schema: 'a', name: 'posts' });
+  });
+});

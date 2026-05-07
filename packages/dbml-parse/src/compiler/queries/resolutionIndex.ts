@@ -15,9 +15,11 @@ import {
   type InfixExpressionNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  InternedNodeSymbol,
-  NodeSymbol,
+import {
+  type InternedNodeSymbol,
+  type NodeSymbol,
+  SchemaSymbol,
+  SymbolKind,
 } from '@/core/types/symbol';
 import {
   isAccessExpression, isExpressionAVariableNode,
@@ -27,6 +29,7 @@ import type Compiler from '../index';
 export interface ResolutionIndex {
   references: Map<InternedNodeSymbol, SyntaxNode[]>;
   metadata: Map<InternedNodeSymbol, NodeMetadata[]>;
+  parents: Map<InternedNodeSymbol, NodeSymbol[]>;
 }
 
 function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
@@ -38,7 +41,7 @@ function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
   return undefined;
 }
 
-// Build full resolution index: references + metadata. One scan of all files.
+// Build full resolution index: references + metadata + symbol parent. One scan of all files.
 export function resolutionIndex (this: Compiler): ResolutionIndex {
   const references = new Map<InternedNodeSymbol, SyntaxNode[]>();
   const metadata = new Map<InternedNodeSymbol, NodeMetadata[]>();
@@ -82,6 +85,7 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
     }
   };
 
+  // Build metadata and references
   for (const astReport of astMap.values()) {
     const ast = astReport.getValue().ast;
     const walk = (node: SyntaxNode): void => {
@@ -116,10 +120,50 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
     walk(ast);
   }
 
+  // Build parent map: for every symbol, record which symbols contain it as a member
+  const parents = new Map<InternedNodeSymbol, NodeSymbol[]>();
+  const visitedSymbols = new Set<InternedNodeSymbol>();
+
+  function buildParents (compiler: Compiler, symbol: NodeSymbol) {
+    const key = symbol.intern();
+    if (visitedSymbols.has(key)) return;
+    visitedSymbols.add(key);
+
+    const children = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+    if (!children) return;
+
+    for (const child of children) {
+      const childKey = child.intern();
+      let arr = parents.get(childKey);
+      if (!arr) {
+        arr = [];
+        parents.set(childKey, arr);
+      }
+      arr.push(symbol);
+
+      if (child instanceof SchemaSymbol && child.isKind(SymbolKind.Schema)) {
+        buildParents(compiler, child);
+      }
+    }
+  }
+
+  for (const astReport of astMap.values()) {
+    const ast = astReport.getValue().ast;
+    const programSymbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
+    if (programSymbol) buildParents(this, programSymbol);
+  }
+
   return {
     references,
     metadata,
+    parents,
   };
+}
+
+// Lookup parent symbols that contain this symbol as a member
+export function symbolParent (this: Compiler, symbol: NodeSymbol): NodeSymbol[] {
+  const index = this.resolutionIndex();
+  return index.parents.get(symbol.intern()) ?? [];
 }
 
 // Lookup references for a symbol from the cached index

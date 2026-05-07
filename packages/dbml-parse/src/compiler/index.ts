@@ -72,7 +72,7 @@ import {
   symbolAliases,
 } from './queries/symbol/symbolAliases';
 import {
-  resolutionIndex, symbolMetadata, symbolReferences,
+  resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
 } from './queries/resolutionIndex';
 import {
   symbolUses,
@@ -332,6 +332,9 @@ export default class Compiler {
   // Return all nodes that refer to this symbol.
   // Signature: (symbol: NodeSymbol) => Report<SyntaxNode[]> | Report<Unhandled>
   symbolReferences = this.globalQuery(symbolReferences);
+  // Return parent symbols that contain this symbol as a member.
+  // Signature: (symbol: NodeSymbol) => NodeSymbol[]
+  symbolParent = this.globalQuery(symbolParent);
   // A global query
   // Return all metadata that attaches to this symbol.
   // Signature: (symbol: NodeSymbol) => Report<NodeMetadata[]> | Report<Unhandled>

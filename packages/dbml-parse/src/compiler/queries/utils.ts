@@ -328,10 +328,7 @@ export function collectTransitiveDependencies (
 
 // Canonical enumeration of visible symbols, rooted at each file's programSymbol.
 //
-// WARNING: always go through `compiler.symbolMembers`  -- never hit usableMembers
-// or symbolFactory directly. AliasSymbol/UseSymbol instances are only canonical
-// when reached via this path; other entry points mint fresh SchemaSymbols and
-// spawn parallel copies, breaking identity comparison against nodeReferee.
+// WARNING: always go through `compiler.symbolMembers` - never use usableMembers in this function
 export function allVisibleMembers (compiler: Compiler): Report<NodeSymbol[]> {
   const members: NodeSymbol[] = [];
   const errors: any[] = [];
