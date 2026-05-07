@@ -149,7 +149,7 @@ export function mergeSymbolIntoUses (
   const existingUseIndex = existingUses.findIndex((u) => u.sourceFile === sourceFileStr);
 
   const newSpecifier = `${symbolKind} ${symbolName}`;
-  const lineEnd = detectLineEnding(fileContent);
+  const lineEnd = '\n';
 
   if (existingUseIndex !== -1) {
     const existingUse = existingUses[existingUseIndex];
@@ -216,11 +216,6 @@ function expandToFullLines (fileContent: string, start: number, end: number): { 
     startOffset: lineStart,
     endOffset: newEnd,
   };
-}
-
-function detectLineEnding (source: string): string {
-  // Use whatever the file already uses; default to `\n`.
-  return source.includes('\r\n') ? '\r\n' : '\n';
 }
 
 /**
