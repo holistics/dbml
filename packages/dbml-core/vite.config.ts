@@ -2,8 +2,12 @@
 
 import path from 'path';
 import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
 export default defineConfig({
+  plugins: [
+    dts({}),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src/'),
