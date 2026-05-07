@@ -426,3 +426,49 @@ use * from './b.dbml'
     expect(roles!.schemaName).toBe('auth');
   });
 });
+
+describe('[example] use { schema auth as a } pulls tables under alias', () => {
+  const { compiler } = setupCompiler({
+    '/base.dbml': `
+Table auth.users { id int [pk]\n  email varchar }
+Table auth.posts { id int [pk]\n  title varchar }
+`,
+    '/main.dbml': `
+use { schema auth as a } from './base'
+`,
+  });
+
+  test('alias schema has both tables', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    expect(db.tables.find((t) => t.name === 'users')).toBeDefined();
+    expect(db.tables.find((t) => t.name === 'posts')).toBeDefined();
+  });
+
+  test('tables accessible via alias schema name in refs', () => {
+    const { compiler: c2 } = setupCompiler({
+      '/base.dbml': `
+Table auth.users { id int [pk] }
+Table auth.posts { id int [pk]\n  user_id int }
+`,
+      '/main.dbml': `
+use { schema auth as a } from './base'
+Ref: a.posts.user_id > a.users.id
+`,
+    });
+    const result = c2.interpretFile(fp('/main.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+    expect(result.getValue()!.refs).toHaveLength(1);
+  });
+
+  test('original schema name not directly accessible', () => {
+    const { compiler: c3 } = setupCompiler({
+      '/base.dbml': 'Table auth.users { id int [pk] }',
+      '/main.dbml': `
+use { schema auth as a } from './base'
+Ref: auth.users.id > auth.users.id
+`,
+    });
+    const result = c3.interpretFile(fp('/main.dbml'));
+    expect(result.getErrors().length).toBeGreaterThan(0);
+  });
+});

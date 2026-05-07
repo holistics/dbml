@@ -127,11 +127,15 @@ function collectImports (compiler: Compiler, filepath: Filepath) {
     ast,
   } = parseResult.getValue();
 
-  const wildcardReuses: { importPath: Filepath;
-    node: WildcardNode; }[] = [];
+  const wildcardReuses: {
+    importPath: Filepath;
+    node: WildcardNode;
+  }[] = [];
   const selectiveReuses: UseSpecifierNode[] = [];
-  const wildcardUses: { importPath: Filepath;
-    node: WildcardNode; }[] = [];
+  const wildcardUses: {
+    importPath: Filepath;
+    node: WildcardNode;
+  }[] = [];
   const selectiveUses: UseSpecifierNode[] = [];
 
   for (const element of ast.body) {
@@ -174,8 +178,10 @@ function usableMembersForProgram (
   compiler: Compiler,
   symbol: ProgramSymbol,
   imports: ReturnType<typeof collectImports>,
-): { nonSchemaMembers: NodeSymbol[];
-  schemaMembers: SchemaSymbol[]; } {
+): {
+  nonSchemaMembers: NodeSymbol[];
+  schemaMembers: SchemaSymbol[];
+} {
   const {
     ast, selectiveUses, selectiveReuses,
   } = imports;

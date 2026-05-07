@@ -216,12 +216,16 @@ function mergeImportedSchema (
   if (specifier.getSymbolKind() !== SymbolKind.Schema) return [];
   if (!specifier.name) return [];
 
-  // Find the external schema matching this schema's name in the import file
+  // Find the external schema referenced by this specifier
   const externalSchema = compiler.nodeReferee(specifier.name).getFiltered(UNHANDLED) as SchemaSymbol;
   if (!externalSchema || !externalSchema.isKind(SymbolKind.Schema)) return [];
 
-  // Only merge if the external schema name matches the current schema name
-  if (externalSchema.name !== symbol.name) return [];
+  // Only merge if the specifier targets this schema.
+  // For `use { schema auth as a }`, alias is 'a' - matches schema 'a'.
+  // For `use { schema x }`, no alias, fullname is ['x'] - matches schema 'x'.
+  const alias = compiler.nodeAlias(specifier).getFiltered(UNHANDLED);
+  const specifierSchemaName = alias ?? compiler.nodeFullname(specifier).getFiltered(UNHANDLED)?.at(0);
+  if (specifierSchemaName !== symbol.name) return [];
 
   const key = externalSchema.intern();
   if (visited.has(key)) return [];
