@@ -1,12 +1,8 @@
-import {
-  describe, expect, it,
-} from 'vitest';
-import { DEFAULT_ENTRY } from '@/constants';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import {
-  createMockTextModel, createPosition,
-} from '@tests/utils';
+import { createMockTextModel, createPosition } from '@tests/utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[DiagramView] CompletionItemProvider', () => {
   describe('top-level suggestions should include DiagramView', () => {

@@ -1,56 +1,67 @@
 import {
   last, partition,
 } from 'lodash-es';
+import Compiler from '@/compiler';
+import {
+  CompileError, CompileErrorCode,
+} from '@/core/types/errors';
 import {
   ElementKind, SettingName,
 } from '@/core/types/keywords';
 import {
-  destructureComplexVariable, destructureIndexNode, extractQuotedStringToken, extractVarNameFromPrimaryVariable,
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  BlockExpressionNode, ElementDeclarationNode,
+  FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
+  SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import {
+  Check, Column, Index, InlineRef, Ref,
+  Table, TablePartialInjection,
+} from '@/core/types/schemaJson';
+import type {
+  Filepath,
+} from '@/core/types/filepath';
+import {
+  SymbolKind,
+} from '@/core/types/symbol';
+import {
+  RefMetadata,
+} from '@/core/types/symbol/metadata';
+import type {
+  ColumnSymbol, TableSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  ProgramSymbol,
+} from '@/core/types/symbol/symbols';
+import {
+  extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
   aggregateSettingList, isValidPartialInjection,
 } from '@/core/utils/validate';
 import {
-  extractColor, extractElementName, getColumnSymbolsOfRefOperand, getMultiplicities,
-  getRefId, getTokenPosition, isSameEndpoint, normalizeNoteContent,
-  processColumnType, processDefaultValue,
-} from '@/core/global_modules/utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  AttributeNode, BlockExpressionNode, CallExpressionNode, ElementDeclarationNode,
-  FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
-  SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  AliasKind,
-  Check, Column, Index, InlineRef,
-  Table, TablePartialInjection,
-} from '@/core/types/schemaJson';
-import {
-  SymbolKind, destructureIndex,
-} from '@/core/types/symbol';
-import {
-  ColumnSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  convertStringToEnum,
-} from '@/core/utils/enum';
-import {
-  InterpreterDatabase,
-} from '@/core/global_modules/types';
+  extractColor, extractElementName,
+  getTokenPosition, normalizeNote,
+  processColumnType,
+} from '@/core/utils/interpret';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
+  private compiler: Compiler;
+  private symbol?: TableSymbol;
+  private filepath: Filepath;
   private table: Partial<Table>;
   private pkColumns: Column[];
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, symbol: TableSymbol, filepath: Filepath) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.env = env;
+    this.symbol = symbol;
+    this.filepath = filepath;
     this.table = {
       name: undefined,
       schemaName: undefined,
@@ -64,12 +75,22 @@ export class TableInterpreter {
     this.pkColumns = [];
   }
 
-  interpret (): CompileError[] {
-    this.table.token = getTokenPosition(this.declarationNode);
-    this.env.tables.set(this.declarationNode, this.table as Table);
+  interpret (): Report<Table> {
+    this.table.token = this.symbol?.token ?? getTokenPosition(this.declarationNode);
+
+    const nameErrors: CompileError[] = [];
+    if (this.symbol) {
+      const {
+        name, schema,
+      } = this.symbol.interpretedName(this.compiler, this.filepath);
+      this.table.name = name;
+      this.table.schemaName = schema;
+    } else {
+      nameErrors.push(...this.interpretName(this.declarationNode.name!));
+    }
 
     const errors = [
-      ...this.interpretName(this.declarationNode.name!),
+      ...nameErrors,
       ...this.interpretAlias(this.declarationNode.alias),
       ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
@@ -107,7 +128,7 @@ export class TableInterpreter {
       });
     }
 
-    return errors;
+    return Report.create(this.table as Table, errors);
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
@@ -135,16 +156,8 @@ export class TableInterpreter {
       return [];
     }
 
-    const alias = extractVarNameFromPrimaryVariable(aliasNode as any) ?? null;
+    const alias = extractVarNameFromPrimaryVariable(aliasNode as any);
     if (alias) {
-      this.env.aliases.push({
-        name: alias,
-        kind: AliasKind.Table,
-        value: {
-          tableName: this.table.name!,
-          schemaName: this.table.schemaName!,
-        },
-      });
       this.table.alias = alias;
     }
 
@@ -162,7 +175,7 @@ export class TableInterpreter {
       noteNode,
     ] = settingMap[SettingName.Note] || [];
     this.table.note = noteNode && {
-      value: normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!),
+      value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
 
@@ -185,7 +198,7 @@ export class TableInterpreter {
       switch (sub.type?.value.toLowerCase()) {
         case ElementKind.Note:
           this.table.note = {
-            value: normalizeNoteContent(extractQuotedStringToken(
+            value: normalizeNote(extractQuotedStringToken(
               sub.body instanceof BlockExpressionNode
                 ? (sub.body.body[0] as FunctionApplicationNode).callee
                 : sub.body!.callee,
@@ -201,8 +214,7 @@ export class TableInterpreter {
           return this.interpretChecks(sub);
 
         case ElementKind.Records:
-          // Collect nested records for later interpretation
-          this.env.recordsElements.push(sub);
+          // Nested records are interpreted in program module
           return [];
 
         default:
@@ -212,26 +224,39 @@ export class TableInterpreter {
   }
 
   private interpretInjection (injection: PrefixExpressionNode, order: number) {
+    const errors: CompileError[] = [];
     const partial: Partial<TablePartialInjection> = {
       order,
       token: getTokenPosition(injection),
     };
-    partial.name = extractVariableFromExpression(injection.expression) ?? '';
+    partial.name = extractVariableFromExpression(injection.expression) || '';
+
+    const partialSymbol = injection.expression ? this.compiler.nodeReferee(injection.expression).getFiltered(UNHANDLED) : undefined;
+    const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
+    const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED) as ProgramSymbol;
+
+    // FIXME: Should support this in the future
+    if (partialSymbol && !programSymbol.inNestedSchema(this.compiler, partialSymbol)) {
+      const tableSymbol = this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
+      const tableUseInThisFile = tableSymbol ? (this.compiler.symbolUses(tableSymbol).getFiltered(UNHANDLED) ?? []).find((u) => u.filepath.equals(this.filepath)) : undefined;
+      errors.push(new CompileError(
+        CompileErrorCode.UNSUPPORTED,
+        `Import TablePartial from '${partialSymbol.filepath}' first. Currently, importing a table that uses a table partial requires that table partial to also be in scope.`,
+        tableUseInThisFile?.useSpecifierDeclaration ?? injection,
+      ));
+    }
+
     this.table.partials!.push(partial as TablePartialInjection);
-    return [];
+    return errors;
   }
 
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const symbolTableEntries = this.declarationNode.symbol?.symbolTable
-      ? [
-          ...this.declarationNode.symbol.symbolTable.entries(),
-        ]
+    const tableSymbol = this.symbol ?? this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
+    const symbolMembers = tableSymbol
+      ? this.compiler.symbolMembers(tableSymbol).getFiltered(UNHANDLED) ?? []
       : [];
-    const columnEntries = symbolTableEntries.filter(([
-      index,
-    ]) => {
-      const res = destructureIndex(index) ?? null;
-      return res?.kind === SymbolKind.Column;
+    const columnEntries = symbolMembers.filter((symbol) => {
+      return symbol.isKind(SymbolKind.Column);
     });
 
     const columnCountErrors = columnEntries.length
@@ -254,133 +279,67 @@ export class TableInterpreter {
 
   private interpretColumn (field: FunctionApplicationNode): CompileError[] {
     const errors: CompileError[] = [];
-
     const column: Partial<Column> = {};
+    const columnSymbol = this.compiler.nodeSymbol(field).getFiltered(UNHANDLED) as ColumnSymbol | undefined;
 
     column.name = extractVarNameFromPrimaryVariable(field.callee as any)!;
+    column.token = getTokenPosition(field);
 
-    const typeReport = processColumnType(field.args[0], this.env);
+    const typeReport = processColumnType(this.compiler, field.args[0]);
     column.type = typeReport.getValue();
     errors.push(...typeReport.getErrors());
 
-    column.token = getTokenPosition(field);
-    column.inline_refs = [];
+    column.pk = columnSymbol?.pk(this.compiler) || false;
+    column.unique = columnSymbol?.unique(this.compiler) || false;
+    column.increment = columnSymbol?.increment(this.compiler) || undefined;
+    const nullable = columnSymbol?.nullable(this.compiler);
+    column.not_null = nullable === undefined ? undefined : !nullable;
+    column.dbdefault = columnSymbol?.default(this.compiler);
+    column.note = columnSymbol?.note(this.compiler);
 
-    const settings = field.args.slice(1);
-    if (last(settings) instanceof ListExpressionNode) {
-      const settingMap = aggregateSettingList(settings.pop() as ListExpressionNode).getValue();
+    const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
 
-      column.pk = !!settingMap[SettingName.PK]?.length || !!settingMap[SettingName.PrimaryKey]?.length;
-      column.increment = !!settingMap[SettingName.Increment]?.length;
-      column.unique = !!settingMap[SettingName.Unique]?.length;
+    const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
+    const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
 
-      column.not_null = settingMap[SettingName.NotNull]?.length
-        ? true
-        : settingMap[SettingName.Null]?.length
-          ? false
-          : undefined;
-      column.dbdefault = processDefaultValue(settingMap[SettingName.Default]?.at(0)?.value);
+    const refs = settingMap[SettingName.Ref] || [];
+    column.inline_refs = refs.flatMap((ref) => {
+      const meta = this.compiler.nodeMetadata(ref).getFiltered(UNHANDLED);
+      if (!meta) return [];
 
-      const noteNode = settingMap[SettingName.Note]?.at(0);
-      column.note = noteNode && {
-        value: normalizeNoteContent(extractQuotedStringToken(noteNode.value)!),
-        token: getTokenPosition(noteNode),
+      const owners = meta.owners(this.compiler);
+      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+
+      const result = this.compiler.interpretMetadata(meta, this.filepath);
+      if (result.hasValue(UNHANDLED)) return [];
+      errors.push(...result.getErrors());
+
+      const value = result.getValue() as Ref | undefined;
+      if (!value?.endpoints?.[0]) return [];
+
+      const ep = value.endpoints[0];
+      const op = (meta as RefMetadata).op(this.compiler);
+      if (!op) return [];
+
+      const inlineRef: InlineRef = {
+        schemaName: ep.schemaName,
+        tableName: ep.tableName,
+        fieldNames: ep.fieldNames,
+        relation: op,
+        token: ep.token,
       };
+      return inlineRef;
+    });
 
-      const refs = settingMap[SettingName.Ref] || [];
-      column.inline_refs = refs.flatMap((ref) => {
-        const [
-          referredSymbol,
-        ] = getColumnSymbolsOfRefOperand((ref.value as PrefixExpressionNode).expression!);
-
-        if (isSameEndpoint(referredSymbol, field.symbol as ColumnSymbol)) {
-          errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', ref));
-
-          return [];
-        }
-
-        const op = (ref.value as PrefixExpressionNode).op!;
-        const fragments = destructureComplexVariable((ref.value as PrefixExpressionNode).expression)!;
-
-        let inlineRef: InlineRef | undefined;
-        if (fragments.length === 1) {
-          const [
-            columnName,
-          ] = fragments;
-
-          inlineRef = {
-            schemaName: this.table.schemaName!,
-            tableName: this.table.name!,
-            fieldNames: [
-              columnName,
-            ],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        } else if (fragments.length === 2) {
-          const [
-            table,
-            columnName,
-          ] = fragments;
-          inlineRef = {
-            schemaName: null,
-            tableName: table,
-            fieldNames: [
-              columnName,
-            ],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        } else if (fragments.length === 3) {
-          const [
-            schema,
-            table,
-            columnName,
-          ] = fragments;
-          inlineRef = {
-            schemaName: schema,
-            tableName: table,
-            fieldNames: [
-              columnName,
-            ],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        } else {
-          errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', ref));
-          const columnName = fragments.pop()!;
-          const table = fragments.pop()!;
-          const schema = fragments.join('.');
-          inlineRef = {
-            schemaName: schema,
-            tableName: table,
-            fieldNames: [
-              columnName,
-            ],
-            relation: op.value as any,
-            token: getTokenPosition(ref),
-          };
-        }
-
-        const errs = this.registerInlineRefToEnv(field, referredSymbol, inlineRef, ref);
-        errors.push(...errs);
-
-        return errs.length === 0 ? inlineRef : [];
-      });
-
-      const checkNodes = settingMap[SettingName.Check] || [];
-      column.checks = checkNodes.map((checkNode) => {
-        const token = getTokenPosition(checkNode);
-        const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
-        return {
-          token,
-          expression,
-        };
-      });
-    }
-
-    column.pk ||= settings.some((setting) => convertStringToEnum(SettingName, extractVariableFromExpression(setting)!) === SettingName.PK);
-    column.unique ||= settings.some((setting) => convertStringToEnum(SettingName, extractVariableFromExpression(setting)!) === SettingName.Unique);
+    const checkNodes = settingMap[SettingName.Check] || [];
+    column.checks = checkNodes.map((checkNode) => {
+      const token = getTokenPosition(checkNode);
+      const expression = (checkNode.value as FunctionExpressionNode).value!.value!;
+      return {
+        token,
+        expression,
+      };
+    });
 
     this.table.fields!.push(column as Column);
     if (column.pk) {
@@ -391,121 +350,24 @@ export class TableInterpreter {
   }
 
   private interpretIndexes (indexes: ElementDeclarationNode): CompileError[] {
-    this.table.indexes!.push(...(indexes.body as BlockExpressionNode).body.map((_indexField) => {
-      const index: Partial<Index> = {
-        columns: [],
-      };
-
-      const indexField = _indexField as FunctionApplicationNode;
-      index.token = getTokenPosition(indexField);
-      const args = [
-        indexField.callee!,
-        ...indexField.args,
-      ];
-      if (last(args) instanceof ListExpressionNode) {
-        const settingMap = aggregateSettingList(args.pop() as ListExpressionNode).getValue();
-        index.pk = !!settingMap[SettingName.PK]?.length;
-        index.unique = !!settingMap[SettingName.Unique]?.length;
-        index.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value);
-        const noteNode = settingMap[SettingName.Note]?.at(0);
-        index.note = noteNode && {
-          value: extractQuotedStringToken(noteNode.value)!,
-          token: getTokenPosition(noteNode),
-        };
-        index.type = extractVariableFromExpression(settingMap[SettingName.Type]?.at(0)?.value);
-      }
-
-      args.flatMap((arg) => {
-        // This is to deal with indexes fields such as
-        // (id, name) (age, weight)
-        // which is a call expression
-        if (!(arg instanceof CallExpressionNode)) {
-          return arg;
-        }
-        const fragments: SyntaxNode[] = [];
-        while (arg instanceof CallExpressionNode) {
-          fragments.push(arg.argumentList!);
-
-          arg = arg.callee!;
-        }
-        fragments.push(arg);
-
-        return fragments;
-      }).forEach((arg) => {
-        const {
-          functional, nonFunctional,
-        } = destructureIndexNode(arg)!;
-        index.columns!.push(
-          ...functional.map((s) => ({
-            value: s.value!.value,
-            type: 'expression',
-            token: getTokenPosition(s),
-          })),
-          ...nonFunctional.map((s) => ({
-            value: extractVarNameFromPrimaryVariable(s)!,
-            type: 'column',
-            token: getTokenPosition(s),
-          })),
-        );
-      });
-
-      return index as Index;
-    }));
-
-    return [];
+    const meta = this.compiler.nodeMetadata(indexes).getFiltered(UNHANDLED);
+    if (!meta) return [];
+    const result = this.compiler.interpretMetadata(meta, this.filepath);
+    if (result.hasValue(UNHANDLED)) return [];
+    const value = result.getValue();
+    if (Array.isArray(value)) this.table.indexes!.push(...value as Index[]);
+    else if (value) this.table.indexes!.push(value as Index);
+    return result.getErrors();
   }
 
   private interpretChecks (checks: ElementDeclarationNode): CompileError[] {
-    this.table.checks!.push(...(checks.body as BlockExpressionNode).body.map((_checkField) => {
-      const check: Partial<Check> = {};
-      const checkField = _checkField as FunctionApplicationNode;
-      check.token = getTokenPosition(checkField);
-
-      if (checkField.args[0] instanceof ListExpressionNode) {
-        const settingMap = aggregateSettingList(checkField.args[0] as ListExpressionNode).getValue();
-        check.name = extractQuotedStringToken(settingMap[SettingName.Name]?.at(0)?.value);
-      }
-
-      check.expression = (checkField.callee as FunctionExpressionNode).value!.value!;
-
-      return check as Check;
-    }));
-
-    return [];
-  }
-
-  private registerInlineRefToEnv (column: FunctionApplicationNode, referredSymbol: ColumnSymbol, inlineRef: InlineRef, ref: AttributeNode): CompileError[] {
-    const refId = getRefId(column.symbol as ColumnSymbol, referredSymbol);
-    if (this.env.refIds[refId]) {
-      return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', ref),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
-      ];
-    }
-
-    const multiplicities = getMultiplicities(inlineRef.relation);
-    this.env.refIds[refId] = ref;
-    this.env.ref.set(ref, {
-      name: null,
-      schemaName: null,
-      token: inlineRef.token,
-      endpoints: [
-        {
-          ...inlineRef,
-          relation: multiplicities[1],
-        },
-        {
-          schemaName: this.table.schemaName!,
-          tableName: this.table.name!,
-          fieldNames: [
-            extractVariableFromExpression(column.callee!)!,
-          ],
-          token: getTokenPosition(column),
-          relation: multiplicities[0],
-        },
-      ],
-    });
-
-    return [];
+    const meta = this.compiler.nodeMetadata(checks).getFiltered(UNHANDLED);
+    if (!meta) return [];
+    const result = this.compiler.interpretMetadata(meta, this.filepath);
+    if (result.hasValue(UNHANDLED)) return [];
+    const value = result.getValue();
+    if (Array.isArray(value)) this.table.checks!.push(...value as Check[]);
+    else if (value) this.table.checks!.push(value as Check);
+    return result.getErrors();
   }
 }

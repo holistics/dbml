@@ -2,12 +2,15 @@ import {
   DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
-  createSchemaSymbolIndex, createTableSymbolIndex,
-} from '@/core/types/symbol';
-import type SymbolTable from '@/core/types/symbol/symbolTable';
+  Filepath,
+} from '@/core/types/filepath';
 import {
-  TableSymbol,
-} from '@/core/types/symbol/symbols';
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  NodeSymbol, SymbolKind,
+} from '@/core/types/symbol';
+import type Compiler from '../../index';
 import {
   splitQualifiedIdentifier,
 } from '../utils';
@@ -19,8 +22,10 @@ export type TableNameInput = string | { schema?: string;
  * Normalizes a table name input to { schema, table } format.
  * Properly handles quoted identifiers with dots inside.
  */
-export function normalizeTableName (input: TableNameInput): { schema: string;
-  table: string; } {
+export function normalizeTableName (input: TableNameInput): {
+  schema: string;
+  table: string;
+} {
   if (typeof input !== 'string') {
     return {
       schema: input.schema ?? DEFAULT_SCHEMA_NAME,
@@ -61,29 +66,41 @@ export function normalizeTableName (input: TableNameInput): { schema: string;
 }
 
 /**
- * Looks up a table symbol from the symbol table.
+ * Looks up a table symbol by matching its full qualified name.
  */
 export function lookupTableSymbol (
-  symbolTable: Readonly<SymbolTable>,
+  compiler: Compiler,
+  filepath: Filepath,
   schema: string,
   table: string,
-): TableSymbol | null {
-  const tableSymbolIndex = createTableSymbolIndex(table);
+): NodeSymbol | null {
+  const ast = compiler.parseFile(filepath).getValue().ast;
+  const astSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+  if (!astSymbol) return null;
 
   if (schema === DEFAULT_SCHEMA_NAME) {
-    const symbol = symbolTable.get(tableSymbolIndex);
-    return symbol instanceof TableSymbol ? symbol : null;
+    const symbol = compiler.lookupMembers(
+      astSymbol,
+      SymbolKind.Table,
+      table,
+    );
+    return symbol ?? null;
   }
 
-  const schemaSymbolIndex = createSchemaSymbolIndex(schema);
-  const schemaSymbol = symbolTable.get(schemaSymbolIndex);
+  const schemaSymbol = compiler.lookupMembers(
+    astSymbol,
+    SymbolKind.Schema,
+    schema,
+  );
+  if (!schemaSymbol) return null;
 
-  if (!schemaSymbol || !schemaSymbol.symbolTable) {
-    return null;
-  }
+  const tableSymbol = compiler.lookupMembers(
+    schemaSymbol,
+    SymbolKind.Table,
+    table,
+  );
 
-  const symbol = schemaSymbol.symbolTable.get(tableSymbolIndex);
-  return symbol instanceof TableSymbol ? symbol : null;
+  return tableSymbol ?? null;
 }
 
 /**

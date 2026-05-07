@@ -1,95 +1,94 @@
 import {
   compact, filter, flatMap, groupBy, isEmpty, keyBy,
 } from 'lodash-es';
-import {
-  InterpreterDatabase, TableRecordRow,
-} from '@/core/global_modules/types';
-import {
-  mergeTableAndPartials,
-} from '@/core/global_modules/utils';
-import {
-  CompileError,
+import type Compiler from '@/compiler/index';
+import type {
+  CompileWarning,
 } from '@/core/types/errors';
-import {
-  Column, Table,
+import type {
+  Index,
+  RecordValue,
+  TableRecord,
 } from '@/core/types/schemaJson';
 import {
-  createConstraintErrors,
+  TableSymbol,
+} from '@/core/types/symbol';
+import {
+  type ColumnInfo,
+  columnInfoFromSymbol,
+  createConstraintWarning,
   extractKeyValueWithDefault,
   formatFullColumnNames,
   formatValues,
   hasNullWithoutDefaultInKey,
+  toKeyedRows,
 } from './helper';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite UNIQUE' : 'UNIQUE';
 
-export function validateUnique (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([
-    table,
-    {
-      rows,
-    },
-  ]) => {
-    if (!env.cachedMergedTables.has(table)) {
-      env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
-    }
-    const mergedTable = env.cachedMergedTables.get(table)!;
+// Validate unique constraints for a table's records.
+export function validateUnique (compiler: Compiler, tableSymbol: TableSymbol, record: TableRecord): CompileWarning[] {
+  if (isEmpty(record.values)) return [];
 
-    if (isEmpty(rows)) return [];
+  const columns = tableSymbol.mergedColumns(compiler);
+  const columnInfos = columns.map((c) => columnInfoFromSymbol(c, compiler));
+  const columnMap = keyBy(columnInfos, 'name');
 
-    const uniqueConstraints = collectUniqueConstraints(mergedTable);
-    const columnMap = keyBy(mergedTable.fields, 'name');
+  const rows = toKeyedRows(record);
+  const schemaName = tableSymbol.schema(compiler);
+  const tableName = tableSymbol.name ?? '';
+  const uniqueConstraints = collectUniqueConstraints(tableSymbol, columnInfos, compiler);
 
-    return flatMap(uniqueConstraints, (uniqueColumns) => {
-      const uniqueColumnFields = compact(uniqueColumns.map((col) => columnMap[col]));
-      return checkUniqueDuplicates(rows, uniqueColumns, uniqueColumnFields, mergedTable);
-    });
+  return flatMap(uniqueConstraints, (uniqueColumns) => {
+    const uniqueColumnFields = compact(uniqueColumns.map((col) => columnMap[col]));
+    return checkUniqueDuplicates(compiler, rows, uniqueColumns, uniqueColumnFields, schemaName, tableName);
   });
 }
 
-function collectUniqueConstraints (mergedTable: Table): string[][] {
+function collectUniqueConstraints (tableSymbol: TableSymbol, columnInfos: ColumnInfo[], compiler: Compiler): string[][] {
   return [
-    ...mergedTable.fields.filter((field) => field.unique).map((field) => [
-      field.name,
+    ...columnInfos.filter((col) => col.unique).map((col) => [
+      col.name,
     ]),
-    ...mergedTable.indexes.filter((index) => index.unique).map((index) => index.columns.map((c) => c.value)),
+    ...tableSymbol.mergedIndexes(compiler).flatMap((index) => {
+      const result = compiler.interpretMetadata(index, index.declaration.filepath).getValue();
+      if (!Array.isArray(result)) return [];
+      return (result as Index[]).filter((e) => e.unique).map((e) => e.columns.map((c) => c.value));
+    }),
   ];
 }
 
 function checkUniqueDuplicates (
-  rows: TableRecordRow[],
+  compiler: Compiler,
+  rows: Record<string, RecordValue>[],
   uniqueColumns: string[],
-  uniqueColumnFields: (Column | undefined)[],
-  mergedTable: Table,
-): CompileError[] {
+  uniqueColumnFields: (ColumnInfo | undefined)[],
+  schemaName: string | null,
+  tableName: string,
+): CompileWarning[] {
   // Filter out rows with NULL values (SQL standard: NULLs don't conflict in UNIQUE constraints)
   const rowsWithoutNull = rows.filter((row) =>
-    !hasNullWithoutDefaultInKey(row.values, uniqueColumns, uniqueColumnFields),
+    !hasNullWithoutDefaultInKey(row, uniqueColumns, uniqueColumnFields),
   );
 
   // Group rows by their unique key value
   const rowsByKeyValue = groupBy(rowsWithoutNull, (row) =>
-    extractKeyValueWithDefault(row.values, uniqueColumns, uniqueColumnFields),
+    extractKeyValueWithDefault(row, uniqueColumns, uniqueColumnFields),
   );
 
   // Find groups with more than 1 row (duplicates)
   const duplicateGroups = filter(rowsByKeyValue, (group) => group.length > 1);
 
-  // Transform duplicate groups to errors
+  // Transform duplicate groups to warnings
   return flatMap(duplicateGroups, (duplicateRows) => {
     const constraintType = getConstraintType(uniqueColumns.length);
-    const columnRef = formatFullColumnNames(
-      mergedTable.schemaName,
-      mergedTable.name,
-      uniqueColumns,
-    );
+    const columnRef = formatFullColumnNames(schemaName, tableName, uniqueColumns);
 
-    // Skip first occurrence, report rest as duplicates
-    return flatMap(duplicateRows.slice(1), (row) => {
-      const valueStr = formatValues(row.values, uniqueColumns);
+    return flatMap(duplicateRows, (row) => {
+      const valueStr = formatValues(row, uniqueColumns);
       const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
-      return createConstraintErrors(row, uniqueColumns, message);
+      return uniqueColumns.map((col) => createConstraintWarning(compiler, row[col], message));
     });
   });
 }

@@ -1,12 +1,13 @@
 import fs from 'node:fs';
-import { NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
+import { getElementNameString } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type Compiler from '@/compiler';
-import { Filepath } from '@/core/types';
+import { UNHANDLED } from '@/core/types/module';
+import { Filepath, SchemaElement, TokenPosition } from '@/core/types';
 import { isEmpty } from 'lodash-es';
-import { getElementNameString } from '@/core/utils/expression';
 
 export function scanTestNames (path: string) {
   const files = fs.readdirSync(path);
@@ -47,11 +48,13 @@ function getReadableId (nodeOrSymbol: SyntaxNode | SyntaxToken | NodeSymbol): st
 
   const node = (nodeOrSymbol instanceof SyntaxNode) || (nodeOrSymbol instanceof SyntaxToken) ? nodeOrSymbol : nodeOrSymbol?.declaration;
 
-  const kind = nodeOrSymbol.kind;
+  const rawKind = nodeOrSymbol.kind;
+  // Program symbols are displayed as Schema in snapshots for readability
+  const kind = rawKind === SymbolKind.Program ? SymbolKind.Schema : rawKind;
 
   const start = `L${node?.startPos.line ?? '?'}:C${node?.startPos.column ?? '?'}`;
   const end = `L${node?.endPos.line ?? '?'}:C${node?.endPos.column ?? '?'}`;
-  const nameHint = node ? getNameHint(node) : nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.name ?? '' : '';
+  const nameHint = node ? getNameHint(node) : nodeOrSymbol instanceof SchemaSymbol ? nodeOrSymbol.qualifiedName.join('.') : '';
 
   return `${type}@${kind}@${nameHint}@[${start}, ${end}]`;
 }
@@ -77,7 +80,8 @@ export type Snappable =
   | CompileError
   | SyntaxNode
   | SyntaxToken
-  | NodeSymbol;
+  | NodeSymbol
+  | SchemaElement;
 
 // Accept an object
 // Output a stable key-value object
@@ -127,7 +131,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
     if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
-    if ((s as any)?.token) return ((s as any).token as any)?.start?.offset ?? 0; // possibly a schema element
+    if ((s as any)?.token) return ((s as any).token as TokenPosition)?.start?.offset ?? 0; // possibly a schema element
     if ((s as any)?.id) return getIntraKindRank((s as any).id);
     if (typeof s === 'object') {
       const obj = s as Record<string, unknown>;
@@ -168,13 +172,19 @@ export function toSnapshot (
     return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple, includeReferences, includeSymbols, includeReferee }));
   }
   if (value instanceof CompileWarning) {
-    return warningToSnapshot(compiler, value, { simple });
+    return warningToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof CompileError) {
-    return errorToSnapshot(compiler, value, { simple });
+    return errorToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof SyntaxToken) {
-    return syntaxTokenToSnapshot(compiler, value, { simple });
+    return syntaxTokenToSnapshot(compiler, value, {
+      simple,
+    });
   }
   if (value instanceof SyntaxNode) {
     return syntaxNodeToSnapshot(compiler, value, { simple, includeReferences, includeSymbols, includeReferee });
@@ -348,11 +358,9 @@ export function syntaxNodeToSnapshot (
     fullStart,
     fullEnd,
     ...props
-  } = node as SyntaxNode & { parent?: unknown };
-  const symbol = (props as any).symbol;
-  delete (props as any).symbol;
-  const referee = (props as any).referee;
-  delete (props as any).referee;
+  } = node;
+  const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
+  const referee = compiler.nodeReferee(node).getFiltered(UNHANDLED);
   if (node instanceof ProgramNode) {
     delete (props as any).source;
   }
@@ -386,9 +394,9 @@ export function syntaxNodeToSnapshot (
   return result;
 }
 
-export function collectNodesWithReferee (node: SyntaxNode): SyntaxNode[] {
+export function collectNodesWithReferee (compiler: Compiler, node: SyntaxNode): SyntaxNode[] {
   const result: SyntaxNode[] = [];
-  if (node.referee) result.push(node);
+  if (compiler.nodeReferee(node).getFiltered(UNHANDLED)) result.push(node);
 
   const {
     id, parent, parentNode, kind, startPos, endPos, start, end, filepath, fullStart, fullEnd, symbol, referee, source, ...props
@@ -396,11 +404,11 @@ export function collectNodesWithReferee (node: SyntaxNode): SyntaxNode[] {
 
   for (const value of Object.values(props)) {
     if (value instanceof SyntaxNode) {
-      result.push(...collectNodesWithReferee(value));
+      result.push(...collectNodesWithReferee(compiler, value));
     } else if (Array.isArray(value)) {
       for (const item of value) {
         if (item instanceof SyntaxNode) {
-          result.push(...collectNodesWithReferee(item));
+          result.push(...collectNodesWithReferee(compiler, item));
         }
       }
     }
@@ -419,10 +427,12 @@ export function symbolToSnapshot (
   const snippet = getCodeSnippet(symbol, compiler);
   const {
     id, // Filter this out
-    symbolTable,
     declaration,
-    references,
+    filepath,
   } = symbol;
+  const symbolTable = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+  const references = includeReferences ? compiler.symbolReferences(symbol) : undefined;
+
   if (simple) {
     return {
       context: {
@@ -438,14 +448,14 @@ export function symbolToSnapshot (
     },
     ...sortObject({
       members: symbolTable && (() => {
-        const filtered = [...symbolTable.entries()].filter(([, sym]) => !(sym instanceof SchemaSymbol && (!sym.name || sym.name === 'public')));
+        const filtered = [...symbolTable.entries()].filter(([, sym]) => !(sym instanceof SchemaSymbol && sym.isPublicSchema()));
         return filtered.length > 0 ? sortArray(filtered.map(([, value]) => symbolToSnapshot(compiler, value, { simple: true }))) : undefined;
       })(),
       declaration: declaration && {
         id: getReadableId(declaration),
         snippet: getCodeSnippet(declaration, compiler),
       },
-      references: includeReferences && references && sortArray(references.map((r) => ({
+      references: references && sortArray(references.map((r) => ({
         id: getReadableId(r),
         snippet: getCodeSnippet(r, compiler),
       }))),

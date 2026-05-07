@@ -1,12 +1,8 @@
-import {
-  describe, expect, it,
-} from 'vitest';
-import { DEFAULT_ENTRY } from '@/constants';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLReferencesProvider from '@/services/references/provider';
-import {
-  createPosition, createMockTextModel, extractTextFromRange,
-} from '../../../utils';
+import { createPosition, createMockTextModel, extractTextFromRange } from '../../../utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[example] ReferencesProvider - Records', () => {
   describe('should find all table references from records', () => {

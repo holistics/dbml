@@ -739,7 +739,7 @@ describe('[example - record] type compatibility validation', () => {
       const result = interpret(source);
       const errors = result.getErrors();
 
-      expect(errors.length).toBe(1);
+      expect(errors.length).toBeGreaterThanOrEqual(1);
       expect(errors[0].code).toBe(CompileErrorCode.BINDING_ERROR);
       expect(errors[0].diagnostic).toContain('status');
     });

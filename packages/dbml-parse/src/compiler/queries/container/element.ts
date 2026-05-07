@@ -1,6 +1,6 @@
 import {
   type Filepath,
-} from '@/core/types';
+} from '@/core/types/filepath';
 import {
   ElementDeclarationNode, ProgramNode,
 } from '@/core/types/nodes';

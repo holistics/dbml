@@ -1,15 +1,6 @@
 import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
   NUMERIC_LITERAL_PREFIX,
 } from '@/constants';
-import {
-  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression,
-} from '@/core/utils/expression';
-import {
-  extractStringFromIdentifierStream,
-} from '@/core/utils/expression';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
@@ -19,35 +10,42 @@ import {
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
+  FunctionApplicationNode,
   FunctionExpressionNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
   PrefixExpressionNode,
   PrimaryExpressionNode,
+  ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
   VariableNode,
   WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  createSchemaSymbolIndex,
-} from '@/core/types/symbol';
-import SymbolFactory from '@/core/types/symbol/factory';
-import SymbolTable from '@/core/types/symbol/symbolTable';
-import {
-  SchemaSymbol,
-} from '@/core/types/symbol/symbols';
-import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
 import {
+  ElementKind,
+  SettingName,
+} from '../types/keywords';
+import {
+  ImportKind,
+} from '../types/symbol';
+import {
   isHexChar,
-} from '@/core/utils/chars';
+} from './chars';
+import {
+  destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression,
+  extractStringFromIdentifierStream,
+  extractVariableFromExpression,
+} from './expression';
+
 // Is the name valid (either simple or complex)
 export function isValidName (nameNode: SyntaxNode): boolean {
   const res = destructureComplexVariable(nameNode);
@@ -94,42 +92,6 @@ export function isValidPartialInjection (
   node?: SyntaxNode,
 ): node is PrefixExpressionNode & { op: { value: '~' } } {
   return node instanceof PrefixExpressionNode && node.op?.value === '~' && isExpressionAVariableNode(node.expression);
-}
-// Register the `variables` array as a stack of schema, the following nested within the former
-export function registerSchemaStack (
-  variables: string[],
-  globalSchema: SymbolTable,
-  symbolFactory: SymbolFactory,
-  filepath: Filepath,
-): SymbolTable {
-  // public schema is already global schema
-  if (variables[0] === DEFAULT_SCHEMA_NAME) {
-    variables = variables.slice(1);
-  }
-
-  let prevSchema = globalSchema;
-
-  for (const curName of variables) {
-    let curSchema: SymbolTable | undefined;
-    const curId = createSchemaSymbolIndex(curName);
-
-    if (!prevSchema.has(curId)) {
-      curSchema = new SymbolTable();
-      const curSymbol = symbolFactory.create(SchemaSymbol, {
-        symbolTable: curSchema,
-        name: curName,
-      }, filepath);
-      prevSchema.set(curId, curSymbol);
-    } else {
-      curSchema = prevSchema.get(curId)?.symbolTable;
-      if (!curSchema) {
-        throw new Error('Expect a symbol table in a schema symbol');
-      }
-    }
-    prevSchema = curSchema;
-  }
-
-  return prevSchema;
 }
 
 export function isRelationshipOp (op?: string): boolean {
@@ -279,12 +241,16 @@ export function isValidColumnType (type: SyntaxNode): boolean {
   return variables !== undefined && variables.length > 0;
 }
 
-export function aggregateSettingList (settingList?: ListExpressionNode): Report<{ [index: string]: AttributeNode[] }> {
-  const map: { [index: string]: AttributeNode[] } = {};
+export type Settings = Record<SettingName | string, AttributeNode[]>;
+
+export function aggregateSettingList (settingList?: ListExpressionNode): Report<Settings> {
+  const map: Settings = {};
   const errors: CompileError[] = [];
+
   if (!settingList) {
-    return new Report({});
+    return new Report(map);
   }
+
   settingList.elementList.forEach((attribute) => {
     if (!attribute.name) return;
 
@@ -296,12 +262,14 @@ export function aggregateSettingList (settingList?: ListExpressionNode): Report<
     const name = extractStringFromIdentifierStream(attribute.name)?.toLowerCase();
     if (!name) return;
 
-    if (map[name] === undefined) {
+    const existing = map[name];
+
+    if (existing) {
+      existing.push(attribute);
+    } else {
       map[name] = [
         attribute,
       ];
-    } else {
-      map[name].push(attribute);
     }
   });
 
@@ -389,6 +357,83 @@ export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimit
   return isAccessExpression(node) && isExpressionAVariableNode(node.rightExpression) && isDotDelimitedIdentifier(node.leftExpression);
 }
 
+// Return whether `node` is an ElementDeclarationNode of kind `kind`
+export function isElementNode (node: SyntaxNode | undefined, kind: ElementKind): node is ElementDeclarationNode {
+  return node instanceof ElementDeclarationNode && node.isKind(kind);
+}
+
+// Return whether `node` is a UseDeclarationNode
+export function isUseDeclaration (node: SyntaxNode): node is UseDeclarationNode {
+  return node instanceof UseDeclarationNode;
+}
+
+// Return whether `node` is an UseDeclarationNode with import kind `kind`
+export function isUseSpecifier (node: SyntaxNode, kind?: ImportKind): node is UseSpecifierNode {
+  return node instanceof UseSpecifierNode && (kind === undefined || node.isKind(kind));
+}
+
+// Return whether `node` is a WilcardNode inside use all import
+export function isWildcardSpecifier (node: SyntaxNode): node is WildcardNode {
+  return node instanceof WildcardNode && !!node.parentOfKind(UseDeclarationNode) && !node.parentOfKind(UseSpecifierListNode); // inside UseDeclarationNode but outside UseSepcifierListNode
+}
+
+// Return whether `node` is a ProgramNode
+export function isProgramNode (node: SyntaxNode | undefined): node is ProgramNode {
+  return node instanceof ProgramNode;
+}
+
+// Return whether `node` is a field of some element
+export function isElementFieldNode (node: SyntaxNode | undefined, ...kinds: ElementKind[]): node is FunctionApplicationNode {
+  return node instanceof FunctionApplicationNode
+    && node.parent instanceof ElementDeclarationNode
+    && node.parent.isKind(...kinds);
+}
+
+// Return whether `node` is within some element of a given kind
+export function isInsideElementBody (node: SyntaxNode, kind: ElementKind): boolean {
+  const parent = node.parent;
+  return parent instanceof ElementDeclarationNode
+    && parent.isKind(kind)
+    && !!parent.body
+    && parent.body.strictlyContains(node);
+}
+
+// Return whether `node` is within the n-th arg of a field
+// `callee` -> 0th arg
+// `args[0]` -> 1th arg
+// `args[1]` -> 2nd arg
+// ...
+export function isWithinNthArgOfField (node: SyntaxNode, nth: number): boolean {
+  const parentField = node.parentOfKind(FunctionApplicationNode);
+  if (!parentField) {
+    return false;
+  }
+  if (nth < 0) return false;
+  if (nth === 0) {
+    if (!parentField.callee) return false;
+    return parentField.callee.containsEq(node);
+  }
+  const arg = parentField.args[nth - 1];
+  if (!arg) return false;
+  return arg.containsEq(node);
+}
+
+// Return whether `node` is within a setting list
+export function isInsideSettingList (node: SyntaxNode): boolean {
+  const parentField = node.parentOfKind(ListExpressionNode);
+  return !!parentField;
+}
+
+export function isInsideSettingValue (node: SyntaxNode, settingName: SettingName): boolean {
+  const attributeNode = node.parentOfKind(AttributeNode);
+  if (!attributeNode) return false;
+  const name = attributeNode.name instanceof PrimaryExpressionNode ? extractVariableFromExpression(attributeNode.name) : extractStringFromIdentifierStream(attributeNode.name);
+  if (name?.toLowerCase() !== settingName) {
+    return false;
+  }
+  return !!attributeNode.value?.containsEq(node);
+}
+
 export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpressionNode {
   if (!(value instanceof InfixExpressionNode)) {
     return false;
@@ -404,7 +449,7 @@ export function isBinaryRelationship (value?: SyntaxNode): value is InfixExpress
   );
 }
 
-export function isEqualTupleOperands (value: InfixExpressionNode): value is InfixExpressionNode {
+export function isEqualTupleOperands (value: InfixExpressionNode): boolean {
   const leftRes = destructureComplexVariableTuple(value.leftExpression);
   const rightRes = destructureComplexVariableTuple(value.rightExpression);
 
@@ -433,4 +478,14 @@ export function isValidIndexName (
     (value instanceof PrimaryExpressionNode && value.expression instanceof VariableNode)
     || value instanceof FunctionExpressionNode
   );
+}
+
+// Returns true if `node` is the rightmost (terminal) fragment of an access expression chain.
+// A node is terminal when its containing access expression is NOT itself the left-hand side
+// of a further access expression (e.g. `users` in `public.users` or `auth.public.users`).
+export function isTerminalAccessFragment (node: SyntaxNode): boolean {
+  const currentAccess = node.parentNode;
+  if (!isAccessExpression(currentAccess)) return false;
+  if (currentAccess.rightExpression !== node) return false;
+  return !(isAccessExpression(currentAccess.parentNode) && (currentAccess.parentNode as InfixExpressionNode).leftExpression === currentAccess);
 }

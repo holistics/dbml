@@ -1,100 +1,86 @@
 import {
-  compact, difference, filter, flatMap, groupBy, isEmpty, keyBy, partition,
+  compact, difference, flatMap, filter, groupBy, isEmpty, keyBy, partition,
 } from 'lodash-es';
+import type Compiler from '@/compiler/index';
 import {
-  InterpreterDatabase, TableRecordRow,
-} from '@/core/global_modules/types';
-import {
-  mergeTableAndPartials,
-} from '@/core/global_modules/utils';
-import {
-  CompileError, CompileErrorCode,
+  CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
-import {
-  Column, Table,
+import type {
+  SyntaxNode,
+} from '@/core/types/nodes';
+import type {
+  Index,
+  RecordValue,
+  TableRecord,
 } from '@/core/types/schemaJson';
 import {
-  isSerialType,
-} from '../data';
+  TableSymbol,
+} from '@/core/types/symbol';
 import {
-  createConstraintErrors,
+  type ColumnInfo,
+  columnInfoFromSymbol,
+  createConstraintWarning,
   extractKeyValueWithDefault,
   formatFullColumnNames,
   formatValues,
   hasNullWithoutDefaultInKey,
   isAutoIncrementColumn,
+  toKeyedRows,
 } from './helper';
 
 const getConstraintType = (columnCount: number) =>
   columnCount > 1 ? 'Composite PK' : 'PK';
 
-export function validatePrimaryKey (env: InterpreterDatabase): CompileError[] {
-  return flatMap(Array.from(env.records), ([
-    table,
-    {
-      rows,
-    },
-  ]) => {
-    if (isEmpty(rows)) return [];
+// Validate primary key constraints for a table's records.
+export function validatePrimaryKey (compiler: Compiler, tableSymbol: TableSymbol, recordBlock: SyntaxNode, record: TableRecord): CompileWarning[] {
+  if (isEmpty(record.values)) return [];
 
-    if (!env.cachedMergedTables.has(table)) {
-      env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
-    }
-    const mergedTable = env.cachedMergedTables.get(table)!;
+  const columns = tableSymbol.mergedColumns(compiler);
+  const columnInfos = columns.map((c) => columnInfoFromSymbol(c, compiler));
+  const columnMap = keyBy(columnInfos, 'name');
 
-    const pkConstraints = collectPkConstraints(mergedTable);
-    const availableColumns = collectAvailableColumns(rows);
-    const columnMap = keyBy(mergedTable.fields, 'name');
+  const rows = toKeyedRows(record);
+  const pkConstraints = collectPkConstraints(tableSymbol, columnInfos, compiler);
+  const availableColumns = new Set(record.columns);
 
-    return flatMap(pkConstraints, (pkColumns) =>
-      validatePkConstraint(pkColumns, rows, availableColumns, columnMap, mergedTable),
-    );
-  });
+  return flatMap(pkConstraints, (pkColumns) =>
+    validatePkConstraint(compiler, tableSymbol, recordBlock, pkColumns, rows, availableColumns, columnMap, record),
+  );
 }
 
 function validatePkConstraint (
+  compiler: Compiler,
+  tableSymbol: TableSymbol,
+  recordBlock: SyntaxNode,
   pkColumns: string[],
-  rows: TableRecordRow[],
+  rows: Record<string, RecordValue>[],
   availableColumns: Set<string>,
-  columnMap: Record<string, Column>,
-  mergedTable: Table,
-): CompileError[] {
-  // Check for missing columns
-  const missingErrors = checkMissingPkColumns(
-    pkColumns,
-    availableColumns,
-    columnMap,
-    mergedTable,
-    rows,
-  );
+  columnMap: Record<string, ColumnInfo>,
+  record: TableRecord,
+): CompileWarning[] {
+  const schemaName = tableSymbol.schema(compiler);
+  const tableName = tableSymbol.name ?? '';
+
+  const missingErrors = checkMissingPkColumns(recordBlock, pkColumns, availableColumns, columnMap, schemaName, tableName, record);
   if (!isEmpty(missingErrors)) return missingErrors;
 
-  // Get column definitions
   const pkColumnFields = compact(pkColumns.map((col) => columnMap[col]));
-  const areAllColumnsAutoIncrement = pkColumnFields.every((col) =>
-    col && isAutoIncrementColumn(col),
-  );
+  const areAllAutoIncrement = pkColumnFields.every((col) => col && isAutoIncrementColumn(col));
 
-  // Partition rows into those with NULL and those without
   const [
     rowsWithNull,
     rowsWithoutNull,
-  ] = partition(rows, (row) =>
-    hasNullWithoutDefaultInKey(row.values, pkColumns, pkColumnFields),
+  ] = partition(
+    rows,
+    (row) => hasNullWithoutDefaultInKey(row, pkColumns, pkColumnFields),
   );
 
-  // Validate NULL rows (only error if not all columns are auto-increment)
-  const nullErrors = areAllColumnsAutoIncrement
+  // NULL in PK only errors when not all columns are auto-increment
+  const nullErrors = areAllAutoIncrement
     ? []
-    : createNullErrors(rowsWithNull, pkColumns, mergedTable);
+    : createNullErrors(compiler, rowsWithNull, pkColumns, schemaName, tableName);
 
-  // Find duplicate rows using groupBy
-  const duplicateErrors = findDuplicateErrors(
-    rowsWithoutNull,
-    pkColumns,
-    pkColumnFields,
-    mergedTable,
-  );
+  const duplicateErrors = findDuplicateErrors(compiler, rowsWithoutNull, pkColumns, pkColumnFields, schemaName, tableName);
 
   return [
     ...nullErrors,
@@ -103,101 +89,86 @@ function validatePkConstraint (
 }
 
 function createNullErrors (
-  rowsWithNull: TableRecordRow[],
+  compiler: Compiler,
+  rowsWithNull: Record<string, RecordValue>[],
   pkColumns: string[],
-  mergedTable: Table,
-): CompileError[] {
+  schemaName: string | null,
+  tableName: string,
+): CompileWarning[] {
   if (isEmpty(rowsWithNull)) return [];
 
   const constraintType = getConstraintType(pkColumns.length);
-  const columnRef = formatFullColumnNames(
-    mergedTable.schemaName,
-    mergedTable.name,
-    pkColumns,
-  );
+  const columnRef = formatFullColumnNames(schemaName, tableName, pkColumns);
   const message = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
 
   return flatMap(rowsWithNull, (row) =>
-    createConstraintErrors(row, pkColumns, message),
+    pkColumns.map((col) => createConstraintWarning(compiler, row[col], message)),
   );
 }
 
 function findDuplicateErrors (
-  rows: TableRecordRow[],
+  compiler: Compiler,
+  rows: Record<string, RecordValue>[],
   pkColumns: string[],
-  pkColumnFields: Column[],
-  mergedTable: Table,
-): CompileError[] {
+  pkColumnFields: ColumnInfo[],
+  schemaName: string | null,
+  tableName: string,
+): CompileWarning[] {
   // Group rows by their PK value
-  const rowsByKeyValue = groupBy(rows, (row) =>
-    extractKeyValueWithDefault(row.values, pkColumns, pkColumnFields),
-  );
+  const rowsByKeyValue = groupBy(rows, (row) => extractKeyValueWithDefault(row, pkColumns, pkColumnFields));
 
-  // Find groups with more than 1 row (duplicates)
   const duplicateGroups = filter(rowsByKeyValue, (group) => group.length > 1);
 
-  // Transform duplicate groups to errors
   return flatMap(duplicateGroups, (duplicateRows) => {
     const constraintType = getConstraintType(pkColumns.length);
-    const columnRef = formatFullColumnNames(
-      mergedTable.schemaName,
-      mergedTable.name,
-      pkColumns,
-    );
+    const columnRef = formatFullColumnNames(schemaName, tableName, pkColumns);
 
-    // Skip first occurrence, report rest as duplicates
-    return flatMap(duplicateRows.slice(1), (row) => {
-      const valueStr = formatValues(row.values, pkColumns);
+    return flatMap(duplicateRows, (row) => {
+      const valueStr = formatValues(row, pkColumns);
       const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
-      return createConstraintErrors(row, pkColumns, message);
+      return pkColumns.map((col) => createConstraintWarning(compiler, row[col], message));
     });
   });
 }
 
-function collectPkConstraints (mergedTable: Table): string[][] {
-  return [
-    ...mergedTable.fields.filter((field) => field.pk).map((field) => [
-      field.name,
-    ]),
-    ...mergedTable.indexes.filter((index) => index.pk).map((index) => index.columns.map((c) => c.value)),
-  ];
-}
-
-function collectAvailableColumns (rows: TableRecordRow[]): Set<string> {
-  return new Set(rows.flatMap((row) => Object.keys(row.values)));
-}
-
 function checkMissingPkColumns (
+  recordBlock: SyntaxNode,
   pkColumns: string[],
   availableColumns: Set<string>,
-  columnMap: Record<string, Column>,
-  mergedTable: Table,
-  rows: TableRecordRow[],
-): CompileError[] {
-  // Use difference to find missing columns
+  columnMap: Record<string, ColumnInfo>,
+  schemaName: string | null,
+  tableName: string,
+  record: TableRecord,
+): CompileWarning[] {
   const missingColumns = difference(pkColumns, Array.from(availableColumns));
   if (isEmpty(missingColumns)) return [];
 
-  // Filter to only those without defaults
-  const hasNoDefaultValue = (colName: string): boolean => {
+  const missingWithoutDefaults = missingColumns.filter((colName) => {
     const col = columnMap[colName];
-    return col && !col.increment && !isSerialType(col.type.type_name) && !col.dbdefault;
-  };
-
-  const missingWithoutDefaults = missingColumns.filter(hasNoDefaultValue);
+    return !!(col && !isAutoIncrementColumn(col) && !col.dbdefault);
+  });
   if (isEmpty(missingWithoutDefaults)) return [];
 
   const constraintType = getConstraintType(missingWithoutDefaults.length);
-  const columnRef = formatFullColumnNames(
-    mergedTable.schemaName,
-    mergedTable.name,
-    missingWithoutDefaults,
-  );
+  const columnRef = formatFullColumnNames(schemaName, tableName, missingWithoutDefaults);
   const message = `${constraintType}: Column ${columnRef} is missing from record and has no default value`;
 
-  return rows.map((row) => new CompileError(
+  return record.values.map(() => new CompileWarning(
     CompileErrorCode.INVALID_RECORDS_FIELD,
     message,
-    row.node,
+    recordBlock,
   ));
+}
+
+function collectPkConstraints (tableSymbol: TableSymbol, columnInfos: ColumnInfo[], compiler: Compiler): string[][] {
+  return [
+    ...columnInfos.filter((col) => col.pk).map((col) => [
+      col.name,
+    ]),
+    ...tableSymbol.mergedIndexes(compiler).flatMap((index) => {
+      const result = compiler.interpretMetadata(index, index.declaration.filepath).getValue();
+      if (!Array.isArray(result)) return [];
+      return (result as Index[]).filter((e) => e.pk).map((e) => e.columns.map((c) => c.value));
+    }),
+  ];
 }

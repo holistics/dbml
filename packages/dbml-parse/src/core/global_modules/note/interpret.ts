@@ -5,29 +5,41 @@ import {
   aggregateSettingList,
 } from '@/core/utils/validate';
 import {
-  extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/global_modules/utils';
-import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+  type BlockExpressionNode,
+  type ElementDeclarationNode,
+  FunctionApplicationNode,
+  type ListExpressionNode,
 } from '@/core/types/nodes';
-import {
+import type {
   Note,
 } from '@/core/types/schemaJson';
+import type Compiler from '@/compiler';
 import {
-  InterpreterDatabase,
-} from '@/core/global_modules/types';
+  extractColor,
+  getTokenPosition,
+  normalizeNote,
+} from '@/core/utils/interpret';
+import type {
+  Filepath,
+  NoteSymbol,
+} from '@/core/types';
+import Report from '@/core/types/report';
 
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
+  private symbol: NoteSymbol;
+  private compiler: Compiler;
+  private filepath: Filepath;
   private note: Partial<Note>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
-    this.declarationNode = declarationNode;
-    this.env = env;
+  constructor (compiler: Compiler, symbol: NoteSymbol, filepath: Filepath) {
+    this.compiler = compiler;
+    this.symbol = symbol;
+    this.declarationNode = symbol.declaration as ElementDeclarationNode;
+    this.filepath = filepath;
     this.note = {
       name: undefined,
       content: undefined,
@@ -35,23 +47,22 @@ export class StickyNoteInterpreter {
     };
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<Note> {
     this.note.token = getTokenPosition(this.declarationNode);
-    this.env.notes.set(this.declarationNode, this.note as Note);
 
     const errors = [
-      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretName(),
       ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     ];
 
-    return errors;
+    return Report.create(this.note as Note, errors);
   }
 
-  private interpretName (nameNode: SyntaxNode): CompileError[] {
+  private interpretName (): CompileError[] {
     const {
       name,
-    } = extractElementName(nameNode);
+    } = this.symbol.interpretedName(this.compiler, this.filepath);
 
     this.note.name = name;
 
@@ -86,7 +97,7 @@ export class StickyNoteInterpreter {
   private interpretNote (note: FunctionApplicationNode): CompileError[] {
     const noteContent = get(note, 'callee.expression.literal.value', '');
 
-    this.note.content = normalizeNoteContent(noteContent);
+    this.note.content = normalizeNote(noteContent);
     return [];
   }
 }

@@ -1,45 +1,43 @@
+import type Compiler from '@/compiler';
+import type {
+  CompileError,
+} from '@/core/types/errors';
+import {
+  UNHANDLED,
+} from '@/core/types/module';
+import {
+  BlockExpressionNode,
+  type ElementDeclarationNode,
+  type FunctionApplicationNode,
+  type SyntaxNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import type {
+  Enum, Project, SchemaElement, Table, TableGroup, TablePartial,
+} from '@/core/types/schemaJson';
+import type {
+  Filepath,
+} from '@/core/types/filepath';
 import {
   extractQuotedStringToken,
 } from '@/core/utils/expression';
 import {
-  extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/global_modules/utils';
+  extractElementName, getTokenPosition, normalizeNote,
+} from '@/core/utils/interpret';
 import {
-  CompileError,
-} from '@/core/types/errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  Project,
-} from '@/core/types/schemaJson';
-import {
-  InterpreterDatabase,
-} from '@/core/global_modules/types';
-import {
-  EnumInterpreter,
-} from '@/core/global_modules/enum/interpret';
-import {
-  RefInterpreter,
-} from '@/core/global_modules/ref/interpret';
-import {
-  TableInterpreter,
-} from '@/core/global_modules/table/interpret';
-import {
-  TableGroupInterpreter,
-} from '@/core/global_modules/tableGroup/interpret';
-import {
-  TablePartialInterpreter,
-} from '@/core/global_modules/tablePartial/interpret';
+  ElementKind,
+} from '@/core/types';
 
 export class ProjectInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
+  private filepath: Filepath;
   private project: Partial<Project>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, filepath: Filepath) {
     this.declarationNode = declarationNode;
-    this.env = env;
+    this.compiler = compiler;
+    this.filepath = filepath;
     this.project = {
       enums: [],
       refs: [],
@@ -49,15 +47,14 @@ export class ProjectInterpreter {
     };
   }
 
-  interpret (): CompileError[] {
-    this.env.project.set(this.declarationNode, this.project as Project);
+  interpret (): Report<Project> {
     this.project.token = getTokenPosition(this.declarationNode);
     const errors = [
       ...this.interpretName(this.declarationNode.name),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     ];
 
-    return errors;
+    return new Report(this.project as Project, errors);
   }
 
   private interpretName (nameNode?: SyntaxNode): CompileError[] {
@@ -75,52 +72,54 @@ export class ProjectInterpreter {
     return [];
   }
 
+  private interpretSubElement (sub: ElementDeclarationNode): Report<SchemaElement | SchemaElement[] | undefined> {
+    const symbol = this.compiler.nodeSymbol(sub).getFiltered(UNHANDLED);
+    if (symbol) {
+      const result = this.compiler.interpretSymbol(symbol, this.filepath);
+      if (!result.hasValue(UNHANDLED)) return result;
+    }
+    return Report.create(undefined);
+  }
+
   private interpretBody (body: BlockExpressionNode): CompileError[] {
     return body.body.flatMap((_sub) => {
       const sub = _sub as ElementDeclarationNode;
       switch (sub.type?.value.toLowerCase()) {
-        case 'table': {
-          const errors = (new TableInterpreter(sub, this.env)).interpret();
-          this.project.tables!.push(this.env.tables.get(sub)!);
-
-          return errors;
+        case ElementKind.Table: {
+          const report = this.interpretSubElement(sub);
+          if (report.getValue()) this.project.tables?.push(report.getValue() as Table);
+          return report.getErrors();
         }
-        case 'ref': {
-          const errors = (new RefInterpreter(sub, this.env)).interpret();
-          this.project.refs!.push(this.env.ref.get(sub)!);
-
-          return errors;
+        case ElementKind.TableGroup: {
+          const report = this.interpretSubElement(sub);
+          if (report.getValue()) this.project.tableGroups?.push(report.getValue() as TableGroup);
+          return report.getErrors();
         }
-        case 'tablegroup': {
-          const errors = (new TableGroupInterpreter(sub, this.env)).interpret();
-          this.project.tableGroups!.push(this.env.tableGroups.get(sub)!);
-
-          return errors;
+        case ElementKind.Enum: {
+          const report = this.interpretSubElement(sub);
+          if (report.getValue()) this.project.enums?.push(report.getValue() as Enum);
+          return report.getErrors();
         }
-        case 'enum': {
-          const errors = (new EnumInterpreter(sub, this.env)).interpret();
-          this.project.enums!.push(this.env.enums.get(sub)!);
-
-          return errors;
-        }
-        case 'note': {
-          this.project.note = {
-            value: normalizeNoteContent(extractQuotedStringToken(
-              sub.body instanceof BlockExpressionNode
-                ? (sub.body.body[0] as FunctionApplicationNode).callee
-                : sub.body!.callee,
-            )!),
-            token: getTokenPosition(sub),
-          };
+        case ElementKind.Note: {
+          const noteBody = sub.body instanceof BlockExpressionNode
+            ? (sub.body.body[0] as FunctionApplicationNode)?.callee
+            : (sub.body as FunctionApplicationNode)?.callee;
+          const content = noteBody ? extractQuotedStringToken(noteBody) : undefined;
+          if (content) {
+            this.project.note = {
+              value: normalizeNote(content),
+              token: getTokenPosition(sub),
+            };
+          }
           return [];
         }
-        case 'tablepartial': {
-          const errors = (new TablePartialInterpreter(sub, this.env)).interpret();
-          this.project.tablePartials!.push(this.env.tablePartials.get(sub)!);
-          return errors;
+        case ElementKind.TablePartial: {
+          const report = this.interpretSubElement(sub);
+          if (report.getValue()) this.project.tablePartials?.push(report.getValue() as TablePartial);
+          return report.getErrors();
         }
         default: {
-          (this.project as any)[sub.type!.value.toLowerCase()] = extractQuotedStringToken((sub.body as FunctionApplicationNode).callee)!;
+          (this.project as Record<string, unknown>)[sub.type!.value.toLowerCase()] = extractQuotedStringToken((sub.body as FunctionApplicationNode).callee);
 
           return [];
         }

@@ -1,23 +1,18 @@
-import {
+import type Compiler from '@/compiler';
+import type {
   CompileError,
 } from '@/core/types/errors';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  ElementDeclarationNode, ProgramNode,
+import type {
+  ElementDeclarationNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
 
 export default class ChecksBinder {
-  private symbolFactory: SymbolFactory;
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
   }
 
   bind (): CompileError[] {

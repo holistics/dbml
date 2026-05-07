@@ -202,19 +202,31 @@
         "members": [
           {
             "context": {
-              "id": "symbol@Column@@[L8:C2, L8:C9]",
-              "snippet": "~common"
-            }
-          },
-          {
-            "context": {
               "id": "symbol@Column@id@[L5:C2, L5:C8]",
               "snippet": "id int"
             }
           },
           {
             "context": {
+              "id": "symbol@Column@name@[L1:C2, L1:C11]",
+              "snippet": "name text"
+            }
+          },
+          {
+            "context": {
               "id": "symbol@PartialInjection@@[L6:C2, L6:C9]",
+              "snippet": "~common"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@PartialInjection@@[L7:C2, L7:C9]",
+              "snippet": "~common"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@PartialInjection@@[L8:C2, L8:C9]",
               "snippet": "~common"
             }
           }

@@ -137,7 +137,7 @@ export const useParserStore = defineStore('parser', () => {
         ast.value = undefined;
       }
 
-      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).map(toParserError);
+      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserError);
       database.value = compiler.interpretFile(currentFilepath).getValue() as Database | undefined;
 
       const programSymbol = parseIndex?.ast?.symbol;
@@ -163,7 +163,7 @@ export const useParserStore = defineStore('parser', () => {
       }];
     } finally {
       try {
-        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).map(toParserError);
+        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserError);
       } catch (_err) {
         logger.warn('Failed to get warnings');
         warnings.value = [];

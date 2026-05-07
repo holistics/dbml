@@ -1,12 +1,8 @@
-import {
-  describe, expect, it,
-} from 'vitest';
-import { DEFAULT_ENTRY } from '@/constants';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import {
-  createMockTextModel, createPosition, extractTextFromRange,
-} from '../../../utils';
+import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[example] DefinitionProvider', () => {
   describe('should find definition for tables', () => {
@@ -903,7 +899,23 @@ TableGroup group1 {
       const position = createPosition(7, 21);
       const definitions = definitionProvider.provideDefinition(model, position);
 
-      expect(definitions).toMatchInlineSnapshot('[]');
+      expect(definitions).toMatchInlineSnapshot(`
+        [
+          {
+            "range": {
+              "endColumn": 17,
+              "endLineNumber": 4,
+              "startColumn": 3,
+              "startLineNumber": 4,
+            },
+            "uri": {
+              "$mid": 1,
+              "path": "/main.dbml",
+              "scheme": "file",
+            },
+          },
+        ]
+      `);
     });
 
     it('- should find column in named index', () => {
@@ -1021,10 +1033,10 @@ Ref: users.created_at > logs.timestamp`;
         [
           {
             "range": {
-              "endColumn": 19,
-              "endLineNumber": 8,
+              "endColumn": 23,
+              "endLineNumber": 2,
               "startColumn": 3,
-              "startLineNumber": 8,
+              "startLineNumber": 2,
             },
             "uri": {
               "$mid": 1,
@@ -1426,6 +1438,7 @@ Ref: orders.user_id > myproject.ecommerce.users.id`;
       const position = createPosition(9, 44);
       const definitions = definitionProvider.provideDefinition(model, position);
 
+      // Long qualified names (3+ segments) now resolve through nested schemas
       expect(definitions).toMatchInlineSnapshot(`
         [
           {

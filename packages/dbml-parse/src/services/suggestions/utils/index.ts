@@ -2,26 +2,19 @@ import {
   addDoubleQuoteIfNeeded,
 } from '@/compiler/queries/utils';
 import {
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
   hasTrailingSpaces,
 } from '@/core/lexer/utils';
 import {
-  FunctionApplicationNode, SyntaxNode, TupleExpressionNode,
-} from '@/core/types/nodes';
-import {
-  SymbolKind, createColumnSymbolIndex, destructureIndex,
+  SymbolKind,
 } from '@/core/types/symbol';
-import {
-  ColumnSymbol, TablePartialInjectedColumnSymbol, TablePartialSymbol, TableSymbol,
-} from '@/core/types/symbol/symbols';
 import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
 import {
   CompletionItemInsertTextRule, CompletionItemKind, type CompletionList,
 } from '@/services/types';
+
+export * from './useMerger';
 
 export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemKind {
   switch (symbolKind) {
@@ -118,84 +111,5 @@ export function addSuggestAllSuggestion (completionList: CompletionList, separat
       },
       ...completionList.suggestions,
     ],
-  };
-}
-
-/**
- * Checks if the offset is within the element's header
- * (within the element, but outside the body)
- */
-export function isOffsetWithinElementHeader (offset: number, element: SyntaxNode & { body?: SyntaxNode }): boolean {
-  // Check if offset is within the element at all
-  if (offset < element.start || offset > element.end) {
-    return false;
-  }
-
-  // If element has a body, check if offset is outside it
-  if (element.body) {
-    return offset < element.body.start || offset > element.body.end;
-  }
-
-  // Element has no body, so entire element is considered header
-  return true;
-}
-
-export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
-  return tuple.commaList.length + tuple.elementList.length === 0;
-}
-
-/**
- * Get columns from a table symbol
- * @param tableSymbol The table symbol to extract columns from
- * @returns Array of column objects with name and type information
- */
-export function getColumnsFromTableSymbol (
-  tableSymbol: TableSymbol | TablePartialSymbol,
-): Array<{
-  name: string;
-  type: string;
-}> | null {
-  const columns: Array<{
-    name: string;
-    type: string;
-  }> = [];
-
-  for (const [
-    index,
-    columnSymbol,
-  ] of tableSymbol.symbolTable.entries()) {
-    const res = destructureIndex(index);
-    if (res === undefined || res.kind !== SymbolKind.Column) continue;
-    if (!(columnSymbol instanceof ColumnSymbol || columnSymbol instanceof TablePartialInjectedColumnSymbol)) continue;
-    const columnInfo = extractNameAndTypeOfColumnSymbol(columnSymbol, res.name);
-    if (!columnInfo) continue;
-    columns.push(columnInfo);
-  }
-
-  return columns;
-}
-
-// This function also works with injected columns
-export function extractNameAndTypeOfColumnSymbol (
-  columnSymbol: ColumnSymbol | TablePartialInjectedColumnSymbol,
-  columnName: string,
-): {
-  name: string;
-  type: string;
-} | null {
-  const columnIndex = createColumnSymbolIndex(columnName);
-  const columnDeclaration = columnSymbol instanceof TablePartialInjectedColumnSymbol
-    ? columnSymbol.tablePartialSymbol.symbolTable.get(columnIndex)?.declaration
-    : columnSymbol.declaration;
-  if (!(columnDeclaration instanceof FunctionApplicationNode)) return null;
-
-  const name = extractVariableFromExpression(columnDeclaration.callee) ?? null;
-  const type = extractVariableFromExpression(columnDeclaration.args[0]) ?? null;
-
-  if (name === null || type === null) return null;
-
-  return {
-    name,
-    type,
   };
 }

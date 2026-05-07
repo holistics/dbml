@@ -11,6 +11,9 @@ import type {
   SyntaxToken,
 } from '@/core/types/tokens';
 import type Compiler from '../../index';
+import {
+  collectTransitiveDependencies,
+} from '../utils';
 
 export type FileParseIndex = {
   readonly path: Readonly<Filepath>;
@@ -30,4 +33,17 @@ export function parseFile (this: Compiler, filepath: Filepath): Report<FileParse
       tokens,
       path: filepath,
     }));
+}
+
+export function parseProject (this: Compiler): Map<string, Report<FileParseIndex>> {
+  const deps = collectTransitiveDependencies(this, this.layout.getEntryPoints());
+
+  const result = new Map<string, Report<FileParseIndex>>();
+
+  for (const d of deps) {
+    const parseResult = this.parseFile(d);
+    result.set(d.absolute, parseResult);
+  }
+
+  return result;
 }

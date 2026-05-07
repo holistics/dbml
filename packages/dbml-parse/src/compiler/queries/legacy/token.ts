@@ -9,10 +9,7 @@ import {
 } from '@/core/utils/tokens';
 import type Compiler from '../../index';
 
-export function flatStream (
-  this: Compiler,
-  filepath: Filepath,
-): readonly SyntaxToken[] {
+export function flatStream (this: Compiler, filepath: Filepath): readonly SyntaxToken[] {
   return (this.parseFile(filepath).getValue().tokens)
     .flatMap((token: SyntaxToken) => [
       ...token.leadingInvalid,

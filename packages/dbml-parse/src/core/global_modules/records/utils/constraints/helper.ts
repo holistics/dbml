@@ -1,20 +1,65 @@
+import type Compiler from '@/compiler/index';
 import {
-  TableRecordRow,
-} from '@/core/global_modules/types';
+  DEFAULT_SCHEMA_NAME,
+} from '@/constants';
 import {
-  CompileError, CompileErrorCode,
+  CompileErrorCode, CompileWarning,
 } from '@/core/types/errors';
-import {
-  Column, RecordValue,
+import type {
+  RecordValue,
+} from '@/core/types/schemaJson';
+import type {
+  TableRecord,
 } from '@/core/types/schemaJson';
 import {
   isSerialType,
-} from '../data';
+} from '@/core/global_modules/records/utils/data';
+import type {
+  ColumnSymbol,
+} from '@/core/types/symbol';
+
+export interface ColumnInfo {
+  name: string;
+  pk: boolean;
+  unique: boolean;
+  increment: boolean;
+  notNull: boolean;
+  dbdefault?: { value: string | number;
+    type: string; };
+  typeName: string;
+}
+
+export function columnInfoFromSymbol (col: ColumnSymbol, compiler: Compiler): ColumnInfo {
+  const type = col.type(compiler);
+  const def = col.default(compiler);
+  return {
+    name: col.name ?? '',
+    pk: col.pk(compiler),
+    unique: col.unique(compiler),
+    increment: col.increment(compiler),
+    notNull: col.nullable(compiler) === false,
+    dbdefault: def,
+    typeName: type?.name ?? '',
+  };
+}
+
+// Convert positional TableRecord rows to keyed rows (column name -> value)
+export function toKeyedRows (record: TableRecord): Record<string, RecordValue>[] {
+  return record.values.map((row) => {
+    const keyed: Record<string, RecordValue> = {};
+    record.columns.forEach((col, i) => { keyed[col] = row[i]; });
+    return keyed;
+  });
+}
+
+export function makeTableKey (schema: string | null, table: string): string {
+  return schema ? `${schema}.${table}` : `${DEFAULT_SCHEMA_NAME}.${table}`;
+}
 
 export function extractKeyValueWithDefault (
   row: Record<string, RecordValue>,
   columnNames: string[],
-  columns?: (Column | undefined)[],
+  columns?: (ColumnInfo | undefined)[],
 ): string {
   return columnNames.map((name, idx) => {
     const value = row[name]?.value;
@@ -33,7 +78,7 @@ export function extractKeyValueWithDefault (
 export function hasNullWithoutDefaultInKey (
   row: Record<string, RecordValue>,
   columnNames: string[],
-  columns?: (Column | undefined)[],
+  columns?: (ColumnInfo | undefined)[],
 ): boolean {
   return columnNames.some((name, idx) => {
     const value = row[name]?.value;
@@ -49,12 +94,8 @@ export function hasNullWithoutDefaultInKey (
   });
 }
 
-export function isAutoIncrementColumn (column: Column): boolean {
-  return column.increment || isSerialType(column.type.type_name);
-}
-
-export function hasNotNullWithDefault (column: Column): boolean {
-  return (column.not_null || false) && !!column.dbdefault;
+export function isAutoIncrementColumn (column: ColumnInfo): boolean {
+  return column.increment || isSerialType(column.typeName);
 }
 
 export function formatFullColumnName (
@@ -95,30 +136,20 @@ export function formatValues (
   return `(${values})`;
 }
 
-// For a row and a set of columns
-// Add one compile error for each cell in the row corresponding to each column in the set
-export function createConstraintErrors (
-  row: TableRecordRow,
-  columnNames: string[],
+// Create a compile warning anchored to the AST node at a record value's position.
+export function createConstraintWarning (
+  compiler: Compiler,
+  recordValue: RecordValue,
   message: string,
-): CompileError[] {
-  const errorNodes = columnNames
-    .map((col) => row.columnNodes[col])
-    .filter(Boolean);
-
-  if (errorNodes.length > 0) {
-    return errorNodes.map((node) => new CompileError(
-      CompileErrorCode.INVALID_RECORDS_FIELD,
-      message,
-      node,
-    ));
-  }
-
-  return [
-    new CompileError(
-      CompileErrorCode.INVALID_RECORDS_FIELD,
-      message,
-      row.node,
-    ),
-  ];
+): CompileWarning {
+  const {
+    token,
+  } = recordValue;
+  const node = compiler.nodeAtPosition(token.filepath, token.start.offset)
+    ?? compiler.parse.ast(token.filepath);
+  return new CompileWarning(
+    CompileErrorCode.INVALID_RECORDS_FIELD,
+    message,
+    node,
+  );
 }

@@ -137,7 +137,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "note": {
               "token": {
@@ -386,8 +385,7 @@
                 "line": 29,
                 "offset": 438
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -426,7 +424,6 @@
               },
               "value": "Date"
             },
-            "pk": false,
             "token": {
               "end": {
                 "column": 58,
@@ -439,8 +436,7 @@
                 "line": 30,
                 "offset": 488
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -513,7 +509,6 @@
                 "value": "booking_date"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 39,
@@ -549,7 +544,6 @@
                 "value": "booking_date"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 32,
@@ -563,8 +557,7 @@
                 "offset": 604
               }
             },
-            "type": "hash",
-            "unique": false
+            "type": "hash"
           },
           {
             "columns": [

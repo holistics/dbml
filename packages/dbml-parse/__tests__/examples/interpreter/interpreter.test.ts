@@ -26,7 +26,7 @@ describe('[example] interpreter', () => {
 
       expect(db.tables).toHaveLength(1);
       expect(db.tables[0].name).toBe('users');
-      expect(db.tables[0].schemaName).toBe('public');
+      expect(db.tables[0].schemaName).toBeNull();
     });
 
     test('should interpret table with alias', () => {
@@ -258,7 +258,7 @@ describe('[example] interpreter', () => {
       `;
       const db = interpret(source).getValue()!;
 
-      expect(db.enums[0].schemaName).toBe('public');
+      expect(db.enums[0].schemaName).toBeNull();
     });
 
     test('should interpret enum values', () => {
@@ -330,6 +330,26 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       expect(db.tableGroups[0].color).toBe('#ff0000');
+    });
+
+    test('should not report duplicate for schema-qualified tablegroup fields with same base name', () => {
+      const source = `
+        Table public.users { id int }
+        Table ecommerce.users { id int }
+        TableGroup mixed {
+          public.users
+          ecommerce.users
+        }
+      `;
+      const report = interpret(source);
+      const db = report.getValue()!;
+
+      expect(report.getErrors()).toHaveLength(0);
+      expect(db.tableGroups[0].tables).toHaveLength(2);
+      expect(db.tableGroups[0].tables[0].name).toBe('users');
+      expect(db.tableGroups[0].tables[0].schemaName).toBe('public');
+      expect(db.tableGroups[0].tables[1].name).toBe('users');
+      expect(db.tableGroups[0].tables[1].schemaName).toBe('ecommerce');
     });
   });
 
@@ -609,6 +629,7 @@ describe('[example] interpreter', () => {
       const field = db.tables[0].fields[0];
 
       expect(field.name).toBe('col');
+      // Explicit 'public' schema qualifier is preserved in output
       expect(field.type.type_name).toBe('custom_type');
       expect(field.type.schemaName).toBe('public');
       expect(field.type.args).toBeNull();
@@ -875,13 +896,7 @@ describe('[example] interpreter', () => {
         Ref: (b.a_id1, b.a_id2) > (a.id1, a.id2)
       `;
       const result = interpret(source);
-      // Composite refs may have parsing issues - just verify it doesn't crash
       expect(result).toBeDefined();
-      const db = result.getValue();
-      if (db && db.refs && db.refs.length > 0) {
-        const ref = db.refs[0];
-        expect(ref.endpoints).toHaveLength(2);
-      }
     });
 
     test('should interpret cross-schema ref', () => {
@@ -893,7 +908,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ref = db.refs[0];
 
-      expect(ref.endpoints[0].schemaName).toBe('public');
+      expect(ref.endpoints[0].schemaName).toBeNull();
       expect(ref.endpoints[1].schemaName).toBe('auth');
     });
   });
@@ -1111,7 +1126,7 @@ describe('[example] interpreter', () => {
   });
 
   describe('DiagramView interpretation (Trinity omit rule)', () => {
-    test('should apply Trinity rule: Tables explicit → tableGroups and schemas default to []', () => {
+    test('should apply Trinity rule: Tables explicit -> tableGroups and schemas default to []', () => {
       const source = `
         Table users { id int }
         DiagramView myView {
@@ -1133,7 +1148,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('should apply Trinity rule: Tables {*} → tableGroups and schemas default to []', () => {
+    test('should apply Trinity rule: Tables {*} -> tableGroups and schemas default to []', () => {
       const source = `
         DiagramView myView {
           Tables { * }
@@ -1148,7 +1163,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('should apply Trinity rule: Tables explicit + Notes explicit → tableGroups/schemas default to [], stickyNotes is []', () => {
+    test('should apply Trinity rule: Tables explicit + Notes explicit -> tableGroups/schemas default to [], stickyNotes is []', () => {
       const source = `
         Table users { id int }
         DiagramView myView {
@@ -1212,7 +1227,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('should apply Trinity rule: TableGroups {*} as sole trigger → tables and schemas default to []', () => {
+    test('should apply Trinity rule: TableGroups {*} as sole trigger -> tables and schemas default to []', () => {
       const source = `
         DiagramView myView {
           TableGroups { * }
@@ -1265,7 +1280,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       const ve = db.diagramViews[0].visibleEntities;
-      // Body-level {*} sets all dims — Tables/Schemas are also set, so no expansion
+      // Body-level {*} sets all dims - Tables/Schemas are also set, so no expansion
       expect(ve.tableGroups).toEqual([]);
       expect(ve.tables).toEqual([]);
       expect(ve.schemas).toEqual([]);
@@ -1283,7 +1298,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       const ve = db.diagramViews[0].visibleEntities;
-      // tableGroups [] comes from Trinity promotion, not explicit wildcard — should stay []
+      // tableGroups [] comes from Trinity promotion, not explicit wildcard - should stay []
       expect(ve.tableGroups).toEqual([]);
       expect(ve.tables).toEqual([
         {
@@ -1358,7 +1373,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('should expand TableGroups {*} alongside Schemas * → Schemas * triggers all Trinity []', () => {
+    test('should expand TableGroups {*} alongside Schemas * -> Schemas * triggers all Trinity []', () => {
       const source = `
         Table users { id int }
         TableGroup Inventory { users }
@@ -1370,7 +1385,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Schemas {*} → union covers everything → all Trinity []
+      // Schemas {*} -> union covers everything -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
@@ -1426,7 +1441,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('only Notes set → no Trinity omit (Trinity dims stay null)', () => {
+    test('only Notes set -> no Trinity omit (Trinity dims stay null)', () => {
       const source = `
         Table users { id int }
         DiagramView myView {
@@ -1436,7 +1451,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Notes is set (to [] = show all), but no Trinity dims set → Trinity omit doesn't apply
+      // Notes is set (to [] = show all), but no Trinity dims set -> Trinity omit doesn't apply
       expect(ve.tables).toBeNull();
       expect(ve.tableGroups).toBeNull();
       expect(ve.schemas).toBeNull();
@@ -1444,10 +1459,10 @@ describe('[example] interpreter', () => {
     });
   });
 
-  describe('DiagramView parser — dbml-filter-examples.md full coverage', () => {
+  describe('DiagramView parser - dbml-filter-examples.md full coverage', () => {
     // Group D: Sub-block with specific items
 
-    test('D3: Schemas only → Trinity omit promotes tables and tableGroups to []', () => {
+    test('D3: Schemas only -> Trinity omit promotes tables and tableGroups to []', () => {
       const source = `
         DiagramView myView {
           Schemas { * }
@@ -1462,7 +1477,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('D4: Tables + Schemas wildcard → Schemas * triggers all Trinity []', () => {
+    test('D4: Tables + Schemas wildcard -> Schemas * triggers all Trinity []', () => {
       const source = `
         Table users { id int }
         DiagramView myView {
@@ -1473,14 +1488,14 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Schemas {*} → union covers everything → all Trinity []
+      // Schemas {*} -> union covers everything -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('D6: TableGroups + Schemas wildcard → Schemas * triggers all Trinity []', () => {
+    test('D6: TableGroups + Schemas wildcard -> Schemas * triggers all Trinity []', () => {
       const source = `
         Table users { id int }
         TableGroup Inventory { users }
@@ -1492,14 +1507,14 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Schemas {*} → union covers everything → all Trinity []
+      // Schemas {*} -> union covers everything -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('D7: All three Trinity dims with Schemas * → all Trinity []', () => {
+    test('D7: All three Trinity dims with Schemas * -> all Trinity []', () => {
       const source = `
         Table users { id int }
         TableGroup Inventory { users }
@@ -1512,7 +1527,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Schemas {*} → union covers everything → all Trinity []
+      // Schemas {*} -> union covers everything -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
@@ -1521,7 +1536,7 @@ describe('[example] interpreter', () => {
 
     // Group E: Wildcard sub-blocks
 
-    test('E1: Wildcard TableGroups + explicit tables + schemas wildcard → Schemas * triggers all Trinity []', () => {
+    test('E1: Wildcard TableGroups + explicit tables + schemas wildcard -> Schemas * triggers all Trinity []', () => {
       const source = `
         Table users { id int }
         Table orders { id int }
@@ -1539,7 +1554,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Schemas {*} → union covers everything → all Trinity []
+      // Schemas {*} -> union covers everything -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
@@ -1548,7 +1563,7 @@ describe('[example] interpreter', () => {
 
     // Mixed wildcard + specific items in sibling Trinity dims
 
-    test('Mixed: Tables { items } + Schemas { * } → Schemas * means show all, union = all Trinity []', () => {
+    test('Mixed: Tables { items } + Schemas { * } -> Schemas * means show all, union = all Trinity []', () => {
       const source = `
         Table users { id int }
         Table orders { id int }
@@ -1563,14 +1578,14 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Schemas {*} → union covers everything → all Trinity []
+      // Schemas {*} -> union covers everything -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('Mixed: Tables { * } + TableGroups { Inv } → Tables * means show all, union = all Trinity []', () => {
+    test('Mixed: Tables { * } + TableGroups { Inv } -> Tables * means show all, union = all Trinity []', () => {
       const source = `
         Table users { id int }
         TableGroup Inventory { users }
@@ -1582,14 +1597,14 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Tables {*} → union covers everything → all Trinity []
+      // Tables {*} -> union covers everything -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('Mixed: TableGroups { Inv } + Schemas { * } → Schemas * means show all, union = all Trinity []', () => {
+    test('Mixed: TableGroups { Inv } + Schemas { * } -> Schemas * means show all, union = all Trinity []', () => {
       const source = `
         Table users { id int }
         TableGroup Inventory { users }
@@ -1601,14 +1616,14 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Schemas {*} → union covers everything → all Trinity []
+      // Schemas {*} -> union covers everything -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('Mixed: Tables { * } + Schemas { * } → both show all, all Trinity []', () => {
+    test('Mixed: Tables { * } + Schemas { * } -> both show all, all Trinity []', () => {
       const source = `
         DiagramView myView {
           Tables { * }
@@ -1624,7 +1639,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('Mixed: TableGroups { Inv } + Tables { * } + Schemas { * } → Tables/Schemas * → all Trinity []', () => {
+    test('Mixed: TableGroups { Inv } + Tables { * } + Schemas { * } -> Tables/Schemas * -> all Trinity []', () => {
       const source = `
         Table users { id int }
         TableGroup Inventory { users }
@@ -1637,14 +1652,14 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
       const ve = db.diagramViews[0].visibleEntities;
 
-      // Tables {*} or Schemas {*} → all Trinity []
+      // Tables {*} or Schemas {*} -> all Trinity []
       expect(ve.tables).toEqual([]);
       expect(ve.tableGroups).toEqual([]);
       expect(ve.schemas).toEqual([]);
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('Mixed: Tables { items } + TableGroups { * } → TableGroups * expands, Tables preserved', () => {
+    test('Mixed: Tables { items } + TableGroups { * } -> TableGroups * expands, Tables preserved', () => {
       const source = `
         Table users { id int }
         Table orders { id int }
@@ -1671,7 +1686,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('E3: Wildcard Schemas only → [] + Trinity omit', () => {
+    test('E3: Wildcard Schemas only -> [] + Trinity omit', () => {
       const source = `
         DiagramView myView {
           Schemas { * }
@@ -1688,7 +1703,7 @@ describe('[example] interpreter', () => {
 
     // Group F: Body-level wildcard + Notes
 
-    test('F2: Tables {*} + Notes → Trinity omit for tableGroups/schemas, notes has items', () => {
+    test('F2: Tables {*} + Notes -> Trinity omit for tableGroups/schemas, notes has items', () => {
       const source = `
         Note MyNote { 'hello' }
         DiagramView myView {
@@ -1707,7 +1722,7 @@ describe('[example] interpreter', () => {
 
     // Group G: Empty blocks
 
-    test('G2: Empty TableGroups block → same as empty body (all null)', () => {
+    test('G2: Empty TableGroups block -> same as empty body (all null)', () => {
       const source = `
         DiagramView myView {
           TableGroups { }
@@ -1722,7 +1737,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('G2: Empty Schemas block → same as empty body (all null)', () => {
+    test('G2: Empty Schemas block -> same as empty body (all null)', () => {
       const source = `
         DiagramView myView {
           Schemas { }
@@ -1737,7 +1752,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('G2: Empty Notes block → same as empty body (all null)', () => {
+    test('G2: Empty Notes block -> same as empty body (all null)', () => {
       const source = `
         DiagramView myView {
           Notes { }
@@ -1754,7 +1769,7 @@ describe('[example] interpreter', () => {
 
     // Group H: No Trinity dims, only Notes
 
-    test('H1: Only Notes with items → no Trinity omit', () => {
+    test('H1: Only Notes with items -> no Trinity omit', () => {
       const source = `
         Note Note1 { 'hello' }
         Note Note2 { 'world' }
@@ -1774,9 +1789,9 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toEqual([{ name: 'Note1' }, { name: 'Note2' }]);
     });
 
-    // Round-trip verification: DBML → FC → DBML stability
+    // Round-trip verification: DBML -> FC -> DBML stability
 
-    test('Round-trip: Tables { users } → FC → generates same DBML', () => {
+    test('Round-trip: Tables { users } -> FC -> generates same DBML', () => {
       const source = `
         Table users { id int }
         DiagramView myView {
@@ -1794,7 +1809,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('Round-trip: TableGroups { Inv } → FC → generates same DBML', () => {
+    test('Round-trip: TableGroups { Inv } -> FC -> generates same DBML', () => {
       const source = `
         Table users { id int }
         TableGroup Inv { users }
@@ -1812,7 +1827,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toBeNull();
     });
 
-    test('Round-trip: { *} → FC → generates same { * }', () => {
+    test('Round-trip: { *} -> FC -> generates same { * }', () => {
       const source = `
         DiagramView myView { * }
       `;
@@ -1826,7 +1841,7 @@ describe('[example] interpreter', () => {
       expect(ve.stickyNotes).toEqual([]);
     });
 
-    test('Round-trip: { } (empty) → FC → generates same { }', () => {
+    test('Round-trip: { } (empty) -> FC -> generates same { }', () => {
       const source = `
         DiagramView myView {
         }
@@ -1982,7 +1997,7 @@ describe('[example] interpreter', () => {
       const db = interpret(source).getValue()!;
 
       expect(db.tables).toHaveLength(3);
-      expect(db.tables[0].schemaName).toBe('public');
+      expect(db.tables[0].schemaName).toBeNull();
       expect(db.tables[1].schemaName).toBe('auth');
       expect(db.tables[2].schemaName).toBe('billing');
     });

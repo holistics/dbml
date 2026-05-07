@@ -3,7 +3,7 @@ import {
 } from '@/core/utils/tokens';
 import {
   Position,
-} from '@/core/types';
+} from '@/core/types/position';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';

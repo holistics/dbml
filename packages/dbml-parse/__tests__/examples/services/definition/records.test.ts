@@ -1,12 +1,8 @@
-import {
-  describe, expect, it,
-} from 'vitest';
-import { DEFAULT_ENTRY } from '@/constants';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import {
-  createMockTextModel, createPosition, extractTextFromRange,
-} from '../../../utils';
+import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
+import { DEFAULT_ENTRY } from '@/constants';
 
 describe('[example - records] DefinitionProvider - Records', () => {
   describe('should find table definition from records', () => {

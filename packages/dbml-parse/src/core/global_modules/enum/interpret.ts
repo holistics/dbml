@@ -1,65 +1,69 @@
 import {
-  extractQuotedStringToken, extractVariableFromExpression,
+  extractQuotedStringToken,
+  extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
   aggregateSettingList,
 } from '@/core/utils/validate';
 import {
-  extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/global_modules/utils';
-import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+import type {
+  BlockExpressionNode,
+  ElementDeclarationNode,
+  FunctionApplicationNode,
+  ListExpressionNode,
+  SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  Enum, EnumField,
+import type {
+  Enum,
+  EnumField,
 } from '@/core/types/schemaJson';
+import type {
+  EnumSymbol,
+  Filepath,
+} from '@/core/types';
+import type Compiler from '@/compiler';
 import {
-  InterpreterDatabase,
-} from '@/core/global_modules/types';
+  getTokenPosition,
+  normalizeNote,
+} from '@/core/utils/interpret';
+import Report from '@/core/types/report';
 
 export class EnumInterpreter {
+  private compiler: Compiler;
+  private symbol: EnumSymbol;
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
   private enum: Partial<Enum>;
+  private filepath: Filepath;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
-    this.declarationNode = declarationNode;
-    this.env = env;
+  constructor (compiler: Compiler, symbol: EnumSymbol, filepath: Filepath) {
+    this.compiler = compiler;
+    this.declarationNode = symbol.declaration as ElementDeclarationNode;
+    this.symbol = symbol;
+    this.filepath = filepath;
     this.enum = {
       values: [],
     };
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<Enum> {
     this.enum.token = getTokenPosition(this.declarationNode);
-    this.env.enums.set(this.declarationNode, this.enum as Enum);
     const errors = [
-      ...this.interpretName(this.declarationNode.name!),
+      ...this.interpretName(),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     ];
 
-    return errors;
+    return Report.create(this.enum as Enum, errors);
   }
 
-  private interpretName (nameNode: SyntaxNode): CompileError[] {
+  private interpretName (): CompileError[] {
     const {
-      name, schemaName,
-    } = extractElementName(nameNode);
-
-    if (schemaName.length > 1) {
-      this.enum.name = name;
-      this.enum.schemaName = schemaName.join('.');
-
-      return [
-        new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', nameNode),
-      ];
-    }
+      name, schema,
+    } = this.symbol.interpretedName(this.compiler, this.filepath);
 
     this.enum.name = name;
-    this.enum.schemaName = schemaName.length ? schemaName[0] : null;
+    this.enum.schemaName = schema;
 
     return [];
   }
@@ -76,7 +80,7 @@ export class EnumInterpreter {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
       const noteNode = settingMap.note?.at(0);
       enumField.note = noteNode && {
-        value: normalizeNoteContent(extractQuotedStringToken(noteNode.value)!),
+        value: normalizeNote(extractQuotedStringToken(noteNode.value)!),
         token: getTokenPosition(noteNode),
       };
 

@@ -37,20 +37,11 @@ export default class DBMLDiagnosticsProvider {
   /**
    * Get all diagnostics (errors and warnings) from the current compilation
    */
-  provideDiagnostics (filepath: Filepath): Diagnostic[] {
-    const diagnostics: Diagnostic[] = [];
-
-    const errors = this.compiler.parse.errors(filepath);
-    for (const error of errors) {
-      diagnostics.push(this.createDiagnostic(error, 'error'));
-    }
-
-    const warnings = this.compiler.parse.warnings(filepath);
-    for (const warning of warnings) {
-      diagnostics.push(this.createDiagnostic(warning, 'warning'));
-    }
-
-    return diagnostics;
+  provideDiagnostics (filepath?: Filepath): Diagnostic[] {
+    return [
+      ...this.provideErrors(filepath),
+      ...this.provideWarnings(filepath),
+    ];
   }
 
   /**

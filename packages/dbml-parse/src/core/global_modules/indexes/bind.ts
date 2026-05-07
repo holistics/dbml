@@ -1,44 +1,35 @@
 import {
   partition,
 } from 'lodash-es';
+import Compiler from '@/compiler';
 import {
   CompileError, CompileErrorCode,
 } from '@/core/types/errors';
-import SymbolFactory from '@/core/types/symbol/factory';
 import {
-  createColumnSymbolIndex,
-} from '@/core/types/symbol/symbolIndex';
+  UNHANDLED,
+} from '@/core/types/module';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  ProgramNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
 import {
   ElementKind,
 } from '@/core/types/keywords';
 import {
   destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/utils/expression';
-import {
-  pickBinder,
-} from '@/core/global_modules/utils';
+} from '../../utils/expression';
 import {
   scanNonListNodeForBinding,
-} from '@/core/global_modules/utils';
+} from '../utils';
 
 export default class IndexesBinder {
-  private symbolFactory: SymbolFactory;
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
   }
 
   bind (): CompileError[] {
@@ -79,11 +70,11 @@ export default class IndexesBinder {
       if (!field.callee) {
         return [];
       }
-      const ownerTableName = (() => {
-        const frags = destructureComplexVariable((this.declarationNode.parent! as ElementDeclarationNode).name);
-        return frags !== undefined ? frags.join('.') : '<unnamed>';
-      })();
-      const ownerTableSymbolTable = this.declarationNode.parent!.symbol!.symbolTable!;
+      const ownerTableName = destructureComplexVariable(
+        (this.declarationNode.parent as ElementDeclarationNode).name,
+      )
+        ?.join('.')
+        ?? '<unnamed>';
 
       const args = [
         field.callee,
@@ -104,13 +95,10 @@ export default class IndexesBinder {
       return bindees.flatMap((bindee) => {
         const columnName = extractVarNameFromPrimaryVariable(bindee);
         if (columnName === undefined) return [];
-        const columnIndex = createColumnSymbolIndex(columnName);
-        const column = ownerTableSymbolTable.get(columnIndex);
-        if (!column) {
+        const column = this.compiler.nodeReferee(bindee);
+        if (!column.getValue() || column.hasValue(UNHANDLED)) {
           return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
         }
-        bindee.referee = column;
-        column.references.push(bindee);
 
         return [];
       });
@@ -122,10 +110,8 @@ export default class IndexesBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
 
-      return binder.bind();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

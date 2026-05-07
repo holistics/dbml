@@ -258,8 +258,7 @@
             },
             "type": {
               "type_name": "int"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "increment_id",
@@ -281,7 +280,6 @@
         "fields": [
           {
             "name": "name",
-            "pk": false,
             "token": {
               "end": {
                 "column": 22,
@@ -298,8 +296,7 @@
             "type": {
               "args": "255",
               "type_name": "varchar(255)"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "name",
@@ -322,7 +319,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "user_id",
             "not_null": true,
             "pk": false,
@@ -493,7 +489,6 @@
               "type": "number",
               "value": 1
             },
-            "increment": false,
             "name": "quantity",
             "pk": false,
             "token": {
@@ -580,7 +575,6 @@
               "type": "expression",
               "value": "now()"
             },
-            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -653,8 +647,7 @@
                 "line": 30,
                 "offset": 475
               }
-            },
-            "unique": false
+            }
           }
         ],
         "name": "products",
@@ -694,7 +687,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "email",
             "pk": false,
             "token": {
@@ -742,7 +734,6 @@
               "type": "expression",
               "value": "now()"
             },
-            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -764,7 +755,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "country_code",
             "not_null": true,
             "pk": false,
@@ -841,7 +831,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "code",
             "pk": true,
             "token": {

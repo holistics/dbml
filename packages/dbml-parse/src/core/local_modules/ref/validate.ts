@@ -1,62 +1,44 @@
 import {
   last, partition,
 } from 'lodash-es';
+import Compiler from '@/compiler';
 import {
-  destructureComplexVariableTuple,
-} from '@/core/utils/expression';
+  SettingName,
+} from '@/core/types';
 import {
-  pickValidator,
-} from '@/core/local_modules/utils';
-import {
-  aggregateSettingList,
-  isBinaryRelationship,
-  isEqualTupleOperands,
-  isSimpleName,
-  isValidColor,
-} from '@/core/utils/validate';
-import {
-  isExpressionAVariableNode,
-} from '@/core/utils/validate';
-import {
-  extractStringFromIdentifierStream,
-} from '@/core/utils/expression';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
+  CompileError, CompileErrorCode,
 } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import SymbolFactory from '@/core/types/symbol/factory';
-import SymbolTable from '@/core/types/symbol/symbolTable';
+import Report from '@/core/types/report';
 import {
-  SyntaxToken, SyntaxTokenKind,
+  SyntaxTokenKind,
 } from '@/core/types/tokens';
+import {
+  destructureComplexVariableTuple, extractStringFromIdentifierStream,
+} from '@/core/utils/expression';
+import {
+  Settings, aggregateSettingList, isSimpleName, isValidColor, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
+} from '@/core/utils/validate';
 
 export default class RefValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
+  private declarationNode: ElementDeclarationNode;
+  private compiler: Compiler;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
   }
 
-  validate (): {
-    errors: CompileError[];
-    warnings: CompileWarning[];
-  } {
-    return {
-      errors: [
-        ...this.validateContext(),
-        ...this.validateName(this.declarationNode.name),
-        ...this.validateAlias(this.declarationNode.alias),
-        ...this.validateSettingList(this.declarationNode.attributeList),
-        ...this.validateBody(this.declarationNode.body),
-      ],
-      warnings: [],
-    };
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
   private validateContext (): CompileError[] {
@@ -72,12 +54,12 @@ export default class RefValidator {
     if (!nameNode) {
       return [];
     }
+
     if (nameNode instanceof WildcardNode) {
       return [
         new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Ref name', nameNode),
       ];
     }
-
     if (!isSimpleName(nameNode)) {
       return [
         new CompileError(CompileErrorCode.INVALID_NAME, 'A Ref\'s name is optional or must be an identifier or a quoted identifer', nameNode),
@@ -188,38 +170,7 @@ export default class RefValidator {
   }
 
   validateFieldSettings (settings: ListExpressionNode): CompileError[] {
-    const aggReport = aggregateSettingList(settings);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-    for (const name in settingMap) {
-      const attrs = settingMap[name];
-      switch (name) {
-        case 'delete':
-        case 'update':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidPolicy(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
-            }
-          });
-          break;
-        case 'color':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
-            }
-          });
-          break;
-        default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
-      }
-    }
-    return errors;
+    return validateFieldSettings(settings).getErrors();
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -227,9 +178,7 @@ export default class RefValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate().errors;
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }
@@ -247,7 +196,7 @@ function isValidPolicy (value?: SyntaxNode): boolean {
 
   let extractedString: string | undefined;
   if (value instanceof IdentifierStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value) ?? '';
+    extractedString = extractStringFromIdentifierStream(value) || '';
   } else {
     extractedString = value.expression.variable.value;
   }
@@ -266,4 +215,45 @@ function isValidPolicy (value?: SyntaxNode): boolean {
   }
 
   return false; // unreachable
+}
+
+export function validateFieldSettings (settings: ListExpressionNode): Report<Settings> {
+  const aggReport = aggregateSettingList(settings);
+  const errors = aggReport.getErrors();
+  const settingMap = aggReport.getValue();
+  const clean: Settings = {};
+
+  for (const [
+    name,
+    attrs,
+  ] of Object.entries(settingMap)) {
+    switch (name) {
+      case SettingName.Delete:
+      case SettingName.Update:
+        if (attrs.length > 1) {
+          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
+        }
+        attrs.forEach((attr) => {
+          if (!isValidPolicy(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
+          }
+        });
+        clean[name] = attrs;
+        break;
+      case SettingName.Color:
+        if (attrs.length > 1) {
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
+        }
+        attrs.forEach((attr) => {
+          if (!isValidColor(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
+          }
+        });
+        clean[name] = attrs;
+        break;
+      default:
+        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
+    }
+  }
+  return new Report(clean, errors);
 }

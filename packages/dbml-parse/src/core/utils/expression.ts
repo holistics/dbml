@@ -9,27 +9,54 @@ import {
   isValidIndexName,
 } from '@/core/utils/validate';
 import {
+  BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
+  FunctionApplicationNode,
   FunctionExpressionNode,
   IdentifierStreamNode,
-  InfixExpressionNode,
   LiteralNode,
   PrimaryExpressionNode,
-  ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
   VariableNode,
 } from '@/core/types/nodes';
 import {
-  NodeSymbolIndex, isPublicSchemaIndex,
-} from '@/core/types/symbol';
-import {
-  NodeSymbol,
-} from '@/core/types/symbol/symbols';
-import {
   SyntaxToken, SyntaxTokenKind,
 } from '@/core/types/tokens';
+
+export function extractVariableNode (value?: unknown): SyntaxToken | undefined {
+  if (isExpressionAVariableNode(value)) {
+    return value.expression.variable;
+  }
+  return undefined;
+}
+
+export function extractStringFromIdentifierStream (stream?: IdentifierStreamNode): string | undefined {
+  if (stream === undefined) return undefined;
+  const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
+  if (name === '') return undefined;
+  return name;
+}
+
+export function getElementNameString (element?: SyntaxNode): string | undefined {
+  if (!(element instanceof ElementDeclarationNode)) return undefined;
+  const ss = destructureComplexVariable(element?.name);
+  return ss !== undefined ? ss.join('.') : undefined;
+}
+
+export function isTupleEmpty (tuple: TupleExpressionNode): boolean {
+  return tuple.elementList.length === 0;
+}
+
+export function getBody (node?: ElementDeclarationNode): (FunctionApplicationNode | ElementDeclarationNode)[] {
+  if (!node?.body) return [];
+  return node.body instanceof BlockExpressionNode
+    ? node.body.body
+    : [
+        node.body,
+      ];
+}
 
 export function destructureMemberAccessExpression (node?: SyntaxNode): SyntaxNode[] | undefined {
   if (!node) return undefined;
@@ -41,13 +68,9 @@ export function destructureMemberAccessExpression (node?: SyntaxNode): SyntaxNod
   }
 
   const fragments = destructureMemberAccessExpression(node.leftExpression);
-
-  if (!fragments) {
-    return undefined;
-  }
+  if (!fragments) return undefined;
 
   fragments.push(node.rightExpression);
-
   return fragments;
 }
 
@@ -80,15 +103,10 @@ export function destructureComplexVariableTuple (
   variables: (PrimaryExpressionNode & { expression: VariableNode })[];
   tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[];
 } | undefined {
-  if (node === undefined) {
-    return undefined;
-  }
+  if (node === undefined) return undefined;
 
   const fragments = destructureMemberAccessExpression(node);
-
-  if (!fragments || fragments.length === 0) {
-    return undefined;
-  }
+  if (!fragments || fragments.length === 0) return undefined;
 
   let tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
 
@@ -102,22 +120,12 @@ export function destructureComplexVariableTuple (
   }
 
   const variables = fragments;
-  if (!variables.every(isExpressionAVariableNode)) {
-    return undefined;
-  }
+  if (!variables.every(isExpressionAVariableNode)) return undefined;
 
   return {
     variables,
     tupleElements,
   };
-}
-
-export function extractVariableFromExpression (node?: SyntaxNode): string | undefined {
-  if (!isExpressionAVariableNode(node)) {
-    return undefined;
-  }
-
-  return node.expression.variable.value;
 }
 
 export function destructureIndexNode (node?: SyntaxNode): {
@@ -155,18 +163,8 @@ export function destructureIndexNode (node?: SyntaxNode): {
   return undefined;
 }
 
-export function extractVarNameFromPrimaryVariable (
-  node?: PrimaryExpressionNode & { expression: VariableNode },
-): string | undefined {
-  const value = node?.expression.variable?.value;
-
-  return value === undefined ? undefined : value;
-}
-
 export function extractQuotedStringToken (value?: SyntaxNode): string | undefined {
-  if (!isExpressionAQuotedString(value)) {
-    return undefined;
-  }
+  if (!isExpressionAQuotedString(value)) return undefined;
 
   if (value.expression instanceof VariableNode) {
     return value?.expression?.variable?.value;
@@ -184,35 +182,6 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
   return null;
 }
 
-// Extract referee from a simple variable (x) or complex variable (a.b.c)
-// For complex variables, returns the referee of the rightmost part
-export function extractReferee (node?: SyntaxNode): NodeSymbol | undefined {
-  if (!node) return undefined;
-
-  // Simple variable: x
-  if (isExpressionAVariableNode(node)) {
-    return node.referee;
-  }
-
-  // Complex variable: a.b.c - get referee from rightmost part
-  if (node instanceof InfixExpressionNode && node.op?.value === '.') {
-    return extractReferee(node.rightExpression);
-  }
-
-  return node.referee;
-}
-export function extractIndexName (
-  value:
-    | (PrimaryExpressionNode & { expression: VariableNode & { variable: SyntaxToken } })
-    | (FunctionExpressionNode & { value: SyntaxToken }),
-): string {
-  if (value instanceof PrimaryExpressionNode) {
-    return value.expression.variable.value;
-  }
-
-  return value.value.value;
-}
-
 // Destructure a call expression like `schema.table(col1, col2)` or `table(col1, col2)`.
 // Returns the callee variables (schema, table) and the args (col1, col2).
 //   schema.table(col1, col2) => { variables: [schema, table], args: [col1, col2] }
@@ -224,22 +193,12 @@ export function destructureCallExpression (
   variables: (PrimaryExpressionNode & { expression: VariableNode })[];
   args: (PrimaryExpressionNode & { expression: VariableNode })[];
 } | undefined {
-  if (!(node instanceof CallExpressionNode) || !node.callee) {
-    return undefined;
-  }
+  if (!(node instanceof CallExpressionNode) || !node.callee) return undefined;
 
-  // Destructure the callee (e.g., schema.table or just table)
   const fragments = destructureMemberAccessExpression(node.callee);
-  if (!fragments || fragments.length === 0) {
-    return undefined;
-  }
+  if (!fragments || fragments.length === 0) return undefined;
+  if (!fragments.every(isExpressionAVariableNode)) return undefined;
 
-  // All callee fragments must be simple variables
-  if (!fragments.every(isExpressionAVariableNode)) {
-    return undefined;
-  }
-
-  // Get args from argument list
   let args: (PrimaryExpressionNode & { expression: VariableNode })[] = [];
   if (isTupleOfVariables(node.argumentList)) {
     args = [
@@ -253,57 +212,18 @@ export function destructureCallExpression (
   };
 }
 
-// Starting from `startElement`
-// find the closest outer scope that contains `id`
-// and return the symbol corresponding to `id` in that scope
-export function findSymbol (
-  id: NodeSymbolIndex,
-  startElement: ElementDeclarationNode,
-): NodeSymbol | undefined {
-  let curElement: ElementDeclarationNode | ProgramNode | undefined = startElement;
-  const isPublicSchema = isPublicSchemaIndex(id);
-
-  while (curElement) {
-    if (curElement.symbol?.symbolTable?.has(id)) {
-      return curElement.symbol.symbolTable?.get(id);
-    }
-
-    if (curElement.symbol?.declaration instanceof ProgramNode && isPublicSchema) {
-      return curElement.symbol;
-    }
-
-    if (curElement instanceof ProgramNode) {
-      return undefined;
-    }
-
-    curElement = curElement.parent;
-  }
-
-  return undefined;
-}
-
-// Return a variable node if it's nested inside a primary expression
-export function extractVariableNode (value?: unknown): SyntaxToken | undefined {
-  if (isExpressionAVariableNode(value)) {
-    return value.expression.variable;
-  }
-
-  return undefined;
-}
-
-export function extractStringFromIdentifierStream (stream?: IdentifierStreamNode): string | undefined {
-  if (stream === undefined) {
-    return undefined;
-  }
-  const name = stream.identifiers.map((identifier) => identifier.value).join(' ');
-  if (name === '') {
+export function extractVariableFromExpression (node?: SyntaxNode): string | undefined {
+  if (!isExpressionAVariableNode(node)) {
     return undefined;
   }
 
-  return name;
+  return node.expression.variable.value;
 }
 
-export function getElementNameString (element?: ElementDeclarationNode): string | undefined {
-  const res = destructureComplexVariable(element?.name);
-  return res !== undefined ? res.join('.') : undefined;
+export function extractVarNameFromPrimaryVariable (
+  node?: PrimaryExpressionNode & { expression: VariableNode },
+): string | undefined {
+  const value = node?.expression.variable?.value;
+
+  return value === undefined ? undefined : value;
 }
