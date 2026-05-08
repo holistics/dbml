@@ -73,7 +73,12 @@ function suggestInUseDeclaration (
     return suggestUseFilepath(compiler, filepath, useDecl.importPath, model, useDecl);
   }
 
-  // After `from` -> filepath completions
+  // After closing quote of importPath -> no suggestions
+  if (useDecl.importPath && offset >= useDecl.importPath.end) {
+    return noSuggestions();
+  }
+
+  // After `from` but no importPath yet -> filepath completions
   if (useDecl.fromKeyword && offset > useDecl.fromKeyword.end) {
     return suggestUseFilepath(compiler, filepath, undefined, model, useDecl);
   }
