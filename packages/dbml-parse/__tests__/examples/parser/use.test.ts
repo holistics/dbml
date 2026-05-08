@@ -88,21 +88,20 @@ describe('[example] use declaration parsing', () => {
       expect(r.getValue().ast.uses).toHaveLength(1);
     });
 
-    test('missing specifiers: 2 errors, continues parsing elements', () => {
+    test('missing specifiers: 8 errors, continues parsing elements', () => {
       const r = parse(`use from './schema'\nTable posts { id int }`);
-      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getErrors()).toHaveLength(8);
       expect(r.getErrors()[0].diagnostic).toBe("Expect an opening brace '{'");
-      expect(r.getErrors()[1].diagnostic).toBe('Expect an identifier');
-      expect(r.getValue().ast.declarations.length).toBeGreaterThanOrEqual(1);
+      expect(r.getValue().ast.body.length).toBeGreaterThanOrEqual(1);
     });
 
-    test('truncated use: 2 errors each, does not crash', () => {
+    test('truncated use: errors, does not crash', () => {
       const r1 = parse('use');
-      expect(r1.getErrors()).toHaveLength(2);
+      expect(r1.getErrors()).toHaveLength(4);
       expect(r1.getErrors()[0].diagnostic).toBe("Expect an opening brace '{'");
 
       const r2 = parse('use {');
-      expect(r2.getErrors()).toHaveLength(2);
+      expect(r2.getErrors()).toHaveLength(3);
       expect(r2.getErrors()[0].diagnostic).toBe("Expect a closing brace '}'");
 
       const r3 = parse('use *');
@@ -110,9 +109,9 @@ describe('[example] use declaration parsing', () => {
       expect(r3.getErrors()[0].diagnostic).toBe("Expect 'from' after '*'");
     });
 
-    test('as without alias: 2 errors, alias is undefined', () => {
+    test('as without alias: 1 error, alias is undefined', () => {
       const r = parse(`use { table users as } from './a'`);
-      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getErrors()).toHaveLength(1);
       expect(r.getErrors()[0].diagnostic).toBe("Expect an alias name after 'as'");
       expect(r.getValue().ast.uses).toHaveLength(1);
       const spec = (r.getValue().ast.uses[0].specifiers as UseSpecifierListNode).specifiers[0];
@@ -120,9 +119,9 @@ describe('[example] use declaration parsing', () => {
       expect(spec.alias).toBeUndefined();
     });
 
-    test('as then newline then close brace: 2 errors', () => {
+    test('as then newline then close brace: 1 error', () => {
       const r = parse(`use { table users as\n} from './a'`);
-      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getErrors()).toHaveLength(1);
       expect(r.getErrors()[0].diagnostic).toBe("Expect an alias name after 'as'");
     });
 

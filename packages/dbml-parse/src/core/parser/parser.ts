@@ -313,7 +313,7 @@ export default class Parser {
     return buildNode();
   }
 
-  private useSpecifierList (): UseSpecifierListNode {
+  private useSpecifierList = this.contextStack.withContextDo(ParsingContext.BlockExpression, () => {
     const args: {
       openBrace?: SyntaxToken;
       specifiers: UseSpecifierNode[];
@@ -330,7 +330,10 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+      if (!this.canHandle(e)) {
+        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+      }
+      this.synchronizeUseSpecifierList();
     }
 
     while (!this.isAtEnd() && !this.check(SyntaxTokenKind.RBRACE)) {
@@ -343,7 +346,10 @@ export default class Parser {
         if (e.partialNode instanceof UseSpecifierNode) {
           args.specifiers.push(e.partialNode);
         }
-        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        if (!this.canHandle(e)) {
+          throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        }
+        this.synchronizeUseSpecifierList();
       }
 
       if (this.check(SyntaxTokenKind.IDENTIFIER) && isFromKeyword(this.peek())) {
@@ -362,11 +368,34 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+      if (!this.canHandle(e)) {
+        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+      }
+      this.synchronizeUseSpecifierList();
     }
 
     return buildNode();
-  }
+  });
+
+  private synchronizeUseSpecifierList = () => {
+    if (this.check(SyntaxTokenKind.RBRACE)) {
+      return;
+    }
+    markInvalid(this.advance());
+    while (!this.isAtEnd()) {
+      const token = this.peek();
+      if (
+        this.check(SyntaxTokenKind.RBRACE)
+        || this.check(SyntaxTokenKind.STRING_LITERAL)
+        || (this.check(SyntaxTokenKind.IDENTIFIER) && isFromKeyword(token))
+        || isAtStartOfLine(this.previous(), token)
+      ) {
+        break;
+      }
+      markInvalid(token);
+      this.advance();
+    }
+  };
 
   private useSpecifier (): UseSpecifierNode {
     const args: {
@@ -384,7 +413,10 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+      if (!this.canHandle(e)) {
+        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+      }
+      this.synchronizeUseSpecifier();
     }
 
     if (
@@ -396,9 +428,15 @@ export default class Parser {
         if (!(e instanceof PartialParsingError)) {
           throw e;
         }
-        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        if (e.partialNode instanceof SyntaxNode) {
+          args.name = e.partialNode;
+        }
+        if (!this.canHandle(e)) {
+          throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        }
+        this.synchronizeUseSpecifier();
       }
-    } else {
+    } else if (args.importKind) {
       this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an element name');
     }
 
@@ -421,12 +459,29 @@ export default class Parser {
         if (!(e instanceof PartialParsingError)) {
           throw e;
         }
-        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        if (!this.canHandle(e)) {
+          throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        }
+        this.synchronizeUseSpecifier();
       }
     }
 
     return buildNode();
   }
+
+  private synchronizeUseSpecifier = () => {
+    while (!this.isAtEnd()) {
+      const token = this.peek();
+      if (
+        this.check(SyntaxTokenKind.RBRACE)
+        || isAtStartOfLine(this.previous(), token)
+      ) {
+        break;
+      }
+      markInvalid(token);
+      this.advance();
+    }
+  };
 
   private synchronizeProgram = () => {
     const invalidToken = this.peek();

@@ -67,10 +67,9 @@ describe('[example] use declaration validation', () => {
     expect(errors[1].diagnostic).toBe('Unexpected EOF');
   });
 
-  test('invalid: missing specifiers or wildcard - 2 errors', () => {
+  test('invalid: missing specifiers or wildcard - 8 errors', () => {
     const errors = validate(`use from './a'`).getErrors();
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(8);
     expect(errors[0].diagnostic).toBe("Expect an opening brace '{'");
-    expect(errors[1].diagnostic).toBe('Expect an identifier');
   });
 });
