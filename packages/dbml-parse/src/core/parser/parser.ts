@@ -288,8 +288,9 @@ export default class Parser {
         if (!(e instanceof PartialParsingError)) {
           throw e;
         }
-        args.specifiers = e.partialNode;
-        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        if (e.partialNode instanceof UseSpecifierListNode) {
+          args.specifiers = e.partialNode;
+        }
       }
     }
 
@@ -299,7 +300,6 @@ export default class Parser {
       args.fromKeyword = this.advance();
     } else {
       this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, `Expect 'from' after ${afterWhat}`);
-      throw new PartialParsingError(this.peek(), buildNode(), this.contextStack.findHandlerContext(this.tokens, this.current));
     }
 
     // consume path (string literal)
@@ -307,7 +307,6 @@ export default class Parser {
       args.importPath = this.previous();
     } else {
       this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect a string literal path');
-      throw new PartialParsingError(this.peek(), buildNode(), this.contextStack.findHandlerContext(this.tokens, this.current));
     }
 
     return buildNode();

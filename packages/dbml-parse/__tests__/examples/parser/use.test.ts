@@ -73,11 +73,10 @@ describe('[example] use declaration parsing', () => {
       expect(r.getValue().ast.uses).toHaveLength(1);
     });
 
-    test('missing import path: 2 errors', () => {
+    test('missing import path: 1 error', () => {
       const r = parse(`use { table users } from`);
-      expect(r.getErrors()).toHaveLength(2);
+      expect(r.getErrors()).toHaveLength(1);
       expect(r.getErrors()[0].diagnostic).toBe('Expect a string literal path');
-      expect(r.getErrors()[1].diagnostic).toBe('Unexpected EOF');
       expect(r.getValue().ast.uses[0].importPath).toBeUndefined();
     });
 

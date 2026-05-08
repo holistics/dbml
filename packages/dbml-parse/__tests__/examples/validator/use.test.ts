@@ -57,14 +57,13 @@ describe('[example] use declaration validation', () => {
     const errors = validate(`use { table users }`).getErrors();
     expect(errors).toHaveLength(2);
     expect(errors[0].diagnostic).toBe("Expect 'from' after specifier list");
-    expect(errors[1].diagnostic).toBe('Unexpected EOF');
+    expect(errors[1].diagnostic).toBe('Expect a string literal path');
   });
 
-  test('invalid: missing path after from - 2 errors', () => {
+  test('invalid: missing path after from - 1 error', () => {
     const errors = validate(`use { table users } from`).getErrors();
-    expect(errors).toHaveLength(2);
+    expect(errors).toHaveLength(1);
     expect(errors[0].diagnostic).toBe('Expect a string literal path');
-    expect(errors[1].diagnostic).toBe('Unexpected EOF');
   });
 
   test('invalid: missing specifiers or wildcard - 8 errors', () => {
