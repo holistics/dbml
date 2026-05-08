@@ -60,7 +60,6 @@ export interface UseStatementMergeResult {
 export function scanExistingUses (
   compiler: Compiler,
   filepath: Filepath,
-  fileContent: string,
 ): ParsedUseStatement[] {
   const results: ParsedUseStatement[] = [];
 
@@ -69,82 +68,38 @@ export function scanExistingUses (
   if (!ast) return results;
 
   for (const useNode of ast.uses) {
-    let sourceFile = useNode.importPath?.value ?? '';
-    // It happens that autocompletion is triggered when there's syntax error
-    // So we fall back to manual search here
-    if (!sourceFile) {
-      const useKeywordStart = useNode.useKeyword?.start ?? useNode.fullStart;
-      const lineStart = fileContent.lastIndexOf('\n', useKeywordStart - 1) + 1;
-      const lineEnd = fileContent.indexOf('\n', useKeywordStart);
-      const line = fileContent.slice(lineStart, lineEnd === -1 ? undefined : lineEnd);
-      const fromMatch = line.match(/from\s*(['"])(.*?)\1/);
-      if (fromMatch) {
-        sourceFile = fromMatch[2];
-      }
-    }
+    const sourceFile = useNode.importPath?.value ?? '';
     const specifiers: ParsedUseSpecifier[] = [];
 
     if (useNode.specifiers instanceof UseSpecifierListNode) {
-      const IMPORT_KIND_KEYWORDS = new Set([
-        'table',
-        'enum',
-        'tablepartial',
-        'tablegroup',
-        'note',
-        'schema',
-        'from',
-      ]);
       for (const specifier of useNode.specifiers.specifiers) {
         let kind: string | undefined;
         let name: string | undefined;
 
         if (specifier.name) {
-          // Fully formed: `use { table users }` or `use { table users as u }`
           kind = specifier.importKind?.value;
           name = extractVariableFromExpression(specifier.name);
-          if (!name && specifier.name.start !== undefined && specifier.name.end !== undefined) {
-            name = fileContent.slice(specifier.name.start, specifier.name.end).trim();
-          }
         } else if (specifier.importKind) {
           // Parse recovery: `use { User }` - "kind slot" holds the symbol name.
-          const val = specifier.importKind.value ?? undefined;
-          if (val && !IMPORT_KIND_KEYWORDS.has(val.toLowerCase())) {
-            name = val;
-          }
+          name = specifier.importKind.value ?? undefined;
         }
 
-        if (name && name.toLowerCase() !== 'from') {
+        if (name) {
           const alias = specifier.alias ? extractVariableFromExpression(specifier.alias) : undefined;
-          specifiers.push({
-            kind,
-            name,
-            alias,
-          });
+          specifiers.push({ kind, name, alias });
         }
       }
     } else if (useNode.specifiers instanceof WildcardNode) {
-      specifiers.push({
-        name: '*',
-      });
+      specifiers.push({ name: '*' });
     }
 
     if (specifiers.length === 0 && !(useNode.specifiers instanceof WildcardNode)) {
       continue;
     }
 
-    // When the AST node ends before the full `use { ... } from '...'` statement
-    // (parse error recovery truncates the node), extend endOffset to cover the
-    // full statement including the `from '...'` clause.
-    let endOffset = useNode.fullEnd;
-    if (!useNode.importPath) {
-      const useKeywordStart = useNode.useKeyword?.start ?? useNode.fullStart;
-      const lineEnd = fileContent.indexOf('\n', useKeywordStart);
-      endOffset = lineEnd === -1 ? fileContent.length : lineEnd;
-    }
-
     results.push({
       startOffset: useNode.fullStart,
-      endOffset,
+      endOffset: useNode.fullEnd,
       sourceFile,
       specifiers,
       node: useNode,
@@ -166,7 +121,7 @@ export function mergeSymbolIntoUses (
   currentFilepath: Filepath,
   fileContent: string,
 ): UseStatementMergeResult {
-  const existingUses = scanExistingUses(compiler, currentFilepath, fileContent);
+  const existingUses = scanExistingUses(compiler, currentFilepath);
 
   // Normalize source file path relative to the current file's directory
   const sourceFileStr = normalizeSourcePath(sourceFilepath, currentFilepath);

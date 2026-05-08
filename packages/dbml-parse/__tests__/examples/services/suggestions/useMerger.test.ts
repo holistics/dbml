@@ -18,7 +18,7 @@ describe('scanExistingUses - preserves alias', () => {
       '/base.dbml': 'Table users { id int [pk] }',
       '/main.dbml': "use { table users as u } from './base'",
     });
-    const uses = scanExistingUses(compiler, Filepath.from('/main.dbml'), "use { table users as u } from './base'");
+    const uses = scanExistingUses(compiler, Filepath.from('/main.dbml'));
     expect(uses).toHaveLength(1);
     expect(uses[0].specifiers[0]).toEqual({ kind: 'table', name: 'users', alias: 'u' });
   });
@@ -28,7 +28,7 @@ describe('scanExistingUses - preserves alias', () => {
       '/base.dbml': 'Table users { id int [pk] }',
       '/main.dbml': "use { table users } from './base'",
     });
-    const uses = scanExistingUses(compiler, Filepath.from('/main.dbml'), "use { table users } from './base'");
+    const uses = scanExistingUses(compiler, Filepath.from('/main.dbml'));
     expect(uses[0].specifiers[0]).toEqual({ kind: 'table', name: 'users', alias: undefined });
   });
 });
