@@ -250,8 +250,6 @@ function suggestOnRelOp (
     ScopeKind.TABLE,
     ScopeKind.TABLEPARTIAL,
   ].includes(scopeKind)) {
-    // Cross-file suggestions are surfaced inside suggestNamesInScope when its
-    // walk reaches ProgramNode - no need to append them here.
     const res = suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
       SymbolKind.Table,
       SymbolKind.Schema,

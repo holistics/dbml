@@ -26,6 +26,9 @@ import {
 import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
+import {
+  uniq,
+} from 'lodash-es';
 
 // A single use specifier information
 // e.g. `use { table user as u } from './path'`
@@ -86,11 +89,17 @@ export function scanExistingUses (
 
         if (name) {
           const alias = specifier.alias ? extractVariableFromExpression(specifier.alias) : undefined;
-          specifiers.push({ kind, name, alias });
+          specifiers.push({
+            kind,
+            name,
+            alias,
+          });
         }
       }
     } else if (useNode.specifiers instanceof WildcardNode) {
-      specifiers.push({ name: '*' });
+      specifiers.push({
+        name: '*',
+      });
     }
 
     if (specifiers.length === 0 && !(useNode.specifiers instanceof WildcardNode)) {
@@ -124,7 +133,7 @@ export function mergeSymbolIntoUses (
   const existingUses = scanExistingUses(compiler, currentFilepath);
 
   // Normalize source file path relative to the current file's directory
-  const sourceFileStr = normalizeSourcePath(sourceFilepath, currentFilepath);
+  const sourceFileStr = sourceFilepath.relativeTo(currentFilepath.dirname).replace(/\.dbml$/, '');
 
   // Look for existing use from this source file
   const existingUseIndex = existingUses.findIndex((u) => u.sourceFile === sourceFileStr);
@@ -142,7 +151,7 @@ export function mergeSymbolIntoUses (
       };
     }
 
-    const allSpecifiers = uniqueInOrder([
+    const allSpecifiers = uniq([
       ...existingUse.specifiers
         .filter((s) => s.name !== '*')
         .map((s) => `${s.kind ?? symbolKind} ${s.name}${s.alias ? ` as ${s.alias}` : ''}`),
@@ -170,22 +179,12 @@ function buildUseStatement (specifiers: string[], sourceFileStr: string, lineEnd
   return `use {${lineEnd}${body}${lineEnd}} from '${sourceFileStr}'${lineEnd}${lineEnd}`;
 }
 
-function uniqueInOrder (xs: string[]): string[] {
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const x of xs) {
-    const key = x.trim();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(x);
-  }
-  return out;
-}
-
 // Extend a range so it consumes any trailing newline(s), so deleting it
 // removes the statement cleanly without leaving a blank line behind.
-function expandToFullLines (fileContent: string, start: number, end: number): { startOffset: number;
-  endOffset: number; } {
+function expandToFullLines (fileContent: string, start: number, end: number): {
+  startOffset: number;
+  endOffset: number;
+} {
   // Pull the start back to the beginning of the line.
   const lineStart = fileContent.lastIndexOf('\n', start - 1) + 1;
   // Eat the trailing line break so the surrounding blank line doesn't linger.
@@ -197,13 +196,4 @@ function expandToFullLines (fileContent: string, start: number, end: number): { 
     startOffset: lineStart,
     endOffset: newEnd,
   };
-}
-
-/**
-  * Normalize a source Filepath to a relative path as seen from the current file's directory,
-  * with the .dbml extension stripped.
-  * e.g. source=/a/b/common.dbml, current=/a/c/main.dbml -> '../b/common'
-  */
-function normalizeSourcePath (filepath: Filepath, currentFilepath: Filepath): string {
-  return filepath.relativeTo(currentFilepath.dirname).replace(/\.dbml$/, '');
 }
