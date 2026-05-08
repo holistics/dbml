@@ -1,3 +1,18 @@
+// This file contains functions for merging use statements for auto-import
+// e.g
+// ```
+// use { table T } from './path'
+// ```
+// If we auto import table R from './path'
+// Then `use { table R } from './path'` should be merged into use T.
+// Result:
+// ```
+// use {
+//   table T
+//   table R
+// } from './path'
+// ```
+
 import type Compiler from '@/compiler';
 import {
   SymbolKind,
@@ -12,12 +27,18 @@ import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 
+// A single use specifier information
+// e.g. `use { table user as u } from './path'`
+//             ^^^^^ ^^^^    ^
+//             kind  name   alias
 export interface ParsedUseSpecifier {
   kind?: string;
   name: string;
   alias?: string;
 }
 
+// A single use statement information
+// e.g. `use { table user as u } from './path'`
 export interface ParsedUseStatement {
   startOffset: number;
   endOffset: number;
@@ -26,8 +47,10 @@ export interface ParsedUseStatement {
   node: UseDeclarationNode; // Original AST node for precise source tracking
 }
 
+// Instructions to merge use statements
 export interface UseStatementMergeResult {
-  topInsert: string;
+  topInsert: string; // The "merged" use statement to insert at the top
+  // Remove the old, non-merged use statement
   removeRange?: {
     startOffset: number;
     endOffset: number;
@@ -47,6 +70,8 @@ export function scanExistingUses (
 
   for (const useNode of ast.uses) {
     let sourceFile = useNode.importPath?.value ?? '';
+    // It happens that autocompletion is triggered when there's syntax error
+    // So we fall back to manual search here
     if (!sourceFile) {
       const useKeywordStart = useNode.useKeyword?.start ?? useNode.fullStart;
       const lineStart = fileContent.lastIndexOf('\n', useKeywordStart - 1) + 1;
@@ -128,6 +153,7 @@ export function scanExistingUses (
 
   return results;
 }
+
 /** Merge a new symbol into the file's use statements.
   * If a use from sourceFile exists, add the symbol to it.
   * If not, create a new use statement at the top.
