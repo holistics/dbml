@@ -12,7 +12,7 @@ import {
   destructureComplexVariable,
 } from '@/core/utils/expression';
 import {
-  aggregateSettingList, isSimpleName,
+  aggregateSettingList, hasSimpleBody, isSimpleName,
   isWildcardExpression,
 } from '@/core/utils/validate';
 
@@ -214,6 +214,18 @@ export default class DiagramViewValidator {
   } {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
+
+    if (hasSimpleBody(sub)) {
+      errors.push(new CompileError(
+        CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
+        `${sub.type?.value} body must be a block`,
+        sub.bodyColon,
+      ));
+      return {
+        errors,
+        warnings,
+      };
+    }
 
     if (!sub.body || !(sub.body instanceof BlockExpressionNode)) {
       return {
