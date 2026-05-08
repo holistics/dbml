@@ -2,7 +2,7 @@ import Compiler, {
   ScopeKind,
 } from '@/compiler';
 import {
-  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
+  DEFAULT_SCHEMA_NAME,
 } from '@/constants';
 import {
   isComment,

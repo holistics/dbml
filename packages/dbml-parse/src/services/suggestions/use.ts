@@ -190,7 +190,7 @@ function suggestUseSpecifierStart (): CompletionList {
       {
         label: '* from',
         detail: 'import all',
-        insertText: "* from '${1:path}'",
+        insertText: "* from '${1:./path}'",
         insertTextRules: CompletionItemInsertTextRule.InsertAsSnippet,
         kind: CompletionItemKind.Snippet,
         range: undefined as any,
@@ -198,7 +198,7 @@ function suggestUseSpecifierStart (): CompletionList {
       {
         label: '{ } from',
         detail: 'import named',
-        insertText: "{ ${1:table} ${2:name} } from '${3:path}'",
+        insertText: "{ ${1:kind} ${2:name} } from '${3:./path}'",
         insertTextRules: CompletionItemInsertTextRule.InsertAsSnippet,
         kind: CompletionItemKind.Snippet,
         range: undefined as any,
