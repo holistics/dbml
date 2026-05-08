@@ -41,12 +41,17 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     }
   }
 
-  // Interpret each file
+  // Bind and interpret each file
   const perFile = new Map<string, Database>();
   for (const file of allFiles) {
     const parseResult = this.parseFile(file);
     errors.push(...parseResult.getErrors());
     warnings.push(...parseResult.getWarnings());
+
+    const bindResult = this.bindFile(file);
+    errors.push(...bindResult.getErrors());
+    warnings.push(...bindResult.getWarnings());
+
     const ast = parseResult.getValue().ast;
     const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
     const result = symbol ? this.interpretSymbol(symbol, file) : Report.create(UNHANDLED);

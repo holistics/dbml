@@ -1070,5 +1070,76 @@ describe('[example] binder', () => {
       `;
       expect(analyze(source).getErrors()).toHaveLength(0);
     });
+
+    test('should produce binding error when DiagramView.Tables references non-existent table (no schema)', () => {
+      const source = `
+        DiagramView myView {
+          Tables { ghost_table }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('should produce binding error when DiagramView.Notes references non-existent note', () => {
+      const source = `
+        DiagramView myView {
+          Notes { ghost_note }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('should produce no binding errors when DiagramView.Notes references existing note', () => {
+      const source = `
+        Note my_note { 'hello' }
+        DiagramView myView {
+          Notes { my_note }
+        }
+      `;
+      expect(analyze(source).getErrors()).toHaveLength(0);
+    });
+
+    test('should produce binding error when DiagramView.TableGroups references non-existent tablegroup', () => {
+      const source = `
+        DiagramView myView {
+          TableGroups { ghost_group }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('should produce no binding errors when DiagramView.TableGroups references existing tablegroup', () => {
+      const source = `
+        Table users { id int }
+        TableGroup my_group { users }
+        DiagramView myView {
+          TableGroups { my_group }
+        }
+      `;
+      expect(analyze(source).getErrors()).toHaveLength(0);
+    });
+
+    test('should produce binding error when DiagramView.Schemas references non-existent schema', () => {
+      const source = `
+        DiagramView myView {
+          Schemas { ghost_schema }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.some((e: any) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
+    });
+
+    test('should produce no binding errors when DiagramView.Schemas references existing schema', () => {
+      const source = `
+        Table auth.users { id int }
+        DiagramView myView {
+          Schemas { auth }
+        }
+      `;
+      expect(analyze(source).getErrors()).toHaveLength(0);
+    });
   });
 });

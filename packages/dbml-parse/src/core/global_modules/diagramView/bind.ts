@@ -87,8 +87,12 @@ export default class DiagramViewBinder {
         if (!tableBindee) {
           return [];
         }
+        const schemaBindee = bindee.variables.pop();
 
-        return this.compiler.nodeReferee(tableBindee).getErrors();
+        return [
+          ...(schemaBindee ? this.compiler.nodeReferee(schemaBindee).getErrors() : []),
+          ...this.compiler.nodeReferee(tableBindee).getErrors(),
+        ];
       });
     });
   }
