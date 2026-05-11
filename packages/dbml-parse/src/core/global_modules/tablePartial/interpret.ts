@@ -138,7 +138,7 @@ export class TablePartialInterpreter {
       noteNode,
     ] = settingMap[SettingName.Note] || [];
     this.tablePartial.note = noteNode && {
-      value: extractQuotedStringToken(noteNode?.value) ? normalizeNote(extractQuotedStringToken(noteNode?.value)!) : '',
+      value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
 
