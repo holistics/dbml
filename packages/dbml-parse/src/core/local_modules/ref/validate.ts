@@ -251,6 +251,17 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
         });
         clean[name] = attrs;
         break;
+      case SettingName.Inactive:
+        if (attrs.length > 1) {
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'inactive\' can only appear once', attr)));
+        }
+        attrs.forEach((attr) => {
+          if (attr.value) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'inactive\' cannot have a value', attr!));
+          }
+        });
+        clean[name] = attrs;
+        break;
       default:
         attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
     }
