@@ -17,7 +17,7 @@ class Ref extends Element {
    * @param {import('../../types/model_structure/ref').RawRef} param0
    */
   constructor ({
-    name, color, endpoints, onDelete, onUpdate, token, schema = {}, injectedPartial = null,
+    name, color, endpoints, onDelete, onUpdate, inactive, token, schema = {}, injectedPartial = null,
   } = {}) {
     super(token);
     /** @type {string} */
@@ -28,6 +28,8 @@ class Ref extends Element {
     this.onDelete = onDelete;
     /** @type {any} */
     this.onUpdate = onUpdate;
+    /** @type {boolean} */
+    this.inactive = inactive;
     /** @type {import('../../types/model_structure/endpoint').default[]} */
     this.endpoints = [];
     /** @type {import('../../types/model_structure/schema').default} */
@@ -89,6 +91,7 @@ class Ref extends Element {
       color: this.color,
       onDelete: this.onDelete,
       onUpdate: this.onUpdate,
+      inactive: this.inactive,
       injectedPartialId: this.injectedPartial?.id,
     };
   }
