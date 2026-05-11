@@ -1,11 +1,7 @@
-import type {
-  Filepath,
-} from '@/core/types/filepath';
+import type { Filepath } from '@/core/types/filepath';
 import Report from '@/core/types/report';
 import type Compiler from '../../index';
-import {
-  collectTransitiveDependencies,
-} from '../utils';
+import { collectTransitiveDependencies } from '../utils';
 
 export function bindFile (this: Compiler, filepath: Filepath): Report<void> {
   const validateResult = this.validateFile(filepath);

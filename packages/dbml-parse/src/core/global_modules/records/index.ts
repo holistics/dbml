@@ -1,38 +1,20 @@
 import type Compiler from '@/compiler/index';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  RecordsMetadata,
-} from '@/core/types/symbol/metadata';
-import type {
-  NodeMetadata,
-} from '@/core/types/symbol/metadata';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
+import { ElementKind } from '@/core/types/keywords';
+import type { Filepath } from '@/core/types/filepath';
+import { RecordsMetadata } from '@/core/types/symbol/metadata';
+import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   CallExpressionNode,
   ElementDeclarationNode,
   InfixExpressionNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
-import {
-  NodeSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import type { SchemaElement } from '@/core/types/schemaJson';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import type { SyntaxToken } from '@/core/types/tokens';
 import {
   destructureMemberAccessExpression,
   extractVarNameFromPrimaryVariable,
@@ -42,15 +24,9 @@ import {
   isElementNode,
   isExpressionAVariableNode,
 } from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  nodeRefereeOfLeftExpression,
-} from '../utils';
+import { CompileError, CompileErrorCode } from '@/core/types';
+import type { GlobalModule } from '../types';
+import { nodeRefereeOfLeftExpression } from '../utils';
 import RecordsBinder from './bind';
 import RecordsInterpreter from './interpret';
 

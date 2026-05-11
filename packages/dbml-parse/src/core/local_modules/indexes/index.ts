@@ -1,16 +1,8 @@
-import {
-  last,
-} from 'lodash-es';
+import { last } from 'lodash-es';
 import type Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
 import {
   AttributeNode,
   ListExpressionNode,
@@ -22,9 +14,7 @@ import {
   isElementFieldNode, isElementNode, isExpressionAVariableNode,
   Settings, aggregateSettingList,
 } from '@/core/utils/validate';
-import {
-  type LocalModule,
-} from '../types';
+import { type LocalModule } from '../types';
 import IndexesValidator from './validate';
 
 export const indexesModule: LocalModule = {

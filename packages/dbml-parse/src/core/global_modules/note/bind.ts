@@ -1,7 +1,5 @@
 import type Compiler from '@/compiler';
-import type {
-  CompileError,
-} from '@/core/types/errors';
+import type { CompileError } from '@/core/types/errors';
 import {
   ElementDeclarationNode,
   type BlockExpressionNode,

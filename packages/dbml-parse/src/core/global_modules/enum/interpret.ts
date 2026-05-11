@@ -2,12 +2,8 @@ import {
   extractQuotedStringToken,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+import { aggregateSettingList } from '@/core/utils/validate';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type {
   BlockExpressionNode,
   ElementDeclarationNode,

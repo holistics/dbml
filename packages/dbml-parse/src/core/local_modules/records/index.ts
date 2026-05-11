@@ -1,33 +1,21 @@
 import type Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, UNHANDLED, type PassThrough,
-} from '@/core/types/module';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
+import { PASS_THROUGH, UNHANDLED, type PassThrough } from '@/core/types/module';
 import {
   CallExpressionNode, ProgramNode, SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
+import { destructureComplexVariable } from '@/core/utils/expression';
 import {
   isElementFieldNode, isElementNode,
   isTupleOfVariables,
   isValidName,
 } from '@/core/utils/validate';
-import {
-  type LocalModule, type Settings,
-} from '../types';
+import { type LocalModule, type Settings } from '../types';
 import RecordsValidator from './validate';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export const recordsModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

@@ -1,13 +1,7 @@
 import type Compiler from '@/compiler/index';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
+import type { Filepath } from '@/core/types/filepath';
+import { ElementKind } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -16,13 +10,9 @@ import {
   type VariableNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
+import type { SchemaElement } from '@/core/types/schemaJson';
 import {
   DiagramViewNoteSymbol,
   DiagramViewSchemaSymbol,
@@ -33,31 +23,17 @@ import {
   type NodeSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  extractVarNameFromPrimaryVariable, getBody,
-} from '@/core/utils/expression';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { extractVarNameFromPrimaryVariable, getBody } from '@/core/utils/expression';
 import {
   isAccessExpression, isElementFieldNode, isElementNode, isInsideSettingList, isTerminalAccessFragment,
 } from '@/core/utils/validate';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  nodeRefereeOfLeftExpression,
-} from '../utils';
+import type { GlobalModule } from '../types';
+import { nodeRefereeOfLeftExpression } from '../utils';
 import DiagramViewBinder from './bind';
-import {
-  DiagramViewInterpreter,
-} from './interpret';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types';
-import {
-  addDoubleQuoteIfNeeded,
-} from '@/compiler/index';
+import { DiagramViewInterpreter } from './interpret';
+import { CompileError, CompileErrorCode } from '@/core/types';
+import { addDoubleQuoteIfNeeded } from '@/compiler/index';
 
 // Public utils that other modules can use
 export const diagramViewUtils = {

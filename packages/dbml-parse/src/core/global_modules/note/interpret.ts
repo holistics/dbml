@@ -1,21 +1,13 @@
-import {
-  get, partition,
-} from 'lodash-es';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+import { get, partition } from 'lodash-es';
+import { aggregateSettingList } from '@/core/utils/validate';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   type BlockExpressionNode,
   type ElementDeclarationNode,
   FunctionApplicationNode,
   type ListExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  Note,
-} from '@/core/types/schemaJson';
+import type { Note } from '@/core/types/schemaJson';
 import type Compiler from '@/compiler';
 import {
   extractColor,

@@ -1,31 +1,17 @@
 import type Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import {
   PASS_THROUGH,
   PassThrough,
 } from '@/core/types/module';
-import {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
-import type {
-  LocalModule,
-} from '../types';
+import { destructureComplexVariable } from '@/core/utils/expression';
+import type { LocalModule } from '../types';
 import DiagramViewValidator from './validate';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  isElementFieldNode, isElementNode,
-} from '@/core/utils/validate';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { isElementFieldNode, isElementNode } from '@/core/utils/validate';
 
 export const diagramViewModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

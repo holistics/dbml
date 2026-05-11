@@ -1,50 +1,22 @@
 import type Compiler from '@/compiler/index';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  schemaMembership,
-} from '@/compiler/queries/files/usableMembers';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode, FunctionApplicationNode, WildcardNode,
-} from '@/core/types/nodes';
-import {
-  SyntaxNode, UseSpecifierNode,
-} from '@/core/types/nodes';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { schemaMembership } from '@/compiler/queries/files/usableMembers';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { type Filepath } from '@/core/types/filepath';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
+import { ElementDeclarationNode, FunctionApplicationNode, WildcardNode } from '@/core/types/nodes';
+import { SyntaxNode, UseSpecifierNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind, UseSymbol,
 } from '@/core/types/symbol';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
-import {
-  enumUtils,
-} from '../enum';
-import {
-  tableUtils,
-} from '../table';
-import {
-  tableGroupUtils,
-} from '../tableGroup';
-import {
-  tablePartialUtils,
-} from '../tablePartial';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  diagramViewUtils,
-} from '../diagramView';
+import { destructureComplexVariable } from '@/core/utils/expression';
+import { enumUtils } from '../enum';
+import { tableUtils } from '../table';
+import { tableGroupUtils } from '../tableGroup';
+import { tablePartialUtils } from '../tablePartial';
+import type { GlobalModule } from '../types';
+import { diagramViewUtils } from '../diagramView';
 
 export const schemaModule: GlobalModule = {
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {

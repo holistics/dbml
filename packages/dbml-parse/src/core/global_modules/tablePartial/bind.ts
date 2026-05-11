@@ -1,25 +1,13 @@
-import {
-  last, partition,
-} from 'lodash-es';
+import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  CompileError,
-} from '@/core/types/errors';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  destructureComplexVariableTuple,
-} from '../../utils/expression';
-import {
-  aggregateSettingList,
-} from '../../utils/validate';
-import {
-  scanNonListNodeForBinding,
-} from '../utils';
+import { SyntaxToken } from '@/core/types/tokens';
+import { destructureComplexVariableTuple } from '../../utils/expression';
+import { aggregateSettingList } from '../../utils/validate';
+import { scanNonListNodeForBinding } from '../utils';
 
 export default class TablePartialBinder {
   private compiler: Compiler;

@@ -1,12 +1,6 @@
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode, ProgramNode,
-} from '@/core/types/nodes';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
+import { UNHANDLED } from '@/core/types/module';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
 
 export function symbolOfName (this: Compiler, nameStack: string[], owner: ElementDeclarationNode | ProgramNode) {

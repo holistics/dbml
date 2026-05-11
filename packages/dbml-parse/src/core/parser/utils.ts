@@ -1,6 +1,4 @@
-import {
-  last,
-} from 'lodash-es';
+import { last } from 'lodash-es';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -31,18 +29,10 @@ import {
   VariableNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  isAsKeyword,
-} from '../utils/tokens';
-import {
-  extractVariableNode,
-} from '../utils/expression';
-import {
-  isExpressionAnIdentifierNode,
-} from '../utils/validate';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { isAsKeyword } from '../utils/tokens';
+import { extractVariableNode } from '../utils/expression';
+import { isExpressionAnIdentifierNode } from '../utils/validate';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (

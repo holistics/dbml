@@ -1,23 +1,13 @@
-import {
-  last, partition,
-} from 'lodash-es';
+import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  SettingName,
-} from '@/core/types';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+import { SettingName } from '@/core/types';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  destructureComplexVariableTuple, extractStringFromIdentifierStream,
-} from '@/core/utils/expression';
+import { SyntaxTokenKind } from '@/core/types/tokens';
+import { destructureComplexVariableTuple, extractStringFromIdentifierStream } from '@/core/utils/expression';
 import {
   Settings, aggregateSettingList, isSimpleName, isValidColor, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
 } from '@/core/utils/validate';

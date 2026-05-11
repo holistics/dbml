@@ -1,32 +1,16 @@
 import type Compiler from '@/compiler/index';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
-import {
-  ProgramNode, type SyntaxNode,
-} from '@/core/types/nodes';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import type { Filepath } from '@/core/types/filepath';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
+import { ProgramNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
+import type { SchemaElement } from '@/core/types/schemaJson';
 import {
   NodeSymbol, ProgramSymbol, SchemaSymbol, SymbolKind,
 } from '@/core/types/symbol';
-import {
-  isProgramNode,
-} from '@/core/utils/validate';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  shouldInterpretNode,
-} from '../utils';
+import { isProgramNode } from '@/core/utils/validate';
+import type { GlobalModule } from '../types';
+import { shouldInterpretNode } from '../utils';
 import Binder from './bind';
 import ProgramInterpreter from './interpret';
 

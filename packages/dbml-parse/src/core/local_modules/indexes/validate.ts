@@ -1,13 +1,7 @@
-import {
-  last, partition,
-} from 'lodash-es';
+import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -19,15 +13,9 @@ import {
   SyntaxNode,
   VariableNode,
 } from '@/core/types/nodes';
-import {
-  isExpressionAQuotedString, isExpressionAVariableNode,
-} from '@/core/utils/validate';
-import {
-  destructureIndexNode,
-} from '@/core/utils/expression';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
+import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
+import { destructureIndexNode } from '@/core/utils/expression';
+import { aggregateSettingList } from '@/core/utils/validate';
 
 export default class IndexesValidator {
   private compiler: Compiler;

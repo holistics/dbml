@@ -1,13 +1,7 @@
 import Compiler from '@/compiler';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { Filepath } from '@/core/types/filepath';
+import { ElementKind } from '@/core/types/keywords';
+import { UNHANDLED } from '@/core/types/module';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -15,12 +9,8 @@ import {
   ProgramNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import {
-  isOffsetWithinSpan,
-} from '@/core/utils/span';
-import {
-  noSuggestions,
-} from '@/services/suggestions/utils';
+import { isOffsetWithinSpan } from '@/core/utils/span';
+import { noSuggestions } from '@/services/suggestions/utils';
 import {
   CompletionItemInsertTextRule,
   CompletionItemKind,

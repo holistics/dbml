@@ -1,22 +1,12 @@
-import {
-  isInvalidToken,
-} from '@/core/utils/tokens';
-import {
-  Position,
-} from '@/core/types/position';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  Filepath,
-} from '@/core/types/filepath';
+import { isInvalidToken } from '@/core/utils/tokens';
+import { Position } from '@/core/types/position';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { Filepath } from '@/core/types/filepath';
 import Report from '@/core/types/report';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
 } from '@/core/types/tokens';
-import {
-  isAlphaNumeric, isAlphaOrUnderscore, isDigit,
-} from '@/core/utils/chars';
+import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 
 export default class Lexer {
   private start: Position = {

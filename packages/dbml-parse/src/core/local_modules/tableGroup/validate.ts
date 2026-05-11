@@ -1,20 +1,12 @@
-import {
-  partition,
-} from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
+import { destructureComplexVariable } from '@/core/utils/expression';
 import {
   Settings, aggregateSettingList, isSimpleName, isValidColor, isExpressionAQuotedString,
 } from '@/core/utils/validate';

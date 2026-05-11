@@ -1,20 +1,12 @@
-import {
-  partition,
-} from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
-import {
-  type Settings, isSimpleName,
-} from '@/core/utils/validate';
+import { destructureComplexVariable } from '@/core/utils/expression';
+import { type Settings, isSimpleName } from '@/core/utils/validate';
 
 export default class ProjectValidator {
   private declarationNode: ElementDeclarationNode;

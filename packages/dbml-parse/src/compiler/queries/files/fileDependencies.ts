@@ -1,10 +1,6 @@
 import type Compiler from '@/compiler/index';
-import {
-  Filepath, resolveImportFilepath,
-} from '@/core/types/filepath';
-import {
-  UseDeclarationNode,
-} from '@/core/types/nodes';
+import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import { UseDeclarationNode } from '@/core/types/nodes';
 
 // Returns resolved Filepath objects for each `use { … } from './…'` in the file.
 export function fileDependencies (this: Compiler, filepath: Filepath): Filepath[] {

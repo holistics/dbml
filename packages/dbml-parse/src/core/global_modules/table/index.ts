@@ -1,41 +1,23 @@
-import {
-  uniqBy,
-} from 'lodash-es';
+import { uniqBy } from 'lodash-es';
 import type Compiler from '@/compiler/index';
-import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
+import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import type { Filepath } from '@/core/types/filepath';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   InfixExpressionNode,
   PrefixExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
+import type { SchemaElement } from '@/core/types/schemaJson';
 import {
   ColumnSymbol, InjectedColumnSymbol, NodeSymbol, PartialInjectionSymbol, SchemaSymbol, SymbolKind, TableSymbol,
 } from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import type { SyntaxToken } from '@/core/types/tokens';
 import {
   extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
@@ -52,16 +34,10 @@ import {
   isWithinNthArgOfField,
   isValidPartialInjection,
 } from '@/core/utils/validate';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  nodeRefereeOfLeftExpression,
-} from '../utils';
+import type { GlobalModule } from '../types';
+import { nodeRefereeOfLeftExpression } from '../utils';
 import TableBinder from './bind';
-import {
-  TableInterpreter,
-} from './interpret';
+import { TableInterpreter } from './interpret';
 
 // Public utils that other modules can use
 export const tableUtils = {

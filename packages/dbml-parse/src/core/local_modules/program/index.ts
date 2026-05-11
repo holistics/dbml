@@ -1,18 +1,12 @@
 import type Compiler from '@/compiler';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
-import type {
-  ProgramNode, SyntaxNode,
-} from '@/core/types/nodes';
+import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
+import type { ProgramNode, SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
   isProgramNode,
   Settings,
 } from '@/core/utils/validate';
-import {
-  type LocalModule,
-} from '../types';
+import { type LocalModule } from '../types';
 import ProgramValidator from './validate';
 
 export const programModule: LocalModule = {

@@ -14,21 +14,11 @@
 // ```
 
 import type Compiler from '@/compiler';
-import {
-  SymbolKind,
-} from '@/core/types';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  UseDeclarationNode, UseSpecifierListNode, WildcardNode,
-} from '@/core/types/nodes';
-import {
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
-  uniq,
-} from 'lodash-es';
+import { SymbolKind } from '@/core/types';
+import { Filepath } from '@/core/types/filepath';
+import { UseDeclarationNode, UseSpecifierListNode, WildcardNode } from '@/core/types/nodes';
+import { extractVariableFromExpression } from '@/core/utils/expression';
+import { uniq } from 'lodash-es';
 
 // A single use specifier information
 // e.g. `use { table user as u } from './path'`

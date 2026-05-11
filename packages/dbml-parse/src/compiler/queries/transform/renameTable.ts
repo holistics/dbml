@@ -1,28 +1,12 @@
-import {
-  DbmlProjectLayout,
-} from '@/compiler/projectLayout/layout';
-import {
-  isValidIdentifier,
-} from '@/compiler/queries/utils';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode, SyntaxNode, UseSpecifierNode,
-} from '@/core/types/nodes';
-import {
-  AliasSymbol, NodeSymbol, UseSymbol,
-} from '@/core/types/symbol';
+import { DbmlProjectLayout } from '@/compiler/projectLayout/layout';
+import { isValidIdentifier } from '@/compiler/queries/utils';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import { ElementDeclarationNode, SyntaxNode, UseSpecifierNode } from '@/core/types/nodes';
+import { AliasSymbol, NodeSymbol, UseSymbol } from '@/core/types/symbol';
 import type Compiler from '../../index';
-import {
-  TextEdit, applyTextEdits,
-} from './applyTextEdits';
+import { TextEdit, applyTextEdits } from './applyTextEdits';
 import {
   type TableNameInput, lookupTableSymbol, normalizeTableName, stripQuotes,
 } from './utils';

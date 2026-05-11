@@ -1,48 +1,24 @@
 import type Compiler from '@/compiler/index';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import type { Filepath } from '@/core/types/filepath';
+import { ElementKind } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
+import { ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
+import type { SchemaElement } from '@/core/types/schemaJson';
 import {
   EnumFieldSymbol,
   EnumSymbol,
   type NodeSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  getBody,
-} from '@/core/utils/expression';
-import {
-  isElementFieldNode, isElementNode,
-} from '@/core/utils/validate';
-import type {
-  GlobalModule,
-} from '../types';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { getBody } from '@/core/utils/expression';
+import { isElementFieldNode, isElementNode } from '@/core/utils/validate';
+import type { GlobalModule } from '../types';
 import EnumBinder from './bind';
-import {
-  EnumInterpreter,
-} from './interpret';
+import { EnumInterpreter } from './interpret';
 
 // Public utils that other modules can use
 export const enumUtils = {

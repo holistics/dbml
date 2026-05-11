@@ -1,19 +1,9 @@
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  NodeSymbol, SymbolKind,
-} from '@/core/types/symbol';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
-import {
-  splitQualifiedIdentifier,
-} from '../utils';
+import { splitQualifiedIdentifier } from '../utils';
 
 export type TableNameInput = string | { schema?: string;
   table: string; };

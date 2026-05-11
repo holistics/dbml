@@ -1,28 +1,12 @@
-import {
-  flatMap, isEmpty,
-} from 'lodash-es';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
+import { flatMap, isEmpty } from 'lodash-es';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '@/compiler/index';
-import type {
-  CompileWarning,
-} from '@/core/types/errors';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import type {
-  Ref, RefEndpoint, TableRecord,
-} from '@/core/types/schemaJson';
-import type {
-  TableSymbol,
-} from '@/core/types/symbol';
-import type {
-  InternedNodeSymbol,
-} from '@/core/types/symbol/symbols';
+import type { CompileWarning } from '@/core/types/errors';
+import type { Filepath } from '@/core/types/filepath';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { Ref, RefEndpoint, TableRecord } from '@/core/types/schemaJson';
+import type { TableSymbol } from '@/core/types/symbol';
+import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
   createConstraintWarning,
   extractKeyValueWithDefault,

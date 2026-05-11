@@ -1,13 +1,7 @@
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementDeclarationNode, ProgramNode,
-} from '@/core/types/nodes';
+import { type Filepath } from '@/core/types/filepath';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import type Compiler from '../../index';
-import {
-  ScopeKind,
-} from '../../types';
+import { ScopeKind } from '../../types';
 
 export function containerScopeKind (this: Compiler, filepath: Filepath, offset: number): ScopeKind {
   const elem = this.container.element(filepath, offset);

@@ -1,22 +1,12 @@
-import {
-  Uri,
-} from '@/services/types';
+import { Uri } from '@/services/types';
 import Compiler from '@/compiler';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  SyntaxNode, SyntaxNodeKind,
-} from '@/core/types/nodes';
+import { Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
 import {
   Location, Position, ReferenceProvider, TextModel,
 } from '@/services/types';
-import {
-  getOffsetFromMonacoPosition,
-} from '@/services/utils';
+import { getOffsetFromMonacoPosition } from '@/services/utils';
 
 export default class DBMLReferencesProvider implements ReferenceProvider {
   private compiler: Compiler;

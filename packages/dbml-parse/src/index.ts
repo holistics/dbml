@@ -1,22 +1,16 @@
 import Compiler from '@/compiler/index';
 
 // Export the types that playground and other consumers need
-export {
-  DEFAULT_ENTRY,
-} from '@/constants';
+export { DEFAULT_ENTRY } from '@/constants';
 
-export {
-  Filepath,
-} from '@/core/types/filepath';
+export { Filepath } from '@/core/types/filepath';
 
 export {
   UNHANDLED,
   type Unhandled,
 } from '@/core/types/module';
 
-export {
-  ElementKind,
-} from '@/core/types/keywords';
+export { ElementKind } from '@/core/types/keywords';
 
 export {
   type NodeSymbol,
@@ -106,8 +100,6 @@ export {
 
 export * from '@/compiler/projectLayout/layout';
 
-export {
-  Compiler,
-};
+export { Compiler };
 
 export * from '@/services';

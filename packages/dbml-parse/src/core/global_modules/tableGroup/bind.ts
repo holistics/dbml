@@ -1,25 +1,11 @@
-import {
-  partition,
-} from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode,
-} from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  UseSymbol,
-} from '@/core/types/symbol';
-import {
-  scanNonListNodeForBinding,
-} from '../utils';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { UNHANDLED } from '@/core/types/module';
+import { BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { UseSymbol } from '@/core/types/symbol';
+import { scanNonListNodeForBinding } from '../utils';
 
 export default class TableGroupBinder {
   private compiler: Compiler;

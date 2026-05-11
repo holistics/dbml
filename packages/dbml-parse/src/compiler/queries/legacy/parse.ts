@@ -1,25 +1,11 @@
 import type Compiler from '@/compiler';
-import {
-  Database,
-} from '@/core/types';
-import type {
-  CompileError, CompileWarning,
-} from '@/core/types/errors';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import type {
-  ProgramNode,
-} from '@/core/types/nodes';
-import {
-  type NodeSymbol,
-} from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import { Database } from '@/core/types';
+import type { CompileError, CompileWarning } from '@/core/types/errors';
+import { type Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import type { ProgramNode } from '@/core/types/nodes';
+import { type NodeSymbol } from '@/core/types/symbol';
+import type { SyntaxToken } from '@/core/types/tokens';
 
 export function ast (this: Compiler, filepath: Filepath): Readonly<ProgramNode> {
   this.bindFile(filepath);

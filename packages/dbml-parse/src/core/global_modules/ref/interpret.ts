@@ -2,15 +2,9 @@ import {
   destructureComplexVariable, extractVariableFromExpression,
   getBody,
 } from '@/core/utils/expression';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
-import {
-  extractStringFromIdentifierStream,
-} from '@/core/utils/expression';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+import { aggregateSettingList } from '@/core/utils/validate';
+import { extractStringFromIdentifierStream } from '@/core/utils/expression';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -18,9 +12,7 @@ import {
   type ListExpressionNode,
   AttributeNode,
 } from '@/core/types/nodes';
-import type {
-  Ref,
-} from '@/core/types/schemaJson';
+import type { Ref } from '@/core/types/schemaJson';
 import {
   RefMetadata,
   type Filepath,
@@ -31,12 +23,8 @@ import {
   getTokenPosition,
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
-import {
-  getMultiplicities,
-} from '../utils';
-import {
-  zip,
-} from 'lodash-es';
+import { getMultiplicities } from '../utils';
+import { zip } from 'lodash-es';
 
 export class RefInterpreter {
   private compiler: Compiler;

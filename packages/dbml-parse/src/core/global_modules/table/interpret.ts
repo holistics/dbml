@@ -1,16 +1,8 @@
-import {
-  last, partition,
-} from 'lodash-es';
+import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { UNHANDLED } from '@/core/types/module';
 import {
   BlockExpressionNode, ElementDeclarationNode,
   FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, PrefixExpressionNode,
@@ -21,28 +13,16 @@ import {
   Check, Column, Index, InlineRef, Ref,
   Table, TablePartialInjection,
 } from '@/core/types/schemaJson';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  SymbolKind,
-} from '@/core/types/symbol';
-import {
-  RefMetadata,
-} from '@/core/types/symbol/metadata';
-import type {
-  ColumnSymbol, TableSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  ProgramSymbol,
-} from '@/core/types/symbol/symbols';
+import type { Filepath } from '@/core/types/filepath';
+import { SymbolKind } from '@/core/types/symbol';
+import { RefMetadata } from '@/core/types/symbol/metadata';
+import type { ColumnSymbol, TableSymbol } from '@/core/types/symbol/symbols';
+import { ProgramSymbol } from '@/core/types/symbol/symbols';
 import {
   extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import {
-  aggregateSettingList, isValidPartialInjection,
-} from '@/core/utils/validate';
+import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
 import {
   extractColor, extractElementName,
   getTokenPosition, normalizeNote,

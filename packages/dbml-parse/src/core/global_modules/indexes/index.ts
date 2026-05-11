@@ -1,44 +1,22 @@
 import type Compiler from '@/compiler/index';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  IndexesMetadata, MetadataKind,
-} from '@/core/types/symbol/metadata';
-import type {
-  NodeMetadata,
-} from '@/core/types/symbol/metadata';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import { ElementKind } from '@/core/types/keywords';
+import { IndexesMetadata, MetadataKind } from '@/core/types/symbol/metadata';
+import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
+import { ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
+import type { SchemaElement } from '@/core/types/schemaJson';
 import {
   type NodeSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import type {
-  GlobalModule,
-} from '../types';
+import type { SyntaxToken } from '@/core/types/tokens';
+import type { GlobalModule } from '../types';
 import IndexesBinder from './bind';
 import IndexesInterpreter from './interpret';
-import {
-  isElementNode, isExpressionAVariableNode, isInsideSettingList,
-} from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types';
+import { isElementNode, isExpressionAVariableNode, isInsideSettingList } from '@/core/utils/validate';
+import { CompileError, CompileErrorCode } from '@/core/types';
 
 export const indexesModule: GlobalModule = {
   nodeMetadata (compiler: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<PassThrough> {

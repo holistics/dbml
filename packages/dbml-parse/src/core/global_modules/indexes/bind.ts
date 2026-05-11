@@ -1,27 +1,15 @@
-import {
-  partition,
-} from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { UNHANDLED } from '@/core/types/module';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
 } from '@/core/types/nodes';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '../../utils/expression';
-import {
-  scanNonListNodeForBinding,
-} from '../utils';
+import { ElementKind } from '@/core/types/keywords';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils/expression';
+import { scanNonListNodeForBinding } from '../utils';
 
 export default class IndexesBinder {
   private compiler: Compiler;

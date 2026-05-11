@@ -1,23 +1,11 @@
 import type Compiler from '@/compiler/index';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import type {
-  NodeMetadata,
-} from '@/core/types/symbol/metadata';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { Filepath } from '@/core/types/filepath';
+import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import type { SyntaxNode } from '@/core/types/nodes';
 import type Report from '@/core/types/report';
-import type {
-  Module, PassThrough,
-} from '../types/module';
-import type {
-  SchemaElement,
-} from '../types/schemaJson';
-import type {
-  NodeSymbol,
-} from '../types/symbol';
+import type { Module, PassThrough } from '../types/module';
+import type { SchemaElement } from '../types/schemaJson';
+import type { NodeSymbol } from '../types/symbol';
 
 export interface GlobalModule extends Module {
   nodeSymbol? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough>;

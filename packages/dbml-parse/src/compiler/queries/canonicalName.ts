@@ -1,16 +1,8 @@
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { UNHANDLED } from '@/core/types/module';
 import Report from '@/core/types/report';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
+import { type Filepath } from '@/core/types/filepath';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../index';
 
 export interface CanonicalName {

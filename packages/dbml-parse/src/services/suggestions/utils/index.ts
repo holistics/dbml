@@ -1,18 +1,8 @@
-import {
-  addDoubleQuoteIfNeeded,
-} from '@/compiler/queries/utils';
-import {
-  hasTrailingSpaces,
-} from '@/core/lexer/utils';
-import {
-  SymbolKind,
-} from '@/core/types/symbol';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  CompletionItemInsertTextRule, CompletionItemKind, type CompletionList,
-} from '@/services/types';
+import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
+import { hasTrailingSpaces } from '@/core/lexer/utils';
+import { SymbolKind } from '@/core/types/symbol';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { CompletionItemInsertTextRule, CompletionItemKind, type CompletionList } from '@/services/types';
 
 export * from './useMerger';
 

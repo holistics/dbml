@@ -2,17 +2,13 @@ import {
   compact, filter, flatMap, groupBy, isEmpty, keyBy,
 } from 'lodash-es';
 import type Compiler from '@/compiler/index';
-import type {
-  CompileWarning,
-} from '@/core/types/errors';
+import type { CompileWarning } from '@/core/types/errors';
 import type {
   Index,
   RecordValue,
   TableRecord,
 } from '@/core/types/schemaJson';
-import {
-  TableSymbol,
-} from '@/core/types/symbol';
+import { TableSymbol } from '@/core/types/symbol';
 import {
   type ColumnInfo,
   columnInfoFromSymbol,

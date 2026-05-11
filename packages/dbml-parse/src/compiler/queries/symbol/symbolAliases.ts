@@ -1,11 +1,7 @@
 import Report from '@/core/types/report';
-import {
-  AliasSymbol, NodeSymbol,
-} from '@/core/types/symbol';
+import { AliasSymbol, NodeSymbol } from '@/core/types/symbol';
 import type Compiler from '../../index';
-import {
-  allVisibleMembers,
-} from '../utils';
+import { allVisibleMembers } from '../utils';
 
 // All AliasSymbols across the project that alias `symbol` (transitive).
 export function symbolAliases (this: Compiler, symbol: NodeSymbol): Report<AliasSymbol[]> {

@@ -1,9 +1,5 @@
-import type {
-  Database, ElementRef,
-} from '@/core/types/schemaJson';
-import {
-  type NodeSymbol, SymbolKind,
-} from '@/core/types/symbol';
+import type { Database, ElementRef } from '@/core/types/schemaJson';
+import { type NodeSymbol, SymbolKind } from '@/core/types/symbol';
 
 export function pushExternal (db: Database, member: NodeSymbol, ref: ElementRef): void {
   if (member.isKind(SymbolKind.Table)) db.externals.tables.push(ref);

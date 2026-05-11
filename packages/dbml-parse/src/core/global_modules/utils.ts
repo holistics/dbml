@@ -1,29 +1,15 @@
-import {
-  zip,
-} from 'lodash-es';
+import { zip } from 'lodash-es';
 import type Compiler from '@/compiler';
-import {
-  getMemberChain,
-} from '@/core/parser/utils';
-import type {
-  RelationCardinality,
-} from '@/core/types';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { getMemberChain } from '@/core/parser/utils';
+import type { RelationCardinality } from '@/core/types';
+import { UNHANDLED } from '@/core/types/module';
 import {
   InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  NodeSymbol,
-} from '@/core/types/symbol';
-import {
-  destructureComplexVariableTuple,
-} from '@/core/utils/expression';
-import {
-  isAccessExpression, isExpressionAVariableNode,
-} from '../utils/validate';
+import type { NodeSymbol } from '@/core/types/symbol';
+import { destructureComplexVariableTuple } from '@/core/utils/expression';
+import { isAccessExpression, isExpressionAVariableNode } from '../utils/validate';
 
 export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
   const hasParseError = [

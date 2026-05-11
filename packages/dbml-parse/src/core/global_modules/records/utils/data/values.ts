@@ -1,18 +1,8 @@
-import {
-  last,
-} from 'lodash-es';
-import {
-  DateTime,
-} from 'luxon';
-import {
-  destructureComplexVariable, extractNumericLiteral, extractQuotedStringToken,
-} from '@/core/utils/expression';
-import {
-  isExpressionASignedNumberExpression,
-} from '@/core/utils/validate';
-import {
-  isExpressionAnIdentifierNode,
-} from '@/core/utils/validate';
+import { last } from 'lodash-es';
+import { DateTime } from 'luxon';
+import { destructureComplexVariable, extractNumericLiteral, extractQuotedStringToken } from '@/core/utils/expression';
+import { isExpressionASignedNumberExpression } from '@/core/utils/validate';
+import { isExpressionAnIdentifierNode } from '@/core/utils/validate';
 import {
   EmptyNode,
   FunctionExpressionNode,
@@ -20,9 +10,7 @@ import {
   SyntaxNode,
 } from '@/core/types/nodes';
 
-export {
-  extractNumericLiteral,
-} from '@/core/utils/expression';
+export { extractNumericLiteral } from '@/core/utils/expression';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {

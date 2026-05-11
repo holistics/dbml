@@ -1,9 +1,5 @@
-import {
-  NUMERIC_LITERAL_PREFIX,
-} from '@/constants';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
+import { NUMERIC_LITERAL_PREFIX } from '@/constants';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ArrayNode,
   AttributeNode,
@@ -27,19 +23,13 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
   ElementKind,
   SettingName,
 } from '../types/keywords';
-import {
-  ImportKind,
-} from '../types/symbol';
-import {
-  isHexChar,
-} from './chars';
+import { ImportKind } from '../types/symbol';
+import { isHexChar } from './chars';
 import {
   destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression,
   extractStringFromIdentifierStream,

@@ -1,19 +1,9 @@
 import type Compiler from '@/compiler';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import type {
-  CompileError, CompileWarning,
-} from '@/core/types/errors';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  MarkerData, MarkerSeverity,
-} from '@/services/types';
+import { Filepath } from '@/core/types/filepath';
+import type { CompileError, CompileWarning } from '@/core/types/errors';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { MarkerData, MarkerSeverity } from '@/services/types';
 
 // This is the same format that dbdiagram-frontend uses
 export interface Diagnostic {

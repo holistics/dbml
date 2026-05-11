@@ -1,16 +1,8 @@
 import type Compiler from '@/compiler';
-import type {
-  Database, MasterDatabase,
-} from '@/core/types/schemaJson';
-import type {
-  CompileError, CompileWarning,
-} from '@/core/types/errors';
-import {
-  Filepath, type FilepathId,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import type { Database, MasterDatabase } from '@/core/types/schemaJson';
+import type { CompileError, CompileWarning } from '@/core/types/errors';
+import { Filepath, type FilepathId } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
 import Report from '@/core/types/report';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {

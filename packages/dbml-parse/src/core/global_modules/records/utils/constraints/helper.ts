@@ -1,22 +1,10 @@
 import type Compiler from '@/compiler/index';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import type {
-  RecordValue,
-} from '@/core/types/schemaJson';
-import type {
-  TableRecord,
-} from '@/core/types/schemaJson';
-import {
-  isSerialType,
-} from '@/core/global_modules/records/utils/data';
-import type {
-  ColumnSymbol,
-} from '@/core/types/symbol';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import type { RecordValue } from '@/core/types/schemaJson';
+import type { TableRecord } from '@/core/types/schemaJson';
+import { isSerialType } from '@/core/global_modules/records/utils/data';
+import type { ColumnSymbol } from '@/core/types/symbol';
 
 export interface ColumnInfo {
   name: string;

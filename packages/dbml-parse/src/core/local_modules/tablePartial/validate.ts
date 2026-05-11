@@ -1,13 +1,7 @@
-import {
-  forIn, last, partition,
-} from 'lodash-es';
+import { forIn, last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -21,12 +15,8 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
-  isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode,
-} from '@/core/utils/validate';
+import { extractVariableFromExpression } from '@/core/utils/expression';
+import { isExpressionAQuotedString, isExpressionAVariableNode, isExpressionAnIdentifierNode } from '@/core/utils/validate';
 import {
   Settings,
   aggregateSettingList,

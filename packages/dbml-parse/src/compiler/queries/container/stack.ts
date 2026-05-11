@@ -1,12 +1,6 @@
-import {
-  findLastIndex, last,
-} from 'lodash-es';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  getMemberChain,
-} from '@/core/parser/utils';
+import { findLastIndex, last } from 'lodash-es';
+import { type Filepath } from '@/core/types/filepath';
+import { getMemberChain } from '@/core/parser/utils';
 import {
   BlockExpressionNode,
   CommaExpressionNode,
@@ -19,12 +13,8 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  isOffsetWithinSpan,
-} from '@/core/utils/span';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 import type Compiler from '../../index';
 
 export function containerStack (

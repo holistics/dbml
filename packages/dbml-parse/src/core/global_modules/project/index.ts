@@ -1,36 +1,20 @@
 import type Compiler from '@/compiler/index';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import { ElementKind } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
+import { ElementDeclarationNode } from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import type {
-  GlobalModule,
-} from '../types';
+import type { SyntaxToken } from '@/core/types/tokens';
+import type { GlobalModule } from '../types';
 import ProjectBinder from './bind';
-import {
-  isElementNode,
-} from '@/core/utils/validate';
+import { isElementNode } from '@/core/utils/validate';
 import {
   type Filepath,
   type NodeMetadata,
   type Project,
   ProjectMetadata,
 } from '@/core/types';
-import {
-  ProjectInterpreter,
-} from './interpret';
+import { ProjectInterpreter } from './interpret';
 
 export const projectModule: GlobalModule = {
   nodeMetadata (compiler: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<PassThrough> {

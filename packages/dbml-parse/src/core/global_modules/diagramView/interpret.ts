@@ -1,13 +1,7 @@
-import {
-  partition, uniqBy,
-} from 'lodash-es';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
+import { partition, uniqBy } from 'lodash-es';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '@/compiler';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
+import type { Filepath } from '@/core/types/filepath';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -17,20 +11,14 @@ import type {
   CompileError,
   DiagramView,
 } from '@/core/types';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { UNHANDLED } from '@/core/types/module';
 import Report from '@/core/types/report';
 import {
   type DiagramViewSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
-import {
-  isWildcardExpression,
-} from '@/core/utils/validate';
+import { destructureComplexVariable } from '@/core/utils/expression';
+import { isWildcardExpression } from '@/core/utils/validate';
 
 export class DiagramViewInterpreter {
   private compiler: Compiler;

@@ -15,23 +15,15 @@ import type {
   TablePartialSymbol,
   TableSymbol,
 } from '../symbol';
-import type {
-  Internable,
-} from '../internable';
-import {
-  UNHANDLED,
-} from '../module';
-import {
-  ElementKind,
-} from '../keywords';
+import type { Internable } from '../internable';
+import { UNHANDLED } from '../module';
+import { ElementKind } from '../keywords';
 import {
   getBody,
   destructureComplexVariableTuple,
   destructureCallExpression,
 } from '@/core/utils/expression';
-import {
-  TablePartial,
-} from '../schemaJson';
+import { TablePartial } from '../schemaJson';
 
 export enum MetadataKind {
   Ref = 'ref',

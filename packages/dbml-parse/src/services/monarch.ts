@@ -456,6 +456,4 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
   },
 };
 
-export {
-  dbmlMonarchTokensProvider,
-};
+export { dbmlMonarchTokensProvider };

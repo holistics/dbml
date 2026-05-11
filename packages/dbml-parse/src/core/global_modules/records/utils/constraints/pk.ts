@@ -2,20 +2,14 @@ import {
   compact, difference, flatMap, filter, groupBy, isEmpty, keyBy, partition,
 } from 'lodash-es';
 import type Compiler from '@/compiler/index';
-import {
-  CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import { CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import type { SyntaxNode } from '@/core/types/nodes';
 import type {
   Index,
   RecordValue,
   TableRecord,
 } from '@/core/types/schemaJson';
-import {
-  TableSymbol,
-} from '@/core/types/symbol';
+import { TableSymbol } from '@/core/types/symbol';
 import {
   type ColumnInfo,
   columnInfoFromSymbol,
