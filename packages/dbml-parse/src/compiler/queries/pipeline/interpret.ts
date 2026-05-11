@@ -32,7 +32,7 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
   // Collect all reachable files from all entry points
   const visited = new Set<FilepathId>();
   const allFiles: Filepath[] = [];
-  for (const entry of this.layout.getEntryPoints()) {
+  for (const entry of this.layout.getEntrypoints()) {
     for (const file of this.reachableFiles(entry)) {
       const id = file.intern();
       if (visited.has(id)) continue;

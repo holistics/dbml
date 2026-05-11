@@ -25,7 +25,7 @@ export function bindFile (this: Compiler, filepath: Filepath): Report<void> {
 }
 
 export function bindProject (this: Compiler): Map<string, Report<void>> {
-  const deps = collectTransitiveDependencies(this, this.layout.getEntryPoints());
+  const deps = collectTransitiveDependencies(this, this.layout.getEntrypoints());
 
   const result = new Map<string, Report<void>>();
 

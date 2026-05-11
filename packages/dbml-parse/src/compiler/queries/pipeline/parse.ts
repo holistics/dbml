@@ -36,7 +36,7 @@ export function parseFile (this: Compiler, filepath: Filepath): Report<FileParse
 }
 
 export function parseProject (this: Compiler): Map<string, Report<FileParseIndex>> {
-  const deps = collectTransitiveDependencies(this, this.layout.getEntryPoints());
+  const deps = collectTransitiveDependencies(this, this.layout.getEntrypoints());
 
   const result = new Map<string, Report<FileParseIndex>>();
 

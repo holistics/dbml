@@ -24,7 +24,7 @@ export interface DbmlProjectLayout {
 
   listDirectory (dirPath?: Filepath): Filepath[];
 
-  getEntryPoints (): Filepath[];
+  getEntrypoints (): Filepath[];
 
   // Returns a deep copy of the layout. Mutations on the returned layout do
   // not affect the source.
@@ -92,7 +92,7 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
     ].sort().map(Filepath.from);
   }
 
-  getEntryPoints (): Filepath[] {
+  getEntrypoints (): Filepath[] {
     return [
       ...this.files.keys(),
     ]

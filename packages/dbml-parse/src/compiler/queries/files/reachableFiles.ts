@@ -10,7 +10,7 @@ export function reachableFiles (this: Compiler, entry?: Filepath): Filepath[] {
     ? [
         entry,
       ]
-    : this.layout.getEntryPoints();
+    : this.layout.getEntrypoints();
   let head = 0;
 
   while (head < queue.length) {

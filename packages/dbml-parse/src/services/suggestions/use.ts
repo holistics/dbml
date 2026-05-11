@@ -240,7 +240,7 @@ function suggestUseFilepath (
   const childContainsMatch = new Map<string, boolean>();
 
   // Scan all reachable files
-  const allFilepaths = uniqBy(compiler.layout.getEntryPoints().flatMap((f) => [
+  const allFilepaths = uniqBy(compiler.layout.getEntrypoints().flatMap((f) => [
     ...compiler.reachableFiles(f),
   ]), (p) => p.intern());
   for (const filepath of allFilepaths) {

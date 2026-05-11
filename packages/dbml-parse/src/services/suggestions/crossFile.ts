@@ -30,7 +30,7 @@ export function collectCrossFileSuggestions (
   const seen = new Set<string>();
   const currentContent = compiler.layout.getSource(currentFilepath) ?? '';
 
-  for (const fp of compiler.layout.getEntryPoints()) {
+  for (const fp of compiler.layout.getEntrypoints()) {
     if (fp.equals(currentFilepath)) continue;
     const usable = compiler.usableMembers(fp).getFiltered(UNHANDLED);
     if (!usable) continue;

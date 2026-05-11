@@ -111,7 +111,7 @@ export class NodeProjectLayout implements DbmlProjectLayout {
     return [...results].sort().map(Filepath.from);
   }
 
-  getEntryPoints (): Filepath[] {
+  getEntrypoints (): Filepath[] {
     return this.entryPoints.filter((fp) => this.exists(fp));
   }
 
