@@ -7,7 +7,6 @@ import {
   SettingName,
 } from '@/core/types/keywords';
 import {
-  MetadataKind,
   PartialRefMetadata,
   RefMetadata,
 } from '@/core/types/symbol/metadata';
@@ -25,7 +24,7 @@ import type {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Ref, SchemaElement,
+  SchemaElement,
 } from '@/core/types/schemaJson';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind,
@@ -47,12 +46,8 @@ import type {
   GlobalModule,
 } from '../types';
 import {
-  getMultiplicities,
   nodeRefereeOfLeftExpression,
 } from '../utils';
-import {
-  getTokenPosition,
-} from '@/core/utils/interpret';
 import RefBinder from './bind';
 import {
   RefInterpreter,
