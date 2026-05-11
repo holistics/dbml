@@ -1,6 +1,4 @@
-import type {
-  Filepath,
-} from '@/core/types/filepath';
+import type { Filepath } from '@/core/types/filepath';
 import Report from '@/core/types/report';
 import type Compiler from '../../index';
 

@@ -1,29 +1,17 @@
 import type Compiler from '@/compiler';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
-import {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import { ElementKind } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
+import { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
-import {
-  type LocalModule, type Settings,
-} from '../types';
+import { destructureComplexVariable } from '@/core/utils/expression';
+import { type LocalModule, type Settings } from '../types';
 import ProjectValidator from './validate';
 import {
   isElementFieldNode,
   isElementNode,
   isSimpleName,
 } from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types';
+import { CompileError, CompileErrorCode } from '@/core/types';
 
 export const projectModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

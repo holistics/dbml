@@ -1,15 +1,7 @@
-import {
-  nodeReferee,
-} from '@/core/global_modules';
-import {
-  getMemberChain,
-} from '@/core/parser/utils';
-import type {
-  NodeMetadata,
-} from '@/core/types/symbol/metadata';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { nodeReferee } from '@/core/global_modules';
+import { getMemberChain } from '@/core/parser/utils';
+import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import { UNHANDLED } from '@/core/types/module';
 import {
   SyntaxNode,
   type InfixExpressionNode,
@@ -21,9 +13,7 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import {
-  isAccessExpression, isExpressionAVariableNode,
-} from '@/core/utils/validate';
+import { isAccessExpression, isExpressionAVariableNode } from '@/core/utils/validate';
 import type Compiler from '../index';
 
 export interface ResolutionIndex {

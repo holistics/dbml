@@ -1,6 +1,4 @@
-import {
-  Filepath,
-} from '@/core/types/filepath';
+import { Filepath } from '@/core/types/filepath';
 
 // A snapshot of the project layout
 // The underlying filesystem is not modified you use `setSource`, `deleteSource`, `clearSource`

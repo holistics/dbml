@@ -1,48 +1,28 @@
 import type Compiler from '@/compiler/index';
-import {
-  addDoubleQuoteIfNeeded,
-} from '@/compiler/queries/utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
+import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   ElementDeclarationNode,
   PrimaryExpressionNode,
   VariableNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
+import type { SchemaElement } from '@/core/types/schemaJson';
 import {
   NodeSymbol, SchemaSymbol, SymbolKind, TableGroupFieldSymbol, TableGroupSymbol,
 } from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import type { SyntaxToken } from '@/core/types/tokens';
 import {
   extractVarNameFromPrimaryVariable,
   getBody,
 } from '@/core/utils/expression';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  nodeRefereeOfLeftExpression, shouldInterpretNode,
-} from '../utils';
+import type { GlobalModule } from '../types';
+import { nodeRefereeOfLeftExpression, shouldInterpretNode } from '../utils';
 import TableGroupBinder from './bind';
-import {
-  TableGroupInterpreter,
-} from './interpret';
+import { TableGroupInterpreter } from './interpret';
 import {
   isAccessExpression,
   isElementFieldNode, isElementNode,
@@ -50,9 +30,7 @@ import {
   isInsideElementBody,
   isInsideSettingList,
 } from '@/core/utils/validate';
-import type {
-  Filepath,
-} from '@/core/types';
+import type { Filepath } from '@/core/types';
 
 // Public utils that other modules can use
 export const tableGroupUtils = {

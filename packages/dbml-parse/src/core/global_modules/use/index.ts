@@ -1,32 +1,18 @@
-import Compiler, {
-  addDoubleQuoteIfNeeded,
-} from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  Filepath, resolveImportFilepath,
-} from '@/core/types/filepath';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
+import Compiler, { addDoubleQuoteIfNeeded } from '@/compiler';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
-import {
-  NodeSymbol, SymbolKind, UseSymbol,
-} from '@/core/types/symbol';
+import type { SchemaElement } from '@/core/types/schemaJson';
+import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
 import {
   destructureComplexVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import {
-  GlobalModule,
-} from '../types';
+import { GlobalModule } from '../types';
 import {
   isAccessExpression,
   isDotDelimitedIdentifier, isExpressionAVariableNode, isUseDeclaration, isUseSpecifier,

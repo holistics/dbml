@@ -7,19 +7,11 @@ import {
   tryExtractNumeric,
   tryExtractString,
 } from '@/core/global_modules/records/utils/data';
-import {
-  Filepath, FilepathId,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { Filepath, FilepathId } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
 import Report from '@/core/types/report';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import {
-  isAlphaOrUnderscore, isDigit,
-} from '@/core/utils/chars';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
+import { isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 import Compiler from '..';
 
 /**

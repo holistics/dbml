@@ -1,33 +1,13 @@
-import {
-  flatten, zip,
-} from 'lodash-es';
-import {
-  getTokenFullEnd, getTokenFullStart,
-} from '@/core/lexer/utils';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  type Internable,
-} from '@/core/types/internable';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  ImportKind,
-} from '@/core/types/symbol';
-import {
-  Position,
-} from '@/core/types/position';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  isReuseKeyword,
-} from '@/core/utils/tokens';
-import {
-  SymbolKind,
-} from './symbol';
+import { flatten, zip } from 'lodash-es';
+import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
+import { Filepath } from '@/core/types/filepath';
+import { type Internable } from '@/core/types/internable';
+import { ElementKind } from '@/core/types/keywords';
+import { ImportKind } from '@/core/types/symbol';
+import { Position } from '@/core/types/position';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { isReuseKeyword } from '@/core/utils/tokens';
+import { SymbolKind } from './symbol';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;

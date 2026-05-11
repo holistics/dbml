@@ -1,19 +1,11 @@
-import {
-  partition,
-} from 'lodash-es';
+import { partition } from 'lodash-es';
 import {
   destructureComplexVariable,
   extractQuotedStringToken,
 } from '@/core/utils/expression';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  SymbolKind,
-} from '@/core/types/symbol';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
+import { UNHANDLED } from '@/core/types/module';
+import { SymbolKind } from '@/core/types/symbol';
+import { aggregateSettingList } from '@/core/utils/validate';
 import {
   CompileError,
   CompileErrorCode,
@@ -25,9 +17,7 @@ import {
   type ListExpressionNode,
   type SyntaxNode,
 } from '@/core/types/nodes';
-import type {
-  TableGroup,
-} from '@/core/types/schemaJson';
+import type { TableGroup } from '@/core/types/schemaJson';
 import type Compiler from '@/compiler';
 import type {
   Filepath,

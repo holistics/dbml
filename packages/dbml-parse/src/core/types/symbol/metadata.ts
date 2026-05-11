@@ -15,16 +15,9 @@ import type {
   TablePartialSymbol,
   TableSymbol,
 } from '../symbol';
-import type {
-  Internable,
-} from '../internable';
-import {
-  UNHANDLED,
-} from '../module';
-import {
-  ElementKind,
-  SettingName,
-} from '../keywords';
+import type { Internable } from '../internable';
+import { UNHANDLED } from '../module';
+import { ElementKind, SettingName } from '../keywords';
 import {
   getBody,
   destructureComplexVariableTuple,

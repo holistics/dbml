@@ -1,13 +1,7 @@
 import Compiler from '@/compiler/index';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
+import { UNHANDLED } from '@/core/types/module';
 import {
   type BlockExpressionNode,
   CommaExpressionNode,
@@ -22,9 +16,7 @@ import type {
   RecordValue,
   TableRecord,
 } from '@/core/types/schemaJson';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
+import type { Filepath } from '@/core/types/filepath';
 import {
   type ColumnSymbol,
   type NodeSymbol,
@@ -32,12 +24,8 @@ import {
   SymbolKind,
   TableSymbol,
 } from '@/core/types/symbol';
-import {
-  destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
-  getTokenPosition,
-} from '@/core/utils/interpret';
+import { destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils/expression';
+import { getTokenPosition } from '@/core/utils/interpret';
 import {
   getRecordValueType,
   isBooleanType,
@@ -55,9 +43,7 @@ import {
   tryExtractDateTime,
   tryExtractString,
 } from './utils/data/values';
-import {
-  isExpressionAVariableNode,
-} from '@/core/utils/validate';
+import { isExpressionAVariableNode } from '@/core/utils/validate';
 
 export default class RecordsInterpreter {
   private compiler: Compiler;

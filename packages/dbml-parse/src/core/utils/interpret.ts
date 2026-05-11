@@ -1,20 +1,12 @@
 import type Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import type {
-  ColumnType, TokenPosition,
-} from '@/core/types/schemaJson';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import type { ColumnType, TokenPosition } from '@/core/types/schemaJson';
 import {
   ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  SyntaxTokenKind,
-} from '@/core/types/tokens';
+import { SyntaxTokenKind } from '@/core/types/tokens';
 import {
   destructureComplexVariable, destructureMemberAccessExpression,
   extractQuotedStringToken, extractVariableFromExpression,

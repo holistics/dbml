@@ -14,69 +14,35 @@ import {
   Filepath,
   FilepathId,
 } from '@/core/types/filepath';
-import {
-  type Internable, type Primitive, intern,
-} from '@/core/types/internable';
-import {
-  SyntaxNode, SyntaxNodeIdGenerator,
-} from '@/core/types/nodes';
-import {
-  NodeSymbolIdGenerator, SymbolFactory,
-} from '@/core/types/symbol';
+import { type Internable, type Primitive, intern } from '@/core/types/internable';
+import { SyntaxNode, SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import { NodeSymbolIdGenerator, SymbolFactory } from '@/core/types/symbol';
 import {
   DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
 } from '@/services/index';
-import {
-  type DbmlProjectLayout, MemoryProjectLayout,
-} from './projectLayout';
+import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
 import {
   containerElement, containerScope, containerScopeKind, containerStack, containerToken,
 } from './queries/container';
-import {
-  canonicalName,
-} from './queries/canonicalName';
-import {
-  fileDependencies,
-} from './queries/files/fileDependencies';
-import {
-  reachableFiles,
-} from './queries/files/reachableFiles';
-import {
-  usableMembers,
-} from './queries/files/usableMembers';
+import { canonicalName } from './queries/canonicalName';
+import { fileDependencies } from './queries/files/fileDependencies';
+import { reachableFiles } from './queries/files/reachableFiles';
+import { usableMembers } from './queries/files/usableMembers';
 import {
   ast, errors, publicSymbolTable, rawDb, tokens, warnings,
 } from './queries/legacy/parse';
-import {
-  flatStream, invalidStream,
-} from './queries/legacy/token';
-import {
-  nodeAtPosition,
-} from './queries/nodeAtPosition';
-import {
-  bindFile, bindProject,
-} from './queries/pipeline/bind';
-import {
-  interpretFile, interpretProject,
-} from './queries/pipeline/interpret';
-import {
-  validateFile,
-} from './queries/pipeline/validate';
-import {
-  parseFile, parseProject,
-} from './queries/pipeline/parse';
-import {
-  lookupMembers,
-} from './queries/symbol/lookupMembers';
-import {
-  symbolAliases,
-} from './queries/symbol/symbolAliases';
+import { flatStream, invalidStream } from './queries/legacy/token';
+import { nodeAtPosition } from './queries/nodeAtPosition';
+import { bindFile, bindProject } from './queries/pipeline/bind';
+import { interpretFile, interpretProject } from './queries/pipeline/interpret';
+import { validateFile } from './queries/pipeline/validate';
+import { parseFile, parseProject } from './queries/pipeline/parse';
+import { lookupMembers } from './queries/symbol/lookupMembers';
+import { symbolAliases } from './queries/symbol/symbolAliases';
 import {
   resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
 } from './queries/resolutionIndex';
-import {
-  symbolUses,
-} from './queries/symbol/symbolUses';
+import { symbolUses } from './queries/symbol/symbolUses';
 import {
   type DiagramViewBlock,
   findDiagramViewBlocks,
@@ -85,17 +51,11 @@ import {
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
 } from './queries/utils';
-import {
-  DEFAULT_ENTRY,
-} from '@/constants';
+import { DEFAULT_ENTRY } from '@/constants';
 
 // Re-export types
-export {
-  ScopeKind,
-} from './types';
-export type {
-  DiagramViewBlock, TableNameInput, TextEdit,
-} from './queries/transform';
+export { ScopeKind } from './types';
+export type { DiagramViewBlock, TableNameInput, TextEdit } from './queries/transform';
 // Re-export utilities
 export {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,

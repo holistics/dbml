@@ -1,10 +1,6 @@
 import type Compiler from '@/compiler';
-import type {
-  CompileError,
-} from '@/core/types/errors';
-import type {
-  ElementDeclarationNode,
-} from '@/core/types/nodes';
+import type { CompileError } from '@/core/types/errors';
+import type { ElementDeclarationNode } from '@/core/types/nodes';
 
 export default class ChecksBinder {
   private compiler: Compiler;

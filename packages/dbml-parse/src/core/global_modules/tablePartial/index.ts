@@ -1,39 +1,23 @@
 import type Compiler from '@/compiler/index';
-import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
+import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import type { Filepath } from '@/core/types/filepath';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   ElementDeclarationNode,
   InfixExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
+import type { SchemaElement } from '@/core/types/schemaJson';
 import {
   ColumnSymbol,
   NodeSymbol,
   SymbolKind,
   TablePartialSymbol,
 } from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import type { SyntaxToken } from '@/core/types/tokens';
 import {
   extractVarNameFromPrimaryVariable,
   getBody,
@@ -47,19 +31,11 @@ import {
   isInsideSettingValue,
   isWithinNthArgOfField,
 } from '@/core/utils/validate';
-import {
-  tableUtils,
-} from '../table';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  nodeRefereeOfLeftExpression,
-} from '../utils';
+import { tableUtils } from '../table';
+import type { GlobalModule } from '../types';
+import { nodeRefereeOfLeftExpression } from '../utils';
 import TablePartialBinder from './bind';
-import {
-  TablePartialInterpreter,
-} from './interpret';
+import { TablePartialInterpreter } from './interpret';
 
 // Public utils that other modules can use
 export const tablePartialUtils = {

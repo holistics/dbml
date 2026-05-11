@@ -1,18 +1,8 @@
-import {
-  getMemberChain,
-} from '@/core/parser/utils';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  isOffsetWithinSpan,
-} from '@/core/utils/span';
+import { getMemberChain } from '@/core/parser/utils';
+import { type Filepath } from '@/core/types/filepath';
+import { SyntaxNode } from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 import type Compiler from '../index';
 
 export function nodeAtPosition (this: Compiler, filepath: Filepath, offset: number): SyntaxNode | SyntaxToken | undefined {

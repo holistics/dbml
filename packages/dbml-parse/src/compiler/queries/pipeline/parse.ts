@@ -1,19 +1,11 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import type {
-  ProgramNode,
-} from '@/core/types/nodes';
+import type { Filepath } from '@/core/types/filepath';
+import type { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import type { SyntaxToken } from '@/core/types/tokens';
 import type Compiler from '../../index';
-import {
-  collectTransitiveDependencies,
-} from '../utils';
+import { collectTransitiveDependencies } from '../utils';
 
 export type FileParseIndex = {
   readonly path: Readonly<Filepath>;

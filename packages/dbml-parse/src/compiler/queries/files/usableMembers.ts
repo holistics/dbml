@@ -1,16 +1,8 @@
 import type Compiler from '@/compiler';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  useUtils,
-} from '@/core/global_modules/use';
-import {
-  Filepath, resolveImportFilepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { useUtils } from '@/core/global_modules/use';
+import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
 import {
   ElementDeclarationNode, UseDeclarationNode, UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';

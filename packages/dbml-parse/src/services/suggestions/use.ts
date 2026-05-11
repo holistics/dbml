@@ -1,28 +1,14 @@
 import Compiler from '@/compiler';
-import {
-  Filepath, resolveImportFilepath,
-} from '@/core/types/filepath';
-import {
-  ImportKind,
-} from '@/core/types/symbol';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import { ImportKind } from '@/core/types/symbol';
+import { UNHANDLED } from '@/core/types/module';
 import {
   UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';
-import {
-  SymbolKind,
-} from '@/core/types/symbol';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
-  isOffsetWithinSpan,
-} from '@/core/utils/span';
+import { SymbolKind } from '@/core/types/symbol';
+import { SyntaxToken } from '@/core/types/tokens';
+import { extractVariableFromExpression } from '@/core/utils/expression';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
   noSuggestions, pickCompletionItemKind, prependSpace, shouldPrependSpace,
 } from '@/services/suggestions/utils';
@@ -33,15 +19,9 @@ import {
   type CompletionList,
   type TextModel,
 } from '@/services/types';
-import {
-  getEditorRange,
-} from '../utils';
-import {
-  uniqBy,
-} from 'lodash-es';
-import {
-  DBML_EXT,
-} from '@/constants';
+import { getEditorRange } from '../utils';
+import { uniqBy } from 'lodash-es';
+import { DBML_EXT } from '@/constants';
 
 // Use-declaration completions. Returns null if cursor not inside a use statement.
 export function suggestUseCompletion (

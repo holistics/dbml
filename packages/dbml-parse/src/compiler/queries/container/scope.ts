@@ -1,12 +1,6 @@
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  NodeSymbol,
-} from '@/core/types/symbol';
+import { type Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import { NodeSymbol } from '@/core/types/symbol';
 import type Compiler from '../../index';
 
 // @deprecated - returns the members of the element at offset

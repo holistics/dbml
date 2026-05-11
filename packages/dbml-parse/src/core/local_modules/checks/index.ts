@@ -1,24 +1,14 @@
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, PassThrough,
-} from '@/core/types/module';
-import {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
+import { PASS_THROUGH, PassThrough } from '@/core/types/module';
+import { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
   isElementNode,
   Settings,
 } from '@/core/utils/validate';
-import {
-  LocalModule,
-} from '../types';
+import { LocalModule } from '../types';
 import ChecksValidator from './validate';
 
 export const checksModule: LocalModule = {

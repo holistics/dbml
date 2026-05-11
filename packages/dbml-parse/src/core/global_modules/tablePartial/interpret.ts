@@ -1,13 +1,7 @@
-import {
-  head, last, partition,
-} from 'lodash-es';
+import { head, last, partition } from 'lodash-es';
 import Compiler from '@/compiler/index';
-import {
-  CompileError,
-} from '@/core/types/errors';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
+import { CompileError } from '@/core/types/errors';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -21,28 +15,16 @@ import type {
   Check, Column, Index, InlineRef,
   SchemaElement, TablePartial,
 } from '@/core/types/schemaJson';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import type {
-  ColumnSymbol, TablePartialSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  extractQuotedStringToken, extractVarNameFromPrimaryVariable,
-} from '@/core/utils/expression';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
+import type { Filepath } from '@/core/types/filepath';
+import type { ColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
+import { extractQuotedStringToken, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
+import { aggregateSettingList } from '@/core/utils/validate';
 import {
   extractColor, extractElementName, getTokenPosition,
   normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  PartialRefMetadata,
-} from '@/core/types/symbol/metadata';
+import { UNHANDLED } from '@/core/types/module';
+import { PartialRefMetadata } from '@/core/types/symbol/metadata';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;

@@ -1,13 +1,7 @@
 import type Compiler from '@/compiler/index';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  SymbolKind,
-} from '@/core/types/symbol';
+import { Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import { SymbolKind } from '@/core/types/symbol';
 import {
   type CompletionItem,
   CompletionItemInsertTextRule,

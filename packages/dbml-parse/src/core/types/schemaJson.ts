@@ -1,9 +1,5 @@
-import type {
-  Filepath,
-} from './filepath';
-import type {
-  Position,
-} from './position';
+import type { Filepath } from './filepath';
+import type { Position } from './position';
 
 export enum AliasKind {
   Table = 'table',

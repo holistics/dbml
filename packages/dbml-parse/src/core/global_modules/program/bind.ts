@@ -1,13 +1,7 @@
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { UNHANDLED } from '@/core/types/module';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -18,12 +12,8 @@ import {
   TupleExpressionNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  type NodeSymbol, SchemaSymbol,
-} from '@/core/types/symbol';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
+import { SyntaxToken } from '@/core/types/tokens';
 import {
   isRelationshipOp,
   isBinaryRelationship,

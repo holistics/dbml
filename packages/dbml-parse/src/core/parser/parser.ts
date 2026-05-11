@@ -1,24 +1,14 @@
-import {
-  last,
-} from 'lodash-es';
-import {
-  hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine,
-} from '@/core/lexer/utils';
-import {
-  ParsingContext, ParsingContextStack,
-} from '@/core/parser/contextStack';
+import { last } from 'lodash-es';
+import { hasTrailingNewLines, hasTrailingSpaces, isAtStartOfLine } from '@/core/lexer/utils';
+import { ParsingContext, ParsingContextStack } from '@/core/parser/contextStack';
 import NodeFactory from '@/core/parser/factory';
 import {
   convertFuncAppToElem,
   getMemberChain,
   markInvalid,
 } from '@/core/parser/utils';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  Filepath,
-} from '@/core/types/filepath';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { Filepath } from '@/core/types/filepath';
 import {
   ArrayNode,
   AttributeNode,
@@ -50,9 +40,7 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  SyntaxToken, SyntaxTokenKind, isOpToken,
-} from '@/core/types/tokens';
+import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/types/tokens';
 import {
   isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword,
 } from '../utils/tokens';

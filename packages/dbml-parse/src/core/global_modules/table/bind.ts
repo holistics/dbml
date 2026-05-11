@@ -1,33 +1,19 @@
-import {
-  last, partition,
-} from 'lodash-es';
+import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
-import {
-  CompileError,
-} from '@/core/types/errors';
+import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import { CompileError } from '@/core/types/errors';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  InfixExpressionNode,
-} from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  destructureComplexVariableTuple,
-} from '@/core/utils/expression';
+import { InfixExpressionNode } from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import {
   isAccessExpression,
   isExpressionAQuotedString, isExpressionAVariableNode,
   aggregateSettingList, isValidPartialInjection,
 } from '@/core/utils/validate';
-import {
-  scanNonListNodeForBinding,
-} from '../utils';
+import { scanNonListNodeForBinding } from '../utils';
 
 export default class TableBinder {
   private compiler: Compiler;

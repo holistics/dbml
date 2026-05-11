@@ -1,19 +1,9 @@
-import {
-  last,
-} from 'lodash-es';
+import { last } from 'lodash-es';
 import type Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
-import {
-  AttributeNode, ListExpressionNode, SyntaxNode,
-} from '@/core/types/nodes';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
+import { AttributeNode, ListExpressionNode, SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
   destructureComplexVariable,
@@ -22,13 +12,9 @@ import {
 import {
   aggregateSettingList, isElementFieldNode, isElementNode, isExpressionAQuotedString, isValidName,
 } from '@/core/utils/validate';
-import {
-  type LocalModule, type Settings,
-} from '../types';
+import { type LocalModule, type Settings } from '../types';
 import EnumValidator from './validate';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export const enumModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

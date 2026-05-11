@@ -1,27 +1,15 @@
-import {
-  partition,
-} from 'lodash-es';
+import { partition } from 'lodash-es';
 import type Compiler from '@/compiler';
-import type {
-  CompileError,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
+import type { CompileError } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import {
   BlockExpressionNode,
   type ElementDeclarationNode,
   FunctionApplicationNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  isWildcardExpression,
-} from '@/core/utils/validate';
-import {
-  scanNonListNodeForBinding,
-} from '../utils';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { isWildcardExpression } from '@/core/utils/validate';
+import { scanNonListNodeForBinding } from '../utils';
 
 export default class DiagramViewBinder {
   private compiler: Compiler;

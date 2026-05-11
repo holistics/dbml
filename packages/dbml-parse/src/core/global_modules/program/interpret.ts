@@ -1,26 +1,14 @@
 import Compiler from '@/compiler/index';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import type {
-  CompileWarning,
-} from '@/core/types/errors';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  ProgramNode,
-} from '@/core/types/nodes';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import type { CompileWarning } from '@/core/types/errors';
+import type { Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
   Alias, Database, DiagramView, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
-import {
-  AliasKind,
-} from '@/core/types/schemaJson';
+import { AliasKind } from '@/core/types/schemaJson';
 import {
   AliasSymbol,
   type NodeSymbol,
@@ -28,38 +16,20 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import {
-  MetadataKind, PartialRefMetadata, RecordsMetadata,
-} from '@/core/types/symbol/metadata';
-import {
-  TableSymbol,
-} from '@/core/types/symbol';
-import type {
-  InternedNodeSymbol,
-} from '@/core/types/symbol/symbols';
+import { MetadataKind, PartialRefMetadata, RecordsMetadata } from '@/core/types/symbol/metadata';
+import { TableSymbol } from '@/core/types/symbol';
+import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
   InjectedColumnSymbol,
   TablePartialSymbol,
   UseSymbol,
 } from '@/core/types/symbol/symbols';
-import {
-  pushExternal,
-} from './utils';
-import type {
-  ElementRef,
-} from '@/core/types/schemaJson';
-import {
-  validateForeignKeys, validatePrimaryKey, validateUnique,
-} from '../records/utils/constraints';
-import type {
-  TableInfo,
-} from '../records/utils/constraints/fk';
-import {
-  getTokenPosition,
-} from '@/core/utils/interpret';
-import {
-  getMultiplicities,
-} from '../utils';
+import { pushExternal } from './utils';
+import type { ElementRef } from '@/core/types/schemaJson';
+import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../records/utils/constraints';
+import type { TableInfo } from '../records/utils/constraints/fk';
+import { getTokenPosition } from '@/core/utils/interpret';
+import { getMultiplicities } from '../utils';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;

@@ -1,6 +1,4 @@
-import {
-  last,
-} from 'lodash-es';
+import { last } from 'lodash-es';
 import {
   isAccessExpression,
   isExpressionAQuotedString,
@@ -21,9 +19,7 @@ import {
   TupleExpressionNode,
   VariableNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 
 export function extractVariableNode (value?: unknown): SyntaxToken | undefined {
   if (isExpressionAVariableNode(value)) {

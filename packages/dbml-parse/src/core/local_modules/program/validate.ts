@@ -1,10 +1,6 @@
 import Compiler from '@/compiler';
-import type {
-  CompileError, CompileWarning,
-} from '@/core/types/errors';
-import {
-  ProgramNode,
-} from '@/core/types/nodes';
+import type { CompileError, CompileWarning } from '@/core/types/errors';
+import { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 
 export default class ProgramValidator {

@@ -1,10 +1,6 @@
 import type Compiler from '@/compiler';
-import type {
-  CompileError,
-} from '@/core/types/errors';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import type { CompileError } from '@/core/types/errors';
+import { UNHANDLED } from '@/core/types/module';
 import {
   BlockExpressionNode,
   type ElementDeclarationNode,
@@ -15,18 +11,10 @@ import Report from '@/core/types/report';
 import type {
   Enum, Project, SchemaElement, Table, TableGroup, TablePartial,
 } from '@/core/types/schemaJson';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  extractQuotedStringToken,
-} from '@/core/utils/expression';
-import {
-  extractElementName, getTokenPosition, normalizeNote,
-} from '@/core/utils/interpret';
-import {
-  ElementKind,
-} from '@/core/types';
+import type { Filepath } from '@/core/types/filepath';
+import { extractQuotedStringToken } from '@/core/utils/expression';
+import { extractElementName, getTokenPosition, normalizeNote } from '@/core/utils/interpret';
+import { ElementKind } from '@/core/types';
 
 export class ProjectInterpreter {
   private compiler: Compiler;

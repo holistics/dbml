@@ -1,7 +1,5 @@
 import type Compiler from '@/compiler/index';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
+import type { Filepath } from '@/core/types/filepath';
 import {
   ElementKind,
   SettingName,
@@ -10,48 +8,26 @@ import {
   PartialRefMetadata,
   RefMetadata,
 } from '@/core/types/symbol/metadata';
-import type {
-  NodeMetadata,
-} from '@/core/types/symbol/metadata';
-import {
-  PASS_THROUGH, type PassThrough, UNHANDLED,
-} from '@/core/types/module';
+import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   AttributeNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, InfixExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
-import {
-  NodeSymbol, SchemaSymbol, SymbolKind,
-} from '@/core/types/symbol';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import type { SchemaElement } from '@/core/types/schemaJson';
+import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
+import type { SyntaxToken } from '@/core/types/tokens';
 import {
   extractStringFromIdentifierStream, getBody,
   extractVarNameFromPrimaryVariable,
 } from '@/core/utils/expression';
-import {
-  isAccessExpression, isElementNode, isExpressionAVariableNode,
-} from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types';
-import type {
-  GlobalModule,
-} from '../types';
-import {
-  nodeRefereeOfLeftExpression,
-} from '../utils';
+import { isAccessExpression, isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
+import { CompileError, CompileErrorCode } from '@/core/types';
+import type { GlobalModule } from '../types';
+import { nodeRefereeOfLeftExpression } from '../utils';
 import RefBinder from './bind';
-import {
-  RefInterpreter,
-} from './interpret';
+import { RefInterpreter } from './interpret';
 
 // Check if a node is a descendant of a Ref element's body (not its name/alias)
 function isInsideRefBody (node: SyntaxNode): boolean {

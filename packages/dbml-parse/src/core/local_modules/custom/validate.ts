@@ -1,16 +1,10 @@
 import Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  isExpressionAQuotedString,
-} from '@/core/utils/validate';
+import { isExpressionAQuotedString } from '@/core/utils/validate';
 
 export default class CustomValidator {
   private compiler: Compiler;

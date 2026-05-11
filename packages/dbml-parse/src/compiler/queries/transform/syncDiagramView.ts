@@ -1,27 +1,13 @@
-import {
-  DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME,
-} from '@/constants';
+import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  SyntaxNodeIdGenerator,
-} from '@/core/types/nodes';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
+import type { Filepath } from '@/core/types/filepath';
+import { ElementKind } from '@/core/types/keywords';
+import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import { destructureComplexVariable } from '@/core/utils/expression';
 import type Compiler from '../../index';
-import {
-  addDoubleQuoteIfNeeded,
-} from '../utils';
-import {
-  TextEdit, applyTextEdits,
-} from './applyTextEdits';
+import { addDoubleQuoteIfNeeded } from '../utils';
+import { TextEdit, applyTextEdits } from './applyTextEdits';
 
 export interface DiagramViewSyncOperation {
   operation: 'create' | 'update' | 'delete';

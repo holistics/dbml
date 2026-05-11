@@ -1,13 +1,7 @@
-import {
-  last,
-} from 'lodash-es';
+import { last } from 'lodash-es';
 import type Compiler from '@/compiler/index';
-import {
-  SettingName,
-} from '@/core/types/keywords';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { SettingName } from '@/core/types/keywords';
+import { UNHANDLED } from '@/core/types/module';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -15,22 +9,16 @@ import {
   FunctionApplicationNode,
   ListExpressionNode,
 } from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  Index, SchemaElement, TokenPosition,
-} from '@/core/types/schemaJson';
+import type { Index, SchemaElement, TokenPosition } from '@/core/types/schemaJson';
 import {
   destructureIndexNode,
   extractQuotedStringToken,
   extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import {
-  getTokenPosition,
-} from '@/core/utils/interpret';
+import { getTokenPosition } from '@/core/utils/interpret';
 
 export default class IndexesInterpreter {
   private compiler: Compiler;

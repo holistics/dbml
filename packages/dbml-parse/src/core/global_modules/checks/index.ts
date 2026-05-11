@@ -1,31 +1,15 @@
 import type Compiler from '@/compiler/index';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  TableChecksMetadata, MetadataKind,
-} from '@/core/types/symbol/metadata';
-import type {
-  NodeMetadata,
-} from '@/core/types/symbol/metadata';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode, type SyntaxNode,
-} from '@/core/types/nodes';
+import { ElementKind } from '@/core/types/keywords';
+import { TableChecksMetadata, MetadataKind } from '@/core/types/symbol/metadata';
+import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
+import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
-import type {
-  GlobalModule,
-} from '../types';
+import type { SchemaElement } from '@/core/types/schemaJson';
+import type { GlobalModule } from '../types';
 import ChecksBinder from './bind';
 import ChecksInterpreter from './interpret';
-import {
-  isElementNode,
-} from '@/core/utils/validate';
+import { isElementNode } from '@/core/utils/validate';
 
 export const checksModule: GlobalModule = {
   nodeMetadata (compiler: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<PassThrough> {

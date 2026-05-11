@@ -1,20 +1,10 @@
 import type Compiler from '@/compiler';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  PASS_THROUGH, type PassThrough,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode, SyntaxNode,
-} from '@/core/types/nodes';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
+import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  Settings,
-} from '@/core/utils/validate';
-import type {
-  LocalModule,
-} from '../types';
+import { Settings } from '@/core/utils/validate';
+import type { LocalModule } from '../types';
 import CustomValidator from './validate';
 
 function isCustomElement (node: SyntaxNode): node is ElementDeclarationNode {

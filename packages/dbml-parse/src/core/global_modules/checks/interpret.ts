@@ -1,23 +1,13 @@
 import Compiler from '@/compiler/index';
-import {
-  SettingName,
-} from '@/core/types/keywords';
+import { SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type {
-  SchemaElement,
-} from '@/core/types/schemaJson';
-import {
-  extractQuotedStringToken,
-} from '@/core/utils/expression';
-import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
-import {
-  getTokenPosition,
-} from '@/core/utils/interpret';
+import type { SchemaElement } from '@/core/types/schemaJson';
+import { extractQuotedStringToken } from '@/core/utils/expression';
+import { aggregateSettingList } from '@/core/utils/validate';
+import { getTokenPosition } from '@/core/utils/interpret';
 
 export default class ChecksInterpreter {
   private compiler: Compiler;

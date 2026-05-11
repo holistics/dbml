@@ -1,15 +1,7 @@
-import {
-  UNHANDLED,
-} from '@/core/types/module';
-import {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  NodeSymbol, SymbolKind, UseSymbol,
-} from '@/core/types/symbol';
-import {
-  useUtils,
-} from '@/core/global_modules/use';
+import { UNHANDLED } from '@/core/types/module';
+import { SyntaxNode } from '@/core/types/nodes';
+import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
+import { useUtils } from '@/core/global_modules/use';
 import type Compiler from '../../index';
 
 export function lookupMembers (

@@ -1,9 +1,5 @@
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementDeclarationNode, ProgramNode,
-} from '@/core/types/nodes';
+import { type Filepath } from '@/core/types/filepath';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import type Compiler from '../../index';
 
 export function containerElement (

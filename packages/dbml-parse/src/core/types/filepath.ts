@@ -1,9 +1,7 @@
 import {
   basename, dirname, extname, isAbsolute, join, normalize, relative, resolve,
 } from 'pathe';
-import type {
-  Internable,
-} from './internable';
+import type { Internable } from './internable';
 
 // Matches a Windows drive-letter prefix after normalization (e.g. "C:/").
 const WIN_DRIVE_RE = /^[a-zA-Z]:\//;

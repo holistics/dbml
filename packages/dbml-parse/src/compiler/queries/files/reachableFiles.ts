@@ -1,7 +1,5 @@
 import type Compiler from '@/compiler/index';
-import {
-  Filepath, type FilepathId,
-} from '@/core/types/filepath';
+import { Filepath, type FilepathId } from '@/core/types/filepath';
 
 export function reachableFiles (this: Compiler, entry?: Filepath): Filepath[] {
   const visited = new Set<FilepathId>();

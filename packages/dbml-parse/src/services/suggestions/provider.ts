@@ -1,21 +1,9 @@
-import Compiler, {
-  ScopeKind,
-} from '@/compiler';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  isComment,
-} from '@/core/lexer/utils';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  ElementKind, SettingName,
-} from '@/core/types/keywords';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import Compiler, { ScopeKind } from '@/compiler';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { isComment } from '@/core/lexer/utils';
+import { Filepath } from '@/core/types/filepath';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { UNHANDLED } from '@/core/types/module';
 import {
   AttributeNode,
   BlockExpressionNode,
@@ -36,30 +24,18 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
   destructureMemberAccessExpression,
   extractStringFromIdentifierStream,
   extractVariableFromExpression,
   isTupleEmpty,
 } from '@/core/utils/expression';
-import {
-  isExpressionAVariableNode,
-} from '@/core/utils/validate';
-import {
-  isOffsetWithinElementHeader, isOffsetWithinSpan,
-} from '@/core/utils/span';
-import {
-  collectCrossFileSuggestions,
-} from '@/services/suggestions/crossFile';
-import {
-  suggestRecordRowSnippet,
-} from '@/services/suggestions/recordRowSnippet';
-import {
-  suggestUseCompletion,
-} from '@/services/suggestions/use';
+import { isExpressionAVariableNode } from '@/core/utils/validate';
+import { isOffsetWithinElementHeader, isOffsetWithinSpan } from '@/core/utils/span';
+import { collectCrossFileSuggestions } from '@/services/suggestions/crossFile';
+import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
+import { suggestUseCompletion } from '@/services/suggestions/use';
 import {
   addQuoteToSuggestionIfNeeded,
   addSuggestAllSuggestion,
@@ -76,9 +52,7 @@ import {
   type Position,
   type TextModel,
 } from '@/services/types';
-import {
-  getOffsetFromMonacoPosition,
-} from '@/services/utils';
+import { getOffsetFromMonacoPosition } from '@/services/utils';
 
 export interface DBMLCompletionItemProviderOptions {
   triggerCharacters?: string[];

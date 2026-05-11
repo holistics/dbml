@@ -1,37 +1,15 @@
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import type {
-  Internable,
-} from '@/core/types/internable';
-import {
-  UNHANDLED,
-} from '@/core/types/module';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import type { Filepath } from '@/core/types/filepath';
+import type { Internable } from '@/core/types/internable';
+import { UNHANDLED } from '@/core/types/module';
 import type Compiler from '@/compiler';
-import {
-  MetadataKind,
-} from '@/core/types/symbol/metadata';
-import type {
-  TableChecksMetadata, NodeMetadata, IndexesMetadata,
-} from '@/core/types/symbol/metadata';
-import type {
-  TokenPosition,
-} from '@/core/types/schemaJson';
-import {
-  SettingName,
-} from '@/core/types/keywords';
-import {
-  extractQuotedStringToken,
-} from '@/core/utils/expression';
-import {
-  isValidPartialInjection,
-} from '@/core/utils/validate';
-import type {
-  Settings,
-} from '@/core/utils/validate';
+import { MetadataKind } from '@/core/types/symbol/metadata';
+import type { TableChecksMetadata, NodeMetadata, IndexesMetadata } from '@/core/types/symbol/metadata';
+import type { TokenPosition } from '@/core/types/schemaJson';
+import { SettingName } from '@/core/types/keywords';
+import { extractQuotedStringToken } from '@/core/utils/expression';
+import { isValidPartialInjection } from '@/core/utils/validate';
+import type { Settings } from '@/core/utils/validate';
 import {
   extractColor, getTokenPosition, normalizeNote, processColumnType, processDefaultValue,
 } from '@/core/utils/interpret';
