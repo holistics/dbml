@@ -1047,19 +1047,19 @@ describe('[example] CompletionItemProvider', () => {
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).toEqual([
+        'inactive',
         'update',
         'delete',
         'color',
-
       ]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
       expect(insertTexts).toEqual([
+        'inactive',
         'update: ',
         'delete: ',
         'color: ',
-
       ]);
     });
 

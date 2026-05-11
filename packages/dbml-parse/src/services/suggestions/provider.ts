@@ -586,16 +586,25 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
     case ScopeKind.REF:
       return {
         suggestions: [
-          SettingName.Update,
-          SettingName.Delete,
-          SettingName.Color,
-        ].map((name) => ({
-          label: name,
-          insertText: `${name}: `,
-          kind: CompletionItemKind.Property,
-          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-          range: undefined as any,
-        })),
+          {
+            label: SettingName.Inactive,
+            insertText: SettingName.Inactive,
+            kind: CompletionItemKind.Property,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            range: undefined as any,
+          },
+          ...[
+            SettingName.Update,
+            SettingName.Delete,
+            SettingName.Color,
+          ].map((name) => ({
+            label: name,
+            insertText: `${name}: `,
+            kind: CompletionItemKind.Property,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            range: undefined as any,
+          })),
+        ],
       };
     case ScopeKind.CHECKS:
       return {
