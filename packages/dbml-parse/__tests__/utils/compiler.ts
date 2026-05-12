@@ -32,6 +32,7 @@ import {
 import Report from '@/core/types/report';
 import { Compiler, SyntaxToken } from '@/index';
 import type { Database } from '@/core/types/schemaJson';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 export function lex (source: string): Report<SyntaxToken[]> {
   return new Lexer(source, DEFAULT_ENTRY).lex();
@@ -42,8 +43,9 @@ export function parse (source: string): Report<{ ast: ProgramNode; tokens: Synta
 }
 
 export function validate (source: string) {
-  const compiler = new Compiler();
-  compiler.setSource(DEFAULT_ENTRY, source);
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, source);
+  const compiler = new Compiler(layout);
 
   const astResult = compiler.parseFile(DEFAULT_ENTRY);
   const ast = astResult.getValue().ast;
@@ -60,8 +62,9 @@ export function validate (source: string) {
 }
 
 export function analyze (source: string) {
-  const compiler = new Compiler();
-  compiler.setSource(DEFAULT_ENTRY, source);
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, source);
+  const compiler = new Compiler(layout);
 
   const parseResult = compiler.parseFile(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;
@@ -83,8 +86,9 @@ export function analyze (source: string) {
 }
 
 export function interpret (source: string): Report<Readonly<Database> | undefined> {
-  const compiler = new Compiler();
-  compiler.setSource(DEFAULT_ENTRY, source);
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, source);
+  const compiler = new Compiler(layout);
 
   const parseResult = compiler.parseFile(DEFAULT_ENTRY);
   const ast = parseResult.getValue().ast;

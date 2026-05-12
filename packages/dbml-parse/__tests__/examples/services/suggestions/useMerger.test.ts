@@ -3,12 +3,14 @@ import Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import { scanExistingUses, mergeSymbolIntoUses } from '@/services/suggestions/utils/useMerger';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 function setup (files: Record<string, string>) {
-  const compiler = new Compiler();
+  const layout = new MemoryProjectLayout();
   for (const [path, src] of Object.entries(files)) {
-    compiler.setSource(Filepath.from(path), src);
+    layout.setSource(Filepath.from(path), src);
   }
+  const compiler = new Compiler(layout);
   return compiler;
 }
 

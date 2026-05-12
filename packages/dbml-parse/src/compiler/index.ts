@@ -26,7 +26,7 @@ import {
 } from './queries/container';
 import { canonicalName } from './queries/canonicalName';
 import { fileDependencies } from './queries/files/fileDependencies';
-import { reachableFiles } from './queries/files/reachableFiles';
+import { reachableFiles, walkDependencies } from './queries/files/reachableFiles';
 import { usableMembers } from './queries/files/usableMembers';
 import {
   ast, errors, publicSymbolTable, rawDb, tokens, warnings,
@@ -76,27 +76,51 @@ export default class Compiler {
   readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   // The structure of the DbmlProject
-  layout: DbmlProjectLayout = new MemoryProjectLayout();
+  layout: DbmlProjectLayout;
 
-  setSource (filepath: Filepath, source: string) {
-    this.layout.setSource(filepath, source);
-    // Local queries are keyed per-file: only the changed file's cache is stale.
-    // Global queries depend on all files: always invalidate the entire global cache.
-    this.localCache.delete(filepath.intern());
-    this.globalCache.clear();
+  constructor (layout: DbmlProjectLayout = new MemoryProjectLayout()) {
+    this.layout = layout;
   }
 
-  clearSource () {
-    this.layout = new MemoryProjectLayout();
-    this.localCache.clear();
-    this.globalCache.clear();
+  getSource (filepath: Filepath): string | undefined {
+    return this.layout.getSource(filepath);
   }
 
-  deleteSource (filepath: Filepath) {
-    this.layout.deleteSource(filepath);
-    // Same invalidation logic as setSource: local per-file, global always full clear.
-    this.localCache.delete(filepath.intern());
-    this.globalCache.clear();
+  private sourceSnapshot = new Map<string, string | undefined>();
+  // Purge local + global caches if `filepath`'s content changed since last seen
+  private cleanStaleLocalCache (filepath: Filepath): void {
+    const content = this.layout.getSource(filepath);
+    const key = filepath.absolute;
+    if (this.sourceSnapshot.has(key) && this.sourceSnapshot.get(key) !== content) {
+      this.localCache.delete(filepath.intern());
+      this.globalCache.clear();
+    }
+    this.sourceSnapshot.set(key, content);
+  }
+
+  private entrypointsSnapshot: Filepath[] | undefined;
+  // Purge global cache if entrypoints or any reachable file's content changed
+  private cleanStaleGlobalCache (): void {
+    const entrypoints = this.layout.getEntrypoints();
+
+    // Check if entrypoints changed
+    let dirty = false;
+    if (this.entrypointsSnapshot !== undefined) {
+      if (this.entrypointsSnapshot.length !== entrypoints.length
+        || this.entrypointsSnapshot.some((fp, i) => fp.absolute !== entrypoints[i].absolute)) {
+        dirty = true;
+      }
+    }
+    this.entrypointsSnapshot = entrypoints;
+
+    // Ensure local caches are fresh for all reachable files
+    for (const fp of walkDependencies(this, entrypoints)) {
+      this.cleanStaleLocalCache(fp);
+    }
+
+    if (dirty) {
+      this.globalCache.clear();
+    }
   }
 
   // A global cache mapping from:
@@ -112,6 +136,9 @@ export default class Compiler {
     const queryKey = Symbol();
 
     return ((...args: Args): Return => {
+      // Detect entrypoint changes before cache lookup.
+      this.cleanStaleGlobalCache();
+
       if (!this.globalCache.has(queryKey)) {
         this.globalCache.set(queryKey, new Map());
       }
@@ -162,6 +189,10 @@ export default class Compiler {
         firstArg,
       ] = args;
       const filepath = firstArg instanceof SyntaxNode ? firstArg.filepath : firstArg;
+
+      // Detect source changes before cache lookup.
+      this.cleanStaleLocalCache(filepath);
+
       const filepathId = filepath.intern();
       const argKey = args.map((a) => intern(a)).join('\0');
 
@@ -331,7 +362,7 @@ export default class Compiler {
   renameTable = renameTable.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
   findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.layout.getSource(filepath) ?? '');
+    return findDiagramViewBlocks(this.getSource(filepath) ?? '');
   }
 
   // @deprecated - legacy APIs for services compatibility
@@ -342,7 +373,7 @@ export default class Compiler {
 
   // @deprecated - legacy APIs for services compatibility
   readonly parse = {
-    source: (filepath: Filepath) => this.layout.getSource(filepath) || '',
+    source: (filepath: Filepath) => this.getSource(filepath) || '',
     ast: (filepath = DEFAULT_ENTRY) => ast.call(this, filepath),
     errors: (filepath = DEFAULT_ENTRY) => errors.call(this, filepath),
     warnings: (filepath = DEFAULT_ENTRY) => warnings.call(this, filepath),

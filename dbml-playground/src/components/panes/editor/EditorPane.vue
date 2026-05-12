@@ -157,11 +157,10 @@ function submitRename () {
     return;
   }
   const filepath = Filepath.fromUri(monaco.Uri.file(project.currentFile).toString());
-  const newLayout = parser.compiler.renameTable(filepath, oldName, newName);
-  for (const fp of newLayout.getEntrypoints()) {
-    const src = newLayout.getSource(fp);
-    if (src !== undefined && project.files[fp.absolute] !== undefined) {
-      project.files[fp.absolute] = src;
+  const changes = parser.compiler.renameTable(filepath, oldName, newName);
+  for (const [absPath, src] of changes) {
+    if (project.files[absPath] !== undefined) {
+      project.files[absPath] = src;
     }
   }
   renameOldName.value = '';

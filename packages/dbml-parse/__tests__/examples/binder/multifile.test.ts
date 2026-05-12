@@ -1,18 +1,20 @@
 import { describe, expect, test } from 'vitest';
 import { Compiler, CompileErrorCode } from '@/index';
 import { Filepath } from '@/core/types/filepath';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { NodeSymbol, UseSymbol, SymbolKind } from '@/core/types';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 // Build a multi-file compiler from a record of absolute filepath -> source.
 function setupCompiler (files: Record<string, string>): { compiler: Compiler; fps: Record<string, Filepath> } {
-  const compiler = new Compiler();
+  const layout = new MemoryProjectLayout();
   const fps: Record<string, Filepath> = {};
   for (const [path, src] of Object.entries(files)) {
     const fp = Filepath.from(path);
     fps[path] = fp;
-    compiler.setSource(fp, src);
+    layout.setSource(fp, src);
   }
+  const compiler = new Compiler(layout);
   return { compiler, fps };
 }
 

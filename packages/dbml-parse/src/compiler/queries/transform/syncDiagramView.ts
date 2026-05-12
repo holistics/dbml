@@ -214,7 +214,7 @@ export function syncDiagramView (
   newDbml: string;
   edits: TextEdit[];
 } {
-  const dbml = this.layout.getSource(filepath) ?? '';
+  const dbml = this.getSource(filepath) ?? '';
   const originalBlocks = blocks ?? findDiagramViewBlocks(dbml);
   const allEdits: TextEdit[] = [];
 

@@ -1,4 +1,4 @@
-import { Compiler, DEFAULT_ENTRY } from '@dbml/parse';
+import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
 import Database from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
 import dbmlParser from './deprecated/dbmlParser.cjs';
@@ -43,7 +43,9 @@ class Parser {
   static parseDBMLToJSONv2 (str, dbmlCompiler) {
     const compiler = dbmlCompiler || new Compiler();
 
-    compiler.setSource(DEFAULT_ENTRY, str);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, str);
+    compiler.layout = layout;
 
     const diags = compiler.parse.errors(DEFAULT_ENTRY).map((error) => ({
       message: error.diagnostic,

@@ -4,14 +4,15 @@ import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import { MockTextModel, createPosition } from '../../../utils';
 import { Filepath } from '@/core/types/filepath';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 describe('[samples] multifile symbol collision and wildcard imports', () => {
   describe('symbol name collisions across files', () => {
     it('should handle same table name defined in multiple files', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
       // File 1: schema1.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/schema1.dbml'),
         `Table users {
   id int [pk]
@@ -20,7 +21,7 @@ describe('[samples] multifile symbol collision and wildcard imports', () => {
       );
 
       // File 2: schema2.dbml - same table name different columns
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/schema2.dbml'),
         `Table users {
   user_id int [pk]
@@ -29,6 +30,7 @@ describe('[samples] multifile symbol collision and wildcard imports', () => {
 }`,
       );
 
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       // Verify both tables exist in the project
@@ -44,7 +46,7 @@ Table orders {
 
 Ref: orders.user_id > users.id`;
 
-      compiler.setSource(new Filepath('/project/orders.dbml'), refSource);
+      layout.setSource(new Filepath('/project/orders.dbml'), refSource);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -57,10 +59,10 @@ Ref: orders.user_id > users.id`;
     });
 
     it('should handle same enum name in multiple files', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
       // File 1: types1.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/types1.dbml'),
         `Enum status {
   active
@@ -70,7 +72,7 @@ Ref: orders.user_id > users.id`;
       );
 
       // File 2: types2.dbml - same enum name, different values
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/types2.dbml'),
         `Enum status {
   draft
@@ -87,7 +89,8 @@ Table posts {
   status status
 }`;
 
-      compiler.setSource(new Filepath('/project/models.dbml'), modelSource);
+      layout.setSource(new Filepath('/project/models.dbml'), modelSource);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -100,10 +103,10 @@ Table posts {
     });
 
     it('should handle same schema name in multiple files with use statement', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
       // File 1: db1.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/db1.dbml'),
         `Schema public {
   Table users {
@@ -113,7 +116,7 @@ Table posts {
       );
 
       // File 2: db2.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/db2.dbml'),
         `Schema public {
   Table products {
@@ -127,7 +130,8 @@ Table posts {
 
 Ref: public.users.id > other.user_id`;
 
-      compiler.setSource(new Filepath('/project/main.dbml'), mainSource);
+      layout.setSource(new Filepath('/project/main.dbml'), mainSource);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
@@ -140,10 +144,10 @@ Ref: public.users.id > other.user_id`;
     });
 
     it('should resolve to correct symbol when collision disambiguated by use statement', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
       // File 1: auth.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/auth.dbml'),
         `Table User {
   id int [pk]
@@ -152,7 +156,7 @@ Ref: public.users.id > other.user_id`;
       );
 
       // File 2: accounts.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/accounts.dbml'),
         `Table User {
   id int [pk]
@@ -170,7 +174,8 @@ Table sessions {
 
 Ref: sessions.user_id > User.id`;
 
-      compiler.setSource(new Filepath('/project/main.dbml'), mainSource);
+      layout.setSource(new Filepath('/project/main.dbml'), mainSource);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -183,9 +188,9 @@ Ref: sessions.user_id > User.id`;
     });
 
     it('should handle collision without use statement falls back to local scope', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/remote.dbml'),
         `Table Config {
   id int
@@ -201,7 +206,8 @@ Ref: sessions.user_id > User.id`;
 
 Ref: Config.id > other.config_id`;
 
-      compiler.setSource(new Filepath('/project/local.dbml'), localSource);
+      layout.setSource(new Filepath('/project/local.dbml'), localSource);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -216,10 +222,10 @@ Ref: Config.id > other.config_id`;
 
   describe('wildcard-style imports (import all from file)', () => {
     it('should handle conceptual import all via explicit symbol list', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
       // File 1: types.dbml - define many types
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/types.dbml'),
         `Enum status {
   active
@@ -248,7 +254,8 @@ Table tasks {
   visibility visibility
 }`;
 
-      compiler.setSource(new Filepath('/project/main.dbml'), mainSource);
+      layout.setSource(new Filepath('/project/main.dbml'), mainSource);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -268,10 +275,10 @@ Table tasks {
     });
 
     it('should handle importing all tables from a file', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
       // File 1: auth_tables.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/auth_tables.dbml'),
         `Table users {
   id int [pk]
@@ -299,7 +306,8 @@ Table user_roles {
 Ref: user_roles.user_id > users.id
 Ref: user_roles.role_id > roles.id`;
 
-      compiler.setSource(new Filepath('/project/main.dbml'), mainSource);
+      layout.setSource(new Filepath('/project/main.dbml'), mainSource);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
@@ -312,9 +320,9 @@ Ref: user_roles.role_id > roles.id`;
     });
 
     it('should handle importing all symbols when some are used, some are not', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/lib.dbml'),
         `Enum Color {
   red
@@ -342,7 +350,8 @@ Table items {
   color Color
 }`;
 
-      compiler.setSource(new Filepath('/project/main.dbml'), mainSource);
+      layout.setSource(new Filepath('/project/main.dbml'), mainSource);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -361,22 +370,22 @@ Table items {
     });
 
     it('should handle multiple files each importing all from different sources', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
       // File 1: types.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/types.dbml'),
         `Enum status { active, inactive }`,
       );
 
       // File 2: enums.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/enums.dbml'),
         `Enum priority { high, medium, low }`,
       );
 
       // File 3: models1.dbml - imports from types
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/models1.dbml'),
         `use { status } from './types'
 
@@ -387,7 +396,7 @@ Table posts {
       );
 
       // File 4: models2.dbml - imports from enums
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/models2.dbml'),
         `use { priority } from './enums'
 
@@ -397,6 +406,7 @@ Table tasks {
 }`,
       );
 
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -423,10 +433,10 @@ Table tasks { id int priority priority }`,
     });
 
     it('should handle importing overlapping symbol sets from multiple files', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
       // File 1: common.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/common.dbml'),
         `Table Audit {
   id int
@@ -435,7 +445,7 @@ Table tasks { id int priority priority }`,
       );
 
       // File 2: auth.dbml
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/auth.dbml'),
         `Table Audit {
   id int
@@ -458,7 +468,8 @@ Table logs {
 
 Ref: logs.audit_id > Audit.id`;
 
-      compiler.setSource(new Filepath('/project/main.dbml'), mainSource);
+      layout.setSource(new Filepath('/project/main.dbml'), mainSource);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -476,9 +487,9 @@ Ref: logs.audit_id > Audit.id`;
 
   describe('collision resolution via binder', () => {
     it('should bind correct symbol when multiple with same name exist', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/db1.dbml'),
         `Table Item {
   id int [pk]
@@ -486,7 +497,7 @@ Ref: logs.audit_id > Audit.id`;
 }`,
       );
 
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/db2.dbml'),
         `Table Item {
   id int [pk]
@@ -502,7 +513,8 @@ Table Cart {
 
 Ref: Cart.item_id > Item.id`;
 
-      compiler.setSource(new Filepath('/project/main.dbml'), source);
+      layout.setSource(new Filepath('/project/main.dbml'), source);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       // After binding, the Ref should resolve to Item from db1
@@ -516,14 +528,14 @@ Ref: Cart.item_id > Item.id`;
     });
 
     it('should handle binder with symbols imported from different files in same scope', () => {
-      const compiler = new Compiler();
+      const layout = new MemoryProjectLayout();
 
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/auth.dbml'),
         `Table User { id int }`,
       );
 
-      compiler.setSource(
+      layout.setSource(
         new Filepath('/project/products.dbml'),
         `Table Product { id int }`,
       );
@@ -540,7 +552,8 @@ Table Order {
 Ref: Order.user_id > User.id
 Ref: Order.product_id > Product.id`;
 
-      compiler.setSource(new Filepath('/project/main.dbml'), source);
+      layout.setSource(new Filepath('/project/main.dbml'), source);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const referencesProvider = new DBMLReferencesProvider(compiler);

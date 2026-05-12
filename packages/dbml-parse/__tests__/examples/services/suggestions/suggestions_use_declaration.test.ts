@@ -12,12 +12,14 @@ import {
 import {
   CompletionItemKind,
 } from '@/services/types';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 function setupMultiFile (files: Record<string, string>) {
-  const compiler = new Compiler();
+  const layout = new MemoryProjectLayout();
   for (const [path, content] of Object.entries(files)) {
-    compiler.setSource(Filepath.from(path), content);
+    layout.setSource(Filepath.from(path), content);
   }
+  const compiler = new Compiler(layout);
   compiler.bindProject();
   return compiler;
 }
@@ -26,8 +28,9 @@ describe('[example] CompletionItemProvider - use declaration', () => {
   describe('after use keyword (no specifiers yet)', () => {
     it('suggests * from and { } from snippets', () => {
       const program = 'use ';
-      const compiler = new Compiler();
-      compiler.setSource(Filepath.from('/main.dbml'), program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(Filepath.from('/main.dbml'), program);
+      const compiler = new Compiler(layout);
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 5));
@@ -38,8 +41,9 @@ describe('[example] CompletionItemProvider - use declaration', () => {
 
     it('snippets are InsertAsSnippet with tab stops', () => {
       const program = 'use ';
-      const compiler = new Compiler();
-      compiler.setSource(Filepath.from('/main.dbml'), program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(Filepath.from('/main.dbml'), program);
+      const compiler = new Compiler(layout);
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 5));
@@ -51,8 +55,9 @@ describe('[example] CompletionItemProvider - use declaration', () => {
   describe('inside specifier list braces', () => {
     it('suggests all import kinds when cursor is after open brace', () => {
       const program = "use { } from './schema'";
-      const compiler = new Compiler();
-      compiler.setSource(Filepath.from('/main.dbml'), program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(Filepath.from('/main.dbml'), program);
+      const compiler = new Compiler(layout);
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor after '{'
@@ -119,8 +124,9 @@ Enum color { red blue }
 
     it('returns no suggestions when importPath is absent', () => {
       const program = 'use { table }';
-      const compiler = new Compiler();
-      compiler.setSource(Filepath.from('/main.dbml'), program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(Filepath.from('/main.dbml'), program);
+      const compiler = new Compiler(layout);
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 13));
@@ -259,8 +265,9 @@ Enum color { red blue }
   describe('no suggestions in wrong positions', () => {
     it('returns no suggestions inside alias position (after `as`)', () => {
       const program = "use { table users as } from './schema'";
-      const compiler = new Compiler();
-      compiler.setSource(Filepath.from('/main.dbml'), program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(Filepath.from('/main.dbml'), program);
+      const compiler = new Compiler(layout);
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor after 'as '
@@ -272,8 +279,9 @@ Enum color { red blue }
 
     it('returns no suggestions after wildcard `*` (before `from`)', () => {
       const program = 'use * ';
-      const compiler = new Compiler();
-      compiler.setSource(Filepath.from('/main.dbml'), program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(Filepath.from('/main.dbml'), program);
+      const compiler = new Compiler(layout);
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 7));

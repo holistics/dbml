@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor';
-import { Compiler, Filepath } from '@dbml/parse';
+import { Compiler, Filepath, type MemoryProjectLayout } from '@dbml/parse';
 import { DBMLLanguageService } from './dbml_language';
 
 type MonacoServices = Awaited<ReturnType<Compiler['initMonacoServices']>>;
@@ -11,7 +11,7 @@ const languageId = DBMLLanguageService.getLanguageId();
 
 function syncModelToCompiler (compiler: Compiler, model: monaco.editor.ITextModel): void {
   if (!model.uri) return;
-  compiler.setSource(Filepath.fromUri(String(model.uri)), model.getValue());
+  (compiler.layout as MemoryProjectLayout).setSource(Filepath.fromUri(String(model.uri)), model.getValue());
 }
 
 export async function setupDbmlServices (compiler: Compiler): Promise<void> {

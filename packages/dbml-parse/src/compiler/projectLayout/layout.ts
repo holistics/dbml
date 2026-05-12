@@ -1,16 +1,10 @@
 import { Filepath } from '@/core/types/filepath';
 
-// A snapshot of the project layout
-// The underlying filesystem is not modified you use `setSource`, `deleteSource`, `clearSource`
-// Only the snapshot of it
+// A read-only view of the project layout.
+// Consumers mutate the concrete class directly. The compiler detects
+// content changes automatically when `getSource` or `getEntrypoints` is called.
 export interface DbmlProjectLayout {
-  setSource (filePath: Filepath, content: string): void;
-
   getSource (filePath: Filepath): string | undefined;
-
-  deleteSource (filePath: Filepath): void;
-
-  clearSource (): void;
 
   exists (filePath: Filepath): boolean;
 
@@ -23,10 +17,6 @@ export interface DbmlProjectLayout {
   listDirectory (dirPath?: Filepath): Filepath[];
 
   getEntrypoints (): Filepath[];
-
-  // Returns a deep copy of the layout. Mutations on the returned layout do
-  // not affect the source.
-  clone (): DbmlProjectLayout;
 }
 
 export class MemoryProjectLayout implements DbmlProjectLayout {

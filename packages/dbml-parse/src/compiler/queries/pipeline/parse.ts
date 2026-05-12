@@ -14,7 +14,7 @@ export type FileParseIndex = {
 };
 
 export function parseFile (this: Compiler, filepath: Filepath): Report<FileParseIndex> {
-  const source = this.layout.getSource(filepath);
+  const source = this.getSource(filepath);
   return new Lexer(source ?? '', filepath)
     .lex()
     .chain((lexedTokens) => new Parser(source ?? '', lexedTokens, this.nodeIdGenerator, filepath).parse())

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import type { ProgramNode } from '@/core/types/nodes';
 import { scanTestNames, toSnapshot, collectNodesWithReferee } from '@tests/utils';
 import Compiler from '@/compiler';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { DEFAULT_ENTRY } from '@/constants';
 import { UNHANDLED } from '@/core/types/module';
 import { SymbolKind, SchemaSymbol } from '@/core/types/symbol';
@@ -54,8 +55,9 @@ describe('[snapshot] binder', () => {
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, program);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, program);
+    const compiler = new Compiler(layout);
 
     const ast = compiler.parseFile(DEFAULT_ENTRY).getValue().ast;
     const output = serializeBinderResult(compiler, ast);
