@@ -262,6 +262,7 @@ export interface TableRecord {
   tableName: string;
   columns: string[];
   values: RecordValue[][];
+  example?: boolean;
   token: TokenPosition;
 }
 

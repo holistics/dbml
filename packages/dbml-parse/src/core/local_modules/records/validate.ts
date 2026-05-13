@@ -1,8 +1,9 @@
 import { partition } from 'lodash-es';
+import { forIn } from 'lodash-es';
 import Compiler from '@/compiler';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ElementKind } from '@/core/types/keywords';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode,
   CallExpressionNode,
@@ -16,8 +17,9 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
+import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
+import { type Settings, aggregateSettingList, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName } from '@/core/utils/validate';
 
 export default class RecordsValidator {
@@ -151,12 +153,7 @@ export default class RecordsValidator {
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [
-        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', settingList),
-      ];
-    }
-    return [];
+    return validateRecordsSettings(settingList).getErrors();
   }
 
   // Validate that records body contains only simple values (one comma-separated row per line).
@@ -283,4 +280,28 @@ export default class RecordsValidator {
       return this.compiler.validateNode(sub).getErrors();
     });
   }
+}
+
+export function validateRecordsSettings (settingList?: ListExpressionNode): Report<Settings> {
+  const aggReport = aggregateSettingList(settingList);
+  const errors = aggReport.getErrors();
+  const settingMap = aggReport.getValue();
+
+  forIn(settingMap, (attrs, name) => {
+    switch (name) {
+      case SettingName.Example:
+        if (attrs.length > 1) {
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_RECORDS_SETTING, '\'example\' can only appear once', attr)));
+        }
+        attrs.forEach((attr) => {
+          if (attr.value) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_RECORDS_SETTING_VALUE, '\'example\' cannot have a value', attr!));
+          }
+        });
+        break;
+      default:
+        errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_RECORDS_SETTING, `Unknown '${name}' setting`, attr)));
+    }
+  });
+  return new Report(settingMap, errors);
 }
