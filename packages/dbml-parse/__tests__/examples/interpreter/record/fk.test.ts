@@ -529,15 +529,15 @@ describe('[example - record] simple foreign key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    // One-to-one validates both directions:
+    // One-to-one: FK is on the left side (user_profiles.user_id), validates left to right only.
+    // 1-1 is not symmetric - it's a 1-[0..1] relationship, so users.id=2 not having
+    // a matching user_profiles.user_id is fine (Bob simply has no profile).
     // 1. user_profiles.user_id=3 doesn't exist in users.id
-    // 2. users.id=2 (Bob) doesn't have a matching user_profiles.user_id
     // One-to-many violation:
-    // 3. employees.dept_id=999 doesn't exist in departments.id
-    expect(warnings.length).toBe(3);
+    // 2. employees.dept_id=999 doesn't exist in departments.id
+    expect(warnings.length).toBe(2);
     expect(warnings[0].diagnostic).toBe('FK violation: user_profiles.user_id = 3 does not exist in users.id');
-    expect(warnings[1].diagnostic).toBe('FK violation: users.id = 2 does not exist in user_profiles.user_id');
-    expect(warnings[2].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
+    expect(warnings[1].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
   });
 
   test('should validate inline ref syntax and self-referencing FK', () => {

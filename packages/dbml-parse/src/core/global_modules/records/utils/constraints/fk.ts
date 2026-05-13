@@ -127,13 +127,18 @@ function validateRelationship (
   const rel1 = endpoint1.relation;
   const rel2 = endpoint2.relation;
 
-  // Bidirectional relationships: both 1-1 and many-to-many
-  const isBidirectional = (rel1 === '1' && rel2 === '1') || (rel1 === '*' && rel2 === '*');
-  if (isBidirectional) {
+  // Many-to-many: validate both directions
+  if (rel1 === '*' && rel2 === '*') {
     return [
       ...validateFkSourceToTarget(compiler, table1, table2, endpoint1, endpoint2, filepath),
       ...validateFkSourceToTarget(compiler, table2, table1, endpoint2, endpoint1, filepath),
     ];
+  }
+
+  // One-to-one: FK is on the left side (endpoint1), validate left to right only.
+  // 1-1 is not symmetric - it's a 1-[0..1] relationship from the right side's perspective.
+  if (rel1 === '1' && rel2 === '1') {
+    return validateFkSourceToTarget(compiler, table1, table2, endpoint1, endpoint2, filepath);
   }
 
   // Many-to-one: validate FK from "many" side to "one" side
