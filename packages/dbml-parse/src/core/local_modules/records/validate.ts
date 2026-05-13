@@ -19,7 +19,9 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { type Settings, aggregateSettingList, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
+import {
+  type Settings, aggregateSettingList, isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
+} from '@/core/utils/validate';
 import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName } from '@/core/utils/validate';
 
 export default class RecordsValidator {
