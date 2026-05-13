@@ -17,6 +17,7 @@ import { tableGroupUtils } from '../tableGroup';
 import { tablePartialUtils } from '../tablePartial';
 import type { GlobalModule } from '../types';
 import { diagramViewUtils } from '../diagramView';
+import { useUtils } from '../use';
 
 export const schemaModule: GlobalModule = {
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
@@ -200,12 +201,25 @@ function mergeImportedSchema (
   if (!externalSchema || !externalSchema.isKind(SymbolKind.Schema)) return [];
 
   // Only merge if the specifier targets this schema.
-  // For `use { schema auth as a }`, alias is 'a' - matches schema 'a'.
-  // For `use { schema x }`, no alias, fullname is ['x'] - matches schema 'x'.
-  const alias = compiler.nodeAlias(specifier).getFiltered(UNHANDLED);
-  const specifierSchemaName = alias ?? compiler.nodeFullname(specifier).getFiltered(UNHANDLED)?.at(0);
-  if (specifierSchemaName !== symbol.name) return [];
+  // For `use { schema auth as a }`, visibleName is ['a'] - matches schema ['a'].
+  // For `use { schema x.y }`, visibleName is ['x', 'y'] - matches schema ['x', 'y'].
+  const visibleName = useUtils.visibleName(compiler, specifier);
+  const qualifiedName = symbol.qualifiedName;
+  if (!visibleName || visibleName.length !== qualifiedName.length
+    || !visibleName.every((s, i) => s === qualifiedName[i])) return [];
 
+  return mergeSchemaMembers(compiler, symbol, specifier, externalSchema, visited);
+}
+
+// Core logic for merging an external schema's members into the current schema.
+// Shared by both selective (`use { schema x }`) and wildcard (`reuse *`) paths.
+function mergeSchemaMembers (
+  compiler: Compiler,
+  symbol: SchemaSymbol,
+  specifier: UseSpecifierNode,
+  externalSchema: SchemaSymbol,
+  visited: Set<string>,
+): NodeSymbol[] {
   const key = externalSchema.intern();
   if (visited.has(key)) return [];
   visited.add(key);
@@ -235,7 +249,29 @@ function mergeImportedSchema (
 
   // Recursively follow reuse chains only (use is local-only, not transitive)
   for (const s of usable.reuses.selective) {
+    // Follow schema reuse chains (e.g. `reuse { schema x }`)
     members.push(...mergeImportedSchema(compiler, symbol, s, visited));
+
+    // Include non-schema selective reuses as direct members (e.g. `reuse { table T }`)
+    const membership = schemaMembership(compiler, symbol, s);
+    if (membership.kind === 'direct') {
+      const useSymbol = compiler.nodeSymbol(s).getFiltered(UNHANDLED);
+      if (useSymbol && useSymbol.canBeImported) {
+        members.push(compiler.symbolFactory.create(UseSymbol, {
+          kind: useSymbol.kind,
+          declaration: useSymbol.originalSymbol.declaration,
+          usedSymbol: useSymbol.originalSymbol,
+          useSpecifierDeclaration: specifier,
+          name: useSymbol.name,
+        }, symbol.filepath));
+      }
+    }
+  }
+  for (const { importPath: externalFilepath } of usable.reuses.wildcard) {
+    const wildcardExternalSchema = findSchemaSymbolInFilepath(compiler, externalFilepath, symbol.qualifiedName);
+    if (wildcardExternalSchema) {
+      members.push(...mergeSchemaMembers(compiler, symbol, specifier, wildcardExternalSchema, visited));
+    }
   }
 
   return members;

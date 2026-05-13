@@ -93,6 +93,7 @@ export const useModule: GlobalModule = {
     const symbolKind = isTerminalFragment ? useSpecifier.getSymbolKind() : SymbolKind.Schema;
     if (symbolKind === undefined) return Report.create(undefined);
 
+    // Extract the name of the use specifier
     const fullname = destructureComplexVariable(node.parentOfKind(InfixExpressionNode));
     const name = extractVariableFromExpression(node) ?? fullname?.at(-1);
     if (name === undefined) return Report.create(undefined);
@@ -100,6 +101,7 @@ export const useModule: GlobalModule = {
     const useDeclaration = node.parentOfKind(UseDeclarationNode);
     if (useDeclaration?.importPath?.value === undefined) return Report.create(undefined);
 
+    // Find the referenced import path
     const importPath = resolveImportFilepath(node.filepath, useDeclaration.importPath.value);
     if (!importPath) return Report.create(
       undefined,

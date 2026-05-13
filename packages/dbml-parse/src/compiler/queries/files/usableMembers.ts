@@ -91,11 +91,16 @@ export function schemaMembership (compiler: Compiler, schema: SchemaSymbol, elem
     kind: 'none',
   };
 
-  const elementSchemaChain = fullname.length <= 1
-    ? [
-        DEFAULT_SCHEMA_NAME,
-      ]
-    : fullname.slice(0, -1);
+  // For schema specifiers, the entire fullname IS the schema chain.
+  // For non-schema specifiers, the last segment is the element name and everything before is the schema chain.
+  const isSchemaSpecifier = element instanceof UseSpecifierNode && element.getSymbolKind() === SymbolKind.Schema;
+  const elementSchemaChain = isSchemaSpecifier
+    ? fullname
+    : fullname.length <= 1
+      ? [
+          DEFAULT_SCHEMA_NAME,
+        ]
+      : fullname.slice(0, -1);
 
   if (elementSchemaChain.length < qualifiedName.length) return {
     kind: 'none',

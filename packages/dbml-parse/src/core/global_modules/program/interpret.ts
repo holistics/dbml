@@ -94,14 +94,24 @@ export default class ProgramInterpreter {
     // wildcard and also via aliased schema). Only interpret each original once.
     const interpretedOriginals = new Set<string>();
     const schemas = this.compiler.symbolMembers(this.programSymbol).getFiltered(UNHANDLED) ?? [];
-    for (const schema of schemas) {
-      if (!(schema instanceof SchemaSymbol)) continue;
+
+    // Keep track of all encountered schemas while interpreting
+    const schemaQueue = schemas.filter((s): s is SchemaSymbol => s instanceof SchemaSymbol);
+    while (schemaQueue.length > 0) {
+      const schema = schemaQueue.shift()!;
       const members = this.compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
       for (const member of members) {
+        if (member instanceof SchemaSymbol) {
+          schemaQueue.push(member);
+          continue;
+        }
         if (!(member instanceof UseSymbol)) continue;
+
+        // Check if we've already interpreted this
         const originalKey = member.originalSymbol.intern();
         if (interpretedOriginals.has(originalKey)) continue;
         interpretedOriginals.add(originalKey);
+
         this.interpretUseSymbol(member);
       }
     }
