@@ -4,7 +4,9 @@ import {
 import { defineStore } from 'pinia';
 import { debounce } from 'lodash-es';
 import * as monaco from 'monaco-editor';
-import { Compiler, DBMLDiagnosticsProvider, Filepath } from '@dbml/parse';
+import {
+  Compiler, DBMLDiagnosticsProvider, Filepath, MemoryProjectLayout,
+} from '@dbml/parse';
 import type {
   Diagnostic, SyntaxToken, ProgramNode, Database, NodeSymbol,
 } from '@dbml/parse';
@@ -87,7 +89,8 @@ function toParserError (diagnostic: Diagnostic): ParserError {
 }
 
 export const useParserStore = defineStore('parser', () => {
-  const compiler = new Compiler();
+  const layout = new MemoryProjectLayout();
+  const compiler = new Compiler(layout);
   const diagnosticsProvider = new DBMLDiagnosticsProvider(compiler);
   const project = useProjectStore();
 
@@ -103,7 +106,7 @@ export const useParserStore = defineStore('parser', () => {
   const hasDatabase = computed(() => database.value !== undefined);
 
   // Tracks which file paths the compiler currently holds so we can
-  // send deleteSource for paths that disappear from the project store.
+  // remove paths that disappear from the project store.
   const loadedFilepaths = new Set<string>();
 
   const debouncedParse = debounce((targetFile?: string) => {
@@ -114,7 +117,8 @@ export const useParserStore = defineStore('parser', () => {
       const currentPaths = new Set(Object.keys(project.files));
       for (const loadedPath of loadedFilepaths) {
         if (!currentPaths.has(loadedPath)) {
-          compiler.deleteSource(Filepath.fromUri(monaco.Uri.file(loadedPath).toString()));
+          const fp = Filepath.fromUri(monaco.Uri.file(loadedPath).toString());
+          layout.deleteSource(fp);
           loadedFilepaths.delete(loadedPath);
         }
       }
@@ -123,7 +127,7 @@ export const useParserStore = defineStore('parser', () => {
       // so go-to-def resolves into the correct Monaco model.
       for (const [path, content] of Object.entries(project.files)) {
         const filepath = Filepath.fromUri(monaco.Uri.file(path).toString());
-        compiler.setSource(filepath, content);
+        layout.setSource(filepath, content);
         loadedFilepaths.add(path);
       }
 

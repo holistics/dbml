@@ -17,6 +17,7 @@ import {
   scanTestNames, toSnapshot,
 } from '@tests/utils';
 import Compiler from '@/compiler';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import type Report from '@/core/types/report';
 
 function serializeParserResult (compiler: Compiler, report: Report<ProgramNode>): string {
@@ -36,8 +37,9 @@ describe('[snapshot] parser', () => {
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, program);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, program);
+    const compiler = new Compiler(layout);
 
     const {
       nodeIdGenerator,

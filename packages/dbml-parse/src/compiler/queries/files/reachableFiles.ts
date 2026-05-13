@@ -1,14 +1,14 @@
 import type Compiler from '@/compiler/index';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 
-export function reachableFiles (this: Compiler, entry?: Filepath): Filepath[] {
+// BFS-walk the dependency graph from the given roots using fileDependencies
+// (a local query). Returns all reachable files in discovery order.
+export function walkDependencies (compiler: Compiler, roots: Filepath[]): Filepath[] {
   const visited = new Set<FilepathId>();
   const results: Filepath[] = [];
-  const queue = entry
-    ? [
-        entry,
-      ]
-    : this.layout.getEntrypoints();
+  const queue = [
+    ...roots,
+  ];
   let head = 0;
 
   while (head < queue.length) {
@@ -18,10 +18,18 @@ export function reachableFiles (this: Compiler, entry?: Filepath): Filepath[] {
     visited.add(id);
     results.push(current);
 
-    for (const dep of this.fileDependencies(current)) {
+    for (const dep of compiler.fileDependencies(current)) {
       queue.push(dep);
     }
   }
 
   return results;
+}
+
+export function reachableFiles (this: Compiler, entry?: Filepath): Filepath[] {
+  return walkDependencies(this, entry
+    ? [
+        entry,
+      ]
+    : this.layout.getEntrypoints());
 }

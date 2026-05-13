@@ -9,6 +9,7 @@ import {
 } from '@tests/utils';
 import { NodeSymbol, SymbolKind, TableSymbol } from '@/core/types/symbol';
 import { UNHANDLED } from '@/core/types/module';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 describe('[example] CompletionItemProvider - Records', () => {
   describe('should NOT suggest record entry snippets in Records body (handled by inline completions)', () => {
@@ -24,8 +25,9 @@ describe('[example] CompletionItemProvider - Records', () => {
           }
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       // Position inside the Records body (between the braces)
@@ -48,8 +50,9 @@ describe('[example] CompletionItemProvider - Records', () => {
 
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(8, 11);
@@ -72,8 +75,9 @@ describe('[example] Expand * to all columns in Records', () => {
 
   records ()
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -110,8 +114,9 @@ describe('[example] Expand * to all columns in Records', () => {
 Records users() {
 }
 `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -143,8 +148,9 @@ Records users() {
 
 Records products(
 `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const suggestionProvider = new DBMLCompletionItemProvider(compiler);
       const model = createMockTextModel(program);
@@ -187,8 +193,9 @@ describe('[example] Suggestions Utils - Records', () => {
           ~timestamps
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[2]; // users table is the third element
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -221,8 +228,9 @@ describe('[example] Suggestions Utils - Records', () => {
           ~base
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[1];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -251,8 +259,9 @@ describe('[example] Suggestions Utils - Records', () => {
           name varchar
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[1];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -280,8 +289,9 @@ describe('[example] Suggestions Utils - Records', () => {
           email varchar
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       // Get the table symbol
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
@@ -314,8 +324,9 @@ describe('[example] Suggestions Utils - Records', () => {
           created_at timestamp
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -347,8 +358,9 @@ describe('[example] Suggestions Utils - Records', () => {
           count int
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -372,8 +384,9 @@ describe('[example] Suggestions Utils - Records', () => {
           "column.3" boolean
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -398,8 +411,9 @@ describe('[example] Suggestions Utils - Records', () => {
         Table empty_table {
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -423,8 +437,9 @@ describe('[example] Suggestions Utils - Records', () => {
           }
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;
@@ -450,8 +465,9 @@ describe('[example] Suggestions Utils - Records', () => {
           password_hash varchar
         }
       `;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
       const ast = compiler.parse.ast(DEFAULT_ENTRY);
       const tableElement = ast.body[0];
       const tableSymbol = compiler.nodeSymbol(tableElement).getFiltered(UNHANDLED) as NodeSymbol | undefined;

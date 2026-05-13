@@ -2,6 +2,7 @@ import {
   describe, expect, it,
 } from 'vitest';
 import Compiler from '@/compiler/index';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import Lexer from '@/core/lexer/lexer';
 import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Parser from '@/core/parser/parser';
@@ -13,8 +14,9 @@ import type {
 } from '@/compiler/queries/transform/syncDiagramView';
 
 function syncDiagramView (dbml: string, operations: DiagramViewSyncOperation[]) {
-  const compiler = new Compiler();
-  compiler.setSource(DEFAULT_ENTRY, dbml);
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbml);
+  const compiler = new Compiler(layout);
   return compiler.syncDiagramView(DEFAULT_ENTRY, operations);
 }
 
@@ -98,8 +100,9 @@ DiagramView "New View" {
   Schemas { * }
 }
 `;
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, source);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, source);
+    const compiler = new Compiler(layout);
     expect(compiler.parse.errors(DEFAULT_ENTRY)).toHaveLength(0);
   });
 });
@@ -995,8 +998,9 @@ describe('syncDiagramView - entity name quoting', () => {
         },
       },
     ]);
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, newDbml);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, newDbml);
+    const compiler = new Compiler(layout);
     expect(compiler.parse.errors(DEFAULT_ENTRY)).toHaveLength(0);
   });
 

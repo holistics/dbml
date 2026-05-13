@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Compiler } from '@/index';
 import { Filepath } from '@/core/types/filepath';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import type { Database } from '@/core/types/schemaJson';
 import { fp, getDatabase, setupCompiler } from './utils';
 
@@ -537,9 +538,9 @@ use { table employees } from './source.dbml'
   });
 
   test('ref is NOT pulled when only one endpoint is imported', () => {
-    const partial = new Compiler();
+    const partialLayout = new MemoryProjectLayout();
     const fp = Filepath.from('/partial.dbml');
-    partial.setSource(Filepath.from('/source.dbml'), `
+    partialLayout.setSource(Filepath.from('/source.dbml'), `
 Table departments {
   id int [pk]
   name varchar
@@ -551,7 +552,9 @@ Table employees {
 }
 Ref: employees.dept_id > departments.id
 `);
-    partial.setSource(fp, `use { table employees } from './source.dbml'`);
+    partialLayout.setSource(fp, `use { table employees } from './source.dbml'`);
+    const partial = new Compiler();
+    partial.layout = partialLayout;
     const result = partial.interpretFile(fp);
     const db = result.getValue() as Database | undefined;
     expect(db?.refs ?? []).toHaveLength(0);

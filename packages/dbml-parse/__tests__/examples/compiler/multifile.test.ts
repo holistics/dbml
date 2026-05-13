@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { Compiler } from '@/index';
 import { Filepath } from '@/core/types/filepath';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { UNHANDLED } from '@/core/types/module';
 import { SyntaxNodeKind } from '@/core/types/nodes';
 
@@ -10,24 +11,27 @@ const fileC = Filepath.from('/project/c.dbml');
 
 describe('[example] multi-file compiler', () => {
   test('should set, get, delete, and clear sources', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, 'Table users { id int }');
-    compiler.setSource(fileB, 'Table posts { id int }');
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, 'Table users { id int }');
+    layout.setSource(fileB, 'Table posts { id int }');
+    const compiler = new Compiler(layout);
     expect(compiler.layout.getSource(fileA)).toBe('Table users { id int }');
     expect(compiler.layout.getSource(fileB)).toBe('Table posts { id int }');
 
-    compiler.deleteSource(fileA);
+    layout.deleteSource(fileA);
+
     expect(compiler.layout.getSource(fileA)).toBeUndefined();
     expect(compiler.layout.getSource(fileB)).toBe('Table posts { id int }');
 
-    compiler.clearSource();
+    compiler.layout = new MemoryProjectLayout();
     expect(compiler.layout.getSource(fileB)).toBeUndefined();
   });
 
   test('should parse each file independently with correct filepath on nodes and tokens', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, 'Table users { id int }');
-    compiler.setSource(fileB, 'Table posts { id int }');
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, 'Table users { id int }');
+    layout.setSource(fileB, 'Table posts { id int }');
+    const compiler = new Compiler(layout);
 
     const resultA = compiler.parseFile(fileA);
     const resultB = compiler.parseFile(fileB);
@@ -49,12 +53,13 @@ describe('[example] multi-file compiler', () => {
   });
 
   test('should parse file with use declarations alongside elements', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, 'Table users { id int }');
-    compiler.setSource(fileB, `
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, 'Table users { id int }');
+    layout.setSource(fileB, `
       use { table users } from './a.dbml'
       Table posts { user_id int }
     `);
+    const compiler = new Compiler(layout);
 
     const ast = compiler.parseFile(fileB).getValue().ast;
     expect(ast.uses).toHaveLength(1);
@@ -65,31 +70,34 @@ describe('[example] multi-file compiler', () => {
   });
 
   test('should cache parse results and invalidate on setSource', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, 'Table users { id int }');
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, 'Table users { id int }');
+    const compiler = new Compiler(layout);
 
     const result1 = compiler.parseFile(fileA);
     const result2 = compiler.parseFile(fileA);
     expect(result1).toBe(result2); // cached
 
-    compiler.setSource(fileA, `
+    layout.setSource(fileA, `
 Table users {
   id int
   name varchar
 }
 `);
+
     const result3 = compiler.parseFile(fileA);
     expect(result3).not.toBe(result1); // invalidated
   });
 
   test('should detect file dependencies from use declarations', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, 'Table users { id int }');
-    compiler.setSource(fileB, `
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, 'Table users { id int }');
+    layout.setSource(fileB, `
       use { table users } from './a.dbml'
       use * from './c.dbml'
     `);
-    compiler.setSource(fileC, 'Enum status { active }');
+    layout.setSource(fileC, 'Enum status { active }');
+    const compiler = new Compiler(layout);
 
     const depsB = compiler.fileDependencies(fileB);
     expect(depsB).toHaveLength(2);
@@ -99,13 +107,14 @@ Table users {
   });
 
   test('should not cache poisoned slot when query throws', () => {
-    const compiler = new Compiler();
+    const layout = new MemoryProjectLayout();
     // Set source to something that parses but will fail during bind
     // due to missing referenced file
-    compiler.setSource(fileA, `
+    layout.setSource(fileA, `
       use { table X } from './missing.dbml'
       Ref: X.id > X.id
     `);
+    const compiler = new Compiler(layout);
 
     // First call may throw or produce errors
     try {
@@ -117,24 +126,26 @@ Table users {
     // Second call should not throw "Cycle detected" - the COMPUTING
     // sentinel must have been cleared on failure
     expect(() => {
-      compiler.setSource(fileA, 'Table users { id int }');
+      layout.setSource(fileA, 'Table users { id int }');
+  
       compiler.bindProject();
     }).not.toThrow();
   });
 
   test('mutual use imports should not infinite-loop (cycle detection)', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, `
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, `
       use { tablepartial PB } from './b.dbml'
       TablePartial PA { id int }
       Table A { ~PB }
     `);
-    compiler.setSource(fileB, `
+    layout.setSource(fileB, `
       use { tablepartial PA } from './a.dbml'
       TablePartial PB { id int }
       Table B { ~PA }
       Ref: B.id > A.id
     `);
+    const compiler = new Compiler(layout);
 
     // Should resolve without infinite loop or "Cycle detected" error
     expect(() => compiler.bindProject()).not.toThrow();
@@ -145,17 +156,18 @@ Table users {
   });
 
   test('mutual use imports should resolve symbols across files', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, `
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, `
       use { tablepartial PB } from './b.dbml'
       TablePartial PA { id int }
       Table A { ~PB }
     `);
-    compiler.setSource(fileB, `
+    layout.setSource(fileB, `
       use { tablepartial PA } from './a.dbml'
       TablePartial PB { name varchar }
       Table B { ~PA }
     `);
+    const compiler = new Compiler(layout);
 
     compiler.bindProject();
 
@@ -175,11 +187,12 @@ Table users {
   });
 
   test('fileDependencies returns Filepath objects', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, 'Table users { id int }');
-    compiler.setSource(fileB, `
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, 'Table users { id int }');
+    layout.setSource(fileB, `
       use { table users } from './a.dbml'
     `);
+    const compiler = new Compiler(layout);
 
     const deps = compiler.fileDependencies(fileB);
     expect(deps).toHaveLength(1);
@@ -188,14 +201,15 @@ Table users {
   });
 
   test('reachableFiles returns Filepath array', () => {
-    const compiler = new Compiler();
-    compiler.setSource(fileA, 'Table users { id int }');
-    compiler.setSource(fileB, `
+    const layout = new MemoryProjectLayout();
+    layout.setSource(fileA, 'Table users { id int }');
+    layout.setSource(fileB, `
       use { table users } from './a.dbml'
     `);
-    compiler.setSource(fileC, `
+    layout.setSource(fileC, `
       use * from './b.dbml'
     `);
+    const compiler = new Compiler(layout);
 
     const reachable = compiler.reachableFiles(fileC);
     expect(Array.isArray(reachable)).toBe(true);

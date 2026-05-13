@@ -1,4 +1,3 @@
-import { DbmlProjectLayout } from '@/compiler/projectLayout/layout';
 import { isValidIdentifier } from '@/compiler/queries/utils';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { Filepath } from '@/core/types/filepath';
@@ -174,19 +173,16 @@ function findReplacements (
  *      specifier source-name tokens, and refs that flow through unaliased
  *      imports.
  *
- * Returns a fresh `DbmlProjectLayout` containing every file from the input
- * layout with the rename applied where appropriate. Files the rename did not
- * touch are returned with byte-identical source. A lookup miss or name
- * collision still produces a fresh-copy layout (caller can always swap).
+ * Returns a map of absolute file paths to new source content, containing
+ * only the files that were actually changed by the rename. An empty map
+ * indicates a no-op (lookup miss, name collision, or alias rename attempt).
  */
 export function renameTable (
   this: Compiler,
   filepath: Filepath,
   oldName: TableNameInput,
   newName: TableNameInput,
-): DbmlProjectLayout {
-  const newLayout = this.layout.clone();
-
+): Map<string, string> {
   const normalizedOld = normalizeTableName(oldName);
   const normalizedNew = normalizeTableName(newName);
   const oldSchema = normalizedOld.schema;
@@ -195,15 +191,15 @@ export function renameTable (
   const newTable = normalizedNew.table;
 
   const tableSymbol = lookupTableSymbol(this, filepath, oldSchema, oldTable);
-  if (!tableSymbol) return newLayout;
+  if (!tableSymbol) return new Map();
 
   // Inline table aliases (e.g. `Table users as U`) resolve to an AliasSymbol.
   // Renaming via the alias name is a no-op - aliases are not renameable handles;
   // only the direct declaration name (or a use-specifier alias) can be renamed.
-  if (tableSymbol instanceof AliasSymbol) return newLayout;
+  if (tableSymbol instanceof AliasSymbol) return new Map();
 
   if (checkForNameCollision(this, filepath, oldSchema, oldTable, newSchema, newTable)) {
-    return newLayout;
+    return new Map();
   }
 
   // Alias rename: the resolved symbol is a UseSymbol whose alias text matches oldTable.
@@ -215,24 +211,23 @@ export function renameTable (
     const spec = tableSymbol.useSpecifierDeclaration;
     const aliasName = this.nodeAlias(spec).getFiltered(UNHANDLED);
     if (aliasName === oldTable) {
-      return renameAlias(this, newLayout, filepath, spec, tableSymbol, newSchema, newTable);
+      return renameAlias(this, filepath, spec, tableSymbol, newSchema, newTable);
     }
   }
 
-  return renameRealDeclaration(this, newLayout, tableSymbol, oldSchema, oldTable, newSchema, newTable);
+  return renameRealDeclaration(this, tableSymbol, oldSchema, oldTable, newSchema, newTable);
 }
 
 function renameAlias (
   compiler: Compiler,
-  newLayout: DbmlProjectLayout,
   filepath: Filepath,
   spec: UseSpecifierNode,
   useSymbol: UseSymbol,
   newSchema: string,
   newTable: string,
-): DbmlProjectLayout {
-  const source = compiler.layout.getSource(filepath) ?? '';
-  if (!spec.alias) return newLayout;
+): Map<string, string> {
+  const source = compiler.getSource(filepath) ?? '';
+  if (!spec.alias) return new Map();
   const aliasText = source.substring(spec.alias.start, spec.alias.end);
   const usedQuotes = aliasText.includes('"');
   // Aliases live in the default schema - schema prefix is ignored for the alias text itself.
@@ -256,27 +251,30 @@ function renameAlias (
     });
   }
 
-  newLayout.setSource(filepath, applyTextEdits(source, edits));
-  return newLayout;
+  return new Map([
+    [
+      filepath.absolute,
+      applyTextEdits(source, edits),
+    ],
+  ]);
 }
 
 function renameRealDeclaration (
   compiler: Compiler,
-  newLayout: DbmlProjectLayout,
   tableSymbol: NodeSymbol,
   oldSchema: string,
   oldTable: string,
   newSchema: string,
   newTable: string,
-): DbmlProjectLayout {
+): Map<string, string> {
   const original = tableSymbol.originalSymbol;
   const declNode = original.declaration;
-  if (!declNode || !(declNode instanceof ElementDeclarationNode)) return newLayout;
+  if (!declNode || !(declNode instanceof ElementDeclarationNode)) return new Map();
 
   const declFp = declNode.filepath;
-  if (!declFp) return newLayout;
+  if (!declFp) return new Map();
 
-  const declSource = compiler.layout.getSource(declFp) ?? '';
+  const declSource = compiler.getSource(declFp) ?? '';
   const usedQuotes = checkIfDeclarationUsesQuotes(declNode, declSource);
   const newFormatted = formatTableName(newSchema, newTable, usedQuotes);
 
@@ -317,7 +315,7 @@ function renameRealDeclaration (
   for (const ref of directRefs) {
     if (ref === declNameNode) continue; // already handled above
     const fp = ref.filepath;
-    const src = compiler.layout.getSource(fp) ?? '';
+    const src = compiler.getSource(fp) ?? '';
     for (const e of findReplacements([
       ref,
     ], oldSchema, oldTable, newFormatted, src)) {
@@ -325,12 +323,13 @@ function renameRealDeclaration (
     }
   }
 
+  const result = new Map<string, string>();
   for (const {
     fp, edits,
   } of editsByFile.values()) {
-    const src = compiler.layout.getSource(fp) ?? '';
-    newLayout.setSource(fp, applyTextEdits(src, edits));
+    const src = compiler.getSource(fp) ?? '';
+    result.set(fp.absolute, applyTextEdits(src, edits));
   }
 
-  return newLayout;
+  return result;
 }

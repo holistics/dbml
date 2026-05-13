@@ -3,15 +3,17 @@ import { Database, Filepath } from '@/index';
 import { UNHANDLED } from '@/core/types/module';
 import { SymbolKind } from '@/core/types/symbol';
 import type { CanonicalName } from '@/compiler/queries/canonicalName';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 export function setupCompiler (files: Record<string, string>): { compiler: Compiler; sources: Map<Filepath, string> } {
-  const compiler = new Compiler();
+  const layout = new MemoryProjectLayout();
   const sources = new Map<Filepath, string>();
   for (const [path, src] of Object.entries(files)) {
     const filepath = Filepath.from(path);
-    compiler.setSource(filepath, src);
+    layout.setSource(filepath, src);
     sources.set(filepath, src);
   }
+  const compiler = new Compiler(layout);
   return { compiler, sources };
 }
 

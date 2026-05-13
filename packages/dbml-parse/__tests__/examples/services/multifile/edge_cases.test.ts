@@ -4,6 +4,7 @@ import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import { MockTextModel, createPosition } from '../../../utils';
 import { Filepath } from '@/core/types/filepath';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 describe('[advanced] multifile edge cases', () => {
   describe('URI handling edge cases', () => {
@@ -54,9 +55,10 @@ describe('[advanced] multifile edge cases', () => {
   });
 
     it('should handle symbol defined multiple times across files', () => {
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/schema1.dbml'), 'Table users { id int }');
-      compiler.setSource(new Filepath('/schema2.dbml'), 'Table users { id int }');
+      const layout = new MemoryProjectLayout();
+      layout.setSource(new Filepath('/schema1.dbml'), 'Table users { id int }');
+      layout.setSource(new Filepath('/schema2.dbml'), 'Table users { id int }');
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -74,11 +76,12 @@ describe('[advanced] multifile edge cases', () => {
 
     it('should handle references with very long symbol names', () => {
       const longName = 'VeryLongTableNameWithManyCharactersForTestingEdgeCase';
-      const compiler = new Compiler();
-      compiler.setSource(
+      const layout = new MemoryProjectLayout();
+      layout.setSource(
         new Filepath('/models.dbml'),
         `Table ${longName} { id int }`,
       );
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const referencesProvider = new DBMLReferencesProvider(compiler);
@@ -102,8 +105,9 @@ describe('[advanced] multifile edge cases', () => {
 
 Ref: nodes.parent_id > nodes.id`;
 
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/models.dbml'), source);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(new Filepath('/models.dbml'), source);
+      const compiler = new Compiler(layout);
       compiler.bindProject();
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -116,8 +120,9 @@ Ref: nodes.parent_id > nodes.id`;
 
     it('should handle position at end of file', () => {
       const source = 'Table test { id int }';
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/test.dbml'), source);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(new Filepath('/test.dbml'), source);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
@@ -138,8 +143,9 @@ Ref: nodes.parent_id > nodes.id`;
 
     it('should handle position at line 0, column 0', () => {
       const source = 'Table test { id int }';
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/test.dbml'), source);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(new Filepath('/test.dbml'), source);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
@@ -156,8 +162,9 @@ Ref: nodes.parent_id > nodes.id`;
 
     it('should handle very large position values', () => {
       const source = 'Table test { id int }';
-      const compiler = new Compiler();
-      compiler.setSource(new Filepath('/test.dbml'), source);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(new Filepath('/test.dbml'), source);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
