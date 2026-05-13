@@ -140,7 +140,7 @@ export class TablePartialInterpreter {
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
-      switch (sub.type?.value.toLowerCase()) {
+      switch (sub.getElementKind()) {
         case ElementKind.Note:
           this.tablePartial.note = {
             value: normalizeNote(
