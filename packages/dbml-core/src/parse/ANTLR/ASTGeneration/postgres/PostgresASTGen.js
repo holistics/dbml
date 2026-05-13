@@ -283,7 +283,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     const constraints = ctx.colquallist().accept(this);
 
     const serialIncrementType = new Set(['serial', 'smallserial', 'bigserial']);
-    const columnTypeName = type.type_name.toLowerCase();
+    const columnTypeName = type?.type_name?.toLowerCase();
     if ((serialIncrementType.has(columnTypeName))) constraints.increment = true;
 
     return {
