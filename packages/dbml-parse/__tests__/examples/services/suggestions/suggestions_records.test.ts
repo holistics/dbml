@@ -488,3 +488,53 @@ describe('[example] Suggestions Utils - Records', () => {
     });
   });
 });
+
+describe('[example] CompletionItemProvider - Records settings', () => {
+  it('should suggest only example setting on nested records', () => {
+    const program = `Table users {
+  id int [pk]
+  name varchar
+
+  records [] {
+    1, 'Alice'
+  }
+}
+`;
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, program);
+    const compiler = new Compiler(layout);
+    const model = createMockTextModel(program);
+    const provider = new DBMLCompletionItemProvider(compiler);
+    // "  records [] {" — inside the brackets, line 5 col 12
+    const position = createPosition(5, 12);
+    const result = provider.provideCompletionItems(model, position);
+
+    expect(result.suggestions.length).toBe(1);
+    expect(result.suggestions[0].label).toBe('example');
+    expect(result.suggestions[0].insertText).toBe('example');
+  });
+
+  it('should suggest example setting on top-level records', () => {
+    const program = `Table users {
+  id int [pk]
+  name varchar
+}
+
+Records users(id, name) [] {
+  1, 'Alice'
+}
+`;
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, program);
+    const compiler = new Compiler(layout);
+    const model = createMockTextModel(program);
+    const provider = new DBMLCompletionItemProvider(compiler);
+    // "Records users(id, name) [] {" — inside the brackets, line 6 col 26
+    const position = createPosition(6, 26);
+    const result = provider.provideCompletionItems(model, position);
+
+    const exampleSuggestion = result.suggestions.find((s) => s.label === 'example');
+    expect(exampleSuggestion).not.toBeUndefined();
+    expect(exampleSuggestion!.insertText).toBe('example');
+  });
+});
