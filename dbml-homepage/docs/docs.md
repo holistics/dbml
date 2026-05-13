@@ -534,3 +534,25 @@ records users(id, name, age, status, created_at) {
   3, 'Charlie', , Status.pending, '2024-01-15'
 }
 ```
+
+### Example Flag
+
+Records blocks can be marked with the `[example]` flag. Example records are treated as sample data — they are preserved in the DBML output but excluded from SQL `INSERT` statements during export.
+
+```text
+Table users {
+  id int [pk]
+  name varchar
+
+  records [example] {
+    1, 'Alice'
+    2, 'Bob'
+  }
+}
+
+// Also works on top-level records
+records users(id, name) [example] {
+  1, 'Alice'
+  2, 'Bob'
+}
+```
