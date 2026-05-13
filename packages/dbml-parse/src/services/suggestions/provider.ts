@@ -467,6 +467,17 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
         ];
         break;
 
+      case ScopeKind.RECORDS:
+        return {
+          suggestions: [{
+            label: SettingName.Example,
+            insertText: SettingName.Example,
+            kind: CompletionItemKind.Field,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            range: undefined as any,
+          }],
+        };
+
       default:
         attributes = [];
     }
