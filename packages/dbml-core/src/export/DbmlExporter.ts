@@ -405,7 +405,8 @@ class DbmlExporter {
         `  ${row.map(formatRecordValue).join(', ')}`,
       );
 
-      return `Records ${tableRef}(${columnList}) {\n${rowStrs.join('\n')}\n}\n`;
+      const exampleFlag = groupRecords.some((r) => r.example) ? ' [example]' : '';
+      return `Records ${tableRef}(${columnList})${exampleFlag} {\n${rowStrs.join('\n')}\n}\n`;
     });
 
     return recordStrs.join('\n');
