@@ -15,34 +15,6 @@
       }
     },
     {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect a comma ','",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<identifier>@s@[L7:C35, L7:C36]",
-          "snippet": "s",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_NEWLINE",
-      "diagnostic": "Invalid newline encountered while parsing",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<string>@']@[L7:C69, L7:C71]",
-          "snippet": "']",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
       "code": "UNEXPECTED_NEWLINE",
       "diagnostic": "Invalid newline encountered while parsing",
       "filepath": "/main.dbml",
@@ -77,34 +49,6 @@
         "context": {
           "id": "token@<rparen>@)@[L9:C24, L9:C25]",
           "snippet": ")",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<rparen>@)@[L9:C24, L9:C25]",
-          "snippet": ")",
-          "isInvalid": true,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "UNEXPECTED_TOKEN",
-      "diagnostic": "Expect an identifier",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<rbrace>@}@[L11:C0, L11:C1]",
-          "snippet": "}",
           "isInvalid": true,
           "filepath": "/main.dbml"
         }
