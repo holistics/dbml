@@ -41,11 +41,16 @@ class Parser {
   }
 
   static parseDBMLToJSONv2 (str, dbmlCompiler) {
-    const compiler = dbmlCompiler || new Compiler(new MemoryProjectLayout());
-
     const layout = new MemoryProjectLayout();
     layout.setSource(DEFAULT_ENTRY, str);
-    compiler.layout = layout;
+
+    let compiler;
+    if (dbmlCompiler) {
+      dbmlCompiler.layout = layout;
+      compiler = dbmlCompiler;
+    } else {
+      compiler = new Compiler(layout);
+    }
 
     const diags = compiler.parse.errors(DEFAULT_ENTRY).map((error) => ({
       message: error.diagnostic,

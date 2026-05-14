@@ -1,6 +1,5 @@
 import path from 'path';
 import chalk from 'chalk';
-import stripAnsi from 'strip-ansi';
 import {
   createLogger, format, transports,
 } from 'winston';
@@ -22,7 +21,7 @@ const fileFormat = printf((info) => {
   const {
     timestamp: ts, message, stack, rootError,
   } = info as any;
-  let logContent = `${ts}\n${stripAnsi(stack ?? message ?? '')}\n`;
+  let logContent = `${ts}\n${stack ?? message ?? ''}\n`;
   if (rootError) {
     logContent += '\nROOT_ERROR:';
     logContent += `\n${rootError.stack}`;
@@ -48,6 +47,7 @@ const consoleLogger = createLogger({
 const fileLogger = createLogger({
   format: combine(
     timestamp(),
+    format.uncolorize(),
     fileFormat,
   ),
   transports: [
