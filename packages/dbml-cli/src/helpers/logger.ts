@@ -72,6 +72,9 @@ const logger = {
   error (msg: Error | string, {
     console: toConsole,
     file: toFile,
+  }: {
+    console?: boolean;
+    file?: boolean;
   } = {
     console: true,
     file: true,
