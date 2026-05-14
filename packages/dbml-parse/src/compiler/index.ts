@@ -76,11 +76,7 @@ export default class Compiler {
   readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   // The structure of the DbmlProject
-  layout: DbmlProjectLayout;
-
-  constructor (layout: DbmlProjectLayout) {
-    this.layout = layout;
-  }
+  constructor (public layout: DbmlProjectLayout) {}
 
   getSource (filepath: Filepath): string | undefined {
     return this.layout.getSource(filepath);
