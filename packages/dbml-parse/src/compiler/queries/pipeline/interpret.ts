@@ -6,16 +6,32 @@ import { UNHANDLED } from '@/core/types/module';
 import Report from '@/core/types/report';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
-  const bindResult = this.bindFile(filepath);
-  if (bindResult.getErrors().length > 0) {
-    return bindResult.map(() => undefined);
+  // Collect parse and bind errors from all reachable files, not just the entry file
+  const errors: CompileError[] = [];
+  const warnings: CompileWarning[] = [];
+  for (const file of this.reachableFiles(filepath)) {
+    const parseResult = this.parseFile(file);
+    errors.push(...parseResult.getErrors());
+    warnings.push(...parseResult.getWarnings());
   }
+
+  const bindResult = this.bindFile(filepath);
+  errors.push(...bindResult.getErrors());
+  warnings.push(...bindResult.getWarnings());
+
+  if (errors.length > 0) {
+    return new Report(undefined, errors, warnings);
+  }
+
   const {
     ast,
   } = this.parseFile(filepath).getValue();
   const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
-  if (!symbol) return Report.create(undefined);
-  return this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
+  if (!symbol) return new Report(undefined, errors, warnings);
+  const result = this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
+  errors.push(...result.getErrors());
+  warnings.push(...result.getWarnings());
+  return new Report(result.getValue(), errors, warnings);
 }
 
 // Interpret all files. Returns raw MasterDatabase
