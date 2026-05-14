@@ -204,6 +204,8 @@ function markInvalidNode (node: SyntaxNode) {
   } else if (node instanceof UseSpecifierNode) {
     markInvalid(node.importKind);
     markInvalid(node.name);
+    markInvalid(node.asKeyword);
+    markInvalid(node.alias);
   } else if (node instanceof WildcardNode) {
     markInvalid(node.token);
   } else {
@@ -328,7 +330,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   }
 
   if (node instanceof UseSpecifierNode) {
-    return filterUndefined(node.importKind, node.name);
+    return filterUndefined(node.importKind, node.name, node.asKeyword, node.alias);
   }
 
   if (node instanceof WildcardNode) {

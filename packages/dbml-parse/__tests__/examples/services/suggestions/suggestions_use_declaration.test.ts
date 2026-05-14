@@ -288,4 +288,50 @@ Enum color { red blue }
       expect(result.suggestions).toHaveLength(0);
     });
   });
+
+  describe('reused symbols suggested in consumer file', () => {
+    it('suggests tables reused from a transitive file', () => {
+      const compiler = setupMultiFile({
+        '/types.dbml': 'Table products { id int [pk] }',
+        '/base.dbml': "reuse * from './types.dbml'\nTable users { id int [pk] }",
+        '/main.dbml': "use { table } from './base'",
+      });
+      const program = "use { table } from './base'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 13));
+      const labels = result.suggestions.map((s) => s.label);
+      expect(labels).toContain('users');
+      expect(labels).toContain('products');
+    });
+
+    it('does not suggest use-only (non-reused) symbols from transitive file', () => {
+      const compiler = setupMultiFile({
+        '/types.dbml': 'Table products { id int [pk] }',
+        '/base.dbml': "use * from './types.dbml'\nTable users { id int [pk] }",
+        '/main.dbml': "use { table } from './base'",
+      });
+      const program = "use { table } from './base'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 13));
+      const labels = result.suggestions.map((s) => s.label);
+      expect(labels).toContain('users');
+      expect(labels).not.toContain('products');
+    });
+
+    it('suggests enums reused from a transitive file', () => {
+      const compiler = setupMultiFile({
+        '/types.dbml': 'Enum status { active inactive }',
+        '/base.dbml': "reuse * from './types.dbml'",
+        '/main.dbml': "use { enum } from './base'",
+      });
+      const program = "use { enum } from './base'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 12));
+      const labels = result.suggestions.map((s) => s.label);
+      expect(labels).toContain('status');
+    });
+  });
 });

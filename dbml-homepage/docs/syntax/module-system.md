@@ -95,6 +95,7 @@ Only the named elements become available in the importing file. Everything else 
 | `table`        | Table (records and refs come along with it)   |
 | `enum`         | Enum                                          |
 | `tablepartial` | TablePartial                                  |
+| `note`         | Sticky Note                                   |
 | `schema`       | All elements under that schema                |
 | `tablegroup`   | TableGroup (all tables in the group)          |
 

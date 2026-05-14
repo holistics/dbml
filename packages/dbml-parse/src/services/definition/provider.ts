@@ -28,9 +28,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       const node = containers.pop();
       if (!node) continue;
 
-      const refereeResult = this.compiler.nodeReferee(node);
-      if (refereeResult.hasValue(UNHANDLED)) continue;
-      const referee = refereeResult.getValue();
+      const referee = this.compiler.nodeReferee(node).getFiltered(UNHANDLED);
       if (!referee) continue;
 
       let declaration: SyntaxNode | undefined;
