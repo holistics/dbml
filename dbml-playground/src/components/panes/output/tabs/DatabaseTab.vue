@@ -397,6 +397,33 @@
           </div>
         </DbSection>
 
+        <!-- Notes (Sticky Notes) -->
+        <DbSection
+          v-if="database.notes?.length"
+          label="Notes"
+          :count="database.notes.length"
+          :icon="PhNote"
+          icon-color="text-yellow-500"
+        >
+          <div
+            v-for="(note, ni) in database.notes"
+            :key="ni"
+            class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+            :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+          >
+            <VTooltip
+              placement="right"
+              :distance="6"
+            >
+              <PhNote class="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+              <template #popper>
+                <span class="text-xs">Sticky Note</span>
+              </template>
+            </VTooltip>
+            <span class="text-blue-500">{{ note.name }}</span>
+          </div>
+        </DbSection>
+
         <!-- DiagramViews -->
         <DbSection
           label="DiagramViews"
@@ -524,6 +551,7 @@ import {
   PhPuzzlePiece,
   PhLayout,
   PhArrowSquareOut,
+  PhNote,
 } from '@phosphor-icons/vue';
 import TabSettingsButton from './common/TabSettingsButton.vue';
 import type { Database } from '@dbml/parse';
@@ -568,7 +596,7 @@ const totalCount = computed(() => {
   const indexCount = db.tables.reduce((n, t) => n + t.indexes.length, 0);
   return db.tables.length + indexCount + db.refs.length + db.enums.length
     + db.tableGroups.length + (db.records?.length ?? 0) + (db.tablePartials?.length ?? 0)
-    + (db.diagramViews?.length ?? 0) + externalsCount.value;
+    + (db.notes?.length ?? 0) + (db.diagramViews?.length ?? 0) + externalsCount.value;
 });
 
 const expandedTables = ref(new Set<number>());
@@ -626,7 +654,7 @@ function externalIcon (category: string) {
     case 'enum': return PhTextAa;
     case 'tableGroup': return PhFolder;
     case 'tablePartial': return PhPuzzlePiece;
-    case 'note': return PhRows;
+    case 'note': return PhNote;
     default: return PhArrowSquareOut;
   }
 }
@@ -637,7 +665,7 @@ function externalIconColor (category: string): string {
     case 'enum': return 'text-green-600';
     case 'tableGroup': return 'text-yellow-600';
     case 'tablePartial': return 'text-teal-500';
-    case 'note': return 'text-gray-500';
+    case 'note': return 'text-yellow-500';
     default: return 'text-orange-500';
   }
 }

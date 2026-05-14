@@ -222,8 +222,8 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
   if (!usable) return undefined;
 
   // 1. Direct non-schema members
-  const directMember = usable.nonSchemaMembers.find((m) => m.name === name);
-  if (directMember?.isKind(symbolKind)) {
+  const directMember = usable.nonSchemaMembers.find((m) => m.name === name && m.isKind(symbolKind));
+  if (directMember) {
     return directMember;
   }
 

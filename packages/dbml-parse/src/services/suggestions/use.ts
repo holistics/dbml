@@ -5,7 +5,7 @@ import { UNHANDLED } from '@/core/types/module';
 import {
   UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';
-import { SchemaSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
+import { SymbolKind, UseSymbol } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import { isOffsetWithinSpan } from '@/core/utils/span';
@@ -153,7 +153,9 @@ function suggestUseElementNames (
   }
 
   return {
-    suggestions: [...names].map((name) => ({
+    suggestions: [
+      ...names,
+    ].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -274,8 +276,10 @@ function suggestUseFilepath (
 }
 
 // Extract { name, kind } pairs from the use declaration's specifier list.
-function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{ name: string;
-  kind: SymbolKind; }> {
+function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{
+  name: string;
+  kind: SymbolKind;
+}> {
   const specifiers = useDeclaration.specifiers;
   if (!(specifiers instanceof UseSpecifierListNode)) return [];
   return specifiers.specifiers.flatMap((spec: UseSpecifierNode) => {
