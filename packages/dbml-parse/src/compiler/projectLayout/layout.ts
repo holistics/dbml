@@ -8,9 +8,6 @@ export interface DbmlProjectLayout {
 
   exists (filePath: Filepath): boolean;
 
-  // Distinguishing file vs directory lets callers (e.g. filepath suggestions)
-  // decide without re-implementing path-map probing, and gives node-backed
-  // layouts a place to resolve through symlinks.
   isFile (filePath: Filepath): boolean;
   isDirectory (filePath: Filepath): boolean;
 
