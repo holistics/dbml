@@ -1,0 +1,6 @@
+reuse * from './types.dbml'
+
+Table users {
+  id int [pk]
+  name varchar
+}

@@ -1,0 +1,20 @@
+CREATE TABLE "orders" (
+  "id" int PRIMARY KEY,
+  "user_id" int,
+  "product_id" int
+);
+
+CREATE TABLE "users" (
+  "id" int PRIMARY KEY,
+  "name" varchar
+);
+
+CREATE TABLE "products" (
+  "id" int PRIMARY KEY,
+  "name" varchar
+);
+
+ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "orders" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+

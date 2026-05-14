@@ -1,0 +1,4 @@
+Table products {
+  id int [pk]
+  name varchar
+}

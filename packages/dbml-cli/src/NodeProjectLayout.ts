@@ -4,6 +4,7 @@ import {
 import {
   type DbmlProjectLayout, Filepath,
 } from '@dbml/parse';
+import logger from './helpers/logger';
 
 /**
  * A read-only DbmlProjectLayout backed by the Node.js filesystem.
@@ -25,7 +26,10 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   getSource (filePath: Filepath): string | undefined {
     try {
       return readFileSync(filePath.absolute, 'utf-8');
-    } catch {
+    } catch (e) {
+      logger.error(e instanceof Error ? e : new Error(String(e)), {
+        console: false,
+      });
       return undefined;
     }
   }
@@ -35,19 +39,17 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   }
 
   isFile (filePath: Filepath): boolean {
-    try {
-      return statSync(filePath.absolute).isFile();
-    } catch {
-      return false;
-    }
+    const stat = statSync(filePath.absolute, {
+      throwIfNoEntry: false,
+    });
+    return stat?.isFile() ?? false;
   }
 
   isDirectory (filePath: Filepath): boolean {
-    try {
-      return statSync(filePath.absolute).isDirectory();
-    } catch {
-      return false;
-    }
+    const stat = statSync(filePath.absolute, {
+      throwIfNoEntry: false,
+    });
+    return stat?.isDirectory() ?? false;
   }
 
   listDirectory (dirPath?: Filepath): Filepath[] {
@@ -57,7 +59,10 @@ export class NodeProjectLayout implements DbmlProjectLayout {
         .map((entry) => basePath + entry)
         .sort()
         .map(Filepath.from);
-    } catch {
+    } catch (e) {
+      logger.error(e instanceof Error ? e : new Error(String(e)), {
+        console: false,
+      });
       return [];
     }
   }

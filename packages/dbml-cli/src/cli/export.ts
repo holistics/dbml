@@ -32,8 +32,8 @@ export default async function exportHandler (program: Command): Promise<void> {
   const opts = program.opts();
   const format = getFormatOpt(opts);
 
-  const entryPoints = inputPaths.map((p: string) => new Filepath(p));
-  const compiler = new Compiler(new NodeProjectLayout(entryPoints));
+  const entrypoints = inputPaths.map((p: string) => new Filepath(p));
+  const compiler = new Compiler(new NodeProjectLayout(entrypoints));
 
   const outputPlugin = opts.outFile
     ? new OutputFilePlugin(
@@ -48,13 +48,13 @@ export default async function exportHandler (program: Command): Promise<void> {
 
   let hasErrors = false;
 
-  for (const filepath of entryPoints) {
+  for (const filepath of entrypoints) {
     const result = compiler.interpretFile(filepath);
     const errors = result.getErrors();
 
     if (errors.length > 0) {
       hasErrors = true;
-      const isMultifile = compiler.reachableFiles(filepath).length > 1;
+      const isMultifile = compiler.reachableFiles(filepath).length > 1; // If this filepath can reach other files, it's mutifile
       logger.error(
         `\n    ${errors
           .map((e) => {

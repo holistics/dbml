@@ -1,0 +1,5 @@
+use * from './missing.dbml'
+
+Table orders {
+  id int [pk]
+}

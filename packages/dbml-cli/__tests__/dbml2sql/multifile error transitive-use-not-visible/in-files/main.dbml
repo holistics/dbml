@@ -1,0 +1,3 @@
+use * from './base.dbml'
+
+Ref: users.id > products.id
