@@ -28,7 +28,7 @@ export class NodeProjectLayout implements DbmlProjectLayout {
       return readFileSync(filePath.absolute, 'utf-8');
     } catch (e) {
       logger.error(e instanceof Error ? e : new Error(String(e)), {
-        console: false,
+        file: true,
       });
       return undefined;
     }
@@ -39,17 +39,31 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   }
 
   isFile (filePath: Filepath): boolean {
-    const stat = statSync(filePath.absolute, {
-      throwIfNoEntry: false,
-    });
-    return stat?.isFile() ?? false;
+    try {
+      const stat = statSync(filePath.absolute, {
+        throwIfNoEntry: false,
+      });
+      return stat?.isFile() ?? false;
+    } catch (e) {
+      logger.error(e instanceof Error ? e : new Error(String(e)), {
+        file: true,
+      });
+      return false;
+    }
   }
 
   isDirectory (filePath: Filepath): boolean {
-    const stat = statSync(filePath.absolute, {
-      throwIfNoEntry: false,
-    });
-    return stat?.isDirectory() ?? false;
+    try {
+      const stat = statSync(filePath.absolute, {
+        throwIfNoEntry: false,
+      });
+      return stat?.isDirectory() ?? false;
+    } catch (e) {
+      logger.error(e instanceof Error ? e : new Error(String(e)), {
+        file: true,
+      });
+      return false;
+    }
   }
 
   listDirectory (dirPath?: Filepath): Filepath[] {
@@ -61,7 +75,7 @@ export class NodeProjectLayout implements DbmlProjectLayout {
         .map(Filepath.from);
     } catch (e) {
       logger.error(e instanceof Error ? e : new Error(String(e)), {
-        console: false,
+        file: true,
       });
       return [];
     }

@@ -69,7 +69,13 @@ const logger = {
     consoleLogger.warn(msg);
   },
 
-  error (msg: Error | string, { console: toConsole = true, file: toFile = true } = {}) {
+  error (msg: Error | string, {
+    console: toConsole,
+    file: toFile,
+  } = {
+    console: true,
+    file: true,
+  }) {
     if (toConsole) consoleLogger.error(msg);
     if (toFile) fileLogger.error(msg);
   },
