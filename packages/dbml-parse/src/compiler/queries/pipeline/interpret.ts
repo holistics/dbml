@@ -10,7 +10,9 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
   if (bindResult.getErrors().length > 0) {
     return bindResult.map(() => undefined);
   }
-  const ast = this.parseFile(filepath).getValue().ast;
+  const {
+    ast,
+  } = this.parseFile(filepath).getValue();
   const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!symbol) return Report.create(undefined);
   return this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
@@ -44,7 +46,9 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     errors.push(...bindResult.getErrors());
     warnings.push(...bindResult.getWarnings());
 
-    const ast = parseResult.getValue().ast;
+    const {
+      ast,
+    } = parseResult.getValue();
     const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
     const result = symbol ? this.interpretSymbol(symbol, file) : Report.create(UNHANDLED);
     const db = result.getFiltered(UNHANDLED);
