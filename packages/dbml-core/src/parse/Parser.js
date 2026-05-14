@@ -9,8 +9,9 @@ import schemarbParser from './deprecated/schemarbParser.cjs';
 import { CompilerError } from './error';
 
 class Parser {
-  constructor (dbmlCompiler) {
-    this.DBMLCompiler = dbmlCompiler || new Compiler(new MemoryProjectLayout());
+  constructor () {
+    this.layout = new MemoryProjectLayout();
+    this.DBMLCompiler = new Compiler(this.layout);
   }
 
   static parseJSONToDatabase (rawDatabase) {
@@ -40,33 +41,12 @@ class Parser {
     return postgresParser.parse(str);
   }
 
-  static parseDBMLToJSONv2 (str, dbmlCompiler) {
+  static parseDBMLToJSONv2 (str) {
     const layout = new MemoryProjectLayout();
     layout.setSource(DEFAULT_ENTRY, str);
+    const compiler = new Compiler(layout);
 
-    let compiler;
-    if (dbmlCompiler) {
-      dbmlCompiler.layout = layout;
-      compiler = dbmlCompiler;
-    } else {
-      compiler = new Compiler(layout);
-    }
-
-    const diags = compiler.parse.errors(DEFAULT_ENTRY).map((error) => ({
-      message: error.diagnostic,
-      location: {
-        start: {
-          line: error.nodeOrToken.startPos.line + 1,
-          column: error.nodeOrToken.startPos.column + 1,
-        },
-        end: {
-          line: error.nodeOrToken.endPos.line + 1,
-          column: error.nodeOrToken.endPos.column + 1,
-        },
-      },
-      code: error.code,
-    }));
-
+    const diags = convertDbmlParserError(this.DBMLCompiler.parse.errors(DEFAULT_ENTRY));
     if (diags.length > 0) throw CompilerError.create(diags);
 
     return compiler.parse.rawDb(DEFAULT_ENTRY);
@@ -134,9 +114,15 @@ class Parser {
           rawDatabase = Parser.parseDBMLToJSON(str);
           break;
 
-        case 'dbmlv2':
-          rawDatabase = Parser.parseDBMLToJSONv2(str, this.DBMLCompiler);
+        case 'dbmlv2': {
+          this.layout.setSource(DEFAULT_ENTRY, str);
+
+          const diags = convertDbmlParserError(this.DBMLCompiler.parse.errors(DEFAULT_ENTRY));
+          if (diags.length > 0) throw CompilerError.create(diags);
+
+          rawDatabase = this.DBMLCompiler.parse.rawDb(DEFAULT_ENTRY);
           break;
+        }
 
         case 'schemarb':
           rawDatabase = Parser.parseSchemaRbToJSON(str);
@@ -175,3 +161,21 @@ class Parser {
 }
 
 export default Parser;
+
+// Convert the parser error to a format compatible with other parsers' errors
+function convertDbmlParserError (diags) {
+  return diags.map((error) => ({
+    message: error.diagnostic,
+    location: {
+      start: {
+        line: error.nodeOrToken.startPos.line + 1,
+        column: error.nodeOrToken.startPos.column + 1,
+      },
+      end: {
+        line: error.nodeOrToken.endPos.line + 1,
+        column: error.nodeOrToken.endPos.column + 1,
+      },
+    },
+    code: error.code,
+  }));
+}
