@@ -13,7 +13,9 @@ import figures from 'figures';
 import {
   SyntaxError,
 } from '../errors';
-import logger from '../helpers/logger';
+import {
+  consoleLogger, fileLogger,
+} from '../helpers/logger';
 import config from './config';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
@@ -44,9 +46,11 @@ export default async function importHandler (program: Command) {
     }
   } catch (error) {
     if (error instanceof CompilerError) {
-      logger.error(`\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath ?? '', diag)).map(({
+      const msg = `\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath ?? '', diag)).map(({
         message,
-      }) => message).join('\n    ')}`);
+      }) => message).join('\n    ')}`;
+      consoleLogger.error(msg);
+      fileLogger.error(msg);
       return;
     }
     throw error;

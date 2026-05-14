@@ -33,7 +33,7 @@ const fileFormat = printf((info) => {
   return logContent;
 });
 
-const consoleLogger = createLogger({
+export const consoleLogger = createLogger({
   format: combine(
     consoleFormat,
   ),
@@ -44,7 +44,7 @@ const consoleLogger = createLogger({
   ],
 });
 
-const fileLogger = createLogger({
+export const fileLogger = createLogger({
   format: combine(
     timestamp(),
     format.uncolorize(),
@@ -57,31 +57,3 @@ const fileLogger = createLogger({
     }),
   ],
 });
-
-const logger = {
-  debug (msg: string) {
-    consoleLogger.debug(msg);
-  },
-  info (msg: string) {
-    consoleLogger.info(msg);
-  },
-  warn (msg: string) {
-    consoleLogger.warn(msg);
-  },
-
-  error (msg: Error | string, {
-    console: toConsole,
-    file: toFile,
-  }: {
-    console?: boolean;
-    file?: boolean;
-  } = {
-    console: true,
-    file: true,
-  }) {
-    if (toConsole) consoleLogger.error(msg);
-    if (toFile) fileLogger.error(msg);
-  },
-};
-
-export default logger;

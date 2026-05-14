@@ -13,7 +13,9 @@ import figures from 'figures';
 import {
   NodeProjectLayout,
 } from '../NodeProjectLayout';
-import logger from '../helpers/logger';
+import {
+  consoleLogger, fileLogger,
+} from '../helpers/logger';
 import config from './config';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
@@ -55,18 +57,18 @@ export default async function exportHandler (program: Command): Promise<void> {
     if (errors.length > 0) {
       hasErrors = true;
       const isMultifile = compiler.reachableFiles(filepath).length > 1; // If this filepath can reach other files, it's mutifile
-      logger.error(
-        `\n    ${errors
-          .map((e) => {
-            const pos = e.nodeOrToken.startPos;
-            const line = pos.line + 1;
-            const col = pos.column + 1;
-            const location = chalk.cyan(isMultifile ? e.filepath.relativeTo(process.cwd()) : e.filepath.basename);
-            const position = chalk.yellow(`(${line},${col})`);
-            return `${location}${position}: ${e.message}`;
-          })
-          .join('\n    ')}`,
-      );
+      const msg = `\n    ${errors
+        .map((e) => {
+          const pos = e.nodeOrToken.startPos;
+          const line = pos.line + 1;
+          const col = pos.column + 1;
+          const location = chalk.cyan(isMultifile ? e.filepath.relativeTo(process.cwd()) : e.filepath.basename);
+          const position = chalk.yellow(`(${line},${col})`);
+          return `${location}${position}: ${e.message}`;
+        })
+        .join('\n    ')}`;
+      consoleLogger.error(msg);
+      fileLogger.error(msg);
       continue;
     }
 
