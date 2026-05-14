@@ -553,8 +553,7 @@ Table employees {
 Ref: employees.dept_id > departments.id
 `);
     partialLayout.setSource(fp, `use { table employees } from './source.dbml'`);
-    const partial = new Compiler();
-    partial.layout = partialLayout;
+    const partial = new Compiler(partialLayout);
     const result = partial.interpretFile(fp);
     const db = result.getValue() as Database | undefined;
     expect(db?.refs ?? []).toHaveLength(0);

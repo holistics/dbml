@@ -17,7 +17,7 @@ export interface DbmlProjectLayout {
 }
 
 export class MemoryProjectLayout implements DbmlProjectLayout {
-  private files: Map<string, string>;
+  private readonly files: Map<string, string>;
 
   constructor (files: Map<string, string> | Record<string, string> = {}) {
     this.files = files instanceof Map

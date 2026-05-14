@@ -20,7 +20,7 @@ import { NodeSymbolIdGenerator, SymbolFactory } from '@/core/types/symbol';
 import {
   DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
 } from '@/services/index';
-import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
+import { type DbmlProjectLayout } from './projectLayout';
 import {
   containerElement, containerScope, containerScopeKind, containerStack, containerToken,
 } from './queries/container';
@@ -78,7 +78,7 @@ export default class Compiler {
   // The structure of the DbmlProject
   layout: DbmlProjectLayout;
 
-  constructor (layout: DbmlProjectLayout = new MemoryProjectLayout()) {
+  constructor (layout: DbmlProjectLayout) {
     this.layout = layout;
   }
 

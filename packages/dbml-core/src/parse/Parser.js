@@ -10,7 +10,7 @@ import { CompilerError } from './error';
 
 class Parser {
   constructor (dbmlCompiler) {
-    this.DBMLCompiler = dbmlCompiler || new Compiler();
+    this.DBMLCompiler = dbmlCompiler || new Compiler(new MemoryProjectLayout());
   }
 
   static parseJSONToDatabase (rawDatabase) {
@@ -41,7 +41,7 @@ class Parser {
   }
 
   static parseDBMLToJSONv2 (str, dbmlCompiler) {
-    const compiler = dbmlCompiler || new Compiler();
+    const compiler = dbmlCompiler || new Compiler(new MemoryProjectLayout());
 
     const layout = new MemoryProjectLayout();
     layout.setSource(DEFAULT_ENTRY, str);

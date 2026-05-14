@@ -33,8 +33,7 @@ export default async function exportHandler (program: Command): Promise<void> {
   const format = getFormatOpt(opts);
 
   const entryPoints = inputPaths.map((p: string) => new Filepath(p));
-  const compiler = new Compiler();
-  compiler.layout = new NodeProjectLayout(entryPoints);
+  const compiler = new Compiler(new NodeProjectLayout(entryPoints));
 
   const outputPlugin = opts.outFile
     ? new OutputFilePlugin(

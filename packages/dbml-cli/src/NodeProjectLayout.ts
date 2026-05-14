@@ -7,9 +7,16 @@ import {
 
 /**
  * A read-only DbmlProjectLayout backed by the Node.js filesystem.
+ *
+ * getSource      -> fs.readFileSync
+ * exists         -> statSync (isFile || isDirectory)
+ * isFile         -> statSync().isFile()
+ * isDirectory    -> statSync().isDirectory()
+ * listDirectory  -> fs.readdirSync
+ * getEntrypoints -> filtered constructor arg
  */
 export class NodeProjectLayout implements DbmlProjectLayout {
-  private entryPoints: Filepath[];
+  private readonly entryPoints: Filepath[];
 
   constructor (entryPoints: Filepath[]) {
     this.entryPoints = [...entryPoints];
