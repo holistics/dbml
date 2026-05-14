@@ -221,7 +221,7 @@ export class TableInterpreter {
       const tableUseInThisFile = tableSymbol ? (this.compiler.symbolUses(tableSymbol).getFiltered(UNHANDLED) ?? []).find((u) => u.filepath.equals(this.filepath)) : undefined;
       errors.push(new CompileError(
         CompileErrorCode.UNSUPPORTED,
-        `Import TablePartial ${partial.name} from '${partialSymbol.filepath}' first. Currently, importing a table that uses a table partial requires that table partial to also be in scope.`,
+        `TablePartial ${partial.name} from '${partialSymbol.filepath}' should be imported. Currently, importing a table that uses a table partial requires that table partial to also be in scope.`,
         tableUseInThisFile?.useSpecifierDeclaration ?? injection,
       ));
     }
