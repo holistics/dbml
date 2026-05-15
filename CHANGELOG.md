@@ -2,12 +2,13 @@
 
 #### :rocket: New Feature
 * `dbml-cli`, `dbml-core`, `dbml-parse`
-  * [#870](https://github.com/holistics/dbml/pull/870) Query-based compiler ([@huydo862003](https://github.com/huydo862003))
   * [#870](https://github.com/holistics/dbml/pull/870) Multifile support ([@huydo862003](https://github.com/huydo862003))
-* `dbml-core`, `dbml-parse`
-  * [#883](https://github.com/holistics/dbml/pull/883) Playground rewrite ([@huydo862003](https://github.com/huydo862003))
 
 #### :boom: Breaking Change
+* `dbml-core`, `dbml-parse`, `dbml-playground`
+  * [#883](https://github.com/holistics/dbml/pull/883) Playground rewrite ([@huydo862003](https://github.com/huydo862003))
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#870](https://github.com/holistics/dbml/pull/870) Query-based compiler ([@huydo862003](https://github.com/huydo862003))
 * `dbml-core`
   * [#870](https://github.com/holistics/dbml/pull/870) `Parser` constructor no longer accepts a compiler. ([@huydo862003](https://github.com/huydo862003))
   * [#870](https://github.com/holistics/dbml/pull/870) `Parser.parseDBMLToJSONv2` no longer accepts a compiler parameter. ([@huydo862003](https://github.com/huydo862003))
