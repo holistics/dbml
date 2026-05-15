@@ -179,7 +179,7 @@ function suggestUseSpecifierStart (): CompletionList {
       {
         label: '{ } from',
         detail: 'import named',
-        insertText: "{ ${1:kind} ${2:name} } from '${3:./path}'",
+        insertText: "{ ${1:type} ${2:name} } from '${3:./path}'",
         insertTextRules: CompletionItemInsertTextRule.InsertAsSnippet,
         kind: CompletionItemKind.Snippet,
         range: undefined as any,
