@@ -1,35 +1,23 @@
+import { partition } from 'lodash-es';
+import type Compiler from '@/compiler';
+import type { CompileError } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import {
-  partition,
-} from 'lodash-es';
-import {
-  CompileError,
-} from '@/core/types/errors';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  SymbolKind,
-} from '@/core/types/symbol/symbolIndex';
-import {
-  isWildcardExpression,
-} from '@/core/utils/validate';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode,
+  BlockExpressionNode,
+  type ElementDeclarationNode,
+  FunctionApplicationNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  lookupAndBindInScope, scanNonListNodeForBinding,
-} from '@/core/global_modules/utils';
+import type { SyntaxToken } from '@/core/types/tokens';
+import { isWildcardExpression } from '@/core/utils/validate';
+import { scanNonListNodeForBinding } from '../utils';
 
 export default class DiagramViewBinder {
-  private symbolFactory: SymbolFactory;
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
   }
 
   bind (): CompileError[] {
@@ -54,35 +42,15 @@ export default class DiagramViewBinder {
         return [];
       }
 
-      const blockType = sub.type.value.toLowerCase();
-
-      // Only bind sub-blocks with body
       if (!(sub.body instanceof BlockExpressionNode)) {
         return [];
       }
 
-      // Bind fields based on block type
-      const errors: CompileError[] = [];
-
-      switch (blockType) {
-        case 'tables':
-          errors.push(...this.bindTableReferences(sub.body));
-          break;
-        case 'notes':
-          errors.push(...this.bindNoteReferences(sub.body));
-          break;
-        case 'tablegroups':
-          errors.push(...this.bindTableGroupReferences(sub.body));
-          break;
-        case 'schemas':
-          errors.push(...this.bindSchemaReferences(sub.body));
-          break;
-        default:
-          // Unknown block type - will be caught by validator
-          break;
-      }
-
-      return errors;
+      if (sub.isKind(ElementKind.DiagramViewTables)) return this.bindTableReferences(sub.body);
+      if (sub.isKind(ElementKind.DiagramViewNotes)) return this.bindNoteReferences(sub.body);
+      if (sub.isKind(ElementKind.DiagramViewTableGroups)) return this.bindTableGroupReferences(sub.body);
+      if (sub.isKind(ElementKind.DiagramViewSchemas)) return this.bindSchemaReferences(sub.body);
+      return [];
     });
   }
 
@@ -92,12 +60,7 @@ export default class DiagramViewBinder {
     ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
-      if (!field.callee) {
-        return [];
-      }
-
-      // Skip wildcard
-      if (isWildcardExpression(field.callee)) {
+      if (!field.callee || isWildcardExpression(field.callee)) {
         return [];
       }
 
@@ -112,18 +75,12 @@ export default class DiagramViewBinder {
         if (!tableBindee) {
           return [];
         }
-        const schemaBindees = bindee.variables;
+        const schemaBindee = bindee.variables.pop();
 
-        return lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({
-            node: b,
-            kind: SymbolKind.Schema,
-          })),
-          {
-            node: tableBindee,
-            kind: SymbolKind.Table,
-          },
-        ]);
+        return [
+          ...(schemaBindee ? this.compiler.nodeReferee(schemaBindee).getErrors() : []),
+          ...this.compiler.nodeReferee(tableBindee).getErrors(),
+        ];
       });
     });
   }
@@ -134,12 +91,7 @@ export default class DiagramViewBinder {
     ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
-      if (!field.callee) {
-        return [];
-      }
-
-      // Skip wildcard
-      if (isWildcardExpression(field.callee)) {
+      if (!field.callee || isWildcardExpression(field.callee)) {
         return [];
       }
 
@@ -151,12 +103,7 @@ export default class DiagramViewBinder {
           return [];
         }
 
-        return lookupAndBindInScope(this.ast, [
-          {
-            node: noteBindee,
-            kind: SymbolKind.StickyNote,
-          },
-        ]);
+        return this.compiler.nodeReferee(noteBindee).getErrors();
       });
     });
   }
@@ -167,12 +114,7 @@ export default class DiagramViewBinder {
     ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
-      if (!field.callee) {
-        return [];
-      }
-
-      // Skip wildcard
-      if (isWildcardExpression(field.callee)) {
+      if (!field.callee || isWildcardExpression(field.callee)) {
         return [];
       }
 
@@ -183,18 +125,8 @@ export default class DiagramViewBinder {
         if (!tableGroupBindee) {
           return [];
         }
-        const schemaBindees = bindee.variables;
 
-        return lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({
-            node: b,
-            kind: SymbolKind.Schema,
-          })),
-          {
-            node: tableGroupBindee,
-            kind: SymbolKind.TableGroup,
-          },
-        ]);
+        return this.compiler.nodeReferee(tableGroupBindee).getErrors();
       });
     });
   }
@@ -205,23 +137,15 @@ export default class DiagramViewBinder {
     ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
 
     return (fields as FunctionApplicationNode[]).flatMap((field) => {
-      if (!field.callee) {
-        return [];
-      }
-
-      // Skip wildcard
-      if (isWildcardExpression(field.callee)) {
+      if (!field.callee || isWildcardExpression(field.callee)) {
         return [];
       }
 
       const bindees = scanNonListNodeForBinding(field.callee);
 
-      return bindees.flatMap((bindee) => {
-        return lookupAndBindInScope(this.ast, bindee.variables.map((b) => ({
-          node: b,
-          kind: SymbolKind.Schema,
-        })));
-      });
+      return bindees.flatMap((bindee) =>
+        bindee.variables.flatMap((b) => this.compiler.nodeReferee(b).getErrors()),
+      );
     });
   }
 }

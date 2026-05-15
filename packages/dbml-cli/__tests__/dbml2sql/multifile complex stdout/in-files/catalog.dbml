@@ -1,0 +1,10 @@
+Table products {
+  id int [pk]
+  name varchar
+  price decimal
+
+  indexes {
+    (name, price) [unique, name: 'products_name_price_idx']
+    price
+  }
+}

@@ -25,7 +25,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "pay_by_quarter",
             "not_null": true,
             "pk": false,
@@ -48,7 +47,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "schedule",
             "not_null": false,
             "pk": false,

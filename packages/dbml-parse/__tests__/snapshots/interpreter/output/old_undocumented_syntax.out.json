@@ -27,7 +27,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "store_id",
             "not_null": true,
             "pk": false,
@@ -50,7 +49,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "first_name",
             "not_null": true,
             "pk": false,
@@ -78,7 +76,6 @@
               "type": "boolean",
               "value": "false"
             },
-            "increment": false,
             "name": "last_name",
             "not_null": true,
             "pk": false,
@@ -106,7 +103,6 @@
               "type": "boolean",
               "value": "null"
             },
-            "increment": false,
             "name": "email",
             "pk": false,
             "token": {
@@ -129,7 +125,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "address_id",
             "not_null": true,
             "pk": false,
@@ -156,7 +151,6 @@
               "type": "boolean",
               "value": "true"
             },
-            "increment": false,
             "name": "active",
             "not_null": true,
             "pk": false,
@@ -179,7 +173,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "create_date",
             "not_null": true,
             "pk": false,
@@ -206,7 +199,6 @@
               "type": "expression",
               "value": "CURRENT_TIMESTAMP"
             },
-            "increment": false,
             "name": "last_update",
             "pk": false,
             "token": {
@@ -246,7 +238,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -272,7 +263,6 @@
               "type": "string",
               "value": "hello"
             },
-            "increment": false,
             "name": "name",
             "pk": false,
             "token": {

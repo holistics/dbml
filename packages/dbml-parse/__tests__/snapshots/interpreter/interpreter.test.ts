@@ -6,13 +6,12 @@ import {
   describe, expect, it,
 } from 'vitest';
 import {
-  scanTestNames, Snappable, toSnapshot,
+  scanTestNames, toSnapshot,
 } from '@tests/utils';
 import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
-import type {
-  Database,
-} from '@/index';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
+import type { Database } from '@/core/types/schemaJson';
 import type Report from '@/core/types/report';
 
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
@@ -32,8 +31,9 @@ describe('[snapshot] interpreter', () => {
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, program);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, program);
+    const compiler = new Compiler(layout);
     const report = compiler.interpretFile(DEFAULT_ENTRY);
 
     it(testName, () => expect(serializeInterpreterResult(compiler, report)).toMatchFileSnapshot(path.resolve(__dirname, `./output/${testName}.out.json`)));

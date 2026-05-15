@@ -40,7 +40,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -62,7 +61,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "username",
             "not_null": true,
             "pk": false,

@@ -29,6 +29,26 @@
     "publicSchema": [
       {
         "context": {
+          "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+          "snippet": "Table User... U1 {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
+          "snippet": "Table User... U1 {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+          "snippet": "Table User... U1 {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
+          "snippet": "Table User... U1 {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
           "id": "symbol@Table@Users@[L4:C0, L6:C1]",
           "snippet": "Table User... U2 {\r\n\r\n}"
         },

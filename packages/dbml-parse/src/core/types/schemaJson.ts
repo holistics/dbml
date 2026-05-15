@@ -1,9 +1,5 @@
-import type {
-  Filepath,
-} from './filepath';
-import type {
-  Position,
-} from './position';
+import type { Filepath } from './filepath';
+import type { Position } from './position';
 
 export enum AliasKind {
   Table = 'table',
@@ -261,7 +257,7 @@ export interface RecordValue {
 }
 
 export interface TableRecord {
-  schemaName: string | undefined;
+  schemaName: string | null;
   tableName: string;
   columns: string[];
   values: RecordValue[][];

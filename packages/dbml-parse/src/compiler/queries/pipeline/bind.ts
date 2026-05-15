@@ -1,51 +1,34 @@
-import Binder from '@/core/global_modules/program/bind';
-import {
-  pickBinder,
-} from '@/core/global_modules/utils';
-import type {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  UNHANDLED, type Unhandled,
-} from '@/core/types/module';
-import {
-  ElementDeclarationNode, ProgramNode,
-} from '@/core/types/nodes';
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
+import type { Filepath } from '@/core/types/filepath';
 import Report from '@/core/types/report';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
 import type Compiler from '../../index';
+import { collectTransitiveDependencies } from '../utils';
 
-export function bindFile (this: Compiler, filepath: Filepath): Report<ProgramNode> {
-  return this.validateFile(filepath).chain((program) =>
-    this.bindNode(program) as Report<ProgramNode>,
+export function bindFile (this: Compiler, filepath: Filepath): Report<void> {
+  const validateResult = this.validateFile(filepath);
+  const ast = this.parseFile(filepath).getValue().ast;
+  const bindResult = this.bindNode(ast).map(() => undefined);
+  return new Report(
+    undefined,
+    [
+      ...validateResult.getErrors(),
+      ...bindResult.getErrors(),
+    ],
+    [
+      ...validateResult.getWarnings(),
+      ...bindResult.getWarnings(),
+    ],
   );
 }
 
-export function bindNode (this: Compiler, node: SyntaxNode): Report<SyntaxNode> | Report<Unhandled> {
-  if (node instanceof ProgramNode) {
-    return new Binder(node, this.symbolFactory).resolve();
+export function bindProject (this: Compiler): Map<string, Report<void>> {
+  const deps = collectTransitiveDependencies(this, this.layout.getEntrypoints());
+
+  const result = new Map<string, Report<void>>();
+
+  for (const d of deps) {
+    const bindResult = this.bindFile(d);
+    result.set(d.absolute, bindResult);
   }
 
-  if (!(node instanceof ElementDeclarationNode) || !node.type) {
-    return Report.create(UNHANDLED);
-  }
-
-  const program = node.parentNode;
-  if (!(program instanceof ProgramNode)) {
-    return Report.create(UNHANDLED);
-  }
-
-  const _Binder = pickBinder(node as ElementDeclarationNode & { type: SyntaxToken });
-  const binder = new _Binder(
-    node as ElementDeclarationNode & { type: SyntaxToken },
-    program,
-    this.symbolFactory,
-  );
-
-  return Report.create(node as SyntaxNode, binder.bind());
+  return result;
 }

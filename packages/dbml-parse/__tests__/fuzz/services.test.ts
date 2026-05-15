@@ -1,18 +1,13 @@
-import {
-  describe, expect, it,
-} from 'vitest';
+import { describe, expect, it } from 'vitest';
 import * as fc from 'fast-check';
 import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import {
-  dbmlSchemaArbitrary, tableArbitrary,
-} from '../utils/arbitraries';
-import {
-  MockTextModel, createPosition,
-} from '../utils';
+import { dbmlSchemaArbitrary, tableArbitrary } from '../utils/arbitraries';
+import { MockTextModel, createPosition } from '../utils';
 
 const FUZZ_CONFIG = {
   numRuns: 50,
@@ -22,17 +17,13 @@ const ROBUSTNESS_CONFIG = {
 };
 
 // Helper to create valid position within source bounds
-function clampPosition (line: number, col: number, source: string): { line: number;
-  col: number; } {
+function clampPosition (line: number, col: number, source: string): { line: number; col: number } {
   const lines = source.split('\n');
   const maxLine = Math.max(0, lines.length - 1);
   const clampedLine = Math.min(Math.max(0, line), maxLine);
   const maxCol = lines[clampedLine]?.length || 0;
   const clampedCol = Math.min(Math.max(0, col), maxCol);
-  return {
-    line: clampedLine,
-    col: clampedCol,
-  };
+  return { line: clampedLine, col: clampedCol };
 }
 
 describe('[fuzz] DefinitionProvider - robustness', () => {
@@ -43,8 +34,9 @@ describe('[fuzz] DefinitionProvider - robustness', () => {
         fc.nat(),
         fc.nat(),
         (source: string, line: number, col: number) => {
-          const compiler = new Compiler();
-          compiler.setSource(DEFAULT_ENTRY, source);
+          const layout = new MemoryProjectLayout();
+          layout.setSource(DEFAULT_ENTRY, source);
+          const compiler = new Compiler(layout);
 
           const definitionProvider = new DBMLDefinitionProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -70,8 +62,9 @@ describe('[fuzz] DefinitionProvider - robustness', () => {
         fc.nat(),
         fc.nat(),
         (source: string, line: number, col: number) => {
-          const compiler = new Compiler();
-          compiler.setSource(DEFAULT_ENTRY, source);
+          const layout = new MemoryProjectLayout();
+          layout.setSource(DEFAULT_ENTRY, source);
+          const compiler = new Compiler(layout);
 
           const definitionProvider = new DBMLDefinitionProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -93,16 +86,15 @@ describe('[fuzz] DefinitionProvider - robustness', () => {
   it('should return valid result structure when definitions are found', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
-        const compiler = new Compiler();
-        compiler.setSource(DEFAULT_ENTRY, source);
+        const layout = new MemoryProjectLayout();
+        layout.setSource(DEFAULT_ENTRY, source);
+        const compiler = new Compiler(layout);
 
         const definitionProvider = new DBMLDefinitionProvider(compiler);
         const model = new MockTextModel(source) as any;
 
         // Use clamped position to increase chance of valid results
-        const {
-          line: clampedLine, col: clampedCol,
-        } = clampPosition(line, col, source);
+        const { line: clampedLine, col: clampedCol } = clampPosition(line, col, source);
         const position = createPosition(clampedLine + 1, clampedCol + 1);
 
         const result = definitionProvider.provideDefinition(model, position);
@@ -133,8 +125,9 @@ describe('[fuzz] ReferencesProvider - robustness', () => {
         fc.nat(),
         fc.nat(),
         (source: string, line: number, col: number) => {
-          const compiler = new Compiler();
-          compiler.setSource(DEFAULT_ENTRY, source);
+          const layout = new MemoryProjectLayout();
+          layout.setSource(DEFAULT_ENTRY, source);
+          const compiler = new Compiler(layout);
 
           const referencesProvider = new DBMLReferencesProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -160,8 +153,9 @@ describe('[fuzz] ReferencesProvider - robustness', () => {
         fc.nat(),
         fc.nat(),
         (source: string, line: number, col: number) => {
-          const compiler = new Compiler();
-          compiler.setSource(DEFAULT_ENTRY, source);
+          const layout = new MemoryProjectLayout();
+          layout.setSource(DEFAULT_ENTRY, source);
+          const compiler = new Compiler(layout);
 
           const referencesProvider = new DBMLReferencesProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -183,15 +177,14 @@ describe('[fuzz] ReferencesProvider - robustness', () => {
   it('should return valid result structure when references are found', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
-        const compiler = new Compiler();
-        compiler.setSource(DEFAULT_ENTRY, source);
+        const layout = new MemoryProjectLayout();
+        layout.setSource(DEFAULT_ENTRY, source);
+        const compiler = new Compiler(layout);
 
         const referencesProvider = new DBMLReferencesProvider(compiler);
         const model = new MockTextModel(source) as any;
 
-        const {
-          line: clampedLine, col: clampedCol,
-        } = clampPosition(line, col, source);
+        const { line: clampedLine, col: clampedCol } = clampPosition(line, col, source);
         const position = createPosition(clampedLine + 1, clampedCol + 1);
 
         const result = referencesProvider.provideReferences(model, position);
@@ -219,8 +212,9 @@ describe('[fuzz] CompletionItemProvider - robustness', () => {
         fc.nat(),
         fc.nat(),
         (source: string, line: number, col: number) => {
-          const compiler = new Compiler();
-          compiler.setSource(DEFAULT_ENTRY, source);
+          const layout = new MemoryProjectLayout();
+          layout.setSource(DEFAULT_ENTRY, source);
+          const compiler = new Compiler(layout);
 
           const completionProvider = new DBMLCompletionItemProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -246,8 +240,9 @@ describe('[fuzz] CompletionItemProvider - robustness', () => {
         fc.nat(),
         fc.nat(),
         (source: string, line: number, col: number) => {
-          const compiler = new Compiler();
-          compiler.setSource(DEFAULT_ENTRY, source);
+          const layout = new MemoryProjectLayout();
+          layout.setSource(DEFAULT_ENTRY, source);
+          const compiler = new Compiler(layout);
 
           const completionProvider = new DBMLCompletionItemProvider(compiler);
           const model = new MockTextModel(source) as any;
@@ -269,27 +264,24 @@ describe('[fuzz] CompletionItemProvider - robustness', () => {
   it('should return valid result structure when completions are provided', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
-        const compiler = new Compiler();
-        compiler.setSource(DEFAULT_ENTRY, source);
+        const layout = new MemoryProjectLayout();
+        layout.setSource(DEFAULT_ENTRY, source);
+        const compiler = new Compiler(layout);
 
         const completionProvider = new DBMLCompletionItemProvider(compiler);
         const model = new MockTextModel(source) as any;
 
-        const {
-          line: clampedLine, col: clampedCol,
-        } = clampPosition(line, col, source);
+        const { line: clampedLine, col: clampedCol } = clampPosition(line, col, source);
         const position = createPosition(clampedLine + 1, clampedCol + 1);
 
         const result = completionProvider.provideCompletionItems(model, position);
 
         // Result should have valid structure
-        if (result && result.suggestions) {
-          expect(result.suggestions).toBeInstanceOf(Array);
-          result.suggestions.forEach((suggestion) => {
-            expect(suggestion.label).toBeDefined();
-            expect(suggestion.insertText).toBeDefined();
-          });
-        }
+        expect(result.suggestions).toBeInstanceOf(Array);
+        result.suggestions.forEach((suggestion) => {
+          expect(suggestion.label).toBeDefined();
+          expect(suggestion.insertText).toBeDefined();
+        });
       }),
       FUZZ_CONFIG,
     );
@@ -300,8 +292,9 @@ describe('[fuzz] services - consistency', () => {
   it('should produce consistent results when called multiple times', () => {
     fc.assert(
       fc.property(dbmlSchemaArbitrary, fc.nat(), fc.nat(), (source: string, line: number, col: number) => {
-        const compiler = new Compiler();
-        compiler.setSource(DEFAULT_ENTRY, source);
+        const layout = new MemoryProjectLayout();
+        layout.setSource(DEFAULT_ENTRY, source);
+        const compiler = new Compiler(layout);
 
         const definitionProvider = new DBMLDefinitionProvider(compiler);
         const model = new MockTextModel(source) as any;
@@ -330,10 +323,11 @@ describe('[fuzz] services - consistency', () => {
         fc.nat(),
         fc.nat(),
         (source1: string, source2: string, line: number, col: number) => {
-          const compiler = new Compiler();
+          const layout = new MemoryProjectLayout();
+          layout.setSource(DEFAULT_ENTRY, source1);
+          const compiler = new Compiler(layout);
 
           // Set first source
-          compiler.setSource(DEFAULT_ENTRY, source1);
           const model1 = new MockTextModel(source1) as any;
           const definitionProvider = new DBMLDefinitionProvider(compiler);
 
@@ -342,7 +336,7 @@ describe('[fuzz] services - consistency', () => {
             definitionProvider.provideDefinition(model1, createPosition(1, 1));
 
             // Update source
-            compiler.setSource(DEFAULT_ENTRY, source2);
+            layout.setSource(DEFAULT_ENTRY, source2);
             const model2 = new MockTextModel(source2) as any;
 
             definitionProvider.provideDefinition(model2, createPosition(line + 1, col + 1));
@@ -361,8 +355,9 @@ describe('[fuzz] services - consistency', () => {
 
 describe('[fuzz] services - edge cases', () => {
   it('should handle empty source', () => {
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, '');
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, '');
+    const compiler = new Compiler(layout);
 
     const model = new MockTextModel('') as any;
     const position = createPosition(1, 1);
@@ -379,8 +374,9 @@ describe('[fuzz] services - edge cases', () => {
   it('should handle position beyond source bounds', () => {
     fc.assert(
       fc.property(tableArbitrary, (source: string) => {
-        const compiler = new Compiler();
-        compiler.setSource(DEFAULT_ENTRY, source);
+        const layout = new MemoryProjectLayout();
+        layout.setSource(DEFAULT_ENTRY, source);
+        const compiler = new Compiler(layout);
 
         const model = new MockTextModel(source) as any;
 
@@ -410,8 +406,9 @@ describe('[fuzz] services - edge cases', () => {
   it('should handle zero/negative positions', () => {
     fc.assert(
       fc.property(tableArbitrary, (source: string) => {
-        const compiler = new Compiler();
-        compiler.setSource(DEFAULT_ENTRY, source);
+        const layout = new MemoryProjectLayout();
+        layout.setSource(DEFAULT_ENTRY, source);
+        const compiler = new Compiler(layout);
 
         const model = new MockTextModel(source) as any;
 
@@ -436,8 +433,9 @@ describe('[fuzz] services - edge cases', () => {
 
   it('should handle very long single-line source', () => {
     const longLine = 'Table t { ' + 'col int '.repeat(1000) + '}';
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, longLine);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, longLine);
+    const compiler = new Compiler(layout);
 
     const model = new MockTextModel(longLine) as any;
 
@@ -445,12 +443,7 @@ describe('[fuzz] services - edge cases', () => {
     const completionProvider = new DBMLCompletionItemProvider(compiler);
 
     // Test at various positions
-    [
-      1,
-      100,
-      500,
-      1000,
-    ].forEach((col) => {
+    [1, 100, 500, 1000].forEach((col) => {
       expect(() => {
         definitionProvider.provideDefinition(model, createPosition(1, col));
         completionProvider.provideCompletionItems(model, createPosition(1, col));
@@ -462,19 +455,15 @@ describe('[fuzz] services - edge cases', () => {
     const manyLines = Array.from({
       length: 500,
     }, (_, i) => `Table t${i} { id int }`).join('\n');
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, manyLines);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, manyLines);
+    const compiler = new Compiler(layout);
 
     const model = new MockTextModel(manyLines) as any;
     const definitionProvider = new DBMLDefinitionProvider(compiler);
 
     // Test at various line positions
-    [
-      1,
-      100,
-      250,
-      500,
-    ].forEach((line) => {
+    [1, 100, 250, 500].forEach((line) => {
       expect(() => {
         definitionProvider.provideDefinition(model, createPosition(line, 1));
       }).not.toThrow();
@@ -485,17 +474,15 @@ describe('[fuzz] services - edge cases', () => {
 describe('[fuzz] services - unicode handling', () => {
   it('should handle unicode identifiers', () => {
     fc.assert(
-      fc.property(fc.string({
-        minLength: 1,
-        maxLength: 20,
-      }), (name: string) => {
+      fc.property(fc.string({ minLength: 1, maxLength: 20 }), (name: string) => {
         // Escape special characters for valid DBML
         const safeName = name.replace(/["\n\r\\\0]/g, '');
         if (safeName.length === 0) return;
 
         const source = `Table "${safeName}" { id int }`;
-        const compiler = new Compiler();
-        compiler.setSource(DEFAULT_ENTRY, source);
+        const layout = new MemoryProjectLayout();
+        layout.setSource(DEFAULT_ENTRY, source);
+        const compiler = new Compiler(layout);
 
         const model = new MockTextModel(source) as any;
         const definitionProvider = new DBMLDefinitionProvider(compiler);

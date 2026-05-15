@@ -42,6 +42,7 @@ export {
   formatRecordValue,
   // Monaco editor syntax highlighting
   dbmlMonarchTokensProvider,
+  DEFAULT_ENTRY,
 } from '@dbml/parse';
 
 // Re-export types

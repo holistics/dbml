@@ -1,12 +1,6 @@
-import {
-  findLastIndex, last,
-} from 'lodash-es';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import {
-  getMemberChain,
-} from '@/core/parser/utils';
+import { findLastIndex, last } from 'lodash-es';
+import { type Filepath } from '@/core/types/filepath';
+import { getMemberChain } from '@/core/parser/utils';
 import {
   BlockExpressionNode,
   CommaExpressionNode,
@@ -19,12 +13,8 @@ import {
   SyntaxNode,
   TupleExpressionNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  isOffsetWithinSpan,
-} from '@/core/utils/span';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 import type Compiler from '../../index';
 
 export function containerStack (
@@ -72,7 +62,7 @@ export function containerStack (
     const lastContainer = last(res)!;
 
     if (lastContainer instanceof FunctionApplicationNode) {
-      const source = this.layout.getSource(filepath) || '';
+      const source = this.getSource(filepath) || '';
       for (let i = lastContainer.end; i < offset; i += 1) {
         if (source[i] === '\n') {
           res.pop();

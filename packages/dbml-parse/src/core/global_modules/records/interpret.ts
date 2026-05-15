@@ -1,177 +1,180 @@
+import Compiler from '@/compiler/index';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
+import { UNHANDLED } from '@/core/types/module';
 import {
-  last,
-} from 'lodash-es';
-import {
-  destructureCallExpression, destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import {
-  BlockExpressionNode,
+  type BlockExpressionNode,
   CommaExpressionNode,
   ElementDeclarationNode,
-  FunctionApplicationNode,
   FunctionExpressionNode,
-  SyntaxNode,
-  TupleExpressionNode,
+  type FunctionApplicationNode,
+  type SyntaxNode,
+  type TupleExpressionNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import {
-  Column,
+import type {
   RecordValue,
-  Table,
+  TableRecord,
 } from '@/core/types/schemaJson';
+import type { Filepath } from '@/core/types/filepath';
 import {
-  InterpreterDatabase,
-} from '@/core/global_modules/types';
-import {
-  getTokenPosition,
-  mergeTableAndPartials,
-} from '@/core/global_modules/utils';
+  type ColumnSymbol,
+  type NodeSymbol,
+  type RecordsMetadata,
+  SymbolKind,
+  TableSymbol,
+} from '@/core/types/symbol';
+import { destructureCallExpression, extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils/expression';
+import { getTokenPosition } from '@/core/utils/interpret';
 import {
   getRecordValueType,
   isBooleanType,
   isDateTimeType,
-  isEmptyStringLiteral,
   isFloatType,
   isIntegerType,
-  isNullish,
-  isNumericType,
   isSerialType,
   isStringType,
+} from './utils/data/sqlTypes';
+import {
+  extractSignedNumber,
+  isEmptyStringLiteral,
+  isNullish,
   tryExtractBoolean,
   tryExtractDateTime,
-  tryExtractNumeric,
   tryExtractString,
-  validateForeignKeys,
-  validatePrimaryKey,
-  validateUnique,
-} from './utils';
+} from './utils/data/values';
+import { isExpressionAVariableNode } from '@/core/utils/validate';
 
-export class RecordsInterpreter {
-  private env: InterpreterDatabase;
-  private tableToRecordMap: Map<Table, ElementDeclarationNode>;
+export default class RecordsInterpreter {
+  private compiler: Compiler;
+  private element: ElementDeclarationNode;
+  private metadata: RecordsMetadata;
+  private filepath: Filepath;
 
-  constructor (env: InterpreterDatabase) {
-    this.env = env;
-    this.tableToRecordMap = new Map();
+  constructor (compiler: Compiler, metadata: RecordsMetadata, filepath: Filepath) {
+    this.compiler = compiler;
+    this.metadata = metadata;
+    this.element = metadata.declaration as ElementDeclarationNode;
+    this.filepath = filepath;
   }
 
-  interpret (elements: ElementDeclarationNode[]): Report<void> {
+  interpret (): Report<TableRecord | undefined> {
     const errors: CompileError[] = [];
     const warnings: CompileWarning[] = [];
+    const result = getTableAndColumnsOfRecords(this.element, this.compiler, this.filepath);
 
-    for (const element of elements) {
-      const {
-        table, mergedColumns,
-      } = getTableAndColumnsOfRecords(element, this.env);
-      const prevRecord = this.tableToRecordMap.get(table);
-      if (prevRecord) {
-        errors.push(new CompileError(
-          CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
-          `Duplicate Records blocks for the same Table '${table.name}' - A Table can only have one Records block`,
-          prevRecord,
-        ));
-        errors.push(new CompileError(
-          CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE,
-          `Duplicate Records blocks for the same Table '${table.name}' - A Table can only have one Records block`,
-          element,
-        ));
-        continue;
-      }
-      this.tableToRecordMap.set(table, element);
-      if (!this.env.records.has(table)) {
-        this.env.records.set(table, {
-          element,
-          rows: [],
-        });
-      }
-      const tableRecords = this.env.records.get(table)!;
-      for (const row of (element.body as BlockExpressionNode).body) {
-        const rowNode = row as FunctionApplicationNode;
-        const result = extractDataFromRow(rowNode, mergedColumns, this.env);
-        errors.push(...result.getErrors());
-        warnings.push(...result.getWarnings());
-        const rowData = result.getValue();
-        if (!rowData.row) continue;
-        tableRecords.rows.push({
-          values: rowData.row,
-          node: rowNode,
-          columnNodes: rowData.columnNodes,
-        });
-      }
+    if (!result || result.columns.length === 0) {
+      return new Report<TableRecord | undefined>(undefined, errors);
     }
 
-    const constraintResult = this.validateConstraints();
-    warnings.push(...constraintResult);
+    const values: RecordValue[][] = [];
+    for (const row of (this.element.body as BlockExpressionNode).body) {
+      const rowNode = row as FunctionApplicationNode;
+      const rowResult = extractDataFromRow(rowNode, result.columns, this.compiler);
+      errors.push(...rowResult.getErrors());
+      warnings.push(...rowResult.getWarnings());
+      const rowData = rowResult.getValue();
+      if (!rowData.row) continue;
+      values.push(rowData.row);
+    }
 
-    return new Report(undefined, errors, warnings);
-  }
+    const token = getTokenPosition(this.element);
+    const tableRecord: TableRecord = {
+      schemaName: result.schemaName,
+      tableName: result.tableName,
+      columns: result.columns.map((c) => c.name ?? ''),
+      values,
+      token,
+    };
 
-  private validateConstraints (): CompileWarning[] {
-    const warnings: CompileWarning[] = [];
-
-    // Validate PK constraints
-    warnings.push(...validatePrimaryKey(this.env).map((e) => e.toWarning()));
-
-    // Validate unique constraints
-    warnings.push(...validateUnique(this.env).map((e) => e.toWarning()));
-
-    // Validate FK constraints
-    warnings.push(...validateForeignKeys(this.env).map((e) => e.toWarning()));
-
-    return warnings;
+    return new Report<TableRecord | undefined>(tableRecord, errors, warnings);
   }
 }
 
-// Returns:
-//   - `table`: The original interpreted table object that `records` refer to
-//   - `mergedTable`: The interpreted table object merged with its table partials
-//   - `mergedColumns`: The columns of the `mergedTable``
-function getTableAndColumnsOfRecords (records: ElementDeclarationNode, env: InterpreterDatabase): { table: Table;
-  mergedTable: Table;
-  mergedColumns: Column[]; } {
+function getTableAndColumnsOfRecords (records: ElementDeclarationNode, compiler: Compiler, filepath: Filepath): {
+  schemaName: string | null;
+  tableName: string;
+  columns: ColumnSymbol[];
+} | undefined {
   const nameNode = records.name;
   const parent = records.parent;
-  if (parent instanceof ElementDeclarationNode) {
-    const table = env.tables.get(parent)!;
-    const mergedTable = mergeTableAndPartials(table, env);
+
+  if (parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table)) {
+    // Case 1: Nested records inside a table element
+    const tableSymbol = compiler.nodeSymbol(parent).getFiltered(UNHANDLED);
+    if (!(tableSymbol instanceof TableSymbol)) return undefined;
+
+    const allColumns = tableSymbol.mergedColumns(compiler);
+    const resolved = tableSymbol.interpretedName(compiler, filepath);
+    const schemaName = resolved.schema;
+    const tableName = resolved.name;
     if (!nameNode) return {
-      table,
-      mergedTable,
-      mergedColumns: mergedTable.fields,
+      schemaName,
+      tableName,
+      columns: allColumns,
     };
-    const mergedColumns = (nameNode as TupleExpressionNode).elementList.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e)!)!);
+
+    const columns = (nameNode as TupleExpressionNode).elementList.flatMap(
+      (e) => allColumns.find((c) => c.name === extractVariableFromExpression(e)) || [],
+    );
     return {
-      table,
-      mergedTable,
-      mergedColumns,
+      schemaName,
+      tableName,
+      columns,
     };
   }
-  const fragments = destructureCallExpression(nameNode!)!;
-  const tableNode = last(fragments.variables)!.referee!.declaration as ElementDeclarationNode;
-  const table = env.tables.get(tableNode)!;
-  const mergedTable = mergeTableAndPartials(table, env);
-  const mergedColumns = fragments.args.map((e) => mergedTable.fields.find((f) => f.name === extractVariableFromExpression(e)!)!);
+
+  // Case 2: Standalone records - table_name(col1, col2) { ... }
+  const fragments = destructureCallExpression(nameNode!);
+  if (!fragments) return undefined;
+
+  const tableNameFragments = fragments.variables.map((v) => v.expression.variable?.value ?? '');
+  const tableName = tableNameFragments.at(-1) ?? '';
+  const schemaName = tableNameFragments.length > 1 ? tableNameFragments.slice(0, -1).join('.') : undefined;
+
+  const ast = compiler.parseFile(records.filepath).getValue().ast;
+  const programSymbolValue = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+  if (!programSymbolValue) return undefined;
+
+  let tableSymbol: NodeSymbol | undefined;
+  if (schemaName) {
+    const schemaResult = compiler.lookupMembers(programSymbolValue, SymbolKind.Schema, schemaName);
+    if (schemaResult) {
+      tableSymbol = compiler.lookupMembers(schemaResult, SymbolKind.Table, tableName);
+    }
+  }
+  if (!tableSymbol) {
+    tableSymbol = compiler.lookupMembers(programSymbolValue, SymbolKind.Table, tableName);
+  }
+
+  if (!tableSymbol) return undefined;
+
+  // Resolve through UseSymbol/AliasSymbol to actual TableSymbol
+  const resolvedSymbol = tableSymbol.originalSymbol;
+  if (!(resolvedSymbol instanceof TableSymbol)) return undefined;
+
+  const allColumns = resolvedSymbol.mergedColumns(compiler);
+  const columns = fragments.args.map((e) => allColumns.find((c) => c.name === extractVariableFromExpression(e))!).filter(Boolean);
+  const resolved = resolvedSymbol.interpretedName(compiler, filepath);
   return {
-    table,
-    mergedTable,
-    mergedColumns,
+    schemaName: resolved.schema,
+    tableName: resolved.name,
+    columns,
   };
 }
 
-type RowData = { row: Record<string, RecordValue> | null;
-  columnNodes: Record<string, SyntaxNode>; };
+type RowData = {
+  row: RecordValue[] | null;
+  columnNodes: Record<string, SyntaxNode>;
+};
 
 function extractDataFromRow (
   row: FunctionApplicationNode,
-  mergedColumns: Column[],
-  env: InterpreterDatabase,
+  columns: ColumnSymbol[],
+  compiler: Compiler,
 ): Report<RowData> {
   const errors: CompileError[] = [];
   const warnings: CompileWarning[] = [];
-  const rowObj: Record<string, RecordValue> = {};
   const columnNodes: Record<string, SyntaxNode> = {};
 
   const args = row.callee instanceof CommaExpressionNode
@@ -179,10 +182,10 @@ function extractDataFromRow (
     : [
         row.callee!,
       ];
-  if (args.length !== mergedColumns.length) {
+  if (args.length !== columns.length) {
     errors.push(new CompileError(
       CompileErrorCode.INVALID_RECORDS_FIELD,
-      `Expected ${mergedColumns.length} values but got ${args.length}`,
+      `Expected ${columns.length} values but got ${args.length}`,
       row,
     ));
     return new Report({
@@ -191,73 +194,74 @@ function extractDataFromRow (
     }, errors, warnings);
   }
 
-  for (let i = 0; i < mergedColumns.length; i++) {
+  const rowValues: RecordValue[] = [];
+  for (let i = 0; i < columns.length; i++) {
     const arg = args[i];
-    const column = mergedColumns[i];
-    columnNodes[column.name] = arg;
-    const result = extractValue(arg, column, env);
+    const column = columns[i];
+    columnNodes[column.name ?? ''] = arg;
+    const result = extractValue(arg, column, compiler);
     errors.push(...result.getErrors());
     warnings.push(...result.getWarnings());
     const value = result.getValue();
-    if (value !== null) {
-      rowObj[column.name] = value;
-    }
+    rowValues.push(value ?? {
+      value: null,
+      type: 'expression',
+      token: getTokenPosition(arg),
+    });
   }
 
   return new Report({
-    row: rowObj,
+    row: rowValues,
     columnNodes,
   }, errors, warnings);
 }
 
-function getNodeSourceText (node: SyntaxNode, source: string): string {
+function getNodeSourceText (node: SyntaxNode): string {
   if (node instanceof FunctionExpressionNode) {
     return node.value?.value || '';
-  }
-  // Extract the source text using node start and end positions
-  if (!isNaN(node.start) && !isNaN(node.end)) {
-    return source.slice(node.start, node.end);
   }
   return '';
 }
 
 function extractValue (
   node: SyntaxNode,
-  column: Column,
-  env: InterpreterDatabase,
+  colSymbol: ColumnSymbol,
+  compiler: Compiler,
 ): Report<RecordValue | null> {
-  // FIXME: Make this more precise
-  const type = column.type.type_name.split('(')[0];
-  const {
-    increment, not_null: notNull, dbdefault,
-  } = column;
-  const isEnum = column.type.isEnum || false;
-  const valueType = getRecordValueType(type, isEnum);
+  const token = getTokenPosition(node);
+  const typeInfo = colSymbol.type(compiler);
+  const typeName = (typeInfo?.name ?? '').split('(')[0];
+  const isEnum = !!typeInfo?.enumSymbol;
+  const increment = colSymbol.increment(compiler);
+  const notNull = colSymbol.nullable(compiler) === false;
+  const dbdefault = colSymbol.default(compiler);
+  const colName = colSymbol.name ?? '';
+  const valueType = getRecordValueType(typeName, isEnum);
   const rawString = tryExtractString(node);
-  const fallbackValue = rawString !== null ? rawString : getNodeSourceText(node, env.source);
+  const fallbackValue = rawString !== null ? rawString : getNodeSourceText(node);
   const fallbackType = rawString !== null ? valueType : 'expression';
 
   if (node instanceof FunctionExpressionNode) {
-    return new Report({
+    return new Report<RecordValue | null>({
       value: node.value?.value || '',
       type: 'expression',
-      token: getTokenPosition(node),
+      token,
     }, [], []);
   }
 
   // NULL literal
-  if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(type))) {
+  if (isNullish(node) || (isEmptyStringLiteral(node) && !isStringType(typeName))) {
     const hasDefaultValue = dbdefault && dbdefault.value.toString().toLowerCase() !== 'null';
-    const isSerial = isSerialType(type);
+    const isSerial = isSerialType(typeName);
     if (notNull && !hasDefaultValue && !increment && !isSerial) {
       return new Report({
         value: null,
         type: valueType,
-        token: getTokenPosition(node),
+        token,
       }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
-          `NULL not allowed for non-nullable column '${column.name}' without default and increment`,
+          `NULL not allowed for non-nullable column '${colName}' without default and increment`,
           node,
         ),
       ]);
@@ -265,28 +269,29 @@ function extractValue (
     return new Report({
       value: null,
       type: valueType,
-      token: getTokenPosition(node),
+      token,
     }, [], []);
   }
 
   // Enum type
   if (isEnum) {
-    const enumMembers = ([
-      ...env.enums.values(),
-    ].find((e) => e.schemaName === column.type.schemaName && e.name === column.type.type_name)?.values || []).map((field) => field.name);
+    const enumSymbol = colSymbol.type(compiler)?.enumSymbol;
+    const enumMembers = enumSymbol
+      ? enumSymbol.members(compiler).filter((f) => f.isKind(SymbolKind.EnumField)).map((f) => f.name).filter(Boolean) as string[]
+      : [];
     let enumValue = extractQuotedStringToken(node);
     if (enumValue === undefined) {
-      enumValue = (destructureComplexVariable(node) ?? []).pop();
+      enumValue = isExpressionAVariableNode(node) ? node.expression.variable.value : undefined;
     }
     if (!(enumMembers as (string | undefined)[]).includes(enumValue)) {
       return new Report({
         value: enumValue,
         type: valueType,
-        token: getTokenPosition(node),
+        token,
       }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid enum value for column '${column.name}'`,
+          `Invalid enum value for column '${colName}'`,
           node,
         ),
       ]);
@@ -295,25 +300,25 @@ function extractValue (
     return new Report({
       value: enumValue,
       type: valueType,
-      token: getTokenPosition(node),
+      token,
     }, [], []);
   }
 
   // Numeric type
-  if (isNumericType(type)) {
-    const numValue = tryExtractNumeric(node);
+  if (isIntegerType(typeName) || isFloatType(typeName) || isSerialType(typeName)) {
+    const numValue = extractSignedNumber(node);
     if (numValue === null) {
       return new Report(
         {
           value: fallbackValue,
           type: fallbackType,
-          token: getTokenPosition(node),
+          token,
         },
         [],
         [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Invalid numeric value for column '${column.name}'`,
+            `Invalid numeric value for column '${colName}'`,
             node,
           ),
         ],
@@ -321,25 +326,31 @@ function extractValue (
     }
 
     // Integer type: validate no decimal point
-    if (isIntegerType(type) && !Number.isInteger(numValue)) {
+    if (isIntegerType(typeName) && !Number.isInteger(numValue)) {
       return new Report({
         value: Math.floor(numValue),
         type: valueType,
-        token: getTokenPosition(node),
+        token,
       }, [], [
         new CompileWarning(
           CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid integer value ${numValue} for column '${column.name}': expected integer, got decimal`,
+          `Invalid integer value ${numValue} for column '${colName}': expected integer, got decimal`,
           node,
         ),
       ]);
     }
 
     // Decimal/numeric type: validate precision and scale
-    if (isFloatType(type) && column.type.numericParams) {
+    const numericParams = isFloatType(typeName) && typeInfo?.args?.length
+      ? {
+          precision: Number(typeInfo.args[0]),
+          scale: typeInfo.args.length >= 2 ? Number(typeInfo.args[1]) : 0,
+        }
+      : undefined;
+    if (isFloatType(typeName) && numericParams) {
       const {
         precision, scale,
-      } = column.type.numericParams;
+      } = numericParams;
       const numStr = numValue.toString();
       const parts = numStr.split('.');
       const integerPart = parts[0].replace(/^-/, ''); // Remove sign
@@ -352,11 +363,11 @@ function extractValue (
         return new Report({
           value: numValue,
           type: valueType,
-          token: getTokenPosition(node),
+          token,
         }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Numeric value ${numValue} for column '${column.name}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
+            `Numeric value ${numValue} for column '${colName}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
             node,
           ),
         ]);
@@ -366,11 +377,11 @@ function extractValue (
         return new Report({
           value: numValue,
           type: valueType,
-          token: getTokenPosition(node),
+          token,
         }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Numeric value ${numValue} for column '${column.name}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
+            `Numeric value ${numValue} for column '${colName}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
             node,
           ),
         ]);
@@ -380,25 +391,25 @@ function extractValue (
     return new Report({
       value: numValue,
       type: valueType,
-      token: getTokenPosition(node),
+      token,
     }, [], []);
   }
 
   // Boolean type
-  if (isBooleanType(type)) {
+  if (isBooleanType(typeName)) {
     const boolValue = tryExtractBoolean(node);
     if (boolValue === null) {
       return new Report(
         {
           value: fallbackValue,
           type: fallbackType,
-          token: getTokenPosition(node),
+          token,
         },
         [],
         [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Invalid boolean value for column '${column.name}'`,
+            `Invalid boolean value for column '${colName}'`,
             node,
           ),
         ],
@@ -407,25 +418,25 @@ function extractValue (
     return new Report({
       value: boolValue,
       type: valueType,
-      token: getTokenPosition(node),
+      token,
     }, [], []);
   }
 
   // Datetime type
-  if (isDateTimeType(type)) {
+  if (isDateTimeType(typeName)) {
     const dtValue = tryExtractDateTime(node);
     if (dtValue === null) {
       return new Report(
         {
           value: fallbackValue,
           type: fallbackType,
-          token: getTokenPosition(node),
+          token,
         },
         [],
         [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Invalid datetime value for column '${column.name}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
+            `Invalid datetime value for column '${colName}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
             node,
           ),
         ],
@@ -434,25 +445,25 @@ function extractValue (
     return new Report({
       value: dtValue,
       type: valueType,
-      token: getTokenPosition(node),
+      token,
     }, [], []);
   }
 
   // String type
-  if (isStringType(type)) {
+  if (isStringType(typeName)) {
     const strValue = tryExtractString(node);
     if (strValue === null) {
       return new Report(
         {
           value: fallbackValue,
           type: fallbackType,
-          token: getTokenPosition(node),
+          token,
         },
         [],
         [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Invalid string value for column '${column.name}'`,
+            `Invalid string value for column '${colName}'`,
             node,
           ),
         ],
@@ -460,10 +471,9 @@ function extractValue (
     }
 
     // Validate string length (using UTF-8 byte length like SQL engines)
-    if (column.type.lengthParam) {
-      const {
-        length,
-      } = column.type.lengthParam;
+    const maxLength = typeInfo?.args?.length ? Number(typeInfo.args[0]) : undefined;
+    if (maxLength && !Number.isNaN(maxLength)) {
+      const length = maxLength;
       // Calculate byte length in UTF-8 encoding (matching SQL behavior)
       const actualByteLength = new TextEncoder().encode(strValue).length;
 
@@ -471,11 +481,11 @@ function extractValue (
         return new Report({
           value: strValue,
           type: valueType,
-          token: getTokenPosition(node),
+          token,
         }, [], [
           new CompileWarning(
             CompileErrorCode.INVALID_RECORDS_FIELD,
-            `String value for column '${column.name}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
+            `String value for column '${colName}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
             node,
           ),
         ]);
@@ -485,7 +495,7 @@ function extractValue (
     return new Report({
       value: strValue,
       type: 'string',
-      token: getTokenPosition(node),
+      token,
     }, [], []);
   }
 
@@ -493,6 +503,6 @@ function extractValue (
   return new Report({
     value: fallbackValue,
     type: fallbackType,
-    token: getTokenPosition(node),
+    token,
   }, [], []);
 }

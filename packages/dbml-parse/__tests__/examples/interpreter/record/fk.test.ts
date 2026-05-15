@@ -47,35 +47,35 @@ describe('[example - record] composite foreign key constraints', () => {
     expect(db.records.length).toBe(2);
 
     // Merchants table
-    // columns = ['id', 'country_code']
-    expect(db.records[0].tableName).toBe('merchants');
-    expect(db.records[0].values.length).toBe(3);
-    expect(db.records[0].values[0][0]).toMatchObject({
+    const merchantsRecord = db.records.find((r) => r.tableName === 'merchants')!;
+    expect(merchantsRecord).toBeDefined();
+    expect(merchantsRecord.values.length).toBe(3);
+    expect(merchantsRecord.values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toMatchObject({
+    expect(merchantsRecord.values[0][1]).toMatchObject({
       type: 'string',
       value: 'US',
     });
 
     // Orders table
-    // columns = ['id', 'merchant_id', 'country', 'amount']
-    expect(db.records[1].tableName).toBe('orders');
-    expect(db.records[1].values.length).toBe(3);
-    expect(db.records[1].values[0][0]).toMatchObject({
+    const ordersRecord = db.records.find((r) => r.tableName === 'orders')!;
+    expect(ordersRecord).toBeDefined();
+    expect(ordersRecord.values.length).toBe(3);
+    expect(ordersRecord.values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[1].values[0][1]).toMatchObject({
+    expect(ordersRecord.values[0][1]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[1].values[0][2]).toMatchObject({
+    expect(ordersRecord.values[0][2]).toMatchObject({
       type: 'string',
       value: 'US',
     });
-    expect(db.records[1].values[0][3]).toMatchObject({
+    expect(ordersRecord.values[0][3]).toMatchObject({
       type: 'real',
       value: 100.00,
     });
@@ -148,27 +148,28 @@ describe('[example - record] composite foreign key constraints', () => {
     expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[1].values.length).toBe(3);
+    const ordersRecord = db.records.find((r) => r.tableName === 'orders')!;
+    expect(ordersRecord.values.length).toBe(3);
 
     // Row 2: null FK column
     // columns = ['id', 'merchant_id', 'country', 'status']
-    expect(db.records[1].values[1][1].value).toBe(null); // merchant_id
-    expect(db.records[1].values[1][2]).toMatchObject({
+    expect(ordersRecord.values[1][1].value).toBe(null); // merchant_id
+    expect(ordersRecord.values[1][2]).toMatchObject({
       type: 'string',
       value: 'UK',
     }); // country
-    expect(db.records[1].values[1][3]).toMatchObject({
+    expect(ordersRecord.values[1][3]).toMatchObject({
       type: 'string',
       value: 'pending',
     }); // status
 
     // Row 3: null FK column
-    expect(db.records[1].values[2][0]).toMatchObject({
+    expect(ordersRecord.values[2][0]).toMatchObject({
       type: 'integer',
       value: 3,
     }); // id
-    expect(db.records[1].values[2][2].value).toBe(null); // country
-    expect(db.records[1].values[2][3]).toMatchObject({
+    expect(ordersRecord.values[2][2].value).toBe(null); // country
+    expect(ordersRecord.values[2][3]).toMatchObject({
       type: 'string',
       value: 'processing',
     }); // status
@@ -244,8 +245,8 @@ describe('[example - record] composite foreign key constraints', () => {
     const warnings = result.getWarnings();
 
     expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: (public.posts.user_id, public.posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
-    expect(warnings[1].diagnostic).toBe('FK violation: (public.posts.user_id, public.posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
+    expect(warnings[0].diagnostic).toBe('FK violation: (posts.user_id, posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
+    expect(warnings[1].diagnostic).toBe('FK violation: (posts.user_id, posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
   });
 });
 
@@ -326,21 +327,22 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(db.records.length).toBe(6);
 
     // Verify users table
-    expect(db.records[0].tableName).toBe('users');
-    expect(db.records[0].values.length).toBe(2);
-    expect(db.records[0].values[0][0]).toMatchObject({
+    const usersRecord = db.records.find((r) => r.tableName === 'users');
+    expect(usersRecord).toBeDefined();
+    expect(usersRecord!.values.length).toBe(2);
+    expect(usersRecord!.values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[0].values[0][1]).toMatchObject({
+    expect(usersRecord!.values[0][1]).toMatchObject({
       type: 'string',
       value: 'Alice',
     });
-    expect(db.records[0].values[1][0]).toMatchObject({
+    expect(usersRecord!.values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[0].values[1][1]).toMatchObject({
+    expect(usersRecord!.values[1][1]).toMatchObject({
       type: 'string',
       value: 'Bob',
     });
@@ -456,29 +458,30 @@ describe('[example - record] simple foreign key constraints', () => {
     expect(warnings.length).toBe(0);
 
     const db = result.getValue()!;
-    expect(db.records[1].values.length).toBe(2);
+    const productsRecord = db.records.find((r) => r.tableName === 'products')!;
+    expect(productsRecord.values.length).toBe(2);
 
     // Row 1: id=1, category_id=1, name="Laptop"
-    expect(db.records[1].values[0][0]).toMatchObject({
+    expect(productsRecord.values[0][0]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[1].values[0][1]).toMatchObject({
+    expect(productsRecord.values[0][1]).toMatchObject({
       type: 'integer',
       value: 1,
     });
-    expect(db.records[1].values[0][2]).toMatchObject({
+    expect(productsRecord.values[0][2]).toMatchObject({
       type: 'string',
       value: 'Laptop',
     });
 
     // Row 2: id=2, category_id=null, name="Uncategorized Item"
-    expect(db.records[1].values[1][0]).toMatchObject({
+    expect(productsRecord.values[1][0]).toMatchObject({
       type: 'integer',
       value: 2,
     });
-    expect(db.records[1].values[1][1].value).toBe(null);
-    expect(db.records[1].values[1][2]).toMatchObject({
+    expect(productsRecord.values[1][1].value).toBe(null);
+    expect(productsRecord.values[1][2]).toMatchObject({
       type: 'string',
       value: 'Uncategorized Item',
     });

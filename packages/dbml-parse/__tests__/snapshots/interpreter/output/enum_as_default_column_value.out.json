@@ -268,7 +268,6 @@
               "type": "string",
               "value": "active"
             },
-            "increment": false,
             "name": "status",
             "pk": false,
             "token": {
@@ -294,7 +293,6 @@
               "type": "string",
               "value": "male"
             },
-            "increment": false,
             "name": "gender",
             "pk": false,
             "token": {
@@ -321,7 +319,6 @@
               "type": "string",
               "value": "young_adult"
             },
-            "increment": false,
             "name": "age_type",
             "pk": false,
             "token": {

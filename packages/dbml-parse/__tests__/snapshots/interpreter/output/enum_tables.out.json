@@ -250,7 +250,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -272,7 +271,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "status",
             "note": {
               "token": {

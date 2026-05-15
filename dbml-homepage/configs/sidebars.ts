@@ -36,6 +36,11 @@ const SidebarConfigs: SidebarsConfig = {
           type: 'doc',
           label: 'Language Basics',
         },
+        {
+          id: 'syntax/module-system',
+          type: 'doc',
+          label: 'Module System',
+        },
       ],
     },
     'database-support',

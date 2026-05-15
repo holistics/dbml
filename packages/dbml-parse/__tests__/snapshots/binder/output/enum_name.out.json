@@ -111,6 +111,40 @@
     },
     {
       "context": {
+        "id": "node@<primary-expression>@public@[L3:C12, L3:C18]",
+        "snippet": "public"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@public@[L3:C12, L3:C18]",
+            "snippet": "public"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@public@[L3:C12, L3:C18]",
+                "snippet": "public"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "public"
+            }
+          },
+          "fullEnd": 72,
+          "fullStart": 66
+        }
+      },
+      "fullEnd": 72,
+      "fullStart": 66,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
         "id": "node@<primary-expression>@status@[L3:C19, L3:C25]",
         "snippet": "status"
       },
@@ -146,6 +180,40 @@
     },
     {
       "context": {
+        "id": "node@<primary-expression>@public@[L4:C12, L4:C18]",
+        "snippet": "public"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@public@[L4:C12, L4:C18]",
+            "snippet": "public"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@public@[L4:C12, L4:C18]",
+                "snippet": "public"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "public"
+            }
+          },
+          "fullEnd": 99,
+          "fullStart": 93
+        }
+      },
+      "fullEnd": 99,
+      "fullStart": 93,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
         "id": "node@<primary-expression>@v2@[L5:C12, L5:C14]",
         "snippet": "v2"
       },
@@ -172,6 +240,74 @@
       },
       "fullEnd": 123,
       "fullStart": 121,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@v2@[L6:C12, L6:C14]",
+        "snippet": "v2"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@v2@[L6:C12, L6:C14]",
+            "snippet": "v2"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@v2@[L6:C12, L6:C14]",
+                "snippet": "v2"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "v2"
+            }
+          },
+          "fullEnd": 147,
+          "fullStart": 145
+        }
+      },
+      "fullEnd": 147,
+      "fullStart": 145,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@v2@[L7:C12, L7:C14]",
+        "snippet": "v2"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@v2@[L7:C12, L7:C14]",
+            "snippet": "v2"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@v2@[L7:C12, L7:C14]",
+                "snippet": "v2"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "v2"
+            }
+          },
+          "fullEnd": 167,
+          "fullStart": 165
+        }
+      },
+      "fullEnd": 167,
+      "fullStart": 165,
       "referee": {
         "context": {
           "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
@@ -298,6 +434,14 @@
           },
           {
             "id": "node@<primary-expression>@v2@[L5:C12, L5:C14]",
+            "snippet": "v2"
+          },
+          {
+            "id": "node@<primary-expression>@v2@[L6:C12, L6:C14]",
+            "snippet": "v2"
+          },
+          {
+            "id": "node@<primary-expression>@v2@[L7:C12, L7:C14]",
             "snippet": "v2"
           }
         ]

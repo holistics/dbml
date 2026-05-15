@@ -1,58 +1,58 @@
 import {
   destructureComplexVariable, extractVariableFromExpression,
+  getBody,
 } from '@/core/utils/expression';
+import { aggregateSettingList } from '@/core/utils/validate';
+import { extractStringFromIdentifierStream } from '@/core/utils/expression';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
-import {
-  extractColor, extractNamesFromRefOperand, getColumnSymbolsOfRefOperand, getMultiplicities, getRefId, getTokenPosition, isSameEndpoint,
-} from '@/core/global_modules/utils';
-import {
-  extractStringFromIdentifierStream,
-} from '@/core/utils/expression';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  type BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   IdentifierStreamNode,
-  type InfixExpressionNode,
   type ListExpressionNode,
-  type SyntaxNode,
+  AttributeNode,
 } from '@/core/types/nodes';
+import type { Ref } from '@/core/types/schemaJson';
 import {
-  Ref, Table,
-} from '@/core/types/schemaJson';
+  RefMetadata,
+  type Filepath,
+} from '@/core/types';
+import type Compiler from '@/compiler';
 import {
-  InterpreterDatabase,
-} from '@/core/global_modules/types';
+  extractColor,
+  getTokenPosition,
+} from '@/core/utils/interpret';
+import Report from '@/core/types/report';
+import { getMultiplicities } from '../utils';
+import { zip } from 'lodash-es';
 
 export class RefInterpreter {
-  private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
-  private container: Partial<Table> | undefined;
+  private compiler: Compiler;
+  private metadata: RefMetadata;
+  private declarationNode: ElementDeclarationNode | AttributeNode;
+  private filepath: Filepath;
   private ref: Partial<Ref>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
-    this.declarationNode = declarationNode;
-    this.env = env;
-    this.container = this.declarationNode.parent instanceof ElementDeclarationNode ? this.env.tables.get(this.declarationNode.parent) : undefined;
-    this.ref = { };
+  constructor (compiler: Compiler, metadata: RefMetadata, filepath: Filepath) {
+    this.compiler = compiler;
+    this.filepath = filepath;
+    this.metadata = metadata;
+    this.declarationNode = metadata.declaration;
+    this.ref = {};
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<Ref> {
     this.ref.token = getTokenPosition(this.declarationNode);
-    this.env.ref.set(this.declarationNode, this.ref as Ref);
     const errors = [
-      ...this.interpretName(this.declarationNode.name!),
-      ...this.interpretBody(this.declarationNode.body!),
+      ...this.interpretName(),
+      ...this.interpretBody(),
     ];
-    return errors;
+    return Report.create(this.ref as Ref, errors);
   }
 
-  private interpretName (_nameNode: SyntaxNode): CompileError[] {
+  private interpretName (): CompileError[] {
+    // Inline refs do not have a name
+    if (!(this.declarationNode instanceof ElementDeclarationNode)) return [];
     const errors: CompileError[] = [];
 
     const fragments = destructureComplexVariable(this.declarationNode.name!) ?? [];
@@ -65,36 +65,73 @@ export class RefInterpreter {
     return errors;
   }
 
-  private interpretBody (body: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
-    if (body instanceof FunctionApplicationNode) {
-      return this.interpretField(body);
-    }
+  private interpretBody (): CompileError[] {
+    const op = this.metadata.op(this.compiler)!;
 
-    return this.interpretField(body.body[0] as FunctionApplicationNode);
-  }
+    const leftColumnSymbols = this.metadata.leftColumns(this.compiler);
+    const leftTableSymbol = this.metadata.leftTable(this.compiler);
 
-  private interpretField (field: FunctionApplicationNode): CompileError[] {
-    const op = (field.callee as InfixExpressionNode).op!.value;
-    const {
-      leftExpression, rightExpression,
-    } = field.callee as InfixExpressionNode;
+    const rightColumnSymbols = this.metadata.rightColumns(this.compiler);
+    const rightTableSymbol = this.metadata.rightTable(this.compiler);
 
-    const leftSymbols = getColumnSymbolsOfRefOperand(leftExpression!);
-    const rightSymbols = getColumnSymbolsOfRefOperand(rightExpression!);
-
-    if (isSameEndpoint(leftSymbols, rightSymbols)) {
+    if (zip(leftColumnSymbols, rightColumnSymbols).every(([
+      left,
+      right,
+    ]) => left?.originalSymbol === right?.originalSymbol)) {
       return [
-        new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', field),
+        new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Two endpoints are the same', this.declarationNode),
       ];
     }
 
-    const refId = getRefId(leftSymbols, rightSymbols);
-    if (this.env.refIds[refId]) {
-      return [
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.declarationNode),
-        new CompileError(CompileErrorCode.CIRCULAR_REF, 'References with same endpoints exist', this.env.refIds[refId]),
-      ];
-    }
+    const multiplicities = getMultiplicities(op)!;
+
+    const leftTableName = leftTableSymbol?.interpretedName(this.compiler, this.filepath);
+    const rightTableName = rightTableSymbol?.interpretedName(this.compiler, this.filepath);
+
+    // Derive tokens for each endpoint via metadata
+    const leftToken = getTokenPosition(this.metadata.leftToken());
+    const rightToken = getTokenPosition(this.metadata.rightToken());
+
+    // For inline refs: left = container (FK side), right = target (referenced side)
+    // We need to swap endpoints to match the standalone FK convention
+    this.ref.endpoints = !(this.declarationNode instanceof ElementDeclarationNode)
+      ? [
+          {
+            schemaName: rightTableName?.schema ?? null,
+            tableName: rightTableName?.name ?? '',
+            fieldNames: rightColumnSymbols.map((c) => c.name ?? ''),
+            relation: multiplicities[1],
+            token: rightToken,
+          },
+          {
+            schemaName: leftTableName?.schema ?? null,
+            tableName: leftTableName?.name ?? '',
+            fieldNames: leftColumnSymbols.map((c) => c.name ?? ''),
+            relation: multiplicities[0],
+            token: leftToken,
+          },
+        ]
+      : [
+          {
+            schemaName: leftTableName?.schema ?? null,
+            tableName: leftTableName?.name ?? '',
+            fieldNames: leftColumnSymbols.map((c) => c.name ?? ''),
+            relation: multiplicities[0],
+            token: leftToken,
+          },
+          {
+            schemaName: rightTableName?.schema ?? null,
+            tableName: rightTableName?.name ?? '',
+            fieldNames: rightColumnSymbols.map((c) => c.name ?? ''),
+            relation: multiplicities[1],
+            token: rightToken,
+          },
+        ];
+
+    // Inline refs have no other settings
+    if (!(this.declarationNode instanceof ElementDeclarationNode)) return [];
+
+    const field = getBody(this.declarationNode)[0] as FunctionApplicationNode;
 
     if (field.args[0]) {
       const settingMap = aggregateSettingList(field.args[0] as ListExpressionNode).getValue();
@@ -111,23 +148,6 @@ export class RefInterpreter {
 
       this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value as any) : undefined;
     }
-
-    const multiplicities = getMultiplicities(op);
-
-    this.ref.endpoints = [
-      {
-        ...extractNamesFromRefOperand(leftExpression!, this.container as Table | undefined),
-        relation: multiplicities[0],
-        token: getTokenPosition(leftExpression!),
-      },
-      {
-        ...extractNamesFromRefOperand(rightExpression!, this.container as Table | undefined),
-        relation: multiplicities[1],
-        token: getTokenPosition(rightExpression!),
-      },
-    ];
-
-    this.env.refIds[refId] = this.declarationNode;
 
     return [];
   }

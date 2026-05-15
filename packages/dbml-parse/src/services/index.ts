@@ -1,8 +1,6 @@
 import DBMLDefinitionProvider from './definition/provider';
 import DBMLDiagnosticsProvider from './diagnostics/provider';
-export type {
-  Diagnostic,
-} from './diagnostics/provider';
+export type { Diagnostic } from './diagnostics/provider';
 import DBMLReferencesProvider from './references/provider';
 import DBMLCompletionItemProvider from './suggestions/provider';
 
@@ -15,6 +13,4 @@ export {
   DBMLDiagnosticsProvider,
 };
 
-export {
-  dbmlMonarchTokensProvider,
-} from './monarch';
+export { dbmlMonarchTokensProvider } from './monarch';

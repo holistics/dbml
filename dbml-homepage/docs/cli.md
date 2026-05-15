@@ -50,6 +50,12 @@ CREATE TABLE `staff` (
 ...
 ```
 
+If your schema is split across multiple files using the [module system](./syntax/module-system), pass the entry point file. The CLI will automatically resolve all imported files:
+
+```bash
+$ dbml2sql project.dbml --postgres
+```
+
 To **output to a file** you may use `--out-file` or `-o`:
 
 ```bash

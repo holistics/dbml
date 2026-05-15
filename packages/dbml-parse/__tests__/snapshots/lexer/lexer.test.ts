@@ -13,6 +13,7 @@ import {
   scanTestNames, toSnapshot,
 } from '@tests/utils';
 import Compiler from '@/compiler';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import type {
   SyntaxToken,
 } from '@/index';
@@ -35,8 +36,9 @@ describe('[snapshot] lexer', () => {
   testNames.forEach((testName) => {
     const program = readFileSync(path.resolve(__dirname, `./input/${testName}.in.dbml`), 'utf-8');
 
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, program);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, program);
+    const compiler = new Compiler(layout);
 
     const lexer = new Lexer(program, DEFAULT_ENTRY);
 

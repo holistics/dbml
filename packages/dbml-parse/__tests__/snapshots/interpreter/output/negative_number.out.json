@@ -8,9 +8,7 @@
               "type": "number",
               "value": -2
             },
-            "increment": false,
             "name": "id",
-            "pk": false,
             "token": {
               "end": {
                 "column": 27,
@@ -27,17 +25,14 @@
             "type": {
               "args": "-1",
               "type_name": "int(-1)"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "number",
               "value": -2
             },
-            "increment": false,
             "name": "id2",
-            "pk": false,
             "token": {
               "end": {
                 "column": 30,
@@ -54,17 +49,14 @@
             "type": {
               "args": "--1",
               "type_name": "int(--1)"
-            },
-            "unique": false
+            }
           },
           {
             "dbdefault": {
               "type": "number",
               "value": -7.2225
             },
-            "increment": false,
             "name": "id3",
-            "pk": false,
             "token": {
               "end": {
                 "column": 49,
@@ -81,8 +73,7 @@
             "type": {
               "args": "+-+---+0.1",
               "type_name": "int(+-+---+0.1)"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "P1",
@@ -109,7 +100,6 @@
               "type": "number",
               "value": -2
             },
-            "increment": false,
             "name": "id",
             "pk": false,
             "token": {
@@ -136,7 +126,6 @@
               "type": "number",
               "value": -2
             },
-            "increment": false,
             "name": "id2",
             "pk": false,
             "token": {
@@ -163,7 +152,6 @@
               "type": "number",
               "value": 7.2225
             },
-            "increment": false,
             "name": "id3",
             "pk": false,
             "token": {

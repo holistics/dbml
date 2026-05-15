@@ -1,31 +1,16 @@
-import {
-  flatten, zip,
-} from 'lodash-es';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  getTokenFullEnd, getTokenFullStart,
-} from '@/core/lexer/utils';
-import {
-  Position,
-} from '@/core/types';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  type Internable,
-} from '@/core/types/internable';
-import {
-  NodeSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
+import { flatten, zip } from 'lodash-es';
+import { getTokenFullEnd, getTokenFullStart } from '@/core/lexer/utils';
+import { Filepath } from '@/core/types/filepath';
+import { type Internable } from '@/core/types/internable';
+import { ElementKind } from '@/core/types/keywords';
+import { ImportKind } from '@/core/types/symbol';
+import { Position } from '@/core/types/position';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { isReuseKeyword } from '@/core/utils/tokens';
+import { SymbolKind } from './symbol';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;
-
 export class SyntaxNodeIdGenerator {
   private id = 0;
 
@@ -50,8 +35,6 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
   end: Readonly<number>;
   fullEnd: Readonly<number>; // End offset with trivias counted
   parentNode?: SyntaxNode;
-  symbol?: NodeSymbol;
-  referee?: NodeSymbol; // The symbol that this syntax node refers to
 
   // args must be passed in order of appearance in the node
   constructor (
@@ -131,24 +114,50 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
   }
 
   // Return if `otherNode` is strictly contained inside this node
-  strictlyContains (otherNode: SyntaxNode): boolean {
-    const thisSmallerStart = this.start < otherNode.start;
-    const thisSmallerEqStart = thisSmallerStart || this.start === otherNode.start;
-    const thisGreaterEnd = this.end > otherNode.end;
-    const thisGreaterEqEnd = thisGreaterEnd || this.end === otherNode.end;
+  strictlyContains (otherNode: SyntaxNode): boolean;
+  strictlyContains (otherToken: SyntaxToken): boolean;
+  strictlyContains (offset: number): boolean;
+  strictlyContains (other: SyntaxNode | SyntaxToken | number): boolean {
+    if (typeof other === 'number') {
+      return this.start < other
+        && this.end > other;
+    }
+    const {
+      start,
+      end,
+    } = other;
+
+    const thisSmallerStart = this.start < start;
+    const thisSmallerEqStart = thisSmallerStart || this.start === start;
+    const thisGreaterEnd = this.end > end;
+    const thisGreaterEqEnd = thisGreaterEnd || this.end === end;
     return (thisSmallerStart && thisGreaterEqEnd) || (thisSmallerEqStart && thisGreaterEnd);
   }
 
   // Return if `otherNode` is contained inside this node or equals this node
-  containsEq (otherNode: SyntaxNode): boolean {
-    return this.start <= otherNode.start
-      && this.end >= otherNode.end;
+  containsEq (otherNode: SyntaxNode): boolean;
+  containsEq (otherToken: SyntaxToken): boolean;
+  containsEq (offset: number): boolean;
+  containsEq (other: SyntaxNode | SyntaxToken | number): boolean {
+    if (typeof other === 'number') {
+      return this.start <= other
+        && this.end >= other;
+    }
+    const {
+      start,
+      end,
+    } = other;
+
+    return this.start <= start && this.end >= end;
   }
 }
 
 export enum SyntaxNodeKind {
   PROGRAM = '<program>',
   ELEMENT_DECLARATION = '<element-declaration>',
+  USE_DECLARATION = '<use-declaration>',
+  USE_SPECIFIER = '<use-specifier>',
+  USE_SPECIFIER_LIST = '<use-specifier-list>',
   ATTRIBUTE = '<attribute>',
   // A node that represents a contiguous stream of identifiers
   // Attribute name or value may use this
@@ -176,10 +185,10 @@ export enum SyntaxNodeKind {
   WILDCARD = '<wildcard>',
 }
 
-// Form: <element-declaration>*
-// The root node of a DBML program containing top-level element declarations
+// Form: (<element-declaration> | <use-declaration>)*
+// The root node of a DBML program containing top-level statements in source order.
 export class ProgramNode extends SyntaxNode {
-  body: ElementDeclarationNode[];
+  body: (UseDeclarationNode | ElementDeclarationNode)[];
 
   eof?: SyntaxToken;
 
@@ -191,7 +200,7 @@ export class ProgramNode extends SyntaxNode {
       eof,
       source,
     }: {
-      body?: ElementDeclarationNode[];
+      body?: (UseDeclarationNode | ElementDeclarationNode)[];
       eof?: SyntaxToken;
       source: string;
     },
@@ -205,6 +214,164 @@ export class ProgramNode extends SyntaxNode {
     this.source = source;
     this.body = body;
     this.eof = eof;
+  }
+
+  get declarations (): ElementDeclarationNode[] {
+    return this.body.filter((s): s is ElementDeclarationNode => s.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+  }
+
+  get uses (): UseDeclarationNode[] {
+    return this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
+  }
+}
+
+// Form: use { <specifiers> } from <path>  (selective)
+//    or: use * from <path>                (entire-file)
+//    or: reuse { <specifiers> } from <path>  (selective re-export)
+//    or: reuse * from <path>                 (entire-file re-export)
+// A top-level import statement bringing named elements into scope
+// e.g. use { table users, enum status } from './schema'
+// e.g. use * from './common'
+// e.g. reuse { table users } from './schema'
+export class UseDeclarationNode extends SyntaxNode {
+  useKeyword?: SyntaxToken; // 'use' or 'reuse'
+
+  specifiers?: UseSpecifierListNode | WildcardNode;
+
+  fromKeyword?: SyntaxToken;
+
+  importPath?: SyntaxToken;
+
+  constructor (
+    {
+      useKeyword,
+      specifiers,
+      fromKeyword,
+      importPath,
+    }: {
+      useKeyword?: SyntaxToken;
+      specifiers?: UseSpecifierListNode | WildcardNode;
+      fromKeyword?: SyntaxToken;
+      importPath?: SyntaxToken;
+    },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
+    super(
+      id,
+      SyntaxNodeKind.USE_DECLARATION,
+      filepath,
+      [
+        useKeyword,
+        specifiers,
+        fromKeyword,
+        importPath,
+      ],
+    );
+    this.useKeyword = useKeyword;
+    this.specifiers = specifiers;
+    this.fromKeyword = fromKeyword;
+    this.importPath = importPath;
+  }
+
+  get isReuse (): boolean {
+    return isReuseKeyword(this.useKeyword);
+  }
+}
+
+// Form: <kind> <name> [as <alias>]
+// A single specifier inside a use statement
+// e.g. table users
+// e.g. enum status
+// e.g. table users as u
+export class UseSpecifierNode extends SyntaxNode {
+  importKind?: SyntaxToken;
+
+  name?: NormalExpressionNode;
+
+  asKeyword?: SyntaxToken;
+
+  alias?: NormalExpressionNode;
+
+  constructor (
+    {
+      importKind, name, asKeyword, alias,
+    }: {
+      importKind?: SyntaxToken;
+      name?: NormalExpressionNode;
+      asKeyword?: SyntaxToken;
+      alias?: NormalExpressionNode;
+    },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
+    super(
+      id,
+      SyntaxNodeKind.USE_SPECIFIER,
+      filepath,
+      [
+        importKind,
+        name,
+        asKeyword,
+        alias,
+      ],
+    );
+    this.importKind = importKind;
+    this.name = name;
+    this.asKeyword = asKeyword;
+    this.alias = alias;
+  }
+
+  isKind (...importKinds: ImportKind[]): boolean {
+    return this.importKind?.value !== undefined && importKinds.map((k) => k.toLowerCase()).includes(this.importKind.value.toLowerCase());
+  }
+
+  getSymbolKind (): SymbolKind | undefined {
+    const value = this.importKind?.value?.toLowerCase();
+    if (value === undefined) return undefined;
+    return Object.values(SymbolKind).find((k) => k.toLowerCase() === value);
+  }
+}
+
+// Form: { <specifier> [\n+ <specifier>]* }
+// The braced list of specifiers in a use statement
+// e.g. {
+//   table users
+//   enum status
+// }
+export class UseSpecifierListNode extends SyntaxNode {
+  openBrace?: SyntaxToken;
+
+  specifiers: UseSpecifierNode[];
+
+  closeBrace?: SyntaxToken;
+
+  constructor (
+    {
+      openBrace,
+      specifiers = [],
+      closeBrace,
+    }: {
+      openBrace?: SyntaxToken;
+      specifiers?: UseSpecifierNode[];
+      closeBrace?: SyntaxToken;
+    },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
+    super(
+      id,
+      SyntaxNodeKind.USE_SPECIFIER_LIST,
+      filepath,
+      [
+        openBrace,
+        ...specifiers,
+        closeBrace,
+      ],
+    );
+    this.openBrace = openBrace;
+    this.specifiers = specifiers;
+    this.closeBrace = closeBrace;
   }
 }
 
