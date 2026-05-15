@@ -7,10 +7,10 @@ title: Module System
 A single DBML file can grow very large, making it difficult to navigate, maintain, and collaborate on. The module system lets you split a schema across multiple files — keeping things organized by domain, sharing common definitions across projects, and importing only what you need.
 
 - [Overview](#overview)
+- [Import All](#import-all)
 - [Selective Import](#selective-import)
   - [Supported Import Types](#supported-import-types)
   - [Import Aliases](#import-aliases)
-- [Import All](#import-all)
 - [Re-Exporting with `reuse`](#re-exporting-with-reuse)
 - [Notes](#notes)
 
@@ -48,6 +48,30 @@ Table jobs {
 ```
 
 Each file is isolated by default — nothing is visible across files unless explicitly imported.
+
+## Import All
+
+When you want everything a file exports, use `*` instead of listing each element.
+
+```text
+// base.dbml
+Table users {
+  id int [pk]
+}
+
+Table orders {
+  id int [pk]
+}
+```
+
+```text
+// Everything from ./base.dbml will be imported
+use * from './base'
+
+Ref: orders.user_id > users.id
+```
+
+`use *` and selective imports from the same file can coexist; any duplicate names are deduplicated automatically.
 
 ## Selective Import
 
@@ -162,31 +186,7 @@ use {
 
 Once aliased, only the alias name is accessible — the original name is not.
 
-## Import All
-
-When you want everything a file exports, use `*` instead of listing each element.
-
-```text
-// base.dbml
-Table users {
-  id int [pk]
-}
-
-Table orders {
-  id int [pk]
-}
-```
-
-```text
-// Everything from ./base.dbml will be imported
-use * from './base'
-
-Ref: orders.user_id > users.id
-```
-
-`use *` and selective imports from the same file can coexist; any duplicate names are deduplicated automatically.
-
-## Re-Exporting with `reuse`
+## Re-exporting with `reuse`
 
 `use` makes imported elements available only in the current file. If another file imports the current file, it will **not** see elements brought in via `use`:
 
@@ -218,63 +218,15 @@ use * from './common/index'
 
 `reuse` is best for cases where you want to expose some schema elements to other consumers, without forcing the consumers to be aware of the internal folder structure of your project.
 
-### The Barrel File Pattern With `reuse`
+<figure>
 
-To illustrate a use case of `reuse`, suppose you have a project named `management` that is split into 3 files for easier personal management: `management/users.dbml`, `management/products.dbml`, `management/orders.dbml`.
+![use vs reuse illustration](/img/reuse-and-use-illustration.svg)
 
-With `use`, all consumers of `management` must be aware of your project structure to import everything:
-
-```text
-// Consumer's file
-use * from './management/users'
-use * from './management/products'
-use * from './management/orders'
-```
-
-This is fragile, as when you decide to reorganize your project (e.g. merge `products` and `orders` into one file), all consumers' schemas will be broken.
-
-With `reuse`, you can do this instead:
-
-```text
-// management/index.dbml
-// You totally control this file
-reuse * from './users'
-reuse * from './products'
-reuse * from './orders'
-```
-
-Now, the consumers only have to import this barrel file:
-
-```text
-// Consumer's file
-use * from './management/index'
-```
-
-This way, you can reorganize your project as you wish, only needing to modify your own barrel file. Your consumers never need to be aware of your changes.
+<figcaption>`main.dbml` can only see `include-*.dbml` files — those imported via `reuse`. Files imported via `use` stay private to the intermediate file.</figcaption>
+</figure>
 
 ## Notes
 
 **`use` is not transitive** — If `a.dbml` imports `b.dbml` and `b.dbml` imports `c.dbml` via `use`, elements from `c.dbml` would not be available in `a.dbml`. Use [`reuse`](#re-exporting-with-reuse) if you need to pass elements through.
 
 **Circular imports** — Because DBML is declarative, files can reference each other without any issues. For example, `users.dbml` can import from `orders.dbml` and vice versa.
-
-```text
-// users.dbml
-use { table orders } from './orders'
-
-Table users {
-  id int [pk]
-}
-
-Ref: users.id < orders.user_id
-```
-
-```text
-// orders.dbml
-use { table users } from './users'
-
-Table orders {
-  id int [pk]
-  user_id int [ref: > users.id]
-}
-```
