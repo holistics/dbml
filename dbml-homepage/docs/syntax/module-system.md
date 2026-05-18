@@ -48,6 +48,8 @@ Import all may cause unexpected name conflicts. For a more fine-grained control 
 ```text
 use {
   type name
+  type name // one or more elements can be specified
+  ...
 } from './path-to-file'
 ```
 
@@ -92,9 +94,10 @@ TableGroup auth_core {
 ```
 
 ```text
-// u is available as a table here
+// u and r are available as tables here
 use {
   table auth.users as u
+  table auth.roles as r
 } from './auth'
 
 // auth.users, auth.roles, auth.sessions are available here
