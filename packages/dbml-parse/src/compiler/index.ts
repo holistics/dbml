@@ -281,7 +281,7 @@ export default class Compiler {
   // A global query
   // Interpret metadata (ref, check, index, record) into a SchemaElement
   // Signature: (metadata: SymbolMetadata) => Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled>
-  interpretMetadata = interpretMetadata.bind(this);
+  interpretMetadata = this.globalQuery(interpretMetadata);
   // A global query
   // Interpret a single file's AST into a raw Database
   // Signature: (filepath: Filepath) => Report<Readonly<Database> | undefined>

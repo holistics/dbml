@@ -6,7 +6,6 @@ title: Module System
 
 A single DBML file can grow very large, making it difficult to navigate, maintain, and collaborate on. The module system lets you split a schema across multiple files — keeping things organized by domain, sharing common definitions across projects, and importing only what you need.
 
-- [Overview](#overview)
 - [Import All](#import-all)
 - [Selective Import](#selective-import)
   - [Supported Import Types](#supported-import-types)
@@ -14,44 +13,15 @@ A single DBML file can grow very large, making it difficult to navigate, maintai
 - [Re-Exporting with `reuse`](#re-exporting-with-reuse)
 - [Notes](#notes)
 
-## Overview
-
-Use `use` to import elements from another file:
-
-```text
-use {
-  type name
-} from './path-to-file'
-```
-
-- **`type`** — the element type: `table`, `enum`, `tablepartial`, `note`, `schema`, or `tablegroup`. See [Supported Import Types](#supported-import-types).
-- **`name`** — the element name as declared in the source file
-- **`./path-to-file`** — a relative path to the source file; the `.dbml` extension is optional (`'./types'` and `'./types.dbml'` both work)
-
-```text
-// types.dbml
-Enum job_status {
-  pending running done
-}
-```
-
-```text
-// jobs.dbml
-use {
-  enum job_status
-} from './types'
-
-Table jobs {
-  id int [pk]
-  status job_status
-}
-```
-
-Each file is isolated by default — nothing is visible across files unless explicitly imported.
-
 ## Import All
 
-When you want everything a file exports, use `*` instead of listing each element.
+You can use the import-all syntax to import everything a file exports.
+
+```
+use * from './path-to-file'
+```
+
+**`./path-to-file`** is a relative path to the source file. The `.dbml` extension in the import path is optional (`'./base'` and `'./base.dbml'` both work).
 
 ```text
 // base.dbml
@@ -71,35 +41,22 @@ use * from './base'
 Ref: orders.user_id > users.id
 ```
 
-`use *` and selective imports from the same file can coexist; any duplicate names are deduplicated automatically.
-
 ## Selective Import
 
-You can selectively pick some elements from another file to import into the current file.
+Import all may cause unexpected name conflicts. For a more fine-grained control over what is imported, you can selectively pick some elements from another file to import into the current file with the selective-import syntax.
 
 ```text
-// shared.dbml
-Table users {
-  id int [pk]
-}
-
-Enum role {
-  admin member
-}
-
-Table products {
-  id int [pk]
-  user_id int [ref: > users.id]
-}
-```
-
-```text
-// products won't be imported here
 use {
-  table users
-  enum role
-} from './shared'
+  type name
+  type name // one or more elements can be specified
+  ...
+} from './path-to-file'
 ```
+
+- **`type`** — the element type: `table`, `enum`, `tablepartial`, `note`, `schema`, or `tablegroup`. See [Supported Import Types](#supported-import-types).
+- **`name`** — the element name as declared in the source file
+
+Only the specified elements will be imported, others will not be visible and will not cause conflicts in the current file.
 
 ### Supported Import Types
 
@@ -137,9 +94,10 @@ TableGroup auth_core {
 ```
 
 ```text
-// u is available as a table here
+// u and r are available as tables here
 use {
   table auth.users as u
+  table auth.roles as r
 } from './auth'
 
 // auth.users, auth.roles, auth.sessions are available here
