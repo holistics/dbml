@@ -6,48 +6,12 @@ title: Module System
 
 A single DBML file can grow very large, making it difficult to navigate, maintain, and collaborate on. The module system lets you split a schema across multiple files — keeping things organized by domain, sharing common definitions across projects, and importing only what you need.
 
-- [Overview](#overview)
 - [Import All](#import-all)
 - [Selective Import](#selective-import)
   - [Supported Import Types](#supported-import-types)
   - [Import Aliases](#import-aliases)
 - [Re-Exporting with `reuse`](#re-exporting-with-reuse)
 - [Notes](#notes)
-
-## Overview
-
-Use `use` to import elements from another file:
-
-```text
-use {
-  type name
-} from './path-to-file'
-```
-
-- **`type`** — the element type: `table`, `enum`, `tablepartial`, `note`, `schema`, or `tablegroup`. See [Supported Import Types](#supported-import-types).
-- **`name`** — the element name as declared in the source file
-- **`./path-to-file`** — a relative path to the source file; the `.dbml` extension is optional (`'./types'` and `'./types.dbml'` both work)
-
-```text
-// types.dbml
-Enum job_status {
-  pending running done
-}
-```
-
-```text
-// jobs.dbml
-use {
-  enum job_status
-} from './types'
-
-Table jobs {
-  id int [pk]
-  status job_status
-}
-```
-
-Each file is isolated by default — nothing is visible across files unless explicitly imported.
 
 ## Import All
 
