@@ -1,3 +1,5 @@
+import type { Filepath } from '@dbml/parse';
+
 export interface Token {
     end: {
         column: number;
@@ -9,6 +11,7 @@ export interface Token {
         line: number;
         offset: number;
     };
+    filepath?: Filepath;
 }
 
 export interface RawNote {
