@@ -15,7 +15,13 @@ A single DBML file can grow very large, making it difficult to navigate, maintai
 
 ## Import All
 
-When you want everything a file exports, use `*` instead of listing each element.
+You can use the import-all syntax to import everything a file exports.
+
+```
+use * from './path-to-file'
+```
+
+**`./path-to-file`** is a relative path to the source file. The `.dbml` extension in the import path is optional (`'./base'` and `'./base.dbml'` both work).
 
 ```text
 // base.dbml
@@ -35,35 +41,20 @@ use * from './base'
 Ref: orders.user_id > users.id
 ```
 
-`use *` and selective imports from the same file can coexist; any duplicate names are deduplicated automatically.
-
 ## Selective Import
 
-You can selectively pick some elements from another file to import into the current file.
+Import all may cause unexpected name conflicts. For a more fine-grained control over what is imported, you can selectively pick some elements from another file to import into the current file with the selective-import syntax.
 
 ```text
-// shared.dbml
-Table users {
-  id int [pk]
-}
-
-Enum role {
-  admin member
-}
-
-Table products {
-  id int [pk]
-  user_id int [ref: > users.id]
-}
-```
-
-```text
-// products won't be imported here
 use {
-  table users
-  enum role
-} from './shared'
+  type name
+} from './path-to-file'
 ```
+
+- **`type`** — the element type: `table`, `enum`, `tablepartial`, `note`, `schema`, or `tablegroup`. See [Supported Import Types](#supported-import-types).
+- **`name`** — the element name as declared in the source file
+
+Only the specified elements will be imported, others will not be visible and will not cause conflicts in the current file.
 
 ### Supported Import Types
 
