@@ -198,6 +198,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
     'tablegroups',
     'notes',
     'schemas',
+    'inactive',
   ],
 
   symbols: /[=><!~?:&|+\-/^%]+/,
