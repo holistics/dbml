@@ -6,8 +6,7 @@ type TableName = string | { schema?: string; table: string };
 export function renameTable (oldName: TableName, newName: TableName, dbmlCode: string): string {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
-  const compiler = new Compiler();
-  compiler.layout = layout;
+  const compiler = new Compiler(layout);
   const changes = compiler.renameTable(DEFAULT_ENTRY, oldName, newName);
   return changes.get(DEFAULT_ENTRY.absolute) ?? dbmlCode;
 }
@@ -19,15 +18,13 @@ export function syncDiagramView (
 ): { newDbml: string; edits: TextEdit[] } {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
-  const compiler = new Compiler();
-  compiler.layout = layout;
+  const compiler = new Compiler(layout);
   return compiler.syncDiagramView(DEFAULT_ENTRY, operations, blocks);
 }
 
 export function findDiagramViewBlocks (dbmlCode: string): DiagramViewBlock[] {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
-  const compiler = new Compiler();
-  compiler.layout = layout;
+  const compiler = new Compiler(layout);
   return compiler.findDiagramViewBlocks(DEFAULT_ENTRY);
 }

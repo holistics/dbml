@@ -1,4 +1,3 @@
-import { zip } from 'lodash-es';
 import type Compiler from '@/compiler';
 import { getMemberChain } from '@/core/parser/utils';
 import type { RelationCardinality } from '@/core/types';
@@ -12,12 +11,9 @@ import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import { isAccessExpression, isExpressionAVariableNode } from '../utils/validate';
 
 export function shouldInterpretNode (compiler: Compiler, node: SyntaxNode): boolean {
-  const hasParseError = [
-    ...compiler.parseProject().values(),
-  ].some((r) => r.getErrors().length > 0);
-  const hasValidateError = compiler.validateNode(node).getErrors().length > 0;
-  const hasBindError = compiler.bindNode(node).getErrors().length > 0;
-  return !hasParseError && !hasValidateError && !hasBindError;
+  return compiler.reachableFiles(node.filepath).every(
+    (file) => compiler.bindFile(file).getErrors().length === 0,
+  );
 }
 
 // Get all symbols syntactically defined inside `node`

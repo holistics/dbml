@@ -33,14 +33,7 @@ export function rawDb (this: Compiler, filepath: Filepath): Readonly<Database> |
 
 export function publicSymbolTable (this: Compiler, filepath: Filepath): readonly Readonly<NodeSymbol>[] | undefined {
   const astNode = this.parseFile(filepath).getValue().ast;
-  const sym = this.nodeSymbol(astNode);
-  if (sym.hasValue(UNHANDLED)) return undefined;
-  const programMembers = this.symbolMembers(sym.getValue());
-  if (programMembers.hasValue(UNHANDLED)) return undefined;
-
-  const result: NodeSymbol[] = [];
-  for (const member of programMembers.getValue()) {
-    result.push(member);
-  }
-  return result;
+  const sym = this.nodeSymbol(astNode).getFiltered(UNHANDLED);
+  if (!sym) return undefined;
+  return this.symbolMembers(sym).getFiltered(UNHANDLED);
 }

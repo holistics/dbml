@@ -82,7 +82,13 @@ export class Filepath implements Internable<FilepathId> {
   // Return the path relative to a given base directory, always prefixed with './' or '../'
   relativeTo (baseDir: string): string {
     const rel = relative(baseDir, this.path);
-    return rel.startsWith('.') ? rel : `./${rel}`;
+    if (!rel.startsWith('./') && !rel.startsWith('../') && ![
+      '.',
+      '..',
+    ].includes(rel)) {
+      return `./${rel}`;
+    }
+    return rel;
   }
 
   toString (): string {

@@ -82,10 +82,10 @@ export const programModule: GlobalModule = {
     if (!(symbol.declaration instanceof ProgramNode)) return Report.create(undefined);
 
     if (!shouldInterpretNode(compiler, symbol.declaration)) {
-      return Report.create(undefined, [
-        ...compiler.validateNode(symbol.declaration).getErrors(),
-        ...compiler.bindNode(symbol.declaration).getErrors(),
-      ]);
+      const errors = compiler.reachableFiles(filepath).flatMap(
+        (file) => compiler.bindFile(file).getErrors(),
+      );
+      return Report.create(undefined, errors);
     }
 
     return new ProgramInterpreter(compiler, symbol, filepath).interpret() as Report<SchemaElement | SchemaElement[] | undefined>;

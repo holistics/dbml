@@ -6,184 +6,70 @@ title: Module System
 
 A single DBML file can grow very large, making it difficult to navigate, maintain, and collaborate on. The module system lets you split a schema across multiple files — keeping things organized by domain, sharing common definitions across projects, and importing only what you need.
 
-- [Overview](#overview)
+- [Import All](#import-all)
 - [Selective Import](#selective-import)
-  - [Supported Import Kinds](#supported-import-kinds)
-  - [Importing a Schema](#importing-a-schema)
-  - [Importing a TableGroup](#importing-a-tablegroup)
-- [Wildcard Import](#wildcard-import)
-- [Import Aliases](#import-aliases)
-- [Schema-Qualified Import](#schema-qualified-import)
+  - [Supported Import Types](#supported-import-types)
+  - [Import Aliases](#import-aliases)
 - [Re-Exporting with `reuse`](#re-exporting-with-reuse)
-- [Circular Imports](#circular-imports)
+- [Notes](#notes)
 
-## Overview
+## Import All
 
-Use `use` to import elements from another file:
+You can use the import-all syntax to import everything a file exports.
 
-```text
-use {
-  kind name
-} from './path-to-file'
+```
+use * from './path-to-file'
 ```
 
-- **`kind`** — the element kind: `table`, `enum`, `tablepartial`, `schema`, or `tablegroup`. See [Supported Import Kinds](#supported-import-kinds).
-- **`name`** — the element name as declared in the source file
-- **`./path-to-file`** — a relative path to the source file; the `.dbml` extension is optional (`'./types'` and `'./types.dbml'` both work)
+**`./path-to-file`** is a relative path to the source file. The `.dbml` extension in the import path is optional (`'./base'` and `'./base.dbml'` both work).
 
 ```text
-// types.dbml
-Enum job_status {
-  pending running done
-}
-
-// jobs.dbml
-use {
-  enum job_status
-} from './types'
-
-Table jobs {
+// base.dbml
+Table users {
   id int [pk]
-  status job_status
+}
+
+Table orders {
+  id int [pk]
 }
 ```
 
-Each file is isolated by default — nothing is visible across files unless explicitly imported. Imports are also not transitive: if `a.dbml` imports `b.dbml` and `b.dbml` imports `c.dbml`, elements from `c.dbml` are not available in `a.dbml`.
+```text
+// Everything from ./base.dbml will be imported
+use * from './base'
+
+Ref: orders.user_id > users.id
+```
 
 ## Selective Import
 
-When you only need a few specific elements from another file, list them by kind and name.
-
-```text
-// types.dbml
-Enum job_status {
-  pending
-  running
-  done
-}
-
-// jobs.dbml
-use {
-  enum job_status
-} from './types'
-
-Table jobs {
-  id int [pk]
-  status job_status
-}
-```
-
-Multiple entries can appear in one block or across separate statements:
+Import all may cause unexpected name conflicts. For a more fine-grained control over what is imported, you can selectively pick some elements from another file to import into the current file with the selective-import syntax.
 
 ```text
 use {
-  table users
-  enum role
-} from './shared'
-
-use {
-  table orders
-} from './orders'
+  type name
+  type name // one or more elements can be specified
+  ...
+} from './path-to-file'
 ```
 
-Only the named elements become available in the importing file. Everything else in the source file stays out of scope.
+- **`type`** — the element type: `table`, `enum`, `tablepartial`, `note`, `schema`, or `tablegroup`. See [Supported Import Types](#supported-import-types).
+- **`name`** — the element name as declared in the source file
 
-### Supported Import Kinds
+Only the specified elements will be imported, others will not be visible and will not cause conflicts in the current file.
+
+### Supported Import Types
 
 | Keyword        | What is imported                              |
 |----------------|-----------------------------------------------|
 | `table`        | Table (records and refs come along with it)   |
 | `enum`         | Enum                                          |
 | `tablepartial` | TablePartial                                  |
+| `note`         | Sticky Note                                   |
 | `schema`       | All elements under that schema                |
 | `tablegroup`   | TableGroup (all tables in the group)          |
 
-Element kind keywords are case-insensitive (`Table`, `TABLE`, and `table` are all valid).
-
-### Importing a Schema
-
-When a source file defines multiple tables under the same schema, importing the schema brings all of them in at once instead of listing each table individually.
-
-```text
-// auth.dbml
-Table auth.users {
-  id int [pk]
-}
-
-Table auth.roles {
-  id int [pk]
-}
-
-Table auth.sessions {
-  id int [pk]
-}
-
-// main.dbml
-use {
-  schema auth
-} from './auth'
-
-Table orders {
-  id int [pk]
-  user_id int [ref: > auth.users.id]
-}
-```
-
-All tables, enums, and other elements declared under the `auth` schema become available in `main.dbml` under their original schema-qualified names.
-
-### Importing a TableGroup
-
-Importing a `tablegroup` brings the group definition itself into scope, along with all the tables it references.
-
-```text
-// base.dbml
-Table users {
-  id int [pk]
-}
-
-Table posts {
-  id int [pk]
-  user_id int
-}
-
-TableGroup blog {
-  users
-  posts
-}
-
-// main.dbml
-use {
-  tablegroup blog
-} from './base'
-```
-
-The `blog` tablegroup and its member tables (`users`, `posts`) are all available in `main.dbml`.
-
-## Wildcard Import
-
-When you want everything a file has to offer, use a wildcard instead of listing each element individually.
-
-```text
-// base.dbml
-Table users {
-  id int [pk]
-}
-
-Table orders {
-  id int [pk]
-}
-
-// main.dbml
-use * from './base'
-
-Ref: orders.user_id > users.id
-```
-
-Wildcard and selective imports from the same file can coexist; any duplicate names are deduplicated automatically.
-
-## Import Aliases
-
-When two files define elements with the same name, or when you want a shorter name locally, use `as` to rename an import.
+Element type keywords are case-insensitive (`Table`, `TABLE`, and `table` are all valid).
 
 ```text
 // auth.dbml
@@ -192,101 +78,113 @@ Table auth.users {
   email varchar
 }
 
-// main.dbml
-use {
-  table auth.users as u
-} from './auth'
-
-Table orders {
+Table auth.roles {
   id int [pk]
-  user_id int [ref: > u.id]
+  name varchar
+}
+
+Table auth.sessions {
+  id int [pk]
+}
+
+TableGroup auth_core {
+  auth.users
+  auth.roles
 }
 ```
 
-Once aliased, only the alias name (`u`) is accessible — the original name is not. Aliases also strip any schema prefix, so `auth.users as u` is visible as plain `u` in the default schema.
+```text
+// u and r are available as tables here
+use {
+  table auth.users as u
+  table auth.roles as r
+} from './auth'
 
-The same element can be imported multiple times under different aliases. Giving two different elements the same alias name is an error.
+// auth.users, auth.roles, auth.sessions are available here
+use {
+  schema auth
+} from './auth'
 
-## Schema-Qualified Import
+// auth_core, auth.user, auth.roles are available here
+use {
+  tablegroup auth_core
+} from './auth'
+```
 
-To import elements that live inside a named schema, qualify the name with the schema.
+### Import Aliases
+
+When two files define elements with the same name, use `as` to rename imports and avoid conflicts.
 
 ```text
 // auth.dbml
-Table auth.users {
+Table users {
   id int [pk]
+  email varchar
 }
-
-Table auth.roles {
-  id int [pk]
-}
-
-// main.dbml
-use {
-  table auth.users
-} from './auth'
 ```
-
-Without an alias the element keeps its schema-qualified name (`auth.users`). Combined with `as`, it is placed in the default schema under the alias:
 
 ```text
-use {
-  table auth.users as u
-} from './auth'
-// visible as: u  (no schema prefix)
+// billing.dbml
+Table users {
+  id int [pk]
+  amount decimal
+}
 ```
 
-## Re-Exporting with `reuse`
+```text
+// Alias the tables to avoid name conflicts
+use {
+  table users as auth_users
+} from './auth'
 
-When you do want a file to pass elements through to its own importers — for example, a barrel file that composes several sub-files — use `reuse` instead of `use`.
+use {
+  table users as billing_users
+} from './billing'
+```
+
+Once aliased, only the alias name is accessible — the original name is not.
+
+## Re-exporting with `reuse`
+
+`use` makes imported elements available only in the current file. If another file imports the current file, it will **not** see elements brought in via `use`:
+
+```text
+// common/index.dbml
+use * from './users'
+use * from './orders'
+```
+
+```text
+// main.dbml
+// users and orders are NOT available here
+use * from './common/index'
+```
+
+`reuse` goes one step further — it also makes them visible to any file that imports the current file.
 
 ```text
 // common/index.dbml
 reuse * from './users'
 reuse * from './orders'
-reuse * from './products'
+```
 
+```text
 // main.dbml
+// users and orders are available here
 use * from './common/index'
 ```
 
-Consumers of `common/index.dbml` never need to know how the files are organized internally. If you later restructure the sub-files, only the barrel changes — not every consumer.
+`reuse` is best for cases where you want to expose some schema elements to other consumers, without forcing the consumers to be aware of the internal folder structure of your project.
 
-`reuse` works with selective imports and aliases too:
+<figure>
 
-```text
-reuse {
-  table users
-} from './base'
+![use vs reuse illustration](/img/reuse-and-use-illustration.svg)
 
-reuse {
-  table auth.users as u
-} from './auth'
-```
+<figcaption>`main.dbml` can only see `include-*.dbml` files — those imported via `reuse`. Files imported via `use` stay private to the intermediate file.</figcaption>
+</figure>
 
-## Circular Imports
+## Notes
 
-Because DBML is declarative, files can freely reference each other without any issues.
+**`use` is not transitive** — If `a.dbml` imports `b.dbml` and `b.dbml` imports `c.dbml` via `use`, elements from `c.dbml` would not be available in `a.dbml`. Use [`reuse`](#re-exporting-with-reuse) if you need to pass elements through.
 
-```text
-// users.dbml
-use {
-  table orders
-} from './orders'
-
-Table users {
-  id int [pk]
-}
-
-Ref: users.id < orders.user_id
-
-// orders.dbml
-use {
-  table users
-} from './users'
-
-Table orders {
-  id int [pk]
-  user_id int
-}
-```
+**Circular imports** — Because DBML is declarative, files can reference each other without any issues. For example, `users.dbml` can import from `orders.dbml` and vice versa.

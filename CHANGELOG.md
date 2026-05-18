@@ -1,3 +1,45 @@
+## v8.0.0 (2026-05-15)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#870](https://github.com/holistics/dbml/pull/870) Multifile support ([@huydo862003](https://github.com/huydo862003))
+
+#### :boom: Breaking Change
+* `dbml-core`, `dbml-parse`, `dbml-playground`
+  * [#883](https://github.com/holistics/dbml/pull/883) Playground rewrite ([@huydo862003](https://github.com/huydo862003))
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#870](https://github.com/holistics/dbml/pull/870) Query-based compiler ([@huydo862003](https://github.com/huydo862003))
+* `dbml-core`
+  * [#870](https://github.com/holistics/dbml/pull/870) `Parser` constructor no longer accepts a compiler. ([@huydo862003](https://github.com/huydo862003))
+  * [#870](https://github.com/holistics/dbml/pull/870) `Parser.parseDBMLToJSONv2` no longer accepts a compiler parameter. ([@huydo862003](https://github.com/huydo862003))
+* `dbml-parse`
+  * [#870](https://github.com/holistics/dbml/pull/870) Language services now require `TextModel` URIs to be set. ([@huydo862003](https://github.com/huydo862003))
+
+#### :memo: Documentation
+* [#899](https://github.com/holistics/dbml/pull/899) Add information about Elixir DBML support ([@saleyn](https://github.com/saleyn))
+
+#### :robot: Dependencies Update
+* `dbml-homepage`, `dbml-core`, `dbml-cli`, `dbml-parse`
+  * [#865](https://github.com/holistics/dbml/pull/865) chore(deps): bump lodash from 4.17.21 to 4.18.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#869](https://github.com/holistics/dbml/pull/869) chore(deps): bump follow-redirects from 1.15.11 to 1.16.0 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#895](https://github.com/holistics/dbml/pull/895) chore(deps): bump picomatch from 2.3.1 to 2.3.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#893](https://github.com/holistics/dbml/pull/893) chore(deps): bump immutable from 4.3.5 to 4.3.8 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#894](https://github.com/holistics/dbml/pull/894) chore(deps): bump lodash-es from 4.17.21 to 4.18.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#892](https://github.com/holistics/dbml/pull/892) chore(deps): bump flatted from 3.3.3 to 3.4.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#789](https://github.com/holistics/dbml/pull/789) chore(deps): bump jws from 3.2.2 to 3.2.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#886](https://github.com/holistics/dbml/pull/886) chore(deps): bump postcss from 8.5.6 to 8.5.13 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#891](https://github.com/holistics/dbml/pull/891) chore(deps): bump rollup from 4.52.3 to 4.60.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#890](https://github.com/holistics/dbml/pull/890) chore(deps): bump handlebars from 4.7.8 to 4.7.9 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#832](https://github.com/holistics/dbml/pull/832) chore(deps): bump bn.js from 4.12.0 to 4.12.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#864](https://github.com/holistics/dbml/pull/864) chore(deps): bump axios from 1.9.0 to 1.15.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#863](https://github.com/holistics/dbml/pull/863) chore(deps-dev): bump vite from 7.1.7 to 7.3.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 4
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Serge Aleynikov ([@saleyn](https://github.com/saleyn))
+- [@blacksmith-sh[bot]](https://github.com/apps/blacksmith-sh)
+
 ## v7.1.2 (2026-04-28)
 
 #### :robot: Dependencies Update

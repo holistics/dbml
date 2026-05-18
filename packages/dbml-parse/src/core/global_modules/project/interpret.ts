@@ -72,7 +72,7 @@ export class ProjectInterpreter {
   private interpretBody (body: BlockExpressionNode): CompileError[] {
     return body.body.flatMap((_sub) => {
       const sub = _sub as ElementDeclarationNode;
-      switch (sub.type?.value.toLowerCase()) {
+      switch (sub.getElementKind()) {
         case ElementKind.Table: {
           const report = this.interpretSubElement(sub);
           if (report.getValue()) this.project.tables?.push(report.getValue() as Table);

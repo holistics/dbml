@@ -20,7 +20,7 @@ import { NodeSymbolIdGenerator, SymbolFactory } from '@/core/types/symbol';
 import {
   DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
 } from '@/services/index';
-import { type DbmlProjectLayout, MemoryProjectLayout } from './projectLayout';
+import { type DbmlProjectLayout } from './projectLayout';
 import {
   containerElement, containerScope, containerScopeKind, containerStack, containerToken,
 } from './queries/container';
@@ -76,11 +76,7 @@ export default class Compiler {
   readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
   // The structure of the DbmlProject
-  layout: DbmlProjectLayout;
-
-  constructor (layout: DbmlProjectLayout = new MemoryProjectLayout()) {
-    this.layout = layout;
-  }
+  constructor (public layout: DbmlProjectLayout) {}
 
   getSource (filepath: Filepath): string | undefined {
     return this.layout.getSource(filepath);
@@ -285,7 +281,7 @@ export default class Compiler {
   // A global query
   // Interpret metadata (ref, check, index, record) into a SchemaElement
   // Signature: (metadata: SymbolMetadata) => Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled>
-  interpretMetadata = interpretMetadata.bind(this);
+  interpretMetadata = this.globalQuery(interpretMetadata);
   // A global query
   // Interpret a single file's AST into a raw Database
   // Signature: (filepath: Filepath) => Report<Readonly<Database> | undefined>

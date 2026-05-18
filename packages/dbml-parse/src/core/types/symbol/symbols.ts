@@ -3,6 +3,7 @@ import type { Filepath } from '@/core/types/filepath';
 import type { Internable } from '@/core/types/internable';
 import { UNHANDLED } from '@/core/types/module';
 import type Compiler from '@/compiler';
+import type { CanonicalName } from '@/compiler/queries/canonicalName';
 import { MetadataKind } from '@/core/types/symbol/metadata';
 import type { TableChecksMetadata, NodeMetadata, IndexesMetadata } from '@/core/types/symbol/metadata';
 import type { TokenPosition } from '@/core/types/schemaJson';
@@ -120,10 +121,7 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
   }
 
   // Return the canonical name from the file's perspective
-  canonicalName (compiler: Compiler, filepath: Filepath): {
-    schema: string;
-    name: string;
-  } | undefined {
+  canonicalName (compiler: Compiler, filepath: Filepath): CanonicalName | undefined {
     return compiler.canonicalName(filepath, this).getValue();
   }
 
