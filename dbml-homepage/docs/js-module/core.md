@@ -113,6 +113,53 @@ const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 const mysql = exporter.export(dbml, 'mysql');
 ```
 
+### Filepath
+
+```javascript
+const { Filepath } = require('@dbml/core');
+```
+
+#### `Filepath.from(absolutePath)`
+
+* **Arguments:**
+  * ```{string} absolutePath``` — an absolute file path (e.g. `'/main.dbml'`)
+
+* **Returns:** ```Filepath``` object
+
+* **Usage:**
+Create a `Filepath` reference for use with `parser.dbmlProjectLayout` and `parser.parseDbmlProject`.
+
+```javascript
+const entry = Filepath.from('/main.dbml');
+```
+
+#### `filepath.absolute`
+
+* **Type:** ```string```
+
+* **Usage:**
+Returns the absolute path string of the filepath.
+
+#### `filepath.resolve(relativePath)`
+
+* **Arguments:**
+  * ```{string} relativePath```
+
+* **Returns:** ```Filepath``` object
+
+* **Usage:**
+Resolve a relative path against this filepath's directory.
+
+#### `filepath.relativeTo(baseDir)`
+
+* **Arguments:**
+  * ```{string} baseDir```
+
+* **Returns:** ```string```
+
+* **Usage:**
+Returns the relative path from `baseDir` to this filepath.
+
 ### Parser
 
 ```javascript
@@ -135,7 +182,7 @@ Regarding DBML parsing, `Parser` supports two styles:
 * **Returns:** ```Database``` object
 
 * **Usage:**
-Parse a single-file input in the specified format to ```Database``` object. For multifile DBML projects, use `setDbmlSource` and `parseDbmlProject` instead.
+Parse a single-file input in the specified format to ```Database``` object. For multifile DBML projects, use `parser.setDbmlSource` and `parseDbmlProject` instead.
 
 :::note
 
@@ -167,6 +214,19 @@ const database = parser.parse(dbml, 'dbml');
 * **Usage:**
 Register or remove a DBML source file for multifile parsing. Use together with `parseDbmlProject`.
 
+#### `parser.deleteDbmlSource(filepath)`
+
+* **Arguments:**
+  * ```{Filepath} filepath```
+
+* **Usage:**
+Remove a single DBML source file from the parser.
+
+#### `parser.clearDbmlSource()`
+
+* **Usage:**
+Remove all DBML source files from the parser.
+
 #### `parser.parseDbmlProject(entrypoint)`
 
 * **Arguments:**
@@ -177,7 +237,7 @@ Register or remove a DBML source file for multifile parsing. Use together with `
 * **Throws:** ```CompilerError``` on syntax or binding errors
 
 * **Usage:**
-Parse a file (specified by entrypoint) in a multifile project, including all used files. Use together with `setDbmlSource` to register files before parsing.
+Parse a file (specified by entrypoint) in a multifile project, including all used files. Use together with `parser.setDbmlSource` to register files before parsing.
 
 ```javascript
 const { Parser, Filepath } = require('@dbml/core');
@@ -202,19 +262,6 @@ parser.setDbmlSource(Filepath.from('/users.dbml'), `
 
 const database = parser.parseDbmlProject(Filepath.from('/main.dbml'));
 ```
-
-#### `parser.deleteDbmlSource(filepath)`
-
-* **Arguments:**
-  * ```{Filepath} filepath```
-
-* **Usage:**
-Remove a single DBML source file from the parser.
-
-#### `parser.clearDbmlSource()`
-
-* **Usage:**
-Remove all DBML source files from the parser.
 
 ### ModelExporter
 

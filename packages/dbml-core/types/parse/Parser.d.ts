@@ -11,7 +11,6 @@ export declare type ParseFormat = 'json'
     | 'oracle';
 
 declare class Parser {
-    public layout: MemoryProjectLayout;
     public DBMLCompiler: Compiler;
     constructor();
     static parseJSONToDatabase(rawDatabase: RawDatabase): Database;

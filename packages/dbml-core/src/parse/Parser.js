@@ -10,8 +10,8 @@ import { CompilerError } from './error';
 
 class Parser {
   constructor () {
-    this.layout = new MemoryProjectLayout();
-    this.DBMLCompiler = new Compiler(this.layout);
+    this.dbmlProjectLayout = new MemoryProjectLayout();
+    this.DBMLCompiler = new Compiler(this.dbmlProjectLayout);
   }
 
   static parseJSONToDatabase (rawDatabase) {
@@ -88,18 +88,18 @@ class Parser {
 
   setDbmlSource (filepath, source) {
     if (source === undefined) {
-      this.layout.deleteSource(filepath);
+      this.dbmlProjectLayout.deleteSource(filepath);
     } else {
-      this.layout.setSource(filepath, source);
+      this.dbmlProjectLayout.setSource(filepath, source);
     }
   }
 
   deleteDbmlSource (filepath) {
-    this.layout.deleteSource(filepath);
+    this.dbmlProjectLayout.deleteSource(filepath);
   }
 
   clearDbmlSource () {
-    this.layout.clearSource();
+    this.dbmlProjectLayout.clearSource();
   }
 
   parseDbmlProject (entrypoint) {
