@@ -94,6 +94,14 @@ class Parser {
     }
   }
 
+  deleteDbmlSource (filepath) {
+    this.layout.deleteSource(filepath);
+  }
+
+  clearDbmlSource () {
+    this.layout.clearSource();
+  }
+
   parseDbmlProject (entrypoint) {
     try {
       const result = this.DBMLCompiler.interpretFile(entrypoint);

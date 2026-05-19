@@ -135,7 +135,7 @@ Regarding DBML parsing, `Parser` supports two styles:
 * **Returns:** ```Database``` object
 
 * **Usage:**
-Parse a single-file input to ```Database``` object. For multifile DBML projects, use `setDbmlSource` and `parseDbmlProject` instead.
+Parse a single-file input in the specified format to ```Database``` object. For multifile DBML projects, use `setDbmlSource` and `parseDbmlProject` instead.
 
 :::note
 
@@ -202,6 +202,19 @@ parser.setDbmlSource(Filepath.from('/users.dbml'), `
 
 const database = parser.parseDbmlProject(Filepath.from('/main.dbml'));
 ```
+
+#### `parser.deleteDbmlSource(filepath)`
+
+* **Arguments:**
+  * ```{Filepath} filepath```
+
+* **Usage:**
+Remove a single DBML source file from the parser.
+
+#### `parser.clearDbmlSource()`
+
+* **Usage:**
+Remove all DBML source files from the parser.
 
 ### ModelExporter
 

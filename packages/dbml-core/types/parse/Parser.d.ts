@@ -1,4 +1,4 @@
-import { Compiler, MemoryProjectLayout } from '@dbml/parse';
+import { Compiler, Filepath, MemoryProjectLayout } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 
 export declare type ParseFormat = 'json'
@@ -32,6 +32,10 @@ declare class Parser {
     static parseOracleToJSON(str: string): RawDatabase;
     static parse(str: string, format: ParseFormat): Database;
     static parse(str: RawDatabase, format: 'json'): Database;
+    setDbmlSource(filepath: Filepath, source: string | undefined): void;
+    deleteDbmlSource(filepath: Filepath): void;
+    clearDbmlSource(): void;
+    parseDbmlProject(entrypoint: Filepath): Database;
     parse(str: string, format: ParseFormat): Database;
     parse(str: RawDatabase, format: 'json'): Database;
 }

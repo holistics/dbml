@@ -127,6 +127,45 @@ describe('@dbml/core', () => {
       expect(refs.length).toBeGreaterThanOrEqual(3);
     });
 
+    test('deleteDbmlSource removes a single file', () => {
+      const parser = new Parser();
+      const main = Filepath.from('/main.dbml');
+      const users = Filepath.from('/users.dbml');
+
+      parser.setDbmlSource(users, `
+        Table users {
+          id integer [pk]
+        }
+      `);
+      parser.setDbmlSource(main, `
+        use { table users } from './users.dbml'
+
+        Table posts {
+          id integer [pk]
+          user_id integer [ref: > users.id]
+        }
+      `);
+
+      expect(allTables(parser.parseDbmlProject(main))).toHaveLength(2);
+
+      parser.deleteDbmlSource(users);
+      // After deleting users.dbml, parsing main should fail because the import can't resolve
+      expect(() => parser.parseDbmlProject(main)).toThrow();
+    });
+
+    test('clearDbmlSource removes all files', () => {
+      const parser = new Parser();
+      const entry = Filepath.from('/main.dbml');
+
+      parser.setDbmlSource(entry, 'Table users { id integer [pk] }');
+      expect(allTables(parser.parseDbmlProject(entry))).toHaveLength(1);
+
+      parser.clearDbmlSource();
+      // After clearing all sources, parsing should return empty or throw
+      const database = parser.parseDbmlProject(entry);
+      expect(allTables(database)).toHaveLength(0);
+    });
+
     test('updating source invalidates cache', () => {
       const parser = new Parser();
       const entry = Filepath.from('/main.dbml');
