@@ -46,7 +46,7 @@ class Parser {
     layout.setSource(DEFAULT_ENTRY, str);
     const compiler = new Compiler(layout);
 
-    const diags = convertDbmlParserError(this.DBMLCompiler.parse.errors(DEFAULT_ENTRY));
+    const diags = convertDbmlParserError(compiler.parse.errors(DEFAULT_ENTRY));
     if (diags.length > 0) throw CompilerError.create(diags);
 
     return compiler.parse.rawDb(DEFAULT_ENTRY);
@@ -86,6 +86,26 @@ class Parser {
     return new Parser().parse(str, format);
   }
 
+  setDbmlSource (filepath, source) {
+    if (source === undefined) {
+      this.layout.deleteSource(filepath);
+    } else {
+      this.layout.setSource(filepath, source);
+    }
+  }
+
+  parseDbmlProject (entrypoint) {
+    try {
+      const result = this.DBMLCompiler.interpretFile(entrypoint);
+      const diags = convertDbmlParserError(result.getErrors());
+      if (diags.length > 0) throw CompilerError.create(diags);
+
+      return Parser.parseJSONToDatabase(result.getValue() || {});
+    } catch (diags) {
+      throw CompilerError.create(diags);
+    }
+  }
+
   parse (str, format) {
     try {
       let rawDatabase = {};
@@ -114,15 +134,9 @@ class Parser {
           rawDatabase = Parser.parseDBMLToJSON(str);
           break;
 
-        case 'dbmlv2': {
-          this.layout.setSource(DEFAULT_ENTRY, str);
-
-          const diags = convertDbmlParserError(this.DBMLCompiler.parse.errors(DEFAULT_ENTRY));
-          if (diags.length > 0) throw CompilerError.create(diags);
-
-          rawDatabase = this.DBMLCompiler.parse.rawDb(DEFAULT_ENTRY);
+        case 'dbmlv2':
+          rawDatabase = Parser.parseDBMLToJSONv2(str);
           break;
-        }
 
         case 'schemarb':
           rawDatabase = Parser.parseSchemaRbToJSON(str);

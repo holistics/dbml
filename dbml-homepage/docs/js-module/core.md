@@ -121,6 +121,11 @@ const { Parser } = require('@dbml/core');
 const parser = new Parser();
 ```
 
+Regarding DBML parsing, `Parser` supports two styles:
+
+- **Stateless single-file API** (`parser.parse`) — takes a string and format, returns a `Database`. Good for ad-hoc, one-off parsing.
+- **Stateful multifile API** (`parser.setDbmlSource` and `parser.parseDbmlProject`) — register files into the parser, then parse by entrypoint. Results are cached and incrementally updated, making it more performant for repeated or editor-driven use cases.
+
 #### `parser.parse(str, format)`
 
 * **Arguments:**
@@ -130,7 +135,7 @@ const parser = new Parser();
 * **Returns:** ```Database``` object
 
 * **Usage:**
-Parse specified format to ```Database``` object
+Parse a single-file input to ```Database``` object. For multifile DBML projects, use `setDbmlSource` and `parseDbmlProject` instead.
 
 :::note
 
@@ -151,6 +156,51 @@ const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 
 // parse DBML to Database object
 const database = parser.parse(dbml, 'dbml');
+```
+
+#### `parser.setDbmlSource(filepath, source)`
+
+* **Arguments:**
+  * ```{Filepath} filepath```
+  * ```{string|undefined} source``` — file content, or `undefined` to remove the file
+
+* **Usage:**
+Register or remove a DBML source file for multifile parsing. Use together with `parseDbmlProject`.
+
+#### `parser.parseDbmlProject(entrypoint)`
+
+* **Arguments:**
+  * ```{Filepath} entrypoint``` — the entry file to start parsing from
+
+* **Returns:** ```Database``` object
+
+* **Throws:** ```CompilerError``` on syntax or binding errors
+
+* **Usage:**
+Parse a file (specified by entrypoint) in a multifile project, including all used files. Use together with `setDbmlSource` to register files before parsing.
+
+```javascript
+const { Parser, Filepath } = require('@dbml/core');
+
+const parser = new Parser();
+
+parser.setDbmlSource(Filepath.from('/main.dbml'), `
+  use { table users } from './users.dbml'
+
+  Table posts {
+    id integer [pk]
+    user_id integer [ref: > users.id]
+  }
+`);
+
+parser.setDbmlSource(Filepath.from('/users.dbml'), `
+  Table users {
+    id integer [pk]
+    name varchar
+  }
+`);
+
+const database = parser.parseDbmlProject(Filepath.from('/main.dbml'));
 ```
 
 ### ModelExporter

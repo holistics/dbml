@@ -40,7 +40,6 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatRecordValue,
-  DEFAULT_ENTRY,
   Filepath,
 } from '@dbml/parse';
 
