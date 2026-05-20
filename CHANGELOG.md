@@ -8,6 +8,10 @@
 * `dbml-parse`
   * [#904](https://github.com/holistics/dbml/pull/904) Add syntax highlighting for `~` operator in Monaco editor ([@huydo862003](https://github.com/huydo862003))
 
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#904](https://github.com/holistics/dbml/pull/904) Fix `Parser.parseDBMLToJSONv2` not reporting errors ([@huydo862003](https://github.com/huydo862003))
+
 #### :memo: Documentation
 * `dbml-core`
   * [#904](https://github.com/holistics/dbml/pull/904) Document stateful multifile API (`setDbmlSource`, `getDbmlSource`, `deleteDbmlSource`, `clearDbmlSource`, `parseDbmlProject`) ([@huydo862003](https://github.com/huydo862003))
