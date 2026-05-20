@@ -103,15 +103,11 @@ class Parser {
   }
 
   parseDbmlProject (entrypoint) {
-    try {
-      const result = this.DBMLCompiler.interpretFile(entrypoint);
-      const diags = convertDbmlParserError(result.getErrors());
-      if (diags.length > 0) throw CompilerError.create(diags);
+    const result = this.DBMLCompiler.interpretFile(entrypoint);
+    const diags = convertDbmlParserError(result.getErrors());
+    if (diags.length > 0) throw CompilerError.create(diags);
 
-      return Parser.parseJSONToDatabase(result.getValue() || {});
-    } catch (diags) {
-      throw CompilerError.create(diags);
-    }
+    return Parser.parseJSONToDatabase(result.getValue() || {});
   }
 
   parse (str, format) {
