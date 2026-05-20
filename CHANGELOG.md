@@ -1,3 +1,24 @@
+## v8.1.0 (2026-05-20)
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#904](https://github.com/holistics/dbml/pull/904) Add stateful multifile API: `setDbmlSource`, `getDbmlSource`, `deleteDbmlSource`, `clearDbmlSource`, `parseDbmlProject` ([@huydo862003](https://github.com/huydo862003))
+  * [#904](https://github.com/holistics/dbml/pull/904) Expose `diagramViews` on `Database` object ([@huydo862003](https://github.com/huydo862003))
+  * [#904](https://github.com/holistics/dbml/pull/904) Accept bare strings as file paths in multifile APIs ([@huydo862003](https://github.com/huydo862003))
+* `dbml-parse`
+  * [#904](https://github.com/holistics/dbml/pull/904) Add syntax highlighting for `~` operator in Monaco editor ([@huydo862003](https://github.com/huydo862003))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#904](https://github.com/holistics/dbml/pull/904) Fix `Parser.parseDBMLToJSONv2` not reporting errors ([@huydo862003](https://github.com/huydo862003))
+
+#### :memo: Documentation
+* `dbml-core`
+  * [#904](https://github.com/holistics/dbml/pull/904) Document stateful multifile API (`setDbmlSource`, `getDbmlSource`, `deleteDbmlSource`, `clearDbmlSource`, `parseDbmlProject`) ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.0.0 (2026-05-15)
 
 #### :rocket: New Feature
