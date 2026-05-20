@@ -233,7 +233,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
 
       // Reference operators
       [
-        /[<>-]/,
+        /[<>~-]/,
         'operators',
       ],
 
