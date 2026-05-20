@@ -113,49 +113,6 @@ const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 const mysql = exporter.export(dbml, 'mysql');
 ```
 
-### Filepath
-
-```javascript
-const { Filepath } = require('@dbml/core');
-```
-
-#### `Filepath.from(absolutePath)`
-
-* **Arguments:**
-  * ```{string} absolutePath``` — an absolute file path (e.g. `'/main.dbml'`)
-
-* **Returns:** ```Filepath``` object
-
-* **Usage:**
-Create a `Filepath` reference for use with `parser.dbmlProjectLayout` and `parser.parseDbmlProject`.
-
-```javascript
-const entry = Filepath.from('/main.dbml');
-```
-
-#### `filepath.absolute`
-
-* **Type:** ```string```
-
-* **Usage:**
-Returns the absolute path string of the filepath.
-
-#### `Filepath.resolve(fromDir, relativePath)`
-
-* **Arguments:**
-  * ```{string} fromDir``` — the base directory to resolve from
-  * ```{string} relativePath``` — the relative path to resolve
-
-* **Returns:** ```Filepath``` object
-
-* **Usage:**
-Resolve a relative path against a base directory.
-
-```javascript
-const usersFile = Filepath.resolve('/project', './users.dbml');
-// equivalent to Filepath.from('/project/users.dbml')
-```
-
 ### Parser
 
 ```javascript
@@ -201,72 +158,116 @@ const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 const database = parser.parse(dbml, 'dbml');
 ```
 
+#### `parser.setDbmlSource(filepath, source)`
+
+* **Arguments:**
+  * ```{string} filepath``` — an absolute file path (e.g. `'/main.dbml'`)
+  * ```{string} source``` — file content
+
+* **Usage:**
+Register a DBML source file for multifile parsing.
+
+```javascript
+const fs = require('fs');
+const path = require('path');
+const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
+const projectDir = '/path/to/project';
+
+// Load DBML files from disk into the parser
+for (const file of fs.readdirSync(projectDir).filter(f => f.endsWith('.dbml'))) {
+  const fullPath = path.join(projectDir, file);
+  parser.setDbmlSource(fullPath, fs.readFileSync(fullPath, 'utf-8'));
+}
+```
+
 #### `parser.getDbmlSource(filepath)`
 
 * **Arguments:**
-  * ```{Filepath} filepath```
+  * ```{string} filepath``` — an absolute file path (e.g. `'/main.dbml'`)
 
-* **Returns:** ```string | undefined``` — The file content, or `undefined` if the file does not exist.
+* **Returns:** ```string | undefined``` — the file content, or `undefined` if the file does not exist.
 
 * **Usage:**
 Read the content of a registered DBML file.
 
-#### `parser.setDbmlSource(filepath, source)`
+```javascript
+const { Parser } = require('@dbml/core');
 
-* **Arguments:**
-  * ```{Filepath} filepath```
-  * ```{string} source``` — file content
+const parser = new Parser();
 
-* **Usage:**
-Register a DBML source file for multifile parsing. Use together with `parseDbmlProject`.
+parser.setDbmlSource('/main.dbml', 'Table posts { id integer [pk] }');
+
+parser.getDbmlSource('/main.dbml');  // 'Table posts { id integer [pk] }'
+parser.getDbmlSource('/other.dbml'); // undefined
+```
 
 #### `parser.deleteDbmlSource(filepath)`
 
 * **Arguments:**
-  * ```{Filepath} filepath```
+  * ```{string} filepath``` — an absolute file path (e.g. `'/main.dbml'`)
 
 * **Usage:**
 Remove a single DBML source file from the parser.
 
+```javascript
+const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
+parser.setDbmlSource('/main.dbml', 'Table posts { id integer [pk] }');
+parser.setDbmlSource('/users.dbml', 'Table users { id integer [pk] }');
+
+parser.deleteDbmlSource('/users.dbml');
+parser.getDbmlSource('/users.dbml'); // undefined
+parser.getDbmlSource('/main.dbml');  // 'Table posts { id integer [pk] }'
+```
+
 #### `parser.clearDbmlSource()`
 
 * **Usage:**
-Remove all DBML source files from the parser.
+Remove all registered DBML source files from the parser.
+
+```javascript
+const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
+parser.setDbmlSource('/main.dbml', 'Table posts { id integer [pk] }');
+parser.setDbmlSource('/users.dbml', 'Table users { id integer [pk] }');
+
+parser.clearDbmlSource();
+parser.getDbmlSource('/main.dbml');  // undefined
+parser.getDbmlSource('/users.dbml'); // undefined
+```
 
 #### `parser.parseDbmlProject(entrypoint)`
 
 * **Arguments:**
-  * ```{Filepath} entrypoint``` — the entry file to start parsing from
+  * ```{string} entrypoint``` — absolute path to the entry file
 
 * **Returns:** ```Database``` object
 
 * **Throws:** ```CompilerError``` on syntax or binding errors
 
 * **Usage:**
-Parse a file (specified by entrypoint) in a multifile project, including all used files. Use together with `parser.setDbmlSource` to register files before parsing.
+Parse a file (specified by entrypoint) in a multifile project, including all used files.
 
 ```javascript
-const { Parser, Filepath } = require('@dbml/core');
+const fs = require('fs');
+const path = require('path');
+const { Parser } = require('@dbml/core');
 
 const parser = new Parser();
+const projectDir = '/path/to/project';
 
-parser.setDbmlSource(Filepath.from('/main.dbml'), `
-  use { table users } from './users.dbml'
+// Load all .dbml files from the project directory
+for (const file of fs.readdirSync(projectDir).filter(f => f.endsWith('.dbml'))) {
+  const fullPath = path.join(projectDir, file);
+  parser.setDbmlSource(fullPath, fs.readFileSync(fullPath, 'utf-8'));
+}
 
-  Table posts {
-    id integer [pk]
-    user_id integer [ref: > users.id]
-  }
-`);
-
-parser.setDbmlSource(Filepath.from('/users.dbml'), `
-  Table users {
-    id integer [pk]
-    name varchar
-  }
-`);
-
-const database = parser.parseDbmlProject(Filepath.from('/main.dbml'));
+// Parse starting from the main entry file
+const database = parser.parseDbmlProject(path.join(projectDir, 'main.dbml'));
 ```
 
 ### ModelExporter

@@ -31,11 +31,11 @@ declare class Parser {
     static parseOracleToJSON(str: string): RawDatabase;
     static parse(str: string, format: ParseFormat): Database;
     static parse(str: RawDatabase, format: 'json'): Database;
-    getDbmlSource (filepath: Filepath): string | undefined;
-    setDbmlSource(filepath: Filepath, source: string | undefined): void;
-    deleteDbmlSource(filepath: Filepath): void;
+    getDbmlSource(filepath: Filepath | string): string | undefined;
+    setDbmlSource(filepath: Filepath | string, source: string | undefined): void;
+    deleteDbmlSource(filepath: Filepath | string): void;
     clearDbmlSource(): void;
-    parseDbmlProject(entrypoint: Filepath): Database;
+    parseDbmlProject(entrypoint: Filepath | string): Database;
     parse(str: string, format: ParseFormat): Database;
     parse(str: RawDatabase, format: 'json'): Database;
 }

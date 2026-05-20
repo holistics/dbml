@@ -1,4 +1,4 @@
-import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
+import { Compiler, DEFAULT_ENTRY, Filepath, MemoryProjectLayout } from '@dbml/parse';
 import Database from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
 import dbmlParser from './deprecated/dbmlParser.cjs';
@@ -87,10 +87,12 @@ class Parser {
   }
 
   getDbmlSource (filepath) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
     return this.layout.getSource(filepath);
   }
 
   setDbmlSource (filepath, source) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
     if (source === undefined) {
       this.layout.deleteSource(filepath);
     } else {
@@ -99,6 +101,7 @@ class Parser {
   }
 
   deleteDbmlSource (filepath) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
     this.layout.deleteSource(filepath);
   }
 
@@ -107,6 +110,7 @@ class Parser {
   }
 
   parseDbmlProject (entrypoint) {
+    entrypoint = typeof entrypoint === 'string' ? Filepath.from(entrypoint) : entrypoint;
     const result = this.DBMLCompiler.interpretFile(entrypoint);
     const diags = convertDbmlParserError(result.getErrors());
     if (diags.length > 0) throw CompilerError.create(diags);
