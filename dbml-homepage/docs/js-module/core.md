@@ -140,25 +140,21 @@ const entry = Filepath.from('/main.dbml');
 * **Usage:**
 Returns the absolute path string of the filepath.
 
-#### `filepath.resolve(relativePath)`
+#### `Filepath.resolve(fromDir, relativePath)`
 
 * **Arguments:**
-  * ```{string} relativePath```
+  * ```{string} fromDir``` — the base directory to resolve from
+  * ```{string} relativePath``` — the relative path to resolve
 
 * **Returns:** ```Filepath``` object
 
 * **Usage:**
-Resolve a relative path against this filepath's directory.
+Resolve a relative path against a base directory.
 
-#### `filepath.relativeTo(baseDir)`
-
-* **Arguments:**
-  * ```{string} baseDir```
-
-* **Returns:** ```string```
-
-* **Usage:**
-Returns the relative path from `baseDir` to this filepath.
+```javascript
+const usersFile = Filepath.resolve('/project', './users.dbml');
+// equivalent to Filepath.from('/project/users.dbml')
+```
 
 ### Parser
 
