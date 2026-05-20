@@ -182,7 +182,7 @@ Regarding DBML parsing, `Parser` supports two styles:
 * **Returns:** ```Database``` object
 
 * **Usage:**
-Parse a single-file input in the specified format to ```Database``` object. For multifile DBML projects, use `parser.setDbmlSource` and `parseDbmlProject` instead.
+Parse a single-file input in the specified format to ```Database``` object. For multifile DBML projects, use `parser.setDbmlSource` and `parser.parseDbmlProject` instead.
 
 :::note
 
