@@ -1,6 +1,4 @@
-import {
-  last,
-} from 'lodash-es';
+import { last } from 'lodash-es';
 import NodeFactory from '@/core/parser/factory';
 import {
   ArrayNode,
@@ -25,21 +23,16 @@ import {
   ProgramNode,
   SyntaxNode,
   TupleExpressionNode,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
   VariableNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken, SyntaxTokenKind,
-} from '@/core/types/tokens';
-import {
-  isAsKeyword,
-} from '../utils/tokens';
-import {
-  extractVariableNode,
-} from '../utils/expression';
-import {
-  isExpressionAnIdentifierNode,
-} from '../utils/validate';
+import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { isAsKeyword } from '../utils/tokens';
+import { extractVariableNode } from '../utils/expression';
+import { isExpressionAnIdentifierNode } from '../utils/validate';
 
 // Try to interpret a function application as an element
 export function convertFuncAppToElem (
@@ -199,6 +192,20 @@ function markInvalidNode (node: SyntaxNode) {
     markInvalid(node.eof);
   } else if (node instanceof EmptyNode) {
     // DummyNode has no children to mark invalid
+  } else if (node instanceof UseDeclarationNode) {
+    markInvalid(node.useKeyword);
+    markInvalid(node.specifiers);
+    markInvalid(node.fromKeyword);
+    markInvalid(node.importPath);
+  } else if (node instanceof UseSpecifierListNode) {
+    markInvalid(node.openBrace);
+    node.specifiers.forEach(markInvalid);
+    markInvalid(node.closeBrace);
+  } else if (node instanceof UseSpecifierNode) {
+    markInvalid(node.importKind);
+    markInvalid(node.name);
+    markInvalid(node.asKeyword);
+    markInvalid(node.alias);
   } else if (node instanceof WildcardNode) {
     markInvalid(node.token);
   } else {
@@ -312,6 +319,18 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
 
   if (node instanceof EmptyNode) {
     return [];
+  }
+
+  if (node instanceof UseDeclarationNode) {
+    return filterUndefined(node.useKeyword, node.specifiers, node.fromKeyword, node.importPath);
+  }
+
+  if (node instanceof UseSpecifierListNode) {
+    return filterUndefined(node.openBrace, ...node.specifiers, node.closeBrace);
+  }
+
+  if (node instanceof UseSpecifierNode) {
+    return filterUndefined(node.importKind, node.name, node.asKeyword, node.alias);
   }
 
   if (node instanceof WildcardNode) {

@@ -351,7 +351,6 @@
     "1": {
       "id": 1,
       "unique": true,
-      "pk": false,
       "note": null,
       "injectedPartialId": 6,
       "columnIds": [
@@ -361,7 +360,6 @@
     },
     "2": {
       "id": 2,
-      "unique": false,
       "pk": true,
       "note": null,
       "injectedPartialId": 6,
@@ -373,7 +371,6 @@
     "3": {
       "id": 3,
       "unique": true,
-      "pk": false,
       "note": null,
       "injectedPartialId": 6,
       "columnIds": [
@@ -385,7 +382,6 @@
     "4": {
       "id": 4,
       "unique": true,
-      "pk": false,
       "note": null,
       "injectedPartialId": 3,
       "columnIds": [
@@ -396,7 +392,6 @@
     "5": {
       "id": 5,
       "unique": true,
-      "pk": false,
       "note": null,
       "injectedPartialId": 3,
       "columnIds": [
@@ -534,7 +529,6 @@
       "unique": false,
       "pk": false,
       "note": null,
-      "increment": false,
       "endpointIds": [
         2
       ],
@@ -549,10 +543,7 @@
         "type_name": "bool",
         "args": null
       },
-      "unique": false,
-      "pk": false,
       "note": null,
-      "increment": false,
       "injectedPartialId": 5,
       "endpointIds": [
         3
@@ -568,11 +559,8 @@
         "type_name": "boolean",
         "args": null
       },
-      "unique": false,
-      "pk": false,
       "not_null": true,
       "note": null,
-      "increment": false,
       "injectedPartialId": 2,
       "endpointIds": [],
       "tableId": 3,
@@ -586,14 +574,11 @@
         "type_name": "timestamp",
         "args": null
       },
-      "unique": false,
-      "pk": false,
       "note": null,
       "dbdefault": {
         "value": "now()",
         "type": "expression"
       },
-      "increment": false,
       "injectedPartialId": 2,
       "endpointIds": [],
       "tableId": 3,
@@ -608,9 +593,7 @@
         "args": null
       },
       "unique": true,
-      "pk": false,
       "note": null,
-      "increment": false,
       "injectedPartialId": 3,
       "endpointIds": [],
       "tableId": 3,
@@ -624,11 +607,9 @@
         "type_name": "int",
         "args": null
       },
-      "unique": false,
       "pk": true,
       "not_null": true,
       "note": null,
-      "increment": false,
       "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 3,
@@ -642,14 +623,11 @@
         "type_name": "timestamp",
         "args": null
       },
-      "unique": false,
-      "pk": false,
       "note": null,
       "dbdefault": {
         "value": "now()",
         "type": "expression"
       },
-      "increment": false,
       "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 3,
@@ -663,14 +641,11 @@
         "type_name": "timestamp",
         "args": null
       },
-      "unique": false,
-      "pk": false,
       "note": null,
       "dbdefault": {
         "value": "now()",
         "type": "expression"
       },
-      "increment": false,
       "injectedPartialId": 1,
       "endpointIds": [],
       "tableId": 3,
@@ -699,10 +674,7 @@
         "type_name": "int(4)",
         "args": "4"
       },
-      "unique": false,
-      "pk": false,
       "note": "simple column with call expression as type",
-      "increment": false,
       "injectedPartialId": 7,
       "endpointIds": [],
       "tableId": 4,
@@ -716,14 +688,11 @@
         "type_name": "decimal(10,2)",
         "args": "10,2"
       },
-      "unique": false,
-      "pk": false,
       "note": "column with type that have arguments and default value being a float number",
       "dbdefault": {
         "type": "number",
         "value": 0.1
       },
-      "increment": false,
       "injectedPartialId": 7,
       "endpointIds": [],
       "tableId": 4,
@@ -738,9 +707,7 @@
         "args": null
       },
       "unique": true,
-      "pk": false,
       "note": null,
-      "increment": false,
       "injectedPartialId": 3,
       "endpointIds": [],
       "tableId": 5,
@@ -776,8 +743,6 @@
           },
           "inline_refs": [],
           "pk": true,
-          "increment": false,
-          "unique": false,
           "not_null": true
         },
         {
@@ -800,9 +765,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -828,9 +790,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -864,9 +823,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "not_null": true
         },
         {
@@ -889,9 +845,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "dbdefault": {
             "value": "now()",
             "type": "expression"
@@ -925,8 +878,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
           "unique": true
         }
       ],
@@ -962,7 +913,6 @@
               "column": 19
             }
           },
-          "pk": false,
           "unique": true
         }
       ]
@@ -1012,10 +962,7 @@
                 }
               }
             }
-          ],
-          "pk": false,
-          "increment": false,
-          "unique": false
+          ]
         },
         {
           "name": "refColumn2",
@@ -1057,10 +1004,7 @@
                 }
               }
             }
-          ],
-          "pk": false,
-          "increment": false,
-          "unique": false
+          ]
         }
       ],
       "indexes": []
@@ -1110,10 +1054,7 @@
                 }
               }
             }
-          ],
-          "pk": false,
-          "increment": false,
-          "unique": false
+          ]
         }
       ],
       "indexes": []
@@ -1155,7 +1096,6 @@
               "column": 19
             }
           },
-          "pk": false,
           "unique": true
         },
         {
@@ -1189,8 +1129,7 @@
               "column": 12
             }
           },
-          "pk": true,
-          "unique": false
+          "pk": true
         },
         {
           "columns": [
@@ -1239,7 +1178,6 @@
               "column": 25
             }
           },
-          "pk": false,
           "unique": true
         }
       ]
@@ -1269,9 +1207,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "note": {
             "value": "simple column with call expression as type",
             "token": {
@@ -1308,9 +1243,6 @@
             }
           },
           "inline_refs": [],
-          "pk": false,
-          "increment": false,
-          "unique": false,
           "dbdefault": {
             "type": "number",
             "value": 0.1

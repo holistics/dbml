@@ -2,7 +2,7 @@
   "errors": [
     {
       "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate enum field churn",
+      "diagnostic": "Duplicate enum field 'churn'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -14,7 +14,7 @@
     },
     {
       "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate enum field churn",
+      "diagnostic": "Duplicate enum field 'churn'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -26,7 +26,7 @@
     },
     {
       "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate enum field churn",
+      "diagnostic": "Duplicate enum field 'churn'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -38,7 +38,7 @@
     },
     {
       "code": "DUPLICATE_COLUMN_NAME",
-      "diagnostic": "Duplicate enum field churn",
+      "diagnostic": "Duplicate enum field 'churn'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -64,6 +64,18 @@
           {
             "context": {
               "id": "symbol@Enum field@churn@[L1:C4, L1:C9]",
+              "snippet": "churn"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Enum field@churn@[L2:C4, L2:C9]",
+              "snippet": "churn"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Enum field@churn@[L3:C4, L3:C9]",
               "snippet": "churn"
             }
           }

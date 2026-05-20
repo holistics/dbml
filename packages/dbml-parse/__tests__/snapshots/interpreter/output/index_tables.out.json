@@ -4,7 +4,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -47,7 +46,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "email",
             "pk": false,
             "token": {
@@ -153,7 +151,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "active",
             "not_null": true,
             "pk": false,
@@ -213,7 +210,6 @@
               },
               "value": "index note"
             },
-            "pk": false,
             "token": {
               "end": {
                 "column": 38,
@@ -250,7 +246,6 @@
               }
             ],
             "name": "User Name",
-            "pk": false,
             "token": {
               "end": {
                 "column": 34,
@@ -263,8 +258,7 @@
                 "line": 13,
                 "offset": 249
               }
-            },
-            "unique": false
+            }
           },
           {
             "columns": [
@@ -303,7 +297,6 @@
                 "value": "created_at"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 36,
@@ -317,8 +310,7 @@
                 "offset": 283
               }
             },
-            "type": "hash",
-            "unique": false
+            "type": "hash"
           },
           {
             "columns": [

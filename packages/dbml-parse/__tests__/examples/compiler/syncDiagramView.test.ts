@@ -1,18 +1,24 @@
 import {
   describe, expect, it,
 } from 'vitest';
-import {
-  syncDiagramView,
-} from '@/compiler/queries/transform/syncDiagramView';
 import Compiler from '@/compiler/index';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import Lexer from '@/core/lexer/lexer';
-import {
-  DEFAULT_ENTRY,
-} from '@/constants';
+import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Parser from '@/core/parser/parser';
 import {
   SyntaxNodeIdGenerator,
 } from '@/core/types/nodes';
+import type {
+  DiagramViewSyncOperation,
+} from '@/compiler/queries/transform/syncDiagramView';
+
+function syncDiagramView (dbml: string, operations: DiagramViewSyncOperation[]) {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbml);
+  const compiler = new Compiler(layout);
+  return compiler.syncDiagramView(DEFAULT_ENTRY, operations);
+}
 
 // update operation
 
@@ -94,8 +100,9 @@ DiagramView "New View" {
   Schemas { * }
 }
 `;
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, source);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, source);
+    const compiler = new Compiler(layout);
     expect(compiler.parse.errors(DEFAULT_ENTRY)).toHaveLength(0);
   });
 });
@@ -219,7 +226,7 @@ DiagramView my_view {
 describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
   // Group A: Legacy/Tricky Cases
 
-  it('A1: all null → empty block', () => {
+  it('A1: all null -> empty block', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -232,7 +239,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml.trim()).toBe('DiagramView V {\n}');
   });
 
-  it('A2: tableGroups null, tables has items (frontend backfills) → emit tables only', () => {
+  it('A2: tableGroups null, tables has items (frontend backfills) -> emit tables only', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -253,7 +260,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).not.toContain('Notes');
   });
 
-  it('A3: tableGroups null, tables + schemas have items → emit both', () => {
+  it('A3: tableGroups null, tables + schemas have items -> emit both', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -273,7 +280,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).not.toContain('Notes');
   });
 
-  it('A5: tables null, rest empty → Notes { * }', () => {
+  it('A5: tables null, rest empty -> Notes { * }', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -289,7 +296,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).not.toContain('Schemas');
   });
 
-  it('A6: schemas null, rest empty → Notes { * }', () => {
+  it('A6: schemas null, rest empty -> Notes { * }', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -302,7 +309,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).toContain('Notes { * }');
   });
 
-  it('A7: tables null + schemas null, tableGroups empty → Notes { * }', () => {
+  it('A7: tables null + schemas null, tableGroups empty -> Notes { * }', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -315,7 +322,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).toContain('Notes { * }');
   });
 
-  it('A8: tables null with other dims having items → union rule', () => {
+  it('A8: tables null with other dims having items -> union rule', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -332,7 +339,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).not.toContain('Tables {');
   });
 
-  it('A9: schemas null with other dims having items → union rule', () => {
+  it('A9: schemas null with other dims having items -> union rule', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -352,7 +359,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).not.toContain('Schemas {');
   });
 
-  it('A10: all Trinity null, stickyNotes empty → Notes { * }', () => {
+  it('A10: all Trinity null, stickyNotes empty -> Notes { * }', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -367,7 +374,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
 
   // Group B: Normal Cases (all Trinity dims non-null)
 
-  it('B1: all empty → body-level { * }', () => {
+  it('B1: all empty -> body-level { * }', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -380,7 +387,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml.trim()).toBe('DiagramView V {\n  *\n}');
   });
 
-  it('B2: only tables filtered → emit Tables only', () => {
+  it('B2: only tables filtered -> emit Tables only', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -506,7 +513,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
 
   // Group C: StickyNotes combinations
 
-  it('C1: only stickyNotes filtered → Tables { * } + Notes', () => {
+  it('C1: only stickyNotes filtered -> Tables { * } + Notes', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -547,10 +554,10 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
 
 // Additional coverage from filter-dbml-examples.md + edge cases
 
-describe('syncDiagramView — additional coverage', () => {
+describe('syncDiagramView - additional coverage', () => {
   // Edge cases from truth tables (02-solutions.md)
 
-  it('all Trinity null + stickyNotes has items → Notes { items }', () => {
+  it('all Trinity null + stickyNotes has items -> Notes { items }', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -567,7 +574,7 @@ describe('syncDiagramView — additional coverage', () => {
     expect(newDbml).not.toContain('Schemas');
   });
 
-  it('tables null + notes has items → Notes { items }', () => {
+  it('tables null + notes has items -> Notes { items }', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -620,9 +627,9 @@ describe('syncDiagramView — additional coverage', () => {
     expect(newDbml).not.toContain('public.users');
   });
 
-  // Round-trip stability: FilterConfig → DBML → FilterConfig
+  // Round-trip stability: FilterConfig -> DBML -> FilterConfig
 
-  it('round-trip: B1 all empty → { *} → re-parse → same FC', () => {
+  it('round-trip: B1 all empty -> { *} -> re-parse -> same FC', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -635,7 +642,7 @@ describe('syncDiagramView — additional coverage', () => {
     expect(newDbml.trim()).toBe('DiagramView V {\n  *\n}');
   });
 
-  it('round-trip: A1 all null → { } → re-parse → same FC', () => {
+  it('round-trip: A1 all null -> { } -> re-parse -> same FC', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -648,7 +655,7 @@ describe('syncDiagramView — additional coverage', () => {
     expect(newDbml.trim()).toBe('DiagramView V {\n}');
   });
 
-  it('round-trip: C1 notes only → Tables{*} Notes{items} → re-parse → same FC', () => {
+  it('round-trip: C1 notes only -> Tables{*} Notes{items} -> re-parse -> same FC', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -663,7 +670,7 @@ describe('syncDiagramView — additional coverage', () => {
     expect(newDbml).toContain('N1');
   });
 
-  it('round-trip: A10 all Trinity null + notes empty → Notes { * }', () => {
+  it('round-trip: A10 all Trinity null + notes empty -> Notes { * }', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -720,7 +727,7 @@ describe('syncDiagramView — additional coverage', () => {
 
   // Union rule with notes
 
-  it('A8 union rule: tables null + tableGroups + schemas + notes → emit all three', () => {
+  it('A8 union rule: tables null + tableGroups + schemas + notes -> emit all three', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -991,8 +998,9 @@ describe('syncDiagramView - entity name quoting', () => {
         },
       },
     ]);
-    const compiler = new Compiler();
-    compiler.setSource(DEFAULT_ENTRY, newDbml);
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, newDbml);
+    const compiler = new Compiler(layout);
     expect(compiler.parse.errors(DEFAULT_ENTRY)).toHaveLength(0);
   });
 

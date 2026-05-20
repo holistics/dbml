@@ -396,6 +396,138 @@
             <span class="text-gray-400 text-xs ml-auto">{{ rec.values.length }} rows</span>
           </div>
         </DbSection>
+
+        <!-- Notes (Sticky Notes) -->
+        <DbSection
+          v-if="database.notes?.length"
+          label="Notes"
+          :count="database.notes.length"
+          :icon="PhNote"
+          icon-color="text-yellow-500"
+        >
+          <div
+            v-for="(note, ni) in database.notes"
+            :key="ni"
+            class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+            :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+          >
+            <VTooltip
+              placement="right"
+              :distance="6"
+            >
+              <PhNote class="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+              <template #popper>
+                <span class="text-xs">Sticky Note</span>
+              </template>
+            </VTooltip>
+            <span class="text-blue-500">{{ note.name }}</span>
+          </div>
+        </DbSection>
+
+        <!-- DiagramViews -->
+        <DbSection
+          label="DiagramViews"
+          :count="database.diagramViews?.length ?? 0"
+          :icon="PhLayout"
+          icon-color="text-pink-500"
+        >
+          <div
+            v-for="(dv, dvi) in database.diagramViews"
+            :key="dvi"
+          >
+            <div
+              class="flex items-center gap-2 py-1 cursor-pointer border-b border-gray-50 hover:bg-blue-50"
+              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+              @click="toggleDiagramView(dvi)"
+            >
+              <PhCaretRight
+                class="w-3 h-3 text-gray-400 transition-transform duration-100 flex-shrink-0"
+                :class="expandedDiagramViews.has(dvi) ? 'rotate-90' : ''"
+              />
+              <VTooltip
+                placement="right"
+                :distance="6"
+              >
+                <PhLayout class="w-3.5 h-3.5 text-pink-500 flex-shrink-0" />
+                <template #popper>
+                  <span class="text-xs">DiagramView</span>
+                </template>
+              </VTooltip>
+              <span class="text-pink-600">{{ dv.name }}</span>
+              <span
+                v-if="dv.schemaName && dv.schemaName !== 'public'"
+                class="text-gray-400"
+              >.{{ dv.schemaName }}</span>
+              <span class="text-gray-400 text-xs ml-auto">{{ diagramViewMemberCount(dv) }} members</span>
+            </div>
+            <div v-if="expandedDiagramViews.has(dvi)">
+              <template
+                v-for="(items, kind) in diagramViewMembers(dv)"
+                :key="kind"
+              >
+                <div
+                  v-for="(item, ii) in items"
+                  :key="`${kind}-${ii}`"
+                  class="flex items-center gap-2 py-[3px] border-b border-gray-50 hover:bg-pink-50"
+                  :style="{ paddingLeft: '40px', paddingRight: '12px' }"
+                >
+                  <span class="text-pink-500">{{ item.name }}</span>
+                  <span class="text-gray-400 text-xs ml-auto">{{ kind }}</span>
+                </div>
+              </template>
+              <div
+                v-if="diagramViewMemberCount(dv) === 0"
+                class="py-[3px] text-gray-400 text-xs italic"
+                :style="{ paddingLeft: '40px' }"
+              >
+                show all (no filter)
+              </div>
+            </div>
+          </div>
+        </DbSection>
+
+        <!-- Externals -->
+        <DbSection
+          label="Externals"
+          :count="externalsCount"
+          :icon="PhArrowSquareOut"
+          icon-color="text-orange-500"
+        >
+          <template
+            v-for="(entries, category) in externalCategories"
+            :key="category"
+          >
+            <div
+              v-for="(ext, ei) in entries"
+              :key="`${category}-${ei}`"
+              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+            >
+              <VTooltip
+                placement="right"
+                :distance="6"
+              >
+                <component
+                  :is="externalIcon(String(category))"
+                  class="w-3.5 h-3.5 flex-shrink-0"
+                  :class="externalIconColor(String(category))"
+                />
+                <template #popper>
+                  <span class="text-xs">{{ category }}</span>
+                </template>
+              </VTooltip>
+              <span class="text-orange-600">{{ ext.name }}</span>
+              <span
+                v-if="ext.schemaName"
+                class="text-gray-400"
+              >.{{ ext.schemaName }}</span>
+              <DbBadge
+                label="external"
+                color="orange"
+              />
+            </div>
+          </template>
+        </DbSection>
       </div>
     </template>
   </div>
@@ -417,6 +549,9 @@ import {
   PhLink,
   PhLightning,
   PhPuzzlePiece,
+  PhLayout,
+  PhArrowSquareOut,
+  PhNote,
 } from '@phosphor-icons/vue';
 import TabSettingsButton from './common/TabSettingsButton.vue';
 import type { Database } from '@dbml/parse';
@@ -436,18 +571,39 @@ const {
 }>();
 const emit = defineEmits<{ 'toggle-decoration': [] }>();
 
+const externalCategories = computed(() => {
+  const ext = database?.externals;
+  if (!ext) return {};
+  const cats: Record<string, typeof ext.tables> = {};
+  if (ext.tables.length) cats.table = ext.tables;
+  if (ext.enums.length) cats.enum = ext.enums;
+  if (ext.tableGroups.length) cats.tableGroup = ext.tableGroups;
+  if (ext.tablePartials.length) cats.tablePartial = ext.tablePartials;
+  if (ext.notes.length) cats.note = ext.notes;
+  return cats;
+});
+
+const externalsCount = computed(() => {
+  const ext = database?.externals;
+  if (!ext) return 0;
+  return ext.tables.length + ext.enums.length + ext.tableGroups.length
+    + ext.tablePartials.length + ext.notes.length;
+});
+
 const totalCount = computed(() => {
   const db = database;
   if (!db) return 0;
   const indexCount = db.tables.reduce((n, t) => n + t.indexes.length, 0);
   return db.tables.length + indexCount + db.refs.length + db.enums.length
-    + db.tableGroups.length + (db.records?.length ?? 0) + (db.tablePartials?.length ?? 0);
+    + db.tableGroups.length + (db.records?.length ?? 0) + (db.tablePartials?.length ?? 0)
+    + (db.notes?.length ?? 0) + (db.diagramViews?.length ?? 0) + externalsCount.value;
 });
 
 const expandedTables = ref(new Set<number>());
 const expandedEnums = ref(new Set<number>());
 const expandedIndexes = ref(new Set<string>());
 const expandedTablePartials = ref(new Set<number>());
+const expandedDiagramViews = ref(new Set<number>());
 
 function toggleTable (i: number) {
   if (expandedTables.value.has(i)) expandedTables.value.delete(i);
@@ -467,6 +623,51 @@ function toggleIndex (key: string) {
 function toggleTablePartial (i: number) {
   if (expandedTablePartials.value.has(i)) expandedTablePartials.value.delete(i);
   else expandedTablePartials.value.add(i);
+}
+
+function toggleDiagramView (i: number) {
+  if (expandedDiagramViews.value.has(i)) expandedDiagramViews.value.delete(i);
+  else expandedDiagramViews.value.add(i);
+}
+
+type DiagramViewEntry = Database['diagramViews'][number];
+
+function diagramViewMembers (dv: DiagramViewEntry): Record<string, Array<{ name: string }>> {
+  const result: Record<string, Array<{ name: string }>> = {};
+  const ve = dv.visibleEntities;
+  if (ve.tables && ve.tables.length > 0) result.table = ve.tables.map((t) => ({ name: t.schemaName ? `${t.schemaName}.${t.name}` : t.name }));
+  if (ve.stickyNotes && ve.stickyNotes.length > 0) result.note = ve.stickyNotes;
+  if (ve.tableGroups && ve.tableGroups.length > 0) result.tableGroup = ve.tableGroups;
+  if (ve.schemas && ve.schemas.length > 0) result.schema = ve.schemas;
+  return result;
+}
+
+function diagramViewMemberCount (dv: DiagramViewEntry): number {
+  const ve = dv.visibleEntities;
+  return (ve.tables?.length ?? 0) + (ve.stickyNotes?.length ?? 0)
+    + (ve.tableGroups?.length ?? 0) + (ve.schemas?.length ?? 0);
+}
+
+function externalIcon (category: string) {
+  switch (category) {
+    case 'table': return PhTable;
+    case 'enum': return PhTextAa;
+    case 'tableGroup': return PhFolder;
+    case 'tablePartial': return PhPuzzlePiece;
+    case 'note': return PhNote;
+    default: return PhArrowSquareOut;
+  }
+}
+
+function externalIconColor (category: string): string {
+  switch (category) {
+    case 'table': return 'text-blue-500';
+    case 'enum': return 'text-green-600';
+    case 'tableGroup': return 'text-yellow-600';
+    case 'tablePartial': return 'text-teal-500';
+    case 'note': return 'text-yellow-500';
+    default: return 'text-orange-500';
+  }
 }
 
 function indexLabel (idx: IndexEntry): string {

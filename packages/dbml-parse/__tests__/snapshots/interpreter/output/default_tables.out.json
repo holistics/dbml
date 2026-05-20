@@ -8,7 +8,6 @@
               "type": "number",
               "value": 123
             },
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -30,7 +29,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "user_id",
             "not_null": true,
             "pk": false,
@@ -57,7 +55,6 @@
               "type": "string",
               "value": "Completed"
             },
-            "increment": false,
             "name": "status",
             "pk": false,
             "token": {
@@ -83,7 +80,6 @@
               "type": "expression",
               "value": "now()"
             },
-            "increment": false,
             "name": "created_at",
             "pk": false,
             "token": {
@@ -204,7 +200,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -230,7 +225,6 @@
               "type": "boolean",
               "value": "null"
             },
-            "increment": false,
             "name": "name",
             "pk": false,
             "token": {
@@ -256,7 +250,6 @@
               "type": "number",
               "value": -1
             },
-            "increment": false,
             "name": "merchant_id",
             "not_null": true,
             "pk": false,
@@ -283,7 +276,6 @@
               "type": "number",
               "value": -123.12
             },
-            "increment": false,
             "name": "price",
             "pk": false,
             "token": {
@@ -309,7 +301,6 @@
               "type": "boolean",
               "value": "true"
             },
-            "increment": false,
             "name": "stock",
             "pk": false,
             "token": {
@@ -335,7 +326,6 @@
               "type": "expression",
               "value": "current_date + interval 1 year"
             },
-            "increment": false,
             "name": "expiration",
             "pk": false,
             "token": {

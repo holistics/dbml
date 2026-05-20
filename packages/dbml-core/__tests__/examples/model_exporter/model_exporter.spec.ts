@@ -193,7 +193,7 @@ describe('@dbml/core - JsonExporter isNormalized option', () => {
     const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
     const normalizedModel = database.normalize();
     const res = JsonExporter.export(normalizedModel, { isNormalized: true });
-    // Normalized model is the internal model format — verify the table is present
+    // Normalized model is the internal model format - verify the table is present
     const parsed = JSON.parse(res);
     expect(Object.values(parsed.tables as Record<string, { name: string }>).map((t) => t.name)).toContain('users');
   });

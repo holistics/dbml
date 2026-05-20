@@ -1,71 +1,41 @@
+import { partition } from 'lodash-es';
+import Compiler from '@/compiler';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import {
-  partition,
-} from 'lodash-es';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
-import {
-  pickValidator,
-} from '@/core/local_modules/utils';
-import {
-  isExpressionAQuotedString,
-} from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  createStickyNoteSymbolIndex,
-} from '@/core/types/symbol/symbolIndex';
-import SymbolTable from '@/core/types/symbol/symbolTable';
-import {
-  StickyNoteSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import { isExpressionAQuotedString } from '@/core/utils/validate';
 
 export default class NoteValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
   }
 
-  validate (): {
-    errors: CompileError[];
-    warnings: CompileWarning[];
-  } {
-    return {
-      errors: [
-        ...this.validateContext(),
-        ...this.validateName(this.declarationNode.name),
-        ...this.validateAlias(this.declarationNode.alias),
-        ...this.validateSettingList(this.declarationNode.attributeList),
-        ...this.validateBody(this.declarationNode.body),
-      ],
-      warnings: [],
-    };
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
   private validateContext (): CompileError[] {
     const parent = this.declarationNode.parent;
     if (
       !(parent instanceof ProgramNode)
-      && !(parent instanceof ElementDeclarationNode && parent.isKind(ElementKind.Table, ElementKind.TableGroup, ElementKind.TablePartial, ElementKind.Project))
+      && !(parent instanceof ElementDeclarationNode && parent.isKind(
+        ElementKind.Table,
+        ElementKind.TableGroup,
+        ElementKind.TablePartial,
+        ElementKind.Project,
+      ))
     ) {
       return [
         new CompileError(
@@ -79,56 +49,14 @@ export default class NoteValidator {
     return [];
   }
 
-  private validateName (nameNode?: SyntaxNode): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ProgramNode)) {
-      if (nameNode) {
-        return [
-          new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'A Note shouldn\'t have a name', nameNode),
-        ];
-      }
-      return [];
-    }
-
-    if (!nameNode) {
-      return [
-        new CompileError(CompileErrorCode.INVALID_NAME, 'Sticky note must have a name', this.declarationNode),
-      ];
-    }
-    if (nameNode instanceof WildcardNode) {
-      return [
-        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Note name', nameNode),
-      ];
-    }
-
-    const nameFragments = destructureComplexVariable(nameNode);
-    if (nameFragments === undefined) return [
-      new CompileError(CompileErrorCode.INVALID_NAME, 'Invalid name for sticky note ', this.declarationNode),
-    ];
-
-    const names = nameFragments;
-
-    const trueName = names.join('.');
-
-    const noteId = createStickyNoteSymbolIndex(trueName);
-
-    if (this.publicSymbolTable.has(noteId)) {
-      return [
-        new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate Note '${trueName}' in schema '${DEFAULT_SCHEMA_NAME}'`, nameNode),
-      ];
-    }
-
-    this.declarationNode.symbol = this.symbolFactory.create(StickyNoteSymbol, {
-      declaration: this.declarationNode,
-    }, this.declarationNode.filepath);
-    this.publicSymbolTable.set(noteId, this.declarationNode.symbol);
-
-    return [];
+  private validateName (_nameNode?: SyntaxNode): CompileError[] {
+    return this.compiler.nodeFullname(this.declarationNode).getErrors();
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [
-        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Ref shouldn\'t have an alias', aliasNode),
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Note shouldn\'t have an alias', aliasNode),
       ];
     }
 
@@ -189,9 +117,7 @@ export default class NoteValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate().errors;
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }
