@@ -170,8 +170,8 @@ const parser = new Parser();
 
 Regarding DBML parsing, `Parser` supports two styles:
 
-- **Stateless single-file API** (`parser.parse`) — takes a string and format, returns a `Database`. Good for ad-hoc, one-off parsing.
-- **Stateful multifile API** (`parser.setDbmlSource` and `parser.parseDbmlProject`) — register files into the parser, then parse by entrypoint. Results are cached and incrementally updated, making it more performant for repeated or editor-driven use cases.
+- **Stateless single-file API** (`parser.parse`): Accepts a string and a format, returns a `Database` as a result of parsing that string according to the specified format. This API is good for ad-hoc, one-off parsing.
+- **Stateful multifile API** (`parser.setDbmlSource` and `parser.parseDbmlProject`): Register files into the parser, then specify the entrypoint file to start parsing. Results are cached and incrementally updated, making it more performant for repeated or editor-driven use cases.
 
 #### `parser.parse(str, format)`
 
