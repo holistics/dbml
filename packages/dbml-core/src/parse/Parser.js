@@ -1,4 +1,4 @@
-import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
+import { Compiler, DEFAULT_ENTRY, Filepath, MemoryProjectLayout } from '@dbml/parse';
 import Database from '../model_structure/database';
 import { parse } from './ANTLR/ASTGeneration';
 import dbmlParser from './deprecated/dbmlParser.cjs';
@@ -46,7 +46,7 @@ class Parser {
     layout.setSource(DEFAULT_ENTRY, str);
     const compiler = new Compiler(layout);
 
-    const diags = convertDbmlParserError(this.DBMLCompiler.parse.errors(DEFAULT_ENTRY));
+    const diags = convertDbmlParserError(compiler.parse.errors(DEFAULT_ENTRY));
     if (diags.length > 0) throw CompilerError.create(diags);
 
     return compiler.parse.rawDb(DEFAULT_ENTRY);
@@ -86,6 +86,38 @@ class Parser {
     return new Parser().parse(str, format);
   }
 
+  getDbmlSource (filepath) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
+    return this.layout.getSource(filepath);
+  }
+
+  setDbmlSource (filepath, source) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
+    if (source === undefined) {
+      this.layout.deleteSource(filepath);
+    } else {
+      this.layout.setSource(filepath, source);
+    }
+  }
+
+  deleteDbmlSource (filepath) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
+    this.layout.deleteSource(filepath);
+  }
+
+  clearDbmlSource () {
+    this.layout.clearSource();
+  }
+
+  parseDbmlProject (entrypoint) {
+    entrypoint = typeof entrypoint === 'string' ? Filepath.from(entrypoint) : entrypoint;
+    const result = this.DBMLCompiler.interpretFile(entrypoint);
+    const diags = convertDbmlParserError(result.getErrors());
+    if (diags.length > 0) throw CompilerError.create(diags);
+
+    return Parser.parseJSONToDatabase(result.getValue() || {});
+  }
+
   parse (str, format) {
     try {
       let rawDatabase = {};
@@ -114,15 +146,9 @@ class Parser {
           rawDatabase = Parser.parseDBMLToJSON(str);
           break;
 
-        case 'dbmlv2': {
-          this.layout.setSource(DEFAULT_ENTRY, str);
-
-          const diags = convertDbmlParserError(this.DBMLCompiler.parse.errors(DEFAULT_ENTRY));
-          if (diags.length > 0) throw CompilerError.create(diags);
-
-          rawDatabase = this.DBMLCompiler.parse.rawDb(DEFAULT_ENTRY);
+        case 'dbmlv2':
+          rawDatabase = Parser.parseDBMLToJSONv2(str);
           break;
-        }
 
         case 'schemarb':
           rawDatabase = Parser.parseSchemaRbToJSON(str);
