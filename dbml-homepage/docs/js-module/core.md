@@ -215,10 +215,10 @@ Read the content of a registered DBML file.
 
 * **Arguments:**
   * ```{Filepath} filepath```
-  * ```{string|undefined} source``` — file content, or `undefined` to remove the file
+  * ```{string} source``` — file content
 
 * **Usage:**
-Register or remove a DBML source file for multifile parsing. Use together with `parseDbmlProject`.
+Register a DBML source file for multifile parsing. Use together with `parseDbmlProject`.
 
 #### `parser.deleteDbmlSource(filepath)`
 
