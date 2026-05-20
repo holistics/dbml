@@ -86,6 +86,10 @@ class Parser {
     return new Parser().parse(str, format);
   }
 
+  getDbmlSource (filepath) {
+    return this.layout.getSource(filepath);
+  }
+
   setDbmlSource (filepath, source) {
     if (source === undefined) {
       this.layout.deleteSource(filepath);

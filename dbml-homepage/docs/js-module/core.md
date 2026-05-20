@@ -205,6 +205,16 @@ const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 const database = parser.parse(dbml, 'dbml');
 ```
 
+#### `parser.getDbmlSource(filepath)`
+
+* **Arguments:**
+  * ```{Filepath} filepath```
+
+* **Returns:** ```string | undefined``` — The file content, or `undefined` if the file does not exist.
+
+* **Usage:**
+Read the content of a registered DBML file.
+
 #### `parser.setDbmlSource(filepath, source)`
 
 * **Arguments:**

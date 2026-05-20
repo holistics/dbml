@@ -31,6 +31,7 @@ declare class Parser {
     static parseOracleToJSON(str: string): RawDatabase;
     static parse(str: string, format: ParseFormat): Database;
     static parse(str: RawDatabase, format: 'json'): Database;
+    getDbmlSource (filepath: Filepath): string | undefined;
     setDbmlSource(filepath: Filepath, source: string | undefined): void;
     deleteDbmlSource(filepath: Filepath): void;
     clearDbmlSource(): void;
