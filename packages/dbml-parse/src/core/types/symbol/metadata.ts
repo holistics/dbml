@@ -17,13 +17,12 @@ import type {
 } from '../symbol';
 import type { Internable } from '../internable';
 import { UNHANDLED } from '../module';
-import { ElementKind } from '../keywords';
+import { ElementKind, SettingName } from '../keywords';
 import {
   getBody,
   destructureComplexVariableTuple,
   destructureCallExpression,
 } from '@/core/utils/expression';
-import { TablePartial } from '../schemaJson';
 
 export enum MetadataKind {
   Ref = 'ref',
@@ -160,6 +159,14 @@ export class RefMetadata extends NodeMetadata {
       return prefix.op?.value as '>' | '<' | '-' | '<>' | undefined;
     }
     return undefined;
+  }
+
+  active (compiler: Compiler): boolean {
+    if (!(this.declaration instanceof ElementDeclarationNode)) return true;
+    const field = getBody(this.declaration)[0];
+    if (!field) return true;
+    const s = compiler.nodeSettings(field).getFiltered(UNHANDLED);
+    return !s?.[SettingName.Inactive]?.length;
   }
 
   leftToken (): SyntaxNode {

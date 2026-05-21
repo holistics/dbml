@@ -10,6 +10,7 @@ export interface RawRef {
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
+    inactive?: boolean;
     token: Token;
     schema: Schema;
 }
@@ -19,6 +20,7 @@ declare class Ref extends Element {
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
+    inactive?: boolean;
     schema: Schema;
     dbState: DbState;
     id: number;
@@ -68,6 +70,7 @@ export interface NormalizedRef {
     color?: string;
     onUpdate?: string;
     onDelete?: string;
+    inactive?: boolean;
     schemaId: number;
     endpointIds: number[];
     injectedPartialId?: number;

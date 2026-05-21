@@ -172,6 +172,7 @@ export interface Ref {
   color?: string;
   onDelete?: string;
   onUpdate?: string;
+  inactive?: boolean;
   token: TokenPosition;
 }
 
