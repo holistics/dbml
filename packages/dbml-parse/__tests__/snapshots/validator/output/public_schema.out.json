@@ -1,0 +1,249 @@
+{
+  "errors": [
+    {
+      "code": "EMPTY_ENUM",
+      "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
+          "snippet": "Enum status {\r\n\r\n}"
+        }
+      }
+    },
+    {
+      "code": "EMPTY_ENUM",
+      "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
+          "snippet": "Enum publi...{\r\n    \r\n}"
+        }
+      }
+    }
+  ],
+  "program": {
+    "context": {
+      "id": "node@<program>@@[L0:C0, L6:C1]",
+      "snippet": "Enum statu...{\r\n    \r\n}"
+    },
+    "children": {
+      "body": [
+        {
+          "context": {
+            "id": "node@<element-declaration>@status@[L0:C0, L2:C1]",
+            "snippet": "Enum status {\r\n\r\n}"
+          },
+          "children": {
+            "body": {
+              "context": {
+                "id": "node@<block-expression>@@[L0:C12, L2:C1]",
+                "snippet": "{\r\n\r\n}"
+              },
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "token@<rbrace>@}@[L2:C0, L2:C1]",
+                    "snippet": "}"
+                  },
+                  "leadingTrivia": "\n",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "token@<lbrace>@{@[L0:C12, L0:C13]",
+                    "snippet": "{"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                }
+              },
+              "fullEnd": 20,
+              "fullStart": 12
+            },
+            "name": {
+              "context": {
+                "id": "node@<primary-expression>@status@[L0:C5, L0:C11]",
+                "snippet": "status"
+              },
+              "children": {
+                "expression": {
+                  "context": {
+                    "id": "node@<variable>@status@[L0:C5, L0:C11]",
+                    "snippet": "status"
+                  },
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "token@<identifier>@status@[L0:C5, L0:C11]",
+                        "snippet": "status"
+                      },
+                      "leadingTrivia": "",
+                      "trailingTrivia": " ",
+                      "value": "status"
+                    }
+                  },
+                  "fullEnd": 12,
+                  "fullStart": 5
+                }
+              },
+              "fullEnd": 12,
+              "fullStart": 5
+            },
+            "type": {
+              "context": {
+                "id": "token@<identifier>@Enum@[L0:C0, L0:C4]",
+                "snippet": "Enum"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "Enum"
+            }
+          },
+          "fullEnd": 20,
+          "fullStart": 0
+        },
+        {
+          "context": {
+            "id": "node@<element-declaration>@public.status@[L4:C0, L6:C1]",
+            "snippet": "Enum publi...{\r\n    \r\n}"
+          },
+          "children": {
+            "body": {
+              "context": {
+                "id": "node@<block-expression>@@[L4:C19, L6:C1]",
+                "snippet": "{\r\n    \r\n}"
+              },
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "token@<rbrace>@}@[L6:C0, L6:C1]",
+                    "snippet": "}"
+                  },
+                  "leadingTrivia": "    \n",
+                  "trailingTrivia": "",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "token@<lbrace>@{@[L4:C19, L4:C20]",
+                    "snippet": "{"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                }
+              },
+              "fullEnd": 51,
+              "fullStart": 41
+            },
+            "name": {
+              "context": {
+                "id": "node@<infix-expression>@@[L4:C5, L4:C18]",
+                "snippet": "public.status"
+              },
+              "children": {
+                "leftExpression": {
+                  "context": {
+                    "id": "node@<primary-expression>@public@[L4:C5, L4:C11]",
+                    "snippet": "public"
+                  },
+                  "children": {
+                    "expression": {
+                      "context": {
+                        "id": "node@<variable>@public@[L4:C5, L4:C11]",
+                        "snippet": "public"
+                      },
+                      "children": {
+                        "variable": {
+                          "context": {
+                            "id": "token@<identifier>@public@[L4:C5, L4:C11]",
+                            "snippet": "public"
+                          },
+                          "leadingTrivia": "",
+                          "trailingTrivia": "",
+                          "value": "public"
+                        }
+                      },
+                      "fullEnd": 33,
+                      "fullStart": 27
+                    }
+                  },
+                  "fullEnd": 33,
+                  "fullStart": 27
+                },
+                "op": {
+                  "context": {
+                    "id": "token@<op>@.@[L4:C11, L4:C12]",
+                    "snippet": "."
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "",
+                  "value": "."
+                },
+                "rightExpression": {
+                  "context": {
+                    "id": "node@<primary-expression>@status@[L4:C12, L4:C18]",
+                    "snippet": "status"
+                  },
+                  "children": {
+                    "expression": {
+                      "context": {
+                        "id": "node@<variable>@status@[L4:C12, L4:C18]",
+                        "snippet": "status"
+                      },
+                      "children": {
+                        "variable": {
+                          "context": {
+                            "id": "token@<identifier>@status@[L4:C12, L4:C18]",
+                            "snippet": "status"
+                          },
+                          "leadingTrivia": "",
+                          "trailingTrivia": " ",
+                          "value": "status"
+                        }
+                      },
+                      "fullEnd": 41,
+                      "fullStart": 34
+                    }
+                  },
+                  "fullEnd": 41,
+                  "fullStart": 34
+                }
+              },
+              "fullEnd": 41,
+              "fullStart": 27
+            },
+            "type": {
+              "context": {
+                "id": "token@<identifier>@Enum@[L4:C0, L4:C4]",
+                "snippet": "Enum"
+              },
+              "leadingTrivia": "\n",
+              "trailingTrivia": " ",
+              "value": "Enum"
+            }
+          },
+          "fullEnd": 51,
+          "fullStart": 21
+        }
+      ],
+      "eof": {
+        "context": {
+          "id": "token@<eof>@@[L6:C1, L6:C1]",
+          "snippet": ""
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
+      }
+    },
+    "fullEnd": 51,
+    "fullStart": 0
+  }
+}

@@ -50,6 +50,12 @@ CREATE TABLE `staff` (
 ...
 ```
 
+If your schema is split across multiple files using the [module system](./syntax/module-system), pass the entry point file. The CLI will automatically resolve all imported files:
+
+```bash
+$ dbml2sql project.dbml --postgres
+```
+
 To **output to a file** you may use `--out-file` or `-o`:
 
 ```bash
@@ -123,7 +129,7 @@ $ db2dbml postgres 'postgresql://dbml_user:dbml_pass@localhost:5432/dbname?schem
 ### Syntax Manual
 
 ```bash
-$ db2dbml postgres|mysql|mssql|snowflake|bigquery
+$ db2dbml postgres|mysql|mssql|snowflake|bigquery|oracle
           <connection-string>
           [-o|--out-file <output-filepath>]
 ```
@@ -135,6 +141,7 @@ Connection string examples:
 - mssql: `'Server=localhost,1433;Database=master;User Id=sa;Password=your_password;Encrypt=true;TrustServerCertificate=true;Schemas=schema1,schema2,schema3;'`
 - snowflake: `'SERVER=<account_identifier>.<region>;UID=<your_username>;PWD=<your_password>;DATABASE=<your_database>;WAREHOUSE=<your_warehouse>;ROLE=<your_role>;SCHEMAS=schema1,schema2,schema3;'`
 - bigquery: `/path_to_json_credential.json`
+- oracle: `'username/password@[//]host[:port][/service_name]'`
 
 For BigQuery, the credential file supports flexible authentication:
 

@@ -25,11 +25,13 @@ npm install @dbml/core
 const { importer } = require('@dbml/core');
 ```
 
-#### `importer.import(str, format)`
+#### `importer.import(str, format[, options])`
 
 * **Arguments:**
   * ```{string} str```
   * ```{'mysql'|'mysqlLegacy'|'postgres'|'postgresLegacy'|'dbml'|'schemarb'|'mssql'|'mssqlLegacy'|'snowflake'|'json'|'oracle'} format```
+  * ```{ImportOptions} options``` *(optional)*
+    * `includeRecords` `{boolean}` — whether to include `Records` blocks in the output DBML. Defaults to `true`.
 
 * **Returns:**
   * ```{string} DBML```
@@ -85,11 +87,14 @@ const dbml = importer.generateDbml(schemaJson);
 const { exporter } = require('@dbml/core');
 ```
 
-#### `exporter.export(str, format)`
+#### `exporter.export(str, format[, options])`
 
 * **Arguments:**
   * ```{string} str```
-  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'schemarb'|'mssql'|'json'} format```
+  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'mssql'|'json'} format```
+  * ```{ExportOptions} options``` *(optional)*
+    * `includeRecords` `{boolean}` — whether to include `Records` blocks in the DBML output. Defaults to `true`. Only applies to the `dbml` format.
+    * `isNormalized` `{boolean}` — whether the model is already normalized. Defaults to `true`. Only applies to the `json` format.
 
 * **Returns:**
   * ```{string} SQL```
@@ -116,6 +121,11 @@ const { Parser } = require('@dbml/core');
 const parser = new Parser();
 ```
 
+Regarding DBML parsing, `Parser` supports two styles:
+
+- **Stateless single-file API** (`parser.parse`): Accepts a string and a format, returns a `Database` as a result of parsing that string according to the specified format. This API is good for ad-hoc, one-off parsing.
+- **Stateful multifile API** (`parser.setDbmlSource` and `parser.parseDbmlProject`): Register files into the parser, then specify the entrypoint file to start parsing. Results are cached and incrementally updated, making it more performant for repeated or editor-driven use cases.
+
 #### `parser.parse(str, format)`
 
 * **Arguments:**
@@ -125,7 +135,7 @@ const parser = new Parser();
 * **Returns:** ```Database``` object
 
 * **Usage:**
-Parse specified format to ```Database``` object
+Parse a single-file input in the specified format to ```Database``` object. For multifile DBML projects, use `parser.setDbmlSource` and `parser.parseDbmlProject` instead.
 
 :::note
 
@@ -148,18 +158,136 @@ const dbml = fs.readFileSync('./schema.dbml', 'utf-8');
 const database = parser.parse(dbml, 'dbml');
 ```
 
+#### `parser.setDbmlSource(filepath, source)`
+
+* **Arguments:**
+  * ```{string} filepath``` — an absolute file path (e.g. `'/main.dbml'`)
+  * ```{string} source``` — file content
+
+* **Usage:**
+Register a DBML source file for multifile parsing.
+
+```javascript
+const fs = require('fs');
+const path = require('path');
+const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
+const projectDir = '/path/to/project';
+
+// Load DBML files from disk into the parser
+for (const file of fs.readdirSync(projectDir).filter(f => f.endsWith('.dbml'))) {
+  const fullPath = path.join(projectDir, file);
+  parser.setDbmlSource(fullPath, fs.readFileSync(fullPath, 'utf-8'));
+}
+```
+
+#### `parser.getDbmlSource(filepath)`
+
+* **Arguments:**
+  * ```{string} filepath``` — an absolute file path (e.g. `'/main.dbml'`)
+
+* **Returns:** ```string | undefined``` — the file content, or `undefined` if the file does not exist.
+
+* **Usage:**
+Read the content of a registered DBML file.
+
+```javascript
+const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
+
+parser.setDbmlSource('/main.dbml', 'Table posts { id integer [pk] }');
+
+parser.getDbmlSource('/main.dbml');  // 'Table posts { id integer [pk] }'
+parser.getDbmlSource('/other.dbml'); // undefined
+```
+
+#### `parser.deleteDbmlSource(filepath)`
+
+* **Arguments:**
+  * ```{string} filepath``` — an absolute file path (e.g. `'/main.dbml'`)
+
+* **Usage:**
+Remove a single DBML source file from the parser.
+
+```javascript
+const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
+parser.setDbmlSource('/main.dbml', 'Table posts { id integer [pk] }');
+parser.setDbmlSource('/users.dbml', 'Table users { id integer [pk] }');
+
+parser.deleteDbmlSource('/users.dbml');
+parser.getDbmlSource('/users.dbml'); // undefined
+parser.getDbmlSource('/main.dbml');  // 'Table posts { id integer [pk] }'
+```
+
+#### `parser.clearDbmlSource()`
+
+* **Usage:**
+Remove all registered DBML source files from the parser.
+
+```javascript
+const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
+parser.setDbmlSource('/main.dbml', 'Table posts { id integer [pk] }');
+parser.setDbmlSource('/users.dbml', 'Table users { id integer [pk] }');
+
+parser.clearDbmlSource();
+parser.getDbmlSource('/main.dbml');  // undefined
+parser.getDbmlSource('/users.dbml'); // undefined
+```
+
+#### `parser.parseDbmlProject(entrypoint)`
+
+* **Arguments:**
+  * ```{string} entrypoint``` — absolute path to the entry file
+
+* **Returns:** ```Database``` object
+
+* **Throws:** ```CompilerError``` on syntax or binding errors
+
+* **Usage:**
+Parse a file (specified by entrypoint) in a multifile project, including all used files.
+
+```javascript
+const fs = require('fs');
+const path = require('path');
+const { Parser } = require('@dbml/core');
+
+const parser = new Parser();
+const projectDir = '/path/to/project';
+
+// Load all .dbml files from the project directory
+for (const file of fs.readdirSync(projectDir).filter(f => f.endsWith('.dbml'))) {
+  const fullPath = path.join(projectDir, file);
+  parser.setDbmlSource(fullPath, fs.readFileSync(fullPath, 'utf-8'));
+}
+
+// Parse starting from the main entry file
+const database = parser.parseDbmlProject(path.join(projectDir, 'main.dbml'));
+```
+
 ### ModelExporter
 
 ```javascript
 const { ModelExporter } = require('@dbml/core');
 ```
 
-#### `ModelExporter.export(model, format, isNormalized)`
+#### `ModelExporter.export(model, format[, options])`
 
 * **Arguments:**
-  * ```{model} Database```
-  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'schemarb'|'mssql'|'json'} format```
-  * ```{boolean} isNormalized```
+  * ```{Database|NormalizedModel} model```
+  * ```{'mysql'|'postgres'|'oracle'|'dbml'|'mssql'|'json'} format```
+  * ```{ExportOptions} options``` *(optional)*
+    * `includeRecords` `{boolean}` — whether to include `Records` blocks in the DBML output. Defaults to `true`. Only applies to the `dbml` format.
+    * `isNormalized` `{boolean}` — whether the passed model is already normalized. Defaults to `true`. Only applies to the `json` format.
+
+:::note
+Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
+:::
 
 * **Returns:** specified format string
 
@@ -177,7 +305,5 @@ const parser = new Parser();
 const database = parser.parse(dbml, 'dbml');
 
 // Export Database object to PostgreSQL
-const postgreSQL = ModelExporter.export(database, 'postgres', false);
-// or
-const postgreSQL = ModelExporter.export(database.normalize(), 'postgres');
+const postgreSQL = ModelExporter.export(database, 'postgres');
 ```

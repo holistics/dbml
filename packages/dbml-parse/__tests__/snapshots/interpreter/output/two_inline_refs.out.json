@@ -1,0 +1,28 @@
+{
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'staff' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@staff@[L3:C23, L3:C28]",
+          "snippet": "staff"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'rental' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@rental@[L4:C24, L4:C30]",
+          "snippet": "rental"
+        }
+      }
+    }
+  ]
+}

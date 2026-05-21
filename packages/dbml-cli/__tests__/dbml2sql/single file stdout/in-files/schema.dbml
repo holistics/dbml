@@ -1,0 +1,11 @@
+Table users {
+  id int [pk]
+  name varchar
+  email varchar [unique]
+}
+
+Table posts {
+  id int [pk]
+  title varchar
+  user_id int [ref: > users.id]
+}

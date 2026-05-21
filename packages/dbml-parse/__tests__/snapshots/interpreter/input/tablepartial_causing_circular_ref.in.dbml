@@ -1,0 +1,9 @@
+TablePartial T {
+  col1 type [ref: > T.col1]
+  col3 type [ref: > T.col2]
+}
+
+Table T {
+  ~T
+  col2 type [ref: > col3]
+}

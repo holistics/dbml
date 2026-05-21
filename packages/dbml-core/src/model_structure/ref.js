@@ -1,6 +1,6 @@
+import { DEFAULT_SCHEMA_NAME } from './config';
 import Element from './element';
 import Endpoint from './endpoint';
-import { DEFAULT_SCHEMA_NAME } from './config';
 
 /**
  * Compare two pairs of objects
@@ -13,17 +13,30 @@ function isEqualPair (pair1, pair2) {
 }
 
 class Ref extends Element {
+  /**
+   * @param {import('../../types/model_structure/ref').RawRef} param0
+   */
   constructor ({
-    name, color, endpoints, onDelete, onUpdate, token, schema = {}, injectedPartial = null,
+    name, color, endpoints, onDelete, onUpdate, inactive, token, schema = {}, injectedPartial = null,
   } = {}) {
     super(token);
+    /** @type {string} */
     this.name = name;
+    /** @type {string} */
     this.color = color;
+    /** @type {any} */
     this.onDelete = onDelete;
+    /** @type {any} */
     this.onUpdate = onUpdate;
+    /** @type {boolean} */
+    this.inactive = inactive;
+    /** @type {import('../../types/model_structure/endpoint').default[]} */
     this.endpoints = [];
+    /** @type {import('../../types/model_structure/schema').default} */
     this.schema = schema;
+    /** @type {import('../../types/model_structure/tablePartial').default} */
     this.injectedPartial = injectedPartial;
+    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.schema.dbState;
     this.generateId();
 
@@ -31,9 +44,13 @@ class Ref extends Element {
   }
 
   generateId () {
+    /** @type {number} */
     this.id = this.dbState.generateId('refId');
   }
 
+  /**
+   * @param {any[]} rawEndpoints
+   */
   processEndpoints (rawEndpoints) {
     rawEndpoints.forEach((endpoint) => {
       this.endpoints.push(new Endpoint({ ...endpoint, ref: this }));
@@ -52,6 +69,10 @@ class Ref extends Element {
     // TODO: Handle Error with different number of fields
   }
 
+  /**
+   * @param {import('../../types/model_structure/ref').default} ref
+   * @returns {boolean}
+   */
   equals (ref) {
     return isEqualPair(this.endpoints, ref.endpoints)
       || isEqualPair(this.endpoints, ref.endpoints.slice().reverse());
@@ -70,6 +91,7 @@ class Ref extends Element {
       color: this.color,
       onDelete: this.onDelete,
       onUpdate: this.onUpdate,
+      inactive: this.inactive,
       injectedPartialId: this.injectedPartial?.id,
     };
   }
@@ -92,6 +114,9 @@ class Ref extends Element {
     };
   }
 
+  /**
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   */
   normalize (model) {
     model.refs[this.id] = {
       id: this.id,

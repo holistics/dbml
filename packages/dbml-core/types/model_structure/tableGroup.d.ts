@@ -1,10 +1,10 @@
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { RawNote, Token} from './element';
 import Schema from './schema';
 import Table from './table';
 
-interface RawTableGroup {
+export interface RawTableGroup {
     name: string;
     tables: Table[];
     schema: Schema;
@@ -53,16 +53,19 @@ declare class TableGroup extends Element {
         note: string;
         color: string;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 export interface NormalizedTableGroup {
-    [_id: number]: {
-        id: number;
-        name: string;
-        tableIds: number[];
-        schemaId: number;
-        note: string;
-        color: string;
-    };
+    id: number;
+    name: string;
+    note: string | null;
+    color: string;
+    tableIds: number[];
+    schemaId: number;
 }
+
+export interface NormalizedTableGroupIdMap {
+    [_id: number]: NormalizedTableGroup;
+}
+
 export default TableGroup;

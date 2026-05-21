@@ -1,0 +1,54 @@
+{
+  "errors": [
+    {
+      "code": "UNEXPECTED_SETTINGS",
+      "diagnostic": "A Note shouldn't have a setting list",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<list-expression>@@[L5:C14, L5:C36]",
+          "snippet": "[headercol...: #3457DB]"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L3:C1]",
+          "snippet": "Table user... unique]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@users@[L0:C0, L3:C1]",
+          "snippet": "Table user... unique]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C2, L1:C26]",
+              "snippet": "id integer...imary key]"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@username@[L2:C2, L2:C42]",
+              "snippet": "username v...l, unique]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Note@nodeName@[L5:C0, L9:C1]",
+          "snippet": "Note nodeN...r.\n  '''\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@nodeName@[L5:C0, L9:C1]",
+          "snippet": "Note nodeN...r.\n  '''\n}"
+        }
+      }
+    ]
+  }
+}

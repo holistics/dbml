@@ -1,0 +1,182 @@
+{
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@Users@[L6:C4, L6:C9]",
+        "snippet": "Users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@Users@[L6:C4, L6:C9]",
+            "snippet": "Users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@Users@[L6:C4, L6:C9]",
+                "snippet": "Users"
+              },
+              "leadingTrivia": "    ",
+              "trailingTrivia": "",
+              "value": "Users"
+            }
+          },
+          "fullEnd": 72,
+          "fullStart": 63
+        }
+      },
+      "fullEnd": 72,
+      "fullStart": 63,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L3:C1]",
+          "snippet": "Table User...integer \n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L6:C10, L6:C12]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L6:C10, L6:C12]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L6:C10, L6:C12]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "id"
+            }
+          },
+          "fullEnd": 76,
+          "fullStart": 73
+        }
+      },
+      "fullEnd": 76,
+      "fullStart": 73,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C4, L1:C14]",
+          "snippet": "id integer"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@Users@[L6:C15, L6:C20]",
+        "snippet": "Users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@Users@[L6:C15, L6:C20]",
+            "snippet": "Users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@Users@[L6:C15, L6:C20]",
+                "snippet": "Users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "Users"
+            }
+          },
+          "fullEnd": 83,
+          "fullStart": 78
+        }
+      },
+      "fullEnd": 83,
+      "fullStart": 78,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L3:C1]",
+          "snippet": "Table User...integer \n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@referrer_id@[L6:C21, L6:C32]",
+        "snippet": "referrer_id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@referrer_id@[L6:C21, L6:C32]",
+            "snippet": "referrer_id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@referrer_id@[L6:C21, L6:C32]",
+                "snippet": "referrer_id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "referrer_id"
+            }
+          },
+          "fullEnd": 96,
+          "fullStart": 84
+        }
+      },
+      "fullEnd": 96,
+      "fullStart": 84,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@referrer_id@[L2:C4, L2:C23]",
+          "snippet": "referrer_id integer"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L3:C1]",
+          "snippet": "Table User...integer \n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L3:C1]",
+          "snippet": "Table User...integer \n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C4, L1:C14]",
+              "snippet": "id integer"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@referrer_id@[L2:C4, L2:C23]",
+              "snippet": "referrer_id integer"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@Users@[L6:C15, L6:C20]",
+            "snippet": "Users"
+          },
+          {
+            "id": "node@<primary-expression>@Users@[L6:C4, L6:C9]",
+            "snippet": "Users"
+          }
+        ]
+      }
+    ]
+  }
+}

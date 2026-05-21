@@ -1,9 +1,12 @@
+import { Uri } from '@/services/types';
+import Compiler from '@/compiler';
+import { Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
 import {
-  Definition, DefinitionProvider, TextModel, Position,
+  Definition, DefinitionProvider, Position, TextModel,
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
-import Compiler from '@/compiler';
-import { SyntaxNode, SyntaxNodeKind } from '@/lib/parser/nodes';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;
@@ -13,30 +16,44 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
   }
 
   provideDefinition (model: TextModel, position: Position): Definition {
-    const { uri } = model;
+    const {
+      uri,
+    } = model;
+    const filepath = Filepath.fromUri(String(model.uri));
     const offset = getOffsetFromMonacoPosition(model, position);
-    const containers = [...this.compiler.container.stack(offset)];
+    const containers = [
+      ...this.compiler.container.stack(filepath, offset),
+    ];
     while (containers.length !== 0) {
       const node = containers.pop();
+      if (!node) continue;
 
-      if (!node?.referee) continue;
+      const referee = this.compiler.nodeReferee(node).getFiltered(UNHANDLED);
+      if (!referee) continue;
 
       let declaration: SyntaxNode | undefined;
       if (
-        node.referee?.declaration
+        referee.declaration
         && [
           SyntaxNodeKind.PRIMARY_EXPRESSION,
           SyntaxNodeKind.VARIABLE,
-          SyntaxNodeKind.PARTIAL_INJECTION,
-        ].includes(node?.kind)
+        ].includes(node.kind)
       ) {
-        ({ declaration } = node.referee);
-      } else if (node.referee?.injectorDeclaration) {
-        declaration = node.referee.injectorDeclaration;
+        ({
+          declaration,
+        } = referee);
       }
 
       if (declaration) {
-        const { startPos, endPos } = declaration;
+        const {
+          startPos, endPos,
+        } = declaration;
+        // Use filepath from declaration if available and in multi-file mode (uri is set)
+        let definitionUri = uri;
+        if (uri && declaration.filepath) {
+          definitionUri = Uri.parse(declaration.filepath.toUri());
+        }
+
         return [
           {
             range: {
@@ -45,7 +62,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
               endColumn: endPos.column + 1,
               endLineNumber: endPos.line + 1,
             },
-            uri,
+            uri: definitionUri,
           },
         ];
       }

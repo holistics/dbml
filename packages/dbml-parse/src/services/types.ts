@@ -1,6 +1,14 @@
-import type {
-  Position as IPosition, editor, languages, IRange, IDisposable, CancellationToken as ICancellationToken,
+import {
+  CancellationToken as ICancellationToken, IDisposable, IPosition, IRange, editor, languages,
 } from 'monaco-editor-core';
+import {
+  URI as Uri,
+  // @ts-expect-error "We need to export from the untyped uri.js file because we cannot import directly from monaco-editor-core for a portable library"
+} from 'monaco-editor-core/esm/vs/base/common/uri.js';
+export { Uri };
+
+export type LanguageConfiguration = languages.LanguageConfiguration;
+export type MonarchLanguage = languages.IMonarchLanguage;
 
 export type Position = IPosition;
 export type TextModel = editor.ITextModel;
@@ -26,8 +34,10 @@ export interface CompletionItemProvider {
     token: CancellationToken,
   ): ProviderResult<CompletionItem>;
 }
-export type CompletionItem = languages.CompletionItem;
-export type CompletionList = languages.CompletionList;
+export type CompletionItem = languages.CompletionItem & { quoted?: boolean };
+export interface CompletionList extends languages.CompletionList {
+  suggestions: CompletionItem[];
+};
 export enum CompletionItemKind {
   Function = 1,
   Constructor = 2,
@@ -77,3 +87,13 @@ export type SignatureHelpResult = languages.SignatureHelpResult;
 
 // Show references
 export type ReferenceProvider = languages.ReferenceProvider;
+
+// Diagnostics/Markers
+export enum MarkerSeverity {
+  Hint = 1,
+  Info = 2,
+  Warning = 4,
+  Error = 8,
+}
+
+export type MarkerData = editor.IMarkerData;

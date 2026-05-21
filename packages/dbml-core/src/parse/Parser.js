@@ -1,16 +1,17 @@
-import { Compiler } from '@dbml/parse';
+import { Compiler, DEFAULT_ENTRY, Filepath, MemoryProjectLayout } from '@dbml/parse';
 import Database from '../model_structure/database';
-import mysqlParser from './mysqlParser';
-import postgresParser from './postgresParser';
-import dbmlParser from './dbmlParser';
-import schemarbParser from './schemarbParser';
-import mssqlParser from './mssqlParser';
 import { parse } from './ANTLR/ASTGeneration';
+import dbmlParser from './deprecated/dbmlParser.cjs';
+import mssqlParser from './deprecated/mssqlParser.cjs';
+import mysqlParser from './deprecated/mysqlParser.cjs';
+import postgresParser from './deprecated/postgresParser.cjs';
+import schemarbParser from './deprecated/schemarbParser.cjs';
 import { CompilerError } from './error';
 
 class Parser {
-  constructor (dbmlCompiler) {
-    this.DBMLCompiler = dbmlCompiler || new Compiler();
+  constructor () {
+    this.layout = new MemoryProjectLayout();
+    this.DBMLCompiler = new Compiler(this.layout);
   }
 
   static parseJSONToDatabase (rawDatabase) {
@@ -22,6 +23,9 @@ class Parser {
     return parse(str, 'mysql');
   }
 
+  /**
+   * @deprecated Use the `parseMySQLToJSONv2` method instead
+   */
   static parseMySQLToJSON (str) {
     return mysqlParser.parse(str);
   }
@@ -30,35 +34,27 @@ class Parser {
     return parse(str, 'postgres');
   }
 
+  /**
+   * @deprecated Use the `parsePostgresToJSONv2` method instead
+   */
   static parsePostgresToJSON (str) {
     return postgresParser.parse(str);
   }
 
-  static parseDBMLToJSONv2 (str, dbmlCompiler) {
-    const compiler = dbmlCompiler || new Compiler();
+  static parseDBMLToJSONv2 (str) {
+    const layout = new MemoryProjectLayout();
+    layout.setSource(DEFAULT_ENTRY, str);
+    const compiler = new Compiler(layout);
 
-    compiler.setSource(str);
-
-    const diags = compiler.parse.errors().map((error) => ({
-      message: error.diagnostic,
-      location: {
-        start: {
-          line: error.nodeOrToken.startPos.line + 1,
-          column: error.nodeOrToken.startPos.column + 1,
-        },
-        end: {
-          line: error.nodeOrToken.endPos.line + 1,
-          column: error.nodeOrToken.endPos.column + 1,
-        },
-      },
-      code: error.code,
-    }));
-
+    const diags = convertDbmlParserError(compiler.parse.errors(DEFAULT_ENTRY));
     if (diags.length > 0) throw CompilerError.create(diags);
 
-    return compiler.parse.rawDb();
+    return compiler.parse.rawDb(DEFAULT_ENTRY);
   }
 
+  /**
+   * @deprecated Use the `parseDBMLToJSONv2` method instead
+   */
   static parseDBMLToJSON (str) {
     return dbmlParser.parse(str);
   }
@@ -67,6 +63,9 @@ class Parser {
     return schemarbParser.parse(str);
   }
 
+  /**
+   * @deprecated Use the `parseMSSQLToJSONv2` method instead
+   */
   static parseMSSQLToJSON (str) {
     return mssqlParser.parseWithPegError(str);
   }
@@ -85,6 +84,38 @@ class Parser {
 
   static parse (str, format) {
     return new Parser().parse(str, format);
+  }
+
+  getDbmlSource (filepath) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
+    return this.layout.getSource(filepath);
+  }
+
+  setDbmlSource (filepath, source) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
+    if (source === undefined) {
+      this.layout.deleteSource(filepath);
+    } else {
+      this.layout.setSource(filepath, source);
+    }
+  }
+
+  deleteDbmlSource (filepath) {
+    filepath = typeof filepath === 'string' ? Filepath.from(filepath) : filepath;
+    this.layout.deleteSource(filepath);
+  }
+
+  clearDbmlSource () {
+    this.layout.clearSource();
+  }
+
+  parseDbmlProject (entrypoint) {
+    entrypoint = typeof entrypoint === 'string' ? Filepath.from(entrypoint) : entrypoint;
+    const result = this.DBMLCompiler.interpretFile(entrypoint);
+    const diags = convertDbmlParserError(result.getErrors());
+    if (diags.length > 0) throw CompilerError.create(diags);
+
+    return Parser.parseJSONToDatabase(result.getValue() || {});
   }
 
   parse (str, format) {
@@ -116,7 +147,7 @@ class Parser {
           break;
 
         case 'dbmlv2':
-          rawDatabase = Parser.parseDBMLToJSONv2(str, this.DBMLCompiler);
+          rawDatabase = Parser.parseDBMLToJSONv2(str);
           break;
 
         case 'schemarb':
@@ -156,3 +187,21 @@ class Parser {
 }
 
 export default Parser;
+
+// Convert the parser error to a format compatible with other parsers' errors
+function convertDbmlParserError (diags) {
+  return diags.map((error) => ({
+    message: error.diagnostic,
+    location: {
+      start: {
+        line: error.nodeOrToken.startPos.line + 1,
+        column: error.nodeOrToken.startPos.column + 1,
+      },
+      end: {
+        line: error.nodeOrToken.endPos.line + 1,
+        column: error.nodeOrToken.endPos.column + 1,
+      },
+    },
+    code: error.code,
+  }));
+}

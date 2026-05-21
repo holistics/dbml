@@ -1,10 +1,10 @@
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 import DbState from './dbState';
 import Element, { RawNote, Token } from './element';
 import IndexColumn from './indexColumn';
 import Table from './table';
 import TablePartial from './tablePartial';
-interface RawIndex {
+export interface RawIndex {
     columns: IndexColumn;
     type: any;
     unique: boolean;
@@ -62,18 +62,22 @@ declare class Index extends Element {
         note: string;
         injectedPartialId?: number;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 export interface NormalizedIndex {
-    [_id: number]: {
-        id: number;
-        name: string;
-        type: any;
-        unique: boolean;
-        pk: string;
-        note: string;
-        columnIds: number[];
-        tableId: number;
-    };
+    id: number;
+    name: string | null;
+    type: any;
+    unique: boolean;
+    pk: string;
+    note: string | null;
+    columnIds: number[];
+    tableId: number;
+    injectedPartialId?: number;
 }
+
+export interface NormalizedIndexIdMap {
+    [_id: number]: NormalizedIndex;
+}
+
 export default Index;

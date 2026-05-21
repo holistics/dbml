@@ -1,0 +1,332 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "employees",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        },
+        {
+          "name": "department",
+          "type": {
+            "type_name": "VARCHAR2(50)"
+          },
+          "checks": []
+        },
+        {
+          "name": "salary",
+          "type": {
+            "type_name": "NUMBER"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    },
+    {
+      "name": "departments",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "NUMBER"
+          },
+          "pk": true,
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR2(100)"
+          },
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "tableName": "employees",
+      "columns": [
+        "id",
+        "name",
+        "department",
+        "salary"
+      ],
+      "values": [
+        [
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": "Alice",
+            "type": "string"
+          },
+          {
+            "value": "Engineering",
+            "type": "string"
+          },
+          {
+            "value": 75000,
+            "type": "number"
+          }
+        ],
+        [
+          {
+            "value": 2,
+            "type": "number"
+          },
+          {
+            "value": "Bob",
+            "type": "string"
+          },
+          {
+            "value": "Engineering",
+            "type": "string"
+          },
+          {
+            "value": 80000,
+            "type": "number"
+          }
+        ],
+        [
+          {
+            "value": 3,
+            "type": "number"
+          },
+          {
+            "value": "Charlie",
+            "type": "string"
+          },
+          {
+            "value": "Engineering",
+            "type": "string"
+          },
+          {
+            "value": 70000,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "employees",
+      "columns": [
+        "id",
+        "name",
+        "department",
+        "salary"
+      ],
+      "values": [
+        [
+          {
+            "value": 4,
+            "type": "number"
+          },
+          {
+            "value": "Diana",
+            "type": "string"
+          },
+          {
+            "value": "Sales",
+            "type": "string"
+          },
+          {
+            "value": 65000,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "departments",
+      "columns": [
+        "id",
+        "name"
+      ],
+      "values": [
+        [
+          {
+            "value": 1,
+            "type": "number"
+          },
+          {
+            "value": "Engineering",
+            "type": "string"
+          }
+        ],
+        [
+          {
+            "value": 2,
+            "type": "number"
+          },
+          {
+            "value": "Sales",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "employees",
+      "columns": [
+        "id",
+        "name"
+      ],
+      "values": [
+        [
+          {
+            "value": 5,
+            "type": "number"
+          },
+          {
+            "value": "Eve",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "employees",
+      "columns": [
+        "id",
+        "name",
+        "department"
+      ],
+      "values": [
+        [
+          {
+            "value": 6,
+            "type": "number"
+          },
+          {
+            "value": "Frank",
+            "type": "string"
+          },
+          {
+            "value": "Marketing",
+            "type": "string"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "employees",
+      "columns": [
+        "id",
+        "name",
+        "department",
+        "salary"
+      ],
+      "values": [
+        [
+          {
+            "value": 7,
+            "type": "number"
+          },
+          {
+            "value": "Grace",
+            "type": "string"
+          },
+          {
+            "value": "Marketing",
+            "type": "string"
+          },
+          {
+            "value": 72000,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "employees",
+      "columns": [
+        "id",
+        "name",
+        "department",
+        "salary"
+      ],
+      "values": [
+        [
+          {
+            "value": 8,
+            "type": "number"
+          },
+          {
+            "value": "Henry",
+            "type": "string"
+          },
+          {
+            "value": "HR",
+            "type": "string"
+          },
+          {
+            "value": 68000,
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "employees",
+      "columns": [
+        "id",
+        "name",
+        "salary"
+      ],
+      "values": [
+        [
+          {
+            "value": 9,
+            "type": "number"
+          },
+          {
+            "value": "Iris",
+            "type": "string"
+          },
+          {
+            "value": "50000 + 20000",
+            "type": "expression"
+          }
+        ],
+        [
+          {
+            "value": 10,
+            "type": "number"
+          },
+          {
+            "value": "UPPER('jack')",
+            "type": "expression"
+          },
+          {
+            "value": 75000,
+            "type": "number"
+          }
+        ]
+      ]
+    }
+  ]
+}

@@ -14,7 +14,36 @@ import { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 const SidebarConfigs: SidebarsConfig = {
   docs: [
     'home',
-    'docs',
+    {
+      type: 'category',
+      label: 'Syntax',
+      collapsed: false,
+      collapsible: true,
+      link: { type: 'doc', id: 'docs' },
+      items: [
+        {
+          id: 'docs',
+          type: 'doc',
+          label: 'Core Database Markup',
+        },
+        {
+          id: 'syntax/enrichment-visualization',
+          type: 'doc',
+          label: 'Enrichment & Visualization',
+        },
+        {
+          id: 'syntax/language-basics',
+          type: 'doc',
+          label: 'Language Basics',
+        },
+        {
+          id: 'syntax/module-system',
+          type: 'doc',
+          label: 'Module System',
+        },
+      ],
+    },
+    'database-support',
     'cli',
     {
       type: 'category',

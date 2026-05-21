@@ -135,5 +135,6 @@ export {
   IndexesDictionary,
   DatabaseSchema,
   BigQueryCredentials,
+  CheckConstraint,
   CheckConstraintDictionary,
 };

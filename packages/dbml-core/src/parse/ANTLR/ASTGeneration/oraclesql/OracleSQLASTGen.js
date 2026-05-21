@@ -1,19 +1,19 @@
-import { last, flatten } from 'lodash';
-import {
-  Field,
-  Index,
-  Table,
-  TableRecord,
-  Ref,
-  Endpoint,
-} from '../AST';
-import {
-  DATA_TYPE,
-  CONSTRAINT_TYPE,
-} from '../constants';
-import { getOriginalText } from '../helpers';
+import { flatten, last } from 'lodash-es';
 import { CompilerError } from '../../../error';
 import OracleSqlParserVisitor from '../../parsers/oraclesql/OracleSqlParserVisitor';
+import {
+  Endpoint,
+  Field,
+  Index,
+  Ref,
+  Table,
+  TableRecord,
+} from '../AST';
+import {
+  CONSTRAINT_TYPE,
+  DATA_TYPE,
+} from '../constants';
+import { getOriginalText } from '../helpers';
 
 // We cannot use TABLE_CONSTRAINT_KIND and COLUMN_CONSTRAINT_KIND from '../constants' as their values are indistinguishable from each other
 // For example: TABLE_CONSTRAINT_KIND.UNIQUE === COLUMN_CONSTRAINT_KIND.UNIQUE
@@ -94,6 +94,14 @@ const createCompilerError = (ctx, message) => {
       },
     },
   }]);
+};
+
+const unquoteString = (str, quoteChar = '"') => {
+  return !str.startsWith(quoteChar)
+    ? str
+    : str
+        .slice(1, -1) // Strip off starting and ending quotes
+        .replaceAll(`${quoteChar}${quoteChar}`, quoteChar); // Unescape quotes, in Oracle, quotes are escaped by doubling it
 };
 
 // Only methods for rules representing whole statements can mutate `data`:
@@ -550,11 +558,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
 
   visitIdentifier (ctx) {
     const text = getOriginalText(ctx);
-    if (text.startsWith('"')) {
-      return text.substring(1, text.length - 1);
-    }
-    text.replace('""', '"');
-    return text;
+    return unquoteString(text);
   }
 
   visitType_name (ctx) {
@@ -570,7 +574,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   visitDatatype (ctx) {
     const typeName = getOriginalText(ctx);
     return {
-      type_name: typeName,
+      type_name: unquoteString(typeName),
     };
   }
 
@@ -814,7 +818,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //   : id_expression
   //   ;
   visitConstraint_name (ctx) {
-    return getOriginalText(ctx);
+    return unquoteString(getOriginalText(ctx));
   }
 
   visitIndex_name (ctx) {
@@ -842,11 +846,13 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   // insert_statement
-  //   : INSERT (single_table_insert | <other rules>)
+  //   : INSERT (single_table_insert | multi_table_insert)
   //   ;
   visitInsert_statement (ctx) {
     if (ctx.single_table_insert()) {
       ctx.single_table_insert().accept(this);
+    } else if (ctx.multi_table_insert()) {
+      ctx.multi_table_insert().accept(this);
     }
   }
 
@@ -871,6 +877,73 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     }
   }
 
+  // multi_table_insert
+  //   : (ALL multi_table_element+ | conditional_insert_clause) select_statement
+  //   ;
+  visitMulti_table_insert (ctx) {
+    if (!ctx.multi_table_element()) {
+      // conditional_insert_clause is not supported yet
+      return;
+    }
+
+    // Collect all insert elements from INSERT ALL statement
+    const elements = ctx.multi_table_element().map((element) => element.accept(this)).filter(Boolean);
+
+    // Group elements by table, schema, and columns to combine multiple rows into single records
+    const recordsMap = new Map();
+
+    elements.forEach((element) => {
+      const { tableName, schemaName, columns, values } = element;
+      const key = `${schemaName || ''}.${tableName}.${columns.join(',')}`;
+
+      if (recordsMap.has(key)) {
+        // Same table and columns - append values to existing record
+        recordsMap.get(key).values.push(...values);
+      } else {
+        // New combination - create new record entry
+        recordsMap.set(key, {
+          tableName,
+          schemaName,
+          columns,
+          values,
+        });
+      }
+    });
+
+    // Create TableRecord objects for each unique table/column combination
+    recordsMap.forEach((recordData) => {
+      const record = new TableRecord({
+        schemaName: recordData.schemaName,
+        tableName: recordData.tableName,
+        columns: recordData.columns,
+        values: recordData.values,
+      });
+      this.data.records.push(record);
+    });
+  }
+
+  // multi_table_element
+  //   : insert_into_clause values_clause? error_logging_clause?
+  //   ;
+  visitMulti_table_element (ctx) {
+    const intoClause = ctx.insert_into_clause().accept(this);
+    const valuesClause = ctx.values_clause()?.accept(this);
+
+    if (intoClause && valuesClause) {
+      const { tableName, schemaName, columns } = intoClause;
+      const { values } = valuesClause;
+
+      return {
+        tableName,
+        schemaName,
+        columns,
+        values,
+      };
+    }
+
+    return null;
+  }
+
   // insert_into_clause
   //   : INTO general_table_ref paren_column_list?
   //   ;
@@ -878,7 +951,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const names = ctx.general_table_ref().accept(this);
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
-    const columns = ctx.paren_column_list() ? ctx.paren_column_list().accept(this).map((c) => last(c)) : [];
+    const columns = ctx.paren_column_list() ? ctx.paren_column_list().accept(this).map((c) => last(c)) : findTable(this.data.tables, schemaName, tableName)?.fields.map((field) => field.name);
     return {
       tableName,
       schemaName,
@@ -919,7 +992,8 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   visitId_expression (ctx) {
-    return getOriginalText(ctx);
+    const text = getOriginalText(ctx);
+    return unquoteString(text);
   }
 
   // expression
@@ -938,7 +1012,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     if (ctx.CHAR_STRING()) {
       return {
         type: DATA_TYPE.STRING,
-        value: value.slice(1, -1),
+        value: unquoteString(value, "'"), // string literals use single quotes
       };
     }
     if (ctx.TRUE()) {
@@ -968,8 +1042,8 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     if (ctx.column_name()) {
       return {
         type: CONSTRAINT_TYPE.COLUMN,
-        rawValue: value,
-        value: getOriginalText(ctx.column_name()),
+        rawValue: unquoteString(value),
+        value: unquoteString(getOriginalText(ctx.column_name())),
       };
     }
     return {
@@ -979,6 +1053,10 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   }
 
   visitQuoted_string (ctx) {
-    return getOriginalText(ctx).slice(1, -1).replaceAll("''", "'");
+    return unquoteString(getOriginalText(ctx), "'"); // string literals use single quotes
+  }
+
+  visitRegular_id (ctx) {
+    return unquoteString(getOriginalText(ctx), '"');
   }
 }

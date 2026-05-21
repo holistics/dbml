@@ -1,6 +1,6 @@
 # @dbml/core
 
-See our website [@dbml/core](https://dbml.dbdiagram.io/js-module/core) for more information
+Refer to [@dbml/core](https://dbml.dbdiagram.io/js-module/core) for the complete API reference.
 
 ## Installation
 
@@ -10,3 +10,203 @@ npm install @dbml/core
 # or if you're using yarn
 yarn add @dbml/core
 ```
+
+## SQL Parser Feature Support
+
+This section documents the SQL parsing capabilities for each supported database when importing SQL to DBML.
+
+For more detailed documentation on each SQL parser, see the individual parser READMEs:
+- [PostgreSQL Parser](./src/parse/ANTLR/ASTGeneration/postgres/README.md)
+- [MySQL Parser](./src/parse/ANTLR/ASTGeneration/mysql/README.md)
+- [MSSQL Parser](./src/parse/ANTLR/ASTGeneration/mssql/README.md)
+- [Oracle Parser](./src/parse/ANTLR/ASTGeneration/oraclesql/README.md)
+- [Snowflake Parser](./src/parse/ANTLR/ASTGeneration/snowflake/README.md)
+
+### Support Legend
+
+| Symbol | Meaning |
+|--------|---------|
+| ✓ | Fully supported and correctly parsed |
+| ◐ | Valid SQL that is parsed, but some options/clauses are ignored |
+| ✗ | Valid SQL syntax, but the parser fails to generate output |
+| — | Syntax not valid for this database |
+
+### `CREATE TABLE`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Basic syntax | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Parameterized types (e.g., `VARCHAR(255)`) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Array types (e.g., `INTEGER[]`) | ✓ | — | — | — | — |
+| Enumerated types (`ENUM`) | ✓ | ✓ | — | — | — |
+| Temporary tables | ◐ | ✗ | ✓ | ◐ | ◐ |
+| `CREATE TABLE` AS SELECT | ✗ | ✗ | ✗ | ✗ | ✗ |
+| Table options (`ENGINE`, `TABLESPACE`, etc.) | ◐ | ◐ | ◐ | ◐ | ◐ |
+| Other column properties (`COLLATE`, etc.) | ◐ | ✗ | ◐ | ◐ | ◐ |
+| Generated/Computed columns | ◐ | ◐ | ◐ | ◐ | ◐ |
+
+**Notes:**
+- **MSSQL**:
+  - Temporary tables use `#` prefix (local) and `##` prefix (global)
+  - Square bracket identifiers (`[identifier]`) are supported
+
+#### `PRIMARY KEY`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Column-level | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Table-level | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Multi-column | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Explicitly named (`CONSTRAINT name`) | ✓ | ✓ | ✓ | ✓ | ✓ |
+| CLUSTERED/NONCLUSTERED | — | — | ◐ | — | — |
+
+#### `FOREIGN KEY`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Column-level (`REFERENCES`) | ✓ | ✓ | ✗ | ✓ | ✗ |
+| Table-level | ✓ | ✓ | ✓ | ✓ | ✗ |
+| Multi-column | ✓ | ✓ | ✓ | ✓ | ✗ |
+| Explicitly named (`CONSTRAINT name`) | ✓ | ✓ | ✓ | ✓ | ✗ |
+| `ON UPDATE` action | ✓ | ✓ | ✓ | — | ✗ |
+| `ON DELETE` action | ✓ | ✓ | ✓ | ✓ | ✗ |
+
+**Notes:**
+- **MSSQL**: Column-level `FOREIGN KEY` has a known bug - use table-level syntax instead
+- **Snowflake**: All `FOREIGN KEY` definitions have a known bug producing undefined errors
+
+#### `UNIQUE`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Column-level | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Table-level | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Multi-column | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Explicitly named (`CONSTRAINT name`) | ✓ | ✓ | ◐ | ✓ | ◐ |
+| `UNIQUE KEY`/`UNIQUE INDEX` syntax | — | ✓ | — | — | — |
+
+#### `CHECK`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Column-level | ✓ | ✓ | ✓ | ✓ | ✗ |
+| Table-level | ✓ | ✓ | ✓ | ✓ | ✗ |
+| Explicitly named (`CONSTRAINT name`) | ✓ | ✓ | ✓ | ✓ | ✗ |
+
+#### `DEFAULT`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Column-level | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Function as default | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Explicitly named (`CONSTRAINT name`) | — | — | ◐ | — | ◐ |
+
+#### `NOT NULL`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Column-level `NOT NULL` | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Explicit column-level `NULL` | ✓ | ✓ | ✓ | ✓ | ✓ |
+
+#### Auto-Increment Columns
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| `SERIAL` (pseudo-type) | ✓ | — | — | — | — |
+| `BIGSERIAL` (pseudo-type) | ✓ | — | — | — | — |
+| `AUTO_INCREMENT` (column attribute) | — | ✓ | — | — | — |
+| `IDENTITY(seed, increment)` (column property) | — | — | ✓ | — | ✓ |
+| `GENERATED AS IDENTITY` (column property) | ✓ | — | ✗ | ✓ | ✗ |
+| `GENERATED ALWAYS AS IDENTITY` | ✓ | — | — | ✓ | — |
+| `GENERATED BY DEFAULT AS IDENTITY` | ✓ | — | — | ✓ | — |
+
+#### Inline Indexes
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Column-level indexes | — | ✗ | — | — | — |
+| Table-level `INDEX`/`KEY` | — | ✓ | — | ✓ | — |
+| Named indexes | — | ✓ | — | ✓ | — |
+| Multi-column indexes | — | ✓ | — | ✓ | — |
+| USING BTREE/HASH | — | ✓ | — | — | — |
+| FULLTEXT/SPATIAL | — | ◐ | — | — | — |
+
+---
+
+### `CREATE INDEX`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Basic `CREATE INDEX` | ✓ | ✓ | ✓ | ✓ | — |
+| Multi-column index | ✓ | ✓ | ✓ | ✓ | — |
+| `UNIQUE` index | ✓ | ✓ | ✓ | ✓ | — |
+| Function-based index | ✓ | ✓ | — | ✓ | — |
+| BTREE | ✓ | ✓ | ✗ | — | — |
+| HASH | ✓ | ✓ | — | — | — |
+| GIST | ✓ | — | — | — | — |
+| BRIN | ✓ | — | — | — | — |
+| GIN | ✓ | — | — | — | — |
+| Partial/Filtered index (`WHERE`) | ◐ | ✗ | ◐ | ◐ | — |
+| FULLTEXT | — | ◐ | ✗ | — | — |
+| SPATIAL | — | ◐ | ✗ | — | — |
+
+**Notes:**
+- **MSSQL**: Function-based indexes use computed columns instead
+
+---
+
+### `INSERT` Statements
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Basic `INSERT` ... VALUES | ✓ | ✓ | ✓ | ✓ | ✗ |
+| Multi-row `INSERT` | ✓ | ✓ | ✓ | ✓ | ✓ |
+| `INSERT` ... SELECT | ✗ | ✗ | ✗ | ✗ | ✗ |
+| `INSERT` ... with returned rows (`RETURNING`, `OUTPUT`) | ◐ | — | ◐ | ◐ | — |
+| `INSERT` ... ON CONFLICT/DUPLICATE KEY | ◐ | ◐ | — | — | — |
+
+**Notes:**
+- **Oracle**: Multi-row inserts use `INSERT ALL ... SELECT * FROM dual` syntax, which is fully supported.
+
+---
+
+### `ALTER TABLE`
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| **ADD COLUMN** | ✗ | ✗ | ✗ | ✗ | ✗ |
+| **DROP COLUMN** | ✗ | ✗ | ✗ | ✗ | ✗ |
+| **ALTER/MODIFY COLUMN** | ✗ | ✗ | ✗ | ✗ | ✗ |
+| **RENAME COLUMN** | ✗ | ✗ | ✗ | ✗ | ✗ |
+| **ADD CONSTRAINT** | | | | | |
+| - `DEFAULT` | ✗ | ✗ | ✓ | ✓ | ✗ |
+| - `NOT NULL` | ✗ | ✗ | ✗ | ✓ | ✗ |
+| - `CHECK` | ✓ | ✓ | ✓ | ✓ | — |
+| - `UNIQUE` | ✓ | ✗ | ✓ | ✓ | ✓ |
+| - `PRIMARY KEY` | ✓ | ✓ | ✓ | ✓ | ✗ |
+| - `FOREIGN KEY` | ✓ | ✓ | ✓ | ✓ | ✓ |
+| **DROP CONSTRAINT** | ✗ | ✗ | ✗ | ✗ | ✗ |
+
+---
+
+### Comments
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| Table comments | ✓ | ✓ | ◐ | ✓ | ✓ |
+| Column comments | ✓ | ✓ | ◐ | ✓ | ✗ |
+| Comment syntax | `COMMENT ON` | Inline `COMMENT` | `sp_addextendedproperty` | `COMMENT ON` | Inline `COMMENT` |
+
+**Notes:**
+- **MSSQL**: Comments via `sp_addextendedproperty` have unreliable parsing
+
+---
+
+### Other DDL Statements
+
+| Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
+|---------|------------|-------|-------|--------|-----------|
+| `DROP TABLE` | ✗ | ✗ | ✗ | ✗ | ✗ |
+| `DROP INDEX` | ✗ | ✗ | ✗ | ✗ | — |
+| `ALTER INDEX` | ✗ | — | ✗ | ✗ | — |
+| `CREATE VIEW` | ✗ | ✗ | ✗ | ✗ | ✗ |

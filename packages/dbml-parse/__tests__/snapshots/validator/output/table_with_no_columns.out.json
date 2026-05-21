@@ -1,0 +1,99 @@
+{
+  "program": {
+    "context": {
+      "id": "node@<program>@@[L0:C0, L2:C0]",
+      "snippet": "Table empt...table {\n}\n"
+    },
+    "children": {
+      "body": [
+        {
+          "context": {
+            "id": "node@<element-declaration>@empty_table@[L0:C0, L1:C1]",
+            "snippet": "Table empt..._table {\n}"
+          },
+          "children": {
+            "body": {
+              "context": {
+                "id": "node@<block-expression>@@[L0:C18, L1:C1]",
+                "snippet": "{\n}"
+              },
+              "children": {
+                "blockCloseBrace": {
+                  "context": {
+                    "id": "token@<rbrace>@}@[L1:C0, L1:C1]",
+                    "snippet": "}"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "}"
+                },
+                "blockOpenBrace": {
+                  "context": {
+                    "id": "token@<lbrace>@{@[L0:C18, L0:C19]",
+                    "snippet": "{"
+                  },
+                  "leadingTrivia": "",
+                  "trailingTrivia": "\n",
+                  "value": "{"
+                }
+              },
+              "fullEnd": 22,
+              "fullStart": 18
+            },
+            "name": {
+              "context": {
+                "id": "node@<primary-expression>@empty_table@[L0:C6, L0:C17]",
+                "snippet": "empty_table"
+              },
+              "children": {
+                "expression": {
+                  "context": {
+                    "id": "node@<variable>@empty_table@[L0:C6, L0:C17]",
+                    "snippet": "empty_table"
+                  },
+                  "children": {
+                    "variable": {
+                      "context": {
+                        "id": "token@<identifier>@empty_table@[L0:C6, L0:C17]",
+                        "snippet": "empty_table"
+                      },
+                      "leadingTrivia": "",
+                      "trailingTrivia": " ",
+                      "value": "empty_table"
+                    }
+                  },
+                  "fullEnd": 18,
+                  "fullStart": 6
+                }
+              },
+              "fullEnd": 18,
+              "fullStart": 6
+            },
+            "type": {
+              "context": {
+                "id": "token@<identifier>@Table@[L0:C0, L0:C5]",
+                "snippet": "Table"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "Table"
+            }
+          },
+          "fullEnd": 22,
+          "fullStart": 0
+        }
+      ],
+      "eof": {
+        "context": {
+          "id": "token@<eof>@@[L2:C0, L2:C0]",
+          "snippet": ""
+        },
+        "leadingTrivia": "",
+        "trailingTrivia": "",
+        "value": ""
+      }
+    },
+    "fullEnd": 22,
+    "fullStart": 0
+  }
+}

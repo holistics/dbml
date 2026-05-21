@@ -1,0 +1,103 @@
+{
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "TablePartial 'p2' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@p2@[L5:C3, L5:C5]",
+          "snippet": "p2"
+        }
+      }
+    }
+  ],
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@p1@[L4:C3, L4:C5]",
+        "snippet": "p1"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@p1@[L4:C3, L4:C5]",
+            "snippet": "p1"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@p1@[L4:C3, L4:C5]",
+                "snippet": "p1"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "p1"
+            }
+          },
+          "fullEnd": 46,
+          "fullStart": 43
+        }
+      },
+      "fullEnd": 46,
+      "fullStart": 43,
+      "referee": {
+        "context": {
+          "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
+          "snippet": "TablePartial p1 {}"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@TablePartial@p1@[L0:C0, L0:C18]",
+          "snippet": "TablePartial p1 {}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@p1@[L0:C0, L0:C18]",
+          "snippet": "TablePartial p1 {}"
+        },
+        "references": [
+          {
+            "id": "node@<primary-expression>@p1@[L4:C3, L4:C5]",
+            "snippet": "p1"
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@t1@[L2:C0, L6:C1]",
+          "snippet": "Table t1 {...p1\n  ~p2\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@t1@[L2:C0, L6:C1]",
+          "snippet": "Table t1 {...p1\n  ~p2\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L3:C2, L3:C8]",
+              "snippet": "id int"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@PartialInjection@@[L4:C2, L4:C5]",
+              "snippet": "~p1"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@PartialInjection@@[L5:C2, L5:C5]",
+              "snippet": "~p2"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

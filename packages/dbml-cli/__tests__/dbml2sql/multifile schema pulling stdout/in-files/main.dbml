@@ -1,0 +1,3 @@
+use { schema auth } from './auth.dbml'
+
+Ref: auth.users.id > auth.roles.id

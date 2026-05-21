@@ -1,0 +1,147 @@
+{
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Column 'un_col1' does not exist in TablePartial 'T1'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@un_col1@[L1:C20, L1:C27]",
+          "snippet": "un_col1"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Column 'un_col2' does not exist in Table 'public.T1'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@un_col2@[L2:C23, L2:C30]",
+          "snippet": "un_col2"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'un_T' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@un_T@[L3:C20, L3:C24]",
+          "snippet": "un_T"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Column 'un_col' does not exist in Table 'public.T1'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@un_col@[L7:C19, L7:C25]",
+          "snippet": "un_col"
+        }
+      }
+    }
+  ],
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@T1@[L2:C20, L2:C22]",
+        "snippet": "T1"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@T1@[L2:C20, L2:C22]",
+            "snippet": "T1"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@T1@[L2:C20, L2:C22]",
+                "snippet": "T1"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "T1"
+            }
+          },
+          "fullEnd": 69,
+          "fullStart": 67
+        }
+      },
+      "fullEnd": 69,
+      "fullStart": 67,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@T1@[L6:C0, L8:C1]",
+          "snippet": "Table T1 {... un_col]\n}"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@TablePartial@T1@[L0:C0, L4:C1]",
+          "snippet": "TableParti...un_col3]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@T1@[L0:C0, L4:C1]",
+          "snippet": "TableParti...un_col3]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@col1@[L1:C2, L1:C28]",
+              "snippet": "col1 type ...> un_col1]"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@col2@[L2:C2, L2:C31]",
+              "snippet": "col2 type ...1.un_col2]"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@col3@[L3:C2, L3:C33]",
+              "snippet": "col3 type ...T.un_col3]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@T1@[L6:C0, L8:C1]",
+          "snippet": "Table T1 {... un_col]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@T1@[L6:C0, L8:C1]",
+          "snippet": "Table T1 {... un_col]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@col@[L7:C2, L7:C26]",
+              "snippet": "col type [... > un_col]"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@T1@[L2:C20, L2:C22]",
+            "snippet": "T1"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'Products' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@Products@[L6:C4, L6:C12]",
+          "snippet": "Products"
+        }
+      }
+    }
+  ],
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@Users@[L5:C4, L5:C9]",
+        "snippet": "Users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@Users@[L5:C4, L5:C9]",
+            "snippet": "Users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@Users@[L5:C4, L5:C9]",
+                "snippet": "Users"
+              },
+              "leadingTrivia": "    ",
+              "trailingTrivia": "\n",
+              "value": "Users"
+            }
+          },
+          "fullEnd": 53,
+          "fullStart": 42
+        }
+      },
+      "fullEnd": 53,
+      "fullStart": 42,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+          "snippet": "Table Users {\r\n\r\n}"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+          "snippet": "Table Users {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
+          "snippet": "Table Users {\r\n\r\n}"
+        },
+        "references": [
+          {
+            "id": "node@<primary-expression>@Users@[L5:C4, L5:C9]",
+            "snippet": "Users"
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@TableGroup@Group@[L4:C0, L7:C1]",
+          "snippet": "Tablegroup...roducts\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Group@[L4:C0, L7:C1]",
+          "snippet": "Tablegroup...roducts\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@TableGroup field@Products@[L6:C4, L6:C12]",
+              "snippet": "Products"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@TableGroup field@Users@[L5:C4, L5:C9]",
+              "snippet": "Users"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

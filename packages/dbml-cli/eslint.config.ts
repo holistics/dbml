@@ -4,7 +4,6 @@ import { defineConfig } from 'eslint/config';
 import stylistic from '@stylistic/eslint-plugin';
 import tseslint from 'typescript-eslint';
 import tsparser from '@typescript-eslint/parser';
-import jest from 'eslint-plugin-jest';
 
 export default defineConfig(
   eslint.configs.recommended,
@@ -21,9 +20,8 @@ export default defineConfig(
         'node_modules/*',
         'lib/*',
         'bin/*',
-        'jestHelpers.js',
         'eslint.config.ts',
-        'jest.config.ts',
+        'vite.config.ts',
       ],
     },
     {
@@ -38,12 +36,20 @@ export default defineConfig(
           sourceType: 'module',
           ecmaVersion: 2018,
           project: './tsconfig.json',
+          tsconfigRootDir: import.meta.dirname,
         },
       },
       plugins: {
         '@stylistic': stylistic,
       },
       rules: {
+        '@stylistic/object-curly-newline': ['error', {
+          ObjectExpression: { multiline: true, minProperties: 1 },
+          ObjectPattern: { multiline: true, minProperties: 1 },
+          ImportDeclaration: { multiline: true, minProperties: 1 },
+          ExportDeclaration: { multiline: true, minProperties: 1 },
+        }],
+        '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: false }],
         '@typescript-eslint/no-explicit-any': 'off',
         'no-use-before-define': 'off',
         'no-continue': 'off',
@@ -60,25 +66,25 @@ export default defineConfig(
         '@typescript-eslint/consistent-return': [
           'error',
         ],
-        '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+        '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
         '@stylistic/max-statements-per-line': 'off',
         '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
       },
-      settings: {
-        'import/resolver': {
-          typescript: {
-            alwaysTryTypes: true,
-            project: 'packages/*/{ts,js}config.json',
-          },
-        },
-      },
     },
     {
-      files: ['**/*.test.js', '**/*.spec.js'],
-      ...jest.configs['flat/recommended'],
+      files: ['**/*.test.js', '**/*.spec.js', '**/*.test.ts', '**/*.spec.ts'],
       languageOptions: {
         globals: {
-          ...jest.environments.globals.globals,
+          // Vitest globals
+          describe: 'readonly',
+          it: 'readonly',
+          test: 'readonly',
+          expect: 'readonly',
+          beforeAll: 'readonly',
+          afterAll: 'readonly',
+          beforeEach: 'readonly',
+          afterEach: 'readonly',
+          vi: 'readonly',
         },
       },
       rules: {

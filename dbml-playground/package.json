@@ -1,6 +1,6 @@
 {
   "name": "@dbml/playground",
-  "version": "5.2.0",
+  "version": "8.2.0",
   "description": "Interactive playground for debugging and visualizing the DBML parser pipeline",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -25,16 +25,19 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@dbml/parse": "^5.2.0",
-    "lodash": "^4.17.21",
+    "@dbml/core": "^8.2.0",
+    "@dbml/parse": "^8.2.0",
+    "@phosphor-icons/vue": "^2.2.0",
+    "floating-vue": "^5.2.2",
+    "lodash-es": "^4.17.21",
     "monaco-editor": "^0.52.2",
-    "monaco-vim": "^0.4.2",
+    "monaco-vim": "^0.4.4",
+    "pinia": "^2.3.1",
     "vue": "^3.4.0"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.5.0",
     "@tailwindcss/vite": "^4.1.11",
-    "@types/lodash": "^4.14.200",
     "@types/node": "^24.0.14",
     "@typescript-eslint/eslint-plugin": "^8.30.1",
     "@typescript-eslint/parser": "^8.30.1",

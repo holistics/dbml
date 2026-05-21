@@ -1,0 +1,145 @@
+{
+  "errors": [
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Duplicate Note 'note2' in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@note2@[L9:C5, L9:C10]",
+          "snippet": "note2"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Duplicate Note 'note3' in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@note3@[L17:C5, L17:C12]",
+          "snippet": "\"note3\""
+        }
+      }
+    },
+    {
+      "code": "INVALID_NAME",
+      "diagnostic": "Invalid name for sticky note ",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L21:C0, L26:C1]",
+          "snippet": "Note schem...dy\n  '''\n}"
+        }
+      }
+    },
+    {
+      "code": "UNEXPECTED_SETTINGS",
+      "diagnostic": "A Note shouldn't have a setting list",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<list-expression>@@[L34:C22, L34:C44]",
+          "snippet": "[headercol...: #3457DB]"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L3:C1]",
+          "snippet": "Table user... unique]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@users@[L0:C0, L3:C1]",
+          "snippet": "Table user... unique]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C2, L1:C26]",
+              "snippet": "id integer...imary key]"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@username@[L2:C2, L2:C42]",
+              "snippet": "username v...l, unique]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Note@note2@[L5:C0, L7:C1]",
+          "snippet": "Note note2...ne note'\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@note2@[L5:C0, L7:C1]",
+          "snippet": "Note note2...ne note'\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Note@note2@[L9:C0, L11:C1]",
+          "snippet": "Note note2...ne note'\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@note2@[L9:C0, L11:C1]",
+          "snippet": "Note note2...ne note'\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Note@note3@[L13:C0, L15:C1]",
+          "snippet": "Note note3...ne note'\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@note3@[L13:C0, L15:C1]",
+          "snippet": "Note note3...ne note'\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Note@note3@[L17:C0, L19:C1]",
+          "snippet": "Note \"note...ne note'\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@note3@[L17:C0, L19:C1]",
+          "snippet": "Note \"note...ne note'\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Note@schema.note4@[L27:C0, L32:C1]",
+          "snippet": "Note \"sche...dy\n  '''\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@schema.note4@[L27:C0, L32:C1]",
+          "snippet": "Note \"sche...dy\n  '''\n}"
+        }
+      }
+    ],
+    "schemas": [
+      {
+        "context": {
+          "id": "symbol@Schema@schema@[L?:C?, L?:C?]"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Note@schema.note5@[L34:C0, L39:C1]",
+              "snippet": "Note \"sche...dy\n  '''\n}"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

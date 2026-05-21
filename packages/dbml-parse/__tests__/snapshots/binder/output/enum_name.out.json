@@ -1,0 +1,451 @@
+{
+  "errors": [
+    {
+      "code": "INVALID_COLUMN_TYPE",
+      "diagnostic": "Invalid column type",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L6:C12, L6:C18]",
+          "snippet": "v2. []"
+        }
+      }
+    },
+    {
+      "code": "INVALID_COLUMN_TYPE",
+      "diagnostic": "Invalid column type",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L7:C12, L7:C15]",
+          "snippet": "v2."
+        }
+      }
+    },
+    {
+      "code": "INVALID_OPERAND",
+      "diagnostic": "Invalid start of operand \"}\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rbrace>@}@[L8:C0, L8:C1]",
+          "snippet": "}",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    }
+  ],
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@v2@[L2:C12, L2:C14]",
+        "snippet": "v2"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@v2@[L2:C12, L2:C14]",
+            "snippet": "v2"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@v2@[L2:C12, L2:C14]",
+                "snippet": "v2"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "v2"
+            }
+          },
+          "fullEnd": 45,
+          "fullStart": 43
+        }
+      },
+      "fullEnd": 45,
+      "fullStart": 43,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@status@[L2:C15, L2:C21]",
+        "snippet": "status"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@status@[L2:C15, L2:C21]",
+            "snippet": "status"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@status@[L2:C15, L2:C21]",
+                "snippet": "status"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "status"
+            }
+          },
+          "fullEnd": 54,
+          "fullStart": 46
+        }
+      },
+      "fullEnd": 54,
+      "fullStart": 46,
+      "referee": {
+        "context": {
+          "id": "symbol@Enum@v2.status@[L10:C0, L15:C1]",
+          "snippet": "Enum v2.st... tenant\r\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@public@[L3:C12, L3:C18]",
+        "snippet": "public"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@public@[L3:C12, L3:C18]",
+            "snippet": "public"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@public@[L3:C12, L3:C18]",
+                "snippet": "public"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "public"
+            }
+          },
+          "fullEnd": 72,
+          "fullStart": 66
+        }
+      },
+      "fullEnd": 72,
+      "fullStart": 66,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@status@[L3:C19, L3:C25]",
+        "snippet": "status"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@status@[L3:C19, L3:C25]",
+            "snippet": "status"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@status@[L3:C19, L3:C25]",
+                "snippet": "status"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "status"
+            }
+          },
+          "fullEnd": 81,
+          "fullStart": 73
+        }
+      },
+      "fullEnd": 81,
+      "fullStart": 73,
+      "referee": {
+        "context": {
+          "id": "symbol@Enum@status@[L17:C0, L22:C1]",
+          "snippet": "Enum statu... tenant\r\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@public@[L4:C12, L4:C18]",
+        "snippet": "public"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@public@[L4:C12, L4:C18]",
+            "snippet": "public"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@public@[L4:C12, L4:C18]",
+                "snippet": "public"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "public"
+            }
+          },
+          "fullEnd": 99,
+          "fullStart": 93
+        }
+      },
+      "fullEnd": 99,
+      "fullStart": 93,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@public@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@v2@[L5:C12, L5:C14]",
+        "snippet": "v2"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@v2@[L5:C12, L5:C14]",
+            "snippet": "v2"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@v2@[L5:C12, L5:C14]",
+                "snippet": "v2"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "v2"
+            }
+          },
+          "fullEnd": 123,
+          "fullStart": 121
+        }
+      },
+      "fullEnd": 123,
+      "fullStart": 121,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@v2@[L6:C12, L6:C14]",
+        "snippet": "v2"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@v2@[L6:C12, L6:C14]",
+            "snippet": "v2"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@v2@[L6:C12, L6:C14]",
+                "snippet": "v2"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "v2"
+            }
+          },
+          "fullEnd": 147,
+          "fullStart": 145
+        }
+      },
+      "fullEnd": 147,
+      "fullStart": 145,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@v2@[L7:C12, L7:C14]",
+        "snippet": "v2"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@v2@[L7:C12, L7:C14]",
+            "snippet": "v2"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@v2@[L7:C12, L7:C14]",
+                "snippet": "v2"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "v2"
+            }
+          },
+          "fullEnd": 167,
+          "fullStart": 165
+        }
+      },
+      "fullEnd": 167,
+      "fullStart": 165,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L8:C1]",
+          "snippet": "Table User...us6 v2.\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L8:C1]",
+          "snippet": "Table User...us6 v2.\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C4, L1:C14]",
+              "snippet": "id integer"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@status1@[L2:C4, L2:C21]",
+              "snippet": "status1 v2.status"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@status2@[L3:C4, L3:C25]",
+              "snippet": "status2 pu...lic.status"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@status3@[L4:C4, L4:C26]",
+              "snippet": "status3 pu...ic.statuss"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@status4@[L5:C4, L5:C22]",
+              "snippet": "status4 v2.statuss"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@status5@[L6:C4, L6:C18]",
+              "snippet": "status5 v2. []"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@status6@[L7:C4, L7:C15]",
+              "snippet": "status6 v2."
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Enum@status@[L17:C0, L22:C1]",
+          "snippet": "Enum statu... tenant\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@status@[L17:C0, L22:C1]",
+          "snippet": "Enum statu... tenant\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Enum field@active@[L20:C4, L20:C10]",
+              "snippet": "active"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Enum field@churn@[L18:C4, L18:C9]",
+              "snippet": "churn"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Enum field@new@[L19:C4, L19:C7]",
+              "snippet": "new"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Enum field@tenant@[L21:C4, L21:C10]",
+              "snippet": "tenant"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@status@[L3:C19, L3:C25]",
+            "snippet": "status"
+          }
+        ]
+      }
+    ],
+    "schemas": [
+      {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Enum@v2.status@[L10:C0, L15:C1]",
+              "snippet": "Enum v2.st... tenant\r\n}"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@v2@[L2:C12, L2:C14]",
+            "snippet": "v2"
+          },
+          {
+            "id": "node@<primary-expression>@v2@[L5:C12, L5:C14]",
+            "snippet": "v2"
+          },
+          {
+            "id": "node@<primary-expression>@v2@[L6:C12, L6:C14]",
+            "snippet": "v2"
+          },
+          {
+            "id": "node@<primary-expression>@v2@[L7:C12, L7:C14]",
+            "snippet": "v2"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { scanDirNames } from '../jestHelpers.ts';
-import { connector } from '../src/index.ts';
+import { scanDirNames } from './testHelpers';
+import { connector } from '../src/index';
 
 const sortKeys = (obj: any): any => {
   if (Array.isArray(obj)) {
@@ -43,5 +43,5 @@ describe('@dbml/connector', () => {
 
   test.each(scanDirNames(__dirname, 'connectors'))('connectors/%s', async (dirName) => {
     await runTest(path.join(__dirname, 'connectors', dirName));
-  });
+  }, 10000);
 });

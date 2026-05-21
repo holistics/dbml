@@ -1,3 +1,337 @@
+## v8.2.0 (2026-05-21)
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#901](https://github.com/holistics/dbml/pull/901) Support `inactive` setting on ref ([@huydo862003](https://github.com/huydo862003))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * Remove conflicting type re-exports that were introduced in v8.1.0, which cause `@dbml/core`'s `Parser.parse`'s return type to not be compatible with `@dbml/core`'s `Database`  ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
+## v8.1.0 (2026-05-20)
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#904](https://github.com/holistics/dbml/pull/904) Add stateful multifile API: `setDbmlSource`, `getDbmlSource`, `deleteDbmlSource`, `clearDbmlSource`, `parseDbmlProject` ([@huydo862003](https://github.com/huydo862003))
+  * [#904](https://github.com/holistics/dbml/pull/904) Expose `diagramViews` on `Database` object ([@huydo862003](https://github.com/huydo862003))
+  * [#904](https://github.com/holistics/dbml/pull/904) Accept bare strings as file paths in multifile APIs ([@huydo862003](https://github.com/huydo862003))
+* `dbml-parse`
+  * [#904](https://github.com/holistics/dbml/pull/904) Add syntax highlighting for `~` operator in Monaco editor ([@huydo862003](https://github.com/huydo862003))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#904](https://github.com/holistics/dbml/pull/904) Fix `Parser.parseDBMLToJSONv2` not reporting errors ([@huydo862003](https://github.com/huydo862003))
+
+#### :memo: Documentation
+* `dbml-core`
+  * [#904](https://github.com/holistics/dbml/pull/904) Document stateful multifile API (`setDbmlSource`, `getDbmlSource`, `deleteDbmlSource`, `clearDbmlSource`, `parseDbmlProject`) ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
+## v8.0.0 (2026-05-15)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#870](https://github.com/holistics/dbml/pull/870) Multifile support ([@huydo862003](https://github.com/huydo862003))
+
+#### :boom: Breaking Change
+* `dbml-core`, `dbml-parse`, `dbml-playground`
+  * [#883](https://github.com/holistics/dbml/pull/883) Playground rewrite ([@huydo862003](https://github.com/huydo862003))
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#870](https://github.com/holistics/dbml/pull/870) Query-based compiler ([@huydo862003](https://github.com/huydo862003))
+* `dbml-core`
+  * [#870](https://github.com/holistics/dbml/pull/870) `Parser` constructor no longer accepts a compiler. ([@huydo862003](https://github.com/huydo862003))
+  * [#870](https://github.com/holistics/dbml/pull/870) `Parser.parseDBMLToJSONv2` no longer accepts a compiler parameter. ([@huydo862003](https://github.com/huydo862003))
+* `dbml-parse`
+  * [#870](https://github.com/holistics/dbml/pull/870) Language services now require `TextModel` URIs to be set. ([@huydo862003](https://github.com/huydo862003))
+
+#### :memo: Documentation
+* [#899](https://github.com/holistics/dbml/pull/899) Add information about Elixir DBML support ([@saleyn](https://github.com/saleyn))
+
+#### :robot: Dependencies Update
+* `dbml-homepage`, `dbml-core`, `dbml-cli`, `dbml-parse`
+  * [#865](https://github.com/holistics/dbml/pull/865) chore(deps): bump lodash from 4.17.21 to 4.18.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#869](https://github.com/holistics/dbml/pull/869) chore(deps): bump follow-redirects from 1.15.11 to 1.16.0 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#895](https://github.com/holistics/dbml/pull/895) chore(deps): bump picomatch from 2.3.1 to 2.3.2 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#893](https://github.com/holistics/dbml/pull/893) chore(deps): bump immutable from 4.3.5 to 4.3.8 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#894](https://github.com/holistics/dbml/pull/894) chore(deps): bump lodash-es from 4.17.21 to 4.18.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#892](https://github.com/holistics/dbml/pull/892) chore(deps): bump flatted from 3.3.3 to 3.4.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#789](https://github.com/holistics/dbml/pull/789) chore(deps): bump jws from 3.2.2 to 3.2.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#886](https://github.com/holistics/dbml/pull/886) chore(deps): bump postcss from 8.5.6 to 8.5.13 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#891](https://github.com/holistics/dbml/pull/891) chore(deps): bump rollup from 4.52.3 to 4.60.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#890](https://github.com/holistics/dbml/pull/890) chore(deps): bump handlebars from 4.7.8 to 4.7.9 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#832](https://github.com/holistics/dbml/pull/832) chore(deps): bump bn.js from 4.12.0 to 4.12.3 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#864](https://github.com/holistics/dbml/pull/864) chore(deps): bump axios from 1.9.0 to 1.15.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#863](https://github.com/holistics/dbml/pull/863) chore(deps-dev): bump vite from 7.1.7 to 7.3.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 4
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+- Serge Aleynikov ([@saleyn](https://github.com/saleyn))
+- [@blacksmith-sh[bot]](https://github.com/apps/blacksmith-sh)
+
+## v7.1.2 (2026-04-28)
+
+#### :robot: Dependencies Update
+* `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#885](https://github.com/holistics/dbml/pull/885) misc(dbml-parse): upgrade lodash-es to v4.18.1 ([@huyleminh01](https://github.com/huyleminh01))
+
+#### Committers: 1
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
+## v7.1.1 (2026-04-17)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#877](https://github.com/holistics/dbml/pull/877) Fix no double quote when syncing diagram view ([@huyphung1602](https://github.com/huyphung1602))
+* `dbml-core`, `dbml-parse`
+  * [#876](https://github.com/holistics/dbml/pull/876) Missing model_structure exports in @dbml/core ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v7.1.0 (2026-04-16)
+
+#### :memo: Documentation
+* [#858](https://github.com/holistics/dbml/pull/858) Docs: DiagramView block ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#873](https://github.com/holistics/dbml/pull/873) DBX-6689 Fix wrong union in DiagramView ([@huyphung1602](https://github.com/huyphung1602))
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#856](https://github.com/holistics/dbml/pull/856) Test/make snapshot more robust ([@huydo862003](https://github.com/huydo862003))
+* `dbml-connector`
+  * [#867](https://github.com/holistics/dbml/pull/867) DBX-6748 Bump fast-xml-parser to 5.5.7 ([@huydo862003](https://github.com/huydo862003))
+* `dbml-parse`
+  * [#787](https://github.com/holistics/dbml/pull/787) DBX-6749 chore(deps): bump node-forge from 1.3.1 to 1.3.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* Other
+  * [#813](https://github.com/holistics/dbml/pull/813) DBX-6751 chore(deps): bump @isaacs/brace-expansion from 5.0.0 to 5.0.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 3
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v7.0.0 (2026-04-10)
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#849](https://github.com/holistics/dbml/pull/849) DBX-6689 Support Diagram View as code syntax ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 2
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v6.6.0 (2026-04-02)
+
+#### :memo: Documentation
+* [#848](https://github.com/holistics/dbml/pull/848) Add Jetbrains plugin to README.md ([@LiamClarkeNZ](https://github.com/LiamClarkeNZ))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#850](https://github.com/holistics/dbml/pull/850) feat: add token position to TableRecord for source location tracking ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 2
+- Liam Clarke-Hutchinson ([@LiamClarkeNZ](https://github.com/LiamClarkeNZ))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
+## v6.5.0 (2026-03-24)
+
+#### :memo: Documentation
+* [#837](https://github.com/holistics/dbml/pull/837) Refactor documentation structure and improve wording ([@TeaNguyen](https://github.com/TeaNguyen))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#839](https://github.com/holistics/dbml/pull/839) fix(postgres): support UNIQUE NULLS NOT DISTINCT constraint syntax ([@frenzzy](https://github.com/frenzzy))
+* `dbml-connector`
+  * [#835](https://github.com/holistics/dbml/pull/835) Short-circuit null check constraints (db2dbml mssql) ([@ajar](https://github.com/ajar))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#844](https://github.com/holistics/dbml/pull/844) feat: link sample id with table id ([@nguyenalter](https://github.com/nguyenalter))
+
+#### Committers: 4
+- Aaron Artille ([@ajar](https://github.com/ajar))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- Thi Nguyen ([@TeaNguyen](https://github.com/TeaNguyen))
+- Vladimir Kutepov ([@frenzzy](https://github.com/frenzzy))
+
+## v6.4.0 (2026-02-26)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#830](https://github.com/holistics/dbml/pull/830) Remove `"type": "module"` from `@dbml/core`'s `package.json` so that CJS consumers can consume `.d.ts` files ([@hdnax](https://github.com/hdnax))
+
+#### :rocket: New Feature
+* `dbml-core`
+  * [#831](https://github.com/holistics/dbml/pull/831) Add options object to exporter and importer to control record generation ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
+## v6.3.0 (2026-02-13)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-core`, `dbml-parse`
+  * [#800](https://github.com/holistics/dbml/pull/800) Support sample table data in DBML - Add `Records` blocks to define sample data within tables or as standalone elements with full constraint validation (PK, FK, unique, not null) ([@hdnax](https://github.com/hdnax))
+  * [#800](https://github.com/holistics/dbml/pull/800) Support parsing INSERT statements from SQL and converting to DBML `Records` (MySQL, PostgreSQL, Oracle, MSSQL, Snowflake) ([@hdnax](https://github.com/hdnax))
+  * [#800](https://github.com/holistics/dbml/pull/800) Support exporting `Records` to INSERT statements in all SQL dialects with automatic constraint handling ([@hdnax](https://github.com/hdnax))
+  * [#800](https://github.com/holistics/dbml/pull/800) Add support for scientific notation in number literals (e.g., `1.23e5`, `-4.56e-3`) ([@hdnax](https://github.com/hdnax))
+  * [#800](https://github.com/holistics/dbml/pull/800) Add `DBMLDiagnosticsProvider` class with `provideDiagnostics()`, `provideErrors()`, `provideWarnings()` methods ([@hdnax](https://github.com/hdnax))
+
+#### :boom: Breaking Change
+* `dbml-core`
+  * [#800](https://github.com/holistics/dbml/pull/800) Hardcode `Report<T, E>` to `Report<T>` - E is now always `CompileError`, added support for `CompileWarning`. Use `getErrors()` and `getWarnings()` methods to access diagnostics ([@hdnax](https://github.com/hdnax))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * Fix `null` values to be consistently lowercased in SQL export instead of varying cases (NULL, null, Null) ([@hdnax](https://github.com/hdnax))
+  * Fix missing type definitions in `@dbml/core` (added missing `RecordValue`, `NormalizedRecord` and other exported types) ([@hdnax](https://github.com/hdnax))
+  * Fix incorrect Token import from `antlr4` package ([@hdnax](https://github.com/hdnax))
+
+#### :house_with_garden: Internal
+* `dbml-core`
+  * Build output now uses `.cjs` and `.esm` file extensions for non-ambiguity in module loaders ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
+## v6.2.1 (2026-02-11)
+
+#### :house_with_garden: Internal
+* `dbml-core`
+  * [#821](https://github.com/holistics/dbml/pull/821) Expose raw and non-raw model structure types ([@hdnax](https://github.com/hdnax))
+  * [#821](https://github.com/holistics/dbml/pull/821) Make `RawField`'s `dbdefault` a precise type ([@hdnax](https://github.com/hdnax))
+  * [#821](https://github.com/holistics/dbml/pull/821) Add missing `records` field to `NormalizedModel` ([@hdnax](https://github.com/hdnax))
+  * [#821](https://github.com/holistics/dbml/pull/821) Add `NormalizedRecord` and `NormalizedRecordIdMap` and remove `NormalizedRecords` for consistency with other types ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
+## v6.2.0 (2026-02-10)
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#798](https://github.com/holistics/dbml/pull/798) Migrate to vite & vitest to speed up build & test process and reduce bundle size ([@hdnax](https://github.com/hdnax))
+    * Bundle size:
+      * Before: 33MB (CJS)
+      * After: 15MB (CJS), 25MB (ESM)
+    * Build performance:
+      * Before: ~1.5 min
+      * After: ~10 sec
+    * Test performance:
+      * Before: ~10 min
+      * After: ~3 min
+  * [#798](https://github.com/holistics/dbml/pull/798) No longer upload unnecessary HTML coverage reports to github to reduce CI cost ([@hdnax](https://github.com/hdnax))
+* `dbml-core`
+  * [#798](https://github.com/holistics/dbml/pull/798) Disable coverage tests & run normal tests for `@dbml/core` in CI as the package is too large ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
+## v6.1.0 (2026-02-06)
+
+#### :house_with_garden: Internal
+* `dbml-core`
+  * [#816](https://github.com/holistics/dbml/pull/816) Centralize and expose normalized model structure types from `@dbml/core` ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
+## v6.0.0 (2026-02-05)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#811](https://github.com/holistics/dbml/pull/811) Use `unwrap_or` instead of `unwrap` to avoid validation error when validating the scope of DBML elements ([@hdnax](https://github.com/hdnax))
+
+#### :boom: Breaking Change
+* `dbml-core`
+  * [#812](https://github.com/holistics/dbml/pull/812) Fix: update postgres lexer and base class to support json operators ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 2
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v5.5.1 (2026-01-30)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#808](https://github.com/holistics/dbml/pull/808) Properly validate column reference in incomplete ref elements ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
+## v5.5.0 (2026-01-30)
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * [#806](https://github.com/holistics/dbml/pull/806) Add support for `ALTER TABLE WITH CHECK/NOCHECK` in MSSQL parser/AST generator ([@hdnax](https://github.com/hdnax))
+
+#### :boom: Breaking Change
+* `dbml-parse`
+  * [#530](https://github.com/holistics/dbml/pull/530) Refactor binder and partial injection handling ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
+## v5.4.1 (2026-01-13)
+
+#### :bug: Bug Fix
+* `dbml-connector`
+  * [#782](https://github.com/holistics/dbml/pull/782) Avoid connection leak in @dbml/connector
+  * [#782](https://github.com/holistics/dbml/pull/782) Minor parser bugs related to token's offset and handlings of empty element names ([@hdnax](https://github.com/hdnax))
+
+#### :house_with_garden: Internal
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#782](https://github.com/holistics/dbml/pull/782) Setup coverage tests ([@hdnax](https://github.com/hdnax))
+* `dbml-parse`
+  * [#782](https://github.com/holistics/dbml/pull/782) Setup property-based, example-based & fuzz testing ([@hdnax](https://github.com/hdnax))
+
+#### Committers: 1
+- Huy DNA ([@hdnax](https://github.com/hdnax))
+
+## v5.4.0 (2026-01-09)
+
+#### :memo: Documentation
+* `dbml-core`
+  * [#791](https://github.com/holistics/dbml/pull/791) Doc/Document database features support ([@H-DNA](https://github.com/H-DNA))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#794](https://github.com/holistics/dbml/pull/794) [DBX-6497] Add rename table function ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 3
+- Huy DNA ([@H-DNA](https://github.com/H-DNA))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v5.3.1 (2025-12-23)
+
+#### :robot: Dependencies Update
+* `dbml-connector`
+  * [#792](https://github.com/holistics/dbml/pull/792) deps(connector): bump snowflake-sdk to 2.3.3 ([@nguyenalter](https://github.com/nguyenalter))
+* Other
+  * [#790](https://github.com/holistics/dbml/pull/790) chore(deps)/bump node-glob to v10.5.0 ([@H-DNA](https://github.com/H-DNA))
+
+#### Committers: 2
+- Huy DNA ([@H-DNA](https://github.com/H-DNA))
+- Nguyen Hoang ([@nguyenalter](https://github.com/nguyenalter))
+
+## v5.3.0 (2025-12-04)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`
+  * [#785](https://github.com/holistics/dbml/pull/785) Oracle connector ([@H-DNA](https://github.com/H-DNA))
+
+#### Committers: 1
+- Huy DNA ([@H-DNA](https://github.com/H-DNA))
+
 ## v5.2.0 (2025-11-19)
 
 #### :bug: Bug Fix

@@ -1,0 +1,40 @@
+{
+  "errors": [
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Table 'AB' already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@AB@[L4:C6, L4:C8]",
+          "snippet": "AB"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@AB@[L0:C0, L2:C1]",
+          "snippet": "Table AB {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@AB@[L0:C0, L2:C1]",
+          "snippet": "Table AB {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Table@AB@[L4:C0, L6:C1]",
+          "snippet": "Table AB {\r\n    \r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@AB@[L4:C0, L6:C1]",
+          "snippet": "Table AB {\r\n    \r\n}"
+        }
+      }
+    ]
+  }
+}

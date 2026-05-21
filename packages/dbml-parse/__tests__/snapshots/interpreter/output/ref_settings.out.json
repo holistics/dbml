@@ -1,0 +1,259 @@
+{
+  "database": {
+    "refs": [
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "*",
+            "tableName": "A",
+            "token": {
+              "end": {
+                "column": 10,
+                "line": 11,
+                "offset": 97
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 6,
+                "line": 11,
+                "offset": 93
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "id"
+            ],
+            "relation": "1",
+            "tableName": "B",
+            "token": {
+              "end": {
+                "column": 17,
+                "line": 11,
+                "offset": 104
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 13,
+                "line": 11,
+                "offset": 100
+              }
+            }
+          }
+        ],
+        "onDelete": "no action",
+        "onUpdate": "cascade",
+        "token": {
+          "end": {
+            "column": 54,
+            "line": 11,
+            "offset": 141
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 11,
+            "offset": 88
+          }
+        }
+      },
+      {
+        "endpoints": [
+          {
+            "fieldNames": [
+              "code"
+            ],
+            "relation": "*",
+            "tableName": "A",
+            "token": {
+              "end": {
+                "column": 12,
+                "line": 12,
+                "offset": 153
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 6,
+                "line": 12,
+                "offset": 147
+              }
+            }
+          },
+          {
+            "fieldNames": [
+              "code"
+            ],
+            "relation": "1",
+            "tableName": "B",
+            "token": {
+              "end": {
+                "column": 21,
+                "line": 12,
+                "offset": 162
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 15,
+                "line": 12,
+                "offset": 156
+              }
+            }
+          }
+        ],
+        "onDelete": "set default",
+        "onUpdate": "set null",
+        "token": {
+          "end": {
+            "column": 61,
+            "line": 12,
+            "offset": 202
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 12,
+            "offset": 142
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 15,
+                "line": 2,
+                "offset": 24
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 2,
+                "offset": 14
+              }
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "name": "code",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 16,
+                "line": 3,
+                "offset": 40
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 3,
+                "offset": 29
+              }
+            },
+            "type": {
+              "type_name": "number"
+            },
+            "unique": false
+          }
+        ],
+        "name": "A",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 4,
+            "offset": 42
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 15,
+                "line": 7,
+                "offset": 68
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 7,
+                "offset": 58
+              }
+            },
+            "type": {
+              "type_name": "integer"
+            },
+            "unique": false
+          },
+          {
+            "name": "code",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 16,
+                "line": 8,
+                "offset": 84
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 5,
+                "line": 8,
+                "offset": 73
+              }
+            },
+            "type": {
+              "type_name": "number"
+            },
+            "unique": false
+          }
+        ],
+        "name": "B",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 9,
+            "offset": 86
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 6,
+            "offset": 44
+          }
+        }
+      }
+    ],
+    "token": {
+      "end": {
+        "column": 61,
+        "line": 12,
+        "offset": 202
+      },
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
+  }
+}

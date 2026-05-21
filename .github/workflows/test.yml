@@ -1,17 +1,18 @@
-name: Run unit test
+name: Run unit test & coverage
 on:
   push:
     branches: [master]
     paths-ignore:
-      - 'dbml-homepage/**'
+      - "dbml-homepage/**"
   pull_request:
     branches: [master]
     types: [opened, synchronize]
     paths-ignore:
-      - 'dbml-homepage/**'
+      - "dbml-homepage/**"
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: blacksmith-2vcpu-ubuntu-2204
+    timeout-minutes: 20
     strategy:
       matrix:
         node-version: [22.x]
@@ -42,7 +43,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
       mysql-8.0:
         image: mysql:8.0
         env:
@@ -55,8 +55,24 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
+      oracle:
+        image: gvenzl/oracle-xe:21-slim-faststart
+        env:
+          ORACLE_PASSWORD: root
+          ORACLE_DATABASE: dbml_test
+          APP_USER: dbml
+          APP_USER_PASSWORD: root
+        ports:
+          - 1521:1521
+        options: >-
+          --health-cmd healthcheck.sh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
+    - name: Setup Oracle Instant Client
+      uses: iamazeem/setup-oracle-instant-client-action@v2
     - uses: actions/checkout@v3
     - name: Import DDL to Postgres
       run: |
@@ -69,14 +85,45 @@ jobs:
     - name: Import DDL to MSSQL
       run: |
         sqlcmd -S localhost -U sa -P dbml.123.123 -d master -i packages/dbml-cli/__tests__/db2dbml/mssql/schema.sql
+    - name: Import DDL to Oracle
+      run: |
+        sqlplus -s dbml/root@localhost:1521/dbml_test @packages/dbml-cli/__tests__/db2dbml/oracle/schema.sql
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'yarn'
+        cache: "yarn"
     - name: Install dependencies
       run: yarn install --frozen-lockfile
     - name: Build packages
-      run: yarn build
-    - name: Run unit tests
-      run: yarn test
+      run: NODE_OPTIONS="--max-old-space-size=8192" yarn build
+    - name: Run coverage test
+      run: yarn coverage
+    - name: Generate coverage report
+      id: coverage
+      run: node .github/workflows/scripts/collect-coverage.js
+    - name: Upload coverage test
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report.md
+        path: ./coverage-report.md
+        include-hidden-files: true
+
+  comment-coverage:
+    runs-on: blacksmith-2vcpu-ubuntu-2204
+    timeout-minutes: 5
+    continue-on-error: true
+    needs: build
+    steps:
+    - name: Download test coverage
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage-report.md
+        path: ./coverage-report.md
+    - name: Comment PR with coverage report
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: ./coverage-report.md

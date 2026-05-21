@@ -1,0 +1,163 @@
+{
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@v2@[L2:C11, L2:C13]",
+        "snippet": "v2"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@v2@[L2:C11, L2:C13]",
+            "snippet": "v2"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@v2@[L2:C11, L2:C13]",
+                "snippet": "v2"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "v2"
+            }
+          },
+          "fullEnd": 41,
+          "fullStart": 39
+        }
+      },
+      "fullEnd": 41,
+      "fullStart": 39,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@status@[L2:C14, L2:C20]",
+        "snippet": "status"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@status@[L2:C14, L2:C20]",
+            "snippet": "status"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@status@[L2:C14, L2:C20]",
+                "snippet": "status"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "status"
+            }
+          },
+          "fullEnd": 49,
+          "fullStart": 42
+        }
+      },
+      "fullEnd": 49,
+      "fullStart": 42,
+      "referee": {
+        "context": {
+          "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
+          "snippet": "enum v2.st...loyee']\r\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L4:C28, L4:C30]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L4:C28, L4:C30]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L4:C28, L4:C30]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "id"
+            }
+          },
+          "fullEnd": 105,
+          "fullStart": 103
+        }
+      },
+      "fullEnd": 105,
+      "fullStart": 103,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C1, L1:C11]",
+          "snippet": "id integer"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L5:C1]",
+          "snippet": "Table User...f: -id]\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L5:C1]",
+          "snippet": "Table User...f: -id]\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C1, L1:C11]",
+              "snippet": "id integer"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@referrer@[L4:C4, L4:C31]",
+              "snippet": "referrer i...[ref: -id]"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@status@[L2:C4, L2:C39]",
+              "snippet": "status v2....: \"churn\"]"
+            }
+          }
+        ]
+      }
+    ],
+    "schemas": [
+      {
+        "context": {
+          "id": "symbol@Schema@v2@[L?:C?, L?:C?]"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Enum@v2.status@[L7:C0, L10:C1]",
+              "snippet": "enum v2.st...loyee']\r\n}"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@v2@[L2:C11, L2:C13]",
+            "snippet": "v2"
+          }
+        ]
+      }
+    ]
+  }
+}

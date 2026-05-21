@@ -1,0 +1,8 @@
+{
+  "args": [
+    "oracle",
+    "dbml/root@localhost:1521/dbml_test",
+    "-o",
+    "./out-files/schema.dbml"
+  ]
+}
