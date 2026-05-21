@@ -1,17 +1,12 @@
+import { Uri } from '@/services/types';
 import Compiler from '@/compiler';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  SyntaxNode, SyntaxNodeKind,
-} from '@/core/types/nodes';
+import { Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
 import {
   Definition, DefinitionProvider, Position, TextModel,
-  Uri,
 } from '@/services/types';
-import {
-  getOffsetFromMonacoPosition,
-} from '@/services/utils';
+import { getOffsetFromMonacoPosition } from '@/services/utils';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;
@@ -31,26 +26,34 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     ];
     while (containers.length !== 0) {
       const node = containers.pop();
+      if (!node) continue;
 
-      if (!node?.referee) continue;
+      const referee = this.compiler.nodeReferee(node).getFiltered(UNHANDLED);
+      if (!referee) continue;
 
       let declaration: SyntaxNode | undefined;
       if (
-        node.referee?.declaration
+        referee.declaration
         && [
           SyntaxNodeKind.PRIMARY_EXPRESSION,
           SyntaxNodeKind.VARIABLE,
-        ].includes(node?.kind)
+        ].includes(node.kind)
       ) {
         ({
           declaration,
-        } = node.referee);
+        } = referee);
       }
 
       if (declaration) {
         const {
           startPos, endPos,
         } = declaration;
+        // Use filepath from declaration if available and in multi-file mode (uri is set)
+        let definitionUri = uri;
+        if (uri && declaration.filepath) {
+          definitionUri = Uri.parse(declaration.filepath.toUri());
+        }
+
         return [
           {
             range: {
@@ -59,7 +62,7 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
               endColumn: endPos.column + 1,
               endLineNumber: endPos.line + 1,
             },
-            uri: Uri.parse(filepath.toUri()),
+            uri: definitionUri,
           },
         ];
       }

@@ -1,0 +1,15 @@
+// enum imported under alias — alias becomes the type name
+use { enum order_status as Status } from './enums.dbml'
+
+// schema-qualified table imported under alias — alias strips schema prefix
+use { table auth.users as u } from './auth.dbml'
+
+// wildcard import — brings in all symbols from catalog
+use * from './catalog.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > u.id]
+  product_id int [ref: > products.id]
+  status Status
+}

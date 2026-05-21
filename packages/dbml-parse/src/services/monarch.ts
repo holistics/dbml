@@ -198,6 +198,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
     'tablegroups',
     'notes',
     'schemas',
+    'inactive',
   ],
 
   symbols: /[=><!~?:&|+\-/^%]+/,
@@ -233,7 +234,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
 
       // Reference operators
       [
-        /[<>-]/,
+        /[<>~-]/,
         'operators',
       ],
 
@@ -456,6 +457,4 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
   },
 };
 
-export {
-  dbmlMonarchTokensProvider,
-};
+export { dbmlMonarchTokensProvider };

@@ -1,0 +1,5 @@
+Enum order_status {
+  pending
+  shipped
+  delivered
+}

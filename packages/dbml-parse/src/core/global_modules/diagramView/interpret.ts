@@ -1,36 +1,51 @@
+import { partition, uniqBy } from 'lodash-es';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { ElementKind } from '@/core/types/keywords';
+import type Compiler from '@/compiler';
+import type { Filepath } from '@/core/types/filepath';
 import {
-  partition,
-} from 'lodash-es';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  destructureComplexVariable, extractReferee,
-} from '@/core/utils/expression';
-import {
-  DiagramView, InterpreterDatabase,
-} from '@/core/global_modules/types';
-import {
-  getTokenPosition,
-} from '@/core/global_modules/utils';
-import {
-  isWildcardExpression,
-} from '@/core/utils/validate';
-import {
-  CompileError,
-} from '@/core/types/errors';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, SyntaxNode,
+  BlockExpressionNode,
+  ElementDeclarationNode,
+  FunctionApplicationNode,
 } from '@/core/types/nodes';
+import type {
+  CompileError,
+  DiagramView,
+} from '@/core/types';
+import { UNHANDLED } from '@/core/types/module';
+import Report from '@/core/types/report';
+import {
+  type DiagramViewSymbol,
+  SymbolKind,
+} from '@/core/types/symbol';
+import { destructureComplexVariable } from '@/core/utils/expression';
+import { isWildcardExpression } from '@/core/utils/validate';
 
 export class DiagramViewInterpreter {
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
+  private symbol: DiagramViewSymbol;
+  private filepath: Filepath;
   private diagramView: Partial<DiagramView>;
+  private diagramViewWildcards: Set<
+    'tables'
+    | 'stickyNotes'
+    | 'tableGroups'
+    | 'schemas'
+  > = new Set();
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
+  private diagramViewExplicitlySet: Set<
+    'tables'
+    | 'stickyNotes'
+    | 'tableGroups'
+    | 'schemas'
+  > = new Set();
+
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode, symbol: DiagramViewSymbol, filepath: Filepath) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.env = env;
+    this.symbol = symbol;
+    this.filepath = filepath ?? declarationNode.filepath;
     this.diagramView = {
       visibleEntities: {
         tables: null,
@@ -41,36 +56,23 @@ export class DiagramViewInterpreter {
     };
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<DiagramView> {
     const errors: CompileError[] = [];
-    this.diagramView.token = getTokenPosition(this.declarationNode);
+    this.diagramView.token = this.symbol.token!;
 
-    this.env.diagramViews.set(this.declarationNode, this.diagramView as DiagramView);
-    this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set());
-    this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set());
+    const {
+      name: resolvedName, schema: resolvedSchema,
+    } = this.symbol.interpretedName(this.compiler, this.filepath);
+    this.diagramView.name = resolvedName;
+    this.diagramView.schemaName = resolvedSchema;
 
-    // Interpret name
-    if (this.declarationNode.name) {
-      errors.push(...this.interpretName(this.declarationNode.name));
-    }
-
-    // Interpret body
     if (this.declarationNode.body instanceof BlockExpressionNode) {
       errors.push(...this.interpretBody(this.declarationNode.body));
     }
 
-    return errors;
-  }
+    this.expandDiagramViewWildcards();
 
-  private interpretName (nameNode: SyntaxNode): CompileError[] {
-    const fragments = destructureComplexVariable(nameNode) ?? [];
-    if (fragments.length > 0) {
-      this.diagramView.name = fragments[fragments.length - 1];
-      if (fragments.length > 1) {
-        this.diagramView.schemaName = fragments.slice(0, -1).join('.');
-      }
-    }
-    return [];
+    return new Report(this.diagramView as DiagramView, errors);
   }
 
   private interpretBody (body: BlockExpressionNode): CompileError[] {
@@ -84,18 +86,18 @@ export class DiagramViewInterpreter {
           tableGroups: [],
           schemas: [],
         };
-        this.env.diagramViewWildcards.set(this.diagramView as DiagramView, new Set([
+        this.diagramViewWildcards = new Set([
           'tables',
           'stickyNotes',
           'tableGroups',
           'schemas',
-        ]));
-        this.env.diagramViewExplicitlySet.set(this.diagramView as DiagramView, new Set([
+        ]);
+        this.diagramViewExplicitlySet = new Set([
           'tables',
           'stickyNotes',
           'tableGroups',
           'schemas',
-        ]));
+        ]);
         return [];
       }
     }
@@ -114,7 +116,7 @@ export class DiagramViewInterpreter {
     }
 
     // Trinity omit rule: if any Trinity dim was explicitly set with a non-null value,
-    // promote omitted Trinity dims from null → [] (show all)
+    // promote omitted Trinity dims from null -> [] (show all)
     const ve = this.diagramView.visibleEntities!;
     const trinityHasNonNull =
       (explicitlySet.has('tables') && ve.tables !== null)
@@ -127,12 +129,11 @@ export class DiagramViewInterpreter {
       if (!explicitlySet.has('schemas')) ve.schemas = [];
     }
 
-    // Store which dims were explicitly declared (normalize block type names to FilterConfig keys)
-    const envExplicitlySet = this.env.diagramViewExplicitlySet.get(this.diagramView as DiagramView)!;
-    if (explicitlySet.has('tables')) envExplicitlySet.add('tables');
-    if (explicitlySet.has('tablegroups')) envExplicitlySet.add('tableGroups');
-    if (explicitlySet.has('schemas')) envExplicitlySet.add('schemas');
-    if (explicitlySet.has('notes')) envExplicitlySet.add('stickyNotes');
+    // Normalize block type names to FilterConfig keys
+    if (explicitlySet.has(ElementKind.DiagramViewTables)) this.diagramViewExplicitlySet.add('tables');
+    if (explicitlySet.has(ElementKind.DiagramViewTableGroups)) this.diagramViewExplicitlySet.add('tableGroups');
+    if (explicitlySet.has(ElementKind.DiagramViewSchemas)) this.diagramViewExplicitlySet.add('schemas');
+    if (explicitlySet.has(ElementKind.DiagramViewNotes)) this.diagramViewExplicitlySet.add('stickyNotes');
 
     return [];
   }
@@ -147,21 +148,21 @@ export class DiagramViewInterpreter {
 
     if (hasWildcard) {
       // Show all for this entity type
-      const envWildcards = this.env.diagramViewWildcards.get(this.diagramView as DiagramView)!;
+      const envWildcards = this.diagramViewWildcards;
       switch (blockType) {
-        case 'tables':
+        case ElementKind.DiagramViewTables:
           this.diagramView.visibleEntities!.tables = [];
           envWildcards.add('tables');
           break;
-        case 'notes':
+        case ElementKind.DiagramViewNotes:
           this.diagramView.visibleEntities!.stickyNotes = [];
           envWildcards.add('stickyNotes');
           break;
-        case 'tablegroups':
+        case ElementKind.DiagramViewTableGroups:
           this.diagramView.visibleEntities!.tableGroups = [];
           envWildcards.add('tableGroups');
           break;
-        case 'schemas':
+        case ElementKind.DiagramViewSchemas:
           this.diagramView.visibleEntities!.schemas = [];
           envWildcards.add('schemas');
           break;
@@ -175,14 +176,16 @@ export class DiagramViewInterpreter {
     }
 
     // Specific items
-    const items: Array<{ name: string;
-      schemaName: string; }> = [];
+    const items: Array<{
+      name: string;
+      schemaName: string;
+    }> = [];
     for (const field of body.body) {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
-      // If the field was bound to a symbol (e.g., alias "U" → Table "users"),
+      // If the field was bound to a symbol (e.g., alias "U" -> Table "users"),
       // resolve the real name from the referee's declaration
-      const referee = extractReferee(field.callee);
+      const referee = field.callee && this.compiler.nodeReferee(field.callee!).getFiltered(UNHANDLED);
       if (referee?.declaration instanceof ElementDeclarationNode) {
         const realFragments = destructureComplexVariable(referee.declaration.name) ?? [];
         if (realFragments.length > 0) {
@@ -210,24 +213,24 @@ export class DiagramViewInterpreter {
     }
 
     switch (blockType) {
-      case 'tables':
+      case ElementKind.DiagramViewTables:
         this.diagramView.visibleEntities!.tables = items.length > 0 ? items : null;
         break;
-      case 'notes':
+      case ElementKind.DiagramViewNotes:
         this.diagramView.visibleEntities!.stickyNotes = items.length > 0
           ? items.map((i) => ({
               name: i.name,
             }))
           : null;
         break;
-      case 'tablegroups':
+      case ElementKind.DiagramViewTableGroups:
         this.diagramView.visibleEntities!.tableGroups = items.length > 0
           ? items.map((i) => ({
               name: i.name,
             }))
           : null;
         break;
-      case 'schemas':
+      case ElementKind.DiagramViewSchemas:
         this.diagramView.visibleEntities!.schemas = items.length > 0
           ? items.map((i) => ({
               name: i.name,
@@ -235,5 +238,59 @@ export class DiagramViewInterpreter {
           : null;
         break;
     }
+  }
+
+  /**
+   * Expand explicit wildcard ([]) for tableGroups in DiagramView visibleEntities
+   * to the concrete list of table group names.
+   *
+   * Expands when:
+   * 1. The user wrote `TableGroups { * }` (tracked via diagramViewWildcards)
+   * 2. NOT a body-level `{ * }` - body-level wildcard sets ALL dims to [] simultaneously,
+   *    which is a different semantic (show everything) that doesn't need expansion.
+   *    We detect body-level by checking if all four dims are in the wildcards set.
+   *
+   * Why only TableGroups needs expansion:
+   * - Tables: * -> [] means "show all tables" (every table is a table, no indirection)
+   * - Schemas: * -> [] means "show all schemas" (every table belongs to a schema)
+   * - TableGroups: * needs concrete names because some tables DON'T belong to any group.
+   *   The frontend does name-based lookup; [] would produce an empty name map -> no groups matched.
+   */
+  expandDiagramViewWildcards (): void {
+    const ve = this.diagramView.visibleEntities;
+    const wildcards = this.diagramViewWildcards;
+    if (!wildcards || !ve) return;
+
+    // Tables * or Schemas * -> union covers everything -> all Trinity dims become [] (show all)
+    if (wildcards.has('tables') || wildcards.has('schemas')) {
+      ve.tables = [];
+      ve.tableGroups = [];
+      ve.schemas = [];
+      return;
+    }
+
+    // TableGroups * -> expand to concrete group names (not all tables belong to groups)
+    if (wildcards.has('tableGroups') && ve.tableGroups && ve.tableGroups.length === 0) {
+      ve.tableGroups = this.getAllTableGroupNames();
+    }
+  }
+
+  private getAllTableGroupNames (): Array<{ name: string }> {
+    const ast = this.compiler.parseFile(this.declarationNode.filepath).getValue().ast;
+    const programSymbol = this.compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+    if (!programSymbol) return [];
+
+    const members = this.compiler.symbolMembers(programSymbol).getFiltered(UNHANDLED);
+    if (!members) return [];
+
+    return uniqBy(
+      members.filter((m) => m.isKind(SymbolKind.TableGroup)),
+      (m) => m.originalSymbol.intern(),
+    )
+      .flatMap((m) => m.name !== undefined
+        ? ({
+            name: m.name,
+          })
+        : []);
   }
 }

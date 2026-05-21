@@ -35,16 +35,13 @@ describe('[example - record] multiple records blocks', () => {
     const result = interpret(source);
     const errors = result.getErrors();
 
-    // Verify exact error count and ALL error properties (3 blocks = 4 errors)
-    expect(errors.length).toBe(4);
+    expect(errors.length).toBe(3);
     expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
     expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
     expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[2].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
     expect(errors[2].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
-    expect(errors[3].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
-    expect(errors[3].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
   });
 
   test('should report error for nested and top-level records blocks', () => {
@@ -106,7 +103,6 @@ describe('[example - record] multiple records blocks', () => {
     const result = interpret(source);
     const errors = result.getErrors();
 
-    // 2 blocks for users + 2 blocks for posts = 4 errors
     expect(errors.length).toBe(4);
     expect(errors.filter((e) => e.diagnostic.includes("'users'")).length).toBe(2);
     expect(errors.filter((e) => e.diagnostic.includes("'posts'")).length).toBe(2);

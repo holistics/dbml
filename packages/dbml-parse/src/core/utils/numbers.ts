@@ -1,6 +1,4 @@
-import {
-  LiteralNode, PrefixExpressionNode, PrimaryExpressionNode,
-} from '@/core/types/nodes';
+import { LiteralNode, PrefixExpressionNode, PrimaryExpressionNode } from '@/core/types/nodes';
 
 export function getNumberTextFromExpression (node: PrimaryExpressionNode | PrefixExpressionNode): string {
   if (node instanceof PrefixExpressionNode) {

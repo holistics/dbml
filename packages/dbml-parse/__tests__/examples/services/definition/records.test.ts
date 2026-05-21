@@ -1,12 +1,9 @@
-import {
-  describe, expect, it,
-} from 'vitest';
-import { DEFAULT_ENTRY } from '@/constants';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
-import {
-  createMockTextModel, createPosition, extractTextFromRange,
-} from '../../../utils';
+import { createMockTextModel, createPosition, extractTextFromRange } from '../../../utils';
+import { DEFAULT_ENTRY } from '@/constants';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 describe('[example - records] DefinitionProvider - Records', () => {
   describe('should find table definition from records', () => {
@@ -19,8 +16,9 @@ describe('[example - records] DefinitionProvider - Records', () => {
 records users(id, name) {
   1, "Alice"
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -69,8 +67,9 @@ records users(id, name) {
 records auth.users(id, email) {
   1, "alice@example.com"
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -124,8 +123,9 @@ Table users {
 records auth.users(id, email) {
   1, "alice@example.com"
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -176,8 +176,9 @@ records auth.users(id, email) {
 records users(id, name) {
   1, "Alice"
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -221,8 +222,9 @@ records users(id, name) {
 records users(id, name) {
   1, "Alice"
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -273,8 +275,9 @@ Table users {
 records users(id, status) {
   1, status.active
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -328,8 +331,9 @@ Table users {
 records users(id, status) {
   1, status.active
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);
@@ -378,8 +382,9 @@ Table auth.users {
 records auth.users(id, role) {
   1, auth.role.admin
 }`;
-      const compiler = new Compiler();
-      compiler.setSource(DEFAULT_ENTRY, program);
+      const layout = new MemoryProjectLayout();
+      layout.setSource(DEFAULT_ENTRY, program);
+      const compiler = new Compiler(layout);
 
       const definitionProvider = new DBMLDefinitionProvider(compiler);
       const model = createMockTextModel(program);

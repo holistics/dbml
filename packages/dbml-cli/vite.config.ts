@@ -25,6 +25,7 @@ export default defineConfig({
       external: [
         '@dbml/connector',
         '@dbml/core',
+        '@dbml/parse',
         'bluebird',
         'chalk',
         'commander',
