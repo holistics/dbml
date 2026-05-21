@@ -1,3 +1,16 @@
+## v8.2.0 (2026-05-21)
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#901](https://github.com/holistics/dbml/pull/901) Support `inactive` setting on ref ([@huydo862003](https://github.com/huydo862003))
+
+#### :bug: Bug Fix
+* `dbml-core`
+  * Remove conflicting type re-exports that were introduced in v8.1.0, which cause `@dbml/core`'s `Parser.parse`'s return type to not be compatible with `@dbml/core`'s `Database`  ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.1.0 (2026-05-20)
 
 #### :rocket: New Feature
