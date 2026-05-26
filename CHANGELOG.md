@@ -1,3 +1,12 @@
+## v8.2.1 (2026-05-26)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#908](https://github.com/holistics/dbml/pull/908) Schema-qualified tables in diagram view cause the compiler's symbol resolution process to throw a runtime error ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.2.0 (2026-05-21)
 
 #### :rocket: New Feature
