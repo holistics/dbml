@@ -2025,6 +2025,20 @@ describe('[example] interpreter', () => {
       ]);
     });
 
+    test('should resolve public schema-qualified table ref', () => {
+      const source = `
+        Table a { id int }
+        DiagramView myView {
+          Tables { public.a }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        { name: 'a', schemaName: 'public' },
+      ]);
+    });
+
     test('should resolve schema-qualified alias in Tables block', () => {
       const source = `
         Table ecommerce.merchants as M { id int }
