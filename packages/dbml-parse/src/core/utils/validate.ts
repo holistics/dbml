@@ -470,6 +470,18 @@ export function isValidIndexName (
   );
 }
 
+// Extracts the rightmost variable node from an expression.
+// For a simple variable node, returns itself. For an access expression (e.g. `ecommerce.merchants`),
+// returns the rightmost fragment (`merchants`) if it is a variable node.
+export function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
+  if (isExpressionAVariableNode(node)) return node;
+  if (isAccessExpression(node)) {
+    const right = (node as InfixExpressionNode).rightExpression;
+    if (right && isExpressionAVariableNode(right)) return right;
+  }
+  return undefined;
+}
+
 // Returns true if `node` is the rightmost (terminal) fragment of an access expression chain.
 // A node is terminal when its containing access expression is NOT itself the left-hand side
 // of a further access expression (e.g. `users` in `public.users` or `auth.public.users`).

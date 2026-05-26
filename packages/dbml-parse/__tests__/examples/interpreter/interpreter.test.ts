@@ -1960,6 +1960,86 @@ describe('[example] interpreter', () => {
     });
   });
 
+  describe('DiagramView with schema-qualified (infix) table references', () => {
+    test('should resolve schema-qualified table in Tables block', () => {
+      const source = `
+        Table ecommerce.merchants { id int }
+        DiagramView myView {
+          Tables { ecommerce.merchants }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        { name: 'merchants', schemaName: 'ecommerce' },
+      ]);
+    });
+
+    test('should resolve mixed schema-qualified and simple table refs', () => {
+      const source = `
+        Table users { id int }
+        Table ecommerce.orders { id int }
+        Table ecommerce.merchants { id int }
+        DiagramView myView {
+          Tables {
+            ecommerce.merchants
+            users
+            ecommerce.orders
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        { name: 'merchants', schemaName: 'ecommerce' },
+        { name: 'users', schemaName: 'public' },
+        { name: 'orders', schemaName: 'ecommerce' },
+      ]);
+    });
+
+    test('should resolve multiple DiagramViews with schema-qualified refs', () => {
+      const source = `
+        Table users { id int }
+        Table ecommerce.orders { id int }
+        Table ecommerce.merchants { id int }
+        DiagramView Default {
+          Tables {
+            ecommerce.merchants
+            users
+          }
+        }
+        DiagramView "New View" {
+          Tables {
+            ecommerce.orders
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.diagramViews).toHaveLength(2);
+      expect(db.diagramViews[0].visibleEntities.tables).toEqual([
+        { name: 'merchants', schemaName: 'ecommerce' },
+        { name: 'users', schemaName: 'public' },
+      ]);
+      expect(db.diagramViews[1].visibleEntities.tables).toEqual([
+        { name: 'orders', schemaName: 'ecommerce' },
+      ]);
+    });
+
+    test('should resolve schema-qualified alias in Tables block', () => {
+      const source = `
+        Table ecommerce.merchants as M { id int }
+        DiagramView myView {
+          Tables { M }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const ve = db.diagramViews[0].visibleEntities;
+      expect(ve.tables).toEqual([
+        { name: 'merchants', schemaName: 'ecommerce' },
+      ]);
+    });
+  });
+
   describe('standalone note interpretation', () => {
     test('should interpret standalone note', () => {
       const source = `
