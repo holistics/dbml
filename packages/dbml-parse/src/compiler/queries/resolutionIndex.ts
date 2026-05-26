@@ -13,22 +13,13 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import { isAccessExpression, isExpressionAVariableNode } from '@/core/utils/validate';
+import { getRightmostVariable, isAccessExpression, isExpressionAVariableNode } from '@/core/utils/validate';
 import type Compiler from '../index';
 
 export interface ResolutionIndex {
   references: Map<InternedNodeSymbol, SyntaxNode[]>;
   metadata: Map<InternedNodeSymbol, NodeMetadata[]>;
   parents: Map<InternedNodeSymbol, NodeSymbol[]>;
-}
-
-function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
-  if (isExpressionAVariableNode(node)) return node;
-  if (isAccessExpression(node)) {
-    const right = (node as InfixExpressionNode).rightExpression;
-    if (right && isExpressionAVariableNode(right)) return right;
-  }
-  return undefined;
 }
 
 // Build full resolution index: references + metadata + symbol parent. One scan of all files.
