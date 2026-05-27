@@ -120,7 +120,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -182,7 +181,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -204,7 +202,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "name",
             "not_null": true,
             "pk": false,
@@ -261,7 +258,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -304,7 +300,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "price",
             "not_null": true,
             "pk": false,
@@ -362,7 +357,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {

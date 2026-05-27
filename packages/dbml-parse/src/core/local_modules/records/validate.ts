@@ -1,63 +1,42 @@
+import { partition } from 'lodash-es';
+import Compiler from '@/compiler';
+import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import {
-  partition,
-} from 'lodash-es';
-import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  destructureComplexVariable,
-} from '@/core/utils/expression';
-import {
-  pickValidator,
-} from '@/core/local_modules/utils';
-import {
-  isExpressionASignedNumberExpression,
-  isTupleOfVariables,
-  isValidName,
-} from '@/core/utils/validate';
-import {
-  isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode,
-} from '@/core/utils/validate';
-import {
-  CompileError, CompileErrorCode, CompileWarning,
-} from '@/core/types/errors';
-import {
-  BlockExpressionNode, CallExpressionNode, CommaExpressionNode, ElementDeclarationNode, EmptyNode, FunctionApplicationNode, FunctionExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+  BlockExpressionNode,
+  CallExpressionNode,
+  CommaExpressionNode,
+  ElementDeclarationNode,
+  EmptyNode,
+  FunctionApplicationNode,
+  FunctionExpressionNode,
+  ListExpressionNode,
+  ProgramNode,
+  SyntaxNode,
+  WildcardNode,
 } from '@/core/types/nodes';
-import SymbolFactory from '@/core/types/symbol/factory';
-import SymbolTable from '@/core/types/symbol/symbolTable';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import { destructureComplexVariable } from '@/core/utils/expression';
+import { isAccessExpression, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
+import { isExpressionASignedNumberExpression, isTupleOfVariables, isValidName } from '@/core/utils/validate';
 
 export default class RecordsValidator {
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private publicSymbolTable: SymbolTable;
-  private symbolFactory: SymbolFactory;
+  private declarationNode: ElementDeclarationNode;
+  private compiler: Compiler;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, publicSymbolTable: SymbolTable, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
     this.declarationNode = declarationNode;
-    this.publicSymbolTable = publicSymbolTable;
-    this.symbolFactory = symbolFactory;
+    this.compiler = compiler;
   }
 
-  validate (): {
-    errors: CompileError[];
-    warnings: CompileWarning[];
-  } {
-    return {
-      errors: [
-        ...this.validateContext(),
-        ...this.validateName(this.declarationNode.name),
-        ...this.validateAlias(this.declarationNode.alias),
-        ...this.validateSettingList(this.declarationNode.attributeList),
-        ...this.validateBody(this.declarationNode.body),
-      ],
-      warnings: [],
-    };
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.validateBody(this.declarationNode.body),
+    ];
   }
 
   // Validate that Records can only appear top-level or inside a Table.
@@ -116,7 +95,7 @@ export default class RecordsValidator {
         new CompileError(
           CompileErrorCode.INVALID_RECORDS_NAME,
           'Records at top-level must have a name in the form of table(col1, col2, ...) or schema.table(col1, col2, ...)',
-          nameNode || this.declarationNode.type,
+          nameNode || this.declarationNode.type || this.declarationNode,
         ),
       ];
     }
@@ -301,9 +280,7 @@ export default class RecordsValidator {
       if (!sub.type) {
         return [];
       }
-      const _Validator = pickValidator(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const validator = new _Validator(sub as ElementDeclarationNode & { type: SyntaxToken }, this.publicSymbolTable, this.symbolFactory);
-      return validator.validate().errors;
+      return this.compiler.validateNode(sub).getErrors();
     });
   }
 }

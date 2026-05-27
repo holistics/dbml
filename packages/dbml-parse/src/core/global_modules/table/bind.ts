@@ -1,50 +1,27 @@
+import { last, partition } from 'lodash-es';
+import Compiler from '@/compiler';
+import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
+import { CompileError } from '@/core/types/errors';
 import {
-  last, partition,
-} from 'lodash-es';
-import {
-  KEYWORDS_OF_DEFAULT_SETTING,
-} from '@/constants';
-import {
-  CompileError,
-} from '@/core/types/errors';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  SymbolKind, createColumnSymbolIndex,
-} from '@/core/types/symbol/symbolIndex';
-import {
-  TablePartialInjectedColumnSymbol, TablePartialSymbol,
-} from '@/core/types/symbol/symbols';
-import {
-  isExpressionAQuotedString, isExpressionAVariableNode,
-} from '@/core/utils/validate';
-import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, PrefixExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
 } from '@/core/types/nodes';
+import { InfixExpressionNode } from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  destructureComplexVariableTuple, extractVariableFromExpression,
-} from '@/core/utils/expression';
-import {
+  isAccessExpression,
+  isExpressionAQuotedString, isExpressionAVariableNode,
   aggregateSettingList, isValidPartialInjection,
 } from '@/core/utils/validate';
-import {
-  pickBinder,
-} from '@/core/global_modules/utils';
-import {
-  lookupAndBindInScope, scanNonListNodeForBinding,
-} from '@/core/global_modules/utils';
+import { scanNonListNodeForBinding } from '../utils';
 
 export default class TableBinder {
-  private symbolFactory: SymbolFactory;
+  private compiler: Compiler;
   private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode & { type: SyntaxToken }) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
   }
 
   bind (): CompileError[] {
@@ -53,63 +30,6 @@ export default class TableBinder {
     }
 
     return this.bindBody(this.declarationNode.body);
-  }
-
-  // Must call this before any bind methods of any binder classes
-  resolvePartialInjections (): CompileError[] {
-    const {
-      body,
-    } = this.declarationNode;
-    const members = !body
-      ? []
-      : body instanceof BlockExpressionNode
-        ? body.body
-        : [
-            body,
-          ];
-    // Prioritize the later injections
-    return members
-      .filter((i) => i instanceof FunctionApplicationNode && isValidPartialInjection(i.callee))
-      .reverse() // Warning: `reverse` mutates, but it's safe because we're working on a filtered array
-      .flatMap((i) => {
-        const fragments = destructureComplexVariableTuple(((i as FunctionApplicationNode).callee as PrefixExpressionNode).expression);
-        if (!fragments) return [];
-        const tablePartialBindee = fragments.variables.pop();
-        const schemaBindees = fragments.variables;
-
-        if (!tablePartialBindee) {
-          return [];
-        }
-
-        const errors = lookupAndBindInScope(this.ast, [
-          ...schemaBindees.map((b) => ({
-            node: b,
-            kind: SymbolKind.Schema,
-          })),
-          {
-            node: tablePartialBindee,
-            kind: SymbolKind.TablePartial,
-          },
-        ]);
-        if (errors.length) return errors;
-        tablePartialBindee.referee?.symbolTable?.forEach((value) => {
-          const columnName = extractVariableFromExpression((value.declaration as FunctionApplicationNode).callee);
-          if (columnName === undefined) return;
-          const injectedColumnSymbol = this.symbolFactory.create(
-            TablePartialInjectedColumnSymbol,
-            {
-              declaration: i,
-              tablePartialSymbol: tablePartialBindee.referee as TablePartialSymbol,
-            },
-            this.declarationNode.filepath,
-          );
-          const columnSymbolId = createColumnSymbolIndex(columnName);
-          const symbolTable = this.declarationNode.symbol?.symbolTable;
-          if (symbolTable?.has(columnSymbolId)) return;
-          symbolTable?.set(columnSymbolId, injectedColumnSymbol);
-        });
-        return [];
-      });
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -175,22 +95,12 @@ export default class TableBinder {
     }
 
     const enumBindee = fragments.variables.pop();
-    const schemaBindees = fragments.variables;
 
     if (!enumBindee) {
       return;
     }
 
-    lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({
-        node: b,
-        kind: SymbolKind.Schema,
-      })),
-      {
-        node: enumBindee,
-        kind: SymbolKind.Enum,
-      },
-    ]);
+    this.compiler.nodeReferee(enumBindee).getErrors();
   }
 
   // Bind enum field references in default values (e.g., order_status.pending)
@@ -210,6 +120,19 @@ export default class TableBinder {
 
     const fragments = destructureComplexVariableTuple(defaultValue);
     if (!fragments) {
+      // Handle literal.field access (e.g., true.value, "hello".abc)
+      // where the left side is not a variable
+      if (isAccessExpression(defaultValue)) {
+        const infixNode = defaultValue as InfixExpressionNode;
+        const errors: CompileError[] = [];
+        if (infixNode.leftExpression) {
+          errors.push(...this.compiler.nodeReferee(infixNode.leftExpression).getErrors());
+        }
+        if (infixNode.rightExpression) {
+          errors.push(...this.compiler.nodeReferee(infixNode.rightExpression).getErrors());
+        }
+        return errors;
+      }
       return [];
     }
 
@@ -220,22 +143,20 @@ export default class TableBinder {
       return [];
     }
 
+    const errors: CompileError[] = [];
     const schemaBindees = fragments.variables;
 
-    return lookupAndBindInScope(this.ast, [
-      ...schemaBindees.map((b) => ({
-        node: b,
-        kind: SymbolKind.Schema,
-      })),
-      {
-        node: enumBindee,
-        kind: SymbolKind.Enum,
-      },
-      {
-        node: enumFieldBindee,
-        kind: SymbolKind.EnumField,
-      },
-    ]);
+    // Collect errors from schema components - errors are silently dropped by
+    // nodeRefereeOfLeftExpression, so we must bind them explicitly here.
+    for (const schemaBind of schemaBindees) {
+      errors.push(...this.compiler.nodeReferee(schemaBind).getErrors());
+    }
+    // Collect errors from enum bindee (reports error if enum doesn't exist)
+    errors.push(...this.compiler.nodeReferee(enumBindee).getErrors());
+    // Collect errors from enum field bindee
+    errors.push(...this.compiler.nodeReferee(enumFieldBindee).getErrors());
+
+    return errors;
   }
 
   private bindInlineRef (ref: SyntaxNode): CompileError[] {
@@ -249,27 +170,19 @@ export default class TableBinder {
       }
       const schemaBindees = bindee.variables;
 
-      return tableBindee
-        ? lookupAndBindInScope(this.ast, [
-            ...schemaBindees.map((b) => ({
-              node: b,
-              kind: SymbolKind.Schema,
-            })),
-            {
-              node: tableBindee,
-              kind: SymbolKind.Table,
-            },
-            {
-              node: columnBindee,
-              kind: SymbolKind.Column,
-            },
-          ])
-        : lookupAndBindInScope(this.declarationNode, [
-            {
-              node: columnBindee,
-              kind: SymbolKind.Column,
-            },
-          ]);
+      if (tableBindee) {
+        const errors: CompileError[] = [];
+        // Resolve schema bindees
+        for (const schemaBind of schemaBindees) {
+          errors.push(...this.compiler.nodeReferee(schemaBind).getErrors());
+        }
+        // Resolve table bindee (reports error if table doesn't exist)
+        errors.push(...this.compiler.nodeReferee(tableBindee).getErrors());
+        // Resolve column bindee
+        errors.push(...this.compiler.nodeReferee(columnBindee).getErrors());
+        return errors;
+      }
+      return this.compiler.nodeReferee(columnBindee).getErrors();
     });
   }
 
@@ -278,10 +191,9 @@ export default class TableBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
+      const binder = this.compiler.bindNode(sub as ElementDeclarationNode & { type: SyntaxToken });
 
-      return binder.bind();
+      return binder.getErrors();
     });
   }
 }

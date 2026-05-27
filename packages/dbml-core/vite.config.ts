@@ -17,6 +17,11 @@ export default defineConfig({
       fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'mjs' : 'cjs' }`,
       formats: ['cjs', 'es'],
     },
+    rollupOptions: {
+      external: [
+        '@dbml/parse', // Do not bundle @dbml/parse to allow @dbml/core's peerDeps & consumers to sync
+      ],
+    },
   },
   test: {
     globals: true,

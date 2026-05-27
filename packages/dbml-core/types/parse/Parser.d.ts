@@ -1,4 +1,4 @@
-import { Compiler } from '@dbml/parse';
+import { Compiler, Filepath, MemoryProjectLayout } from '@dbml/parse';
 import Database, { RawDatabase } from '../model_structure/database';
 
 export declare type ParseFormat = 'json'
@@ -12,7 +12,7 @@ export declare type ParseFormat = 'json'
 
 declare class Parser {
     public DBMLCompiler: Compiler;
-    constructor(dbmlCompiler?: Compiler);
+    constructor();
     static parseJSONToDatabase(rawDatabase: RawDatabase): Database;
     /** @deprecated Use parseMySQLToJSONv2 instead */
     static parseMySQLToJSON(str: string): RawDatabase;
@@ -22,18 +22,20 @@ declare class Parser {
     static parsePostgresToJSONv2(str: string): RawDatabase;
     /** @deprecated Use parseDBMLToJSONv2 instead */
     static parseDBMLToJSON(str: string): RawDatabase;
-    static parseDBMLToJSONv2(str: string, dbmlCompiler?: Compiler): RawDatabase;
+    static parseDBMLToJSONv2(str: string): RawDatabase;
     static parseSchemaRbToJSON(str: string): RawDatabase;
     /** @deprecated Use parseMSSQLToJSONv2 instead */
     static parseMSSQLToJSON(str: string): RawDatabase;
     static parseMSSQLToJSONv2(str: string): RawDatabase;
     static parseSnowflakeToJSON(str: string): RawDatabase;
     static parseOracleToJSON(str: string): RawDatabase;
-    /**
-     * Should use parse() instance method instead of this static method whenever possible
-     */
     static parse(str: string, format: ParseFormat): Database;
     static parse(str: RawDatabase, format: 'json'): Database;
+    getDbmlSource(filepath: Filepath | string): string | undefined;
+    setDbmlSource(filepath: Filepath | string, source: string | undefined): void;
+    deleteDbmlSource(filepath: Filepath | string): void;
+    clearDbmlSource(): void;
+    parseDbmlProject(entrypoint: Filepath | string): Database;
     parse(str: string, format: ParseFormat): Database;
     parse(str: RawDatabase, format: 'json'): Database;
 }

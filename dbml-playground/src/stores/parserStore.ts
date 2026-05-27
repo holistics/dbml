@@ -4,7 +4,9 @@ import {
 import { defineStore } from 'pinia';
 import { debounce } from 'lodash-es';
 import * as monaco from 'monaco-editor';
-import { Compiler, DBMLDiagnosticsProvider, Filepath } from '@dbml/parse';
+import {
+  Compiler, DBMLDiagnosticsProvider, Filepath, MemoryProjectLayout, UNHANDLED,
+} from '@dbml/parse';
 import type {
   Diagnostic, SyntaxToken, ProgramNode, Database, NodeSymbol,
 } from '@dbml/parse';
@@ -33,12 +35,8 @@ export interface SymbolInfo {
 }
 
 function getSymbolMembers (compiler: Compiler, symbol: NodeSymbol): NodeSymbol[] {
-  try {
-    const members = compiler.symbolMembers(symbol);
-    return Array.isArray(members) ? members.map((m) => m.symbol) : [];
-  } catch {
-    return [];
-  }
+  const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+  return Array.isArray(members) ? members : [];
 }
 
 function buildSymbolInfo (compiler: Compiler, symbol: NodeSymbol, depth = 0): SymbolInfo {
@@ -87,7 +85,8 @@ function toParserError (diagnostic: Diagnostic): ParserError {
 }
 
 export const useParserStore = defineStore('parser', () => {
-  const compiler = new Compiler();
+  const layout = new MemoryProjectLayout();
+  const compiler = new Compiler(layout);
   const diagnosticsProvider = new DBMLDiagnosticsProvider(compiler);
   const project = useProjectStore();
 
@@ -103,7 +102,7 @@ export const useParserStore = defineStore('parser', () => {
   const hasDatabase = computed(() => database.value !== undefined);
 
   // Tracks which file paths the compiler currently holds so we can
-  // send deleteSource for paths that disappear from the project store.
+  // remove paths that disappear from the project store.
   const loadedFilepaths = new Set<string>();
 
   const debouncedParse = debounce((targetFile?: string) => {
@@ -114,7 +113,8 @@ export const useParserStore = defineStore('parser', () => {
       const currentPaths = new Set(Object.keys(project.files));
       for (const loadedPath of loadedFilepaths) {
         if (!currentPaths.has(loadedPath)) {
-          compiler.deleteSource(Filepath.fromUri(monaco.Uri.file(loadedPath).toString()));
+          const fp = Filepath.fromUri(monaco.Uri.file(loadedPath).toString());
+          layout.deleteSource(fp);
           loadedFilepaths.delete(loadedPath);
         }
       }
@@ -123,7 +123,7 @@ export const useParserStore = defineStore('parser', () => {
       // so go-to-def resolves into the correct Monaco model.
       for (const [path, content] of Object.entries(project.files)) {
         const filepath = Filepath.fromUri(monaco.Uri.file(path).toString());
-        compiler.setSource(filepath, content);
+        layout.setSource(filepath, content);
         loadedFilepaths.add(path);
       }
 
@@ -131,16 +131,16 @@ export const useParserStore = defineStore('parser', () => {
       const parseIndex = parseResult.getValue();
       if (parseIndex) {
         tokens.value = [...parseIndex.tokens];
-        ast.value = parseIndex.ast as ProgramNode;
+        ast.value = parseIndex.ast;
       } else {
         tokens.value = [];
         ast.value = undefined;
       }
 
-      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).map(toParserError);
+      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserError);
       database.value = compiler.interpretFile(currentFilepath).getValue() as Database | undefined;
 
-      const programSymbol = parseIndex?.ast?.symbol;
+      const programSymbol = compiler.nodeSymbol(parseIndex.ast).getFiltered(UNHANDLED);
       symbols.value = programSymbol ? [buildSymbolInfo(compiler, programSymbol)] : [];
     } catch (err) {
       logger.error('Unexpected parsing error');
@@ -163,7 +163,7 @@ export const useParserStore = defineStore('parser', () => {
       }];
     } finally {
       try {
-        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).map(toParserError);
+        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserError);
       } catch (_err) {
         logger.warn('Failed to get warnings');
         warnings.value = [];

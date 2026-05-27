@@ -1,9 +1,5 @@
-import {
-  type Filepath,
-} from '@/core/types';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import { type Filepath } from '@/core/types';
+import type { SyntaxToken } from '@/core/types/tokens';
 import type Compiler from '../../index';
 
 export function containerToken (

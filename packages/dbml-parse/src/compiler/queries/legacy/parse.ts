@@ -1,20 +1,11 @@
-import type {
-  CompileError, CompileWarning,
-} from '@/core/types/errors';
-import {
-  type Filepath,
-} from '@/core/types/filepath';
-import type {
-  ProgramNode,
-} from '@/core/types/nodes';
-import type {
-  Database,
-} from '@/core/types/schemaJson';
-import type SymbolTable from '@/core/types/symbol/symbolTable';
-import type {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import type Compiler from '../../index';
+import type Compiler from '@/compiler';
+import { Database } from '@/core/types';
+import type { CompileError, CompileWarning } from '@/core/types/errors';
+import { type Filepath } from '@/core/types/filepath';
+import { UNHANDLED } from '@/core/types/module';
+import type { ProgramNode } from '@/core/types/nodes';
+import { type NodeSymbol } from '@/core/types/symbol';
+import type { SyntaxToken } from '@/core/types/tokens';
 
 export function ast (this: Compiler, filepath: Filepath): Readonly<ProgramNode> {
   this.bindFile(filepath);
@@ -34,13 +25,15 @@ export function tokens (this: Compiler, filepath: Filepath): readonly Readonly<S
 }
 
 export function rawDb (this: Compiler, filepath: Filepath): Readonly<Database> | undefined {
-  return this.interpretFile(filepath).getValue() ?? undefined;
+  const ast = this.parseFile(filepath).getValue().ast;
+  const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
+  if (!symbol) return undefined;
+  return this.interpretSymbol(symbol, filepath).getFiltered(UNHANDLED) as Database | undefined;
 }
 
-export function publicSymbolTable (this: Compiler, filepath: Filepath): Readonly<SymbolTable> {
-  this.bindFile(filepath);
-  const {
-    ast,
-  } = this.parseFile(filepath).getValue();
-  return ast.symbol!.symbolTable!;
+export function publicSymbolTable (this: Compiler, filepath: Filepath): readonly Readonly<NodeSymbol>[] | undefined {
+  const astNode = this.parseFile(filepath).getValue().ast;
+  const sym = this.nodeSymbol(astNode).getFiltered(UNHANDLED);
+  if (!sym) return undefined;
+  return this.symbolMembers(sym).getFiltered(UNHANDLED);
 }

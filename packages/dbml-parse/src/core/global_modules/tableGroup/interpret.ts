@@ -1,45 +1,60 @@
+import { partition } from 'lodash-es';
 import {
-  partition,
-} from 'lodash-es';
-import {
-  destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken,
+  destructureComplexVariable,
+  extractQuotedStringToken,
 } from '@/core/utils/expression';
+import { UNHANDLED } from '@/core/types/module';
+import { SymbolKind } from '@/core/types/symbol';
+import { aggregateSettingList } from '@/core/utils/validate';
 import {
-  aggregateSettingList,
-} from '@/core/utils/validate';
-import {
-  extractColor, extractElementName, getTokenPosition, normalizeNoteContent,
-} from '@/core/global_modules/utils';
-import {
-  CompileError, CompileErrorCode,
+  CompileError,
+  CompileErrorCode,
 } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode,
+  BlockExpressionNode,
+  type ElementDeclarationNode,
+  FunctionApplicationNode,
+  type ListExpressionNode,
+  type SyntaxNode,
 } from '@/core/types/nodes';
+import type { TableGroup } from '@/core/types/schemaJson';
+import type Compiler from '@/compiler';
 import {
-  TableGroup,
-} from '@/core/types/schemaJson';
+  ElementKind,
+  type Filepath,
+  type TableGroupSymbol,
+} from '@/core/types';
+import Report from '@/core/types/report';
 import {
-  InterpreterDatabase,
-} from '@/core/global_modules/types';
+  extractColor,
+  extractElementName,
+  getTokenPosition,
+  normalizeNote,
+} from '@/core/utils/interpret';
 
 export class TableGroupInterpreter {
+  private compiler: Compiler;
+  private symbol: TableGroupSymbol;
   private declarationNode: ElementDeclarationNode;
-  private env: InterpreterDatabase;
+  private filepath: Filepath;
+
   private tableGroup: Partial<TableGroup>;
 
-  constructor (declarationNode: ElementDeclarationNode, env: InterpreterDatabase) {
-    this.declarationNode = declarationNode;
-    this.env = env;
+  constructor (compiler: Compiler, symbol: TableGroupSymbol, filepath: Filepath) {
+    this.compiler = compiler;
+    this.symbol = symbol;
+    this.declarationNode = symbol.declaration as ElementDeclarationNode;
+
+    this.filepath = filepath;
+
     this.tableGroup = {
       tables: [],
     };
   }
 
-  interpret (): CompileError[] {
+  interpret (): Report<TableGroup> {
     const errors: CompileError[] = [];
     this.tableGroup.token = getTokenPosition(this.declarationNode);
-    this.env.tableGroups.set(this.declarationNode, this.tableGroup as TableGroup);
 
     errors.push(
       ...this.interpretName(this.declarationNode.name!),
@@ -47,7 +62,7 @@ export class TableGroupInterpreter {
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     );
 
-    return errors;
+    return Report.create(this.tableGroup as TableGroup, errors);
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
@@ -80,10 +95,10 @@ export class TableGroupInterpreter {
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
-      switch (sub.type?.value.toLowerCase()) {
-        case 'note':
+      switch (sub.getElementKind()) {
+        case ElementKind.Note:
           this.tableGroup.note = {
-            value: normalizeNoteContent(extractQuotedStringToken(
+            value: normalizeNote(extractQuotedStringToken(
               sub.body instanceof BlockExpressionNode
                 ? (sub.body.body[0] as FunctionApplicationNode).callee
                 : sub.body!.callee,
@@ -103,24 +118,22 @@ export class TableGroupInterpreter {
   private interpretFields (fields: FunctionApplicationNode[]): CompileError[] {
     const errors: CompileError[] = [];
     this.tableGroup.tables = fields.map((field) => {
-      const fragments = destructureComplexVariable((field as FunctionApplicationNode).callee)!;
+      const tableSymbol = field.callee ? this.compiler.nodeReferee(field.callee).getFiltered(UNHANDLED) : undefined;
+      if (tableSymbol?.isKind(SymbolKind.Table)) {
+        const {
+          name, schema,
+        } = tableSymbol.interpretedName(this.compiler, this.filepath);
+        return {
+          name,
+          schemaName: schema,
+        };
+      }
 
+      // Fallback: parse from syntax if symbol not resolved
+      const fragments = destructureComplexVariable(field.callee)!;
       if (fragments.length > 2) {
         errors.push(new CompileError(CompileErrorCode.UNSUPPORTED, 'Nested schema is not supported', field));
       }
-
-      const tableid = destructureMemberAccessExpression((field as FunctionApplicationNode).callee!)!.pop()!.referee!.id;
-      if (this.env.tableOwnerGroup[tableid]) {
-        const tableGroup = this.env.tableOwnerGroup[tableid];
-        const {
-          schemaName, name,
-        } = this.env.tableGroups.get(tableGroup)!;
-        const groupName = schemaName ? `${schemaName}.${name}` : name;
-        errors.push(new CompileError(CompileErrorCode.TABLE_REAPPEAR_IN_TABLEGROUP, `Table "${fragments.join('.')}" already appears in group "${groupName}"`, field));
-      } else {
-        this.env.tableOwnerGroup[tableid] = this.declarationNode;
-      }
-
       return {
         name: fragments.pop()!,
         schemaName: fragments.join('.') || null,
@@ -141,7 +154,7 @@ export class TableGroupInterpreter {
       noteNode,
     ] = settingMap.note || [];
     this.tableGroup.note = noteNode && {
-      value: normalizeNoteContent(extractQuotedStringToken(noteNode?.value)!),
+      value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
 

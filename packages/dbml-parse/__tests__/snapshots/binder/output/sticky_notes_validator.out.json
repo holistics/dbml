@@ -87,12 +87,32 @@
       },
       {
         "context": {
+          "id": "symbol@Note@note2@[L9:C0, L11:C1]",
+          "snippet": "Note note2...ne note'\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@note2@[L9:C0, L11:C1]",
+          "snippet": "Note note2...ne note'\n}"
+        }
+      },
+      {
+        "context": {
           "id": "symbol@Note@note3@[L13:C0, L15:C1]",
           "snippet": "Note note3...ne note'\n}"
         },
         "declaration": {
           "id": "node@<element-declaration>@note3@[L13:C0, L15:C1]",
           "snippet": "Note note3...ne note'\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Note@note3@[L17:C0, L19:C1]",
+          "snippet": "Note \"note...ne note'\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@note3@[L17:C0, L19:C1]",
+          "snippet": "Note \"note...ne note'\n}"
         }
       },
       {
@@ -104,16 +124,21 @@
           "id": "node@<element-declaration>@schema.note4@[L27:C0, L32:C1]",
           "snippet": "Note \"sche...dy\n  '''\n}"
         }
-      },
+      }
+    ],
+    "schemas": [
       {
         "context": {
-          "id": "symbol@Note@schema.note5@[L34:C0, L39:C1]",
-          "snippet": "Note \"sche...dy\n  '''\n}"
+          "id": "symbol@Schema@schema@[L?:C?, L?:C?]"
         },
-        "declaration": {
-          "id": "node@<element-declaration>@schema.note5@[L34:C0, L39:C1]",
-          "snippet": "Note \"sche...dy\n  '''\n}"
-        }
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Note@schema.note5@[L34:C0, L39:C1]",
+              "snippet": "Note \"sche...dy\n  '''\n}"
+            }
+          }
+        ]
       }
     ]
   }

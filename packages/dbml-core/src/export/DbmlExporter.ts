@@ -316,6 +316,9 @@ class DbmlExporter {
       if (ref.onDelete) {
         refActions.push(`delete: ${ref.onDelete.toLowerCase()}`);
       }
+      if (ref.inactive) {
+        refActions.push('inactive');
+      }
       if (refActions.length > 0) {
         line += ` [${refActions.join(', ')}]`;
       }

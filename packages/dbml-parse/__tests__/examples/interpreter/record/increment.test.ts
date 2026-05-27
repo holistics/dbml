@@ -29,7 +29,7 @@ describe('[example - record] auto-increment and serial type constraints', () => 
 
     // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
+    expect(record.schemaName).toBeNull();
     expect(record.tableName).toBe('users');
     expect(record.columns).toEqual(['id', 'name']);
     expect(record.values.length).toBe(3);
@@ -91,7 +91,7 @@ describe('[example - record] auto-increment and serial type constraints', () => 
 
     // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
+    expect(record.schemaName).toBeNull();
     expect(record.tableName).toBe('users');
     expect(record.columns).toEqual(['id', 'name']);
     expect(record.values.length).toBe(2);
@@ -141,7 +141,7 @@ describe('[example - record] auto-increment and serial type constraints', () => 
 
     // Verify ALL properties of the TableRecord
     const record = db.records[0];
-    expect(record.schemaName).toBe(undefined);
+    expect(record.schemaName).toBeNull();
     expect(record.tableName).toBe('users');
     expect(record.columns).toEqual(['id', 'name']);
     expect(record.values.length).toBe(2);
@@ -185,8 +185,9 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(1);
+    expect(warnings.length).toBe(2);
     expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = 1');
+    expect(warnings[1].diagnostic).toBe('Duplicate PK: users.id = 1');
   });
 
   test('should detect duplicate pk with not null + dbdefault', () => {
@@ -204,7 +205,8 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     const warnings = result.getWarnings();
 
     // Both NULLs resolve to default value 1, which is a duplicate
-    expect(warnings.length).toBe(1);
+    expect(warnings.length).toBe(2);
     expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = null');
+    expect(warnings[1].diagnostic).toBe('Duplicate PK: users.id = null');
   });
 });

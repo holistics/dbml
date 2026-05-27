@@ -18,6 +18,7 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [TableGroup Settings](#tablegroup-settings)
 - [DiagramView](#diagramview)
 - [Colors](#colors)
+- [Inactive Ref](#inactive-ref)
 
 ## Note Definition
 
@@ -253,5 +254,22 @@ Use `color` on a table group to change its background color:
 TableGroup e_commerce [color: #3498DB] {
   merchants
   countries
+}
+```
+
+## Inactive Ref
+
+Use `inactive` on a relationship to mark it as inactive. Inactive refs are displayed as a dotted line in the diagram, allowing you to document relationships that are not of immediate focus.
+
+```text
+// short form
+Ref: posts.user_id > users.id [inactive]
+
+// with other settings
+Ref: posts.user_id > users.id [delete: cascade, inactive]
+
+// long form
+Ref {
+  posts.user_id > users.id [inactive]
 }
 ```
