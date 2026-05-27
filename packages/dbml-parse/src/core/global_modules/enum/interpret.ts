@@ -68,7 +68,7 @@ export class EnumInterpreter {
     return body.body.flatMap((_field) => {
       const field = _field as FunctionApplicationNode;
 
-      const enumField: Partial<EnumField> = { };
+      const enumField: Partial<EnumField> = {};
 
       enumField.token = getTokenPosition(field);
       enumField.name = extractVariableFromExpression(field.callee)!;
