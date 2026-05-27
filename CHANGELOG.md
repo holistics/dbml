@@ -1,3 +1,15 @@
+## v8.2.2 (2026-05-27)
+
+#### :robot: Dependencies Update
+* Other
+  * [#866](https://github.com/holistics/dbml/pull/866) chore(deps): bump brace-expansion from 1.1.12 to 1.1.14 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#910](https://github.com/holistics/dbml/pull/910) chore(deps): Bump uuid to 11.1.1 to fix vulnerability issues ([@huydo862003](https://github.com/huydo862003))
+* `dbml-parse`
+  * [#898](https://github.com/holistics/dbml/pull/898) chore(deps): bump @babel/plugin-transform-modules-systemjs from 7.24.1 to 7.29.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.2.1 (2026-05-26)
 
 #### :bug: Bug Fix
