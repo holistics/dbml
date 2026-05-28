@@ -1,0 +1,2 @@
+use { table users } from './users.dbml'
+use { table orders } from './orders.dbml'

@@ -19,9 +19,10 @@ import {
 } from '@/core/types/nodes';
 import type { TableGroup } from '@/core/types/schemaJson';
 import type Compiler from '@/compiler';
-import type {
-  Filepath,
-  TableGroupSymbol,
+import {
+  ElementKind,
+  type Filepath,
+  type TableGroupSymbol,
 } from '@/core/types';
 import Report from '@/core/types/report';
 import {
@@ -94,8 +95,8 @@ export class TableGroupInterpreter {
 
   private interpretSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
-      switch (sub.type?.value.toLowerCase()) {
-        case 'note':
+      switch (sub.getElementKind()) {
+        case ElementKind.Note:
           this.tableGroup.note = {
             value: normalizeNote(extractQuotedStringToken(
               sub.body instanceof BlockExpressionNode

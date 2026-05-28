@@ -10,7 +10,9 @@ import {
   Command,
 } from 'commander';
 import figures from 'figures';
-import logger from '../helpers/logger';
+import {
+  consoleLogger, fileLogger,
+} from '../helpers/logger';
 import OutputConsolePlugin from './outputPlugins/outputConsolePlugin';
 import OutputFilePlugin from './outputPlugins/outputFilePlugin';
 import {
@@ -37,6 +39,7 @@ export default async function connectionHandler (program: Command) {
       console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from database's connection: ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
-    logger.error(error as Error | string);
+    consoleLogger.error(error as Error | string);
+    fileLogger.error(error as Error | string);
   }
 }

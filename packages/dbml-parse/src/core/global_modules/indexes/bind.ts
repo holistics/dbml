@@ -60,9 +60,7 @@ export default class IndexesBinder {
       }
       const ownerTableName = destructureComplexVariable(
         (this.declarationNode.parent as ElementDeclarationNode).name,
-      )
-        ?.join('.')
-        ?? '<unnamed>';
+      )?.join('.') ?? '<unnamed>';
 
       const args = [
         field.callee,

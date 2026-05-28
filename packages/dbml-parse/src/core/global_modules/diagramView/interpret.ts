@@ -1,5 +1,6 @@
 import { partition, uniqBy } from 'lodash-es';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { ElementKind } from '@/core/types/keywords';
 import type Compiler from '@/compiler';
 import type { Filepath } from '@/core/types/filepath';
 import {
@@ -18,7 +19,7 @@ import {
   SymbolKind,
 } from '@/core/types/symbol';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { isWildcardExpression } from '@/core/utils/validate';
+import { getRightmostVariable, isWildcardExpression } from '@/core/utils/validate';
 
 export class DiagramViewInterpreter {
   private compiler: Compiler;
@@ -129,10 +130,10 @@ export class DiagramViewInterpreter {
     }
 
     // Normalize block type names to FilterConfig keys
-    if (explicitlySet.has('tables')) this.diagramViewExplicitlySet.add('tables');
-    if (explicitlySet.has('tablegroups')) this.diagramViewExplicitlySet.add('tableGroups');
-    if (explicitlySet.has('schemas')) this.diagramViewExplicitlySet.add('schemas');
-    if (explicitlySet.has('notes')) this.diagramViewExplicitlySet.add('stickyNotes');
+    if (explicitlySet.has(ElementKind.DiagramViewTables)) this.diagramViewExplicitlySet.add('tables');
+    if (explicitlySet.has(ElementKind.DiagramViewTableGroups)) this.diagramViewExplicitlySet.add('tableGroups');
+    if (explicitlySet.has(ElementKind.DiagramViewSchemas)) this.diagramViewExplicitlySet.add('schemas');
+    if (explicitlySet.has(ElementKind.DiagramViewNotes)) this.diagramViewExplicitlySet.add('stickyNotes');
 
     return [];
   }
@@ -149,19 +150,19 @@ export class DiagramViewInterpreter {
       // Show all for this entity type
       const envWildcards = this.diagramViewWildcards;
       switch (blockType) {
-        case 'tables':
+        case ElementKind.DiagramViewTables:
           this.diagramView.visibleEntities!.tables = [];
           envWildcards.add('tables');
           break;
-        case 'notes':
+        case ElementKind.DiagramViewNotes:
           this.diagramView.visibleEntities!.stickyNotes = [];
           envWildcards.add('stickyNotes');
           break;
-        case 'tablegroups':
+        case ElementKind.DiagramViewTableGroups:
           this.diagramView.visibleEntities!.tableGroups = [];
           envWildcards.add('tableGroups');
           break;
-        case 'schemas':
+        case ElementKind.DiagramViewSchemas:
           this.diagramView.visibleEntities!.schemas = [];
           envWildcards.add('schemas');
           break;
@@ -183,8 +184,11 @@ export class DiagramViewInterpreter {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
       // If the field was bound to a symbol (e.g., alias "U" -> Table "users"),
-      // resolve the real name from the referee's declaration
-      const referee = field.callee && this.compiler.nodeReferee(field.callee!).getFiltered(UNHANDLED);
+      // resolve the real name from the referee's declaration.
+      // For access expressions (e.g. ecommerce.merchants), extract the rightmost
+      // variable node since nodeReferee expects a PrimaryExpressionNode.
+      const refereeNode = field.callee && getRightmostVariable(field.callee);
+      const referee = refereeNode && this.compiler.nodeReferee(refereeNode).getFiltered(UNHANDLED);
       if (referee?.declaration instanceof ElementDeclarationNode) {
         const realFragments = destructureComplexVariable(referee.declaration.name) ?? [];
         if (realFragments.length > 0) {
@@ -212,24 +216,24 @@ export class DiagramViewInterpreter {
     }
 
     switch (blockType) {
-      case 'tables':
+      case ElementKind.DiagramViewTables:
         this.diagramView.visibleEntities!.tables = items.length > 0 ? items : null;
         break;
-      case 'notes':
+      case ElementKind.DiagramViewNotes:
         this.diagramView.visibleEntities!.stickyNotes = items.length > 0
           ? items.map((i) => ({
               name: i.name,
             }))
           : null;
         break;
-      case 'tablegroups':
+      case ElementKind.DiagramViewTableGroups:
         this.diagramView.visibleEntities!.tableGroups = items.length > 0
           ? items.map((i) => ({
               name: i.name,
             }))
           : null;
         break;
-      case 'schemas':
+      case ElementKind.DiagramViewSchemas:
         this.diagramView.visibleEntities!.schemas = items.length > 0
           ? items.map((i) => ({
               name: i.name,

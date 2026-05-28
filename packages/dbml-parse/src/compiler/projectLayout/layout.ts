@@ -8,9 +8,6 @@ export interface DbmlProjectLayout {
 
   exists (filePath: Filepath): boolean;
 
-  // Distinguishing file vs directory lets callers (e.g. filepath suggestions)
-  // decide without re-implementing path-map probing, and gives node-backed
-  // layouts a place to resolve through symlinks.
   isFile (filePath: Filepath): boolean;
   isDirectory (filePath: Filepath): boolean;
 
@@ -20,7 +17,7 @@ export interface DbmlProjectLayout {
 }
 
 export class MemoryProjectLayout implements DbmlProjectLayout {
-  private files: Map<string, string>;
+  private readonly files: Map<string, string>;
 
   constructor (files: Map<string, string> | Record<string, string> = {}) {
     this.files = files instanceof Map

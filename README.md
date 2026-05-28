@@ -43,7 +43,7 @@ Example of a database definition of a simple blogging site:
 
 ## Community Contributions
 
-* [Elixir DBML parser, Ecto schema generator](https://github.com/saleyn/dbml)
+* [Elixir DBML parser, Ecto schema and migrations generator](https://github.com/saleyn/dbml)
 * [Emacs Mode for DBML by ccod](https://github.com/ccod/dbd-mode)
 * [Vim Plugin for DBML by jidn](https://github.com/jidn/vim-dbml)
 * [VSCode Plugin for DBML by duynvu](https://marketplace.visualstudio.com/items?itemName=duynvu.dbml-language)

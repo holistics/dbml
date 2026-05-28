@@ -1,0 +1,5 @@
+  ERROR: 
+    ./in-files/broken.dbml(4,1): Expect an identifier
+    ./in-files/broken.dbml(2,11): Unknown column setting 'pk name varchar'
+
+  A complete log can be found in:

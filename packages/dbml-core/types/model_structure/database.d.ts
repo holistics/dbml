@@ -13,7 +13,7 @@ import { NormalizedIndexColumnIdMap } from './indexColumn';
 import { NormalizedIndexIdMap } from './indexes';
 import { NormalizedCheckIdMap } from './check';
 import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
-import { TokenPosition } from '@dbml/parse';
+import { TokenPosition, DiagramView } from '@dbml/parse';
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -61,6 +61,7 @@ export interface RawDatabase {
     project: Project;
     records: RawTableRecord[];
     tablePartials: TablePartial[];
+    diagramViews: DiagramView[];
 }
 
 declare class Database extends Element {
@@ -73,6 +74,7 @@ declare class Database extends Element {
     databaseType: string;
     name: string;
     records: TableRecord[];
+    diagramViews: DiagramView[];
     id: number;
     constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;

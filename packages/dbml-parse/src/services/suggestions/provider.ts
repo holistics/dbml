@@ -1192,9 +1192,8 @@ function suggestInDiagramViewSubBlock (
   offset: number,
   elem: ElementDeclarationNode,
 ): CompletionList {
-  const blockType = elem.type?.value.toLowerCase();
-  switch (blockType) {
-    case 'tables': {
+  switch (elem.getElementKind()) {
+    case ElementKind.DiagramViewTables: {
       const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.Table,
         SymbolKind.Schema,
@@ -1206,7 +1205,7 @@ function suggestInDiagramViewSubBlock (
         ],
       };
     }
-    case 'tablegroups': {
+    case ElementKind.DiagramViewTableGroups: {
       const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.TableGroup,
       ]);
@@ -1217,7 +1216,7 @@ function suggestInDiagramViewSubBlock (
         ],
       };
     }
-    case 'schemas': {
+    case ElementKind.DiagramViewSchemas: {
       const defaultSchema = {
         label: DEFAULT_SCHEMA_NAME,
         insertText: DEFAULT_SCHEMA_NAME,
@@ -1236,7 +1235,7 @@ function suggestInDiagramViewSubBlock (
         ],
       };
     }
-    case 'notes': {
+    case ElementKind.DiagramViewNotes: {
       const namesInScope = suggestNamesInScope(compiler, filepath, offset, compiler.parse.ast(filepath), [
         SymbolKind.StickyNote,
       ]);

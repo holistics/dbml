@@ -547,3 +547,449 @@ use { schema public as nested } from './nested.dbml'
     expect(tables).toHaveLength(1);
   });
 });
+
+describe('[example] use { schema public } merges wildcard-reused tables transitively', () => {
+  // a.dbml imports schema public from b.
+  // b.dbml has `reuse * from './c'` (wildcard) and `use * from './a'`, plus Table T.
+  // c.dbml defines Table E.
+  // Ref T.id > E.id in a.dbml should resolve because E is reused into b via wildcard.
+  const { compiler } = setupCompiler({
+    '/a.dbml': `
+use { schema public } from './b'
+
+Ref: T.id > E.id
+`,
+    '/b.dbml': `
+reuse * from './c'
+use * from './a'
+
+Table T {
+  id int
+}
+`,
+    '/c.dbml': `
+Table E {
+  id int
+}
+`,
+  });
+
+  test('no errors when interpreting a.dbml', () => {
+    const result = compiler.interpretFile(fp('/a.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('Table T is present in a.dbml', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'T')).toBeDefined();
+  });
+
+  test('Table E is present in a.dbml (via wildcard reuse chain)', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'E')).toBeDefined();
+  });
+});
+
+describe('[example] chained wildcard reuse through schema merge (a -> b -> c -> d)', () => {
+  // d.dbml defines Table T3.
+  // c.dbml wildcard-reuses d.
+  // b.dbml wildcard-reuses c, defines Table T2.
+  // a.dbml imports schema public from b - should pull in T2 and T3 transitively.
+  const { compiler } = setupCompiler({
+    '/d.dbml': `
+Table T3 {
+  id int [pk]
+}
+`,
+    '/c.dbml': `
+reuse * from './d'
+`,
+    '/b.dbml': `
+reuse * from './c'
+
+Table T2 {
+  id int [pk]
+}
+`,
+    '/a.dbml': `
+use { schema public } from './b'
+
+Ref: T2.id > T3.id
+`,
+  });
+
+  test('no errors when interpreting a.dbml', () => {
+    const result = compiler.interpretFile(fp('/a.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('T2 is present', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'T2')).toBeDefined();
+  });
+
+  test('T3 is present via chained wildcard reuse', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'T3')).toBeDefined();
+  });
+});
+
+describe('[example] non-public schema with wildcard reuse through schema merge', () => {
+  // c.dbml defines Table auth.roles.
+  // b.dbml wildcard-reuses c, defines Table auth.users.
+  // a.dbml imports schema auth from b - should pull both auth.users and auth.roles.
+  const { compiler } = setupCompiler({
+    '/c.dbml': `
+Table auth.roles {
+  id int [pk]
+}
+`,
+    '/b.dbml': `
+reuse * from './c'
+
+Table auth.users {
+  id int [pk]
+}
+`,
+    '/a.dbml': `
+use { schema auth } from './b'
+
+Ref: auth.users.id > auth.roles.id
+`,
+  });
+
+  test('no errors when interpreting a.dbml', () => {
+    const result = compiler.interpretFile(fp('/a.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('auth.users is present', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'users' && t.schemaName === 'auth')).toBeDefined();
+  });
+
+  test('auth.roles is present via wildcard reuse', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'roles' && t.schemaName === 'auth')).toBeDefined();
+  });
+});
+
+describe('[example] wildcard reuse from multiple files through schema merge', () => {
+  // c.dbml defines Table T1.
+  // d.dbml defines Table T2.
+  // b.dbml wildcard-reuses both c and d.
+  // a.dbml imports schema public from b - should pull T1 and T2.
+  const { compiler } = setupCompiler({
+    '/c.dbml': `
+Table T1 {
+  id int [pk]
+}
+`,
+    '/d.dbml': `
+Table T2 {
+  id int [pk]
+}
+`,
+    '/b.dbml': `
+reuse * from './c'
+reuse * from './d'
+`,
+    '/a.dbml': `
+use { schema public } from './b'
+
+Ref: T1.id > T2.id
+`,
+  });
+
+  test('no errors when interpreting a.dbml', () => {
+    const result = compiler.interpretFile(fp('/a.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('T1 present via wildcard reuse from c', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'T1')).toBeDefined();
+  });
+
+  test('T2 present via wildcard reuse from d', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'T2')).toBeDefined();
+  });
+});
+
+describe('[example] mixed selective and wildcard reuses through schema merge', () => {
+  // c.dbml defines Table T_wild.
+  // d.dbml defines Table T_sel.
+  // b.dbml has `reuse * from './c'` (wildcard) and `reuse { table T_sel } from './d'` (selective).
+  // a.dbml imports schema public from b — should pull both.
+  const { compiler } = setupCompiler({
+    '/c.dbml': `
+Table T_wild {
+  id int [pk]
+}
+`,
+    '/d.dbml': `
+Table T_sel {
+  id int [pk]
+}
+`,
+    '/b.dbml': `
+reuse * from './c'
+reuse { table T_sel } from './d'
+`,
+    '/a.dbml': `
+use { schema public } from './b'
+
+Ref: T_wild.id > T_sel.id
+`,
+  });
+
+  test('no errors when interpreting a.dbml', () => {
+    const result = compiler.interpretFile(fp('/a.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('T_wild present via wildcard reuse', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'T_wild')).toBeDefined();
+  });
+
+  test('T_sel present via selective reuse', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'T_sel')).toBeDefined();
+  });
+});
+
+describe('[example] use-only wildcard is NOT transitive through schema merge', () => {
+  // c.dbml defines Table E.
+  // b.dbml has `use * from './c'` (NOT reuse), defines Table T.
+  // a.dbml imports schema public from b - should see T but NOT E.
+  const { compiler } = setupCompiler({
+    '/c.dbml': `
+Table E {
+  id int [pk]
+}
+`,
+    '/b.dbml': `
+use * from './c'
+
+Table T {
+  id int [pk]
+}
+`,
+    '/a.dbml': `
+use { schema public } from './b'
+`,
+  });
+
+  test('T is present', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'T')).toBeDefined();
+  });
+
+  test('E is NOT present (use is local-only, not transitive)', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'E')).toBeUndefined();
+  });
+});
+
+describe('[example] nested schema import places members under correct schema', () => {
+  // base.dbml defines Table x.y.t1.
+  // main.dbml imports schema x.y from base — t1 should be under schema x.y, not x.
+  const { compiler } = setupCompiler({
+    '/base.dbml': `
+Table x.y.t1 {
+  id int [pk]
+}
+`,
+    '/main.dbml': `
+use { schema x.y } from './base'
+`,
+  });
+
+  test('no errors when interpreting main.dbml', () => {
+    const result = compiler.interpretFile(fp('/main.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('t1 appears under schema x.y', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    const t1 = db.tables.find((t) => t.name === 't1');
+    expect(t1).toBeDefined();
+    expect(t1!.schemaName).toBe('x.y');
+  });
+});
+
+describe('[example] nested schema import with ref resolution', () => {
+  // base.dbml defines Table x.y.users and Table x.y.orders.
+  // main.dbml imports schema x.y from base, then uses a ref between them.
+  const { compiler } = setupCompiler({
+    '/base.dbml': `
+Table x.y.users {
+  id int [pk]
+}
+Table x.y.orders {
+  id int [pk]
+  user_id int
+}
+`,
+    '/main.dbml': `
+use { schema x.y } from './base'
+
+Ref: x.y.orders.user_id > x.y.users.id
+`,
+  });
+
+  test('no errors when interpreting main.dbml', () => {
+    const result = compiler.interpretFile(fp('/main.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('ref resolves across nested-schema imported tables', () => {
+    const db = getDatabase(compiler, '/main.dbml');
+    expect(db.refs).toHaveLength(1);
+  });
+});
+
+describe('[example] nested schema with wildcard reuse through schema merge', () => {
+  // c.dbml defines Table x.y.deep.
+  // b.dbml wildcard-reuses c, defines Table x.y.local.
+  // a.dbml imports schema x.y from b — should pull both.
+  const { compiler } = setupCompiler({
+    '/c.dbml': `
+Table x.y.deep {
+  id int [pk]
+}
+`,
+    '/b.dbml': `
+reuse * from './c'
+
+Table x.y.local {
+  id int [pk]
+}
+`,
+    '/a.dbml': `
+use { schema x.y } from './b'
+
+Ref: x.y.local.id > x.y.deep.id
+`,
+  });
+
+  test('no errors when interpreting a.dbml', () => {
+    const result = compiler.interpretFile(fp('/a.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('x.y.local is present', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'local' && t.schemaName === 'x.y')).toBeDefined();
+  });
+
+  test('x.y.deep is present via wildcard reuse', () => {
+    const db = getDatabase(compiler, '/a.dbml');
+    expect(db.tables.find((t) => t.name === 'deep' && t.schemaName === 'x.y')).toBeDefined();
+  });
+});
+
+describe('[example] reuse * from file with reuse { schema x as y } merges to aliased schema', () => {
+  // base.dbml has Table x.t1 and Table x.t2.
+  // mid.dbml reuses schema x aliased as y.
+  // consumer.dbml does reuse * from mid — should see t1 and t2 under schema y.
+  const { compiler } = setupCompiler({
+    '/base.dbml': `
+Table x.t1 {
+  id int [pk]
+}
+Table x.t2 {
+  id int [pk]
+  t1_id int
+}
+`,
+    '/mid.dbml': `
+reuse { schema x as y } from './base'
+`,
+    '/consumer.dbml': `
+reuse * from './mid'
+
+Ref: y.t2.t1_id > y.t1.id
+`,
+  });
+
+  test('no errors', () => {
+    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('t1 under aliased schema y', () => {
+    const db = getDatabase(compiler, '/consumer.dbml');
+    expect(db.tables.find((t) => t.name === 't1' && t.schemaName === 'y')).toBeDefined();
+  });
+
+  test('t2 under aliased schema y', () => {
+    const db = getDatabase(compiler, '/consumer.dbml');
+    expect(db.tables.find((t) => t.name === 't2' && t.schemaName === 'y')).toBeDefined();
+  });
+
+  test('ref resolves through aliased schema', () => {
+    const db = getDatabase(compiler, '/consumer.dbml');
+    expect(db.refs).toHaveLength(1);
+  });
+});
+
+describe('[example] reuse * from file with use { schema x as y } does NOT merge (use is local-only)', () => {
+  // mid.dbml uses `use` (not reuse), so the alias is local — not transitively visible.
+  const { compiler } = setupCompiler({
+    '/base.dbml': `
+Table x.t1 {
+  id int [pk]
+}
+`,
+    '/mid.dbml': `
+use { schema x as y } from './base'
+`,
+    '/consumer.dbml': `
+reuse * from './mid'
+`,
+  });
+
+  test('no errors', () => {
+    const result = compiler.interpretFile(fp('/consumer.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('t1 is NOT present (use is local-only)', () => {
+    const db = getDatabase(compiler, '/consumer.dbml');
+    expect(db.tables.find((t) => t.name === 't1')).toBeUndefined();
+  });
+});
+
+describe('[example] chained reuse * preserves aliased schema transitively', () => {
+  // base -> mid (reuse schema alias) -> consumer (reuse *) -> final (use schema y)
+  const { compiler } = setupCompiler({
+    '/base.dbml': `
+Table x.t1 {
+  id int [pk]
+}
+`,
+    '/mid.dbml': `
+reuse { schema x as y } from './base'
+`,
+    '/consumer.dbml': `
+reuse * from './mid'
+`,
+    '/final.dbml': `
+use { schema y } from './consumer'
+`,
+  });
+
+  test('no errors', () => {
+    const result = compiler.interpretFile(fp('/final.dbml'));
+    expect(result.getErrors()).toHaveLength(0);
+  });
+
+  test('t1 under aliased schema y in final', () => {
+    const db = getDatabase(compiler, '/final.dbml');
+    expect(db.tables.find((t) => t.name === 't1' && t.schemaName === 'y')).toBeDefined();
+  });
+});
+

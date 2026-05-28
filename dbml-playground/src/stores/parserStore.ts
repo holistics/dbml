@@ -5,7 +5,7 @@ import { defineStore } from 'pinia';
 import { debounce } from 'lodash-es';
 import * as monaco from 'monaco-editor';
 import {
-  Compiler, DBMLDiagnosticsProvider, Filepath, MemoryProjectLayout,
+  Compiler, DBMLDiagnosticsProvider, Filepath, MemoryProjectLayout, UNHANDLED,
 } from '@dbml/parse';
 import type {
   Diagnostic, SyntaxToken, ProgramNode, Database, NodeSymbol,
@@ -35,12 +35,8 @@ export interface SymbolInfo {
 }
 
 function getSymbolMembers (compiler: Compiler, symbol: NodeSymbol): NodeSymbol[] {
-  try {
-    const members = compiler.symbolMembers(symbol);
-    return Array.isArray(members) ? members.map((m) => m.symbol) : [];
-  } catch {
-    return [];
-  }
+  const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
+  return Array.isArray(members) ? members : [];
 }
 
 function buildSymbolInfo (compiler: Compiler, symbol: NodeSymbol, depth = 0): SymbolInfo {
@@ -135,7 +131,7 @@ export const useParserStore = defineStore('parser', () => {
       const parseIndex = parseResult.getValue();
       if (parseIndex) {
         tokens.value = [...parseIndex.tokens];
-        ast.value = parseIndex.ast as ProgramNode;
+        ast.value = parseIndex.ast;
       } else {
         tokens.value = [];
         ast.value = undefined;
@@ -144,7 +140,7 @@ export const useParserStore = defineStore('parser', () => {
       errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserError);
       database.value = compiler.interpretFile(currentFilepath).getValue() as Database | undefined;
 
-      const programSymbol = parseIndex?.ast?.symbol;
+      const programSymbol = compiler.nodeSymbol(parseIndex.ast).getFiltered(UNHANDLED);
       symbols.value = programSymbol ? [buildSymbolInfo(compiler, programSymbol)] : [];
     } catch (err) {
       logger.error('Unexpected parsing error');

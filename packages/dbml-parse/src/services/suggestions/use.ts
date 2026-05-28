@@ -5,7 +5,7 @@ import { UNHANDLED } from '@/core/types/module';
 import {
   UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode, WildcardNode,
 } from '@/core/types/nodes';
-import { SymbolKind } from '@/core/types/symbol';
+import { SymbolKind, UseSymbol } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import { isOffsetWithinSpan } from '@/core/utils/span';
@@ -133,28 +133,29 @@ function suggestUseElementNames (
   const usable = compiler.usableMembers(targetFilepath).getFiltered(UNHANDLED);
   if (!usable) return noSuggestions();
 
-  const names: string[] = [];
+  const names = new Set<string>();
 
-  for (const member of usable.nonSchemaMembers) {
-    if (member.kind !== symbolKind) continue;
-    const name = member.name;
-    if (name) names.push(name);
-  }
-
+  // Collect from schema members (which resolves reuse chains)
   for (const schema of usable.schemaMembers) {
-    if (schema.isPublicSchema()) continue;
-    const schemaName = schema.name;
-    if (!schemaName) continue;
     const schemaMembers = compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
     for (const member of schemaMembers) {
       if (member.kind !== symbolKind) continue;
+      // Only suggest symbols that can be imported (reused, not use-only)
+      if (member instanceof UseSymbol && !member.canBeImported) continue;
       const memberName = member.name;
-      if (memberName) names.push(`${schemaName}.${memberName}`);
+      if (!memberName) continue;
+      if (schema.isPublicSchema()) {
+        names.add(memberName);
+      } else {
+        names.add(`${schema.name}.${memberName}`);
+      }
     }
   }
 
   return {
-    suggestions: names.map((name) => ({
+    suggestions: [
+      ...names,
+    ].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -178,7 +179,7 @@ function suggestUseSpecifierStart (): CompletionList {
       {
         label: '{ } from',
         detail: 'import named',
-        insertText: "{ ${1:kind} ${2:name} } from '${3:./path}'",
+        insertText: "{ ${1:type} ${2:name} } from '${3:./path}'",
         insertTextRules: CompletionItemInsertTextRule.InsertAsSnippet,
         kind: CompletionItemKind.Snippet,
         range: undefined as any,
@@ -275,8 +276,10 @@ function suggestUseFilepath (
 }
 
 // Extract { name, kind } pairs from the use declaration's specifier list.
-function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{ name: string;
-  kind: SymbolKind; }> {
+function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{
+  name: string;
+  kind: SymbolKind;
+}> {
   const specifiers = useDeclaration.specifiers;
   if (!(specifiers instanceof UseSpecifierListNode)) return [];
   return specifiers.specifiers.flatMap((spec: UseSpecifierNode) => {
