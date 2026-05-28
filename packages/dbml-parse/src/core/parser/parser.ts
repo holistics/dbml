@@ -187,8 +187,10 @@ export default class Parser {
     this.tokens = tokens;
   }
 
-  parse (): Report<{ ast: ProgramNode;
-    tokens: SyntaxToken[]; }> {
+  parse (): Report<{
+    ast: ProgramNode;
+    tokens: SyntaxToken[];
+  }> {
     const body = this.program();
     const eof = this.advance();
     const program = this.nodeFactory.create(ProgramNode, {
@@ -400,10 +402,7 @@ export default class Parser {
       if (!(e instanceof PartialParsingError)) {
         throw e;
       }
-      if (!this.canHandle(e)) {
-        throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-      }
-      this.synchronizeUseSpecifier();
+      throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
     }
 
     if (
@@ -418,10 +417,7 @@ export default class Parser {
         if (e.partialNode instanceof SyntaxNode) {
           args.name = e.partialNode;
         }
-        if (!this.canHandle(e)) {
-          throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
-        }
-        this.synchronizeUseSpecifier();
+        throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
       }
     } else if (args.importKind) {
       this.logError(this.peek(), CompileErrorCode.UNEXPECTED_TOKEN, 'Expect an element name');
@@ -449,26 +445,11 @@ export default class Parser {
         if (!this.canHandle(e)) {
           throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
         }
-        this.synchronizeUseSpecifier();
       }
     }
 
     return buildNode();
   }
-
-  private synchronizeUseSpecifier = () => {
-    while (!this.isAtEnd()) {
-      const token = this.peek();
-      if (
-        this.check(SyntaxTokenKind.RBRACE)
-        || isAtStartOfLine(this.previous(), token)
-      ) {
-        break;
-      }
-      markInvalid(token);
-      this.advance();
-    }
-  };
 
   private synchronizeProgram = () => {
     const invalidToken = this.peek();
