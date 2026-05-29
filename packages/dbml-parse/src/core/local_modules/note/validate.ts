@@ -5,7 +5,9 @@ import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { aggregateSettingList, isExpressionAQuotedString, isValidColor, isExpressionAnIdentifierNode } from '@/core/utils/validate';
+import {
+  aggregateSettingList, isExpressionAQuotedString, isValidColor, isExpressionAnIdentifierNode,
+} from '@/core/utils/validate';
 
 export default class NoteValidator {
   private compiler: Compiler;
@@ -63,18 +65,19 @@ export default class NoteValidator {
     return [];
   }
 
+  // A sticky note is a Note that appears top-level
+  // A sticky note is not if it appear nested
   private isStickyNote (): boolean {
     return this.declarationNode.parent instanceof ProgramNode;
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+    if (!settingList) return [];
+
     if (!this.isStickyNote()) {
-      if (settingList) {
-        return [
-          new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList),
-        ];
-      }
-      return [];
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList),
+      ];
     }
 
     const aggReport = aggregateSettingList(settingList);
@@ -88,7 +91,9 @@ export default class NoteValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_NOTE_SETTING, '\'color\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
+            // color can be `none` (transparent)
             const isNoneKeyword = isExpressionAnIdentifierNode(attr.value) && attr.value.expression.variable.value.toLowerCase() === 'none';
+            // color can be a hex number
             if (!isValidColor(attr.value) && !isNoneKeyword) {
               errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, '\'color\' must be a color literal or \'none\'', attr.value || attr.name!));
             }
