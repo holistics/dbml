@@ -32,7 +32,7 @@ Note "schema.note4" {
   '''
 }
 
-Note "schema"."note5" [headercolor: #3457DB] {
+Note "schema"."note5" [color: #3457DB] {
   '''
     # Title
     body
