@@ -1,11 +1,11 @@
-import { partition } from 'lodash-es';
+import { partition, forIn } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ElementKind } from '@/core/types/keywords';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString } from '@/core/utils/validate';
+import { aggregateSettingList, isExpressionAQuotedString, isValidColor, isExpressionAnIdentifierNode } from '@/core/utils/validate';
 
 export default class NoteValidator {
   private compiler: Compiler;
@@ -63,14 +63,43 @@ export default class NoteValidator {
     return [];
   }
 
+  private isStickyNote (): boolean {
+    return this.declarationNode.parent instanceof ProgramNode;
+  }
+
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    if (settingList) {
-      return [
-        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList),
-      ];
+    if (!this.isStickyNote()) {
+      if (settingList) {
+        return [
+          new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList),
+        ];
+      }
+      return [];
     }
 
-    return [];
+    const aggReport = aggregateSettingList(settingList);
+    const errors = aggReport.getErrors();
+    const settingMap = aggReport.getValue();
+
+    forIn(settingMap, (attrs, name) => {
+      switch (name) {
+        case SettingName.Color:
+          if (attrs.length > 1) {
+            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_NOTE_SETTING, '\'color\' can only appear once', attr)));
+          }
+          attrs.forEach((attr) => {
+            const isNoneKeyword = isExpressionAnIdentifierNode(attr.value) && attr.value.expression.variable.value.toLowerCase() === 'none';
+            if (!isValidColor(attr.value) && !isNoneKeyword) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, '\'color\' must be a color literal or \'none\'', attr.value || attr.name!));
+            }
+          });
+          break;
+        default:
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_NOTE_SETTING, `Unknown '${name}' setting`, attr)));
+      }
+    });
+
+    return errors;
   }
 
   validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

@@ -99,6 +99,7 @@ export interface Note {
   content: string;
   token: TokenPosition;
   headerColor?: string;
+  color?: string;
 }
 
 export interface ColumnType {

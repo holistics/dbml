@@ -37,14 +37,14 @@
       }
     },
     {
-      "code": "UNEXPECTED_SETTINGS",
-      "diagnostic": "A Note shouldn't have a setting list",
+      "code": "UNKNOWN_NOTE_SETTING",
+      "diagnostic": "Unknown 'headercolor' setting",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<list-expression>@@[L34:C22, L34:C44]",
-          "snippet": "[headercol...: #3457DB]"
+          "id": "node@<attribute>@@[L34:C23, L34:C43]",
+          "snippet": "headercolor: #3457DB"
         }
       }
     }

@@ -693,6 +693,64 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(0);
     });
+
+    test('should accept sticky note with color setting', () => {
+      const source = `
+        Note my_note [color: #FF5733] {
+          'A colored note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept sticky note with color none', () => {
+      const source = `
+        Note my_note [color: none] {
+          'A note without color'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should reject unknown setting on sticky note', () => {
+      const source = `
+        Note my_note [unknown: value] {
+          'A note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.UNKNOWN_NOTE_SETTING);
+    });
+
+    test('should reject invalid color value on sticky note', () => {
+      const source = `
+        Note my_note [color: invalid] {
+          'A note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_NOTE_SETTING_VALUE);
+    });
+
+    test('should reject duplicate color setting on sticky note', () => {
+      const source = `
+        Note my_note [color: #FF5733, color: #00FF00] {
+          'A note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(2);
+      expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_NOTE_SETTING);
+    });
   });
 
   describe('context validation', () => {
