@@ -9,6 +9,7 @@ export interface RawStickyNote {
     database: Database;
     token: Token;
     headerColor: string;
+    color?: string;
 }
 
 declare class StickyNote extends Element {
@@ -16,15 +17,17 @@ declare class StickyNote extends Element {
     content: string;
     noteToken: Token;
     headerColor: string;
+    color?: string;
     database: Database;
     dbState: DbState;
     id: number;
-    constructor({ name, content, token, headerColor, database }: RawStickyNote);
+    constructor({ name, content, token, headerColor, color, database }: RawStickyNote);
     generateId(): void;
     export(): {
         name: string;
         content: string;
         headerColor: string;
+        color?: string;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -33,6 +36,7 @@ export interface NormalizedNote {
     name: string;
     content: string;
     headerColor: string | null;
+    color?: string;
 }
 
 export interface NormalizedNoteIdMap {
