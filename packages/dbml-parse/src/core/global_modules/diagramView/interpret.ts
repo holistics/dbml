@@ -19,7 +19,7 @@ import {
   SymbolKind,
 } from '@/core/types/symbol';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { isWildcardExpression } from '@/core/utils/validate';
+import { getRightmostVariable, isWildcardExpression } from '@/core/utils/validate';
 
 export class DiagramViewInterpreter {
   private compiler: Compiler;
@@ -184,8 +184,11 @@ export class DiagramViewInterpreter {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
       // If the field was bound to a symbol (e.g., alias "U" -> Table "users"),
-      // resolve the real name from the referee's declaration
-      const referee = field.callee && this.compiler.nodeReferee(field.callee!).getFiltered(UNHANDLED);
+      // resolve the real name from the referee's declaration.
+      // For access expressions (e.g. ecommerce.merchants), extract the rightmost
+      // variable node since nodeReferee expects a PrimaryExpressionNode.
+      const refereeNode = field.callee && getRightmostVariable(field.callee);
+      const referee = refereeNode && this.compiler.nodeReferee(refereeNode).getFiltered(UNHANDLED);
       if (referee?.declaration instanceof ElementDeclarationNode) {
         const realFragments = destructureComplexVariable(referee.declaration.name) ?? [];
         if (realFragments.length > 0) {
