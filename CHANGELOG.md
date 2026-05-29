@@ -1,3 +1,12 @@
+## v8.2.3 (2026-05-29)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#912](https://github.com/holistics/dbml/pull/912) Infinite loop when recovering from syntax errors of use specifier syntax in dbml ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.2.2 (2026-05-27)
 
 #### :robot: Dependencies Update
