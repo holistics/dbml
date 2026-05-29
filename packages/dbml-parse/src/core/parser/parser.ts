@@ -58,6 +58,15 @@ class PartialParsingError<T extends SyntaxNode> {
   }
 }
 
+// Parser architecture:
+// - Recursive descent parser: Each node in AST maps to a private "parse method" in the parser
+//   Example: ProgramNode -> Parser.program
+//            UseSpecifierNode -> Parser.useSpecifier
+// - Panic mode recovery strategy: A "parse method" when encounters an invalid syntax:
+//   1. Determine whether it can handle this syntax error: `this.canHandle(e)`
+//   2. If it can't, throw a new PartialParsingError with the partially built node
+//   3. If it can, call `synchronizeParseMethod`
+//      INVARIANT: `synchronizeParseMethod` must ensure in most cases that it consumes at least one Lexer token, else, we risk infinite loops. Only do this when you know what you're doing, but avoid doing so.
 export default class Parser {
   private tokens: SyntaxToken[];
 
@@ -386,6 +395,11 @@ export default class Parser {
     }
   };
 
+  // Parse a use specifier
+  // use { table t } from './t.dbml'
+  //       ^^^^^^^
+  //       use specifier
+  // It cannot handle any syntax errors, expect useSpecifierList to handle syntax errors it throws
   private useSpecifier (): UseSpecifierNode {
     const args: {
       importKind?: SyntaxToken;
