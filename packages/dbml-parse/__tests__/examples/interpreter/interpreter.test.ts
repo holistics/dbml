@@ -186,6 +186,25 @@ describe('[example] interpreter', () => {
 
       expect(index.columns).toHaveLength(2);
     });
+
+    test('should report error for non-existent column in composite index', () => {
+      const source = `
+        Table posts {
+          id int [pk]
+          title varchar [not null]
+          content text
+          user_id int
+          created_at timestamp [default: \`now()\`]
+          indexes {
+            (id, non_existent_column)
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'non_existent_column' inside Table 'posts'");
+    });
   });
 
   describe('ref interpretation', () => {
