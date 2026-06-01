@@ -74,6 +74,7 @@ export default class NoteValidator {
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
     if (!settingList) return [];
 
+    // Normal note (non-sticky) cannot have settings
     if (!this.isStickyNote()) {
       return [
         new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList),
@@ -86,6 +87,7 @@ export default class NoteValidator {
 
     forIn(settingMap, (attrs, name) => {
       switch (name) {
+        // Sticky note color
         case SettingName.Color:
           if (attrs.length > 1) {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_NOTE_SETTING, '\'color\' can only appear once', attr)));
