@@ -37,6 +37,9 @@ TablePartial test2 {
 }
 
 TablePartial testIndex {
+  email varchar
+  id int
+
   indexes {
     email [unique]
     id [pk]
