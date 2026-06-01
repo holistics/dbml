@@ -257,6 +257,20 @@ TableGroup e_commerce [color: #3498DB] {
 }
 ```
 
+### Sticky note color
+
+Use `color` on a sticky note to change its background color. Use `none` for transparent:
+
+```text
+Note reminder [color: #F4D03F] {
+  'This is a reminder'
+}
+
+Note no_color [color: none] {
+  'This note has no background color'
+}
+```
+
 ## Inactive Ref
 
 Use `inactive` on a relationship to mark it as inactive. Inactive refs are displayed as a dotted line in the diagram, allowing you to document relationships that are not of immediate focus.
