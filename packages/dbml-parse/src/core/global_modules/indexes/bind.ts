@@ -21,7 +21,9 @@ export default class IndexesBinder {
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || !this.declarationNode.parent.isKind(ElementKind.Table)) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode)
+      || (!this.declarationNode.parent.isKind(ElementKind.Table)
+        && !this.declarationNode.parent.isKind(ElementKind.TablePartial))) {
       return [];
     }
 
@@ -30,6 +32,11 @@ export default class IndexesBinder {
     }
 
     return this.bindBody(this.declarationNode.body);
+  }
+
+  private get ownerContainerKind (): string {
+    const parent = this.declarationNode.parent as ElementDeclarationNode;
+    return parent.isKind(ElementKind.TablePartial) ? 'TablePartial' : 'Table';
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -94,7 +101,7 @@ export default class IndexesBinder {
         if (columnName === undefined) return [];
         const column = this.compiler.nodeReferee(bindee);
         if (!column.getValue() || column.hasValue(UNHANDLED)) {
-          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
+          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside ${this.ownerContainerKind} '${ownerTableName}'`, bindee);
         }
 
         return [];

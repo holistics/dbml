@@ -1,0 +1,10 @@
+TablePartial posts_partial {
+  id int [pk]
+  title varchar [not null]
+  content text
+  user_id int
+  created_at timestamp [default: `now()`]
+  indexes {
+    (id, non_existent_column)
+  }
+}
