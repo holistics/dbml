@@ -467,6 +467,12 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
         ];
         break;
 
+      case ScopeKind.NOTE:
+        attributes = [
+          SettingName.Color,
+        ];
+        break;
+
       default:
         attributes = [];
     }
@@ -635,6 +641,19 @@ function suggestAttributeValue (
           range: undefined as any,
         })),
       };
+    case 'color':
+      if (compiler.container.scopeKind(filepath, offset) === ScopeKind.NOTE) {
+        return {
+          suggestions: ['none'].map((name) => ({
+            label: name,
+            insertText: name,
+            kind: CompletionItemKind.Value,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            range: undefined as any,
+          })),
+        };
+      }
+      break;
     case 'default':
       return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
         SymbolKind.Schema,

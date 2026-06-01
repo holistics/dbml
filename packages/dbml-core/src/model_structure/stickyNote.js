@@ -5,15 +5,13 @@ class StickyNote extends Element {
    * @param {import('../../types/model_structure/stickyNote').RawStickyNote} param0
    */
   constructor ({
-    name, content, headerColor, color, token, database = {},
+    name, content, color, token, database = {},
   } = {}) {
     super(token);
     /** @type {string} */
     this.name = name;
     /** @type {string} */
     this.content = content;
-    /** @type {string} */
-    this.headerColor = headerColor;
     /** @type {string | undefined} */
     this.color = color;
     /** @type {import('../../types/model_structure/database').default} */
@@ -32,7 +30,6 @@ class StickyNote extends Element {
     return {
       name: this.name,
       content: this.content,
-      headerColor: this.headerColor,
       color: this.color,
     };
   }

@@ -98,7 +98,6 @@ export interface Note {
   name: string;
   content: string;
   token: TokenPosition;
-  headerColor?: string;
   color?: string;
 }
 

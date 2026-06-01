@@ -66,8 +66,6 @@ export class StickyNoteInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.note.headerColor = settingMap.headercolor?.length ? extractColor(settingMap.headercolor?.at(0)?.value as any) : undefined;
-
     if (settingMap.color?.length) {
       const colorNode = settingMap.color.at(0)?.value;
       const isNone = isExpressionAnIdentifierNode(colorNode) && colorNode.expression.variable.value.toLowerCase() === 'none';
