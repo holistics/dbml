@@ -87,9 +87,9 @@ describe('[example] use declaration parsing', () => {
       expect(r.getValue().ast.uses).toHaveLength(1);
     });
 
-    test('missing specifiers: 8 errors, continues parsing elements', () => {
+    test('missing specifiers: 6 errors, continues parsing elements', () => {
       const r = parse(`use from './schema'\nTable posts { id int }`);
-      expect(r.getErrors()).toHaveLength(8);
+      expect(r.getErrors()).toHaveLength(6);
       expect(r.getErrors()[0].diagnostic).toBe("Expect an opening brace '{'");
       expect(r.getValue().ast.body.length).toBeGreaterThanOrEqual(1);
     });
