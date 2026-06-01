@@ -1,3 +1,14 @@
+## v8.2.4 (2026-06-01)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#916](https://github.com/holistics/dbml/pull/916) Missing column in index tuples are not reported as compile error, causing a runtime error ([@huydo862003](https://github.com/huydo862003))
+  * [#916](https://github.com/holistics/dbml/pull/916) TablePartial indexes are not being resolved ([@huydo862003](https://github.com/huydo862003))
+  * [#916](https://github.com/holistics/dbml/pull/916) Improve URI handling in compiler services, respecting the model's uri scheme when generate definitions and references ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.2.3 (2026-05-29)
 
 #### :bug: Bug Fix
