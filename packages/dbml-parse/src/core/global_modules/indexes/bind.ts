@@ -68,13 +68,24 @@ export default class IndexesBinder {
       ];
       const bindees = args.flatMap(scanNonListNodeForBinding)
         .flatMap((bindee) => {
-          if (bindee.variables.length + bindee.tupleElements.length > 1) {
+          // Indexes can never be schema-qualified (they reference table columns)
+          if (bindee.variables.length > 1) {
             return [];
           }
+          // Indexes is a simple column
+          // e.g
+          // Indexes {
+          //   id
+          // }
           if (bindee.variables.length) {
             return bindee.variables[0];
           }
 
+          // Indexes is a tuple
+          // e.g
+          // Indexes {
+          //   (id, name, age)
+          // }
           return bindee.tupleElements;
         });
 

@@ -48,7 +48,7 @@ export function getNodeMemberSymbols (compiler: Compiler, node: SyntaxNode): Rep
   );
 }
 
-// Scan for variable node and member access expression in the node except ListExpressionNo
+// Scan for variable node and member access expression in the node except ListExpressionNode
 export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (PrimaryExpressionNode & { expression: VariableNode })[];
   tupleElements: (PrimaryExpressionNode & { expression: VariableNode })[]; }[] {
   if (!node) return [];
