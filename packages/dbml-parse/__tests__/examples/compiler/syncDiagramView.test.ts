@@ -12,12 +12,31 @@ import {
 import type {
   DiagramViewSyncOperation,
 } from '@/compiler/queries/transform/syncDiagramView';
+import { interpret } from '@tests/utils';
 
 function syncDiagramView (dbml: string, operations: DiagramViewSyncOperation[]) {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbml);
   const compiler = new Compiler(layout);
   return compiler.syncDiagramView(DEFAULT_ENTRY, operations);
+}
+
+// Round-trip helper: emit DBML for a visibleEntities input, then parse it back
+// and return the visibleEntities the interpreter produced. Asserts emit→parse
+// equals the input (the property the writer must preserve).
+//
+// `prelude` supplies entity definitions (Tables, StickyNotes, TableGroups) that
+// the DiagramView block references. Without these, the interpreter's bind step
+// drops the whole project (referenced symbols missing).
+function roundTripVisibleEntities (
+  ve: NonNullable<DiagramViewSyncOperation['visibleEntities']>,
+  prelude = '',
+) {
+  const { newDbml } = syncDiagramView(prelude, [
+    { operation: 'create', name: 'V', visibleEntities: ve },
+  ]);
+  const db = interpret(newDbml).getValue()!;
+  return { newDbml, parsed: db.diagramViews[0].visibleEntities };
 }
 
 // update operation
@@ -789,6 +808,94 @@ DiagramView my_view {
     expect(newDbml).not.toContain('users');
     expect(newDbml).toContain('TableGroups {');
     expect(newDbml).toContain('Inv');
+  });
+});
+
+// Round-trip semantics: writer output must parse back to the same visibleEntities.
+// These tests pin the contract that null = hide-all and [] = show-all survive
+// a write → parse cycle.
+
+describe('syncDiagramView - round-trip preserves null vs [] semantics', () => {
+  it('hide all sticky notes alone (trinity show-all, notes null) round-trips', () => {
+    const { parsed } = roundTripVisibleEntities({
+      tables: [], tableGroups: [], schemas: [], stickyNotes: null,
+    });
+    expect(parsed.tables).toEqual([]);
+    expect(parsed.tableGroups).toEqual([]);
+    expect(parsed.schemas).toEqual([]);
+    expect(parsed.stickyNotes).toBeNull();
+  });
+
+  it('hide all everything (all four null) round-trips', () => {
+    const { parsed } = roundTripVisibleEntities({
+      tables: null, tableGroups: null, schemas: null, stickyNotes: null,
+    });
+    expect(parsed.tables).toBeNull();
+    expect(parsed.tableGroups).toBeNull();
+    expect(parsed.schemas).toBeNull();
+    expect(parsed.stickyNotes).toBeNull();
+  });
+
+  it('show all everything (all four []) round-trips', () => {
+    const { parsed } = roundTripVisibleEntities({
+      tables: [], tableGroups: [], schemas: [], stickyNotes: [],
+    });
+    expect(parsed.tables).toEqual([]);
+    expect(parsed.tableGroups).toEqual([]);
+    expect(parsed.schemas).toEqual([]);
+    expect(parsed.stickyNotes).toEqual([]);
+  });
+
+  it('show all trinity + show all notes via items + items round-trips', () => {
+    const { parsed } = roundTripVisibleEntities(
+      {
+        tables: [], tableGroups: [], schemas: [], stickyNotes: [{ name: 'Note1' }],
+      },
+      'Note Note1 { \'\' }',
+    );
+    expect(parsed.tables).toEqual([]);
+    expect(parsed.tableGroups).toEqual([]);
+    expect(parsed.schemas).toEqual([]);
+    expect(parsed.stickyNotes).toEqual([{ name: 'Note1' }]);
+  });
+
+  it('all trinity null + notes [] round-trips', () => {
+    const { parsed } = roundTripVisibleEntities({
+      tables: null, tableGroups: null, schemas: null, stickyNotes: [],
+    });
+    expect(parsed.tables).toBeNull();
+    expect(parsed.tableGroups).toBeNull();
+    expect(parsed.schemas).toBeNull();
+    expect(parsed.stickyNotes).toEqual([]);
+  });
+
+  it('all trinity null + notes items round-trips', () => {
+    const { parsed } = roundTripVisibleEntities(
+      {
+        tables: null, tableGroups: null, schemas: null, stickyNotes: [{ name: 'N1' }],
+      },
+      'Note N1 { \'\' }',
+    );
+    expect(parsed.tables).toBeNull();
+    expect(parsed.tableGroups).toBeNull();
+    expect(parsed.schemas).toBeNull();
+    expect(parsed.stickyNotes).toEqual([{ name: 'N1' }]);
+  });
+
+  it('specific tables + hide notes round-trips', () => {
+    const { parsed } = roundTripVisibleEntities(
+      {
+        tables: [{ name: 'users', schemaName: 'public' }],
+        tableGroups: [],
+        schemas: [],
+        stickyNotes: null,
+      },
+      'Table users { id int }',
+    );
+    expect(parsed.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+    expect(parsed.tableGroups).toEqual([]);
+    expect(parsed.schemas).toEqual([]);
+    expect(parsed.stickyNotes).toBeNull();
   });
 });
 
