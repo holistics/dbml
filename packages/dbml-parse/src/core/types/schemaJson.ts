@@ -1,6 +1,8 @@
 import type { Filepath } from './filepath';
 import type { Position } from './position';
 
+export type Color = `#${string}` | 'none';
+
 export enum AliasKind {
   Table = 'table',
 }
@@ -87,7 +89,7 @@ export interface Table {
   partials: TablePartialInjection[];
   token: TokenPosition;
   indexes: Index[];
-  headerColor?: string;
+  headerColor?: Color;
   note?: {
     value: string;
     token: TokenPosition;
@@ -98,7 +100,7 @@ export interface Note {
   name: string;
   content: string;
   token: TokenPosition;
-  color?: string;
+  color?: Color;
 }
 
 export interface ColumnType {
@@ -169,7 +171,7 @@ export interface Ref {
   schemaName: string | null;
   name: string | null;
   endpoints: RefEndpointPair;
-  color?: string;
+  color?: Color;
   onDelete?: string;
   onUpdate?: string;
   inactive?: boolean;
@@ -209,7 +211,7 @@ export interface TableGroup {
   schemaName: string | null;
   tables: TableGroupField[];
   token: TokenPosition;
-  color?: string;
+  color?: Color;
   note?: {
     value: string;
     token: TokenPosition;
@@ -236,7 +238,7 @@ export interface TablePartial {
   token: TokenPosition;
   indexes: Index[];
   checks: Check[];
-  headerColor?: string;
+  headerColor?: Color;
   note?: {
     value: string;
     token: TokenPosition;

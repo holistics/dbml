@@ -1,4 +1,4 @@
-import Element, { Token } from './element';
+import Element, { Token, Color } from './element';
 import Database from './database';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
@@ -8,14 +8,14 @@ export interface RawStickyNote {
     content: string;
     database: Database;
     token: Token;
-    color?: string;
+    color?: Color;
 }
 
 declare class StickyNote extends Element {
     name: string;
     content: string;
     noteToken: Token;
-    color?: string;
+    color?: Color;
     database: Database;
     dbState: DbState;
     id: number;
@@ -24,7 +24,7 @@ declare class StickyNote extends Element {
     export(): {
         name: string;
         content: string;
-        color?: string;
+        color?: Color;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -32,7 +32,7 @@ export interface NormalizedNote {
     id: number;
     name: string;
     content: string;
-    color?: string;
+    color?: Color;
 }
 
 export interface NormalizedNoteIdMap {

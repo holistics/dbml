@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { ColumnType, TokenPosition } from '@/core/types/schemaJson';
+import type { Color, ColumnType, TokenPosition } from '@/core/types/schemaJson';
 import {
   ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode,
 } from '@/core/types/nodes';
@@ -63,13 +63,13 @@ export function extractElementName (nameNode: SyntaxNode): {
   };
 }
 
-export function extractColor (node: unknown): string | undefined {
+export function extractColor (node: unknown): Color | undefined {
   if (
     node instanceof PrimaryExpressionNode
     && node.expression instanceof LiteralNode
     && node.expression.literal?.kind === SyntaxTokenKind.COLOR_LITERAL
   ) {
-    return node.expression.literal.value;
+    return node.expression.literal.value as Color;
   }
   // Support `color: none` as transparent
   if (isExpressionAnIdentifierNode(node as SyntaxNode)) {

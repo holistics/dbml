@@ -67,10 +67,7 @@ export class StickyNoteInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     if (settingMap.color?.length) {
-      const colorNode = settingMap.color.at(0)?.value;
-      const isNone = isExpressionAnIdentifierNode(colorNode) && colorNode.expression.variable.value.toLowerCase() === 'none';
-      // Transparent color #00000000
-      this.note.color = isNone ? '#00000000' : extractColor(colorNode as any);
+      this.note.color = extractColor(settingMap.color.at(0)?.value as any);
     }
 
     return [];
