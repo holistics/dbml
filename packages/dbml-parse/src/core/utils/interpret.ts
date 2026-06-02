@@ -71,6 +71,11 @@ export function extractColor (node: unknown): string | undefined {
   ) {
     return node.expression.literal.value;
   }
+  // Support `color: none` as transparent
+  if (isExpressionAnIdentifierNode(node as SyntaxNode)) {
+    const value = extractVariableFromExpression(node as SyntaxNode);
+    if (value?.toLowerCase() === 'none') return 'none';
+  }
   return undefined;
 }
 
