@@ -1,10 +1,10 @@
 /**
- * DiagramView block transform — read, write, and synchronise DiagramView
+ * DiagramView block transform - read, write, and synchronise DiagramView
  * blocks in DBML source.
  *
  * Glossary
  * --------
- * - **dim** (dimension): one of the four fields in `visibleEntities` —
+ * - **dim** (dimension): one of the four fields in `visibleEntities` -
  *   `tables`, `tableGroups`, `schemas`, or `stickyNotes`. Each dim
  *   independently describes which entities of that kind should be visible
  *   in the DiagramView.
@@ -12,15 +12,15 @@
  *   `schemas`). They share an interpreter rule (trinity-omit) and are
  *   handled as a group when emitting DBML.
  * - **notes**: shorthand for the `stickyNotes` dim. Independent of trinity
- *   in the interpreter — has its own emission rules.
+ *   in the interpreter - has its own emission rules.
  * - **dim state**: the three possible runtime shapes for a single dim's
  *   FilterConfig value (see {@link DimState}):
- *     - `'null'`  → user explicitly hides all entities of this kind
- *     - `'empty'` → user shows all entities of this kind (current + future)
- *     - `'items'` → user shows a specific subset (the array carries the items)
+ *     - `'null'`  -> user explicitly hides all entities of this kind
+ *     - `'empty'` -> user shows all entities of this kind (current + future)
+ *     - `'items'` -> user shows a specific subset (the array carries the items)
  * - **sub-block**: a child block inside a DiagramView body, e.g.
  *   `Tables { users }` or `Notes { * }`. One sub-block per dim.
- * - **body-level wildcard**: the DBML form `DiagramView X { * }` — a `*`
+ * - **body-level wildcard**: the DBML form `DiagramView X { * }` - a `*`
  *   at the body level rather than inside a sub-block. The interpreter
  *   expands it to "show all" for ALL four dims simultaneously.
  * - **wildcard expansion** ({@link ../../../core/global_modules/diagramView/interpret.ts}):
@@ -31,7 +31,7 @@
  * - **trinity-omit rule** (same file as wildcard expansion): when at least
  *   one trinity dim is explicitly non-null in the DBML, any omitted trinity
  *   dim is promoted from `null` to `[]` (show all). Lets us encode trinity
- *   `[]` by omitting the block — provided another trinity dim carries items.
+ *   `[]` by omitting the block - provided another trinity dim carries items.
  * - **round-trip**: the property that an input `visibleEntities` value,
  *   when emitted to DBML and then re-parsed, yields the same value. The
  *   writer's job is to preserve this for every UI-reachable input.
@@ -70,21 +70,18 @@ export interface DiagramViewBlock {
 }
 
 /**
- * Returns the start/end byte positions of every DiagramView block in `source`.
- *
- * Returns an empty array on any lex or parse error - callers cannot
- * distinguish "no DiagramView blocks present" from "malformed DBML" based on
- * the return value alone. If you need to detect malformed input, lex/parse
- * the source separately and check for errors before calling this function.
+ * Returns the position of every DiagramView block in `source`
+ * Note that onany lex or parse errors, we return [], as there's no reliable way to detect diagram views from malformed DBML
  */
 export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
-  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return blocks; // malformed - cannot tokenize
 
+  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
+  if (lexerResult.getErrors().length > 0) return blocks; // Lex error, return
   const tokens = lexerResult.getValue();
+
   const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
-  if (ast.getErrors().length > 0) return blocks; // malformed - cannot parse
+  if (ast.getErrors().length > 0) return blocks; // Parse error, return
 
   const program = ast.getValue().ast;
 
@@ -112,15 +109,11 @@ type SubBlockName = 'Tables' | 'TableGroups' | 'Schemas' | 'Notes';
  *   <indent><indent>item1
  *   <indent><indent>item2
  *   <indent>}
- *
- * `formatItem` produces the rendered text for each item (typically quoting
- * + schema-qualification). Items are emitted in the order they appear.
  */
-function emitListSubBlock<T> (
+function emitListSubBlock (
   lines: string[],
   blockName: SubBlockName,
-  items: T[],
-  // formatItem: (item: T) => string,
+  items: string[],
 ): void {
   lines.push(`  ${blockName} {`);
   items.forEach((item) => lines.push(`    ${item}`));
@@ -134,18 +127,15 @@ function emitWildcardSubBlock (lines: string[], blockName: SubBlockName): void {
 /**
  * The three runtime states a single dim's FilterConfig value can hold.
  * See the file header glossary for the semantic meaning of each.
- *
- * Private to this file — the emission rules below pattern-match on this type
- * to decide what DBML to produce for each dim.
  */
 type DimState = 'null' | 'empty' | 'items';
 
 /**
  * Reduces a dim's FilterConfig value to its {@link DimState}.
  *
- * - `null` / `undefined`  → `'null'`  (hide all)
- * - `[]`                  → `'empty'` (show all)
- * - any non-empty array   → `'items'` (show specific items)
+ * - `null` / `undefined`  -> `'null'`  (hide all)
+ * - `[]`                  -> `'empty'` (show all)
+ * - any non-empty array   -> `'items'` (show specific items)
  */
 function classifyDim<T> (value: T[] | null | undefined): DimState {
   if (value == null) return 'null';
@@ -164,16 +154,16 @@ function classifyDim<T> (value: T[] | null | undefined): DimState {
  * `'null'`, `'empty'`, `'items'`. The emission must round-trip through the
  * interpreter, which relies on three behaviours:
  *
- *   1. **Trinity-omit rule** — when any trinity dim is explicitly non-null,
+ *   1. **Trinity-omit rule** - when any trinity dim is explicitly non-null,
  *      omitted trinity dims are promoted to `[]`. So omitting a trinity
  *      sub-block is the canonical encoding of `'empty'` when another trinity
  *      dim carries items.
- *   2. **Wildcard expansion** — `Tables { * }` or `Schemas { * }` sets all
+ *   2. **Wildcard expansion** - `Tables { * }` or `Schemas { * }` sets all
  *      three trinity dims to `[]` and leaves stickyNotes untouched.
- *   3. **Body-level wildcard `{ * }`** — sets ALL four dims to `[]`,
+ *   3. **Body-level wildcard `{ * }`** - sets ALL four dims to `[]`,
  *      including stickyNotes. Used as a size shortcut only.
  *
- * Truth table (input → emission → round-trips to):
+ * Truth table (input -> emission -> round-trips to):
  *
  *   ┌────────────────────────────────────────┬───────────────────────────┐
  *   │ Input states                           │ Emission                  │
@@ -193,7 +183,7 @@ function classifyDim<T> (value: T[] | null | undefined): DimState {
  *
  * Known round-trip asymmetry (not currently UI-reachable in dbdiagram):
  * mixed `null`/`[]` across trinity dims while another trinity carries items
- * cannot preserve the `null` distinction — the trinity-omit rule forces it
+ * cannot preserve the `null` distinction - the trinity-omit rule forces it
  * to `[]` on parse. See __tests__/.../syncDiagramView.test.ts for the
  * exhaustive case coverage.
  */
@@ -246,14 +236,14 @@ function generateDiagramViewBlock (
     emitWildcardSubBlock(lines, 'Tables');
   }
 
-  // Notes emission — independent of trinity
+  // Notes emission is independent of trinity
   if (states.stickyNotes === 'items') {
     emitListSubBlock(lines, 'Notes', formatedNotes);
   } else if (states.stickyNotes === 'empty') {
     // Emit show-all only when no other dim already carries it.
     emitWildcardSubBlock(lines, 'Notes');
   }
-  // states.stickyNotes === 'null' → omit; interpreter default is null.
+  // states.stickyNotes === 'null' -> omit; interpreter default is null.
 
   lines.push('}');
   return lines.join('\n');
