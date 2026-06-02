@@ -36,17 +36,20 @@ export const indexesModule: GlobalModule = {
     // Skip variables inside index settings (e.g. [type: btree])
     if (isInsideSettingList(node)) return Report.create(PASS_THROUGH);
 
+    // Check that node belongs to an indexes element
     let indexesNode: SyntaxNode | undefined = node;
     while (indexesNode && !isElementNode(indexesNode, ElementKind.Indexes)) {
       indexesNode = indexesNode.parent;
     }
     if (!indexesNode) return Report.create(PASS_THROUGH);
 
+    // Ensure the indexes node belong to a table node
     const tableNode = indexesNode.parent;
     if (!tableNode || (!isElementNode(tableNode, ElementKind.Table) && !isElementNode(tableNode, ElementKind.TablePartial))) return Report.create(PASS_THROUGH);
     const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
-    if (!tableSymbol) return new Report(undefined);
+    if (!tableSymbol) return new Report(undefined); // If no table found, return nothing
 
+    // Extract the column this node refer to
     const varName = isExpressionAVariableNode(node) ? (node.expression.variable?.value ?? '') : '';
     const symbol = compiler.lookupMembers(tableSymbol, SymbolKind.Column, varName);
     if (symbol) {

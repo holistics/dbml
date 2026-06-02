@@ -45,7 +45,7 @@ export default class DBMLReferencesProvider implements ReferenceProvider {
             // Use filepath from reference node if available and in multi-file mode (uri is set)
             let refUri: Uri = uri;
             if (uri && refNode.filepath) {
-              refUri = Uri.parse(refNode.filepath.toUri());
+              refUri = Uri.parse(refNode.filepath.toUri({ protocol: uri.scheme }));
             }
 
             return {

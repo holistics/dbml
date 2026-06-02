@@ -21,7 +21,9 @@ export default class IndexesBinder {
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || !this.declarationNode.parent.isKind(ElementKind.Table)) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode)
+      || (!this.declarationNode.parent.isKind(ElementKind.Table)
+        && !this.declarationNode.parent.isKind(ElementKind.TablePartial))) {
       return [];
     }
 
@@ -30,6 +32,11 @@ export default class IndexesBinder {
     }
 
     return this.bindBody(this.declarationNode.body);
+  }
+
+  private get ownerContainerKind (): string {
+    const parent = this.declarationNode.parent as ElementDeclarationNode;
+    return parent.isKind(ElementKind.TablePartial) ? 'TablePartial' : 'Table';
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -68,13 +75,24 @@ export default class IndexesBinder {
       ];
       const bindees = args.flatMap(scanNonListNodeForBinding)
         .flatMap((bindee) => {
-          if (bindee.variables.length + bindee.tupleElements.length > 1) {
+          // Indexes can never be schema-qualified (they reference table columns)
+          if (bindee.variables.length > 1) {
             return [];
           }
+          // Indexes is a simple column
+          // e.g
+          // Indexes {
+          //   id
+          // }
           if (bindee.variables.length) {
             return bindee.variables[0];
           }
 
+          // Indexes is a tuple
+          // e.g
+          // Indexes {
+          //   (id, name, age)
+          // }
           return bindee.tupleElements;
         });
 
@@ -83,7 +101,7 @@ export default class IndexesBinder {
         if (columnName === undefined) return [];
         const column = this.compiler.nodeReferee(bindee);
         if (!column.getValue() || column.hasValue(UNHANDLED)) {
-          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
+          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside ${this.ownerContainerKind} '${ownerTableName}'`, bindee);
         }
 
         return [];
