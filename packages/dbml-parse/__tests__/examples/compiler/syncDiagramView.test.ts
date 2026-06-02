@@ -29,11 +29,11 @@ function syncDiagramView (dbml: string, operations: DiagramViewSyncOperation[]) 
 // the DiagramView block references. Without these, the interpreter's bind step
 // drops the whole project (referenced symbols missing).
 function roundTripVisibleEntities (
-  ve: NonNullable<DiagramViewSyncOperation['visibleEntities']>,
+  visibleEntities: NonNullable<DiagramViewSyncOperation['visibleEntities']>,
   prelude = '',
 ) {
   const { newDbml } = syncDiagramView(prelude, [
-    { operation: 'create', name: 'V', visibleEntities: ve },
+    { operation: 'create', name: 'V', visibleEntities },
   ]);
   const db = interpret(newDbml).getValue()!;
   return { newDbml, parsed: db.diagramViews[0].visibleEntities };
@@ -258,7 +258,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml.trim()).toBe('DiagramView V {\n}');
   });
 
-  it('A2: tableGroups null, tables has items (frontend backfills) -> emit tables only', () => {
+  it('A2: tableGroups null, tables has items (frontend backfills) -> emit tables + Notes { * } for show-all notes', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -276,10 +276,10 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).toContain('standalone1');
     expect(newDbml).not.toContain('TableGroups');
     expect(newDbml).not.toContain('Schemas');
-    expect(newDbml).not.toContain('Notes');
+    expect(newDbml).toContain('Notes { * }');
   });
 
-  it('A3: tableGroups null, tables + schemas have items -> emit both', () => {
+  it('A3: tableGroups null, tables + schemas have items -> emit both + Notes { * } for show-all notes', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -296,7 +296,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).toContain('Schemas {');
     expect(newDbml).toContain('sales');
     expect(newDbml).not.toContain('TableGroups');
-    expect(newDbml).not.toContain('Notes');
+    expect(newDbml).toContain('Notes { * }');
   });
 
   it('A5: tables null, rest empty -> Notes { * }', () => {
@@ -406,7 +406,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml.trim()).toBe('DiagramView V {\n  *\n}');
   });
 
-  it('B2: only tables filtered -> emit Tables only', () => {
+  it('B2: only tables filtered -> emit Tables + Notes { * } for show-all notes', () => {
     const { newDbml } = syncDiagramView('', [
       {
         operation: 'create',
@@ -422,7 +422,7 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
     expect(newDbml).toContain('orders');
     expect(newDbml).not.toContain('TableGroups');
     expect(newDbml).not.toContain('Schemas');
-    expect(newDbml).not.toContain('Notes');
+    expect(newDbml).toContain('Notes { * }');
   });
 
   it('B3: only tableGroups filtered', () => {
@@ -896,6 +896,22 @@ describe('syncDiagramView - round-trip preserves null vs [] semantics', () => {
     expect(parsed.tableGroups).toEqual([]);
     expect(parsed.schemas).toEqual([]);
     expect(parsed.stickyNotes).toBeNull();
+  });
+
+  it('specific tables + show all notes round-trips (notes [] preserved via Notes { * })', () => {
+    const { parsed } = roundTripVisibleEntities(
+      {
+        tables: [{ name: 'users', schemaName: 'public' }],
+        tableGroups: [],
+        schemas: [],
+        stickyNotes: [],
+      },
+      'Table users { id int }',
+    );
+    expect(parsed.tables).toEqual([{ name: 'users', schemaName: 'public' }]);
+    expect(parsed.tableGroups).toEqual([]);
+    expect(parsed.schemas).toEqual([]);
+    expect(parsed.stickyNotes).toEqual([]);
   });
 });
 

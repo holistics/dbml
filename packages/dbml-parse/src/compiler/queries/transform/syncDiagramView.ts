@@ -120,36 +120,15 @@ function emitListSubBlock<T> (
   lines: string[],
   blockName: SubBlockName,
   items: T[],
-  formatItem: (item: T) => string,
+  // formatItem: (item: T) => string,
 ): void {
   lines.push(`  ${blockName} {`);
-  items.forEach((item) => lines.push(`    ${formatItem(item)}`));
+  items.forEach((item) => lines.push(`    ${item}`));
   lines.push('  }');
 }
 
-/**
- * Emits a single-line wildcard sub-block of the form:
- *
- *   <indent>BlockName { * }
- *
- * Used when the value is `[]` (show all) and we need an explicit wildcard
- * marker in the DBML output — either to trigger trinity wildcard expansion
- * on parse, or to encode "show all notes" when no other dim carries it.
- */
 function emitWildcardSubBlock (lines: string[], blockName: SubBlockName): void {
   lines.push(`  ${blockName} { * }`);
-}
-
-/** Renders a table reference, prefixing the schema name when it's not the default schema. */
-function formatTableRef (table: { name: string; schemaName: string }): string {
-  const tableName = addDoubleQuoteIfNeeded(table.name);
-  if (table.schemaName === DEFAULT_SCHEMA_NAME) return tableName;
-  return `${addDoubleQuoteIfNeeded(table.schemaName)}.${tableName}`;
-}
-
-/** Renders a named entity (table group, schema, or sticky note). */
-function formatNamed (item: { name: string }): string {
-  return addDoubleQuoteIfNeeded(item.name);
 }
 
 /**
@@ -223,6 +202,17 @@ function generateDiagramViewBlock (
   visibleEntities: DiagramViewSyncOperation['visibleEntities'],
 ): string {
   const header = `DiagramView ${addDoubleQuoteIfNeeded(name)} {`;
+  const formatNamed = (item: { name: string }) => addDoubleQuoteIfNeeded(item.name);
+  const formatTableRef = (item: { name: string; schemaName: string }) => {
+    const tableName = addDoubleQuoteIfNeeded(item.name);
+    if (item.schemaName === DEFAULT_SCHEMA_NAME) return tableName;
+    return `${addDoubleQuoteIfNeeded(item.schemaName)}.${tableName}`;
+  };
+  const formatedTables = visibleEntities?.tables?.map(formatTableRef) ?? [];
+  const formatedTableGroups = visibleEntities?.tableGroups?.map(formatNamed) ?? [];
+  const formatedSchemas = visibleEntities?.schemas?.map(formatNamed) ?? [];
+  const formatedNotes = visibleEntities?.stickyNotes?.map(formatNamed) ?? [];
+
   if (!visibleEntities) return `${header}\n}`;
 
   const states = {
@@ -249,23 +239,17 @@ function generateDiagramViewBlock (
   if (anyTrinityItems) {
     // Per-dim: emit only dims with items. Trinity-omit rule promotes omitted
     // peers to [] on parse; null peers cannot be preserved in this branch.
-    if (states.tables === 'items') emitListSubBlock(lines, 'Tables', visibleEntities.tables!, formatTableRef);
-    if (states.tableGroups === 'items') emitListSubBlock(lines, 'TableGroups', visibleEntities.tableGroups!, formatNamed);
-    if (states.schemas === 'items') emitListSubBlock(lines, 'Schemas', visibleEntities.schemas!, formatNamed);
+    if (states.tables === 'items') emitListSubBlock(lines, 'Tables', formatedTables);
+    if (states.tableGroups === 'items') emitListSubBlock(lines, 'TableGroups', formatedTableGroups);
+    if (states.schemas === 'items') emitListSubBlock(lines, 'Schemas', formatedSchemas);
   } else if (allTrinityEmpty) {
-    // Trigger wildcard expansion to set all trinity to []. Notes is independent
-    // and handled below — body-level `{ * }` would clobber a null/items notes
-    // value, so we use the sub-block form here even when notes is empty.
     emitWildcardSubBlock(lines, 'Tables');
   }
-  // else: no trinity items and not all-empty (e.g. all-null with notes set) —
-  // emit nothing for trinity, letting the interpreter default to null.
 
-  // Notes emission — independent of trinity except for the all-empty shortcut
-  // above which already encodes notes via body-level `{ * }`.
+  // Notes emission — independent of trinity
   if (states.stickyNotes === 'items') {
-    emitListSubBlock(lines, 'Notes', visibleEntities.stickyNotes!, formatNamed);
-  } else if (states.stickyNotes === 'empty' && !anyTrinityItems && !allTrinityEmpty) {
+    emitListSubBlock(lines, 'Notes', formatedNotes);
+  } else if (states.stickyNotes === 'empty') {
     // Emit show-all only when no other dim already carries it.
     emitWildcardSubBlock(lines, 'Notes');
   }
