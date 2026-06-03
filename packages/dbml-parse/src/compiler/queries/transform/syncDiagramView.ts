@@ -1,3 +1,42 @@
+/**
+ * DiagramView block transform - read, write, and synchronise DiagramView
+ * blocks in DBML source.
+ *
+ * Glossary
+ * --------
+ * - **dim** (dimension): one of the four fields in `visibleEntities` -
+ *   `tables`, `tableGroups`, `schemas`, or `stickyNotes`. Each dim
+ *   independently describes which entities of that kind should be visible
+ *   in the DiagramView.
+ * - **trinity**: the three table-related dims (`tables`, `tableGroups`,
+ *   `schemas`). They share an interpreter rule (trinity-omit) and are
+ *   handled as a group when emitting DBML.
+ * - **notes**: shorthand for the `stickyNotes` dim. Independent of trinity
+ *   in the interpreter - has its own emission rules.
+ * - **dim state**: the three possible runtime shapes for a single dim's
+ *   FilterConfig value (see {@link DimState}):
+ *     - `'null'`  -> user explicitly hides all entities of this kind
+ *     - `'empty'` -> user shows all entities of this kind (current + future)
+ *     - `'items'` -> user shows a specific subset (the array carries the items)
+ * - **sub-block**: a child block inside a DiagramView body, e.g.
+ *   `Tables { users }` or `Notes { * }`. One sub-block per dim.
+ * - **body-level wildcard**: the DBML form `DiagramView X { * }` - a `*`
+ *   at the body level rather than inside a sub-block. The interpreter
+ *   expands it to "show all" for ALL four dims simultaneously.
+ * - **wildcard expansion** ({@link ../../../core/global_modules/diagramView/interpret.ts}):
+ *   when `Tables { * }` or `Schemas { * }` is emitted, the interpreter sets
+ *   all three trinity dims to `[]`. Notes is left at its default. Used here
+ *   as a compact way to encode "show all trinity" without emitting three
+ *   sub-blocks.
+ * - **trinity-omit rule** (same file as wildcard expansion): when at least
+ *   one trinity dim is explicitly non-null in the DBML, any omitted trinity
+ *   dim is promoted from `null` to `[]` (show all). Lets us encode trinity
+ *   `[]` by omitting the block - provided another trinity dim carries items.
+ * - **round-trip**: the property that an input `visibleEntities` value,
+ *   when emitted to DBML and then re-parsed, yields the same value. The
+ *   writer's job is to preserve this for every UI-reachable input.
+ */
+
 import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
@@ -31,21 +70,18 @@ export interface DiagramViewBlock {
 }
 
 /**
- * Returns the start/end byte positions of every DiagramView block in `source`.
- *
- * Returns an empty array on any lex or parse error - callers cannot
- * distinguish "no DiagramView blocks present" from "malformed DBML" based on
- * the return value alone. If you need to detect malformed input, lex/parse
- * the source separately and check for errors before calling this function.
+ * Returns the position of every DiagramView block in `source`
+ * Note that onany lex or parse errors, we return [], as there's no reliable way to detect diagram views from malformed DBML
  */
 export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   const blocks: DiagramViewBlock[] = [];
-  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return blocks; // malformed - cannot tokenize
 
+  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
+  if (lexerResult.getErrors().length > 0) return blocks; // Lex error, return
   const tokens = lexerResult.getValue();
+
   const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
-  if (ast.getErrors().length > 0) return blocks; // malformed - cannot parse
+  if (ast.getErrors().length > 0) return blocks; // Parse error, return
 
   const program = ast.getValue().ast;
 
@@ -64,132 +100,151 @@ export function findDiagramViewBlocks (source: string): DiagramViewBlock[] {
   return blocks;
 }
 
-function emitTablesBlock (lines: string[], tables: Array<{
-  name: string;
-  schemaName: string;
-}>): void {
-  const tableNames = tables.map((t) => {
-    const tableName = addDoubleQuoteIfNeeded(t.name);
-    if (t.schemaName === DEFAULT_SCHEMA_NAME) return tableName;
-    return `${addDoubleQuoteIfNeeded(t.schemaName)}.${tableName}`;
-  });
-  lines.push('  Tables {');
-  tableNames.forEach((n) => lines.push(`    ${n}`));
+type SubBlockName = 'Tables' | 'TableGroups' | 'Schemas' | 'Notes';
+
+/**
+ * Emits one sub-block of the form:
+ *
+ *   <indent>BlockName {
+ *   <indent><indent>item1
+ *   <indent><indent>item2
+ *   <indent>}
+ */
+function emitListSubBlock (
+  lines: string[],
+  blockName: SubBlockName,
+  items: string[],
+): void {
+  lines.push(`  ${blockName} {`);
+  items.forEach((item) => lines.push(`    ${item}`));
   lines.push('  }');
 }
 
-function emitTableGroupsBlock (lines: string[], tableGroups: Array<{ name: string }>): void {
-  lines.push('  TableGroups {');
-  tableGroups.forEach((n) => lines.push(`    ${addDoubleQuoteIfNeeded(n.name)}`));
-  lines.push('  }');
+function emitWildcardSubBlock (lines: string[], blockName: SubBlockName): void {
+  lines.push(`  ${blockName} { * }`);
 }
 
-function emitSchemasBlock (lines: string[], schemas: Array<{ name: string }>): void {
-  lines.push('  Schemas {');
-  schemas.forEach((n) => lines.push(`    ${addDoubleQuoteIfNeeded(n.name)}`));
-  lines.push('  }');
+/**
+ * The three runtime states a single dim's FilterConfig value can hold.
+ * See the file header glossary for the semantic meaning of each.
+ */
+type DimState = 'null' | 'empty' | 'items';
+
+/**
+ * Reduces a dim's FilterConfig value to its {@link DimState}.
+ *
+ * - `null` / `undefined`  -> `'null'`  (hide all)
+ * - `[]`                  -> `'empty'` (show all)
+ * - any non-empty array   -> `'items'` (show specific items)
+ */
+function classifyDim<T> (value: T[] | null | undefined): DimState {
+  if (value == null) return 'null';
+  if (value.length === 0) return 'empty';
+  return 'items';
 }
 
-function emitNotesBlock (lines: string[], notes: Array<{ name: string }>): void {
-  lines.push('  Notes {');
-  notes.forEach((n) => lines.push(`    ${addDoubleQuoteIfNeeded(n.name)}`));
-  lines.push('  }');
-}
-
+/**
+ * DiagramView block emission contract.
+ *
+ * Terms (dim, trinity, notes, sub-block, body-level wildcard, wildcard
+ * expansion, trinity-omit rule, round-trip) are defined in the file header
+ * glossary. Read that first if any of them are unfamiliar.
+ *
+ * Each visibleEntities dim has three FilterConfig states (see {@link DimState}):
+ * `'null'`, `'empty'`, `'items'`. The emission must round-trip through the
+ * interpreter, which relies on three behaviours:
+ *
+ *   1. **Trinity-omit rule** - when any trinity dim is explicitly non-null,
+ *      omitted trinity dims are promoted to `[]`. So omitting a trinity
+ *      sub-block is the canonical encoding of `'empty'` when another trinity
+ *      dim carries items.
+ *   2. **Wildcard expansion** - `Tables { * }` or `Schemas { * }` sets all
+ *      three trinity dims to `[]` and leaves stickyNotes untouched.
+ *   3. **Body-level wildcard `{ * }`** - sets ALL four dims to `[]`,
+ *      including stickyNotes. Used as a size shortcut only.
+ *
+ * Truth table (input -> emission -> round-trips to):
+ *
+ *   ┌────────────────────────────────────────┬───────────────────────────┐
+ *   │ Input states                           │ Emission                  │
+ *   ├────────────────────────────────────────┼───────────────────────────┤
+ *   │ all four = null                        │ `{}`            shortcut  │
+ *   │ all four = empty                       │ `{ * }`         shortcut  │
+ *   │ all trinity empty, notes = null        │ `{ Tables { * } }`        │
+ *   │ all trinity empty, notes = items       │ `{ Tables { * } + Notes }`│
+ *   │ no trinity items, notes = empty        │ `{ Notes { * } }`         │
+ *   │ no trinity items, notes = items        │ `{ Notes { items } }`     │
+ *   │ no trinity items, notes = null         │ `{}` (interpreter default)│
+ *   │ any trinity items, ...                 │ emit each trinity items   │
+ *   │                                        │ + Notes if items; trinity │
+ *   │                                        │ peers omitted (trinity-   │
+ *   │                                        │ omit promotes to [])      │
+ *   └────────────────────────────────────────┴───────────────────────────┘
+ *
+ * Known round-trip asymmetry (not currently UI-reachable in dbdiagram):
+ * mixed `null`/`[]` across trinity dims while another trinity carries items
+ * cannot preserve the `null` distinction - the trinity-omit rule forces it
+ * to `[]` on parse. See __tests__/.../syncDiagramView.test.ts for the
+ * exhaustive case coverage.
+ */
 function generateDiagramViewBlock (
   name: string,
   visibleEntities: DiagramViewSyncOperation['visibleEntities'],
 ): string {
-  const blockName = addDoubleQuoteIfNeeded(name);
-  const header = `DiagramView ${blockName} {`;
+  const header = `DiagramView ${addDoubleQuoteIfNeeded(name)} {`;
+  const formatNamed = (item: { name: string }) => addDoubleQuoteIfNeeded(item.name);
+  const formatTableRef = (item: { name: string; schemaName: string }) => {
+    const tableName = addDoubleQuoteIfNeeded(item.name);
+    if (item.schemaName === DEFAULT_SCHEMA_NAME) return tableName;
+    return `${addDoubleQuoteIfNeeded(item.schemaName)}.${tableName}`;
+  };
+  const formatedTables = visibleEntities?.tables?.map(formatTableRef) ?? [];
+  const formatedTableGroups = visibleEntities?.tableGroups?.map(formatNamed) ?? [];
+  const formatedSchemas = visibleEntities?.schemas?.map(formatNamed) ?? [];
+  const formatedNotes = visibleEntities?.stickyNotes?.map(formatNamed) ?? [];
 
-  if (!visibleEntities) {
-    return `${header}\n}`;
-  }
+  if (!visibleEntities) return `${header}\n}`;
 
-  const {
-    tables, tableGroups, schemas, stickyNotes,
-  } = visibleEntities;
+  const states = {
+    tables: classifyDim(visibleEntities.tables),
+    tableGroups: classifyDim(visibleEntities.tableGroups),
+    schemas: classifyDim(visibleEntities.schemas),
+    stickyNotes: classifyDim(visibleEntities.stickyNotes),
+  };
 
-  const tablesIsNull = tables === null;
-  const tableGroupsIsNull = tableGroups === null;
-  const schemasIsNull = schemas === null;
-  const notesIsNull = stickyNotes === null;
+  // Body-level shortcuts
+  const allNull = (Object.values(states) as DimState[]).every((s) => s === 'null');
+  if (allNull) return `${header}\n}`;
+  const allEmpty = (Object.values(states) as DimState[]).every((s) => s === 'empty');
+  if (allEmpty) return `${header}\n  *\n}`;
 
-  // A1: All null -> empty block
-  if (tablesIsNull && tableGroupsIsNull && schemasIsNull && notesIsNull) {
-    return `${header}\n}`;
-  }
+  const anyTrinityItems = states.tables === 'items' || states.tableGroups === 'items' || states.schemas === 'items';
+  const allTrinityEmpty = states.tables === 'empty' && states.tableGroups === 'empty' && states.schemas === 'empty';
 
-  // Any Trinity dim null?
-  const anyTrinityNull = tablesIsNull || tableGroupsIsNull || schemasIsNull;
-
-  if (anyTrinityNull) {
-    const tablesHasItems = !tablesIsNull && tables!.length > 0;
-    const tableGroupsHasItems = !tableGroupsIsNull && tableGroups!.length > 0;
-    const schemasHasItems = !schemasIsNull && schemas!.length > 0;
-    const anyTrinityHasItems = tablesHasItems || tableGroupsHasItems || schemasHasItems;
-
-    if (!anyTrinityHasItems) {
-      // No Trinity dims have items
-      if (stickyNotes && stickyNotes.length > 0) {
-        // Specific notes but no Trinity items -> Notes { items }
-        const lines: string[] = [
-          header,
-        ];
-        emitNotesBlock(lines, stickyNotes);
-        lines.push('}');
-        return lines.join('\n');
-      }
-      // Rule 2: all Trinity null/empty + no notes -> Notes { * }
-      return `${header}\n  Notes { * }\n}`;
-    }
-
-    // Rule 3: null dims + items exist -> union rule, omit null dims
-    const lines: string[] = [
-      header,
-    ];
-    if (tablesHasItems) emitTablesBlock(lines, tables!);
-    if (tableGroupsHasItems) emitTableGroupsBlock(lines, tableGroups!);
-    if (schemasHasItems) emitSchemasBlock(lines, schemas!);
-    if (stickyNotes && stickyNotes.length > 0) emitNotesBlock(lines, stickyNotes);
-    lines.push('}');
-    return lines.join('\n');
-  }
-
-  // All Trinity dims are non-null arrays
-  const tablesArr = tables as Array<{
-    name: string;
-    schemaName: string;
-  }>;
-  const tableGroupsArr = tableGroups as Array<{ name: string }>;
-  const schemasArr = schemas as Array<{ name: string }>;
-
-  const allTrinityEmpty = tablesArr.length === 0 && tableGroupsArr.length === 0 && schemasArr.length === 0;
-  const hasNotesItems = stickyNotes != null && stickyNotes.length > 0;
-
-  if (allTrinityEmpty) {
-    // Rule 4: body-level { * }, or Tables { * } + Notes if notes have items
-    if (hasNotesItems) {
-      const lines: string[] = [
-        header,
-        '  Tables { * }',
-      ];
-      emitNotesBlock(lines, stickyNotes!);
-      lines.push('}');
-      return lines.join('\n');
-    }
-    return `${header}\n  *\n}`;
-  }
-
-  // Rules 5 & 6: emit only dims with items, omit empty arrays
   const lines: string[] = [
     header,
   ];
-  if (tablesArr.length > 0) emitTablesBlock(lines, tablesArr);
-  if (tableGroupsArr.length > 0) emitTableGroupsBlock(lines, tableGroupsArr);
-  if (schemasArr.length > 0) emitSchemasBlock(lines, schemasArr);
-  if (hasNotesItems) emitNotesBlock(lines, stickyNotes!);
+
+  // Trinity emission
+  if (anyTrinityItems) {
+    // Per-dim: emit only dims with items. Trinity-omit rule promotes omitted
+    // peers to [] on parse; null peers cannot be preserved in this branch.
+    if (states.tables === 'items') emitListSubBlock(lines, 'Tables', formatedTables);
+    if (states.tableGroups === 'items') emitListSubBlock(lines, 'TableGroups', formatedTableGroups);
+    if (states.schemas === 'items') emitListSubBlock(lines, 'Schemas', formatedSchemas);
+  } else if (allTrinityEmpty) {
+    emitWildcardSubBlock(lines, 'Tables');
+  }
+
+  // Notes emission is independent of trinity
+  if (states.stickyNotes === 'items') {
+    emitListSubBlock(lines, 'Notes', formatedNotes);
+  } else if (states.stickyNotes === 'empty') {
+    // Emit show-all only when no other dim already carries it.
+    emitWildcardSubBlock(lines, 'Notes');
+  }
+  // states.stickyNotes === 'null' -> omit; interpreter default is null.
+
   lines.push('}');
   return lines.join('\n');
 }
