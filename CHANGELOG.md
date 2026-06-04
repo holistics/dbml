@@ -1,3 +1,12 @@
+## v8.2.5 (2026-06-03)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#919](https://github.com/holistics/dbml/pull/919) Fix `syncDiagramView` not generating sticky notes correctly ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 1
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
 ## v8.2.4 (2026-06-01)
 
 #### :bug: Bug Fix
