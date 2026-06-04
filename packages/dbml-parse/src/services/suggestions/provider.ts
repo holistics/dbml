@@ -794,6 +794,7 @@ function suggestTopLevelElementType (): CompletionList {
       'TablePartial',
       'Records',
       'DiagramView',
+      'Note',
     ].map((name) => ({
       label: name,
       insertText: name,
