@@ -19,6 +19,7 @@ import {
   extractNumber,
   getNumberTextFromExpression,
 } from './numbers';
+import { NONE_COLOR } from '@/constants';
 
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
@@ -74,7 +75,7 @@ export function extractColor (node: unknown): Color | undefined {
   // Support `color: none` as transparent
   if (isExpressionAnIdentifierNode(node as SyntaxNode)) {
     const value = extractVariableFromExpression(node as SyntaxNode);
-    if (value?.toLowerCase() === 'none') return 'none';
+    if (value?.toLowerCase() === NONE_COLOR) return 'none';
   }
   return undefined;
 }

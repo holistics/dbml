@@ -1,5 +1,5 @@
 import Compiler, { ScopeKind } from '@/compiler';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, NONE_COLOR } from '@/constants';
 import { isComment } from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -645,7 +645,7 @@ function suggestAttributeValue (
       if (compiler.container.scopeKind(filepath, offset) === ScopeKind.NOTE) {
         return {
           suggestions: [
-            'none',
+            NONE_COLOR,
           ].map((name) => ({
             label: name,
             insertText: name,

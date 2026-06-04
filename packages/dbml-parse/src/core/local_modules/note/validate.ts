@@ -8,6 +8,7 @@ import {
 import {
   aggregateSettingList, isExpressionAQuotedString, isValidColor, isExpressionAnIdentifierNode,
 } from '@/core/utils/validate';
+import { NONE_COLOR } from '@/constants';
 
 export default class NoteValidator {
   private compiler: Compiler;
@@ -94,7 +95,7 @@ export default class NoteValidator {
           }
           attrs.forEach((attr) => {
             // color can be `none` (transparent)
-            const isNoneKeyword = isExpressionAnIdentifierNode(attr.value) && attr.value.expression.variable.value.toLowerCase() === 'none';
+            const isNoneKeyword = isExpressionAnIdentifierNode(attr.value) && attr.value.expression.variable.value.toLowerCase() === NONE_COLOR;
             // color can be a hex number
             if (!isValidColor(attr.value) && !isNoneKeyword) {
               errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, '\'color\' must be a color literal or \'none\'', attr.value || attr.name!));
