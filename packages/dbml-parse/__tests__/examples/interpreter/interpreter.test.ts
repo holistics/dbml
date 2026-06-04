@@ -2122,7 +2122,7 @@ describe('[example] interpreter', () => {
         }
       `;
       const db = interpret(source).getValue()!;
-      expect(db.notes[0].color).toBe('#00000000');
+      expect(db.notes[0].color).toBe('none');
     });
 
     test('should interpret sticky note with double-quoted content', () => {
