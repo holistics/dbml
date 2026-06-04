@@ -534,3 +534,26 @@ records users(id, name, age, status, created_at) {
   3, 'Charlie', , Status.pending, '2024-01-15'
 }
 ```
+
+### Example Records
+
+Records blocks can be marked as **example records**. Example records are treated as sample data — they are preserved in the DBML output but excluded from SQL `INSERT` statements during export.
+
+Example records are desirable if the records only serve as illustrative examples of real data.
+
+```text
+Table users {
+  id int [pk]
+  name varchar
+
+  records [example] {
+    1, 'Alice'
+    2, 'Bob'
+  }
+}
+
+records users(id, name) [example] {
+  1, 'Alice'
+  2, 'Bob'
+}
+```

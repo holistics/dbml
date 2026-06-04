@@ -15,6 +15,7 @@ import {
 } from '@/core/utils/validate';
 import { type LocalModule, type Settings } from '../types';
 import RecordsValidator from './validate';
+import { validateRecordsSettings } from './validate';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
 export const recordsModule: LocalModule = {
@@ -106,12 +107,8 @@ export const recordsModule: LocalModule = {
 
   nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Records)) {
-      if (node.attributeList) {
-        return new Report({}, [
-          new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'Records cannot have a setting list', node.attributeList),
-        ]);
-      }
-      return new Report({});
+      if (!node.attributeList) return new Report({});
+      return validateRecordsSettings(node.attributeList);
     }
     if (isElementFieldNode(node, ElementKind.Records)) {
       return new Report({});

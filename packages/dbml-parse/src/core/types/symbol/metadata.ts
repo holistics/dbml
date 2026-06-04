@@ -376,6 +376,11 @@ export class RecordsMetadata extends NodeMetadata {
     return sym?.originalSymbol as TableSymbol | undefined;
   }
 
+  example (compiler: Compiler): boolean {
+    const s = compiler.nodeSettings(this.declaration as ElementDeclarationNode).getFiltered(UNHANDLED);
+    return !!s?.[SettingName.Example]?.length;
+  }
+
   override owners (compiler: Compiler): NodeSymbol[] {
     const tableSymbol = this.table(compiler);
     if (!tableSymbol) return [];

@@ -36,4 +36,5 @@ export enum SettingName {
   Update = 'update',
   Delete = 'delete',
   Inactive = 'inactive',
+  Example = 'example',
 }

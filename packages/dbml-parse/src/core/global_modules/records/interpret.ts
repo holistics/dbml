@@ -79,11 +79,13 @@ export default class RecordsInterpreter {
     }
 
     const token = getTokenPosition(this.element);
+    const example = this.metadata.example(this.compiler) || undefined;
     const tableRecord: TableRecord = {
       schemaName: result.schemaName,
       tableName: result.tableName,
       columns: result.columns.map((c) => c.name ?? ''),
       values,
+      example,
       token,
     };
 

@@ -249,4 +249,93 @@ describe('[example] records validator', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].diagnostic).toContain('Records can only contain simple values');
   });
+
+  test('should accept example setting on top-level records', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+      records users(id, name) [example] {
+        1, "Alice"
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(0);
+  });
+
+  test('should accept example setting on nested records', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+
+        records [example] {
+          1, "Alice"
+        }
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(0);
+  });
+
+  test('should accept example setting on nested records with column list', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+
+        records (id, name) [example] {
+          1, "Alice"
+        }
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(0);
+  });
+
+  test('should reject example setting with a value', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+      records users(id, name) [example: true] {
+        1, "Alice"
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toContain("'example' cannot have a value");
+  });
+
+  test('should reject duplicate example setting', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+      records users(id, name) [example, example] {
+        1, "Alice"
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(2);
+    expect(errors[0].diagnostic).toContain("'example' can only appear once");
+  });
+
+  test('should reject unknown settings on records', () => {
+    const source = `
+      Table users {
+        id int [pk]
+        name varchar
+      }
+      records users(id, name) [note: 'test'] {
+        1, "Alice"
+      }
+    `;
+    const errors = analyze(source).getErrors();
+    expect(errors.length).toBe(1);
+    expect(errors[0].diagnostic).toContain("Unknown 'note' setting");
+  });
 });

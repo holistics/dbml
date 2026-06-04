@@ -32,6 +32,7 @@ export interface RawTableRecord {
     schemaName: string | undefined;
     tableName: string;
     columns: string[];
+    example?: boolean;
     token: Token;
     values: {
         value: any;

@@ -91,6 +91,69 @@ describe('@dbml/core - ref inactive setting', () => {
   });
 });
 
+const DBML_WITH_EXAMPLE_RECORDS = `
+Table users {
+  id integer [pk]
+  name varchar
+}
+
+Records users(id, name) [example] {
+  1, 'Alice'
+  2, 'Bob'
+}
+`.trim();
+
+const DBML_WITH_MIXED_RECORDS = `
+Table users {
+  id integer [pk]
+  name varchar
+}
+
+Table posts {
+  id integer [pk]
+  title varchar
+}
+
+Records users(id, name) [example] {
+  1, 'Alice'
+}
+
+Records posts(id, title) {
+  1, 'First Post'
+}
+`.trim();
+
+describe('@dbml/core - records example flag', () => {
+  test('exports example flag in DBML output', () => {
+    const res = exporter.export(DBML_WITH_EXAMPLE_RECORDS, 'dbml');
+    expect(res).toContain('[example]');
+    expect(res).toContain('Alice');
+  });
+
+  test('excludes example records from SQL output', () => {
+    for (const format of ['mysql', 'postgres', 'mssql', 'oracle'] as const) {
+      const res = exporter.export(DBML_WITH_EXAMPLE_RECORDS, format);
+      expect(res).not.toContain('INSERT');
+      expect(res).not.toContain('Alice');
+    }
+  });
+
+  test('exports only non-example records as SQL', () => {
+    for (const format of ['mysql', 'postgres', 'mssql', 'oracle'] as const) {
+      const res = exporter.export(DBML_WITH_MIXED_RECORDS, format);
+      expect(res).toContain('First Post');
+      expect(res).not.toContain('Alice');
+    }
+  });
+
+  test('preserves example flag in DBML roundtrip with mixed records', () => {
+    const res = exporter.export(DBML_WITH_MIXED_RECORDS, 'dbml');
+    expect(res).toContain('[example]');
+    expect(res).toContain('Alice');
+    expect(res).toContain('First Post');
+  });
+});
+
 describe('@dbml/core - exporter flags', () => {
   describe('includeRecords', () => {
     test('includes records by default', () => {
