@@ -66,8 +66,8 @@ export default class NoteValidator {
     return [];
   }
 
-  // A sticky note is a Note that appears top-level
-  // A sticky note is not if it appear nested
+  // A note is a StickyNote if it appears top-level
+  // A note is not a StickyNote if it appear nested
   private isStickyNote (): boolean {
     return this.declarationNode.parent instanceof ProgramNode;
   }

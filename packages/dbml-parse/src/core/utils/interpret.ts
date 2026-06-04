@@ -75,7 +75,7 @@ export function extractColor (node: unknown): Color | undefined {
   // Support `color: none` as transparent
   if (isExpressionAnIdentifierNode(node as SyntaxNode)) {
     const value = extractVariableFromExpression(node as SyntaxNode);
-    if (value?.toLowerCase() === NONE_COLOR) return 'none';
+    if (value?.toLowerCase() === NONE_COLOR) return NONE_COLOR;
   }
   return undefined;
 }
