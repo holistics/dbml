@@ -32,7 +32,8 @@
     "coverage": "vitest run --coverage",
     "prepare": "npm run build",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "bench": "vitest bench"
   },
   "devDependencies": {
     "@types/luxon": "^3.7.1",
