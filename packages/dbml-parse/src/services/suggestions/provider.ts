@@ -1,5 +1,5 @@
 import Compiler, { ScopeKind } from '@/compiler';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { DEFAULT_SCHEMA_NAME, NONE_COLOR } from '@/constants';
 import { isComment } from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -467,6 +467,12 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
         ];
         break;
 
+      case ScopeKind.NOTE:
+        attributes = [
+          SettingName.Color,
+        ];
+        break;
+
       default:
         attributes = [];
     }
@@ -635,6 +641,21 @@ function suggestAttributeValue (
           range: undefined as any,
         })),
       };
+    case 'color':
+      if (compiler.container.scopeKind(filepath, offset) === ScopeKind.NOTE) {
+        return {
+          suggestions: [
+            NONE_COLOR,
+          ].map((name) => ({
+            label: name,
+            insertText: name,
+            kind: CompletionItemKind.Value,
+            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+            range: undefined as any,
+          })),
+        };
+      }
+      break;
     case 'default':
       return suggestNamesInScope(compiler, filepath, offset, compiler.container.element(filepath, offset), [
         SymbolKind.Schema,
@@ -773,6 +794,7 @@ function suggestTopLevelElementType (): CompletionList {
       'TablePartial',
       'Records',
       'DiagramView',
+      'Note',
     ].map((name) => ({
       label: name,
       insertText: name,

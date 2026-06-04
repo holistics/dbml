@@ -1,4 +1,4 @@
-import { get, partition } from 'lodash-es';
+import { partition } from 'lodash-es';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
@@ -14,6 +14,8 @@ import {
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
+import { isExpressionAnIdentifierNode } from '@/core/utils/validate';
+import { extractQuotedStringToken } from '@/core/utils/expression';
 import type {
   Filepath,
   NoteSymbol,
@@ -64,7 +66,9 @@ export class StickyNoteInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.note.headerColor = settingMap.headercolor?.length ? extractColor(settingMap.headercolor?.at(0)?.value as any) : undefined;
+    if (settingMap.color?.length) {
+      this.note.color = extractColor(settingMap.color.at(0)?.value as any);
+    }
 
     return [];
   }
@@ -87,7 +91,7 @@ export class StickyNoteInterpreter {
   }
 
   private interpretNote (note: FunctionApplicationNode): CompileError[] {
-    const noteContent = get(note, 'callee.expression.literal.value', '');
+    const noteContent = extractQuotedStringToken(note.callee) ?? '';
 
     this.note.content = normalizeNote(noteContent);
     return [];
