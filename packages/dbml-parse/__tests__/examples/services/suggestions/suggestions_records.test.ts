@@ -505,7 +505,7 @@ describe('[example] CompletionItemProvider - Records settings', () => {
     const compiler = new Compiler(layout);
     const model = createMockTextModel(program);
     const provider = new DBMLCompletionItemProvider(compiler);
-    // "  records [] {" — inside the brackets, line 5 col 12
+    // "  records [] {" - inside the brackets, line 5 col 12
     const position = createPosition(5, 12);
     const result = provider.provideCompletionItems(model, position);
 
@@ -529,7 +529,7 @@ Records users(id, name) [] {
     const compiler = new Compiler(layout);
     const model = createMockTextModel(program);
     const provider = new DBMLCompletionItemProvider(compiler);
-    // "Records users(id, name) [] {" — inside the brackets, line 6 col 26
+    // "Records users(id, name) [] {" - inside the brackets, line 6 col 26
     const position = createPosition(6, 26);
     const result = provider.provideCompletionItems(model, position);
 
