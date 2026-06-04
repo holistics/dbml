@@ -1,0 +1,10 @@
+// Anonymized version of the diagram that caused the infinite loop
+// Check this PR for more context: https://github.com/holistics/dbml/pull/912
+
+USE [SampleDB]
+GO
+
+CREATE TABLE [app].[products](
+    [product_name] [nvarchar](255) NULL,
+)
+GO

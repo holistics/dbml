@@ -186,6 +186,25 @@ describe('[example] interpreter', () => {
 
       expect(index.columns).toHaveLength(2);
     });
+
+    test('should report error for non-existent column in composite index', () => {
+      const source = `
+        Table posts {
+          id int [pk]
+          title varchar [not null]
+          content text
+          user_id int
+          created_at timestamp [default: \`now()\`]
+          indexes {
+            (id, non_existent_column)
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'non_existent_column' inside Table 'posts'");
+    });
   });
 
   describe('ref interpretation', () => {
@@ -374,6 +393,25 @@ describe('[example] interpreter', () => {
       expect(db.tablePartials[0].fields).toHaveLength(2);
       expect(db.tablePartials[0].fields[0].name).toBe('created_at');
       expect(db.tablePartials[0].fields[1].name).toBe('updated_at');
+    });
+
+    test('should report error for non-existent column in composite index of TablePartial', () => {
+      const source = `
+        TablePartial posts_partial {
+          id int [pk]
+          title varchar [not null]
+          content text
+          user_id int
+          created_at timestamp [default: \`now()\`]
+          indexes {
+            (id, non_existent_column)
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'non_existent_column' inside TablePartial 'posts_partial'");
     });
   });
 

@@ -1,3 +1,32 @@
+## v8.2.5 (2026-06-03)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#919](https://github.com/holistics/dbml/pull/919) Fix `syncDiagramView` not generating sticky notes correctly ([@huyphung1602](https://github.com/huyphung1602))
+
+#### Committers: 1
+- harryphung ([@huyphung1602](https://github.com/huyphung1602))
+
+## v8.2.4 (2026-06-01)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#916](https://github.com/holistics/dbml/pull/916) Missing column in index tuples are not reported as compile error, causing a runtime error ([@huydo862003](https://github.com/huydo862003))
+  * [#916](https://github.com/holistics/dbml/pull/916) TablePartial indexes are not being resolved ([@huydo862003](https://github.com/huydo862003))
+  * [#916](https://github.com/holistics/dbml/pull/916) Improve URI handling in compiler services, respecting the model's uri scheme when generate definitions and references ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
+## v8.2.3 (2026-05-29)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#912](https://github.com/holistics/dbml/pull/912) Infinite loop when recovering from syntax errors of use specifier syntax in dbml ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.2.2 (2026-05-27)
 
 #### :robot: Dependencies Update
