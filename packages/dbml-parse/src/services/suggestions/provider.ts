@@ -644,7 +644,9 @@ function suggestAttributeValue (
     case 'color':
       if (compiler.container.scopeKind(filepath, offset) === ScopeKind.NOTE) {
         return {
-          suggestions: ['none'].map((name) => ({
+          suggestions: [
+            'none',
+          ].map((name) => ({
             label: name,
             insertText: name,
             kind: CompletionItemKind.Value,
