@@ -33,7 +33,8 @@
     "prepare": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "bench": "vitest bench"
+    "bench": "vitest bench",
+    "profile": "npx tsx --tsconfig tsconfig.json --cpu-prof --cpu-prof-dir __benchmarks__/output/ __benchmarks__/compiler.profile.ts"
   },
   "devDependencies": {
     "@types/luxon": "^3.7.1",
