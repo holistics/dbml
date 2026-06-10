@@ -1,5 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'vite';
+import noBundle from 'vite-plugin-no-bundle';
 
 export default defineConfig({
   resolve: {
@@ -7,19 +8,18 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src/'),
     },
   },
+  plugins: [noBundle()],
   build: {
     lib: {
       entry: path.resolve(__dirname, '__benchmarks__/compiler.profile.ts'),
-      fileName: 'compiler.profile',
       formats: ['es'],
     },
-    outDir: path.resolve(__dirname, '__benchmarks__/output'),
+    outDir: path.resolve(__dirname, 'dist-profile'),
     sourcemap: 'inline',
     minify: false,
     target: 'esnext',
     rollupOptions: {
-      external: ['node:fs', 'node:path', 'node:url'],
-      treeshake: false,
+      external: ['node:fs', 'node:path', 'node:url', 'lodash-es', 'luxon', 'pathe'],
     },
   },
 });

@@ -2,6 +2,7 @@
 .DS_Store
 node_modules/
 dist/
+dist-profile/
 *.log
 *.cache
 *.package-lock.json
