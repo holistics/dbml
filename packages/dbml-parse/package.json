@@ -33,7 +33,7 @@
     "prepare": "npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "bench": "vitest bench",
+    "bench": "npx tsx __benchmarks__/compiler.benchmark.ts",
     "profile:build": "vite build --config vite.profile.config.mts && cp -r __benchmarks__/input dist-profile/input",
     "profile": "yarn profile:build && node --cpu-prof --cpu-prof-dir __benchmarks__/output/ dist-profile/__benchmarks__/compiler.profile.mjs"
   },

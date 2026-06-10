@@ -7608,6 +7608,11 @@ node-gyp@^9.0.0:
     tar "^6.1.2"
     which "^2.0.2"
 
+nodemark@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/nodemark/-/nodemark-0.3.0.tgz#d824cbcb12ffec7aa1b4c2c767785bc34e76790a"
+  integrity sha512-ehT+NfV5liLY1sZVcosWiCViWHltQTnjsh/7GYkMkirzuyYw/K2VAbgwEIldAM1e9LJ3coGF6uBlTw1/EdZ1XA==
+
 nopt@^6.0.0:
   version "6.0.0"
   resolved "https://registry.npmjs.org/nopt/-/nopt-6.0.0.tgz"

@@ -101,7 +101,7 @@ jobs:
       run: yarn coverage
     - name: Generate coverage report
       id: coverage
-      run: node .github/workflows/scripts/collect-coverage.js
+      run: node .github/workflows/scripts/collect-coverage.mjs
     - name: Upload coverage test
       if: always()
       uses: actions/upload-artifact@v4
@@ -125,5 +125,5 @@ jobs:
       uses: marocchino/sticky-pull-request-comment@v2
       if: github.event_name == 'pull_request'
       with:
-        recreate: true
+        header: coverage-report
         path: ./coverage-report.md

@@ -1,12 +1,16 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { execSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { MarkdownTable } from './utils/markdownTable.mjs';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PACKAGES = ['dbml-cli', 'dbml-connector', 'dbml-core', 'dbml-parse'];
-const COVERAGE_THRESHOLD = 80; // Warning threshold for coverage
+const COVERAGE_THRESHOLD = 80;
 
-function readCoverageSummary(packageName) {
+function readCoverageSummary (packageName) {
   const summaryPath = path.join(__dirname, '../../../packages', packageName, 'coverage', 'coverage-summary.json');
 
   if (!fs.existsSync(summaryPath)) {
@@ -14,34 +18,31 @@ function readCoverageSummary(packageName) {
     return null;
   }
 
-  const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
-  return summary;
+  return JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
 }
 
-function formatPercentage(value) {
+function formatPercentage (value) {
   return value.toFixed(2) + '%';
 }
 
-function getIcon(percentage) {
+function getIcon (percentage) {
   if (percentage >= 80) return '✅';
   if (percentage >= 50) return '⚠️';
   return '❌';
 }
 
-function getFilesWithLowCoverage(coverageData, packageName, threshold = 80) {
+function getFilesWithLowCoverage (coverageData, packageName, threshold = 80) {
   const files = [];
 
   for (const [filePath, coverage] of Object.entries(coverageData)) {
     if (filePath === 'total') continue;
 
-    // Check if any metric is below threshold
     const linePct = coverage.lines.pct;
     const stmtPct = coverage.statements.pct;
     const funcPct = coverage.functions.pct;
     const branchPct = coverage.branches.pct;
 
     if (linePct < threshold || stmtPct < threshold || funcPct < threshold || branchPct < threshold) {
-      // Get relative path from package directory
       const packageDir = path.join('packages', packageName);
       const relativePath = path.relative(path.join(process.cwd(), packageDir), filePath);
 
@@ -55,22 +56,19 @@ function getFilesWithLowCoverage(coverageData, packageName, threshold = 80) {
     }
   }
 
-  // Sort by lowest line coverage first
   files.sort((a, b) => a.lines - b.lines);
-
   return files;
 }
 
-function generateMarkdownReport(coverageData, commitSha) {
+function generateMarkdownReport (coverageData, commitSha) {
   let markdown = `## Coverage Report\n\n`;
   markdown += `**Commit:** ${commitSha}\n\n`;
 
-  let overallLines = { total: 0, covered: 0 };
-  let overallBranches = { total: 0, covered: 0 };
-  let overallFunctions = { total: 0, covered: 0 };
-  let overallStatements = { total: 0, covered: 0 };
+  const overallLines = { total: 0, covered: 0 };
+  const overallBranches = { total: 0, covered: 0 };
+  const overallFunctions = { total: 0, covered: 0 };
+  const overallStatements = { total: 0, covered: 0 };
 
-  // Calculate overall coverage
   for (const pkg of coverageData) {
     if (!pkg.coverageData || !pkg.coverageData.total) continue;
 
@@ -89,38 +87,45 @@ function generateMarkdownReport(coverageData, commitSha) {
   const overallFunctionPct = (overallFunctions.covered / overallFunctions.total) * 100;
   const overallStatementPct = (overallStatements.covered / overallStatements.total) * 100;
 
+  // Overall coverage table
   markdown += `### Overall Coverage\n\n`;
-  markdown += `| Metric | Coverage |\n`;
-  markdown += `|--------|----------|\n`;
-  markdown += `| Lines | ${getIcon(overallLinePct)} ${formatPercentage(overallLinePct)} (${overallLines.covered}/${overallLines.total}) |\n`;
-  markdown += `| Statements | ${getIcon(overallStatementPct)} ${formatPercentage(overallStatementPct)} (${overallStatements.covered}/${overallStatements.total}) |\n`;
-  markdown += `| Functions | ${getIcon(overallFunctionPct)} ${formatPercentage(overallFunctionPct)} (${overallFunctions.covered}/${overallFunctions.total}) |\n`;
-  markdown += `| Branches | ${getIcon(overallBranchPct)} ${formatPercentage(overallBranchPct)} (${overallBranches.covered}/${overallBranches.total}) |\n\n`;
+  markdown += new MarkdownTable()
+    .headers(['Metric', 'Coverage'])
+    .align(['l', 'l'])
+    .row(['Lines', `${getIcon(overallLinePct)} ${formatPercentage(overallLinePct)} (${overallLines.covered}/${overallLines.total})`])
+    .row(['Statements', `${getIcon(overallStatementPct)} ${formatPercentage(overallStatementPct)} (${overallStatements.covered}/${overallStatements.total})`])
+    .row(['Functions', `${getIcon(overallFunctionPct)} ${formatPercentage(overallFunctionPct)} (${overallFunctions.covered}/${overallFunctions.total})`])
+    .row(['Branches', `${getIcon(overallBranchPct)} ${formatPercentage(overallBranchPct)} (${overallBranches.covered}/${overallBranches.total})`])
+    .build();
+  markdown += '\n\n';
 
+  // Package coverage table
   markdown += `### Package Coverage\n\n`;
-  markdown += `| Package | Lines | Statements | Functions | Branches |\n`;
-  markdown += `|---------|-------|------------|-----------|----------|\n`;
+  const pkgTable = new MarkdownTable()
+    .headers(['Package', 'Lines', 'Statements', 'Functions', 'Branches'])
+    .align(['l', 'r', 'r', 'r', 'r']);
 
   for (const pkg of coverageData) {
     if (!pkg.coverageData || !pkg.coverageData.total) {
-      markdown += `| @dbml/${pkg.name} | N/A | N/A | N/A | N/A |\n`;
+      pkgTable.row([`@dbml/${pkg.name}`, 'N/A', 'N/A', 'N/A', 'N/A']);
       continue;
     }
 
-    const linePct = pkg.coverageData.total.lines.pct;
-    const stmtPct = pkg.coverageData.total.statements.pct;
-    const funcPct = pkg.coverageData.total.functions.pct;
-    const branchPct = pkg.coverageData.total.branches.pct;
-
-    markdown += `| @dbml/${pkg.name} | ${getIcon(linePct)} ${formatPercentage(linePct)} | ${getIcon(stmtPct)} ${formatPercentage(stmtPct)} | ${getIcon(funcPct)} ${formatPercentage(funcPct)} | ${getIcon(branchPct)} ${formatPercentage(branchPct)} |\n`;
+    const t = pkg.coverageData.total;
+    pkgTable.row([
+      `@dbml/${pkg.name}`,
+      `${getIcon(t.lines.pct)} ${formatPercentage(t.lines.pct)}`,
+      `${getIcon(t.statements.pct)} ${formatPercentage(t.statements.pct)}`,
+      `${getIcon(t.functions.pct)} ${formatPercentage(t.functions.pct)}`,
+      `${getIcon(t.branches.pct)} ${formatPercentage(t.branches.pct)}`,
+    ]);
   }
 
-  markdown += `\n`;
+  markdown += pkgTable.build() + '\n\n';
 
-  // Add warnings for packages below threshold
-  const lowCoveragePackages = coverageData.filter(pkg =>
-    pkg.coverageData && pkg.coverageData.total && pkg.coverageData.total.lines.pct < COVERAGE_THRESHOLD
-  );
+  // Warnings for packages below threshold
+  const lowCoveragePackages = coverageData.filter((pkg) =>
+    pkg.coverageData && pkg.coverageData.total && pkg.coverageData.total.lines.pct < COVERAGE_THRESHOLD);
 
   if (lowCoveragePackages.length > 0) {
     markdown += `### ⚠️ Coverage Warnings\n\n`;
@@ -131,7 +136,7 @@ function generateMarkdownReport(coverageData, commitSha) {
     markdown += `\n`;
   }
 
-  // Add file-level low coverage reporting
+  // File-level low coverage reporting
   markdown += `### Files with Coverage Below ${COVERAGE_THRESHOLD}%\n\n`;
 
   let hasLowCoverageFiles = false;
@@ -147,14 +152,23 @@ function generateMarkdownReport(coverageData, commitSha) {
       markdown += `#### @dbml/${pkg.name}\n\n`;
       markdown += '<details>\n';
       markdown += `<summary>${lowCoverageFiles.length} file(s) below ${COVERAGE_THRESHOLD}% coverage</summary>\n\n`;
-      markdown += '| File | Lines | Statements | Functions | Branches |\n';
-      markdown += '|------|-------|------------|-----------|----------|\n';
+
+      const fileTable = new MarkdownTable()
+        .headers(['File', 'Lines', 'Statements', 'Functions', 'Branches'])
+        .align(['l', 'r', 'r', 'r', 'r']);
 
       for (const file of lowCoverageFiles) {
-        markdown += `| \`${file.path}\` | ${formatPercentage(file.lines)} | ${formatPercentage(file.statements)} | ${formatPercentage(file.functions)} | ${formatPercentage(file.branches)} |\n`;
+        fileTable.row([
+          `\`${file.path}\``,
+          formatPercentage(file.lines),
+          formatPercentage(file.statements),
+          formatPercentage(file.functions),
+          formatPercentage(file.branches),
+        ]);
       }
 
-      markdown += '\n</details>\n\n';
+      markdown += fileTable.build() + '\n\n';
+      markdown += '</details>\n\n';
     }
   }
 
@@ -177,42 +191,33 @@ function generateMarkdownReport(coverageData, commitSha) {
   return markdown;
 }
 
-function main() {
-  // Get commit SHA from environment or git
-  const commitSha = process.env.GITHUB_SHA ||
-    require('child_process').execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+function main () {
+  const commitSha = process.env.GITHUB_SHA
+    || execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
 
   console.log('Collecting coverage data from packages...');
 
-  const coverageData = PACKAGES.map(packageName => {
+  const coverageData = PACKAGES.map((packageName) => {
     console.log(`- Reading coverage for ${packageName}...`);
-    const coverageData = readCoverageSummary(packageName);
-    return {
-      name: packageName,
-      coverageData
-    };
+    const data = readCoverageSummary(packageName);
+    return { name: packageName, coverageData: data };
   });
 
   console.log('\nGenerating coverage report...');
   const markdown = generateMarkdownReport(coverageData, commitSha.substring(0, 8));
 
-  // Write markdown report
   const reportPath = path.join(__dirname, '../../../coverage-report.md');
   fs.writeFileSync(reportPath, markdown);
   console.log(`\nCoverage report written to: ${reportPath}`);
 
-  // Output to console
   console.log('\n' + markdown);
 
-  const criticallyLowCoverage = coverageData.some(pkg =>
-    pkg.coverageData && pkg.coverageData.total && pkg.coverageData.total.lines.pct < 60
-  );
+  const criticallyLowCoverage = coverageData.some((pkg) =>
+    pkg.coverageData && pkg.coverageData.total && pkg.coverageData.total.lines.pct < 60);
 
   if (criticallyLowCoverage) {
     console.error('\n❌ Critical: One or more packages have coverage below 60%');
   }
 }
 
-if (require.main === module) {
-  main();
-}
+main();
