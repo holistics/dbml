@@ -1,0 +1,70 @@
+Table users {
+  id int
+}
+Table orders {
+  user_id int
+}
+Table my_schema.events {
+  id int
+  ts int
+}
+
+Table another_schema.booking {
+  id int
+  ts int
+}
+
+
+// short-form
+// no error
+Dep: users -> orders
+Dep: orders.user_id <- users.id
+Dep: my_schema.events -> users
+Dep: my_schema.events.id -> users.id
+Dep: my_schema.events.id <- another_schema.booking.id
+
+// full-form
+// no error
+Dep {
+  users -> orders
+  my_schema.events -> users
+  users.id -> orders.user_id
+  my_schema.events.id -> users.id
+}
+
+// inline on table header
+// no error
+Table good_header_bare [dep: <- users] { id int }
+Table good_header_schema [dep: <- my_schema.events] { id int }
+
+// inline on column
+// no error
+Table good_col_bare { id int [dep: -> users.id] }
+Table good_col_schema { id int [dep: -> my_schema.events.id] }
+
+// short-form
+// no error
+Dep: users -> unknown_table
+Dep: users.unknown_col -> users.id
+Dep: unknown_schema.events -> users
+Dep: my_schema.unknown_table -> users
+Dep: my_schema.events.unknown_col -> users.id
+
+// full-form
+// no error
+Dep {
+  users -> unknown_a
+  my_schema.events -> unknown_b
+  users.id -> unknown_c.col
+  my_schema.events.id -> users.unknown_d
+}
+
+// inline on table header
+// no error
+Table bad_header_bare [dep: <- unknown_source] { id int }
+Table bad_header_schema [dep: <- unknown_schema.events] { id int }
+
+// inline on column
+// no error
+Table bad_col_bare { id int [dep: -> unknown_table.col] }
+Table bad_col_schema { id int [dep: -> my_schema.unknown_table.col] }

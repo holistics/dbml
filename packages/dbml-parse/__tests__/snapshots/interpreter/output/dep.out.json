@@ -1,0 +1,1274 @@
+{
+  "database": {
+    "deps": [
+      {
+        "edges": [
+          {
+            "downstream": {
+              "tableName": "orders",
+              "token": {
+                "end": {
+                  "column": 21,
+                  "line": 20,
+                  "offset": 201
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 20,
+                  "offset": 181
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 21,
+                "line": 20,
+                "offset": 201
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 20,
+                "offset": 181
+              }
+            },
+            "upstream": {
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 21,
+                  "line": 20,
+                  "offset": 201
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 20,
+                  "offset": 181
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 21,
+            "line": 20,
+            "offset": 201
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 20,
+            "offset": 181
+          }
+        }
+      },
+      {
+        "edges": [
+          {
+            "downstream": {
+              "fieldNames": [
+                "user_id"
+              ],
+              "tableName": "orders",
+              "token": {
+                "end": {
+                  "column": 32,
+                  "line": 21,
+                  "offset": 233
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 21,
+                  "offset": 202
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 32,
+                "line": 21,
+                "offset": 233
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 21,
+                "offset": 202
+              }
+            },
+            "upstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 32,
+                  "line": 21,
+                  "offset": 233
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 21,
+                  "offset": 202
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 32,
+            "line": 21,
+            "offset": 233
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 21,
+            "offset": 202
+          }
+        }
+      },
+      {
+        "edges": [
+          {
+            "downstream": {
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 31,
+                  "line": 22,
+                  "offset": 264
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 22,
+                  "offset": 234
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 31,
+                "line": 22,
+                "offset": 264
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 22,
+                "offset": 234
+              }
+            },
+            "upstream": {
+              "schemaName": "my_schema",
+              "tableName": "events",
+              "token": {
+                "end": {
+                  "column": 31,
+                  "line": 22,
+                  "offset": 264
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 22,
+                  "offset": 234
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 31,
+            "line": 22,
+            "offset": 264
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 22,
+            "offset": 234
+          }
+        }
+      },
+      {
+        "edges": [
+          {
+            "downstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 37,
+                  "line": 23,
+                  "offset": 301
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 23,
+                  "offset": 265
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 37,
+                "line": 23,
+                "offset": 301
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 23,
+                "offset": 265
+              }
+            },
+            "upstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "schemaName": "my_schema",
+              "tableName": "events",
+              "token": {
+                "end": {
+                  "column": 37,
+                  "line": 23,
+                  "offset": 301
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 23,
+                  "offset": 265
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 37,
+            "line": 23,
+            "offset": 301
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 23,
+            "offset": 265
+          }
+        }
+      },
+      {
+        "edges": [
+          {
+            "downstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "schemaName": "my_schema",
+              "tableName": "events",
+              "token": {
+                "end": {
+                  "column": 54,
+                  "line": 24,
+                  "offset": 355
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 24,
+                  "offset": 302
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 54,
+                "line": 24,
+                "offset": 355
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 24,
+                "offset": 302
+              }
+            },
+            "upstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "schemaName": "another_schema",
+              "tableName": "booking",
+              "token": {
+                "end": {
+                  "column": 54,
+                  "line": 24,
+                  "offset": 355
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 24,
+                  "offset": 302
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 54,
+            "line": 24,
+            "offset": 355
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 24,
+            "offset": 302
+          }
+        }
+      },
+      {
+        "custom": {
+          "materialized": "view",
+          "owner": "team-data",
+          "priority": 1
+        },
+        "edges": [
+          {
+            "downstream": {
+              "tableName": "orders",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 568
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 382
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 38,
+                "offset": 568
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 28,
+                "offset": 382
+              }
+            },
+            "upstream": {
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 568
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 382
+                }
+              }
+            }
+          },
+          {
+            "downstream": {
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 568
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 382
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 38,
+                "offset": 568
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 28,
+                "offset": 382
+              }
+            },
+            "upstream": {
+              "schemaName": "my_schema",
+              "tableName": "events",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 568
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 382
+                }
+              }
+            }
+          },
+          {
+            "downstream": {
+              "fieldNames": [
+                "user_id"
+              ],
+              "tableName": "orders",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 568
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 382
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 38,
+                "offset": 568
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 28,
+                "offset": 382
+              }
+            },
+            "upstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 568
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 382
+                }
+              }
+            }
+          },
+          {
+            "downstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 568
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 382
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 38,
+                "offset": 568
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 28,
+                "offset": 382
+              }
+            },
+            "upstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "schemaName": "my_schema",
+              "tableName": "events",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 568
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 382
+                }
+              }
+            }
+          }
+        ],
+        "note": {
+          "token": {
+            "end": {
+              "column": 13,
+              "line": 34,
+              "offset": 510
+            },
+            "filepath": "/main.dbml",
+            "start": {
+              "column": 3,
+              "line": 34,
+              "offset": 500
+            }
+          },
+          "value": "ok"
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 38,
+            "offset": 568
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 28,
+            "offset": 382
+          }
+        }
+      },
+      {
+        "edges": [
+          {
+            "downstream": {
+              "tableName": "good_header_bare",
+              "token": {
+                "end": {
+                  "column": 38,
+                  "line": 42,
+                  "offset": 645
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 25,
+                  "line": 42,
+                  "offset": 632
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 38,
+                "line": 42,
+                "offset": 645
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 25,
+                "line": 42,
+                "offset": 632
+              }
+            },
+            "upstream": {
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 38,
+                  "line": 42,
+                  "offset": 645
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 25,
+                  "line": 42,
+                  "offset": 632
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 38,
+            "line": 42,
+            "offset": 645
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 25,
+            "line": 42,
+            "offset": 632
+          }
+        }
+      },
+      {
+        "edges": [
+          {
+            "downstream": {
+              "tableName": "good_header_schema",
+              "token": {
+                "end": {
+                  "column": 51,
+                  "line": 43,
+                  "offset": 708
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 27,
+                  "line": 43,
+                  "offset": 684
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 51,
+                "line": 43,
+                "offset": 708
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 27,
+                "line": 43,
+                "offset": 684
+              }
+            },
+            "upstream": {
+              "schemaName": "my_schema",
+              "tableName": "events",
+              "token": {
+                "end": {
+                  "column": 51,
+                  "line": 43,
+                  "offset": 708
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 27,
+                  "line": 43,
+                  "offset": 684
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 51,
+            "line": 43,
+            "offset": 708
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 27,
+            "line": 43,
+            "offset": 684
+          }
+        }
+      },
+      {
+        "edges": [
+          {
+            "downstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 47,
+                  "line": 47,
+                  "offset": 800
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 31,
+                  "line": 47,
+                  "offset": 784
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 47,
+                "line": 47,
+                "offset": 800
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 31,
+                "line": 47,
+                "offset": 784
+              }
+            },
+            "upstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "tableName": "good_col_bare",
+              "token": {
+                "end": {
+                  "column": 47,
+                  "line": 47,
+                  "offset": 800
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 31,
+                  "line": 47,
+                  "offset": 784
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 47,
+            "line": 47,
+            "offset": 800
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 31,
+            "line": 47,
+            "offset": 784
+          }
+        }
+      },
+      {
+        "edges": [
+          {
+            "downstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "schemaName": "my_schema",
+              "tableName": "events",
+              "token": {
+                "end": {
+                  "column": 60,
+                  "line": 48,
+                  "offset": 863
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 33,
+                  "line": 48,
+                  "offset": 836
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 60,
+                "line": 48,
+                "offset": 863
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 33,
+                "line": 48,
+                "offset": 836
+              }
+            },
+            "upstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "tableName": "good_col_schema",
+              "token": {
+                "end": {
+                  "column": 60,
+                  "line": 48,
+                  "offset": 863
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 33,
+                  "line": 48,
+                  "offset": 836
+                }
+              }
+            }
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 60,
+            "line": 48,
+            "offset": 863
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 33,
+            "line": 48,
+            "offset": 836
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 2,
+                "offset": 22
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 16
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "users",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 3,
+            "offset": 24
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "user_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 5,
+                "offset": 53
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 5,
+                "offset": 42
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "orders",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 6,
+            "offset": 55
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 4,
+            "offset": 25
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 8,
+                "offset": 89
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 83
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "name": "ts",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 9,
+                "offset": 98
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 9,
+                "offset": 92
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "events",
+        "schemaName": "my_schema",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 10,
+            "offset": 100
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 7,
+            "offset": 56
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 13,
+                "offset": 141
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 13,
+                "offset": 135
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "name": "ts",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 9,
+                "line": 14,
+                "offset": 150
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 14,
+                "offset": 144
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "booking",
+        "schemaName": "another_schema",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 15,
+            "offset": 152
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 12,
+            "offset": 102
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 48,
+                "line": 42,
+                "offset": 655
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 42,
+                "line": 42,
+                "offset": 649
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "good_header_bare",
+        "token": {
+          "end": {
+            "column": 50,
+            "line": 42,
+            "offset": 657
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 42,
+            "offset": 608
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 61,
+                "line": 43,
+                "offset": 718
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 55,
+                "line": 43,
+                "offset": 712
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "good_header_schema",
+        "token": {
+          "end": {
+            "column": 63,
+            "line": 43,
+            "offset": 720
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 43,
+            "offset": 658
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "inline_deps": [
+              {
+                "direction": "->",
+                "fieldNames": [
+                  "id"
+                ],
+                "tableName": "users",
+                "token": {
+                  "end": {
+                    "column": 47,
+                    "line": 47,
+                    "offset": 800
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 31,
+                    "line": 47,
+                    "offset": 784
+                  }
+                }
+              }
+            ],
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 48,
+                "line": 47,
+                "offset": 801
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 23,
+                "line": 47,
+                "offset": 776
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "good_col_bare",
+        "token": {
+          "end": {
+            "column": 50,
+            "line": 47,
+            "offset": 803
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 47,
+            "offset": 754
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "inline_deps": [
+              {
+                "direction": "->",
+                "fieldNames": [
+                  "id"
+                ],
+                "schemaName": "my_schema",
+                "tableName": "events",
+                "token": {
+                  "end": {
+                    "column": 60,
+                    "line": 48,
+                    "offset": 863
+                  },
+                  "filepath": "/main.dbml",
+                  "start": {
+                    "column": 33,
+                    "line": 48,
+                    "offset": 836
+                  }
+                }
+              }
+            ],
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 61,
+                "line": 48,
+                "offset": 864
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 25,
+                "line": 48,
+                "offset": 828
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "good_col_schema",
+        "token": {
+          "end": {
+            "column": 63,
+            "line": 48,
+            "offset": 866
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 48,
+            "offset": 804
+          }
+        }
+      }
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 49,
+        "offset": 867
+      },
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
+  }
+}

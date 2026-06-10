@@ -1,0 +1,2262 @@
+{
+  "database": {
+    "1": {
+      "id": 1,
+      "hasDefaultSchema": false,
+      "note": null,
+      "schemaIds": [
+        1
+      ],
+      "noteIds": []
+    }
+  },
+  "schemas": {
+    "1": {
+      "id": 1,
+      "name": "public",
+      "note": "Default Public Schema",
+      "tableIds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "enumIds": [],
+      "tableGroupIds": [
+        1,
+        2,
+        3
+      ],
+      "refIds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "depIds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "databaseId": 1
+    }
+  },
+  "notes": {},
+  "refs": {
+    "1": {
+      "id": 1,
+      "name": null,
+      "endpointIds": [
+        1,
+        2
+      ],
+      "schemaId": 1
+    },
+    "2": {
+      "id": 2,
+      "name": null,
+      "endpointIds": [
+        3,
+        4
+      ],
+      "schemaId": 1
+    },
+    "3": {
+      "id": 3,
+      "name": null,
+      "endpointIds": [
+        5,
+        6
+      ],
+      "schemaId": 1
+    },
+    "4": {
+      "id": 4,
+      "name": null,
+      "endpointIds": [
+        7,
+        8
+      ],
+      "schemaId": 1
+    },
+    "5": {
+      "id": 5,
+      "name": null,
+      "endpointIds": [
+        9,
+        10
+      ],
+      "schemaId": 1
+    }
+  },
+  "deps": {
+    "1": {
+      "id": 1,
+      "name": null,
+      "note": "Cast + rename: raw id → canonical user_id",
+      "custom": null,
+      "edgeIds": [
+        1
+      ],
+      "schemaId": 1
+    },
+    "2": {
+      "id": 2,
+      "name": null,
+      "note": "Lowercase + validate email",
+      "custom": null,
+      "edgeIds": [
+        2
+      ],
+      "schemaId": 1
+    },
+    "3": {
+      "id": 3,
+      "name": null,
+      "note": "Trim + normalize name",
+      "custom": null,
+      "edgeIds": [
+        3
+      ],
+      "schemaId": 1
+    },
+    "4": {
+      "id": 4,
+      "name": null,
+      "note": "Parse timestamp (UTC)",
+      "custom": null,
+      "edgeIds": [
+        4
+      ],
+      "schemaId": 1
+    },
+    "5": {
+      "id": 5,
+      "name": null,
+      "note": "Rename: id → order_id",
+      "custom": null,
+      "edgeIds": [
+        5
+      ],
+      "schemaId": 1
+    },
+    "6": {
+      "id": 6,
+      "name": null,
+      "note": "Join key to users dimension",
+      "custom": null,
+      "edgeIds": [
+        6
+      ],
+      "schemaId": 1
+    },
+    "7": {
+      "id": 7,
+      "name": null,
+      "note": "Parse + standardize order timestamp",
+      "custom": null,
+      "edgeIds": [
+        7
+      ],
+      "schemaId": 1
+    },
+    "8": {
+      "id": 8,
+      "name": null,
+      "note": "Map raw status codes → business statuses",
+      "custom": null,
+      "edgeIds": [
+        8
+      ],
+      "schemaId": 1
+    },
+    "9": {
+      "id": 9,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        9
+      ],
+      "schemaId": 1
+    },
+    "10": {
+      "id": 10,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        10
+      ],
+      "schemaId": 1
+    },
+    "11": {
+      "id": 11,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        11
+      ],
+      "schemaId": 1
+    },
+    "12": {
+      "id": 12,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        12
+      ],
+      "schemaId": 1
+    },
+    "13": {
+      "id": 13,
+      "name": null,
+      "note": "Rename: price → unit_price",
+      "custom": null,
+      "edgeIds": [
+        13
+      ],
+      "schemaId": 1
+    },
+    "14": {
+      "id": 14,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        14
+      ],
+      "schemaId": 1
+    },
+    "15": {
+      "id": 15,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        15
+      ],
+      "schemaId": 1
+    },
+    "16": {
+      "id": 16,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        16
+      ],
+      "schemaId": 1
+    },
+    "17": {
+      "id": 17,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        17
+      ],
+      "schemaId": 1
+    },
+    "18": {
+      "id": 18,
+      "name": null,
+      "note": "Aggregation: MIN(ordered_at) by user",
+      "custom": null,
+      "edgeIds": [
+        18
+      ],
+      "schemaId": 1
+    },
+    "19": {
+      "id": 19,
+      "name": null,
+      "note": "Aggregation: COUNT(order_id) by user",
+      "custom": null,
+      "edgeIds": [
+        19
+      ],
+      "schemaId": 1
+    },
+    "20": {
+      "id": 20,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        20
+      ],
+      "schemaId": 1
+    },
+    "21": {
+      "id": 21,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        21
+      ],
+      "schemaId": 1
+    },
+    "22": {
+      "id": 22,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        22
+      ],
+      "schemaId": 1
+    },
+    "23": {
+      "id": 23,
+      "name": null,
+      "note": null,
+      "custom": null,
+      "edgeIds": [
+        23
+      ],
+      "schemaId": 1
+    },
+    "24": {
+      "id": 24,
+      "name": null,
+      "note": "Aggregation: SUM(quantity) by order_id",
+      "custom": null,
+      "edgeIds": [
+        24
+      ],
+      "schemaId": 1
+    },
+    "25": {
+      "id": 25,
+      "name": null,
+      "note": "Aggregation: SUM(line_total) by order_id",
+      "custom": null,
+      "edgeIds": [
+        25
+      ],
+      "schemaId": 1
+    },
+    "26": {
+      "id": 26,
+      "name": null,
+      "note": "Raw data → Staging data",
+      "custom": null,
+      "edgeIds": [
+        26
+      ],
+      "schemaId": 1
+    },
+    "27": {
+      "id": 27,
+      "name": null,
+      "note": "Raw data → Staging data",
+      "custom": null,
+      "edgeIds": [
+        27
+      ],
+      "schemaId": 1
+    },
+    "28": {
+      "id": 28,
+      "name": null,
+      "note": "Raw data → Staging data",
+      "custom": null,
+      "edgeIds": [
+        28
+      ],
+      "schemaId": 1
+    },
+    "29": {
+      "id": 29,
+      "name": null,
+      "note": "Staging data → Domain data",
+      "custom": null,
+      "edgeIds": [
+        29
+      ],
+      "schemaId": 1
+    },
+    "30": {
+      "id": 30,
+      "name": null,
+      "note": "Staging data → Domain data",
+      "custom": null,
+      "edgeIds": [
+        30
+      ],
+      "schemaId": 1
+    },
+    "31": {
+      "id": 31,
+      "name": null,
+      "note": "Staging data → Domain data",
+      "custom": null,
+      "edgeIds": [
+        31
+      ],
+      "schemaId": 1
+    }
+  },
+  "depEdges": {
+    "1": {
+      "id": 1,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_users",
+        "fieldNames": [
+          "id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": [
+          "user_id"
+        ]
+      },
+      "depId": 1,
+      "upstreamTableId": 1,
+      "upstreamFieldIds": [
+        1
+      ],
+      "downstreamTableId": 4,
+      "downstreamFieldIds": [
+        16
+      ]
+    },
+    "2": {
+      "id": 2,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_users",
+        "fieldNames": [
+          "email"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": [
+          "email"
+        ]
+      },
+      "depId": 2,
+      "upstreamTableId": 1,
+      "upstreamFieldIds": [
+        2
+      ],
+      "downstreamTableId": 4,
+      "downstreamFieldIds": [
+        17
+      ]
+    },
+    "3": {
+      "id": 3,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_users",
+        "fieldNames": [
+          "name"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": [
+          "name"
+        ]
+      },
+      "depId": 3,
+      "upstreamTableId": 1,
+      "upstreamFieldIds": [
+        3
+      ],
+      "downstreamTableId": 4,
+      "downstreamFieldIds": [
+        18
+      ]
+    },
+    "4": {
+      "id": 4,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_users",
+        "fieldNames": [
+          "created_at"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": [
+          "created_at"
+        ]
+      },
+      "depId": 4,
+      "upstreamTableId": 1,
+      "upstreamFieldIds": [
+        4
+      ],
+      "downstreamTableId": 4,
+      "downstreamFieldIds": [
+        19
+      ]
+    },
+    "5": {
+      "id": 5,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_orders",
+        "fieldNames": [
+          "id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "order_id"
+        ]
+      },
+      "depId": 5,
+      "upstreamTableId": 2,
+      "upstreamFieldIds": [
+        6
+      ],
+      "downstreamTableId": 5,
+      "downstreamFieldIds": [
+        20
+      ]
+    },
+    "6": {
+      "id": 6,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_orders",
+        "fieldNames": [
+          "user_id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "user_id"
+        ]
+      },
+      "depId": 6,
+      "upstreamTableId": 2,
+      "upstreamFieldIds": [
+        7
+      ],
+      "downstreamTableId": 5,
+      "downstreamFieldIds": [
+        21
+      ]
+    },
+    "7": {
+      "id": 7,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_orders",
+        "fieldNames": [
+          "ordered_at"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "ordered_at"
+        ]
+      },
+      "depId": 7,
+      "upstreamTableId": 2,
+      "upstreamFieldIds": [
+        8
+      ],
+      "downstreamTableId": 5,
+      "downstreamFieldIds": [
+        22
+      ]
+    },
+    "8": {
+      "id": 8,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_orders",
+        "fieldNames": [
+          "status"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "status"
+        ]
+      },
+      "depId": 8,
+      "upstreamTableId": 2,
+      "upstreamFieldIds": [
+        9
+      ],
+      "downstreamTableId": 5,
+      "downstreamFieldIds": [
+        23
+      ]
+    },
+    "9": {
+      "id": 9,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_order_items",
+        "fieldNames": [
+          "id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": [
+          "order_item_id"
+        ]
+      },
+      "depId": 9,
+      "upstreamTableId": 3,
+      "upstreamFieldIds": [
+        11
+      ],
+      "downstreamTableId": 6,
+      "downstreamFieldIds": [
+        24
+      ]
+    },
+    "10": {
+      "id": 10,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_order_items",
+        "fieldNames": [
+          "order_id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": [
+          "order_id"
+        ]
+      },
+      "depId": 10,
+      "upstreamTableId": 3,
+      "upstreamFieldIds": [
+        12
+      ],
+      "downstreamTableId": 6,
+      "downstreamFieldIds": [
+        25
+      ]
+    },
+    "11": {
+      "id": 11,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_order_items",
+        "fieldNames": [
+          "product_id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": [
+          "product_id"
+        ]
+      },
+      "depId": 11,
+      "upstreamTableId": 3,
+      "upstreamFieldIds": [
+        13
+      ],
+      "downstreamTableId": 6,
+      "downstreamFieldIds": [
+        26
+      ]
+    },
+    "12": {
+      "id": 12,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_order_items",
+        "fieldNames": [
+          "quantity"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": [
+          "quantity"
+        ]
+      },
+      "depId": 12,
+      "upstreamTableId": 3,
+      "upstreamFieldIds": [
+        14
+      ],
+      "downstreamTableId": 6,
+      "downstreamFieldIds": [
+        27
+      ]
+    },
+    "13": {
+      "id": 13,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_order_items",
+        "fieldNames": [
+          "price"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": [
+          "unit_price"
+        ]
+      },
+      "depId": 13,
+      "upstreamTableId": 3,
+      "upstreamFieldIds": [
+        15
+      ],
+      "downstreamTableId": 6,
+      "downstreamFieldIds": [
+        28
+      ]
+    },
+    "14": {
+      "id": 14,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": [
+          "user_id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "dim_users",
+        "fieldNames": [
+          "user_id"
+        ]
+      },
+      "depId": 14,
+      "upstreamTableId": 4,
+      "upstreamFieldIds": [
+        16
+      ],
+      "downstreamTableId": 7,
+      "downstreamFieldIds": [
+        30
+      ]
+    },
+    "15": {
+      "id": 15,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": [
+          "email"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "dim_users",
+        "fieldNames": [
+          "email"
+        ]
+      },
+      "depId": 15,
+      "upstreamTableId": 4,
+      "upstreamFieldIds": [
+        17
+      ],
+      "downstreamTableId": 7,
+      "downstreamFieldIds": [
+        31
+      ]
+    },
+    "16": {
+      "id": 16,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": [
+          "name"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "dim_users",
+        "fieldNames": [
+          "name"
+        ]
+      },
+      "depId": 16,
+      "upstreamTableId": 4,
+      "upstreamFieldIds": [
+        18
+      ],
+      "downstreamTableId": 7,
+      "downstreamFieldIds": [
+        32
+      ]
+    },
+    "17": {
+      "id": 17,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": [
+          "created_at"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "dim_users",
+        "fieldNames": [
+          "created_at"
+        ]
+      },
+      "depId": 17,
+      "upstreamTableId": 4,
+      "upstreamFieldIds": [
+        19
+      ],
+      "downstreamTableId": 7,
+      "downstreamFieldIds": [
+        36
+      ]
+    },
+    "18": {
+      "id": 18,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "ordered_at"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "dim_users",
+        "fieldNames": [
+          "first_order_at"
+        ]
+      },
+      "depId": 18,
+      "upstreamTableId": 5,
+      "upstreamFieldIds": [
+        22
+      ],
+      "downstreamTableId": 7,
+      "downstreamFieldIds": [
+        33
+      ]
+    },
+    "19": {
+      "id": 19,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "order_id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "dim_users",
+        "fieldNames": [
+          "total_orders"
+        ]
+      },
+      "depId": 19,
+      "upstreamTableId": 5,
+      "upstreamFieldIds": [
+        20
+      ],
+      "downstreamTableId": 7,
+      "downstreamFieldIds": [
+        34
+      ]
+    },
+    "20": {
+      "id": 20,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "order_id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "fct_orders",
+        "fieldNames": [
+          "order_id"
+        ]
+      },
+      "depId": 20,
+      "upstreamTableId": 5,
+      "upstreamFieldIds": [
+        20
+      ],
+      "downstreamTableId": 8,
+      "downstreamFieldIds": [
+        37
+      ]
+    },
+    "21": {
+      "id": 21,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "user_id"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "fct_orders",
+        "fieldNames": [
+          "user_id"
+        ]
+      },
+      "depId": 21,
+      "upstreamTableId": 5,
+      "upstreamFieldIds": [
+        21
+      ],
+      "downstreamTableId": 8,
+      "downstreamFieldIds": [
+        38
+      ]
+    },
+    "22": {
+      "id": 22,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "ordered_at"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "fct_orders",
+        "fieldNames": [
+          "ordered_at"
+        ]
+      },
+      "depId": 22,
+      "upstreamTableId": 5,
+      "upstreamFieldIds": [
+        22
+      ],
+      "downstreamTableId": 8,
+      "downstreamFieldIds": [
+        39
+      ]
+    },
+    "23": {
+      "id": 23,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": [
+          "status"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "fct_orders",
+        "fieldNames": [
+          "status"
+        ]
+      },
+      "depId": 23,
+      "upstreamTableId": 5,
+      "upstreamFieldIds": [
+        23
+      ],
+      "downstreamTableId": 8,
+      "downstreamFieldIds": [
+        40
+      ]
+    },
+    "24": {
+      "id": 24,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": [
+          "quantity"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "fct_orders",
+        "fieldNames": [
+          "total_items"
+        ]
+      },
+      "depId": 24,
+      "upstreamTableId": 6,
+      "upstreamFieldIds": [
+        27
+      ],
+      "downstreamTableId": 8,
+      "downstreamFieldIds": [
+        41
+      ]
+    },
+    "25": {
+      "id": 25,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": [
+          "line_total"
+        ]
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "fct_orders",
+        "fieldNames": [
+          "order_total"
+        ]
+      },
+      "depId": 25,
+      "upstreamTableId": 6,
+      "upstreamFieldIds": [
+        29
+      ],
+      "downstreamTableId": 8,
+      "downstreamFieldIds": [
+        42
+      ]
+    },
+    "26": {
+      "id": 26,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_users",
+        "fieldNames": []
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": []
+      },
+      "depId": 26,
+      "upstreamTableId": 1,
+      "upstreamFieldIds": [],
+      "downstreamTableId": 4,
+      "downstreamFieldIds": []
+    },
+    "27": {
+      "id": 27,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_orders",
+        "fieldNames": []
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": []
+      },
+      "depId": 27,
+      "upstreamTableId": 2,
+      "upstreamFieldIds": [],
+      "downstreamTableId": 5,
+      "downstreamFieldIds": []
+    },
+    "28": {
+      "id": 28,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "raw_order_items",
+        "fieldNames": []
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": []
+      },
+      "depId": 28,
+      "upstreamTableId": 3,
+      "upstreamFieldIds": [],
+      "downstreamTableId": 6,
+      "downstreamFieldIds": []
+    },
+    "29": {
+      "id": 29,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_users",
+        "fieldNames": []
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "dim_users",
+        "fieldNames": []
+      },
+      "depId": 29,
+      "upstreamTableId": 4,
+      "upstreamFieldIds": [],
+      "downstreamTableId": 7,
+      "downstreamFieldIds": []
+    },
+    "30": {
+      "id": 30,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_orders",
+        "fieldNames": []
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "fct_orders",
+        "fieldNames": []
+      },
+      "depId": 30,
+      "upstreamTableId": 5,
+      "upstreamFieldIds": [],
+      "downstreamTableId": 8,
+      "downstreamFieldIds": []
+    },
+    "31": {
+      "id": 31,
+      "upstream": {
+        "schemaName": null,
+        "tableName": "stg_order_items",
+        "fieldNames": []
+      },
+      "downstream": {
+        "schemaName": null,
+        "tableName": "fct_orders",
+        "fieldNames": []
+      },
+      "depId": 31,
+      "upstreamTableId": 6,
+      "upstreamFieldIds": [],
+      "downstreamTableId": 8,
+      "downstreamFieldIds": []
+    }
+  },
+  "enums": {},
+  "tableGroups": {
+    "1": {
+      "id": 1,
+      "name": "raw_layer",
+      "note": null,
+      "tableIds": [
+        1,
+        2,
+        3
+      ],
+      "schemaId": 1
+    },
+    "2": {
+      "id": 2,
+      "name": "staging_layer",
+      "note": null,
+      "tableIds": [
+        4,
+        5,
+        6
+      ],
+      "schemaId": 1
+    },
+    "3": {
+      "id": 3,
+      "name": "mart_layer",
+      "note": null,
+      "tableIds": [
+        7,
+        8
+      ],
+      "schemaId": 1
+    }
+  },
+  "tables": {
+    "1": {
+      "id": 1,
+      "name": "raw_users",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "recordIds": [],
+      "fieldIds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "indexIds": [],
+      "checkIds": [],
+      "schemaId": 1,
+      "groupId": 1
+    },
+    "2": {
+      "id": 2,
+      "name": "raw_orders",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "recordIds": [],
+      "fieldIds": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "indexIds": [],
+      "checkIds": [],
+      "schemaId": 1,
+      "groupId": 1
+    },
+    "3": {
+      "id": 3,
+      "name": "raw_order_items",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "recordIds": [],
+      "fieldIds": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "indexIds": [],
+      "checkIds": [],
+      "schemaId": 1,
+      "groupId": 1
+    },
+    "4": {
+      "id": 4,
+      "name": "stg_users",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "recordIds": [],
+      "fieldIds": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "indexIds": [],
+      "checkIds": [],
+      "schemaId": 1,
+      "groupId": 2
+    },
+    "5": {
+      "id": 5,
+      "name": "stg_orders",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "recordIds": [],
+      "fieldIds": [
+        20,
+        21,
+        22,
+        23
+      ],
+      "indexIds": [],
+      "checkIds": [],
+      "schemaId": 1,
+      "groupId": 2
+    },
+    "6": {
+      "id": 6,
+      "name": "stg_order_items",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "recordIds": [],
+      "fieldIds": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "indexIds": [],
+      "checkIds": [],
+      "schemaId": 1,
+      "groupId": 2
+    },
+    "7": {
+      "id": 7,
+      "name": "dim_users",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "recordIds": [],
+      "fieldIds": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "indexIds": [],
+      "checkIds": [],
+      "schemaId": 1,
+      "groupId": 3
+    },
+    "8": {
+      "id": 8,
+      "name": "fct_orders",
+      "alias": null,
+      "note": null,
+      "partials": [],
+      "recordIds": [],
+      "fieldIds": [
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "indexIds": [],
+      "checkIds": [],
+      "schemaId": 1,
+      "groupId": 3
+    }
+  },
+  "endpoints": {
+    "1": {
+      "id": 1,
+      "schemaName": null,
+      "tableName": "raw_orders",
+      "fieldNames": [
+        "user_id"
+      ],
+      "relation": "*",
+      "refId": 1,
+      "fieldIds": [
+        7
+      ]
+    },
+    "2": {
+      "id": 2,
+      "schemaName": null,
+      "tableName": "raw_users",
+      "fieldNames": [
+        "id"
+      ],
+      "relation": "1",
+      "refId": 1,
+      "fieldIds": [
+        1
+      ]
+    },
+    "3": {
+      "id": 3,
+      "schemaName": null,
+      "tableName": "raw_order_items",
+      "fieldNames": [
+        "order_id"
+      ],
+      "relation": "*",
+      "refId": 2,
+      "fieldIds": [
+        12
+      ]
+    },
+    "4": {
+      "id": 4,
+      "schemaName": null,
+      "tableName": "raw_orders",
+      "fieldNames": [
+        "id"
+      ],
+      "relation": "1",
+      "refId": 2,
+      "fieldIds": [
+        6
+      ]
+    },
+    "5": {
+      "id": 5,
+      "schemaName": null,
+      "tableName": "stg_orders",
+      "fieldNames": [
+        "user_id"
+      ],
+      "relation": "*",
+      "refId": 3,
+      "fieldIds": [
+        21
+      ]
+    },
+    "6": {
+      "id": 6,
+      "schemaName": null,
+      "tableName": "stg_users",
+      "fieldNames": [
+        "user_id"
+      ],
+      "relation": "1",
+      "refId": 3,
+      "fieldIds": [
+        16
+      ]
+    },
+    "7": {
+      "id": 7,
+      "schemaName": null,
+      "tableName": "stg_order_items",
+      "fieldNames": [
+        "order_id"
+      ],
+      "relation": "*",
+      "refId": 4,
+      "fieldIds": [
+        25
+      ]
+    },
+    "8": {
+      "id": 8,
+      "schemaName": null,
+      "tableName": "stg_orders",
+      "fieldNames": [
+        "order_id"
+      ],
+      "relation": "1",
+      "refId": 4,
+      "fieldIds": [
+        20
+      ]
+    },
+    "9": {
+      "id": 9,
+      "schemaName": null,
+      "tableName": "fct_orders",
+      "fieldNames": [
+        "user_id"
+      ],
+      "relation": "*",
+      "refId": 5,
+      "fieldIds": [
+        38
+      ]
+    },
+    "10": {
+      "id": 10,
+      "schemaName": null,
+      "tableName": "dim_users",
+      "fieldNames": [
+        "user_id"
+      ],
+      "relation": "1",
+      "refId": 5,
+      "fieldIds": [
+        30
+      ]
+    }
+  },
+  "enumValues": {},
+  "indexes": {},
+  "indexColumns": {},
+  "checks": {},
+  "fields": {
+    "1": {
+      "id": 1,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        2
+      ],
+      "tableId": 1,
+      "enumId": null
+    },
+    "2": {
+      "id": 2,
+      "name": "email",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 1,
+      "enumId": null
+    },
+    "3": {
+      "id": 3,
+      "name": "name",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 1,
+      "enumId": null
+    },
+    "4": {
+      "id": 4,
+      "name": "created_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 1,
+      "enumId": null
+    },
+    "5": {
+      "id": 5,
+      "name": "raw_data",
+      "type": {
+        "schemaName": null,
+        "type_name": "json",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 1,
+      "enumId": null
+    },
+    "6": {
+      "id": 6,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        4
+      ],
+      "tableId": 2,
+      "enumId": null
+    },
+    "7": {
+      "id": 7,
+      "name": "user_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        1
+      ],
+      "tableId": 2,
+      "enumId": null
+    },
+    "8": {
+      "id": 8,
+      "name": "ordered_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 2,
+      "enumId": null
+    },
+    "9": {
+      "id": 9,
+      "name": "status",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 2,
+      "enumId": null
+    },
+    "10": {
+      "id": 10,
+      "name": "raw_data",
+      "type": {
+        "schemaName": null,
+        "type_name": "json",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 2,
+      "enumId": null
+    },
+    "11": {
+      "id": 11,
+      "name": "id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "12": {
+      "id": 12,
+      "name": "order_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        3
+      ],
+      "tableId": 3,
+      "enumId": null
+    },
+    "13": {
+      "id": 13,
+      "name": "product_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "14": {
+      "id": 14,
+      "name": "quantity",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "15": {
+      "id": 15,
+      "name": "price",
+      "type": {
+        "schemaName": null,
+        "type_name": "decimal",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 3,
+      "enumId": null
+    },
+    "16": {
+      "id": 16,
+      "name": "user_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        6
+      ],
+      "tableId": 4,
+      "enumId": null
+    },
+    "17": {
+      "id": 17,
+      "name": "email",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 4,
+      "enumId": null
+    },
+    "18": {
+      "id": 18,
+      "name": "name",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 4,
+      "enumId": null
+    },
+    "19": {
+      "id": 19,
+      "name": "created_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 4,
+      "enumId": null
+    },
+    "20": {
+      "id": 20,
+      "name": "order_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        8
+      ],
+      "tableId": 5,
+      "enumId": null
+    },
+    "21": {
+      "id": 21,
+      "name": "user_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        5
+      ],
+      "tableId": 5,
+      "enumId": null
+    },
+    "22": {
+      "id": 22,
+      "name": "ordered_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 5,
+      "enumId": null
+    },
+    "23": {
+      "id": 23,
+      "name": "status",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 5,
+      "enumId": null
+    },
+    "24": {
+      "id": 24,
+      "name": "order_item_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 6,
+      "enumId": null
+    },
+    "25": {
+      "id": 25,
+      "name": "order_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        7
+      ],
+      "tableId": 6,
+      "enumId": null
+    },
+    "26": {
+      "id": 26,
+      "name": "product_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 6,
+      "enumId": null
+    },
+    "27": {
+      "id": 27,
+      "name": "quantity",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 6,
+      "enumId": null
+    },
+    "28": {
+      "id": 28,
+      "name": "unit_price",
+      "type": {
+        "schemaName": null,
+        "type_name": "decimal",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 6,
+      "enumId": null
+    },
+    "29": {
+      "id": 29,
+      "name": "line_total",
+      "type": {
+        "schemaName": null,
+        "type_name": "decimal",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 6,
+      "enumId": null
+    },
+    "30": {
+      "id": 30,
+      "name": "user_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        10
+      ],
+      "tableId": 7,
+      "enumId": null
+    },
+    "31": {
+      "id": 31,
+      "name": "email",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 7,
+      "enumId": null
+    },
+    "32": {
+      "id": 32,
+      "name": "name",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 7,
+      "enumId": null
+    },
+    "33": {
+      "id": 33,
+      "name": "first_order_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 7,
+      "enumId": null
+    },
+    "34": {
+      "id": 34,
+      "name": "total_orders",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 7,
+      "enumId": null
+    },
+    "35": {
+      "id": 35,
+      "name": "total_spent",
+      "type": {
+        "schemaName": null,
+        "type_name": "decimal",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 7,
+      "enumId": null
+    },
+    "36": {
+      "id": 36,
+      "name": "created_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 7,
+      "enumId": null
+    },
+    "37": {
+      "id": 37,
+      "name": "order_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": true,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 8,
+      "enumId": null
+    },
+    "38": {
+      "id": 38,
+      "name": "user_id",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [
+        9
+      ],
+      "tableId": 8,
+      "enumId": null
+    },
+    "39": {
+      "id": 39,
+      "name": "ordered_at",
+      "type": {
+        "schemaName": null,
+        "type_name": "timestamp",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 8,
+      "enumId": null
+    },
+    "40": {
+      "id": 40,
+      "name": "status",
+      "type": {
+        "schemaName": null,
+        "type_name": "varchar",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 8,
+      "enumId": null
+    },
+    "41": {
+      "id": 41,
+      "name": "total_items",
+      "type": {
+        "schemaName": null,
+        "type_name": "int",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 8,
+      "enumId": null
+    },
+    "42": {
+      "id": 42,
+      "name": "order_total",
+      "type": {
+        "schemaName": null,
+        "type_name": "decimal",
+        "args": null
+      },
+      "unique": false,
+      "pk": false,
+      "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
+      "endpointIds": [],
+      "tableId": 8,
+      "enumId": null
+    }
+  },
+  "records": {},
+  "tablePartials": {}
+}

@@ -1,0 +1,46 @@
+{
+  "tables": [
+    {
+      "name": "raw_orders",
+      "fields": [
+        { "name": "id", "type": { "type_name": "int" }, "pk": true }
+      ]
+    },
+    {
+      "name": "stg_orders",
+      "fields": [
+        { "name": "id", "type": { "type_name": "int" }, "pk": true }
+      ]
+    },
+    {
+      "name": "fct_orders",
+      "fields": [
+        { "name": "id", "type": { "type_name": "int" }, "pk": true },
+        { "name": "amount", "type": { "type_name": "decimal" } }
+      ]
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "notes": [],
+  "records": [],
+  "tablePartials": [],
+  "deps": [
+    {
+      "schemaName": "public",
+      "edges": [
+        { "upstream": { "tableName": "raw_orders", "fieldNames": [] }, "downstream": { "tableName": "stg_orders", "fieldNames": [] } }
+      ]
+    },
+    {
+      "schemaName": "public",
+      "note": { "value": "Aggregate staging into facts" },
+      "custom": { "materialized": "table", "owner": "data-team", "priority": 1 },
+      "edges": [
+        { "upstream": { "tableName": "stg_orders", "fieldNames": [] }, "downstream": { "tableName": "fct_orders", "fieldNames": [] } },
+        { "upstream": { "tableName": "stg_orders", "fieldNames": ["id"] }, "downstream": { "tableName": "fct_orders", "fieldNames": ["amount"] } }
+      ]
+    }
+  ]
+}
