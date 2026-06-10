@@ -34,7 +34,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "bench": "vitest bench",
-    "profile": "npx tsx --tsconfig tsconfig.json --cpu-prof --cpu-prof-dir __benchmarks__/output/ __benchmarks__/compiler.profile.ts"
+    "profile:build": "vite build --mode profile --config vite.profile.config.ts",
+    "profile": "yarn profile:build && node --cpu-prof --cpu-prof-dir __benchmarks__/output/ __benchmarks__/output/compiler.profile.mjs"
   },
   "devDependencies": {
     "@types/luxon": "^3.7.1",
