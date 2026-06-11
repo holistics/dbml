@@ -191,7 +191,7 @@ function generateComparisonReport(
     if (!current) continue;
 
     const operations = current.operations;
-    markdown += `### @dbml/${pkg}\n\n`;
+    markdown += `### ${pkg}\n\n`;
 
     // Build table: suite | 🏠 base (op) | 🔀 PR (op) | change | ...
     const headerCells = ["suite"];

@@ -107,13 +107,13 @@ function generateMarkdownReport (coverageData, commitSha) {
 
   for (const pkg of coverageData) {
     if (!pkg.coverageData || !pkg.coverageData.total) {
-      pkgTable.row([`@dbml/${pkg.name}`, 'N/A', 'N/A', 'N/A', 'N/A']);
+      pkgTable.row([`${pkg.name}`, 'N/A', 'N/A', 'N/A', 'N/A']);
       continue;
     }
 
     const t = pkg.coverageData.total;
     pkgTable.row([
-      `@dbml/${pkg.name}`,
+      `${pkg.name}`,
       `${getIcon(t.lines.pct)} ${formatPercentage(t.lines.pct)}`,
       `${getIcon(t.statements.pct)} ${formatPercentage(t.statements.pct)}`,
       `${getIcon(t.functions.pct)} ${formatPercentage(t.functions.pct)}`,
@@ -131,7 +131,7 @@ function generateMarkdownReport (coverageData, commitSha) {
     markdown += `### ⚠️ Coverage Warnings\n\n`;
     markdown += `The following packages have coverage below ${COVERAGE_THRESHOLD}%:\n\n`;
     for (const pkg of lowCoveragePackages) {
-      markdown += `- **@dbml/${pkg.name}**: ${formatPercentage(pkg.coverageData.total.lines.pct)} line coverage\n`;
+      markdown += `- **${pkg.name}**: ${formatPercentage(pkg.coverageData.total.lines.pct)} line coverage\n`;
     }
     markdown += `\n`;
   }
@@ -149,7 +149,7 @@ function generateMarkdownReport (coverageData, commitSha) {
     if (lowCoverageFiles.length > 0) {
       hasLowCoverageFiles = true;
 
-      markdown += `#### @dbml/${pkg.name}\n\n`;
+      markdown += `#### ${pkg.name}\n\n`;
       markdown += '<details>\n';
       markdown += `<summary>${lowCoverageFiles.length} file(s) below ${COVERAGE_THRESHOLD}% coverage</summary>\n\n`;
 
