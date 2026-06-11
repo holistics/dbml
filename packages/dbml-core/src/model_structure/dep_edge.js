@@ -1,32 +1,10 @@
 import { DEFAULT_SCHEMA_NAME } from './config';
 import Element from './element';
-
-/**
- * Resolve a Dep endpoint (upstream or downstream) against the database.
- * For bare-table endpoints (fieldNames empty), returns table only.
- * For column-level endpoints, resolves each field by name.
- *
- * @param {{ schemaName?: string|null, tableName: string, fieldNames?: string[] }} endpointData
- * @param {import('./database').default} database
- * @returns {{ table: any, fields: any[] }}
- */
-function resolveEndpoint (endpointData, database) {
-  const schemaName = endpointData.schemaName || DEFAULT_SCHEMA_NAME;
-  const table = database.findTable(schemaName, endpointData.tableName);
-  if (!table) {
-    return { table: null, fields: [] };
-  }
-
-  const fieldNames = endpointData.fieldNames ?? [];
-  const fields = fieldNames
-    .map((name) => table.findField(name))
-    .filter(Boolean);
-  return { table, fields };
-}
+import { shouldPrintSchema, shouldPrintSchemaName } from './utils';
 
 class DepEdge extends Element {
   /**
-   * @param {{ upstream: any, downstream: any, token?: any, dep: import('./dep').default }} param0
+   * @param {import('../../types/model_structure/dep_edge').RawDepEdge} param0
    */
   constructor ({
     upstream, downstream, token, dep,
@@ -51,16 +29,54 @@ class DepEdge extends Element {
     this.generateId();
 
     const database = this.dep.schema.database;
-    const up = resolveEndpoint(this.upstream, database);
-    const down = resolveEndpoint(this.downstream, database);
-    /** @type {any} */
+    const up = this.resolveEndpoint(this.upstream, database);
+    const down = this.resolveEndpoint(this.downstream, database);
+    /** @type {import('./table').default | null} */
     this.upstreamTable = up.table;
-    /** @type {any[]} */
+    /** @type {import('./field').default[]} */
     this.upstreamFields = up.fields;
-    /** @type {any} */
+    /** @type {import('./table').default | null} */
     this.downstreamTable = down.table;
-    /** @type {any[]} */
+    /** @type {import('./field').default[]} */
     this.downstreamFields = down.fields;
+
+    // Back-reference: each field tracks which dep edges touch it. Parallel to
+    // Endpoint.setFields → field.pushEndpoint for refs.
+    this.upstreamFields.forEach((field) => field.pushDepEdge(this));
+    this.downstreamFields.forEach((field) => field.pushDepEdge(this));
+  }
+
+  /**
+   * Resolve an upstream or downstream endpoint against the database.
+   * Throws via this.error() if the referenced table or field can't be found —
+   * mirrors Endpoint's strict resolution so typos in Dep produce a real
+   * compile error rather than a silently-dropped edge.
+   * For bare-table endpoints (fieldNames empty), returns the table only.
+   *
+   * @param {{ schemaName?: string|null, tableName: string, fieldNames?: string[] }} endpointData
+   * @param {import('./database').default} database
+   * @returns {{ table: import('./table').default, fields: import('./field').default[] }}
+   */
+  resolveEndpoint (endpointData, database) {
+    const schemaName = endpointData.schemaName || DEFAULT_SCHEMA_NAME;
+    const table = database.findTable(schemaName, endpointData.tableName);
+    if (!table) {
+      this.error(`Can't find table ${shouldPrintSchemaName(schemaName)
+        ? `"${schemaName}".`
+        : ''}"${endpointData.tableName}" referenced in Dep edge`);
+    }
+
+    const fieldNames = endpointData.fieldNames ?? [];
+    const fields = fieldNames.map((name) => {
+      const field = table.findField(name);
+      if (!field) {
+        this.error(`Can't find field ${shouldPrintSchema(table.schema)
+          ? `"${table.schema.name}".`
+          : ''}"${name}" in table "${table.name}" referenced in Dep edge`);
+      }
+      return field;
+    });
+    return { table, fields };
   }
 
   generateId () {
@@ -69,16 +85,24 @@ class DepEdge extends Element {
   }
 
   /**
-   * @param {import('./dep_edge').default} other
+   * @param {import('../../types/model_structure/dep_edge').default} depEdge
    * @returns {boolean}
    */
-  equals (other) {
-    return this.upstream.schemaName === other.upstream.schemaName
-      && this.upstream.tableName === other.upstream.tableName
-      && JSON.stringify(this.upstream.fieldNames) === JSON.stringify(other.upstream.fieldNames)
-      && this.downstream.schemaName === other.downstream.schemaName
-      && this.downstream.tableName === other.downstream.tableName
-      && JSON.stringify(this.downstream.fieldNames) === JSON.stringify(other.downstream.fieldNames);
+  equals (depEdge) {
+    return DepEdge.compareEnd(this.upstreamTable, this.upstreamFields, depEdge.upstreamTable, depEdge.upstreamFields)
+      && DepEdge.compareEnd(this.downstreamTable, this.downstreamFields, depEdge.downstreamTable, depEdge.downstreamFields);
+  }
+
+  // Endpoints are compared by resolved ids, so different spellings of the same table/fields are equal.
+  static compareEnd (table, fields, otherTable, otherFields) {
+    if (table?.id !== otherTable?.id) return false;
+    if (fields.length !== otherFields.length) return false;
+    const ids = fields.map((f) => f.id).sort();
+    const otherIds = otherFields.map((f) => f.id).sort();
+    for (let i = 0; i < ids.length; i += 1) {
+      if (ids[i] !== otherIds[i]) return false;
+    }
+    return true;
   }
 
   export () {
@@ -103,7 +127,7 @@ class DepEdge extends Element {
   }
 
   /**
-   * @param {any} model
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
    */
   normalize (model) {
     if (!model.depEdges) model.depEdges = {};

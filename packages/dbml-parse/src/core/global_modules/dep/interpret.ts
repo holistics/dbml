@@ -98,6 +98,22 @@ export class DepInterpreter {
     return [];
   }
 
+  /**
+   * Read settings into `dep.note` and `dep.custom`.
+   *
+   * Settings come from THREE sources, in this order:
+   *   1. The top-level attribute list on the Dep header
+   *      (e.g. `Dep my_block [color: 'blue'] { ... }`).
+   *   2. Per-field setting lists inside the body
+   *      (e.g. `Dep { a -> b [note: 'x'] }`).
+   *   3. Sub-element declarations inside the body
+   *      (e.g. `Dep { a -> b; note: 'x'; materialized: 'view' }`).
+   *
+   * All three sources write into the same `custom` object (with `note`
+   * routed to the typed slot instead). Precedence is last-write-wins by
+   * virtue of plain object assignment — settings later in the source
+   * file overwrite earlier ones with the same key.
+   */
   private interpretSettings (): CompileError[] {
     const custom: Record<string, string | number | boolean | null> = {};
 

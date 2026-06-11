@@ -11,6 +11,10 @@ export default class DbState {
     /** @type {number} */
     this.refId = 1;
     /** @type {number} */
+    this.depId = 1;
+    /** @type {number} */
+    this.depEdgeId = 1;
+    /** @type {number} */
     this.tableId = 1;
     /** @type {number} */
     this.noteId = 1;

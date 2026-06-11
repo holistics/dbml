@@ -65,6 +65,7 @@ export interface Database {
   tables: Table[];
   notes: Note[];
   refs: Ref[];
+  deps: Dep[];
   enums: Enum[];
   tableGroups: TableGroup[];
   aliases: Alias[];
@@ -122,6 +123,7 @@ export interface Column {
   type: ColumnType;
   token: TokenPosition;
   inline_refs: InlineRef[];
+  inline_deps: InlineDep[];
   checks: Check[];
   pk?: boolean;
   dbdefault?: {
@@ -190,6 +192,42 @@ export interface RefEndpoint {
 }
 
 export type RelationCardinality = '1' | '*';
+
+// Data lineage edge: directed dependency between tables or columns.
+// Operator is always `->`; no cardinality.
+export interface Dep {
+  schemaName: string | null;
+  name: string | null;
+  edges: DepEdge[];
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  custom?: Record<string, string | number | boolean | null>;
+  token: TokenPosition;
+}
+
+export interface DepEdge {
+  upstream: DepEndpoint;
+  downstream: DepEndpoint;
+  token: TokenPosition;
+}
+
+export interface DepEndpoint {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  token: TokenPosition;
+}
+
+// Inline dep on a column: `[dep: -> target.col]` or `[dep: <- source.col]`.
+export interface InlineDep {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  direction: '->' | '<-';
+  token: TokenPosition;
+}
 
 export interface Enum {
   name: string;
@@ -295,8 +333,12 @@ export type SchemaElement =
   | Index
   | Check
   | InlineRef
+  | InlineDep
   | Ref
   | RefEndpoint
+  | Dep
+  | DepEdge
+  | DepEndpoint
   | Enum
   | EnumField
   | TableGroup

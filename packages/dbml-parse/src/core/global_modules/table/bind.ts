@@ -25,11 +25,27 @@ export default class TableBinder {
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.body instanceof BlockExpressionNode)) {
-      return [];
+    const errors: CompileError[] = [];
+    if (this.declarationNode.attributeList) {
+      errors.push(...this.bindHeaderSettings(this.declarationNode.attributeList));
     }
+    if (this.declarationNode.body instanceof BlockExpressionNode) {
+      errors.push(...this.bindBody(this.declarationNode.body));
+    }
+    return errors;
+  }
 
-    return this.bindBody(this.declarationNode.body);
+  private bindHeaderSettings (settings: ListExpressionNode): CompileError[] {
+    const settingsMap = aggregateSettingList(settings).getValue();
+    return settingsMap.dep?.flatMap((d) => (d.value ? this.bindInlineDepValue(d.value) : [])) ?? [];
+  }
+
+  private bindInlineDepValue (value: SyntaxNode): CompileError[] {
+    const bindees = scanNonListNodeForBinding(value);
+    return bindees.flatMap((bindee) => {
+      const nodes = [...bindee.variables, ...bindee.tupleElements];
+      return nodes.flatMap((b) => this.compiler.nodeReferee(b).getErrors());
+    });
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -73,6 +89,7 @@ export default class TableBinder {
           const settingsMap = aggregateSettingList(listExpression).getValue();
 
           errors.push(...(settingsMap.ref?.flatMap((ref) => (ref.value ? this.bindInlineRef(ref.value) : [])) || []));
+          errors.push(...(settingsMap.dep?.flatMap((dep) => (dep.value ? this.bindInlineDepValue(dep.value) : [])) || []));
           errors.push(...(settingsMap.default?.flatMap((def) => (def.value ? this.tryToBindEnumFieldRef(def.value) : [])) || []));
           args.pop();
         }

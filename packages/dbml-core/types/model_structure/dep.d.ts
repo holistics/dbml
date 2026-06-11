@@ -4,11 +4,23 @@ import Schema from './schema';
 import DbState from './dbState';
 import Database, { NormalizedModel } from './database';
 
+export interface RawDepEndpoint {
+    schemaName?: string | null;
+    tableName: string;
+    fieldNames?: string[];
+}
+
+export interface RawDepEdgeInput {
+    upstream: RawDepEndpoint;
+    downstream: RawDepEndpoint;
+    token?: Token;
+}
+
 export interface RawDep {
     name?: string | null;
-    note?: any;
+    note?: { value?: string; token?: Token } | string | null;
     custom?: Record<string, string | number | boolean | null> | null;
-    edges: any[];
+    edges: RawDepEdgeInput[];
     token?: Token;
     schema: Schema;
 }
@@ -25,8 +37,7 @@ declare class Dep extends Element {
     database: Database;
     constructor({ name, note, custom, edges, token, schema }: RawDep);
     generateId(): void;
-    processEdges(rawEdges: any[]): void;
-    equals(other: Dep): boolean;
+    processEdges(rawEdges: RawDepEdgeInput[]): void;
     export(): {
         name: string | null;
         note: string | null;

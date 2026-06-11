@@ -30,7 +30,9 @@ declare class DepEdge extends Element {
     downstreamFields: Field[];
     constructor(args: RawDepEdge);
     generateId(): void;
-    equals(other: DepEdge): boolean;
+    equals(depEdge: DepEdge): boolean;
+    static compareEnd(table: Table | null, fields: Field[], otherTable: Table | null, otherFields: Field[]): boolean;
+    resolveEndpoint(endpointData: { schemaName?: string | null; tableName: string; fieldNames?: string[] }, database: import('./database').default): { table: Table; fields: Field[] };
     export(): {
         upstream: DepEndpointData;
         downstream: DepEndpointData;

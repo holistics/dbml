@@ -1,5 +1,7 @@
 import Schema, { NormalizedSchemaIdMap, RawSchema } from './schema';
 import Ref, { NormalizedRefIdMap } from './ref';
+import Dep, { NormalizedDepIdMap } from './dep';
+import { NormalizedDepEdgeIdMap } from './dep_edge';
 import Enum, { NormalizedEnumIdMap } from './enum';
 import TableGroup, { NormalizedTableGroupIdMap } from './tableGroup';
 import Table, { NormalizedTableIdMap } from './table';
@@ -56,6 +58,7 @@ export interface RawDatabase {
     notes: StickyNote[];
     enums: Enum[];
     refs: Ref[];
+    deps?: Dep[];
     tableGroups: TableGroup[];
     project: Project;
     records: RawTableRecord[];
@@ -313,6 +316,8 @@ export interface NormalizedModel {
     schemas: NormalizedSchemaIdMap;
     endpoints: NormalizedEndpointIdMap;
     refs: NormalizedRefIdMap;
+    deps: NormalizedDepIdMap;
+    depEdges: NormalizedDepEdgeIdMap;
     fields: NormalizedFieldIdMap;
     tables: NormalizedTableIdMap;
     tableGroups: NormalizedTableGroupIdMap;

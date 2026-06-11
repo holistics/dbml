@@ -1,10 +1,11 @@
 import { get } from 'lodash-es';
+import { DEFAULT_SCHEMA_NAME } from './config';
 import DepEdge from './dep_edge';
 import Element from './element';
 
 class Dep extends Element {
   /**
-   * @param {{ name?: string|null, note?: any, custom?: object|null, edges: any[], token?: any, schema?: any }} param0
+   * @param {import('../../types/model_structure/dep').RawDep} param0
    */
   constructor ({
     name, note, custom, edges, token, schema = {},
@@ -14,9 +15,9 @@ class Dep extends Element {
     this.name = name ?? null;
     /** @type {string|null} */
     this.note = note ? get(note, 'value', note) : null;
-    /** @type {any} */
+    /** @type {import('../../types/model_structure/element').Token} */
     this.noteToken = note ? get(note, 'token', null) : null;
-    /** @type {object|null} */
+    /** @type {Record<string, string|number|boolean|null>|null} */
     this.custom = custom ?? null;
     /** @type {import('./dep_edge').default[]} */
     this.edges = [];
@@ -35,21 +36,21 @@ class Dep extends Element {
   }
 
   /**
-   * @param {any[]} rawEdges
+   * @param {import('../../types/model_structure/dep_edge').RawDepEdge[]} rawEdges
    */
   processEdges (rawEdges) {
     rawEdges.forEach((rawEdge) => {
+      // Self-loop validation: an edge cannot have the same upstream and
+      // downstream table (regardless of which fields are involved).
+      const upSchema = rawEdge.upstream?.schemaName || DEFAULT_SCHEMA_NAME;
+      const downSchema = rawEdge.downstream?.schemaName || DEFAULT_SCHEMA_NAME;
+      const upTable = rawEdge.upstream?.tableName;
+      const downTable = rawEdge.downstream?.tableName;
+      if (upSchema === downSchema && upTable === downTable) {
+        this.error(`Self-loop Dep edge not allowed: "${upSchema}"."${upTable}" cannot depend on itself`);
+      }
       this.edges.push(new DepEdge({ ...rawEdge, dep: this }));
     });
-  }
-
-  /**
-   * @param {import('./dep').default} dep
-   * @returns {boolean}
-   */
-  equals (dep) {
-    if (this.edges.length !== dep.edges.length) return false;
-    return this.edges.every((edge, i) => edge.equals(dep.edges[i]));
   }
 
   export () {
@@ -86,7 +87,7 @@ class Dep extends Element {
   }
 
   /**
-   * @param {any} model
+   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
    */
   normalize (model) {
     model.deps[this.id] = {

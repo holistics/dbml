@@ -221,6 +221,10 @@ export class TablePartialInterpreter {
       return inlineRef;
     });
 
+    // TablePartial does not support inline `[dep: ...]` in v1 (rejected by validator).
+    // Initialize empty so the Column contract holds.
+    column.inline_deps = [];
+
     const checkNodes = settingMap[SettingName.Check] || [];
     column.checks = checkNodes.map((checkNode) => {
       const token = getTokenPosition(checkNode);

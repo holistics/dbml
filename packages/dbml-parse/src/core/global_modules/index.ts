@@ -9,6 +9,7 @@ import type { NodeMetadata } from '@/core/types/symbol/metadata';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import type { NodeSymbol } from '@/core/types/symbol';
 import { checksModule } from './checks';
+import { depModule } from './dep';
 import { diagramViewModule } from './diagramView';
 import { enumModule } from './enum';
 import { indexesModule } from './indexes';
@@ -33,6 +34,7 @@ export const modules: GlobalModule[] = [
   indexesModule,
   checksModule,
   refModule,
+  depModule,
   projectModule,
   tableGroupModule,
   tablePartialModule,

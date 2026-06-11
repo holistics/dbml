@@ -26,9 +26,9 @@ export default class CustomValidator {
   }
 
   private validateContext (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ElementDeclarationNode && this.declarationNode.parent.isKind(ElementKind.Project))) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode && this.declarationNode.parent.isKind(ElementKind.Project, ElementKind.Dep))) {
       return [
-        new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A Custom element can only appear in a Project', this.declarationNode),
+        new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A Custom element can only appear in a Project or a Dep', this.declarationNode),
       ];
     }
     return [];
@@ -76,8 +76,10 @@ export default class CustomValidator {
     }
 
     const errors: CompileError[] = [];
+    const parentIsDep = this.declarationNode.parent instanceof ElementDeclarationNode
+      && this.declarationNode.parent.isKind(ElementKind.Dep);
 
-    if (!isExpressionAQuotedString(body.callee)) {
+    if (!parentIsDep && !isExpressionAQuotedString(body.callee)) {
       errors.push(new CompileError(CompileErrorCode.INVALID_CUSTOM_ELEMENT_VALUE, 'A Custom element value can only be a string', body));
     }
     if (body.args.length > 0) {
