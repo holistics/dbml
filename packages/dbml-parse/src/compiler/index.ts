@@ -147,15 +147,20 @@ export default class Compiler {
       }
 
       try {
-        if (!this.globalCache.has(queryKey)) {
-          this.globalCache.set(queryKey, new Map());
+        let subCache = this.globalCache.get(queryKey);
+        if (!subCache) {
+          subCache = new Map();
+          this.globalCache.set(queryKey, subCache);
         }
 
-        const argKey = args.map((a) => intern(a)).join('\0');
-        const subCache = this.globalCache.get(queryKey)!;
+        const argKey = args.length === 0
+          ? ''
+          : args.length === 1
+            ? intern(args[0]) as string
+            : args.map((a) => intern(a)).join('\0');
 
-        if (subCache.has(argKey)) {
-          const cached = subCache.get(argKey);
+        const cached = subCache.get(argKey);
+        if (cached) {
           if (cached === COMPUTING) {
             throw new Error(`Cycle detected in query: ${fn.name}(${argKey})`);
           }
@@ -205,7 +210,11 @@ export default class Compiler {
       this.cleanStaleLocalCache(filepath);
 
       const filepathId = filepath.intern();
-      const argKey = args.map((a) => intern(a)).join('\0');
+      const argKey = args.length === 0
+        ? ''
+        : args.length === 1
+          ? intern(args[0]) as string
+          : args.map((a) => intern(a)).join('\0');
 
       let filepathCache = this.localCache.get(filepathId);
       if (!filepathCache) {
