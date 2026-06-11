@@ -87,11 +87,17 @@ export default class Compiler {
   private cleanStaleLocalCache (filepath: Filepath): void {
     const content = this.layout.getSource(filepath);
     const key = filepath.absolute;
-    if (this.sourceSnapshot.has(key) && this.sourceSnapshot.get(key) !== content) {
-      this.localCache.delete(filepath.intern());
-      this.globalCache.clear();
+
+    if (this.sourceSnapshot.has(key)) {
+      if (this.sourceSnapshot.get(key) !== content) {
+        this.localCache.delete(filepath.intern());
+        this.globalCache.clear();
+
+        this.sourceSnapshot.set(key, content); // reset snapshot on change
+      }
+    } else {
+      this.sourceSnapshot.set(key, content); // reset snapshot if not set yet
     }
-    this.sourceSnapshot.set(key, content);
   }
 
   private entrypointsSnapshot: Filepath[] | undefined;
@@ -123,6 +129,8 @@ export default class Compiler {
   // (QuerySymbol, interned argument string) -> Result
   private globalCache = new Map<QuerySymbol, Map<string, any>>();
 
+  private globallyQuerying = false; // Check if we're already inside a query to skip unnecessary repeat global checks
+
   // Turn a normal function into a Compiler's global query
   // Input: A function that only accepts internable types | primitive types
   // Output: A global query wrapping the function
@@ -132,33 +140,40 @@ export default class Compiler {
     const queryKey = Symbol();
 
     return ((...args: Args): Return => {
-      // Detect entrypoint changes before cache lookup.
-      this.cleanStaleGlobalCache();
-
-      if (!this.globalCache.has(queryKey)) {
-        this.globalCache.set(queryKey, new Map());
+      const isTopLevel = !this.globallyQuerying;
+      if (isTopLevel) {
+        this.globallyQuerying = true;
+        this.cleanStaleGlobalCache();
       }
 
-      const argKey = args.map((a) => intern(a)).join('\0');
-      const subCache = this.globalCache.get(queryKey)!;
-
-      if (subCache.has(argKey)) {
-        const cached = subCache.get(argKey);
-        if (cached === COMPUTING) {
-          throw new Error(`Cycle detected in query: ${fn.name}(${argKey})`);
-        }
-        return cached;
-      }
-
-      // Sentinel detects cycles when a query re-enters itself
-      subCache.set(argKey, COMPUTING);
       try {
-        const result = fn.apply(this, args);
-        subCache.set(argKey, result);
-        return result;
-      } catch (e) {
-        subCache.delete(argKey);
-        throw e;
+        if (!this.globalCache.has(queryKey)) {
+          this.globalCache.set(queryKey, new Map());
+        }
+
+        const argKey = args.map((a) => intern(a)).join('\0');
+        const subCache = this.globalCache.get(queryKey)!;
+
+        if (subCache.has(argKey)) {
+          const cached = subCache.get(argKey);
+          if (cached === COMPUTING) {
+            throw new Error(`Cycle detected in query: ${fn.name}(${argKey})`);
+          }
+          return cached;
+        }
+
+        // Sentinel detects cycles when a query re-enters itself
+        subCache.set(argKey, COMPUTING);
+        try {
+          const result = fn.apply(this, args);
+          subCache.set(argKey, result);
+          return result;
+        } catch (e) {
+          subCache.delete(argKey);
+          throw e;
+        }
+      } finally {
+        if (isTopLevel) this.globallyQuerying = false;
       }
     }) as (...args: Args) => Return;
   }
