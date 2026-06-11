@@ -47,6 +47,7 @@ import {
   type DiagramViewBlock,
   findDiagramViewBlocks,
   renameTable, syncDiagramView,
+  updateStickyNote,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
@@ -357,6 +358,7 @@ export default class Compiler {
   // transform queries
   renameTable = renameTable.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
+  updateStickyNote = updateStickyNote.bind(this);
   findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
     return findDiagramViewBlocks(this.getSource(filepath) ?? '');
   }

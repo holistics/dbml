@@ -7,6 +7,7 @@ import {
   renameTable,
   syncDiagramView,
   findDiagramViewBlocks,
+  updateStickyNote,
 } from './transform';
 import { VERSION } from './utils/version';
 
@@ -16,6 +17,7 @@ export {
   renameTable,
   syncDiagramView,
   findDiagramViewBlocks,
+  updateStickyNote,
   ModelExporter,
   CompilerError,
   Parser,
@@ -54,4 +56,5 @@ export type {
   DiagramViewSyncOperation,
   DiagramViewBlock,
   TextEdit,
+  UpdateStickyNoteInput,
 } from '@dbml/parse';

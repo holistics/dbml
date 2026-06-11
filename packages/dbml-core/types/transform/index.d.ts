@@ -1,4 +1,4 @@
-import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit } from '@dbml/parse';
+import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit, UpdateStickyNoteInput } from '@dbml/parse';
 
 export type TableNameInput = string | { schema?: string; table: string };
 
@@ -13,6 +13,11 @@ export function syncDiagramView(
   operations: DiagramViewSyncOperation[],
   blocks?: DiagramViewBlock[],
 ): { newDbml: string; edits: TextEdit[] };
+
+export function updateStickyNote(
+  dbmlCode: string,
+  input: UpdateStickyNoteInput,
+): string;
 
 export function findDiagramViewBlocks(
   dbmlCode: string,

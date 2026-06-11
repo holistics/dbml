@@ -91,6 +91,7 @@ export {
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
   TextEdit,
+  UpdateStickyNoteInput,
 } from '@/compiler/queries/transform';
 
 export {

@@ -1,5 +1,5 @@
 import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
-import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit } from '@dbml/parse';
+import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit, UpdateStickyNoteInput } from '@dbml/parse';
 
 type TableName = string | { schema?: string; table: string };
 
@@ -20,6 +20,14 @@ export function syncDiagramView (
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
   const compiler = new Compiler(layout);
   return compiler.syncDiagramView(DEFAULT_ENTRY, operations, blocks);
+}
+
+export function updateStickyNote (dbmlCode: string, input: UpdateStickyNoteInput): string {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  const changes = compiler.updateStickyNote(DEFAULT_ENTRY, input);
+  return changes.get(DEFAULT_ENTRY.absolute) ?? dbmlCode;
 }
 
 export function findDiagramViewBlocks (dbmlCode: string): DiagramViewBlock[] {
