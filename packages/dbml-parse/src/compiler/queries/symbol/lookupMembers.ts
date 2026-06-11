@@ -31,7 +31,8 @@ export function lookupMembers (
   if (!members) return undefined;
 
   return members.find((m: NodeSymbol) => {
-    if (kinds.length && !m.isKind(...kinds)) return false;
+    if (kinds.length === 1 && m.kind !== kinds[0]) return false;
+    if (kinds.length > 1 && !kinds.includes(m.kind)) return false;
     if (m instanceof UseSymbol) {
       return useUtils.visibleName(this, m)?.at(-1) === targetName;
     }
