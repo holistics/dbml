@@ -37,7 +37,7 @@ import { bindFile, bindProject } from './queries/pipeline/bind';
 import { interpretFile, interpretProject } from './queries/pipeline/interpret';
 import { validateFile } from './queries/pipeline/validate';
 import { parseFile, parseProject } from './queries/pipeline/parse';
-import { lookupMembers } from './queries/symbol/lookupMembers';
+import { lookupMembers, symbolMembersLookupMap } from './queries/symbol/lookupMembers';
 import { symbolAliases } from './queries/symbol/symbolAliases';
 import {
   resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
@@ -327,6 +327,12 @@ export default class Compiler {
   // Return all direct child symbols of a symbol
   // Signature: (symbol: NodeSymbol) => Report<NodeSymbol[]> | Report<Unhandled>
   symbolMembers = this.globalQuery(symbolMembers);
+  // (Internal) global query
+  // Build a name-indexed lookup map for a symbol's members (used by lookupMembers)
+  // This is for pure performance purposes
+  // Signature: (symbol: NodeSymbol) => Map<string, NodeSymbol[]>
+  // @internal
+  symbolMembersLookupMap = this.globalQuery(symbolMembersLookupMap);
   // A global query
   // Look up a member by kind and name inside a symbol or node scope
   // Signature: (symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string) => NodeSymbol | undefined
