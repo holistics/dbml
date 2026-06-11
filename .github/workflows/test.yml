@@ -101,7 +101,7 @@ jobs:
       run: yarn coverage
     - name: Generate coverage report
       id: coverage
-      run: node .github/workflows/scripts/collect-coverage.mjs
+      run: npx tsx@4.19.4 .github/workflows/scripts/collect-coverage.mts
     - name: Upload coverage test
       if: always()
       uses: actions/upload-artifact@v4

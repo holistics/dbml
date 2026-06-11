@@ -1,50 +1,68 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { execSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
-import { MarkdownTable } from './utils/markdownTable.mjs';
+import fs from "node:fs";
+import path from "node:path";
+import { execSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { MarkdownTable, TableAlignment } from "./utils/markdownTable.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PACKAGES = ['dbml-cli', 'dbml-connector', 'dbml-core', 'dbml-parse'];
+const PACKAGES = ["dbml-cli", "dbml-connector", "dbml-core", "dbml-parse"];
 const COVERAGE_THRESHOLD = 80;
 
-function readCoverageSummary (packageName) {
-  const summaryPath = path.join(__dirname, '../../../packages', packageName, 'coverage', 'coverage-summary.json');
+function readCoverageSummary(packageName: string): Record<string, any> | undefined {
+  const summaryPath = path.join(
+    __dirname,
+    "../../../packages",
+    packageName,
+    "coverage",
+    "coverage-summary.json",
+  );
 
   if (!fs.existsSync(summaryPath)) {
     console.error(`Warning: No coverage summary found for ${packageName}`);
-    return null;
+    return undefined;
   }
 
-  return JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+  return JSON.parse(fs.readFileSync(summaryPath, "utf8"));
 }
 
-function formatPercentage (value) {
-  return value.toFixed(2) + '%';
+function formatPercentage(value: number): string {
+  return value.toFixed(2) + "%";
 }
 
-function getIcon (percentage) {
-  if (percentage >= 80) return '✅';
-  if (percentage >= 50) return '⚠️';
-  return '❌';
+function getIcon(percentage: number): string {
+  if (percentage >= 80) return "✅";
+  if (percentage >= 50) return "⚠️";
+  return "❌";
 }
 
-function getFilesWithLowCoverage (coverageData, packageName, threshold = 80) {
-  const files = [];
+function getFilesWithLowCoverage(
+  coverageData: Record<string, any>,
+  packageName: string,
+  threshold = 80,
+) {
+  const files: Record<string, any>[] = [];
 
   for (const [filePath, coverage] of Object.entries(coverageData)) {
-    if (filePath === 'total') continue;
+    if (filePath === "total") continue;
 
     const linePct = coverage.lines.pct;
     const stmtPct = coverage.statements.pct;
     const funcPct = coverage.functions.pct;
     const branchPct = coverage.branches.pct;
 
-    if (linePct < threshold || stmtPct < threshold || funcPct < threshold || branchPct < threshold) {
-      const packageDir = path.join('packages', packageName);
-      const relativePath = path.relative(path.join(process.cwd(), packageDir), filePath);
+    if (
+      linePct < threshold ||
+      stmtPct < threshold ||
+      funcPct < threshold ||
+      branchPct < threshold
+    ) {
+      const packageDir = path.join("packages", packageName);
+      const relativePath = path.relative(
+        path.join(process.cwd(), packageDir),
+        filePath,
+      );
 
       files.push({
         path: relativePath,
@@ -60,7 +78,7 @@ function getFilesWithLowCoverage (coverageData, packageName, threshold = 80) {
   return files;
 }
 
-function generateMarkdownReport (coverageData, commitSha) {
+function generateMarkdownReport(coverageData: Record<string, any>[], commitSha: string) {
   let markdown = `## Coverage Report\n\n`;
   markdown += `**Commit:** ${commitSha}\n\n`;
 
@@ -83,31 +101,46 @@ function generateMarkdownReport (coverageData, commitSha) {
   }
 
   const overallLinePct = (overallLines.covered / overallLines.total) * 100;
-  const overallBranchPct = (overallBranches.covered / overallBranches.total) * 100;
-  const overallFunctionPct = (overallFunctions.covered / overallFunctions.total) * 100;
-  const overallStatementPct = (overallStatements.covered / overallStatements.total) * 100;
+  const overallBranchPct =
+    (overallBranches.covered / overallBranches.total) * 100;
+  const overallFunctionPct =
+    (overallFunctions.covered / overallFunctions.total) * 100;
+  const overallStatementPct =
+    (overallStatements.covered / overallStatements.total) * 100;
 
   // Overall coverage table
   markdown += `### Overall Coverage\n\n`;
   markdown += new MarkdownTable()
-    .headers(['Metric', 'Coverage'])
-    .align(['l', 'l'])
-    .row(['Lines', `${getIcon(overallLinePct)} ${formatPercentage(overallLinePct)} (${overallLines.covered}/${overallLines.total})`])
-    .row(['Statements', `${getIcon(overallStatementPct)} ${formatPercentage(overallStatementPct)} (${overallStatements.covered}/${overallStatements.total})`])
-    .row(['Functions', `${getIcon(overallFunctionPct)} ${formatPercentage(overallFunctionPct)} (${overallFunctions.covered}/${overallFunctions.total})`])
-    .row(['Branches', `${getIcon(overallBranchPct)} ${formatPercentage(overallBranchPct)} (${overallBranches.covered}/${overallBranches.total})`])
+    .headers(["Metric", "Coverage"])
+    .align([TableAlignment.Left, TableAlignment.Left])
+    .row([
+      "Lines",
+      `${getIcon(overallLinePct)} ${formatPercentage(overallLinePct)} (${overallLines.covered}/${overallLines.total})`,
+    ])
+    .row([
+      "Statements",
+      `${getIcon(overallStatementPct)} ${formatPercentage(overallStatementPct)} (${overallStatements.covered}/${overallStatements.total})`,
+    ])
+    .row([
+      "Functions",
+      `${getIcon(overallFunctionPct)} ${formatPercentage(overallFunctionPct)} (${overallFunctions.covered}/${overallFunctions.total})`,
+    ])
+    .row([
+      "Branches",
+      `${getIcon(overallBranchPct)} ${formatPercentage(overallBranchPct)} (${overallBranches.covered}/${overallBranches.total})`,
+    ])
     .build();
-  markdown += '\n\n';
+  markdown += "\n\n";
 
   // Package coverage table
   markdown += `### Package Coverage\n\n`;
   const pkgTable = new MarkdownTable()
-    .headers(['Package', 'Lines', 'Statements', 'Functions', 'Branches'])
-    .align(['l', 'r', 'r', 'r', 'r']);
+    .headers(["Package", "Lines", "Statements", "Functions", "Branches"])
+    .align([TableAlignment.Left, TableAlignment.Right, TableAlignment.Right, TableAlignment.Right, TableAlignment.Right]);
 
   for (const pkg of coverageData) {
     if (!pkg.coverageData || !pkg.coverageData.total) {
-      pkgTable.row([`${pkg.name}`, 'N/A', 'N/A', 'N/A', 'N/A']);
+      pkgTable.row([`${pkg.name}`, "N/A", "N/A", "N/A", "N/A"]);
       continue;
     }
 
@@ -121,11 +154,15 @@ function generateMarkdownReport (coverageData, commitSha) {
     ]);
   }
 
-  markdown += pkgTable.build() + '\n\n';
+  markdown += pkgTable.build() + "\n\n";
 
   // Warnings for packages below threshold
-  const lowCoveragePackages = coverageData.filter((pkg) =>
-    pkg.coverageData && pkg.coverageData.total && pkg.coverageData.total.lines.pct < COVERAGE_THRESHOLD);
+  const lowCoveragePackages = coverageData.filter(
+    (pkg) =>
+      pkg.coverageData &&
+      pkg.coverageData.total &&
+      pkg.coverageData.total.lines.pct < COVERAGE_THRESHOLD,
+  );
 
   if (lowCoveragePackages.length > 0) {
     markdown += `### ⚠️ Coverage Warnings\n\n`;
@@ -144,18 +181,22 @@ function generateMarkdownReport (coverageData, commitSha) {
   for (const pkg of coverageData) {
     if (!pkg.coverageData) continue;
 
-    const lowCoverageFiles = getFilesWithLowCoverage(pkg.coverageData, pkg.name, COVERAGE_THRESHOLD);
+    const lowCoverageFiles = getFilesWithLowCoverage(
+      pkg.coverageData,
+      pkg.name,
+      COVERAGE_THRESHOLD,
+    );
 
     if (lowCoverageFiles.length > 0) {
       hasLowCoverageFiles = true;
 
       markdown += `#### ${pkg.name}\n\n`;
-      markdown += '<details>\n';
+      markdown += "<details>\n";
       markdown += `<summary>${lowCoverageFiles.length} file(s) below ${COVERAGE_THRESHOLD}% coverage</summary>\n\n`;
 
       const fileTable = new MarkdownTable()
-        .headers(['File', 'Lines', 'Statements', 'Functions', 'Branches'])
-        .align(['l', 'r', 'r', 'r', 'r']);
+        .headers(["File", "Lines", "Statements", "Functions", "Branches"])
+        .align([TableAlignment.Left, TableAlignment.Right, TableAlignment.Right, TableAlignment.Right, TableAlignment.Right]);
 
       for (const file of lowCoverageFiles) {
         fileTable.row([
@@ -167,8 +208,8 @@ function generateMarkdownReport (coverageData, commitSha) {
         ]);
       }
 
-      markdown += fileTable.build() + '\n\n';
-      markdown += '</details>\n\n';
+      markdown += fileTable.build() + "\n\n";
+      markdown += "</details>\n\n";
     }
   }
 
@@ -183,19 +224,20 @@ function generateMarkdownReport (coverageData, commitSha) {
       `overall-branches=${overallBranchPct.toFixed(2)}`,
       `overall-functions=${overallFunctionPct.toFixed(2)}`,
       `overall-statements=${overallStatementPct.toFixed(2)}`,
-    ].join('\n');
+    ].join("\n");
 
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, output + '\n');
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, output + "\n");
   }
 
   return markdown;
 }
 
-function main () {
-  const commitSha = process.env.GITHUB_SHA
-    || execSync('git rev-parse HEAD', { encoding: 'utf8' }).trim();
+function main() {
+  const commitSha =
+    process.env.GITHUB_SHA ||
+    execSync("git rev-parse HEAD", { encoding: "utf8" }).trim();
 
-  console.log('Collecting coverage data from packages...');
+  console.log("Collecting coverage data from packages...");
 
   const coverageData = PACKAGES.map((packageName) => {
     console.log(`- Reading coverage for ${packageName}...`);
@@ -203,20 +245,29 @@ function main () {
     return { name: packageName, coverageData: data };
   });
 
-  console.log('\nGenerating coverage report...');
-  const markdown = generateMarkdownReport(coverageData, commitSha.substring(0, 8));
+  console.log("\nGenerating coverage report...");
+  const markdown = generateMarkdownReport(
+    coverageData,
+    commitSha.substring(0, 8),
+  );
 
-  const reportPath = path.join(__dirname, '../../../coverage-report.md');
+  const reportPath = path.join(__dirname, "../../../coverage-report.md");
   fs.writeFileSync(reportPath, markdown);
   console.log(`\nCoverage report written to: ${reportPath}`);
 
-  console.log('\n' + markdown);
+  console.log("\n" + markdown);
 
-  const criticallyLowCoverage = coverageData.some((pkg) =>
-    pkg.coverageData && pkg.coverageData.total && pkg.coverageData.total.lines.pct < 60);
+  const criticallyLowCoverage = coverageData.some(
+    (pkg) =>
+      pkg.coverageData &&
+      pkg.coverageData.total &&
+      pkg.coverageData.total.lines.pct < 60,
+  );
 
   if (criticallyLowCoverage) {
-    console.error('\n❌ Critical: One or more packages have coverage below 60%');
+    console.error(
+      "\n❌ Critical: One or more packages have coverage below 60%",
+    );
   }
 }
 

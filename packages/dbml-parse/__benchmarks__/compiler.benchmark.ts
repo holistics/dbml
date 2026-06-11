@@ -14,55 +14,26 @@ mkdirSync(outputDir, { recursive: true });
 
 const inputFiles = readdirSync(inputDir).filter((f) => f.endsWith('.dbml'));
 
-function createCompiler (source: string): Compiler {
-  const layout = new MemoryProjectLayout();
-  layout.setSource(DEFAULT_ENTRY, source);
-  return new Compiler(layout);
-}
+const report: Record<string, { ms: number; error: number; count: number }> = {};
 
-const operations = [
-  'interpret',
-] as const;
-
-interface BenchResult {
-  ms: number;
-  error: number;
-  count: number;
-}
-
-interface BenchReport {
-  operations: string[];
-  suites: Record<string, Record<string, BenchResult>>;
-}
-
-const report: BenchReport = {
-  operations: [
-    ...operations,
-  ],
-  suites: {},
-};
-
-inputFiles.forEach((file) => {
+for (const file of inputFiles) {
   const source = readFileSync(path.resolve(inputDir, file), 'utf-8');
   const name = path.basename(file, '.dbml');
 
   console.log(`Benchmarking ${name}...`);
-  report.suites[name] = {};
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, source);
+  const result = benchmark(() => { new Compiler(layout).interpretProject(); });
 
-  const benchmarks: Record<string, () => void> = {
-    interpret: () => { createCompiler(source).interpretProject(); },
+  report[name] = {
+    ms: result.milliseconds(3),
+    error: result.error,
+    count: result.count,
   };
 
-  for (const op of operations) {
-    const result = benchmark(benchmarks[op]);
-    report.suites[name][op] = {
-      ms: result.milliseconds(3),
-      error: result.error,
-      count: result.count,
-    };
-    console.log(`  ${op}: ${result.milliseconds(3)}ms ±${Math.round(result.error * 10000) / 100}% (${result.count} samples)`);
-  }
-});
+  const error = Math.round(result.error * 10000) / 100;
+  console.log(`  ${result.milliseconds(3)}ms ±${error}% (${result.count} samples)`);
+}
 
 writeFileSync(path.resolve(outputDir, 'bench.json'), JSON.stringify(report, null, 2));
 console.log(`\nResults written to ${path.resolve(outputDir, 'bench.json')}`);
