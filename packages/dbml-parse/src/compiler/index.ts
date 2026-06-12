@@ -88,8 +88,9 @@ export default class Compiler {
     const content = this.layout.getSource(filepath);
     const key = filepath.absolute;
 
-    if (this.sourceSnapshot.has(key)) {
-      if (this.sourceSnapshot.get(key) !== content) {
+    const snapshot = this.sourceSnapshot.get(key);
+    if (snapshot !== undefined) {
+      if (snapshot !== content) {
         this.localCache.delete(filepath.intern());
         this.globalCache.clear();
 
