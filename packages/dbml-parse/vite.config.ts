@@ -37,5 +37,8 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['json-summary', 'text'],
     },
+    benchmark: {
+      include: ['__benchmarks__/**/*.bench.ts'],
+    },
   },
 });
