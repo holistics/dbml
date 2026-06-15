@@ -1,5 +1,6 @@
 import path from 'path';
 import { defineConfig } from 'vite';
+import noBundle from 'vite-plugin-no-bundle';
 
 export default defineConfig({
   resolve: {
@@ -7,6 +8,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src/'),
     },
   },
+  plugins: [noBundle()],
   build: {
     lib: {
       entry: path.resolve(__dirname, '__benchmarks__/compiler.profile.ts'),
