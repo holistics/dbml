@@ -35,7 +35,9 @@ export const useUtils = {
     }
     if (!node) return undefined;
     const alias = compiler.nodeAlias(node).getFiltered(UNHANDLED);
-    if (alias !== undefined) return [alias];
+    if (alias !== undefined) return [
+      alias,
+    ];
     return compiler.nodeFullname(node).getFiltered(UNHANDLED);
   },
 };
