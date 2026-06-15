@@ -423,21 +423,7 @@ export default class Compiler {
       triggerCharacters?: string[];
     };
   }) {
-    const triggerCharacters = options?.autocompletion?.triggerCharacters ?? [
-      '.',
-      ',',
-      '[',
-      '(',
-      ':',
-      '>',
-      '<',
-      '-',
-      '~',
-      '\'',
-      '"',
-      '/',
-      ' ',
-    ];
+    const triggerCharacters = options?.autocompletion?.triggerCharacters ?? [];
 
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
