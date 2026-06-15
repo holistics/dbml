@@ -130,7 +130,7 @@ export default class Compiler {
   // (QuerySymbol, interned argument string) -> Result
   private globalCache = new Map<QuerySymbol, Map<string, any>>();
 
-  private globallyQuerying = false; // Check if we're already inside a query to skip unnecessary repeat global checks
+  private globallyQuerying = false; // Check if we're already inside a query to skip unnecessary repeat global cache staleness checks
 
   // Turn a normal function into a Compiler's global query
   // Input: A function that only accepts internable types | primitive types
