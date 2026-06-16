@@ -131,8 +131,6 @@ export default class TableValidator {
           });
           break;
         case SettingName.Dep:
-          // Inline `[dep: <- source]` / `[dep: -> target]` on the table header.
-          // Value shape is validated via the dep metadata path; no extra check here.
           break;
         default:
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_SETTING, `Unknown '${name}' setting`, attr)));

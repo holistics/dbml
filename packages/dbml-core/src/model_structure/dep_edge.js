@@ -40,8 +40,6 @@ class DepEdge extends Element {
     /** @type {import('./field').default[]} */
     this.downstreamFields = down.fields;
 
-    // Back-reference: each field tracks which dep edges touch it. Parallel to
-    // Endpoint.setFields → field.pushEndpoint for refs.
     this.upstreamFields.forEach((field) => field.pushDepEdge(this));
     this.downstreamFields.forEach((field) => field.pushDepEdge(this));
   }

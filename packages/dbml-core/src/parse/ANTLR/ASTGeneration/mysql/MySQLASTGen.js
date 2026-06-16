@@ -9,8 +9,6 @@ import {
 } from '../constants';
 import { getOriginalText } from '../helpers';
 
-// Walk an ANTLR ctx subtree, collecting source-table references (FROM / JOIN
-// targets) for the SELECT statement embedded in a VIEW.
 function extractSourceTablesFromCtx (ctx, refClassNames) {
   if (!ctx) return [];
   const seen = new Map();
@@ -89,7 +87,6 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     };
   }
 
-  // R-1.3.1: CREATE VIEW
   visitCreateView (ctx) {
     const fullId = ctx.fullId();
     const ids = fullId ? fullId.getText().replace(/`/g, '').split('.') : [];

@@ -12,8 +12,6 @@ const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
 
 const DEFAULT_SCHEMA = 'dbo';
 
-// Walk a CREATE VIEW ctx, collecting source-table references from FROM / JOIN
-// positions. Used by R-1.3.1 to emit Dep edges from source tables to the view.
 function extractSourceTablesFromMssqlCtx (ctx) {
   if (!ctx) return [];
   const seen = new Map();
@@ -142,7 +140,6 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     };
   }
 
-  // R-1.3.1: CREATE VIEW
   visitCreate_view (ctx) {
     const simpleName = ctx.simple_name();
     if (!simpleName) return;

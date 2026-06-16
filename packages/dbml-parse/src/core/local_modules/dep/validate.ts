@@ -121,7 +121,6 @@ export default class DepValidator {
   }
 }
 
-// Accept any setting name. 'note' is reserved (typed slot in interpreter); other names become `custom`.
 export function validateDepSettings (settings: ListExpressionNode): Report<Settings> {
   const aggReport = aggregateSettingList(settings);
   return new Report(aggReport.getValue(), aggReport.getErrors());

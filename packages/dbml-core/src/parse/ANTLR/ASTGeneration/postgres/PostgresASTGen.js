@@ -8,9 +8,6 @@ import {
 } from '../constants';
 import { getOriginalText } from '../helpers';
 
-// Walk an ANTLR ctx subtree, collecting source-table references (FROM / JOIN
-// targets) for the SELECT statement embedded in a VIEW. Returns [{ name,
-// schemaName }] for each distinct (schemaName, name) pair seen.
 function extractSourceTablesFromCtx (ctx) {
   if (!ctx) return [];
   const seen = new Map();
@@ -79,7 +76,6 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     };
   }
 
-  // R-1.3.1: CREATE VIEW
   visitViewstmt (ctx) {
     const names = ctx.qualified_name().accept(this);
     const tableName = last(names);
@@ -98,7 +94,6 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     this._emitDepsFromViewSelect(ctx, tableName, schemaName);
   }
 
-  // R-1.3.1: CREATE MATERIALIZED VIEW
   visitCreatematviewstmt (ctx) {
     const target = ctx.create_mv_target();
     if (!target) return;
@@ -123,8 +118,6 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     const sources = extractSourceTablesFromCtx(ctx);
     sources.forEach((src) => {
       if (src.name === viewName && (src.schemaName || 'public') === (viewSchemaName || 'public')) return;
-      // Only emit if the source table is declared in this import; otherwise
-      // DepEdge.resolveEndpoint will throw at model-structure time.
       if (!findTable(this.data.tables, src.schemaName, src.name)) return;
       this.data.deps.push({
         edges: [{

@@ -40,8 +40,6 @@ class Dep extends Element {
    */
   processEdges (rawEdges) {
     rawEdges.forEach((rawEdge) => {
-      // Self-loop validation: an edge cannot have the same upstream and
-      // downstream table (regardless of which fields are involved).
       const upSchema = rawEdge.upstream?.schemaName || DEFAULT_SCHEMA_NAME;
       const downSchema = rawEdge.downstream?.schemaName || DEFAULT_SCHEMA_NAME;
       const upTable = rawEdge.upstream?.tableName;

@@ -85,15 +85,10 @@ export const depModule: GlobalModule = {
   },
 };
 
-// Dep endpoint: bare `tbl`, `tbl.col`, `schema.tbl`, or `schema.tbl.col`.
-// Unlike Ref endpoints (which are always `tbl.col` or `schema.tbl.col`), Dep
-// accepts table-only references. 2-segment access is ambiguous (`a.b` could be
-// `tbl.col` or `schema.tbl`); we try Schema lookup first, then fall back to Table.
 function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
-  // Bare variable: look up as Table
   if (!isAccessExpression(node.parentNode)) {
     const defaultSchema = getDefaultSchemaSymbol(compiler, globalSymbol);
     if (defaultSchema) {
@@ -109,7 +104,6 @@ function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol,
 
   const parent = node.parentNode as InfixExpressionNode;
 
-  // Right side of access: resolve via left sibling
   if (parent.rightExpression === node) {
     const left = nodeRefereeOfLeftExpression(compiler, node);
     if (left?.isKind(SymbolKind.Schema)) {
@@ -132,9 +126,7 @@ function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol,
     return new Report(undefined);
   }
 
-  // Left side of access
   if (parent.leftExpression === node) {
-    // 3-segment case (`schema.tbl.col`): this is the Schema slot
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
       const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
       if (symbol) return Report.create(symbol);
@@ -142,7 +134,6 @@ function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol,
         new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist`, node),
       ]);
     }
-    // 2-segment case (`a.b`): try Schema first, fall back to Table
     const schemaSymbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
     if (schemaSymbol) return Report.create(schemaSymbol);
 

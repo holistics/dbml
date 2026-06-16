@@ -193,8 +193,6 @@ export const tableModule: GlobalModule = {
   },
 
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
-    // Header inline-dep lives in declarationNode.attributeList, not the body —
-    // bypass the body-only guard below so the variable still resolves.
     if (isInsideSettingValue(node, SettingName.Dep)) {
       const enclosingDecl = node.parent;
       if (enclosingDecl instanceof ElementDeclarationNode && enclosingDecl.isKind(ElementKind.Table)) {
@@ -233,8 +231,6 @@ export const tableModule: GlobalModule = {
       return nodeRefereeOfInlineRef(compiler, globalSymbol, node);
     }
 
-    // Case 2b: Inline dep — either on a column (`col [dep: -> x.y]`) or on the
-    // table header (`Table x [dep: <- source]`).
     if (isInsideSettingValue(node, SettingName.Dep)) {
       return nodeRefereeOfInlineDep(compiler, globalSymbol, node);
     }
@@ -417,22 +413,15 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
   return new Report(undefined);
 }
 
-// Inline dep value resolution.
-// Two contexts:
-//   - Column-level: `col [dep: -> x.y]` — value is `table.col`, resolve like inline ref.
-//   - Table-header: `Table x [dep: <- source]` — value is a Table name (or `schema.table`).
 function nodeRefereeOfInlineDep (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
-  // If the AttributeNode lives inside a column FunctionApplicationNode, it's column-level.
   const enclosingFa = node.parentOfKind(FunctionApplicationNode);
   if (enclosingFa) {
     return nodeRefereeOfInlineRef(compiler, globalSymbol, node);
   }
 
-  // Otherwise it's on the Table header → resolve as Table / schema.Table.
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
-  // Standalone variable → look up as Table in the program scope (public schema first).
   if (!isAccessExpression(node.parentNode)) {
     const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Table, name);
     if (symbol) return Report.create(symbol);
@@ -441,7 +430,6 @@ function nodeRefereeOfInlineDep (compiler: Compiler, globalSymbol: NodeSymbol, n
     ]);
   }
 
-  // Right side of access (schema.table) — resolve via left sibling.
   const left = nodeRefereeOfLeftExpression(compiler, node);
   if (left?.isKind(SymbolKind.Schema)) {
     const symbol = compiler.lookupMembers(left, [SymbolKind.Table, SymbolKind.Schema], name);
@@ -451,7 +439,6 @@ function nodeRefereeOfInlineDep (compiler: Compiler, globalSymbol: NodeSymbol, n
     ]);
   }
 
-  // Left side of access — look up as schema.
   const parent = node.parentNode as InfixExpressionNode;
   if (parent?.leftExpression === node) {
     const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);

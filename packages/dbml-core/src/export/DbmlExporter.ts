@@ -364,12 +364,10 @@ class DbmlExporter {
       const customEntries = dep.custom ? Object.entries(dep.custom) : [];
       const hasAttrs = hasNote || customEntries.length > 0;
 
-      // Short form: single edge, no attrs
       if (edges.length === 1 && !hasAttrs) {
         return `Dep: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
       }
 
-      // Long block form
       let str = 'Dep {\n';
       edges.forEach((edge: any) => {
         str += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;

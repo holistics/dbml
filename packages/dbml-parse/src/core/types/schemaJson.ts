@@ -193,8 +193,6 @@ export interface RefEndpoint {
 
 export type RelationCardinality = '1' | '*';
 
-// Data lineage edge: directed dependency between tables or columns.
-// Operator is always `->`; no cardinality.
 export interface Dep {
   schemaName: string | null;
   name: string | null;
@@ -220,7 +218,6 @@ export interface DepEndpoint {
   token: TokenPosition;
 }
 
-// Inline dep on a column: `[dep: -> target.col]` or `[dep: <- source.col]`.
 export interface InlineDep {
   schemaName: string | null;
   tableName: string;

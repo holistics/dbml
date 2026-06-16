@@ -569,28 +569,22 @@ function extractTableFromEndpoint (compiler: Compiler, expr: SyntaxNode | undefi
   return compiler.nodeReferee(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
 }
 
-// For inline dep endpoints. Accepts both table-only (`source`, `schema.table`) and
-// column-level (`table.col`, `schema.table.col`) forms. Probes last variable as a
-// Table first; falls back to second-to-last if the last is actually a column.
 function extractTableFromDepEndpoint (compiler: Compiler, expr: SyntaxNode | undefined): TableSymbol | undefined {
   if (!expr) return undefined;
   const fragments = destructureComplexVariableTuple(expr);
   if (!fragments) return undefined;
 
-  // Tuple case (e.g. `table.(col1, col2)`): the table is the last named variable.
   if (fragments.tupleElements.length > 0) {
     const tableNode = fragments.variables.at(-1);
     if (!tableNode) return undefined;
     return compiler.nodeReferee(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
   }
 
-  // Try last variable first — handles `source` and `schema.table`.
   const last = fragments.variables.at(-1);
   if (last) {
     const lastSym = compiler.nodeReferee(last).getFiltered(UNHANDLED);
     if (lastSym?.isKind(SymbolKind.Table)) return lastSym as TableSymbol;
   }
-  // Otherwise fall back to second-to-last — handles `table.col` and `schema.table.col`.
   const secondLast = fragments.variables.at(-2);
   if (secondLast) {
     return compiler.nodeReferee(secondLast).getFiltered(UNHANDLED) as TableSymbol | undefined;

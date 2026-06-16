@@ -15,8 +15,6 @@ import {
 } from '../constants';
 import { getOriginalText } from '../helpers';
 
-// Walk a CREATE VIEW ctx, collecting source-table references from FROM / JOIN
-// positions. Used by R-1.3.1 to emit Dep edges from source tables to the view.
 function extractSourceTablesFromOracleCtx (ctx) {
   if (!ctx) return [];
   const seen = new Map();
@@ -155,7 +153,6 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     };
   }
 
-  // R-1.3.1: CREATE VIEW
   visitCreate_view (ctx) {
     const idExpr = ctx.id_expression ? ctx.id_expression() : null;
     if (!idExpr) return;
@@ -176,7 +173,6 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     this._emitDepsFromViewSelect(ctx, tableName, schemaName);
   }
 
-  // R-1.3.1: CREATE MATERIALIZED VIEW
   visitCreate_materialized_view (ctx) {
     const text = ctx.getText ? ctx.getText() : '';
     const m = text.match(/MATERIALIZEDVIEW(?:IFNOTEXISTS)?(?:"([^"]+)"\.)?"?([^("\s]+)"?/i);
