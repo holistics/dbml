@@ -1621,8 +1621,10 @@ function prefixBindingPower (token: SyntaxToken): { left: null;
 }
 
 const postfixBindingPowerMap: {
-  [index: string]: { left: number;
-    right: null; } | undefined;
+  [index: string]: {
+    left: number;
+    right: null;
+  } | undefined;
 } = {
   '(': {
     left: 14,
