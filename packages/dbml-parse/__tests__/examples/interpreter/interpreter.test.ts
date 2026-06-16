@@ -186,6 +186,25 @@ describe('[example] interpreter', () => {
 
       expect(index.columns).toHaveLength(2);
     });
+
+    test('should report error for non-existent column in composite index', () => {
+      const source = `
+        Table posts {
+          id int [pk]
+          title varchar [not null]
+          content text
+          user_id int
+          created_at timestamp [default: \`now()\`]
+          indexes {
+            (id, non_existent_column)
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'non_existent_column' inside Table 'posts'");
+    });
   });
 
   describe('ref interpretation', () => {
@@ -374,6 +393,25 @@ describe('[example] interpreter', () => {
       expect(db.tablePartials[0].fields).toHaveLength(2);
       expect(db.tablePartials[0].fields[0].name).toBe('created_at');
       expect(db.tablePartials[0].fields[1].name).toBe('updated_at');
+    });
+
+    test('should report error for non-existent column in composite index of TablePartial', () => {
+      const source = `
+        TablePartial posts_partial {
+          id int [pk]
+          title varchar [not null]
+          content text
+          user_id int
+          created_at timestamp [default: \`now()\`]
+          indexes {
+            (id, non_existent_column)
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'non_existent_column' inside TablePartial 'posts_partial'");
     });
   });
 
@@ -2065,6 +2103,46 @@ describe('[example] interpreter', () => {
       const result = interpret(source);
       // Should not crash
       expect(result.getValue()).toBeDefined();
+    });
+
+    test('should interpret sticky note with color', () => {
+      const source = `
+        Note my_note [color: #FF5733] {
+          'A colored note'
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.notes[0].color).toBe('#FF5733');
+    });
+
+    test('should interpret sticky note with color none', () => {
+      const source = `
+        Note my_note [color: none] {
+          'A note without color'
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.notes[0].color).toBe('none');
+    });
+
+    test('should interpret sticky note with double-quoted content', () => {
+      const source = `
+        Note my_note {
+          "A double-quoted note"
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.notes[0].content).toBe('A double-quoted note');
+    });
+
+    test('should interpret sticky note without color setting', () => {
+      const source = `
+        Note my_note {
+          'A plain note'
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.notes[0].color).toBeUndefined();
     });
   });
 

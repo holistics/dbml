@@ -272,6 +272,25 @@ describe('[example] binder', () => {
       expect(errors[0].diagnostic).toBe("No column named 'nonexistent_column' inside Table 'users'");
     });
 
+    test('should detect unknown columns in composite indexes', () => {
+      const source = `
+        Table posts {
+          id int [pk]
+          title varchar [not null]
+          content text
+          user_id int
+          created_at timestamp [default: \`now()\`]
+          indexes {
+            (id, non_existent_column)
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'non_existent_column' inside Table 'posts'");
+    });
+
     test('should bind composite indexes with settings', () => {
       const source = `
         Table users {
@@ -913,6 +932,25 @@ describe('[example] binder', () => {
       const errors = analyze(source).getErrors();
       // Circular refs via table partials are allowed
       expect(errors.length).toBe(0);
+    });
+
+    test('should detect unknown columns in composite indexes of TablePartial', () => {
+      const source = `
+        TablePartial posts_partial {
+          id int [pk]
+          title varchar [not null]
+          content text
+          user_id int
+          created_at timestamp [default: \`now()\`]
+          indexes {
+            (id, non_existent_column)
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'non_existent_column' inside TablePartial 'posts_partial'");
     });
 
     test('should bind refs in table partial columns when injected', () => {

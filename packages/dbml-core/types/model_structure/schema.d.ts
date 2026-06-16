@@ -1,5 +1,5 @@
 import Table from './table';
-import Element, { RawNote, Token } from './element';
+import Element, { RawNote, Token, Color } from './element';
 import Enum from './enum';
 import TableGroup from './tableGroup';
 import Ref from './ref';
@@ -70,7 +70,7 @@ declare class Schema extends Element {
             name: string;
             alias: string;
             note: string;
-            headerColor: string;
+            headerColor: Color;
         }[];
         enums: {
             values: {
@@ -128,7 +128,7 @@ declare class Schema extends Element {
             name: string;
             alias: string;
             note: string;
-            headerColor: string;
+            headerColor: Color;
         }[];
         enums: {
             values: {

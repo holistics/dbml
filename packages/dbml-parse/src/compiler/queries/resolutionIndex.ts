@@ -1,4 +1,3 @@
-import { nodeReferee } from '@/core/global_modules';
 import { getMemberChain } from '@/core/parser/utils';
 import type { NodeMetadata } from '@/core/types/symbol/metadata';
 import { UNHANDLED } from '@/core/types/module';
@@ -72,7 +71,7 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
     const walk = (node: SyntaxNode): void => {
       // Collect references
       if (isExpressionAVariableNode(node)) {
-        const ref = nodeReferee.call(this, node).getFiltered(UNHANDLED);
+        const ref = this.nodeReferee(node).getFiltered(UNHANDLED);
         if (ref) pushRef(ref, node);
         return;
       }
@@ -84,7 +83,7 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
         if (leftExpr) {
           const tableNode = getRightmostVariable(leftExpr);
           if (tableNode) {
-            const ref = nodeReferee.call(this, tableNode).getFiltered(UNHANDLED);
+            const ref = this.nodeReferee(tableNode).getFiltered(UNHANDLED);
             if (ref) pushRef(ref, tableNode);
           }
         }

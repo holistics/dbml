@@ -3,6 +3,7 @@ import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
+import type { NormalizedNote } from '../../types/model_structure/stickyNote';
 import type { NormalizedTable } from '../../types/model_structure/table';
 import type { NormalizedTableGroup } from '../../types/model_structure/tableGroup';
 
@@ -362,10 +363,19 @@ class DbmlExporter {
     return tableGroupStrs.length ? tableGroupStrs.join('\n') : '';
   }
 
+  static getStickyNoteSettings (note: NormalizedNote): string {
+    let settingStr = '';
+    if (note.color) {
+      settingStr += `color: ${note.color}`;
+    }
+    return settingStr ? ` [${settingStr}]` : '';
+  }
+
   static exportStickyNotes (model: NormalizedModel): string {
     return reduce(model.notes, (result, note) => {
       const escapedContent = `  ${DbmlExporter.escapeNote(note.content)}`;
-      const stickyNote = `Note ${note.name} {\n${escapedContent}\n}\n`;
+      const settingStr = DbmlExporter.getStickyNoteSettings(note);
+      const stickyNote = `Note ${note.name}${settingStr} {\n${escapedContent}\n}\n`;
 
       // Add a blank line between note elements
       return result ? `${result}\n${stickyNote}` : stickyNote;
