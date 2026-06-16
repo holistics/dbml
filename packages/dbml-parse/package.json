@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/parse",
-  "version": "8.2.5",
+  "version": "8.3.0",
   "description": "DBML parser v2",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -32,11 +32,15 @@
     "coverage": "vitest run --coverage",
     "prepare": "npm run build",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "bench": "npx tsx __benchmarks__/compiler.benchmark.ts",
+    "profile:build": "vite build --config vite.profile.config.mts && cp -r __benchmarks__/input dist-profile/input",
+    "profile": "yarn profile:build && node --cpu-prof --cpu-prof-dir __benchmarks__/output/ dist-profile/__benchmarks__/compiler.profile.mjs"
   },
   "devDependencies": {
     "@types/luxon": "^3.7.1",
-    "monaco-editor-core": "^0.44.0"
+    "monaco-editor-core": "^0.44.0",
+    "vite-plugin-no-bundle": "^4.0.0"
   },
   "dependencies": {
     "lodash-es": "^4.18.1",

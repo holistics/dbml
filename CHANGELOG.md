@@ -1,3 +1,20 @@
+## v8.3.0 (2026-06-16)
+
+#### :running_woman: Performance
+* `dbml-parse`
+  * [#925](https://github.com/holistics/dbml/pull/925) Optimize the performance of the multifile parser by x6 ([@huydo862003](https://github.com/huydo862003))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#915](https://github.com/holistics/dbml/pull/915) Support sticky note color ([@huydo862003](https://github.com/huydo862003))
+
+#### :house_with_garden: Internal
+* `dbml-parse`
+  * [#925](https://github.com/holistics/dbml/pull/925) Add benchmark ci ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.2.5 (2026-06-03)
 
 #### :bug: Bug Fix
