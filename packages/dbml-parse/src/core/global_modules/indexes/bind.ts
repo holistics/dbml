@@ -1,48 +1,29 @@
-import {
-  partition,
-} from 'lodash-es';
-import {
-  CompileError, CompileErrorCode,
-} from '@/core/types/errors';
-import SymbolFactory from '@/core/types/symbol/factory';
-import {
-  createColumnSymbolIndex,
-} from '@/core/types/symbol/symbolIndex';
+import { partition } from 'lodash-es';
+import Compiler from '@/compiler';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { UNHANDLED } from '@/core/types/module';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  ProgramNode,
 } from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  ElementKind,
-} from '@/core/types/keywords';
-import {
-  destructureComplexVariable, extractVarNameFromPrimaryVariable,
-} from '@/core/utils/expression';
-import {
-  pickBinder,
-} from '@/core/global_modules/utils';
-import {
-  scanNonListNodeForBinding,
-} from '@/core/global_modules/utils';
+import { ElementKind } from '@/core/types/keywords';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils/expression';
+import { scanNonListNodeForBinding } from '../utils';
 
 export default class IndexesBinder {
-  private symbolFactory: SymbolFactory;
-  private declarationNode: ElementDeclarationNode & { type: SyntaxToken };
-  private ast: ProgramNode;
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
 
-  constructor (declarationNode: ElementDeclarationNode & { type: SyntaxToken }, ast: ProgramNode, symbolFactory: SymbolFactory) {
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
     this.declarationNode = declarationNode;
-    this.ast = ast;
-    this.symbolFactory = symbolFactory;
   }
 
   bind (): CompileError[] {
-    if (!(this.declarationNode.parent instanceof ElementDeclarationNode) || !this.declarationNode.parent.isKind(ElementKind.Table)) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode)
+      || (!this.declarationNode.parent.isKind(ElementKind.Table)
+        && !this.declarationNode.parent.isKind(ElementKind.TablePartial))) {
       return [];
     }
 
@@ -51,6 +32,11 @@ export default class IndexesBinder {
     }
 
     return this.bindBody(this.declarationNode.body);
+  }
+
+  private get ownerContainerKind (): string {
+    const parent = this.declarationNode.parent as ElementDeclarationNode;
+    return parent.isKind(ElementKind.TablePartial) ? 'TablePartial' : 'Table';
   }
 
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -79,11 +65,9 @@ export default class IndexesBinder {
       if (!field.callee) {
         return [];
       }
-      const ownerTableName = (() => {
-        const frags = destructureComplexVariable((this.declarationNode.parent! as ElementDeclarationNode).name);
-        return frags !== undefined ? frags.join('.') : '<unnamed>';
-      })();
-      const ownerTableSymbolTable = this.declarationNode.parent!.symbol!.symbolTable!;
+      const ownerTableName = destructureComplexVariable(
+        (this.declarationNode.parent as ElementDeclarationNode).name,
+      )?.join('.') ?? '<unnamed>';
 
       const args = [
         field.callee,
@@ -91,26 +75,34 @@ export default class IndexesBinder {
       ];
       const bindees = args.flatMap(scanNonListNodeForBinding)
         .flatMap((bindee) => {
-          if (bindee.variables.length + bindee.tupleElements.length > 1) {
+          // Indexes can never be schema-qualified (they reference table columns)
+          if (bindee.variables.length > 1) {
             return [];
           }
+          // Indexes is a simple column
+          // e.g
+          // Indexes {
+          //   id
+          // }
           if (bindee.variables.length) {
             return bindee.variables[0];
           }
 
+          // Indexes is a tuple
+          // e.g
+          // Indexes {
+          //   (id, name, age)
+          // }
           return bindee.tupleElements;
         });
 
       return bindees.flatMap((bindee) => {
         const columnName = extractVarNameFromPrimaryVariable(bindee);
         if (columnName === undefined) return [];
-        const columnIndex = createColumnSymbolIndex(columnName);
-        const column = ownerTableSymbolTable.get(columnIndex);
-        if (!column) {
-          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside Table '${ownerTableName}'`, bindee);
+        const column = this.compiler.nodeReferee(bindee);
+        if (!column.getValue() || column.hasValue(UNHANDLED)) {
+          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside ${this.ownerContainerKind} '${ownerTableName}'`, bindee);
         }
-        bindee.referee = column;
-        column.references.push(bindee);
 
         return [];
       });
@@ -122,10 +114,8 @@ export default class IndexesBinder {
       if (!sub.type) {
         return [];
       }
-      const _Binder = pickBinder(sub as ElementDeclarationNode & { type: SyntaxToken });
-      const binder = new _Binder(sub as ElementDeclarationNode & { type: SyntaxToken }, this.ast, this.symbolFactory);
 
-      return binder.bind();
+      return this.compiler.bindNode(sub).getErrors();
     });
   }
 }

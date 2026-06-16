@@ -1,137 +1,147 @@
+import { flatMap, isEmpty } from 'lodash-es';
+import type Compiler from '@/compiler/index';
+import type { CompileWarning } from '@/core/types/errors';
+import type { Filepath } from '@/core/types/filepath';
+import type { SyntaxNode } from '@/core/types/nodes';
+import type { Ref, RefEndpoint, TableRecord } from '@/core/types/schemaJson';
+import type { TableSymbol } from '@/core/types/symbol';
+import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
-  flatMap, isEmpty,
-} from 'lodash-es';
-import {
-  DEFAULT_SCHEMA_NAME,
-} from '@/constants';
-import {
-  InterpreterDatabase, TableRecordRow,
-} from '@/core/global_modules/types';
-import {
-  extractInlineRefsFromTablePartials, mergeTableAndPartials,
-} from '@/core/global_modules/utils';
-import {
-  CompileError,
-} from '@/core/types/errors';
-import {
-  Ref, RefEndpoint, Table,
-} from '@/core/types/schemaJson';
-import {
-  createConstraintErrors,
+  createConstraintWarning,
   extractKeyValueWithDefault,
   formatFullColumnNames,
   formatValues,
   hasNullWithoutDefaultInKey,
+  makeTableKey,
+  toKeyedRows,
 } from './helper';
 
-type TableInfo = {
-  rows: TableRecordRow[];
-  mergedTable: Table;
+// Per-table info for FK validation
+export type TableInfo = {
+  tableSymbol: TableSymbol;
+  record: TableRecord | undefined;
+  recordBlock: SyntaxNode | undefined;
 };
 
-export function validateForeignKeys (env: InterpreterDatabase): CompileError[] {
-  // Collect all refs: explicit refs + inline refs from table partials
-  const refs = [
-    ...env.ref.values(),
-    ...flatMap(Array.from(env.tables.values()), (t) => extractInlineRefsFromTablePartials(t, env)),
-  ];
-
-  // Build table info map
-  const tableInfoMap = buildTableInfoMap(env);
-
-  return flatMap(refs, (ref) => validateRef(ref, tableInfoMap));
+// Prebuild a map from a table's qualified name to the table info
+// This allows for O(1) accesses later
+function buildTableInfoLookup (
+  allRecords: Map<InternedNodeSymbol, TableInfo>,
+  compiler: Compiler,
+  filepath: Filepath,
+): Map<string, TableInfo> {
+  const lookup = new Map<string, TableInfo>();
+  for (const info of allRecords.values()) {
+    const { name, schema } = info.tableSymbol.interpretedName(compiler, filepath);
+    lookup.set(makeTableKey(schema, name), info);
+  }
+  return lookup;
 }
 
-function buildTableInfoMap (env: InterpreterDatabase): Map<string, TableInfo> {
-  const tableInfoMap = new Map<string, TableInfo>();
+export function validateForeignKeys (
+  compiler: Compiler,
+  allRefs: Ref[],
+  allRecords: Map<InternedNodeSymbol, TableInfo>,
+  filepath: Filepath,
+): CompileWarning[] {
+  const tableInfoLookup = buildTableInfoLookup(allRecords, compiler, filepath);
 
-  for (const table of env.tables.values()) {
-    const key = makeTableKey(table.schemaName, table.name);
-    const rows = env.records.get(table)?.rows || [];
-
-    if (!env.cachedMergedTables.has(table)) {
-      env.cachedMergedTables.set(table, mergeTableAndPartials(table, env));
+  // Pre-filter: only validate refs where at least one endpoint has records
+  // There's no use validating refs where both endpoints have no records
+  const tablesWithRecords = new Set<string>();
+  for (const [
+    key,
+    info,
+  ] of tableInfoLookup) {
+    if (info.record && !isEmpty(info.record.values)) {
+      tablesWithRecords.add(key);
     }
-    const mergedTable = env.cachedMergedTables.get(table)!;
-
-    tableInfoMap.set(key, {
-      mergedTable,
-      rows,
-    });
   }
 
-  return tableInfoMap;
+  const relevantRefs = allRefs.filter((ref) => {
+    if (!ref.endpoints) return false;
+    return ref.endpoints.some((ep) => tablesWithRecords.has(makeTableKey(ep.schemaName, ep.tableName)));
+  });
+
+  return flatMap(relevantRefs, (ref) => validateRef(compiler, ref, tableInfoLookup, filepath));
 }
 
-function makeTableKey (schema: string | null | undefined, table: string): string {
-  return schema ? `${schema}.${table}` : `${DEFAULT_SCHEMA_NAME}.${table}`;
-}
-
-// Validate that source's values exist in target's values
+// Validate that source's FK values exist in target's values
 function validateFkSourceToTarget (
+  compiler: Compiler,
   sourceTable: TableInfo,
   targetTable: TableInfo,
   sourceEndpoint: RefEndpoint,
   targetEndpoint: RefEndpoint,
-): CompileError[] {
-  if (isEmpty(sourceTable.rows)) return [];
+  filepath: Filepath,
+): CompileWarning[] {
+  if (!sourceTable.record || isEmpty(sourceTable.record.values)) return [];
+
+  const sourceRows = toKeyedRows(sourceTable.record);
+  const targetRows = targetTable.record ? toKeyedRows(targetTable.record) : [];
 
   // Build set of valid target values for FK reference check
   const validFkValues = new Set(
-    targetTable.rows.map((row) => extractKeyValueWithDefault(row.values, targetEndpoint.fieldNames)),
+    targetRows.map((row) => extractKeyValueWithDefault(row, targetEndpoint.fieldNames)),
   );
 
   // Filter rows with NULL values (optional relationships)
-  const rowsWithValues = sourceTable.rows.filter((row) =>
-    !hasNullWithoutDefaultInKey(row.values, sourceEndpoint.fieldNames),
-  );
+  const rowsWithValues = sourceRows
+    .filter((row) => !hasNullWithoutDefaultInKey(row, sourceEndpoint.fieldNames));
 
   // Find rows with FK values that don't exist in target
   const invalidRows = rowsWithValues.filter((row) => {
-    const fkValue = extractKeyValueWithDefault(row.values, sourceEndpoint.fieldNames);
+    const fkValue = extractKeyValueWithDefault(row, sourceEndpoint.fieldNames);
     return !validFkValues.has(fkValue);
   });
 
-  // Transform invalid rows to errors
+  const sourceName = sourceTable.tableSymbol.interpretedName(compiler, filepath);
+  const targetName = targetTable.tableSymbol.interpretedName(compiler, filepath);
+
+  // Transform invalid rows to warnings
   return flatMap(invalidRows, (row) => {
     const sourceColumnRef = formatFullColumnNames(
-      sourceTable.mergedTable.schemaName,
-      sourceTable.mergedTable.name,
+      sourceName.schema,
+      sourceName.name,
       sourceEndpoint.fieldNames,
     );
     const targetColumnRef = formatFullColumnNames(
-      targetTable.mergedTable.schemaName,
-      targetTable.mergedTable.name,
+      targetName.schema,
+      targetName.name,
       targetEndpoint.fieldNames,
     );
-    const valueStr = formatValues(row.values, sourceEndpoint.fieldNames);
+    const valueStr = formatValues(row, sourceEndpoint.fieldNames);
     const message = `FK violation: ${sourceColumnRef} = ${valueStr} does not exist in ${targetColumnRef}`;
 
-    return createConstraintErrors(row, sourceEndpoint.fieldNames, message);
+    return sourceEndpoint.fieldNames.map((col) =>
+      createConstraintWarning(compiler, row[col], message),
+    );
   });
 }
 
-function validateRef (ref: Ref, tableInfoMap: Map<string, TableInfo>): CompileError[] {
+function validateRef (compiler: Compiler, ref: Ref, tableInfoLookup: Map<string, TableInfo>, filepath: Filepath): CompileWarning[] {
   if (!ref.endpoints) return [];
 
   const [
     endpoint1,
     endpoint2,
   ] = ref.endpoints;
-  const table1 = tableInfoMap.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
-  const table2 = tableInfoMap.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
+  const table1 = tableInfoLookup.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
+  const table2 = tableInfoLookup.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
 
   if (!table1 || !table2) return [];
 
-  return validateRelationship(table1, table2, endpoint1, endpoint2);
+  return validateRelationship(compiler, table1, table2, endpoint1, endpoint2, filepath);
 }
 
 function validateRelationship (
+  compiler: Compiler,
   table1: TableInfo,
   table2: TableInfo,
   endpoint1: RefEndpoint,
   endpoint2: RefEndpoint,
-): CompileError[] {
+  filepath: Filepath,
+): CompileWarning[] {
   const rel1 = endpoint1.relation;
   const rel2 = endpoint2.relation;
 
@@ -139,18 +149,18 @@ function validateRelationship (
   const isBidirectional = (rel1 === '1' && rel2 === '1') || (rel1 === '*' && rel2 === '*');
   if (isBidirectional) {
     return [
-      ...validateFkSourceToTarget(table1, table2, endpoint1, endpoint2),
-      ...validateFkSourceToTarget(table2, table1, endpoint2, endpoint1),
+      ...validateFkSourceToTarget(compiler, table1, table2, endpoint1, endpoint2, filepath),
+      ...validateFkSourceToTarget(compiler, table2, table1, endpoint2, endpoint1, filepath),
     ];
   }
 
   // Many-to-one: validate FK from "many" side to "one" side
   if (rel1 === '*' && rel2 === '1') {
-    return validateFkSourceToTarget(table1, table2, endpoint1, endpoint2);
+    return validateFkSourceToTarget(compiler, table1, table2, endpoint1, endpoint2, filepath);
   }
 
   if (rel1 === '1' && rel2 === '*') {
-    return validateFkSourceToTarget(table2, table1, endpoint2, endpoint1);
+    return validateFkSourceToTarget(compiler, table2, table1, endpoint2, endpoint1, filepath);
   }
 
   return [];

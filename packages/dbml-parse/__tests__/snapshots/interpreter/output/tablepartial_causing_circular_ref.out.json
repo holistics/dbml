@@ -63,7 +63,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [
@@ -87,7 +86,6 @@
               }
             ],
             "name": "col1",
-            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -103,11 +101,9 @@
             },
             "type": {
               "type_name": "type"
-            },
-            "unique": false
+            }
           },
           {
-            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [
@@ -131,7 +127,6 @@
               }
             ],
             "name": "col3",
-            "pk": false,
             "token": {
               "end": {
                 "column": 28,
@@ -147,8 +142,7 @@
             },
             "type": {
               "type_name": "type"
-            },
-            "unique": false
+            }
           }
         ],
         "name": "T",
@@ -171,7 +165,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [

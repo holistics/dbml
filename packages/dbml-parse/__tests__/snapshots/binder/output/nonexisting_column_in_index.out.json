@@ -1,0 +1,99 @@
+{
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "No column named 'non_existent_column' inside Table 'posts'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@non_existent_column@[L7:C9, L7:C28]",
+          "snippet": "non_existent_column"
+        }
+      }
+    }
+  ],
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L7:C5, L7:C7]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L7:C5, L7:C7]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L7:C5, L7:C7]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "id"
+            }
+          },
+          "fullEnd": 145,
+          "fullStart": 143
+        }
+      },
+      "fullEnd": 145,
+      "fullStart": 143,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C13]",
+          "snippet": "id int [pk]"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@posts@[L0:C0, L9:C1]",
+          "snippet": "Table post...umn)\n  }\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@posts@[L0:C0, L9:C1]",
+          "snippet": "Table post...umn)\n  }\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@content@[L3:C2, L3:C14]",
+              "snippet": "content text"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@created_at@[L5:C2, L5:C41]",
+              "snippet": "created_at...: `now()`]"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C2, L1:C13]",
+              "snippet": "id int [pk]"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@title@[L2:C2, L2:C26]",
+              "snippet": "title varc...[not null]"
+            }
+          },
+          {
+            "context": {
+              "id": "symbol@Column@user_id@[L4:C2, L4:C13]",
+              "snippet": "user_id int"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

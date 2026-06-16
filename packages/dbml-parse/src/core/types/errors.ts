@@ -1,12 +1,6 @@
-import {
-  Filepath,
-} from './filepath';
-import {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
+import { Filepath } from './filepath';
+import { SyntaxNode } from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
 
 export enum CompileErrorCode {
   UNKNOWN_SYMBOL = 1000,
@@ -77,6 +71,9 @@ export enum CompileErrorCode {
   NOTE_REDEFINED,
   NOTE_CONTENT_REDEFINED,
   EMPTY_NOTE,
+  UNKNOWN_NOTE_SETTING,
+  DUPLICATE_NOTE_SETTING,
+  INVALID_NOTE_SETTING_VALUE,
 
   INVALID_INDEXES_CONTEXT,
   INVALID_INDEXES_FIELD,

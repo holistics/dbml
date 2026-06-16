@@ -1,0 +1,40 @@
+name: Benchmark
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+    paths:
+      - "packages/dbml-parse/**"
+
+jobs:
+  benchmark:
+    runs-on: blacksmith-2vcpu-ubuntu-2204
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch full history so we can checkout master for comparison
+          fetch-depth: 0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run benchmarks and compare with master
+        run: npx tsx@4.19.4 .github/workflows/scripts/collect-benchmarks.mts master
+
+      - name: Comment benchmark results on PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: benchmark-report
+          path: benchmark-report.md

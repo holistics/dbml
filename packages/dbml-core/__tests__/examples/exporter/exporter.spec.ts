@@ -59,6 +59,38 @@ const EXPECTED_DBML_WITHOUT_RECORDS =
   "name" varchar
 }`;
 
+const DBML_WITH_INACTIVE_REF = `
+Table users {
+  id integer [pk]
+}
+Table posts {
+  user_id integer
+}
+Ref: posts.user_id > users.id [inactive]
+`.trim();
+
+const DBML_WITHOUT_INACTIVE_REF = `
+Table users {
+  id integer [pk]
+}
+Table posts {
+  user_id integer
+}
+Ref: posts.user_id > users.id
+`.trim();
+
+describe('@dbml/core - ref inactive setting', () => {
+  test('exports inactive ref with inactive flag', () => {
+    const res = exporter.export(DBML_WITH_INACTIVE_REF, 'dbml');
+    expect(res).toContain('[inactive]');
+  });
+
+  test('does not export inactive flag when setting absent', () => {
+    const res = exporter.export(DBML_WITHOUT_INACTIVE_REF, 'dbml');
+    expect(res).not.toContain('inactive');
+  });
+});
+
 describe('@dbml/core - exporter flags', () => {
   describe('includeRecords', () => {
     test('includes records by default', () => {

@@ -1,12 +1,11 @@
-import {
-  Filepath,
-} from '@/core/types/filepath';
+import { Filepath } from '@/core/types/filepath';
 
 export const KEYWORDS_OF_DEFAULT_SETTING = [
   'null',
   'true',
   'false',
 ] as readonly string[];
+export const NONE_COLOR = 'none' as const;
 export const DBML_EXT = '.dbml';
 export const NUMERIC_LITERAL_PREFIX = [
   '-',

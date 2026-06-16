@@ -186,7 +186,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -208,7 +207,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "user_id",
             "not_null": true,
             "pk": false,
@@ -231,7 +229,6 @@
             "unique": true
           },
           {
-            "increment": false,
             "name": "status",
             "note": {
               "token": {
@@ -269,7 +266,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "created_at",
             "note": {
               "token": {
@@ -328,7 +324,6 @@
                 "value": "id"
               }
             ],
-            "pk": false,
             "token": {
               "end": {
                 "column": 20,
@@ -342,8 +337,7 @@
                 "offset": 372
               }
             },
-            "type": "hash",
-            "unique": false
+            "type": "hash"
           },
           {
             "columns": [

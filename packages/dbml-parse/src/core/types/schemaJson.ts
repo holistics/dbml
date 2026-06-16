@@ -1,9 +1,8 @@
-import type {
-  Filepath,
-} from './filepath';
-import type {
-  Position,
-} from './position';
+import { NONE_COLOR } from '@/constants';
+import type { Filepath } from './filepath';
+import type { Position } from './position';
+
+export type Color = `#${string}` | typeof NONE_COLOR;
 
 export enum AliasKind {
   Table = 'table',
@@ -91,7 +90,7 @@ export interface Table {
   partials: TablePartialInjection[];
   token: TokenPosition;
   indexes: Index[];
-  headerColor?: string;
+  headerColor?: Color;
   note?: {
     value: string;
     token: TokenPosition;
@@ -102,7 +101,7 @@ export interface Note {
   name: string;
   content: string;
   token: TokenPosition;
-  headerColor?: string;
+  color?: Color;
 }
 
 export interface ColumnType {
@@ -173,9 +172,10 @@ export interface Ref {
   schemaName: string | null;
   name: string | null;
   endpoints: RefEndpointPair;
-  color?: string;
+  color?: Color;
   onDelete?: string;
   onUpdate?: string;
+  inactive?: boolean;
   token: TokenPosition;
 }
 
@@ -212,7 +212,7 @@ export interface TableGroup {
   schemaName: string | null;
   tables: TableGroupField[];
   token: TokenPosition;
-  color?: string;
+  color?: Color;
   note?: {
     value: string;
     token: TokenPosition;
@@ -239,7 +239,7 @@ export interface TablePartial {
   token: TokenPosition;
   indexes: Index[];
   checks: Check[];
-  headerColor?: string;
+  headerColor?: Color;
   note?: {
     value: string;
     token: TokenPosition;
@@ -261,7 +261,7 @@ export interface RecordValue {
 }
 
 export interface TableRecord {
-  schemaName: string | undefined;
+  schemaName: string | null;
   tableName: string;
   columns: string[];
   values: RecordValue[][];

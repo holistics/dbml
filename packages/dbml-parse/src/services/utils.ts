@@ -1,12 +1,6 @@
-import type {
-  SyntaxNode,
-} from '@/core/types/nodes';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import type {
-  Position, Range, TextModel,
-} from '@/services/types';
+import type { SyntaxNode } from '@/core/types/nodes';
+import { SyntaxToken } from '@/core/types/tokens';
+import type { Position, Range, TextModel } from '@/services/types';
 
 export function getOffsetFromMonacoPosition (model: TextModel, position: Position): number {
   return model.getOffsetAt(position);

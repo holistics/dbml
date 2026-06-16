@@ -1,9 +1,7 @@
 import {
   basename, dirname, extname, isAbsolute, join, normalize, relative, resolve,
 } from 'pathe';
-import type {
-  Internable,
-} from './internable';
+import type { Internable } from './internable';
 
 // Matches a Windows drive-letter prefix after normalization (e.g. "C:/").
 const WIN_DRIVE_RE = /^[a-zA-Z]:\//;
@@ -81,9 +79,16 @@ export class Filepath implements Internable<FilepathId> {
     return new Filepath(join(this.path, ...segments));
   }
 
-  // Return the path relative to a given base directory
+  // Return the path relative to a given base directory, always prefixed with './' or '../'
   relativeTo (baseDir: string): string {
-    return relative(baseDir, this.path);
+    const rel = relative(baseDir, this.path);
+    if (!rel.startsWith('./') && !rel.startsWith('../') && ![
+      '.',
+      '..',
+    ].includes(rel)) {
+      return `./${rel}`;
+    }
+    return rel;
   }
 
   toString (): string {
@@ -103,8 +108,8 @@ export class Filepath implements Internable<FilepathId> {
 
   // Convert filepath to monaco URI
   toUri (options: { protocol?: string } = {}): string {
-    const protocol = options.protocol ?? this.protocol;
-    if (protocol === undefined) {
+    const protocol = options.protocol || this.protocol;
+    if (!protocol) {
       return this.path;
     }
     // Windows: C:/path needs an extra leading slash -> file:///C:/path

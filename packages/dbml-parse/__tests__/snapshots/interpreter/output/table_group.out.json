@@ -37,7 +37,7 @@
               "id"
             ],
             "relation": "1",
-            "tableName": "U",
+            "tableName": "users",
             "token": {
               "end": {
                 "column": 28,
@@ -285,14 +285,13 @@
             "unique": false
           },
           {
-            "increment": false,
             "inline_refs": [
               {
                 "fieldNames": [
                   "id"
                 ],
                 "relation": ">",
-                "tableName": "U",
+                "tableName": "users",
                 "token": {
                   "end": {
                     "column": 28,

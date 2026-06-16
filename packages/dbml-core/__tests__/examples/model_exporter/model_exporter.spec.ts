@@ -193,7 +193,7 @@ describe('@dbml/core - JsonExporter isNormalized option', () => {
     const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
     const normalizedModel = database.normalize();
     const res = JsonExporter.export(normalizedModel, { isNormalized: true });
-    // Normalized model is the internal model format — verify the table is present
+    // Normalized model is the internal model format - verify the table is present
     const parsed = JSON.parse(res);
     expect(Object.values(parsed.tables as Record<string, { name: string }>).map((t) => t.name)).toContain('users');
   });
@@ -206,5 +206,47 @@ describe('@dbml/core - JsonExporter isNormalized option', () => {
     expect(parsed.schemas[0].tables[0].name).toBe('users');
     expect(parsed.records[0].tableName).toBe('users');
     expect(parsed.records[0].columns).toEqual(['id', 'name']);
+  });
+});
+
+const DBML_WITH_INACTIVE_REF = `
+Table users {
+  id integer [pk]
+}
+Table posts {
+  user_id integer
+}
+Ref: posts.user_id > users.id [inactive]
+`.trim();
+
+describe('@dbml/core - ref inactive', () => {
+  test('model stores inactive as true', () => {
+    const database = (new Parser()).parse(DBML_WITH_INACTIVE_REF, 'dbmlv2');
+    const ref = database.schemas[0].refs[0];
+    expect(ref.inactive).toBe(true);
+  });
+
+  test('normalized model stores inactive as true', () => {
+    const database = (new Parser()).parse(DBML_WITH_INACTIVE_REF, 'dbmlv2');
+    const normalized = database.normalize();
+    const ref = Object.values(normalized.refs)[0];
+    expect(ref.inactive).toBe(true);
+  });
+
+  test('DbmlExporter exports inactive flag', () => {
+    const database = (new Parser()).parse(DBML_WITH_INACTIVE_REF, 'dbmlv2');
+    const res = DbmlExporter.export(database.normalize(), { includeRecords: false });
+    expect(res).toContain('[inactive]');
+  });
+
+  test('inactive is undefined when setting absent', () => {
+    const source = `
+Table users { id integer [pk] }
+Table posts { user_id integer }
+Ref: posts.user_id > users.id
+`.trim();
+    const database = (new Parser()).parse(source, 'dbmlv2');
+    const ref = database.schemas[0].refs[0];
+    expect(ref.inactive).toBeUndefined();
   });
 });

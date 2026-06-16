@@ -393,12 +393,6 @@
               "snippet": "id int [pk...increment]"
             }
           }
-        ],
-        "references": [
-          {
-            "id": "node@<primary-expression>@users@[L22:C5, L22:C12]",
-            "snippet": "\"users\""
-          }
         ]
       },
       {

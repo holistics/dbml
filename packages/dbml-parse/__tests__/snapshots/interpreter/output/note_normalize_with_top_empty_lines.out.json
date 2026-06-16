@@ -274,7 +274,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -393,7 +392,6 @@
       {
         "fields": [
           {
-            "increment": false,
             "name": "id",
             "pk": true,
             "token": {
@@ -436,7 +434,6 @@
             "unique": false
           },
           {
-            "increment": false,
             "name": "body",
             "note": {
               "token": {

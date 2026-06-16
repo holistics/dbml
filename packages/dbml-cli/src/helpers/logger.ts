@@ -19,9 +19,9 @@ const consoleFormat = printf((info) => {
 
 const fileFormat = printf((info) => {
   const {
-    timestamp: ts, stack, rootError,
+    timestamp: ts, message, stack, rootError,
   } = info as any;
-  let logContent = `${ts}\n${stack}\n`;
+  let logContent = `${ts}\n${stack ?? message ?? ''}\n`;
   if (rootError) {
     logContent += '\nROOT_ERROR:';
     logContent += `\n${rootError.stack}`;
@@ -33,7 +33,7 @@ const fileFormat = printf((info) => {
   return logContent;
 });
 
-const consoleLogger = createLogger({
+export const consoleLogger = createLogger({
   format: combine(
     consoleFormat,
   ),
@@ -44,9 +44,10 @@ const consoleLogger = createLogger({
   ],
 });
 
-const fileLogger = createLogger({
+export const fileLogger = createLogger({
   format: combine(
     timestamp(),
+    format.uncolorize(),
     fileFormat,
   ),
   transports: [
@@ -56,22 +57,3 @@ const fileLogger = createLogger({
     }),
   ],
 });
-
-const logger = {
-  debug (msg: string) {
-    consoleLogger.debug(msg);
-  },
-  info (msg: string) {
-    consoleLogger.info(msg);
-  },
-  warn (msg: string) {
-    consoleLogger.warn(msg);
-  },
-
-  error (msg: Error | string) {
-    consoleLogger.error(msg);
-    fileLogger.error(msg);
-  },
-};
-
-export default logger;
