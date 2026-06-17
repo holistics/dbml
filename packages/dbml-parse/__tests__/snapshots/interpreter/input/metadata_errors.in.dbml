@@ -1,0 +1,20 @@
+Table users {
+  id int
+}
+
+// target does not exist
+Metadata Table public.missing {
+  owner: 'x'
+}
+
+// invalid target kind
+Metadata Banana public.users {
+  owner: 'x'
+}
+
+// nested (not top-level) is rejected
+Table accounts {
+  Metadata Table public.users {
+    owner: 'x'
+  }
+}

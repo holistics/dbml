@@ -28,7 +28,7 @@ import {
   ElementKind,
   SettingName,
 } from '../types/keywords';
-import { ImportKind } from '../types/symbol';
+import { ALLOWED_METADATA_TARGET_KINDS, ImportKind, MetadataTargetKind } from '../types/symbol';
 import { isHexChar } from './chars';
 import {
   destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression,
@@ -348,7 +348,7 @@ export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimit
 }
 
 // Return whether `node` is an ElementDeclarationNode of kind `kind`
-export function isElementNode (node: SyntaxNode | undefined, kind: ElementKind): node is ElementDeclarationNode {
+export function isElementNode<T extends ElementKind> (node: SyntaxNode | undefined, kind: T): node is ElementDeclarationNode & { type: { value: T } } {
   return node instanceof ElementDeclarationNode && node.isKind(kind);
 }
 
@@ -490,4 +490,18 @@ export function isTerminalAccessFragment (node: SyntaxNode): boolean {
   if (!isAccessExpression(currentAccess)) return false;
   if (currentAccess.rightExpression !== node) return false;
   return !(isAccessExpression(currentAccess.parentNode) && (currentAccess.parentNode as InfixExpressionNode).leftExpression === currentAccess);
+}
+
+// Listed as string literals (not `Object.values(MetadataTargetKind)`) so this
+// module-level constant does not read the enum binding during init. validate.ts
+// and the symbol module form an import cycle, and reading the enum here races
+// its initialization. The values must stay in sync with `MetadataTargetKind`.
+
+export function getElementSubKind (elementKind: ElementKind | undefined, subKindToken?: SyntaxToken): MetadataTargetKind | undefined {
+  if (elementKind === ElementKind.Metadata) {
+    const rawValue = subKindToken?.value?.toLowerCase();
+    return ALLOWED_METADATA_TARGET_KINDS.find((k) => k.toLowerCase() === rawValue);
+  }
+
+  return undefined;
 }

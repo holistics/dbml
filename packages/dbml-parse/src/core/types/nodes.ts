@@ -287,6 +287,10 @@ export class UseDeclarationNode extends SyntaxNode {
 export class UseSpecifierNode extends SyntaxNode {
   importKind?: SyntaxToken;
 
+  // Optional target-kind identifier for metadata imports, sitting between
+  // `importKind` and `name`: `use { metadata <subKind> <name> }`.
+  subKind?: SyntaxToken;
+
   name?: NormalExpressionNode;
 
   asKeyword?: SyntaxToken;
@@ -295,9 +299,10 @@ export class UseSpecifierNode extends SyntaxNode {
 
   constructor (
     {
-      importKind, name, asKeyword, alias,
+      importKind, subKind, name, asKeyword, alias,
     }: {
       importKind?: SyntaxToken;
+      subKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -311,12 +316,14 @@ export class UseSpecifierNode extends SyntaxNode {
       filepath,
       [
         importKind,
+        subKind,
         name,
         asKeyword,
         alias,
       ],
     );
     this.importKind = importKind;
+    this.subKind = subKind;
     this.name = name;
     this.asKeyword = asKeyword;
     this.alias = alias;
@@ -382,6 +389,11 @@ export class UseSpecifierListNode extends SyntaxNode {
 export class ElementDeclarationNode extends SyntaxNode {
   type?: SyntaxToken;
 
+  // Optional target-kind identifier that sits between `type` and `name`.
+  // Only used by the Metadata element: `metadata <subKind> <name>`
+  // (e.g. the `table` in `Metadata Table public.users`).
+  subKind?: SyntaxToken;
+
   name?: NormalExpressionNode;
 
   as?: SyntaxToken;
@@ -397,6 +409,7 @@ export class ElementDeclarationNode extends SyntaxNode {
   constructor (
     {
       type,
+      subKind,
       name,
       as,
       alias,
@@ -405,6 +418,7 @@ export class ElementDeclarationNode extends SyntaxNode {
       body,
     }: {
       type?: SyntaxToken;
+      subKind?: SyntaxToken;
       name?: NormalExpressionNode;
       as?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -421,6 +435,7 @@ export class ElementDeclarationNode extends SyntaxNode {
       filepath,
       [
         type,
+        subKind,
         name,
         as,
         alias,
@@ -437,6 +452,7 @@ export class ElementDeclarationNode extends SyntaxNode {
     }
 
     this.type = type;
+    this.subKind = subKind;
     this.name = name;
     this.as = as;
     this.alias = alias;
@@ -445,14 +461,18 @@ export class ElementDeclarationNode extends SyntaxNode {
     this.body = body;
   }
 
-  isKind (...kinds: ElementKind[]): boolean {
+  isKind<T extends ElementKind>(...kinds: T[]): this is ElementDeclarationNode & { type: { value: T } } {
     return kinds.some((kind) => this.type?.value.toLowerCase() === kind);
   }
 
+  getElementKind<T extends ElementKind>(this: ElementDeclarationNode & { type: { value: T } }): T;
+  getElementKind (this: ElementDeclarationNode): ElementKind | undefined;
   getElementKind (): ElementKind | undefined {
     return Object.values(ElementKind).find((k) => this.isKind(k));
   }
 }
+
+export type MetadataElementNode = ElementDeclarationNode & { type: { value: ElementKind.Metadata } };
 
 // Form: <identifier> <identifier>*
 // A contiguous stream of identifiers (space-separated)

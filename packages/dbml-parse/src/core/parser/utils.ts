@@ -30,6 +30,7 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
+import { ElementKind } from '@/core/types/keywords';
 import { isAsKeyword } from '../utils/tokens';
 import { extractVariableNode } from '../utils/expression';
 import { isExpressionAnIdentifierNode } from '../utils/validate';
@@ -103,6 +104,40 @@ export function convertFuncAppToElem (
     });
   }
 
+  // Metadata element: a leading target-kind identifier precedes the name,
+  // e.g. `metadata table public.users { ... }` (2 args -> [subKind, name])
+  // or `metadata table public.users as t { ... }` (4 args -> [subKind, name, as, alias]).
+  // The remaining args after peeling the subKind mirror the 1-arg / 3-arg cases above.
+  // This is purely additive: no other element produces a leftover arg count of 2 or 4.
+  if (type.value.toLowerCase() === ElementKind.Metadata && isExpressionAnIdentifierNode(cpArgs[0])) {
+    const subKind = extractVariableNode(cpArgs[0]);
+
+    if (cpArgs.length === 2) {
+      return factory.create(ElementDeclarationNode, {
+        type,
+        subKind,
+        name: cpArgs[1],
+        attributeList,
+        body,
+      });
+    }
+
+    if (cpArgs.length === 4) {
+      const asKeywordNode = extractVariableNode(cpArgs[2]);
+      return (!asKeywordNode || !isAsKeyword(asKeywordNode))
+        ? undefined
+        : factory.create(ElementDeclarationNode, {
+            type,
+            subKind,
+            name: cpArgs[1],
+            as: asKeywordNode,
+            alias: cpArgs[3],
+            attributeList,
+            body,
+          });
+    }
+  }
+
   return undefined;
 }
 
@@ -129,6 +164,7 @@ function markInvalidToken (token: SyntaxToken) {
 function markInvalidNode (node: SyntaxNode) {
   if (node instanceof ElementDeclarationNode) {
     markInvalid(node.type);
+    markInvalid(node.subKind);
     markInvalid(node.name);
     markInvalid(node.as);
     markInvalid(node.alias);

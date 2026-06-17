@@ -1,0 +1,68 @@
+{
+  "errors": [
+    {
+      "code": "METADATA_TARGET_NOT_FOUND",
+      "diagnostic": "Metadata must target an existing element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L5:C15, L5:C29]",
+          "snippet": "public.missing"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "cannot find metadata target element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L5:C15, L5:C29]",
+          "snippet": "public.missing"
+        }
+      }
+    },
+    {
+      "code": "INVALID_METADATA_TARGET_KIND",
+      "diagnostic": "A Metadata hola: table, schema, column, tablegroup, note",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@Banana@[L10:C9, L10:C15]",
+          "snippet": "Banana",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_METADATA_TARGET_KIND",
+      "diagnostic": "A Metadata target kind must be one of: table, schema, column, tablegroup, note",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@Banana@[L10:C9, L10:C15]",
+          "snippet": "Banana",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_METADATA_CONTEXT",
+      "diagnostic": "Metadata must appear top-level",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@public.users@[L16:C2, L18:C3]",
+          "snippet": "Metadata T...r: 'x'\n  }"
+        }
+      }
+    }
+  ]
+}

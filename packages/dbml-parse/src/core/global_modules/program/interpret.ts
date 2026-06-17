@@ -6,7 +6,7 @@ import { UNHANDLED } from '@/core/types/module';
 import { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, Database, DiagramView, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
+  Alias, Database, DiagramView, Enum, MetadataElement, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
 import {
@@ -56,6 +56,7 @@ export default class ProgramInterpreter {
       tablePartials: [],
       records: [],
       diagramViews: [],
+      metadataElements: [],
       token: getTokenPosition(this.programNode),
       externals: {
         tables: [],
@@ -235,6 +236,9 @@ export default class ProgramInterpreter {
         }
         case MetadataKind.Project:
           this.db.project = value as Project;
+          break;
+        case MetadataKind.MetadataElement:
+          this.db.metadataElements.push(value as MetadataElement);
           break;
         default: break;
       }

@@ -23,6 +23,7 @@ import {
   type NodeSymbol,
   SchemaSymbol,
   SymbolKind,
+  MetadataTargetKind,
 } from '@/core/types/symbol';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
@@ -795,6 +796,7 @@ function suggestTopLevelElementType (): CompletionList {
       'Records',
       'DiagramView',
       'Note',
+      'Metadata',
     ].map((name) => ({
       label: name,
       insertText: name,
@@ -923,6 +925,75 @@ function suggestInRefField (compiler: Compiler, filepath: Filepath, offset: numb
   ]);
 }
 
+// Map a metadata target-kind keyword to the symbol kinds whose names should be
+// suggested for the target identifier.
+const METADATA_TARGET_SYMBOL_KINDS: Record<string, SymbolKind[]> = {
+  [MetadataTargetKind.Table]: [
+    SymbolKind.Schema,
+    SymbolKind.Table,
+  ],
+  [MetadataTargetKind.Column]: [
+    SymbolKind.Schema,
+    SymbolKind.Table,
+    SymbolKind.Column,
+  ],
+  [MetadataTargetKind.Schema]: [
+    SymbolKind.Schema,
+  ],
+  [MetadataTargetKind.TableGroup]: [
+    SymbolKind.Schema,
+    SymbolKind.TableGroup,
+  ],
+  [MetadataTargetKind.Note]: [
+    SymbolKind.Schema,
+    SymbolKind.StickyNote,
+  ],
+};
+
+// Canonical display labels for metadata target kinds.
+const METADATA_TARGET_KIND_LABELS: Record<string, string> = {
+  [MetadataTargetKind.Table]: 'Table',
+  [MetadataTargetKind.Schema]: 'Schema',
+  [MetadataTargetKind.Column]: 'Column',
+  [MetadataTargetKind.TableGroup]: 'TableGroup',
+  [MetadataTargetKind.Note]: 'Note',
+};
+
+function suggestMetadataTargetKinds (): CompletionList {
+  return {
+    suggestions: Object.values(MetadataTargetKind).map((name) => {
+      const label = METADATA_TARGET_KIND_LABELS[name] ?? name;
+      return {
+        label,
+        insertText: label,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      };
+    }),
+  };
+}
+
+function suggestInMetadataHeader (
+  compiler: Compiler,
+  filepath: Filepath,
+  offset: number,
+  container: ElementDeclarationNode,
+): CompletionList {
+  // Before/at the subKind position -> suggest the allowed target kinds.
+  // (No subKind yet, an empty placeholder, or cursor still within the subKind.)
+  const kind = container.subKind?.value?.toLowerCase();
+  if (!kind || isOffsetWithinSpan(offset, container.subKind!)) {
+    return suggestMetadataTargetKinds();
+  }
+
+  // After the subKind -> suggest names of the chosen target kind.
+  const symbolKinds = METADATA_TARGET_SYMBOL_KINDS[kind];
+  if (!symbolKinds) return noSuggestions();
+
+  return suggestNamesInScope(compiler, filepath, offset, container.parent, symbolKinds);
+}
+
 function suggestInElementHeader (
   compiler: Compiler,
   filepath: Filepath,
@@ -934,6 +1005,9 @@ function suggestInElementHeader (
       SymbolKind.Schema,
       SymbolKind.Table,
     ]);
+  }
+  if (container.isKind(ElementKind.Metadata)) {
+    return suggestInMetadataHeader(compiler, filepath, offset, container);
   }
   return noSuggestions();
 }

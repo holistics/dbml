@@ -8,6 +8,7 @@ import {
   markInvalid,
 } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import { Filepath } from '@/core/types/filepath';
 import {
   ArrayNode,
@@ -403,6 +404,7 @@ export default class Parser {
   private useSpecifier (): UseSpecifierNode {
     const args: {
       importKind?: SyntaxToken;
+      subKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -417,6 +419,17 @@ export default class Parser {
         throw e;
       }
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
+    }
+
+    // Metadata imports carry a target-kind identifier before the name:
+    //   `use { metadata <subKind> <qualified-name> }`.
+    // Consume it as a bare identifier; the target name follows it.
+    if (
+      args.importKind?.value.toLowerCase() === ElementKind.Metadata
+      && this.check(SyntaxTokenKind.IDENTIFIER)
+    ) {
+      this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
+      args.subKind = this.previous();
     }
 
     if (
@@ -479,6 +492,7 @@ export default class Parser {
   private elementDeclaration (): ElementDeclarationNode {
     const args: {
       type?: SyntaxToken;
+      subKind?: SyntaxToken;
       name?: NormalExpressionNode;
       as?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -496,6 +510,21 @@ export default class Parser {
         throw e;
       }
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
+    }
+
+    // Metadata element header carries a leading target-kind identifier:
+    //   `metadata <subKind> <qualified-name>` e.g. `Metadata Table public.users`.
+    // Consume it as a bare identifier; the qualified target name follows it.
+    if (args.type.value.toLowerCase() === ElementKind.Metadata) {
+      try {
+        this.consume('Expect an identifier', SyntaxTokenKind.IDENTIFIER);
+        args.subKind = this.previous();
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
+        }
+        throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
+      }
     }
 
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {

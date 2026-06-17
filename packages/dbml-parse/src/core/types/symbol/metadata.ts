@@ -15,6 +15,7 @@ import type {
   TablePartialSymbol,
   TableSymbol,
 } from '../symbol';
+import { SymbolKind } from '../symbol';
 import type { Internable } from '../internable';
 import { UNHANDLED } from '../module';
 import { ElementKind, SettingName } from '../keywords';
@@ -31,6 +32,7 @@ export enum MetadataKind {
   Indexes = 'indexes',
   Records = 'records',
   Project = 'project',
+  MetadataElement = 'metadata element',
 }
 
 declare const __nodeMetadataBrand: unique symbol;
@@ -56,6 +58,19 @@ export abstract class NodeMetadata implements Internable<InternedNodeMetadata> {
   }
 
   abstract owners (compiler: Compiler): NodeSymbol[];
+
+  // Programs that can both (a) reach this metadata's declaration file and
+  // (b) see ALL the given target symbols in their nested schema.
+  reachableOwners (compiler: Compiler, targets: NodeSymbol[]): NodeSymbol[] {
+    const declarationFilepath = this.declaration.filepath;
+    return compiler.reachableFiles()
+      .flatMap((f) => compiler.nodeSymbol(compiler.parseFile(f).getValue().ast).getFiltered(UNHANDLED) || [])
+      .filter((s) => {
+        const reachableFromProgram = compiler.reachableFiles(s.filepath);
+        return reachableFromProgram.some((f) => f.equals(declarationFilepath))
+          && targets.every((t) => (s as ProgramSymbol).inNestedSchema(compiler, t));
+      });
+  }
 }
 
 // Standalone Ref: `Ref name: a.x > b.y [settings]`
@@ -212,16 +227,10 @@ export class RefMetadata extends NodeMetadata {
 
     if (!leftTableSymbol || !rightTableSymbol) return [];
 
-    const declarationFilepath = this.declaration.filepath;
-    const reachableFiles = compiler.reachableFiles();
-    return reachableFiles
-      .flatMap((f) => compiler.nodeSymbol(compiler.parseFile(f).getValue().ast).getFiltered(UNHANDLED) || [])
-      .filter((s) => {
-        const reachableFromProgram = compiler.reachableFiles(s.filepath);
-        return reachableFromProgram.some((f) => f.equals(declarationFilepath))
-          && (s as ProgramSymbol).inNestedSchema(compiler, leftTableSymbol)
-          && (s as ProgramSymbol).inNestedSchema(compiler, rightTableSymbol);
-      });
+    return this.reachableOwners(compiler, [
+      leftTableSymbol,
+      rightTableSymbol,
+    ]);
   }
 }
 
@@ -299,10 +308,10 @@ export class PartialRefMetadata extends NodeMetadata {
 
     if (!leftTableSymbol || !rightTableSymbol) return [];
 
-    const reachableFiles = compiler.reachableFiles();
-    return reachableFiles
-      .flatMap((f) => compiler.nodeSymbol(compiler.parseFile(f).getValue().ast).getFiltered(UNHANDLED) || [])
-      .filter((s) => (s as ProgramSymbol).inNestedSchema(compiler, leftTableSymbol) && (s as ProgramSymbol).inNestedSchema(compiler, rightTableSymbol));
+    return this.reachableOwners(compiler, [
+      leftTableSymbol,
+      rightTableSymbol,
+    ]);
   }
 }
 
@@ -380,10 +389,54 @@ export class RecordsMetadata extends NodeMetadata {
     const tableSymbol = this.table(compiler);
     if (!tableSymbol) return [];
 
-    const reachableFiles = compiler.reachableFiles();
-    return reachableFiles
-      .flatMap((f) => compiler.nodeSymbol(compiler.parseFile(f).getValue().ast).getFiltered(UNHANDLED) || [])
-      .filter((s) => (s as ProgramSymbol).inNestedSchema(compiler, tableSymbol));
+    return this.reachableOwners(compiler, [
+      tableSymbol,
+    ]);
+  }
+}
+
+// Metadata element block: `Metadata <subKind> <qualified-name> { ... }`
+export class MetadataElementMetadata extends NodeMetadata {
+  declare declaration: ElementDeclarationNode;
+
+  readonly kind = MetadataKind.MetadataElement;
+
+  constructor (declaration: ElementDeclarationNode) {
+    super(declaration);
+  }
+
+  // The element this metadata annotates (Table/Column/Schema/Note/TableGroup).
+  // Resolved via the header-name referee, which metadataModule.nodeReferee
+  // maps to the target through resolveMetadataTarget.
+  target (compiler: Compiler): NodeSymbol | undefined {
+    const nameNode = this.declaration.name;
+    if (!nameNode) return undefined;
+    // The rightmost fragment of the qualified header name (e.g. `users` in
+    // `public.users`) is what metadataModule.nodeReferee resolves to the target.
+    const targetNode = nameNode instanceof InfixExpressionNode && nameNode.rightExpression
+      ? nameNode.rightExpression
+      : nameNode;
+    return compiler.nodeReferee(targetNode).getFiltered(UNHANDLED)?.originalSymbol;
+  }
+
+  override owners (compiler: Compiler): NodeSymbol[] {
+    let target = this.target(compiler);
+    if (!target) return [];
+
+    // A Column lives inside a Table, not as a direct schema member, so
+    // inNestedSchema would not find it. Normalise to the containing table.
+    if (target.kind === SymbolKind.Column) {
+      const tableNode = target.declaration?.parentOfKind(ElementDeclarationNode);
+      const tableSymbol = tableNode
+        ? compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol
+        : undefined;
+      if (!tableSymbol) return [];
+      target = tableSymbol;
+    }
+
+    return this.reachableOwners(compiler, [
+      target,
+    ]);
   }
 }
 

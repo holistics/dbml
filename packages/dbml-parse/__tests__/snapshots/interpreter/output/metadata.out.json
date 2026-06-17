@@ -1,0 +1,270 @@
+{
+  "database": {
+    "metadataElements": [
+      {
+        "target": {
+          "kind": "table",
+          "name": [
+            "public",
+            "users"
+          ]
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 19,
+            "offset": 210
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 16,
+            "offset": 133
+          }
+        },
+        "values": {
+          "note": "scott is the owner",
+          "owner": "scott"
+        }
+      },
+      {
+        "target": {
+          "kind": "table",
+          "name": [
+            "public",
+            "users"
+          ]
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 24,
+            "offset": 286
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 21,
+            "offset": 212
+          }
+        },
+        "values": {
+          "color": "#aaa",
+          "note": "this will override"
+        }
+      },
+      {
+        "target": {
+          "kind": "column",
+          "name": [
+            "id",
+            "public",
+            "users"
+          ]
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 29,
+            "offset": 356
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 26,
+            "offset": 288
+          }
+        },
+        "values": {
+          "masking": "partial",
+          "pii": true
+        }
+      },
+      {
+        "target": {
+          "kind": "tablegroup",
+          "name": [
+            "g1"
+          ]
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 33,
+            "offset": 399
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 31,
+            "offset": 358
+          }
+        },
+        "values": {
+          "team": "data"
+        }
+      }
+    ],
+    "tableGroups": [
+      {
+        "name": "g1",
+        "tables": [
+          {
+            "name": "posts"
+          },
+          {
+            "name": "users"
+          }
+        ],
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 14,
+            "offset": 131
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 11,
+            "offset": 98
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 2,
+                "offset": 27
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 2,
+                "offset": 16
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "name": "name",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 15,
+                "line": 3,
+                "offset": 42
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 3,
+                "offset": 30
+              }
+            },
+            "type": {
+              "type_name": "varchar"
+            },
+            "unique": false
+          }
+        ],
+        "name": "users",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 4,
+            "offset": 44
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 1,
+            "offset": 0
+          }
+        }
+      },
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": true,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 7,
+                "offset": 80
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 7,
+                "offset": 69
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          },
+          {
+            "name": "user_id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 14,
+                "line": 8,
+                "offset": 94
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 3,
+                "line": 8,
+                "offset": 83
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "posts",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 9,
+            "offset": 96
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 6,
+            "offset": 46
+          }
+        }
+      }
+    ],
+    "token": {
+      "end": {
+        "column": 1,
+        "line": 34,
+        "offset": 400
+      },
+      "filepath": "/main.dbml",
+      "start": {
+        "column": 1,
+        "line": 1,
+        "offset": 0
+      }
+    }
+  }
+}
