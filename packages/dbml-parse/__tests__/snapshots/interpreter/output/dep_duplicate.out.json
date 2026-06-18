@@ -7,8 +7,8 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L13:C0, L13:C11]",
-          "snippet": "Dep: a -> b"
+          "id": "node@<infix-expression>@@[L13:C5, L13:C11]",
+          "snippet": "a -> b"
         }
       }
     },
@@ -19,8 +19,8 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L17:C0, L17:C17]",
-          "snippet": "Dep: a.id -> b.id"
+          "id": "node@<infix-expression>@@[L17:C5, L17:C17]",
+          "snippet": "a.id -> b.id"
         }
       }
     }
