@@ -89,52 +89,6 @@ describe('@dbml/core - Dep model', () => {
     });
   });
 
-  describe('R-1.1.A src-target uniqueness', () => {
-    const edge = (up: string, down: string, upSchema: string | null = null, downSchema: string | null = null, upFields: string[] = [], downFields: string[] = []) => ({
-      upstream: { schemaName: upSchema, tableName: up, fieldNames: upFields },
-      downstream: { schemaName: downSchema, tableName: down, fieldNames: downFields },
-    });
-    const makeRawDb = (deps: any[]) => ({
-      schemas: [],
-      aliases: [],
-      project: {},
-      tables: [
-        { name: 'a', schemaName: 'public', fields: [{ name: 'id', type: { type_name: 'int' }, pk: true }] },
-        { name: 'b', schemaName: 'public', fields: [{ name: 'id', type: { type_name: 'int' }, pk: true }] },
-      ],
-      refs: [],
-      enums: [],
-      tableGroups: [],
-      notes: [],
-      records: [],
-      tablePartials: [],
-      deps,
-    });
-
-    test('same edge declared in two Dep blocks errors, even with different schema spellings', () => {
-      const raw = makeRawDb([
-        { name: null, schemaName: 'public', edges: [edge('a', 'b')] },
-        { name: null, schemaName: 'public', edges: [edge('a', 'b', 'public', 'public')] },
-      ]);
-      expect(() => new Database(raw as any)).toThrow(/same endpoints already exists/);
-    });
-
-    test('same edge twice within one Dep block errors', () => {
-      const raw = makeRawDb([
-        { name: null, schemaName: 'public', edges: [edge('a', 'b'), edge('a', 'b')] },
-      ]);
-      expect(() => new Database(raw as any)).toThrow(/same endpoints already exists/);
-    });
-
-    test('reversed pair (a -> b and b -> a) is accepted', () => {
-      const raw = makeRawDb([
-        { name: null, schemaName: 'public', edges: [edge('a', 'b')] },
-        { name: null, schemaName: 'public', edges: [edge('b', 'a')] },
-      ]);
-      expect(() => new Database(raw as any)).not.toThrow();
-    });
-  });
-
   describe('normalize', () => {
     test('model.deps populated with all 3 Dep records', () => {
       const model = database.normalize();

@@ -7,18 +7,6 @@ import Table from './table';
 import TableGroup from './tableGroup';
 import { shouldPrintSchema } from './utils';
 
-/**
- * Human-readable endpoint formatter for error messages.
- *
- * @param {{ schemaName?: string|null, tableName: string, fieldNames: string[] }} side
- * @returns {string}
- */
-function formatDepEndpoint (side) {
-  const schemaPart = side.schemaName ? `"${side.schemaName}".` : '';
-  const fieldPart = (side.fieldNames || []).length > 0 ? `(${side.fieldNames.join(', ')})` : '';
-  return `${schemaPart}"${side.tableName}"${fieldPart}`;
-}
-
 class Schema extends Element {
   /**
    * @param {import('../../types/model_structure/schema').RawSchema} param0
@@ -170,28 +158,7 @@ class Schema extends Element {
    * @param {import('./dep').default} dep
    */
   pushDep (dep) {
-    this.checkDep(dep);
     this.deps.push(dep);
-  }
-
-  /**
-   * Enforce src-target uniqueness across all Dep edges in this schema,
-   * mirroring checkRef: each new edge is compared via DepEdge.equals against
-   * every existing edge (and earlier edges in the same block). Reversed
-   * direction is a different edge and is allowed.
-   *
-   * @param {import('./dep').default} dep
-   */
-  checkDep (dep) {
-    dep.edges.forEach((edge, i) => {
-      const duplicated = this.deps.some((d) => d.edges.some((e) => e.equals(edge)))
-        || dep.edges.slice(0, i).some((e) => e.equals(edge));
-      if (duplicated) {
-        const up = formatDepEndpoint(edge.upstream);
-        const down = formatDepEndpoint(edge.downstream);
-        edge.error(`Dep edge with the same endpoints already exists: ${up} -> ${down}`);
-      }
-    });
   }
 
   /**

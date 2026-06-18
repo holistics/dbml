@@ -352,18 +352,18 @@
         "edges": [
           {
             "downstream": {
-              "tableName": "orders",
+              "tableName": "users",
               "token": {
                 "end": {
                   "column": 2,
                   "line": 38,
-                  "offset": 568
+                  "offset": 644
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
                   "line": 28,
-                  "offset": 382
+                  "offset": 458
                 }
               }
             },
@@ -371,82 +371,114 @@
               "end": {
                 "column": 2,
                 "line": 38,
-                "offset": 568
+                "offset": 644
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 1,
                 "line": 28,
-                "offset": 382
+                "offset": 458
               }
             },
             "upstream": {
-              "tableName": "users",
+              "tableName": "orders",
               "token": {
                 "end": {
                   "column": 2,
                   "line": 38,
-                  "offset": 568
+                  "offset": 644
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
                   "line": 28,
-                  "offset": 382
+                  "offset": 458
                 }
               }
             }
           },
           {
             "downstream": {
-              "tableName": "users",
-              "token": {
-                "end": {
-                  "column": 2,
-                  "line": 38,
-                  "offset": 568
-                },
-                "filepath": "/main.dbml",
-                "start": {
-                  "column": 1,
-                  "line": 28,
-                  "offset": 382
-                }
-              }
-            },
-            "token": {
-              "end": {
-                "column": 2,
-                "line": 38,
-                "offset": 568
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 1,
-                "line": 28,
-                "offset": 382
-              }
-            },
-            "upstream": {
               "schemaName": "my_schema",
               "tableName": "events",
               "token": {
                 "end": {
                   "column": 2,
                   "line": 38,
-                  "offset": 568
+                  "offset": 644
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
                   "line": 28,
-                  "offset": 382
+                  "offset": 458
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 38,
+                "offset": 644
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 28,
+                "offset": 458
+              }
+            },
+            "upstream": {
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 644
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 458
                 }
               }
             }
           },
           {
             "downstream": {
+              "fieldNames": [
+                "id"
+              ],
+              "tableName": "users",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 38,
+                  "offset": 644
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 28,
+                  "offset": 458
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 38,
+                "offset": 644
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 28,
+                "offset": 458
+              }
+            },
+            "upstream": {
               "fieldNames": [
                 "user_id"
               ],
@@ -455,45 +487,13 @@
                 "end": {
                   "column": 2,
                   "line": 38,
-                  "offset": 568
+                  "offset": 644
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
                   "line": 28,
-                  "offset": 382
-                }
-              }
-            },
-            "token": {
-              "end": {
-                "column": 2,
-                "line": 38,
-                "offset": 568
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 1,
-                "line": 28,
-                "offset": 382
-              }
-            },
-            "upstream": {
-              "fieldNames": [
-                "id"
-              ],
-              "tableName": "users",
-              "token": {
-                "end": {
-                  "column": 2,
-                  "line": 38,
-                  "offset": 568
-                },
-                "filepath": "/main.dbml",
-                "start": {
-                  "column": 1,
-                  "line": 28,
-                  "offset": 382
+                  "offset": 458
                 }
               }
             }
@@ -503,18 +503,19 @@
               "fieldNames": [
                 "id"
               ],
-              "tableName": "users",
+              "schemaName": "my_schema",
+              "tableName": "events",
               "token": {
                 "end": {
                   "column": 2,
                   "line": 38,
-                  "offset": 568
+                  "offset": 644
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
                   "line": 28,
-                  "offset": 382
+                  "offset": 458
                 }
               }
             },
@@ -522,32 +523,31 @@
               "end": {
                 "column": 2,
                 "line": 38,
-                "offset": 568
+                "offset": 644
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 1,
                 "line": 28,
-                "offset": 382
+                "offset": 458
               }
             },
             "upstream": {
               "fieldNames": [
                 "id"
               ],
-              "schemaName": "my_schema",
-              "tableName": "events",
+              "tableName": "users",
               "token": {
                 "end": {
                   "column": 2,
                   "line": 38,
-                  "offset": 568
+                  "offset": 644
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
                   "line": 28,
-                  "offset": 382
+                  "offset": 458
                 }
               }
             }
@@ -558,13 +558,13 @@
             "end": {
               "column": 13,
               "line": 34,
-              "offset": 510
+              "offset": 586
             },
             "filepath": "/main.dbml",
             "start": {
               "column": 3,
               "line": 34,
-              "offset": 500
+              "offset": 576
             }
           },
           "value": "ok"
@@ -573,13 +573,13 @@
           "end": {
             "column": 2,
             "line": 38,
-            "offset": 568
+            "offset": 644
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
             "line": 28,
-            "offset": 382
+            "offset": 458
           }
         }
       },
@@ -592,13 +592,13 @@
                 "end": {
                   "column": 38,
                   "line": 42,
-                  "offset": 645
+                  "offset": 721
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 25,
                   "line": 42,
-                  "offset": 632
+                  "offset": 708
                 }
               }
             },
@@ -606,13 +606,13 @@
               "end": {
                 "column": 38,
                 "line": 42,
-                "offset": 645
+                "offset": 721
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 25,
                 "line": 42,
-                "offset": 632
+                "offset": 708
               }
             },
             "upstream": {
@@ -621,13 +621,13 @@
                 "end": {
                   "column": 38,
                   "line": 42,
-                  "offset": 645
+                  "offset": 721
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 25,
                   "line": 42,
-                  "offset": 632
+                  "offset": 708
                 }
               }
             }
@@ -637,13 +637,13 @@
           "end": {
             "column": 38,
             "line": 42,
-            "offset": 645
+            "offset": 721
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 25,
             "line": 42,
-            "offset": 632
+            "offset": 708
           }
         }
       },
@@ -656,13 +656,13 @@
                 "end": {
                   "column": 51,
                   "line": 43,
-                  "offset": 708
+                  "offset": 784
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 27,
                   "line": 43,
-                  "offset": 684
+                  "offset": 760
                 }
               }
             },
@@ -670,13 +670,13 @@
               "end": {
                 "column": 51,
                 "line": 43,
-                "offset": 708
+                "offset": 784
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 27,
                 "line": 43,
-                "offset": 684
+                "offset": 760
               }
             },
             "upstream": {
@@ -686,13 +686,13 @@
                 "end": {
                   "column": 51,
                   "line": 43,
-                  "offset": 708
+                  "offset": 784
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 27,
                   "line": 43,
-                  "offset": 684
+                  "offset": 760
                 }
               }
             }
@@ -702,13 +702,13 @@
           "end": {
             "column": 51,
             "line": 43,
-            "offset": 708
+            "offset": 784
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 27,
             "line": 43,
-            "offset": 684
+            "offset": 760
           }
         }
       },
@@ -724,13 +724,13 @@
                 "end": {
                   "column": 47,
                   "line": 47,
-                  "offset": 800
+                  "offset": 876
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 31,
                   "line": 47,
-                  "offset": 784
+                  "offset": 860
                 }
               }
             },
@@ -738,13 +738,13 @@
               "end": {
                 "column": 47,
                 "line": 47,
-                "offset": 800
+                "offset": 876
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 31,
                 "line": 47,
-                "offset": 784
+                "offset": 860
               }
             },
             "upstream": {
@@ -756,13 +756,13 @@
                 "end": {
                   "column": 47,
                   "line": 47,
-                  "offset": 800
+                  "offset": 876
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 31,
                   "line": 47,
-                  "offset": 784
+                  "offset": 860
                 }
               }
             }
@@ -772,13 +772,13 @@
           "end": {
             "column": 47,
             "line": 47,
-            "offset": 800
+            "offset": 876
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 31,
             "line": 47,
-            "offset": 784
+            "offset": 860
           }
         }
       },
@@ -795,13 +795,13 @@
                 "end": {
                   "column": 60,
                   "line": 48,
-                  "offset": 863
+                  "offset": 939
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 33,
                   "line": 48,
-                  "offset": 836
+                  "offset": 912
                 }
               }
             },
@@ -809,13 +809,13 @@
               "end": {
                 "column": 60,
                 "line": 48,
-                "offset": 863
+                "offset": 939
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 33,
                 "line": 48,
-                "offset": 836
+                "offset": 912
               }
             },
             "upstream": {
@@ -827,13 +827,13 @@
                 "end": {
                   "column": 60,
                   "line": 48,
-                  "offset": 863
+                  "offset": 939
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 33,
                   "line": 48,
-                  "offset": 836
+                  "offset": 912
                 }
               }
             }
@@ -843,13 +843,13 @@
           "end": {
             "column": 60,
             "line": 48,
-            "offset": 863
+            "offset": 939
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 33,
             "line": 48,
-            "offset": 836
+            "offset": 912
           }
         }
       }
@@ -1064,13 +1064,13 @@
               "end": {
                 "column": 48,
                 "line": 42,
-                "offset": 655
+                "offset": 731
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 42,
                 "line": 42,
-                "offset": 649
+                "offset": 725
               }
             },
             "type": {
@@ -1084,13 +1084,13 @@
           "end": {
             "column": 50,
             "line": 42,
-            "offset": 657
+            "offset": 733
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
             "line": 42,
-            "offset": 608
+            "offset": 684
           }
         }
       },
@@ -1103,13 +1103,13 @@
               "end": {
                 "column": 61,
                 "line": 43,
-                "offset": 718
+                "offset": 794
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 55,
                 "line": 43,
-                "offset": 712
+                "offset": 788
               }
             },
             "type": {
@@ -1123,13 +1123,13 @@
           "end": {
             "column": 63,
             "line": 43,
-            "offset": 720
+            "offset": 796
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
             "line": 43,
-            "offset": 658
+            "offset": 734
           }
         }
       },
@@ -1147,13 +1147,13 @@
                   "end": {
                     "column": 47,
                     "line": 47,
-                    "offset": 800
+                    "offset": 876
                   },
                   "filepath": "/main.dbml",
                   "start": {
                     "column": 31,
                     "line": 47,
-                    "offset": 784
+                    "offset": 860
                   }
                 }
               }
@@ -1164,13 +1164,13 @@
               "end": {
                 "column": 48,
                 "line": 47,
-                "offset": 801
+                "offset": 877
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 23,
                 "line": 47,
-                "offset": 776
+                "offset": 852
               }
             },
             "type": {
@@ -1184,13 +1184,13 @@
           "end": {
             "column": 50,
             "line": 47,
-            "offset": 803
+            "offset": 879
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
             "line": 47,
-            "offset": 754
+            "offset": 830
           }
         }
       },
@@ -1209,13 +1209,13 @@
                   "end": {
                     "column": 60,
                     "line": 48,
-                    "offset": 863
+                    "offset": 939
                   },
                   "filepath": "/main.dbml",
                   "start": {
                     "column": 33,
                     "line": 48,
-                    "offset": 836
+                    "offset": 912
                   }
                 }
               }
@@ -1226,13 +1226,13 @@
               "end": {
                 "column": 61,
                 "line": 48,
-                "offset": 864
+                "offset": 940
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 25,
                 "line": 48,
-                "offset": 828
+                "offset": 904
               }
             },
             "type": {
@@ -1246,13 +1246,13 @@
           "end": {
             "column": 63,
             "line": 48,
-            "offset": 866
+            "offset": 942
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
             "line": 48,
-            "offset": 804
+            "offset": 880
           }
         }
       }
@@ -1261,7 +1261,7 @@
       "end": {
         "column": 1,
         "line": 49,
-        "offset": 867
+        "offset": 943
       },
       "filepath": "/main.dbml",
       "start": {

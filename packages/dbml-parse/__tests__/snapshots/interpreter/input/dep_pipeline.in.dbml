@@ -29,8 +29,8 @@ Dep {
   owner: 'data-team'
 }
 
-// Reverse direction (sugar — same edge as stg_orders -> fct_orders)
-Dep: fct_orders <- stg_orders
+// Reverse-direction sugar (<-): equivalent to raw_orders -> fct_orders
+Dep: fct_orders <- raw_orders
 
 // Column-level
 Dep {

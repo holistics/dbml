@@ -24,12 +24,12 @@ Dep: my_schema.events.id -> users.id
 Dep: my_schema.events.id <- another_schema.booking.id
 
 // full-form
-// no error
+// no error — distinct edges from the short-form above (same edge twice is a duplicate)
 Dep {
-  users -> orders
-  my_schema.events -> users
-  users.id -> orders.user_id
-  my_schema.events.id -> users.id
+  orders -> users
+  users -> my_schema.events
+  orders.user_id -> users.id
+  users.id -> my_schema.events.id
 
   note: 'ok'
   materialized: view

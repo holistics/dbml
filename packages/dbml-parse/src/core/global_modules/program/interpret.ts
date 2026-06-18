@@ -158,6 +158,7 @@ export default class ProgramInterpreter {
   private interpretAllMetadata () {
     const metadatas = this.compiler.symbolMetadata(this.programSymbol) ?? [];
     const seenRefEndpoints = new Set<string>();
+    const seenDepEndpoints = new Set<string>();
 
     // Pre-scan: count records blocks per table to detect duplicates
     const recordsTableCount = new Map<string, {
@@ -218,7 +219,23 @@ export default class ProgramInterpreter {
           break;
         }
         case MetadataKind.Dep: {
-          this.db.deps.push(value as Dep);
+          const dep = value as Dep;
+          // Directed src-target uniqueness: a -> b and b -> a are distinct, so no reverse key.
+          const hasDuplicateEdge = (dep.edges ?? []).some((edge) => {
+            const { upstream: up, downstream: down } = edge;
+            const key = [
+              up.schemaName, up.tableName, up.fieldNames.join(','),
+              down.schemaName, down.tableName, down.fieldNames.join(','),
+            ].join('|');
+            if (seenDepEndpoints.has(key)) return true;
+            seenDepEndpoints.add(key);
+            return false;
+          });
+          if (hasDuplicateEdge) {
+            this.errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Dep with same endpoints already exists', meta.declaration));
+            break;
+          }
+          this.db.deps.push(dep);
           break;
         }
         case MetadataKind.Records: {

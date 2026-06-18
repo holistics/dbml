@@ -1,0 +1,28 @@
+{
+  "errors": [
+    {
+      "code": "SAME_ENDPOINT",
+      "diagnostic": "Dep with same endpoints already exists",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L13:C0, L13:C11]",
+          "snippet": "Dep: a -> b"
+        }
+      }
+    },
+    {
+      "code": "SAME_ENDPOINT",
+      "diagnostic": "Dep with same endpoints already exists",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L17:C0, L17:C17]",
+          "snippet": "Dep: a.id -> b.id"
+        }
+      }
+    }
+  ]
+}

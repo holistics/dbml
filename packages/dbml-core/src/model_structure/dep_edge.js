@@ -82,27 +82,6 @@ class DepEdge extends Element {
     this.id = this.dbState.generateId('depEdgeId');
   }
 
-  /**
-   * @param {import('../../types/model_structure/dep_edge').default} depEdge
-   * @returns {boolean}
-   */
-  equals (depEdge) {
-    return DepEdge.compareEnd(this.upstreamTable, this.upstreamFields, depEdge.upstreamTable, depEdge.upstreamFields)
-      && DepEdge.compareEnd(this.downstreamTable, this.downstreamFields, depEdge.downstreamTable, depEdge.downstreamFields);
-  }
-
-  // Endpoints are compared by resolved ids, so different spellings of the same table/fields are equal.
-  static compareEnd (table, fields, otherTable, otherFields) {
-    if (table?.id !== otherTable?.id) return false;
-    if (fields.length !== otherFields.length) return false;
-    const ids = fields.map((f) => f.id).sort();
-    const otherIds = otherFields.map((f) => f.id).sort();
-    for (let i = 0; i < ids.length; i += 1) {
-      if (ids[i] !== otherIds[i]) return false;
-    }
-    return true;
-  }
-
   export () {
     return this.shallowExport();
   }
