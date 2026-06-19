@@ -109,6 +109,7 @@ class Field extends Element {
   exportChildIds () {
     return {
       endpointIds: this.endpoints.map((e) => e.id),
+      metadataIds: this.metadataIds,
     };
   }
 
@@ -124,6 +125,7 @@ class Field extends Element {
       increment: this.increment,
       injectedPartialId: this.injectedPartial?.id ?? null,
       checkIds: this.checks.map((check) => check.id),
+      metadata: this.metadata,
     };
   }
 
