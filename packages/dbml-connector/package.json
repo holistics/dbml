@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/connector",
-  "version": "8.3.0",
+  "version": "8.3.1-metadata.0",
   "description": "This package was created to fetch the schema JSON from many kind of databases.",
   "author": "huy.phung.sw@gmail.com",
   "license": "MIT",
@@ -37,5 +37,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "gitHead": "22950b397bac439d76aca6934b128cdf0b460521"
 }
