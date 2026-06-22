@@ -27,13 +27,25 @@
       }
     },
     {
+      "code": "INVALID_METADATA_FIELD",
+      "diagnostic": "A Metadata field must use the 'key: value' syntax",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@id@[L16:C2, L16:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
       "code": "INVALID_COLUMN",
       "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L17:C17, L17:C29]",
+          "id": "node@<infix-expression>@@[L22:C17, L22:C29]",
           "snippet": "public.users"
         }
       }
@@ -45,7 +57,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<block-expression>@@[L17:C30, L19:C3]",
+          "id": "node@<block-expression>@@[L22:C30, L24:C3]",
           "snippet": "{\n    owner: 'x'\n  }"
         }
       }
