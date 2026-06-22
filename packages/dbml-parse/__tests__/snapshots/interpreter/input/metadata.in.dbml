@@ -47,3 +47,11 @@ Metadata Schema sales {
 Metadata Note overview {
   author: 'docs'
 }
+
+Metadata Table public.posts {
+  note: '''
+      # Heading 1
+          code block
+      # Heading 2
+  '''
+}
