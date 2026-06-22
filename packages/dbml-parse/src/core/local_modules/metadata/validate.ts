@@ -11,9 +11,7 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import {
-  isExpressionAVariableNode,
   isValidColor,
-  isValidColumnType,
   isValidName,
 } from '@/core/utils/validate';
 import { ALLOWED_METADATA_TARGET_KINDS } from '@/core/types';
@@ -109,30 +107,14 @@ export default class MetadataValidator {
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
-    const validateColumn = (field: FunctionApplicationNode) => {
-      const errors: CompileError[] = [];
-      if (!field.callee) {
-        return [];
-      }
-      if (field.args.length === 0) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN, 'A column must have a type', field.callee!));
-      }
-
-      if (!isExpressionAVariableNode(field.callee)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_NAME, 'A column name must be an identifier or a quoted identifier', field.callee));
-      }
-
-      if (field.args[0] && !isValidColumnType(field.args[0])) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_TYPE, 'Invalid column type', field.args[0]));
-      }
-
-      return errors;
-    };
-    const fieldErrors = fields.flatMap((field) => {
-      return validateColumn(field);
-    });
-
-    return fieldErrors;
+    // A Metadata body may only contain 'key: value' fields (parsed as
+    // ElementDeclarationNode). A bare expression such as `id int` parses as a
+    // FunctionApplicationNode and is never valid here.
+    return fields.map((field) => new CompileError(
+      CompileErrorCode.INVALID_METADATA_FIELD,
+      'A Metadata field must use the \'key: value\' syntax',
+      field,
+    ));
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {

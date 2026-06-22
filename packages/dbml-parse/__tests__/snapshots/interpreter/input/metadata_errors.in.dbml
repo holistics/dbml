@@ -12,6 +12,11 @@ Metadata Banana public.users {
   owner: 'x'
 }
 
+// column-like field is not valid metadata syntax
+Metadata Table public.users {
+  id int
+}
+
 // metadata is top-level only: nested usage is not treated as metadata and
 // instead follows the normal element-body flow (so it errors generically here)
 Table accounts {
