@@ -11,7 +11,7 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { Color, MetadataElement } from '@/core/types/schemaJson';
-import { extractColor, getTokenPosition } from '@/core/utils/interpret';
+import { extractColor, getTokenPosition, normalizeNote } from '@/core/utils/interpret';
 import {
   destructureComplexVariable,
   extractNumericLiteral,
@@ -85,7 +85,7 @@ export default class MetadataInterpreter {
     return [];
   }
 
-  private interpretValues (body?: MetadataDeclarationNode['body']): CompileError[] {
+  private interpretValues (body?: BlockExpressionNode | FunctionApplicationNode): CompileError[] {
     if (!(body instanceof BlockExpressionNode)) return [];
 
     for (const stmt of body.body) {
@@ -96,7 +96,11 @@ export default class MetadataInterpreter {
       const valueNode = stmt.body instanceof FunctionApplicationNode
         ? stmt.body.callee
         : undefined;
-      this.metadata.values![key] = extractValue(valueNode);
+
+      const value = extractValue(valueNode);
+      this.metadata.values![key] = key === 'note' && typeof value === 'string'
+        ? normalizeNote(value)
+        : value;
     }
 
     return [];

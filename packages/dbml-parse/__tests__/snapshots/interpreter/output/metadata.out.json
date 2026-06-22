@@ -151,6 +151,31 @@
         "values": {
           "author": "docs"
         }
+      },
+      {
+        "target": {
+          "kind": "table",
+          "name": [
+            "posts",
+            "public"
+          ]
+        },
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 57,
+            "offset": 677
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 51,
+            "offset": 571
+          }
+        },
+        "values": {
+          "note": "# Heading 1\n    code block\n# Heading 2\n"
+        }
       }
     ],
     "notes": [
@@ -363,8 +388,8 @@
     "token": {
       "end": {
         "column": 1,
-        "line": 50,
-        "offset": 570
+        "line": 58,
+        "offset": 678
       },
       "filepath": "/main.dbml",
       "start": {
