@@ -89,6 +89,7 @@ class TableGroup extends Element {
   exportChildIds () {
     return {
       tableIds: this.tables.map((t) => t.id),
+      metadataIds: this.metadataIds,
     };
   }
 
@@ -103,6 +104,7 @@ class TableGroup extends Element {
       name: this.name,
       note: this.note,
       color: this.color,
+      metadata: this.metadata,
     };
   }
 

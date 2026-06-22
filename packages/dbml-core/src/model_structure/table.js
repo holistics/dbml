@@ -278,6 +278,7 @@ class Table extends Element {
       fieldIds: this.fields.map((f) => f.id),
       indexIds: this.indexes.map((i) => i.id),
       checkIds: this.checks.map((c) => c.id),
+      metadataIds: this.metadataIds,
     };
   }
 
@@ -296,6 +297,7 @@ class Table extends Element {
       headerColor: this.headerColor,
       partials: this.partials,
       recordIds: this.records.map((r) => r.id),
+      metadata: this.metadata,
     };
   }
 

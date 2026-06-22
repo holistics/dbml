@@ -37,13 +37,14 @@ export default class NoteValidator {
         ElementKind.Table,
         ElementKind.TableGroup,
         ElementKind.TablePartial,
+        ElementKind.Metadata,
         ElementKind.Project,
       ))
     ) {
       return [
         new CompileError(
           CompileErrorCode.INVALID_NOTE_CONTEXT,
-          'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
+          'A Note can only appear inside a Table, a TableGroup, a TablePartial, a Metadata or a Project. Sticky note can only appear at the global scope.',
           this.declarationNode,
         ),
       ];

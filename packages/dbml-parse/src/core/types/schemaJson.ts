@@ -73,6 +73,7 @@ export interface Database {
   records: TableRecord[];
   externals: DatabaseExternals;
   diagramViews: DiagramView[];
+  metadataElements: MetadataElement[];
   token?: TokenPosition;
 }
 
@@ -268,6 +269,17 @@ export interface TableRecord {
   token: TokenPosition;
 }
 
+export interface MetadataElement {
+  target: {
+    kind: string; // target element type keyword: 'table' | 'column' | 'schema' | ...
+    // schemaName: string | null;
+    name: string[];
+    // columnName?: string | null; // set when kind === 'column'
+  };
+  values: { [key: string]: unknown };
+  token: TokenPosition;
+}
+
 export type Project =
   | Record<string, never>
   | {
@@ -305,4 +317,5 @@ export type SchemaElement =
   | TablePartial
   | TablePartialInjection
   | TableRecord
-  | RecordValue;
+  | RecordValue
+  | MetadataElement;

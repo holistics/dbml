@@ -31,6 +31,7 @@ class StickyNote extends Element {
       name: this.name,
       content: this.content,
       color: this.color,
+      metadata: this.metadata,
     };
   }
 
@@ -41,6 +42,7 @@ class StickyNote extends Element {
     model.notes[this.id] = {
       id: this.id,
       ...this.export(),
+      metadataIds: this.metadataIds,
     };
   }
 }

@@ -1,5 +1,5 @@
 import { type Filepath } from '@/core/types/filepath';
-import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
+import { ElementDeclarationNode, MetadataDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import type Compiler from '../../index';
 import { ScopeKind } from '../../types';
 
@@ -8,6 +8,10 @@ export function containerScopeKind (this: Compiler, filepath: Filepath, offset: 
 
   if (elem instanceof ProgramNode) {
     return ScopeKind.TOPLEVEL;
+  }
+
+  if (elem instanceof MetadataDeclarationNode) {
+    return ScopeKind.METADATA;
   }
 
   const typeVal = (elem as ElementDeclarationNode).type?.value.toLowerCase();
@@ -35,6 +39,8 @@ export function containerScopeKind (this: Compiler, filepath: Filepath, offset: 
       return ScopeKind.RECORDS;
     case 'diagramview':
       return ScopeKind.DIAGRAMVIEW;
+    case 'metadata':
+      return ScopeKind.METADATA;
     default:
       return ScopeKind.CUSTOM;
   }
