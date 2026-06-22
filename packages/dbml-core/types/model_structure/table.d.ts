@@ -134,6 +134,8 @@ export interface NormalizedTable {
     schemaId: number;
     groupId: number | null;
     partials: TablePartial[];
+    metadataIds: number[];
+    metadata: { [key: string]: unknown };
 }
 
 export interface NormalizedTableIdMap {

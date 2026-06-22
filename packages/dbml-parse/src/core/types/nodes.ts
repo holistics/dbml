@@ -7,7 +7,7 @@ import { ImportKind } from '@/core/types/symbol';
 import { Position } from '@/core/types/position';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isReuseKeyword } from '@/core/utils/tokens';
-import { SymbolKind } from './symbol';
+import { ALLOWED_METADATA_TARGET_KINDS, MetadataTargetKind, SymbolKind } from './symbol';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;
@@ -155,6 +155,7 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
 export enum SyntaxNodeKind {
   PROGRAM = '<program>',
   ELEMENT_DECLARATION = '<element-declaration>',
+  METADATA_DECLARATION = '<metadata-declaration>',
   USE_DECLARATION = '<use-declaration>',
   USE_SPECIFIER = '<use-specifier>',
   USE_SPECIFIER_LIST = '<use-specifier-list>',
@@ -188,7 +189,7 @@ export enum SyntaxNodeKind {
 // Form: (<element-declaration> | <use-declaration>)*
 // The root node of a DBML program containing top-level statements in source order.
 export class ProgramNode extends SyntaxNode {
-  body: (UseDeclarationNode | ElementDeclarationNode)[];
+  body: (UseDeclarationNode | ElementDeclarationNode | MetadataDeclarationNode)[];
 
   eof?: SyntaxToken;
 
@@ -200,7 +201,7 @@ export class ProgramNode extends SyntaxNode {
       eof,
       source,
     }: {
-      body?: (UseDeclarationNode | ElementDeclarationNode)[];
+      body?: (UseDeclarationNode | ElementDeclarationNode | MetadataDeclarationNode)[];
       eof?: SyntaxToken;
       source: string;
     },
@@ -222,6 +223,10 @@ export class ProgramNode extends SyntaxNode {
 
   get uses (): UseDeclarationNode[] {
     return this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
+  }
+
+  get metadata (): MetadataDeclarationNode[] {
+    return this.body.filter((s): s is MetadataDeclarationNode => s.kind === SyntaxNodeKind.METADATA_DECLARATION);
   }
 }
 
@@ -287,6 +292,10 @@ export class UseDeclarationNode extends SyntaxNode {
 export class UseSpecifierNode extends SyntaxNode {
   importKind?: SyntaxToken;
 
+  // Optional target-kind identifier for metadata imports, sitting between
+  // `importKind` and `name`: `use { metadata <subKind> <name> }`.
+  subKind?: SyntaxToken;
+
   name?: NormalExpressionNode;
 
   asKeyword?: SyntaxToken;
@@ -295,9 +304,10 @@ export class UseSpecifierNode extends SyntaxNode {
 
   constructor (
     {
-      importKind, name, asKeyword, alias,
+      importKind, subKind, name, asKeyword, alias,
     }: {
       importKind?: SyntaxToken;
+      subKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -311,12 +321,14 @@ export class UseSpecifierNode extends SyntaxNode {
       filepath,
       [
         importKind,
+        subKind,
         name,
         asKeyword,
         alias,
       ],
     );
     this.importKind = importKind;
+    this.subKind = subKind;
     this.name = name;
     this.asKeyword = asKeyword;
     this.alias = alias;
@@ -372,6 +384,70 @@ export class UseSpecifierListNode extends SyntaxNode {
     this.openBrace = openBrace;
     this.specifiers = specifiers;
     this.closeBrace = closeBrace;
+  }
+}
+
+// Form: metadata <target-kind> <target-name> { <field>* }
+// A top-level declaration that annotates an existing element with metadata.
+// It does NOT declare a new element: it only targets one (a `targetKind` plus a
+// qualified `targetName` together identify the target). Hence no alias/settings.
+// e.g. Metadata Table public.users { owner: 'scott' }
+// e.g. Metadata Column public.users.id { pii: true }
+export class MetadataDeclarationNode extends SyntaxNode {
+  metadataKeyword?: SyntaxToken;
+
+  // The target-kind identifier (the `table` in `Metadata Table public.users`).
+  targetKind?: SyntaxToken;
+
+  // The qualified name of the targeted element (e.g. `public.users`).
+  targetName?: NormalExpressionNode;
+
+  // Kept so a `:`-style simple body still triggers UNEXPECTED_SIMPLE_BODY.
+  bodyColon?: SyntaxToken;
+
+  body?: FunctionApplicationNode | BlockExpressionNode;
+
+  constructor (
+    {
+      metadataKeyword,
+      targetKind,
+      targetName,
+      bodyColon,
+      body,
+    }: {
+      metadataKeyword?: SyntaxToken;
+      targetKind?: SyntaxToken;
+      targetName?: NormalExpressionNode;
+      bodyColon?: SyntaxToken;
+      body?: BlockExpressionNode | FunctionApplicationNode;
+    },
+    id: SyntaxNodeId,
+    filepath: Filepath,
+  ) {
+    super(
+      id,
+      SyntaxNodeKind.METADATA_DECLARATION,
+      filepath,
+      [
+        metadataKeyword,
+        targetKind,
+        targetName,
+        bodyColon,
+        body,
+      ],
+    );
+    this.metadataKeyword = metadataKeyword;
+    this.targetKind = targetKind;
+    this.targetName = targetName;
+    this.bodyColon = bodyColon;
+    this.body = body;
+  }
+
+  // Resolve the target-kind token to a known MetadataTargetKind, or undefined.
+  getTargetKind (): MetadataTargetKind | undefined {
+    const value = this.targetKind?.value?.toLowerCase();
+    if (value === undefined) return undefined;
+    return ALLOWED_METADATA_TARGET_KINDS.find((k) => k === value);
   }
 }
 
@@ -445,10 +521,12 @@ export class ElementDeclarationNode extends SyntaxNode {
     this.body = body;
   }
 
-  isKind (...kinds: ElementKind[]): boolean {
+  isKind<T extends ElementKind>(...kinds: T[]): this is ElementDeclarationNode & { type: { value: T } } {
     return kinds.some((kind) => this.type?.value.toLowerCase() === kind);
   }
 
+  getElementKind<T extends ElementKind>(this: ElementDeclarationNode & { type: { value: T } }): T;
+  getElementKind (this: ElementDeclarationNode): ElementKind | undefined;
   getElementKind (): ElementKind | undefined {
     return Object.values(ElementKind).find((k) => this.isKind(k));
   }

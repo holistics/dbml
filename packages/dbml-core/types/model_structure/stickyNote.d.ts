@@ -25,6 +25,7 @@ declare class StickyNote extends Element {
         name: string;
         content: string;
         color?: Color;
+        metadata: { [key: string]: unknown };
     };
     normalize(model: NormalizedModel): void;
 }
@@ -33,6 +34,8 @@ export interface NormalizedNote {
     name: string;
     content: string;
     color?: Color;
+    metadata: { [key: string]: unknown };
+    metadataIds: number[];
 }
 
 export interface NormalizedNoteIdMap {

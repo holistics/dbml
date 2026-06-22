@@ -486,6 +486,33 @@
           </div>
         </DbSection>
 
+        <!-- Metadata Elements -->
+        <DbSection
+          label="MetadataElements"
+          :count="database.metadataElements.length"
+          :icon="PhCode"
+          icon-color="text-yellow-500"
+        >
+          <div
+            v-for="(me, idx) in database.metadataElements"
+            :key="idx"
+            class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+            :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+          >
+            <VTooltip
+              placement="right"
+              :distance="6"
+            >
+              <PhCode class="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+              <template #popper>
+                <span class="text-xs">Metadata Element</span>
+              </template>
+            </VTooltip>
+            <span class="text-gray-400">{{ me.target.kind }}</span>
+            <span class="text-blue-500">{{ me.target.name.join('.') }}</span>
+          </div>
+        </DbSection>
+
         <!-- Externals -->
         <DbSection
           label="Externals"
@@ -552,6 +579,7 @@ import {
   PhLayout,
   PhArrowSquareOut,
   PhNote,
+  PhCode,
 } from '@phosphor-icons/vue';
 import TabSettingsButton from './common/TabSettingsButton.vue';
 import type { Database } from '@dbml/parse';

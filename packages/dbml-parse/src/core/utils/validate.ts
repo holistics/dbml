@@ -348,7 +348,7 @@ export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimit
 }
 
 // Return whether `node` is an ElementDeclarationNode of kind `kind`
-export function isElementNode (node: SyntaxNode | undefined, kind: ElementKind): node is ElementDeclarationNode {
+export function isElementNode<T extends ElementKind> (node: SyntaxNode | undefined, kind: T): node is ElementDeclarationNode & { type: { value: T } } {
   return node instanceof ElementDeclarationNode && node.isKind(kind);
 }
 

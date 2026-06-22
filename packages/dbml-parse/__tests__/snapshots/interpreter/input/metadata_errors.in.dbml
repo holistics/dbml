@@ -1,0 +1,21 @@
+Table users {
+  id int
+}
+
+// target does not exist
+Metadata Table public.missing {
+  owner: 'x'
+}
+
+// invalid target kind
+Metadata Banana public.users {
+  owner: 'x'
+}
+
+// metadata is top-level only: nested usage is not treated as metadata and
+// instead follows the normal element-body flow (so it errors generically here)
+Table accounts {
+  Metadata Table public.users {
+    owner: 'x'
+  }
+}

@@ -28,5 +28,8 @@ declare class Element {
     constructor(token: Token);
     bind(selection: any): void;
     error(message: string): void;
+    pushMetadata(meta: import('./metadata').default): void;
+    get metadata(): { [key: string]: unknown };
+    get metadataIds(): number[];
 }
 export default Element;
