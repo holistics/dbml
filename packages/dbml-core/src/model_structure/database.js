@@ -5,6 +5,7 @@ import {
 import DbState from './dbState';
 import Element from './element';
 import Enum from './enum';
+import Metadata from './metadata';
 import Ref from './ref';
 import Schema from './schema';
 import StickyNote from './stickyNote';
@@ -28,6 +29,7 @@ class Database extends Element {
     records = [],
     tablePartials = [],
     diagramViews = [],
+    metadataElements = [],
   }) {
     super();
     this.dbState = new DbState();
@@ -36,6 +38,8 @@ class Database extends Element {
     /** @type {import('../../types/model_structure/schema').default[]} */
     this.schemas = [];
     this.notes = [];
+    /** @type {import('../../types/model_structure/metadata').default[]} */
+    this.metadataElements = [];
     this.note = project.note ? get(project, 'note.value', project.note) : null;
     this.noteToken = project.note ? get(project, 'note.token', project.noteToken) : null;
     this.databaseType = project.database_type;
@@ -68,6 +72,10 @@ class Database extends Element {
       if (schema.refs.some((r) => r.equals(ref))) return;
       schema.pushRef(ref);
     });
+
+    // Metadata elements must be processed last: their targets (tables, columns,
+    // schemas, table groups, notes) must already exist to be resolved.
+    this.processMetadataElements(metadataElements);
   }
 
   generateId () {
@@ -163,6 +171,81 @@ class Database extends Element {
           break;
       }
     });
+  }
+
+  /**
+   * Resolve each raw Metadata element to its target element and wire up the
+   * two-way link (Metadata.target -> element, element._metadata -> Metadata).
+   * @param {any[]} rawMetadataElements
+   */
+  processMetadataElements (rawMetadataElements) {
+    rawMetadataElements.forEach((rawMetadata) => {
+      const meta = new Metadata({ ...rawMetadata, database: this });
+      const target = this.resolveMetadataTarget(meta);
+
+      if (!target) {
+        const name = (meta.targetName || []).join('.');
+        meta.error(`Metadata ${meta.targetKind} target "${name}" not found`);
+      }
+
+      meta.target = target;
+      target.pushMetadata(meta);
+      this.metadataElements.push(meta);
+    });
+  }
+
+  /**
+   * Resolve a Metadata element's target element from its kind and name parts.
+   * Name parts are in dotted order with an optional leading schema:
+   *   table:      [schema?, table]
+   *   column:     [schema?, table, column]
+   *   schema:     [schema]
+   *   tablegroup: [schema?, tableGroup]
+   *   note:       [schema?, note]
+   * @param {import('../../types/model_structure/metadata').default} meta
+   * @returns {import('../../types/model_structure/element').default | null}
+   */
+  resolveMetadataTarget (meta) {
+    const parts = [...(meta.targetName || [])];
+    if (parts.length === 0) return null;
+
+    switch (meta.targetKind) {
+      case 'table': {
+        const tableName = parts[parts.length - 1];
+        const schemaName = parts.length > 1 ? parts[parts.length - 2] : null;
+        return this.findTable(schemaName, tableName) || null;
+      }
+
+      case 'column': {
+        const columnName = parts[parts.length - 1];
+        const tableName = parts[parts.length - 2];
+        const schemaName = parts.length > 2 ? parts[parts.length - 3] : null;
+        const table = this.findTable(schemaName, tableName);
+        if (!table) return null;
+        return table.fields.find((f) => f.name === columnName) || null;
+      }
+
+      case 'schema': {
+        const schemaName = parts[parts.length - 1];
+        return this.schemas.find((s) => s.name === schemaName || s.alias === schemaName) || null;
+      }
+
+      case 'tablegroup': {
+        const groupName = parts[parts.length - 1];
+        const schemaName = parts.length > 1 ? parts[parts.length - 2] : null;
+        const schema = this.schemas.find((s) => s.name === (schemaName || DEFAULT_SCHEMA_NAME) || s.alias === schemaName);
+        if (!schema) return null;
+        return schema.tableGroups.find((tg) => tg.name === groupName) || null;
+      }
+
+      case 'note': {
+        const noteName = parts[parts.length - 1];
+        return this.notes.find((n) => n.name === noteName) || null;
+      }
+
+      default:
+        return null;
+    }
   }
 
   linkRecordsToTables () {
@@ -263,6 +346,7 @@ class Database extends Element {
       schemas: this.schemas.map((s) => s.export()),
       notes: this.notes.map((n) => n.export()),
       records: this.records.map((r) => ({ ...r })),
+      metadataElements: this.metadataElements.map((m) => m.export()),
     };
   }
 
@@ -270,6 +354,7 @@ class Database extends Element {
     return {
       schemaIds: this.schemas.map((s) => s.id),
       noteIds: this.notes.map((n) => n.id),
+      metadataIds: this.metadataElements.map((m) => m.id),
     };
   }
 
@@ -296,12 +381,14 @@ class Database extends Element {
       fields: {},
       records: {},
       tablePartials: {},
+      metadata: {},
     };
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
     this.notes.forEach((note) => note.normalize(normalizedModel));
     this.records.forEach((record) => { normalizedModel.records[record.id] = { ...record }; });
     this.tablePartials.forEach((tablePartial) => tablePartial.normalize(normalizedModel));
+    this.metadataElements.forEach((metadata) => metadata.normalize(normalizedModel));
     return normalizedModel;
   }
 }

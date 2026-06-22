@@ -13,6 +13,7 @@ import { NormalizedIndexColumnIdMap } from './indexColumn';
 import { NormalizedIndexIdMap } from './indexes';
 import { NormalizedCheckIdMap } from './check';
 import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
+import Metadata, { NormalizedMetadataIdMap, RawMetadata } from './metadata';
 import { TokenPosition, DiagramView } from '@dbml/parse';
 export interface Project {
     note: RawNote;
@@ -61,6 +62,7 @@ export interface RawDatabase {
     records: RawTableRecord[];
     tablePartials: TablePartial[];
     diagramViews: DiagramView[];
+    metadataElements: RawMetadata[];
 }
 
 declare class Database extends Element {
@@ -74,6 +76,7 @@ declare class Database extends Element {
     name: string;
     records: TableRecord[];
     diagramViews: DiagramView[];
+    metadataElements: Metadata[];
     id: number;
     constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;
@@ -291,7 +294,10 @@ declare class Database extends Element {
     exportChildIds(): {
         schemaIds: number[];
         noteIds: number[];
+        metadataIds: number[];
     };
+    processMetadataElements(rawMetadataElements: RawMetadata[]): void;
+    resolveMetadataTarget(meta: Metadata): Element | null;
     normalize(): NormalizedModel;
 }
 export interface NormalizedDatabase {
@@ -302,6 +308,7 @@ export interface NormalizedDatabase {
     name: string;
     schemaIds: number[];
     noteIds: number[];
+    metadataIds: number[];
 }
 
 export interface NormalizedDatabaseIdMap {
@@ -324,5 +331,6 @@ export interface NormalizedModel {
     checks: NormalizedCheckIdMap;
     tablePartials: NormalizedTablePartialIdMap;
     records: NormalizedRecordIdMap;
+    metadata: NormalizedMetadataIdMap;
 }
 export default Database;

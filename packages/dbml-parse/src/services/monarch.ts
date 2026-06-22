@@ -117,6 +117,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
     'use',
     'reuse',
     'from',
+    'metadata',
   ],
 
   dataTypes: [
