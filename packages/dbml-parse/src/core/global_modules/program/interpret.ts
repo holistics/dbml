@@ -1,9 +1,11 @@
 import Compiler from '@/compiler/index';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { CompileWarning } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ProgramNode } from '@/core/types/nodes';
+import {
+  BlockExpressionNode, ElementDeclarationNode, MetadataDeclarationNode, ProgramNode,
+} from '@/core/types/nodes';
+import type { SyntaxToken } from '@/core/types/tokens';
 import Report from '@/core/types/report';
 import type {
   Alias, Database, DiagramView, Enum, MetadataElement, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
@@ -16,7 +18,9 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import { MetadataKind, PartialRefMetadata, RecordsMetadata } from '@/core/types/symbol/metadata';
+import {
+  MetadataElementMetadata, MetadataKind, PartialRefMetadata, RecordsMetadata,
+} from '@/core/types/symbol/metadata';
 import { TableSymbol } from '@/core/types/symbol';
 import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
@@ -30,6 +34,21 @@ import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../reco
 import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '../utils';
+
+function buildMetadataKeyMap (declaration: MetadataDeclarationNode): Map<string, SyntaxToken> {
+  const { body } = declaration;
+  const res = new Map<string, SyntaxToken>();
+
+  if (!(body instanceof BlockExpressionNode)) return res;
+
+  for (const stmt of body.body) {
+    if (stmt instanceof ElementDeclarationNode && !!stmt.type?.value) {
+      res.set(stmt.type.value, stmt.type);
+    }
+  }
+
+  return res;
+}
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -177,6 +196,8 @@ export default class ProgramInterpreter {
       });
     }
 
+    const targetKeyMetadataMap = new Map<string, { target: { kind: string; name: string[] }; keyValues: Map<string, (SyntaxToken | MetadataDeclarationNode)[]> }>();
+
     for (const meta of metadatas) {
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) continue;
@@ -237,10 +258,43 @@ export default class ProgramInterpreter {
         case MetadataKind.Project:
           this.db.project = value as Project;
           break;
-        case MetadataKind.MetadataElement:
+        case MetadataKind.MetadataElement: {
+          if (meta instanceof MetadataElementMetadata) {
+            const targetSymbol = meta.target(this.compiler);
+            const metaEl = value as MetadataElement;
+            if (targetSymbol) {
+              const targetId = targetSymbol.intern();
+
+              const metadataKeyMap = buildMetadataKeyMap(meta.declaration);
+
+              if (!targetKeyMetadataMap.has(targetId)) targetKeyMetadataMap.set(targetId, { target: metaEl.target, keyValues: new Map() });
+              const keyMetadataMap = targetKeyMetadataMap.get(targetId)!.keyValues;
+
+              for (const key of Object.keys(metaEl.values)) {
+                if (!keyMetadataMap.get(key)) keyMetadataMap.set(key, []);
+                keyMetadataMap.get(key)!.push(metadataKeyMap.get(key) ?? meta.declaration);
+              }
+            }
+          }
           this.db.metadataElements.push(value as MetadataElement);
           break;
+        }
         default: break;
+      }
+    }
+
+    for (const keyMetadataMap of targetKeyMetadataMap.values()) {
+      const { target, keyValues } = keyMetadataMap;
+      for (const [
+        key,
+        values,
+      ] of keyValues.entries()) {
+        if (values.length <= 1) continue;
+        this.warnings.push(...values.map((v) => new CompileWarning(
+          CompileErrorCode.DUPLICATE_METADATA_KEY_ACROSS_BLOCKS,
+          `Metadata key '${key}' is defined in multiple Metadata blocks targeting '${target.kind} ${target.name.join('.')}'.`,
+          v,
+        )));
       }
     }
   }
