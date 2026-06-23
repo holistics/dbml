@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { getDatabase, setupCompiler } from './utils';
+import { CompileErrorCode } from '@/index';
+import { getDatabase, setupCompiler, fp } from './utils';
 
 describe('[example] multifile interpreter - auto-imported metadata', () => {
   const { compiler } = setupCompiler({
@@ -28,6 +29,48 @@ use { table public.users } from './base.dbml'
     const meta = db.metadataElements.find((m) => m.target.name.at(-1) === 'users' && m.target.kind === 'table');
     expect(meta).toBeDefined();
     expect(meta!.values.owner).toBe('scott');
+  });
+});
+
+describe('[example] multifile interpreter - duplicate metadata key across files', () => {
+  // base.dbml declares the table + a color; main.dbml imports the table (which
+  // carries its metadata) and sets the SAME key again with a different value.
+  const { compiler } = setupCompiler({
+    '/base.dbml': `
+Table users {
+  id int [pk]
+}
+Metadata Table public.users {
+  color: #aaa
+}
+`,
+    '/main.dbml': `
+use { table public.users } from './base.dbml'
+Metadata Table public.users {
+  color: #f00
+}
+`,
+  });
+
+  // NOTE: the precise warning code (e.g. DUPLICATE_METADATA_KEY_ACROSS_BLOCKS)
+  // is not introduced yet; the source implementer must add it. We assert
+  // structurally that a warning IS emitted and the within-block hard error is
+  // NOT present.
+  test('emits a cross-file duplicate-key warning, retains last-write-wins value', () => {
+    const result = compiler.interpretFile(fp('/main.dbml'));
+
+    expect(result.getWarnings().length).toBeGreaterThanOrEqual(1);
+    const errorCodes = result.getErrors().map((e) => e.code);
+    expect(errorCodes).not.toContain(CompileErrorCode.DUPLICATE_METADATA_FIELD);
+
+    const db = result.getValue()!;
+    const metas = db.metadataElements.filter(
+      (m) => m.target.name.at(-1) === 'users' && m.target.kind === 'table',
+    );
+    // Both blocks are retained as separate elements (nothing dropped). base.dbml's
+    // #aaa is the earlier/imported block, main.dbml's #f00 is applied last.
+    expect(metas.map((m) => m.values.color)).toEqual(['#aaa', '#f00']);
+    expect(metas.at(-1)!.values.color).toBe('#f00');
   });
 });
 
