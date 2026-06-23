@@ -398,5 +398,35 @@
         "offset": 0
       }
     }
-  }
+  },
+  "warnings": [
+    {
+      "code": "DUPLICATE_METADATA_KEY_ACROSS_BLOCKS",
+      "diagnostic": "Metadata key 'note' is defined in multiple Metadata blocks targeting 'table public.users'.",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@note@[L25:C2, L25:C6]",
+          "snippet": "note",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_METADATA_KEY_ACROSS_BLOCKS",
+      "diagnostic": "Metadata key 'note' is defined in multiple Metadata blocks targeting 'table public.users'.",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@note@[L29:C2, L29:C6]",
+          "snippet": "note",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    }
+  ]
 }
