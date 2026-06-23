@@ -21,7 +21,7 @@ import {
 
 // Best-effort scalar extraction for a free-form metadata value node.
 // Tries: quoted string -> number -> boolean/identifier -> color -> raw text.
-function extractValue (node?: SyntaxNode): string | number | boolean | Color | undefined {
+export function extractValue (node?: SyntaxNode): string | number | boolean | Color | undefined {
   if (!node) return undefined;
 
   const quoted = extractQuotedStringToken(node);

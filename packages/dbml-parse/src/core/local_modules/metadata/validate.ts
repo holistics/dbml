@@ -5,6 +5,7 @@ import {
   ArrayNode,
   BlockExpressionNode,
   ElementDeclarationNode,
+  EmptyNode,
   FunctionApplicationNode,
   MetadataDeclarationNode,
   SyntaxNode,
@@ -15,6 +16,7 @@ import {
   isValidName,
 } from '@/core/utils/validate';
 import { ALLOWED_METADATA_TARGET_KINDS } from '@/core/types';
+import { extractValue } from '@/core/global_modules/metadata/interpret';
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: MetadataDeclarationNode) {}
@@ -156,14 +158,29 @@ export default class MetadataValidator {
       }
 
       // Generic metadata field: a single inline scalar value
-      // (string/number/boolean/identifier/color). The interpreter extracts the
-      // value best-effort, so validation only rejects a complex (block) body.
+      // (string/number/boolean/identifier/color). Validation rejects a complex
+      // (block) body and positively verifies the value is an admissible scalar.
       if (sub.body instanceof BlockExpressionNode) {
         return [
           new CompileError(
             CompileErrorCode.UNEXPECTED_COMPLEX_BODY,
             'A Metadata field can only have an inline value',
             sub.body,
+          ),
+        ];
+      }
+
+      // Only validate the value when a real callee is present. When a key has
+      // no value the parser emits INVALID_OPERAND via error recovery and
+      // synthesises a FunctionApplicationNode whose callee is an EmptyNode —
+      // we must not pile on with a second INVALID_METADATA_FIELD in that case.
+      const valueNode = sub.body instanceof FunctionApplicationNode ? sub.body.callee : undefined;
+      if (valueNode !== undefined && !(valueNode instanceof EmptyNode) && extractValue(valueNode) === undefined) {
+        return [
+          new CompileError(
+            CompileErrorCode.INVALID_METADATA_FIELD,
+            'A Metadata field value must be a scalar value',
+            sub.body ?? sub,
           ),
         ];
       }
