@@ -61,6 +61,32 @@
           "snippet": "{\n    owner: 'x'\n  }"
         }
       }
+    },
+    {
+      "code": "INVALID_METADATA_FIELD",
+      "diagnostic": "A Metadata field value must be a scalar value",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L29:C8, L29:C18]",
+          "snippet": "['a', 'b']"
+        }
+      }
+    },
+    {
+      "code": "INVALID_OPERAND",
+      "diagnostic": "Invalid start of operand \"}\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rbrace>@}@[L35:C0, L35:C1]",
+          "snippet": "}",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
     }
   ]
 }

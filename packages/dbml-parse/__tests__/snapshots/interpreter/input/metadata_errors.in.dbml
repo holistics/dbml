@@ -24,3 +24,13 @@ Table accounts {
     owner: 'x'
   }
 }
+
+// a list/array literal is not a valid scalar metadata value
+Metadata Table public.users {
+  tags: ['a', 'b']
+}
+
+// an empty value (key with no value) is not a valid metadata value
+Metadata Table public.users {
+  owner:
+}
