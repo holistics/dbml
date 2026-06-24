@@ -7,9 +7,11 @@ class TableGroup extends Element {
    * @param {import('../../types/model_structure/tableGroup').RawTableGroup} param0
    */
   constructor ({
-    name, token, tables = [], schema = {}, note, color, noteToken = null,
+    name, token, tables = [], schema = {}, note, color, noteToken = null, metadata = {},
   }) {
     super(token);
+    /** @type {{ [key: string]: unknown }} */
+    this._metadata = metadata ?? {};
     /** @type {string} */
     this.name = name;
     /** @type {import('../../types/model_structure/table').default[]} */
@@ -89,7 +91,6 @@ class TableGroup extends Element {
   exportChildIds () {
     return {
       tableIds: this.tables.map((t) => t.id),
-      metadataIds: this.metadataIds,
     };
   }
 

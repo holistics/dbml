@@ -62,7 +62,6 @@ export interface NormalizedTableGroup {
     color: Color;
     tableIds: number[];
     schemaId: number;
-    metadataIds: number[];
     metadata: { [key: string]: unknown };
 }
 

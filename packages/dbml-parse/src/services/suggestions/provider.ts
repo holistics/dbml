@@ -25,6 +25,7 @@ import {
   SchemaSymbol,
   SymbolKind,
   MetadataTargetKind,
+  ALLOWED_METADATA_TARGET_KINDS,
 } from '@/core/types/symbol';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
@@ -953,9 +954,6 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<string, SymbolKind[]> = {
     SymbolKind.Table,
     SymbolKind.Column,
   ],
-  [MetadataTargetKind.Schema]: [
-    SymbolKind.Schema,
-  ],
   [MetadataTargetKind.TableGroup]: [
     SymbolKind.Schema,
     SymbolKind.TableGroup,
@@ -969,7 +967,6 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<string, SymbolKind[]> = {
 // Canonical display labels for metadata target kinds.
 const METADATA_TARGET_KIND_LABELS: Record<string, string> = {
   [MetadataTargetKind.Table]: 'Table',
-  [MetadataTargetKind.Schema]: 'Schema',
   [MetadataTargetKind.Column]: 'Column',
   [MetadataTargetKind.TableGroup]: 'TableGroup',
   [MetadataTargetKind.Note]: 'Note',
@@ -977,7 +974,7 @@ const METADATA_TARGET_KIND_LABELS: Record<string, string> = {
 
 function suggestMetadataTargetKinds (): CompletionList {
   return {
-    suggestions: Object.values(MetadataTargetKind).map((name) => {
+    suggestions: ALLOWED_METADATA_TARGET_KINDS.map((name) => {
       const label = METADATA_TARGET_KIND_LABELS[name] ?? name;
       return {
         label,

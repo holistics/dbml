@@ -35,7 +35,6 @@ export interface NormalizedNote {
     content: string;
     color?: Color;
     metadata: { [key: string]: unknown };
-    metadataIds: number[];
 }
 
 export interface NormalizedNoteIdMap {

@@ -143,7 +143,6 @@ export enum CompileErrorCode {
   INVALID_METADATA_FIELD,
   DUPLICATE_METADATA_FIELD,
   METADATA_TARGET_NOT_FOUND,
-  DUPLICATE_METADATA_KEY_ACROSS_BLOCKS,
 }
 
 export class CompileError extends Error {

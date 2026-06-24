@@ -2,6 +2,8 @@ import { NONE_COLOR } from '@/constants';
 import type { Filepath } from './filepath';
 import type { Position } from './position';
 
+export type CustomMetadata = Record<string, unknown>;
+
 export type Color = `#${string}` | typeof NONE_COLOR;
 
 export enum AliasKind {
@@ -73,7 +75,6 @@ export interface Database {
   records: TableRecord[];
   externals: DatabaseExternals;
   diagramViews: DiagramView[];
-  metadataElements: MetadataElement[];
   token?: TokenPosition;
 }
 
@@ -96,6 +97,7 @@ export interface Table {
     value: string;
     token: TokenPosition;
   };
+  metadata?: CustomMetadata;
 }
 
 export interface Note {
@@ -103,6 +105,7 @@ export interface Note {
   content: string;
   token: TokenPosition;
   color?: Color;
+  metadata?: CustomMetadata;
 }
 
 export interface ColumnType {
@@ -136,6 +139,7 @@ export interface Column {
     value: string;
     token: TokenPosition;
   };
+  metadata?: CustomMetadata;
 }
 
 export interface Index {
@@ -218,6 +222,7 @@ export interface TableGroup {
     value: string;
     token: TokenPosition;
   };
+  metadata?: CustomMetadata;
 }
 
 export interface TableGroupField {
@@ -269,14 +274,16 @@ export interface TableRecord {
   token: TokenPosition;
 }
 
+// Intermediate, per-block interpreted form of a Metadata declaration. NOT part
+// of the emitted Database: the interpreter merges every block targeting the same
+// element and attaches the merged `values` onto that element's `metadata` field
+// (Table/Column/TableGroup/Note). This shape only lives inside the metadata pass.
 export interface MetadataElement {
   target: {
-    kind: string; // target element type keyword: 'table' | 'column' | 'schema' | ...
-    // schemaName: string | null;
+    kind: string; // target element type keyword: 'table' | 'column' | 'tablegroup' | 'note'
     name: string[];
-    // columnName?: string | null; // set when kind === 'column'
   };
-  values: { [key: string]: unknown };
+  values: CustomMetadata;
   token: TokenPosition;
 }
 

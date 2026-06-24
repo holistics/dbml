@@ -200,7 +200,6 @@ class Schema extends Element {
       enumIds: this.enums.map((e) => e.id),
       tableGroupIds: this.tableGroups.map((tg) => tg.id),
       refIds: this.refs.map((r) => r.id),
-      metadataIds: this.metadataIds,
     };
   }
 
@@ -215,7 +214,6 @@ class Schema extends Element {
       name: this.name,
       note: this.note,
       alias: this.alias,
-      metadata: this.metadata,
     };
   }
 

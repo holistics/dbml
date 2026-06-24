@@ -12,6 +12,11 @@ Metadata Banana public.users {
   owner: 'x'
 }
 
+// schema is not a valid metadata target kind
+Metadata Schema public {
+  zone: 'analytics'
+}
+
 // column-like field is not valid metadata syntax
 Metadata Table public.users {
   id int

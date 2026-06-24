@@ -2,13 +2,13 @@ import Compiler from '@/compiler/index';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import {
-  BlockExpressionNode, ElementDeclarationNode, MetadataDeclarationNode, ProgramNode,
-} from '@/core/types/nodes';
-import type { SyntaxToken } from '@/core/types/tokens';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, Database, DiagramView, Enum, MetadataElement, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
+  Alias, CustomMetadata, Database, DiagramView,
+  Enum, MetadataElement, Note, Project,
+  Ref, RefEndpoint, SchemaElement, Table,
+  TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
 import {
@@ -35,21 +35,6 @@ import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '../utils';
 
-function buildMetadataKeyMap (declaration: MetadataDeclarationNode): Map<string, SyntaxToken> {
-  const { body } = declaration;
-  const res = new Map<string, SyntaxToken>();
-
-  if (!(body instanceof BlockExpressionNode)) return res;
-
-  for (const stmt of body.body) {
-    if (stmt instanceof ElementDeclarationNode && !!stmt.type?.value) {
-      res.set(stmt.type.value, stmt.type);
-    }
-  }
-
-  return res;
-}
-
 export default class ProgramInterpreter {
   private compiler: Compiler;
   private programSymbol: ProgramSymbol;
@@ -58,6 +43,9 @@ export default class ProgramInterpreter {
   private errors: CompileError[] = [];
   private warnings: CompileWarning[] = [];
   private db: Database;
+  // Maps a metadata-host symbol's interned id to its emitted element object, so
+  // the metadata pass can attach merged values onto the right object.
+  private emittedBySymbol = new Map<string, SchemaElement>();
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {
     this.compiler = compiler;
@@ -75,7 +63,6 @@ export default class ProgramInterpreter {
       tablePartials: [],
       records: [],
       diagramViews: [],
-      metadataElements: [],
       token: getTokenPosition(this.programNode),
       externals: {
         tables: [],
@@ -196,7 +183,11 @@ export default class ProgramInterpreter {
       });
     }
 
-    const targetKeyMetadataMap = new Map<string, { target: { kind: string; name: string[] }; keyValues: Map<string, (SyntaxToken | MetadataDeclarationNode)[]> }>();
+    // Accumulate the merged metadata values per resolved target. Keyed by the
+    // target symbol's interned id, so `Metadata Table users` and
+    // `Metadata Table public.users` merge into the same entry. Values merge
+    // per-key, last-write-wins (Object.assign) in iteration order.
+    const mergedMetadataByTarget = new Map<string, { targetSymbol: NodeSymbol; kind: string; name: string[]; values: CustomMetadata }>();
 
     for (const meta of metadatas) {
       const result = this.compiler.interpretMetadata(meta, this.filepath);
@@ -260,43 +251,58 @@ export default class ProgramInterpreter {
           break;
         case MetadataKind.MetadataElement: {
           if (meta instanceof MetadataElementMetadata) {
+            // Unresolved targets already raise BINDING_ERROR at bind time; there
+            // is no element to attach to, so skip them here.
             const targetSymbol = meta.target(this.compiler);
             const metaEl = value as MetadataElement;
             if (targetSymbol) {
               const targetId = targetSymbol.intern();
-
-              const metadataKeyMap = buildMetadataKeyMap(meta.declaration);
-
-              if (!targetKeyMetadataMap.has(targetId)) targetKeyMetadataMap.set(targetId, { target: metaEl.target, keyValues: new Map() });
-              const keyMetadataMap = targetKeyMetadataMap.get(targetId)!.keyValues;
-
-              for (const key of Object.keys(metaEl.values)) {
-                if (!keyMetadataMap.get(key)) keyMetadataMap.set(key, []);
-                keyMetadataMap.get(key)!.push(metadataKeyMap.get(key) ?? meta.declaration);
+              const existing = mergedMetadataByTarget.get(targetId);
+              if (existing) {
+                // Per-key last-write-wins across blocks.
+                Object.assign(existing.values, metaEl.values);
+              } else {
+                mergedMetadataByTarget.set(targetId, {
+                  targetSymbol,
+                  kind: metaEl.target.kind,
+                  name: metaEl.target.name,
+                  values: { ...metaEl.values },
+                });
               }
             }
           }
-          this.db.metadataElements.push(value as MetadataElement);
           break;
         }
         default: break;
       }
     }
 
-    for (const keyMetadataMap of targetKeyMetadataMap.values()) {
-      const { target, keyValues } = keyMetadataMap;
-      for (const [
-        key,
-        values,
-      ] of keyValues.entries()) {
-        if (values.length <= 1) continue;
-        this.warnings.push(...values.map((v) => new CompileWarning(
-          CompileErrorCode.DUPLICATE_METADATA_KEY_ACROSS_BLOCKS,
-          `Metadata key '${key}' is defined in multiple Metadata blocks targeting '${target.kind} ${target.name.join('.')}'.`,
-          v,
-        )));
-      }
+    // Attach each target's merged metadata onto its emitted element object.
+    for (const { targetSymbol, name, values } of mergedMetadataByTarget.values()) {
+      this.attachMetadata(targetSymbol, name, values);
     }
+  }
+
+  // Attach merged metadata values onto the emitted element object for a
+  // resolved target symbol. Tables/TableGroups/Notes are top-level emitted
+  // objects looked up via `emittedBySymbol`; Columns are nested inside their
+  // table's `fields`, reached via the column symbol's parent table.
+  private attachMetadata (targetSymbol: NodeSymbol, name: string[], values: { [key: string]: unknown }) {
+    if (targetSymbol.kind === SymbolKind.Column) {
+      const tableNode = targetSymbol.declaration?.parentOfKind(ElementDeclarationNode);
+      const tableSymbol = tableNode
+        ? this.compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol
+        : undefined;
+      const table = tableSymbol ? this.emittedBySymbol.get(tableSymbol.intern()) as Table | undefined : undefined;
+      // The rightmost name fragment is the column name (e.g. `id` in `public.users.id`).
+      const columnName = name.at(-1);
+      const column = table?.fields.find((f) => f.name === columnName);
+      if (column) column.metadata = values;
+      return;
+    }
+
+    const element = this.emittedBySymbol.get(targetSymbol.intern());
+    if (element) (element as Table | TableGroup | Note).metadata = values;
   }
 
   private interpretAllAliases () {
@@ -448,23 +454,33 @@ export default class ProgramInterpreter {
     switch (symbol.kind) {
       case SymbolKind.Table:
         this.db.tables.push(value as Table);
+        this.recordEmitted(symbol, value);
         break;
       case SymbolKind.Enum:
         this.db.enums.push(value as Enum);
         break;
       case SymbolKind.TableGroup:
         this.db.tableGroups.push(value as TableGroup);
+        this.recordEmitted(symbol, value);
         break;
       case SymbolKind.TablePartial:
         this.db.tablePartials.push(value as TablePartial);
         break;
       case SymbolKind.StickyNote:
         this.db.notes.push(value as Note);
+        this.recordEmitted(symbol, value);
         break;
       case SymbolKind.DiagramView:
         this.db.diagramViews.push(value as DiagramView);
         break;
       default: break;
     }
+  }
+
+  // Record the emitted object for a metadata-host symbol, keyed by the ORIGINAL
+  // symbol's interned id (imports resolve through to the original), so the
+  // metadata pass can find the object regardless of how the target is named.
+  private recordEmitted (symbol: NodeSymbol, value: SchemaElement) {
+    this.emittedBySymbol.set(symbol.originalSymbol.intern(), value);
   }
 }

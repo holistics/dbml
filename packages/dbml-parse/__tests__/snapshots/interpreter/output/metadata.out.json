@@ -1,186 +1,11 @@
 {
   "database": {
-    "metadataElements": [
-      {
-        "target": {
-          "kind": "table",
-          "name": [
-            "public",
-            "users"
-          ]
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 27,
-            "offset": 288
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 24,
-            "offset": 211
-          }
-        },
-        "values": {
-          "note": "scott is the owner",
-          "owner": "scott"
-        }
-      },
-      {
-        "target": {
-          "kind": "table",
-          "name": [
-            "public",
-            "users"
-          ]
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 32,
-            "offset": 364
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 29,
-            "offset": 290
-          }
-        },
-        "values": {
-          "color": "#aaa",
-          "note": "this will override"
-        }
-      },
-      {
-        "target": {
-          "kind": "column",
-          "name": [
-            "id",
-            "public",
-            "users"
-          ]
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 37,
-            "offset": 434
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 34,
-            "offset": 366
-          }
-        },
-        "values": {
-          "masking": "partial",
-          "pii": true
-        }
-      },
-      {
-        "target": {
-          "kind": "tablegroup",
-          "name": [
-            "g1"
-          ]
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 41,
-            "offset": 477
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 39,
-            "offset": 436
-          }
-        },
-        "values": {
-          "team": "data"
-        }
-      },
-      {
-        "target": {
-          "kind": "schema",
-          "name": [
-            "sales"
-          ]
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 45,
-            "offset": 524
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 43,
-            "offset": 479
-          }
-        },
-        "values": {
-          "zone": "analytics"
-        }
-      },
-      {
-        "target": {
-          "kind": "note",
-          "name": [
-            "overview"
-          ]
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 49,
-            "offset": 569
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 47,
-            "offset": 526
-          }
-        },
-        "values": {
-          "author": "docs"
-        }
-      },
-      {
-        "target": {
-          "kind": "table",
-          "name": [
-            "posts",
-            "public"
-          ]
-        },
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 57,
-            "offset": 677
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 51,
-            "offset": 571
-          }
-        },
-        "values": {
-          "note": "# Heading 1\n    code block\n# Heading 2\n"
-        }
-      }
-    ],
     "notes": [
       {
         "content": "a top-level note",
+        "metadata": {
+          "author": "docs"
+        },
         "name": "overview",
         "token": {
           "end": {
@@ -199,6 +24,9 @@
     ],
     "tableGroups": [
       {
+        "metadata": {
+          "team": "data"
+        },
         "name": "g1",
         "tables": [
           {
@@ -227,6 +55,10 @@
       {
         "fields": [
           {
+            "metadata": {
+              "masking": "partial",
+              "pii": true
+            },
             "name": "id",
             "pk": true,
             "token": {
@@ -269,6 +101,11 @@
             "unique": false
           }
         ],
+        "metadata": {
+          "color": "#aaa",
+          "note": "this will override",
+          "owner": "scott"
+        },
         "name": "users",
         "token": {
           "end": {
@@ -329,6 +166,9 @@
             "unique": false
           }
         ],
+        "metadata": {
+          "note": "# Heading 1\n    code block\n# Heading 2\n"
+        },
         "name": "posts",
         "token": {
           "end": {
@@ -388,8 +228,8 @@
     "token": {
       "end": {
         "column": 1,
-        "line": 58,
-        "offset": 678
+        "line": 54,
+        "offset": 631
       },
       "filepath": "/main.dbml",
       "start": {
@@ -398,35 +238,5 @@
         "offset": 0
       }
     }
-  },
-  "warnings": [
-    {
-      "code": "DUPLICATE_METADATA_KEY_ACROSS_BLOCKS",
-      "diagnostic": "Metadata key 'note' is defined in multiple Metadata blocks targeting 'table public.users'.",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<identifier>@note@[L25:C2, L25:C6]",
-          "snippet": "note",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
-    },
-    {
-      "code": "DUPLICATE_METADATA_KEY_ACROSS_BLOCKS",
-      "diagnostic": "Metadata key 'note' is defined in multiple Metadata blocks targeting 'table public.users'.",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "token": {
-        "context": {
-          "id": "token@<identifier>@note@[L29:C2, L29:C6]",
-          "snippet": "note",
-          "isInvalid": false,
-          "filepath": "/main.dbml"
-        }
-      }
-    }
-  ]
+  }
 }
