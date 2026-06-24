@@ -185,8 +185,6 @@ export interface NormalizedSchema {
     tableGroupIds: number[];
     enumIds: number[];
     databaseId: number;
-    metadataIds: number[];
-    metadata: { [key: string]: unknown };
 }
 
 export interface NormalizedSchemaIdMap {

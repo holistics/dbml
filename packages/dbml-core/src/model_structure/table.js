@@ -11,9 +11,11 @@ class Table extends Element {
    * @param {import('../../types/model_structure/table').RawTable} param0
    */
   constructor ({
-    name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, noteToken = null, partials = [],
+    name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, noteToken = null, partials = [], metadata = {},
   } = {}) {
     super(token);
+    /** @type {{ [key: string]: unknown }} */
+    this._metadata = metadata ?? {};
     /** @type {string} */
     this.name = name;
     /** @type {string} */
@@ -278,7 +280,6 @@ class Table extends Element {
       fieldIds: this.fields.map((f) => f.id),
       indexIds: this.indexes.map((i) => i.id),
       checkIds: this.checks.map((c) => c.id),
-      metadataIds: this.metadataIds,
     };
   }
 

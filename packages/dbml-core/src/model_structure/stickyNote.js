@@ -5,9 +5,11 @@ class StickyNote extends Element {
    * @param {import('../../types/model_structure/stickyNote').RawStickyNote} param0
    */
   constructor ({
-    name, content, color, token, database = {},
+    name, content, color, token, database = {}, metadata = {},
   } = {}) {
     super(token);
+    /** @type {{ [key: string]: unknown }} */
+    this._metadata = metadata ?? {};
     /** @type {string} */
     this.name = name;
     /** @type {string} */
@@ -42,7 +44,6 @@ class StickyNote extends Element {
     model.notes[this.id] = {
       id: this.id,
       ...this.export(),
-      metadataIds: this.metadataIds,
     };
   }
 }

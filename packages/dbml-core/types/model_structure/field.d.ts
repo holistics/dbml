@@ -110,7 +110,6 @@ export interface NormalizedField {
     enumId: number | null;
     injectedPartialId: number | null;
     checkIds: number[];
-    metadataIds: number[];
     metadata: { [key: string]: unknown };
 }
 

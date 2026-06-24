@@ -19,16 +19,14 @@ use { table public.users } from './base.dbml'
 
   test('metadata travels with its target table without an explicit metadata import', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const meta = db.metadataElements.find((m) => m.target.name.at(-1) === 'users' && m.target.kind === 'table');
-    expect(meta).toBeDefined();
-    expect(meta!.values.owner).toBe('scott');
+    const users = db.tables.find((t) => t.name === 'users');
+    expect(users?.metadata).toMatchObject({ owner: 'scott' });
   });
 
-  test('metadata is still emitted in the file that declares it', () => {
+  test('metadata is still attached in the file that declares it', () => {
     const db = getDatabase(compiler, '/base.dbml');
-    const meta = db.metadataElements.find((m) => m.target.name.at(-1) === 'users' && m.target.kind === 'table');
-    expect(meta).toBeDefined();
-    expect(meta!.values.owner).toBe('scott');
+    const users = db.tables.find((t) => t.name === 'users');
+    expect(users?.metadata).toMatchObject({ owner: 'scott' });
   });
 });
 
@@ -52,25 +50,18 @@ Metadata Table public.users {
 `,
   });
 
-  // NOTE: the precise warning code (e.g. DUPLICATE_METADATA_KEY_ACROSS_BLOCKS)
-  // is not introduced yet; the source implementer must add it. We assert
-  // structurally that a warning IS emitted and the within-block hard error is
-  // NOT present.
-  test('emits a cross-file duplicate-key warning, retains last-write-wins value', () => {
+  // Cross-file override is a feature: the compiler merges per-key, last-wins,
+  // silently. base.dbml's #aaa is the imported block; main.dbml's #f00 applies last.
+  test('merges cross-file duplicate key, last-write-wins, no warning', () => {
     const result = compiler.interpretFile(fp('/main.dbml'));
 
-    expect(result.getWarnings().length).toBeGreaterThanOrEqual(1);
+    expect(result.getWarnings()).toHaveLength(0);
     const errorCodes = result.getErrors().map((e) => e.code);
     expect(errorCodes).not.toContain(CompileErrorCode.DUPLICATE_METADATA_FIELD);
 
     const db = result.getValue()!;
-    const metas = db.metadataElements.filter(
-      (m) => m.target.name.at(-1) === 'users' && m.target.kind === 'table',
-    );
-    // Both blocks are retained as separate elements (nothing dropped). base.dbml's
-    // #aaa is the earlier/imported block, main.dbml's #f00 is applied last.
-    expect(metas.map((m) => m.values.color)).toEqual(['#aaa', '#f00']);
-    expect(metas.at(-1)!.values.color).toBe('#f00');
+    const users = db.tables.find((t) => t.name === 'users');
+    expect(users?.metadata).toMatchObject({ color: '#f00' });
   });
 });
 
@@ -98,8 +89,9 @@ use { table public.users } from './base.dbml'
 
   test('metadata declared in an unreachable file is excluded', () => {
     const db = getDatabase(compiler, '/main.dbml');
-    const meta = db.metadataElements.find((m) => m.target.name.at(-1) === 'users' && m.target.kind === 'table');
-    expect(meta).toBeUndefined();
+    const users = db.tables.find((t) => t.name === 'users');
+    // No reachable metadata block, so nothing is attached.
+    expect(users?.metadata ?? {}).toEqual({});
   });
 
   test('records declared in an unreachable file are excluded', () => {
@@ -110,7 +102,8 @@ use { table public.users } from './base.dbml'
 
   test('the file declaring them still emits both', () => {
     const db = getDatabase(compiler, '/extra.dbml');
-    expect(db.metadataElements.find((m) => m.target.name.at(-1) === 'users')).toBeDefined();
+    const users = db.tables.find((t) => t.name === 'users');
+    expect(users?.metadata).toMatchObject({ owner: 'scott' });
     expect(db.records.find((r) => r.tableName === 'users')).toBeDefined();
   });
 });

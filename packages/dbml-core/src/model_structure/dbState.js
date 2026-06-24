@@ -30,8 +30,6 @@ export default class DbState {
     this.recordId = 1;
     /** @type {number} */
     this.tablePartialId = 1;
-    /** @type {number} */
-    this.metadataId = 1;
   }
 
   /**

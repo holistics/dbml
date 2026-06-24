@@ -14,7 +14,7 @@
     },
     {
       "code": "INVALID_METADATA_TARGET_KIND",
-      "diagnostic": "A Metadata target kind must be one of: table, schema, column, tablegroup, note",
+      "diagnostic": "A Metadata target kind must be one of: table, column, tablegroup, note",
       "filepath": "/main.dbml",
       "level": "error",
       "token": {
@@ -27,13 +27,27 @@
       }
     },
     {
+      "code": "INVALID_METADATA_TARGET_KIND",
+      "diagnostic": "A Metadata target kind must be one of: table, column, tablegroup, note",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@Schema@[L15:C9, L15:C15]",
+          "snippet": "Schema",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
       "code": "INVALID_METADATA_FIELD",
       "diagnostic": "A Metadata field must use the 'key: value' syntax",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@id@[L16:C2, L16:C8]",
+          "id": "node@<function-application>@id@[L21:C2, L21:C8]",
           "snippet": "id int"
         }
       }
@@ -45,7 +59,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L22:C17, L22:C29]",
+          "id": "node@<infix-expression>@@[L27:C17, L27:C29]",
           "snippet": "public.users"
         }
       }
@@ -57,7 +71,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<block-expression>@@[L22:C30, L24:C3]",
+          "id": "node@<block-expression>@@[L27:C30, L29:C3]",
           "snippet": "{\n    owner: 'x'\n  }"
         }
       }
@@ -69,7 +83,7 @@
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<function-application>@@[L29:C8, L29:C18]",
+          "id": "node@<function-application>@@[L34:C8, L34:C18]",
           "snippet": "['a', 'b']"
         }
       }
@@ -81,7 +95,7 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token@<rbrace>@}@[L35:C0, L35:C1]",
+          "id": "token@<rbrace>@}@[L40:C0, L40:C1]",
           "snippet": "}",
           "isInvalid": false,
           "filepath": "/main.dbml"

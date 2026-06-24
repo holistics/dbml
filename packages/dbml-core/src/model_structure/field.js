@@ -9,9 +9,11 @@ class Field extends Element {
    */
   constructor ({
     name, type, unique, pk, token, not_null: notNull, note, dbdefault,
-    increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null,
+    increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null, metadata = {},
   } = {}) {
     super(token);
+    /** @type {{ [key: string]: unknown }} */
+    this._metadata = metadata ?? {};
     if (!name) {
       this.error('Field must have a name');
     }
@@ -109,7 +111,6 @@ class Field extends Element {
   exportChildIds () {
     return {
       endpointIds: this.endpoints.map((e) => e.id),
-      metadataIds: this.metadataIds,
     };
   }
 
