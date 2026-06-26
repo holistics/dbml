@@ -8,7 +8,8 @@ import {
 import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import {
-  Settings, aggregateSettingList, isSimpleName, isValidColor, isExpressionAQuotedString,
+  Settings, aggregateSettingList, isSimpleName, isValidHexColor, isExpressionAQuotedString,
+  validateInlineMetadataSetting,
 } from '@/core/utils/validate';
 
 export default class TableGroupValidator {
@@ -103,7 +104,7 @@ export default class TableGroupValidator {
             )));
           }
           attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
+            if (!isValidHexColor(attr.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 '\'color\' must be a color literal',
@@ -131,11 +132,11 @@ export default class TableGroupValidator {
             });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.UNKNOWN_TABLE_SETTING,
-            `Unknown '${name}' setting`,
-            attr,
-          )));
+          // Any non-builtin key is free-form inline custom metadata.
+          errors.push(...validateInlineMetadataSetting(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
+            invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
+          }));
           break;
       }
     }
@@ -214,7 +215,7 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
           )));
         }
         attrs.forEach((attr) => {
-          if (!isValidColor(attr.value)) {
+          if (!isValidHexColor(attr.value)) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
               '\'color\' must be a color literal',
@@ -244,11 +245,14 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
         clean[name] = attrs;
         break;
       default:
-        errors.push(...attrs.map((attr) => new CompileError(
-          CompileErrorCode.UNKNOWN_TABLE_SETTING,
-          `Unknown '${name}' setting`,
-          attr,
-        )));
+        // Any non-builtin key is free-form inline custom metadata. Keep it in
+        // the returned map so the interpreter can harvest it onto `metadata`.
+        errors.push(
+          ...validateInlineMetadataSetting(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
+            invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
+          }));
+        clean[name] = attrs;
         break;
     }
   }

@@ -19,6 +19,7 @@ import type { Filepath } from '@/core/types/filepath';
 import type { ColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
 import { extractQuotedStringToken, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
+import { COLUMN_BUILTIN_SETTINGS, extractInlineMetadata } from '@/core/global_modules/metadata/interpret';
 import {
   extractColor, extractElementName, getTokenPosition,
   normalizeNote, processColumnType,
@@ -113,7 +114,7 @@ export class TablePartialInterpreter {
 
     const firstHeaderColor = head(settingMap[SettingName.HeaderColor]);
     this.tablePartial.headerColor = firstHeaderColor
-      ? extractColor(firstHeaderColor.value as any)
+      ? extractColor(firstHeaderColor.value)
       : undefined;
 
     const [
@@ -191,6 +192,9 @@ export class TablePartialInterpreter {
     column.note = columnSymbol?.note(this.compiler);
 
     const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
+
+    const metadata = extractInlineMetadata(settingMap, COLUMN_BUILTIN_SETTINGS);
+    if (Object.keys(metadata).length > 0) column.metadata = metadata;
 
     const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);

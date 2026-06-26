@@ -10,7 +10,8 @@ import {
   SyntaxNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type { Color, MetadataElement } from '@/core/types/schemaJson';
+import type { Color, CustomMetadata, MetadataElement } from '@/core/types/schemaJson';
+import type { Settings } from '@/core/utils/validate';
 import { extractColor, getTokenPosition, normalizeNote } from '@/core/utils/interpret';
 import {
   destructureComplexVariable,
@@ -37,10 +38,73 @@ export function extractValue (node?: SyntaxNode): string | number | boolean | Co
     return ident;
   }
 
-  const color = extractColor(node as any);
+  const color = extractColor(node);
   if (color !== undefined) return color;
 
   return undefined;
+}
+
+// Per-element-kind typed builtin setting names (lowercased). A setting-list key
+// in one of these sets is the typed builtin and is NOT custom metadata; every
+// other key is harvested as inline custom metadata. These are explicit
+// allowlists (not derived from the validators) so the two stay independently
+// auditable. Mirrors the SettingName enum values.
+export const TABLE_BUILTIN_SETTINGS = [
+  'headercolor',
+  'note',
+] as const;
+
+export const TABLEGROUP_BUILTIN_SETTINGS = [
+  'color',
+  'note',
+] as const;
+
+export const NOTE_BUILTIN_SETTINGS = [
+  'color',
+] as const;
+
+export const COLUMN_BUILTIN_SETTINGS = [
+  'pk',
+  'primary key',
+  'unique',
+  'note',
+  'ref',
+  'default',
+  'check',
+  'increment',
+  'not null',
+  'null',
+] as const;
+
+// Harvest inline custom metadata from an aggregated setting list. Every key NOT
+// in `builtinSettingNames` (the element kind's typed builtins, lowercased) is
+// treated as free-form custom metadata. Duplicate and invalid-value keys are
+// already rejected at validate time, so here we take the first attribute and
+// best-effort extract its scalar value. Keys whose value cannot be extracted as
+// a scalar (or are valueless) are skipped — validation has already flagged them.
+//
+// Returns only `values`; inline custom keys never overlap-promote and the
+// emitted element types have no slot for per-key tokens, so no tokens are kept.
+export function extractInlineMetadata (
+  settingMap: Settings,
+  builtinSettingNames: readonly string[],
+): CustomMetadata {
+  const builtins = new Set(builtinSettingNames.map((n) => n.toLowerCase()));
+  const values: CustomMetadata = {};
+
+  for (const [
+    name,
+    attrs,
+  ] of Object.entries(settingMap)) {
+    if (builtins.has(name.toLowerCase())) continue;
+    const attr = attrs[0];
+    if (!attr?.value) continue;
+    const value = extractValue(attr.value);
+    if (value === undefined) continue;
+    values[name] = value;
+  }
+
+  return values;
 }
 
 export default class MetadataInterpreter {
@@ -56,6 +120,7 @@ export default class MetadataInterpreter {
     this.metadata = {
       target: undefined,
       values: {},
+      valueTokens: {},
       token: undefined,
     };
   }
@@ -101,6 +166,7 @@ export default class MetadataInterpreter {
       this.metadata.values![key] = key === 'note' && typeof value === 'string'
         ? normalizeNote(value)
         : value;
+      this.metadata.valueTokens![key] = getTokenPosition(stmt);
     }
 
     return [];

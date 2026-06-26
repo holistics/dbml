@@ -22,9 +22,10 @@ import {
   aggregateSettingList,
   isSimpleName,
   isUnaryRelationship,
-  isValidColor,
   isValidColumnType,
   isValidDefaultValue,
+  isValidHexColor,
+  validateInlineMetadataSetting,
 } from '@/core/utils/validate';
 
 export default class TablePartialValidator {
@@ -113,7 +114,7 @@ export default class TablePartialValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
           }
           attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
+            if (!isValidHexColor(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attr.value || attr.name!));
             }
           });
@@ -357,7 +358,11 @@ export default class TablePartialValidator {
           break;
 
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
+          // Any non-builtin key is free-form inline custom metadata.
+          errors.push(...validateInlineMetadataSetting(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
+            invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
+          }));
       }
     });
     return errors;
@@ -392,7 +397,7 @@ export function validateTablePartialSettings (settingList?: ListExpressionNode):
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_PARTIAL_SETTING, `'${name}' can only appear once`, attr)));
         }
         attrs.forEach((attr) => {
-          if (!isValidColor(attr.value)) {
+          if (!isValidHexColor(attr.value)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_PARTIAL_SETTING_VALUE, `'${name}' must be a color literal`, attr.value || attr.name!));
           }
         });
@@ -593,7 +598,11 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         break;
 
       default:
-        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
+        // Any non-builtin key is free-form inline custom metadata.
+        errors.push(...validateInlineMetadataSetting(name, attrs, {
+          duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
+          invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
+        }));
     }
   });
   return new Report(settingMap, errors);

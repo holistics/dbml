@@ -1,4 +1,4 @@
-import { NUMERIC_LITERAL_PREFIX } from '@/constants';
+import { NONE_COLOR, NUMERIC_LITERAL_PREFIX } from '@/constants';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ArrayNode,
@@ -88,7 +88,7 @@ export function isRelationshipOp (op?: string): boolean {
   return op === '-' || op === '<>' || op === '>' || op === '<';
 }
 
-export function isValidColor (value?: SyntaxNode): boolean {
+export function isValidHexColor (value?: SyntaxNode): value is PrimaryExpressionNode & { expression: LiteralNode & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL } } } {
   if (
     !(value instanceof PrimaryExpressionNode)
     || !(value.expression instanceof LiteralNode)
@@ -115,6 +115,15 @@ export function isValidColor (value?: SyntaxNode): boolean {
   }
 
   return true;
+}
+
+// A color value is valid if it is a hex color literal OR the `none` keyword
+// (transparent). Mirrors how inline color settings accept `none`.
+export function isValidColorOrNone (value?: SyntaxNode): boolean {
+  if (isValidHexColor(value)) return true;
+
+  return isExpressionAnIdentifierNode(value)
+    && value.expression.variable.value.toLowerCase() === NONE_COLOR;
 }
 
 // Is the `value` a valid value for a column's `default` setting
@@ -232,6 +241,42 @@ export function isValidColumnType (type: SyntaxNode): boolean {
 }
 
 export type Settings = Record<SettingName | string, AttributeNode[]>;
+
+export function isValidMetadataValue (value?: SyntaxNode): boolean {
+  return isExpressionAQuotedString(value) || isValidHexColor(value);
+}
+
+// Validate a custom-metadata key in a setting list (the `default` branch of an
+// element's settings switch). A duplicate key, a valueless key, or a non-scalar
+// value is an error, reported with the element's own settings error codes so the
+// diagnostics stay in the user's "settings" vocabulary. Returns the errors.
+export function validateInlineMetadataSetting (
+  name: string,
+  attrs: AttributeNode[],
+  codes: { duplicate: CompileErrorCode; invalidValue: CompileErrorCode },
+): CompileError[] {
+  const errors: CompileError[] = [];
+
+  if (attrs.length > 1) {
+    errors.push(...attrs.map((attr) => new CompileError(
+      codes.duplicate,
+      `'${name}' can only appear once`,
+      attr,
+    )));
+  }
+
+  attrs.forEach((attr) => {
+    if (!isValidMetadataValue(attr.value)) {
+      errors.push(new CompileError(
+        codes.invalidValue,
+        `'${name}' must be a string or a color literal`,
+        attr.value || attr.name || attr,
+      ));
+    }
+  });
+
+  return errors;
+}
 
 export function aggregateSettingList (settingList?: ListExpressionNode): Report<Settings> {
   const map: Settings = {};

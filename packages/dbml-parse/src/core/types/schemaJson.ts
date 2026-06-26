@@ -284,6 +284,11 @@ export interface MetadataElement {
     name: string[];
   };
   values: CustomMetadata;
+  // Per-key token of the value node (the `key: value` pair), keyed by the same
+  // (original-cased) key as `values`. Merged in lockstep with `values` so a
+  // promoted overlap value (e.g. a note) can carry a token pointing at the
+  // specific key/value pair it came from.
+  valueTokens: Record<string, TokenPosition>;
   token: TokenPosition;
 }
 
