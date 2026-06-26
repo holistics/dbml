@@ -146,7 +146,7 @@ export class RefInterpreter {
         ? extractStringFromIdentifierStream(updateSetting)
         : extractVariableFromExpression(updateSetting) as string;
 
-      this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value as any) : undefined;
+      this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value) : undefined;
 
       this.ref.inactive = settingMap.inactive?.length ? true : undefined;
     }

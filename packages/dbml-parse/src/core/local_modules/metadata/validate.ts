@@ -12,11 +12,14 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import {
-  isValidColor,
+  isExpressionAQuotedString,
+  isValidColorOrNone,
+  isValidMetadataValue,
   isValidName,
 } from '@/core/utils/validate';
 import { ALLOWED_METADATA_TARGET_KINDS } from '@/core/types';
 import { extractValue } from '@/core/global_modules/metadata/interpret';
+import { OverlapValueKind, findOverlapKey } from '@/core/global_modules/metadata/overlap';
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: MetadataDeclarationNode) {}
@@ -121,6 +124,7 @@ export default class MetadataValidator {
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const subKindMap: Record<string, ElementDeclarationNode[]> = {};
+    const targetKind = this.declarationNode.getTargetKind();
 
     const errors = subs.flatMap((sub) => {
       if (!sub.type) {
@@ -131,30 +135,45 @@ export default class MetadataValidator {
       if (!subKindMap[subKind]) subKindMap[subKind] = [];
       subKindMap[subKind].push(sub);
 
-      switch (subKind) {
-        case 'color':
-        case 'headercolor':
-          if (sub.body instanceof BlockExpressionNode) {
-            return [
-              new CompileError(
-                CompileErrorCode.UNEXPECTED_COMPLEX_BODY,
-                'A Custom element can only have an inline field',
-                sub.body,
-              ),
-            ];
-          }
+      // A key that overlaps a supported inline setting for this target kind is
+      // validated as that inline value type (it will be promoted onto the typed
+      // field). Color-/note-named keys on a target that does NOT support them
+      // fall through to generic scalar validation and stay as custom metadata.
+      const overlap = findOverlapKey(targetKind, subKind);
+      if (overlap) {
+        if (sub.body instanceof BlockExpressionNode) {
+          return [
+            new CompileError(
+              CompileErrorCode.UNEXPECTED_COMPLEX_BODY,
+              'A Metadata field can only have an inline value',
+              sub.body,
+            ),
+          ];
+        }
 
-          if (!isValidColor(sub.body?.callee)) {
-            return [
-              new CompileError(
-                CompileErrorCode.INVALID_METADATA_FIELD,
-                `'${sub.type.value}' must be a color literal`,
-                sub,
-              ),
-            ];
-          }
+        const isColorReshape = overlap.reshape === OverlapValueKind.Color
+          || overlap.reshape === OverlapValueKind.HeaderColor;
+        if (isColorReshape && !isValidColorOrNone(sub.body?.callee)) {
+          return [
+            new CompileError(
+              CompileErrorCode.INVALID_METADATA_FIELD,
+              `'${sub.type.value}' must be a color literal or 'none'`,
+              sub,
+            ),
+          ];
+        }
 
-          return [];
+        if (overlap.reshape === OverlapValueKind.Note && !isExpressionAQuotedString(sub.body?.callee)) {
+          return [
+            new CompileError(
+              CompileErrorCode.INVALID_METADATA_FIELD,
+              `'${sub.type.value}' must be a string`,
+              sub,
+            ),
+          ];
+        }
+
+        return [];
       }
 
       // Generic metadata field: a single inline scalar value
@@ -175,7 +194,7 @@ export default class MetadataValidator {
       // synthesises a FunctionApplicationNode whose callee is an EmptyNode —
       // we must not pile on with a second INVALID_METADATA_FIELD in that case.
       const valueNode = sub.body instanceof FunctionApplicationNode ? sub.body.callee : undefined;
-      if (valueNode !== undefined && !(valueNode instanceof EmptyNode) && extractValue(valueNode) === undefined) {
+      if (!isValidMetadataValue(valueNode)) {
         return [
           new CompileError(
             CompileErrorCode.INVALID_METADATA_FIELD,
