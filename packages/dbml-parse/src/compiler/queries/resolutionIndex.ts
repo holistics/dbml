@@ -155,6 +155,5 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): SyntaxNod
 // Lookup metadata for a symbol from the cached index
 export function symbolMetadata (this: Compiler, symbol: NodeSymbol): NodeMetadata[] {
   const index = this.resolutionIndex();
-  console.log('symbolMetadata', symbol.name, symbol.kind, index.metadata);
   return index.metadata.get(symbol.intern()) ?? [];
 }

@@ -21,6 +21,8 @@ export interface RawNote {
     token: Token;
 }
 
+export type Metadata = Record<string, unknown>;
+
 declare class Element {
     token: Token;
     id: number;
@@ -28,6 +30,5 @@ declare class Element {
     constructor(token: Token);
     bind(selection: any): void;
     error(message: string): void;
-    get metadata(): { [key: string]: unknown };
 }
 export default Element;

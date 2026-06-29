@@ -27,16 +27,6 @@ class Element {
   }
 
   /**
-   * The merged metadata key/value pairs for this element. The compiler
-   * (@dbml/parse) owns metadata merging and attaches the final merged values
-   * onto each element; @dbml/core only reads them.
-   * @returns {{ [key: string]: unknown }}
-   */
-  get metadata () {
-    return this._metadata ?? {};
-  }
-
-  /**
    * @param {string} message
    */
   error (message) {

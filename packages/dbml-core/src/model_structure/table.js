@@ -11,11 +11,11 @@ class Table extends Element {
    * @param {import('../../types/model_structure/table').RawTable} param0
    */
   constructor ({
-    name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, noteToken = null, partials = [], metadata = {},
+    name, alias, note, fields = [], indexes = [], checks = [], schema = {}, token, headerColor, noteToken = null, partials = [], metadata,
   } = {}) {
     super(token);
-    /** @type {{ [key: string]: unknown }} */
-    this._metadata = metadata ?? {};
+    /** @type {import('../../types/model_structure/element').Metadata} */
+    this.metadata = metadata ?? {};
     /** @type {string} */
     this.name = name;
     /** @type {string} */
