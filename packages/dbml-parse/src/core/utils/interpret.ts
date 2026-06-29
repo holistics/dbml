@@ -1,24 +1,16 @@
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type { Color, ColumnType, TokenPosition } from '@/core/types/schemaJson';
-import {
-  ArrayNode, CallExpressionNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode,
-} from '@/core/types/nodes';
+import { ArrayNode, CallExpressionNode, FunctionExpressionNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import { SyntaxTokenKind } from '@/core/types/tokens';
 import {
-  destructureComplexVariable, destructureMemberAccessExpression,
-  extractQuotedStringToken, extractVariableFromExpression,
+  destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression,
 } from './expression';
 import {
-  isExpressionASignedNumberExpression,
-  isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode,
+  isExpressionASignedNumberExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode, isValidHexColor,
 } from './validate';
-import {
-  extractNumber,
-  getNumberTextFromExpression,
-} from './numbers';
+import { extractNumber, getNumberTextFromExpression } from './numbers';
 import { NONE_COLOR } from '@/constants';
 
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
@@ -64,17 +56,12 @@ export function extractElementName (nameNode: SyntaxNode): {
   };
 }
 
-export function extractColor (node: unknown): Color | undefined {
-  if (
-    node instanceof PrimaryExpressionNode
-    && node.expression instanceof LiteralNode
-    && node.expression.literal?.kind === SyntaxTokenKind.COLOR_LITERAL
-  ) {
-    return node.expression.literal.value as Color;
-  }
+export function extractColor (node?: SyntaxNode): Color | undefined {
+  if (isValidHexColor(node)) return node.expression.literal.value as Color;
+
   // Support `color: none` as transparent
-  if (isExpressionAnIdentifierNode(node as SyntaxNode)) {
-    const value = extractVariableFromExpression(node as SyntaxNode);
+  if (isExpressionAnIdentifierNode(node)) {
+    const value = extractVariableFromExpression(node);
     if (value?.toLowerCase() === NONE_COLOR) return NONE_COLOR;
   }
   return undefined;

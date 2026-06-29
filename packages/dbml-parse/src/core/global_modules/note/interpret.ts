@@ -15,6 +15,7 @@ import {
   normalizeNote,
 } from '@/core/utils/interpret';
 import { isExpressionAnIdentifierNode } from '@/core/utils/validate';
+import { NOTE_BUILTIN_SETTINGS, extractInlineMetadata } from '@/core/global_modules/metadata/interpret';
 import { extractQuotedStringToken } from '@/core/utils/expression';
 import type {
   Filepath,
@@ -67,8 +68,11 @@ export class StickyNoteInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     if (settingMap.color?.length) {
-      this.note.color = extractColor(settingMap.color.at(0)?.value as any);
+      this.note.color = extractColor(settingMap.color.at(0)?.value);
     }
+
+    const metadata = extractInlineMetadata(settingMap, NOTE_BUILTIN_SETTINGS);
+    if (Object.keys(metadata).length > 0) this.note.metadata = metadata;
 
     return [];
   }

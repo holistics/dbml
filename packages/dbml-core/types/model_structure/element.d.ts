@@ -21,6 +21,8 @@ export interface RawNote {
     token: Token;
 }
 
+export type Metadata = Record<string, unknown>;
+
 declare class Element {
     token: Token;
     id: number;

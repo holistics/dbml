@@ -8,6 +8,7 @@ import {
   markInvalid,
 } from '@/core/parser/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind } from '@/core/types/keywords';
 import { Filepath } from '@/core/types/filepath';
 import {
   ArrayNode,
@@ -25,6 +26,7 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
+  MetadataDeclarationNode,
   NormalExpressionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
@@ -42,7 +44,7 @@ import {
 import Report from '@/core/types/report';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/types/tokens';
 import {
-  isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword,
+  isAsKeyword, isFromKeyword, isMetadataKeyword, isReuseKeyword, isUseKeyword,
 } from '../utils/tokens';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
@@ -228,8 +230,8 @@ export default class Parser {
 
   /* Parsing and synchronizing ProgramNode */
 
-  private program (): (UseDeclarationNode | ElementDeclarationNode)[] {
-    const statements: (UseDeclarationNode | ElementDeclarationNode)[] = [];
+  private program (): (UseDeclarationNode | ElementDeclarationNode | MetadataDeclarationNode)[] {
+    const statements: (UseDeclarationNode | ElementDeclarationNode | MetadataDeclarationNode)[] = [];
     while (!this.isAtEnd()) {
       if (isUseKeyword(this.peek()) || isReuseKeyword(this.peek())) {
         try {
@@ -239,6 +241,18 @@ export default class Parser {
             throw e;
           }
           if (e.partialNode instanceof UseDeclarationNode) {
+            statements.push(e.partialNode);
+          }
+          this.synchronizeProgram();
+        }
+      } else if (isMetadataKeyword(this.peek())) {
+        try {
+          statements.push(this.metadataDeclaration());
+        } catch (e) {
+          if (!(e instanceof PartialParsingError)) {
+            throw e;
+          }
+          if (e.partialNode instanceof MetadataDeclarationNode) {
             statements.push(e.partialNode);
           }
           this.synchronizeProgram();
@@ -403,6 +417,7 @@ export default class Parser {
   private useSpecifier (): UseSpecifierNode {
     const args: {
       importKind?: SyntaxToken;
+      subKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -417,6 +432,17 @@ export default class Parser {
         throw e;
       }
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
+    }
+
+    // Metadata imports carry a target-kind identifier before the name:
+    //   `use { metadata <subKind> <qualified-name> }`.
+    // Consume it as a bare identifier; the target name follows it.
+    if (
+      args.importKind?.value.toLowerCase() === ElementKind.Metadata
+      && this.check(SyntaxTokenKind.IDENTIFIER)
+    ) {
+      this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
+      args.subKind = this.previous();
     }
 
     if (
@@ -473,6 +499,85 @@ export default class Parser {
       this.logError(invalidToken, CompileErrorCode.UNEXPECTED_EOF, 'Unexpected EOF');
     }
   };
+
+  /* Parsing and synchronizing top-level MetadataDeclarationNode */
+
+  // Form: metadata <target-kind> <target-name> { <field>* }
+  // e.g. Metadata Table public.users { owner: 'scott' }
+  private metadataDeclaration (): MetadataDeclarationNode {
+    const args: {
+      metadataKeyword?: SyntaxToken;
+      targetKind?: SyntaxToken;
+      targetName?: NormalExpressionNode;
+      bodyColon?: SyntaxToken;
+      body?: FunctionApplicationNode | BlockExpressionNode;
+    } = {};
+    const buildNode = () => this.nodeFactory.create(MetadataDeclarationNode, args);
+
+    // consume the 'metadata' keyword
+    this.advance();
+    args.metadataKeyword = this.previous();
+
+    // consume the target-kind identifier (e.g. `table`)
+    try {
+      this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
+      args.targetKind = this.previous();
+    } catch (e) {
+      if (!(e instanceof PartialParsingError)) {
+        throw e;
+      }
+      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+    }
+
+    // consume the qualified target name (e.g. `public.users`)
+    if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
+      try {
+        args.targetName = this.normalExpression();
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
+        }
+        args.targetName = e.partialNode;
+        if (!this.canHandle(e)) {
+          throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+        }
+        this.synchronizeElementDeclarationName();
+      }
+    }
+
+    if (
+      !this.discardUntil(
+        'Expect an opening brace \'{\' or a colon \':\'',
+        SyntaxTokenKind.LBRACE,
+        SyntaxTokenKind.COLON,
+      )
+    ) {
+      return buildNode();
+    }
+
+    try {
+      if (this.match(SyntaxTokenKind.COLON)) {
+        args.bodyColon = this.previous();
+        const expr = this.expression();
+        if (expr instanceof ElementDeclarationNode) {
+          markInvalid(expr);
+          this.logError(expr, CompileErrorCode.UNEXPECTED_ELEMENT_DECLARATION, 'An element\'s simple body must not be an element declaration');
+        } else {
+          args.body = expr;
+        }
+      } else {
+        args.body = this.blockExpression();
+      }
+    } catch (e) {
+      if (!(e instanceof PartialParsingError)) {
+        throw e;
+      }
+      args.body = e.partialNode;
+      throw new PartialParsingError(e.token, buildNode(), e.handlerContext);
+    }
+
+    return this.nodeFactory.create(MetadataDeclarationNode, args);
+  }
 
   /* Parsing and synchronizing top-level ElementDeclarationNode */
 

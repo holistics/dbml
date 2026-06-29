@@ -2,6 +2,8 @@ import { NONE_COLOR } from '@/constants';
 import type { Filepath } from './filepath';
 import type { Position } from './position';
 
+export type CustomMetadata = Record<string, unknown>;
+
 export type Color = `#${string}` | typeof NONE_COLOR;
 
 export enum AliasKind {
@@ -95,6 +97,7 @@ export interface Table {
     value: string;
     token: TokenPosition;
   };
+  metadata?: CustomMetadata;
 }
 
 export interface Note {
@@ -102,6 +105,7 @@ export interface Note {
   content: string;
   token: TokenPosition;
   color?: Color;
+  metadata?: CustomMetadata;
 }
 
 export interface ColumnType {
@@ -135,6 +139,7 @@ export interface Column {
     value: string;
     token: TokenPosition;
   };
+  metadata?: CustomMetadata;
 }
 
 export interface Index {
@@ -217,6 +222,7 @@ export interface TableGroup {
     value: string;
     token: TokenPosition;
   };
+  metadata?: CustomMetadata;
 }
 
 export interface TableGroupField {
@@ -268,6 +274,24 @@ export interface TableRecord {
   token: TokenPosition;
 }
 
+// Intermediate, per-block interpreted form of a Metadata declaration. NOT part
+// of the emitted Database: the interpreter merges every block targeting the same
+// element and attaches the merged `values` onto that element's `metadata` field
+// (Table/Column/TableGroup/Note). This shape only lives inside the metadata pass.
+export interface MetadataElement {
+  target: {
+    kind: string; // target element type keyword: 'table' | 'column' | 'tablegroup' | 'note'
+    name: string[];
+  };
+  values: CustomMetadata;
+  // Per-key token of the value node (the `key: value` pair), keyed by the same
+  // (original-cased) key as `values`. Merged in lockstep with `values` so a
+  // promoted overlap value (e.g. a note) can carry a token pointing at the
+  // specific key/value pair it came from.
+  valueTokens: Record<string, TokenPosition>;
+  token: TokenPosition;
+}
+
 export type Project =
   | Record<string, never>
   | {
@@ -305,4 +329,5 @@ export type SchemaElement =
   | TablePartial
   | TablePartialInjection
   | TableRecord
-  | RecordValue;
+  | RecordValue
+  | MetadataElement;

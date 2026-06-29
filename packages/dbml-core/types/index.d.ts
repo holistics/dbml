@@ -40,6 +40,7 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatRecordValue,
+  dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,
   Filepath,
 } from '@dbml/parse';

@@ -49,6 +49,8 @@ export enum SymbolKind {
   DiagramViewNote = 'DiagramView note',
   DiagramViewSchema = 'DiagramView schema',
 
+  Metadata = 'Metadata',
+
   Program = 'Program',
 }
 
@@ -60,8 +62,35 @@ export const ImportKind = {
   TablePartial: SymbolKind.TablePartial,
   Note: SymbolKind.StickyNote,
   Schema: SymbolKind.Schema,
+  Metadata: SymbolKind.Metadata,
 };
 export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];
+
+// Allowed target element types for a Metadata element header:
+//   Metadata <target-kind> <qualified-name> { ... }
+// e.g. `Metadata Table public.users`, `Metadata Column public.users.id`.
+// This is a distinct concept from ElementKind because some target kinds
+// (Column, Schema) are not standalone elements.
+// Schema is retained here because it is used internally as the PARENT kind when
+// walking a qualified name (e.g. the `public` in `public.users`), but it is NOT
+// a valid user-facing metadata target — see ALLOWED_METADATA_TARGET_KINDS.
+export enum MetadataTargetKind {
+  Table = 'table',
+  Schema = 'schema',
+  Column = 'column',
+  TableGroup = 'tablegroup',
+  Note = 'note',
+}
+
+// User-facing metadata target kinds. Schemas are intentionally excluded: they
+// are not first-class declared elements and have no host object to attach
+// metadata to, so `Metadata Schema ...` is rejected as INVALID_METADATA_TARGET_KIND.
+export const ALLOWED_METADATA_TARGET_KINDS: readonly MetadataTargetKind[] = [
+  MetadataTargetKind.Table,
+  MetadataTargetKind.Column,
+  MetadataTargetKind.TableGroup,
+  MetadataTargetKind.Note,
+];
 
 declare const __nodeSymbolBrand: unique symbol;
 export type NodeSymbolId = number & { readonly [__nodeSymbolBrand]: true };

@@ -9,9 +9,11 @@ class Field extends Element {
    */
   constructor ({
     name, type, unique, pk, token, not_null: notNull, note, dbdefault,
-    increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null,
+    increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null, metadata = {},
   } = {}) {
     super(token);
+    /** @type {import('../../types/model_structure/element').Metadata} */
+    this.metadata = metadata;
     if (!name) {
       this.error('Field must have a name');
     }
@@ -124,6 +126,7 @@ class Field extends Element {
       increment: this.increment,
       injectedPartialId: this.injectedPartial?.id ?? null,
       checkIds: this.checks.map((check) => check.id),
+      metadata: this.metadata,
     };
   }
 

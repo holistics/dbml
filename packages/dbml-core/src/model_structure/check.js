@@ -1,11 +1,9 @@
-/// <reference path="../../types/model_structure/check.d.ts" />
-// @ts-check
 import Element from './element';
 
-/**
-  * @type  Check
-  */
 class Check extends Element {
+  /**
+    * @param {import('../../types/model_structure/check').RawCheck} param0
+    */
   constructor ({
     token, name, expression, table, column = null, injectedPartial = null,
   } = {}) {

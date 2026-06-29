@@ -26,11 +26,12 @@ import {
   aggregateSettingList,
   isUnaryRelationship,
   isValidAlias,
-  isValidColor,
   isValidColumnType,
   isValidDefaultValue,
+  isValidHexColor,
   isValidName,
   isValidPartialInjection,
+  validateInlineMetadataSetting,
 } from '@/core/utils/validate';
 
 export default class TableValidator {
@@ -115,7 +116,7 @@ export default class TableValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
+            if (!isValidHexColor(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'headercolor\' must be a color literal', attr.value || attr.name!));
             }
           });
@@ -131,7 +132,12 @@ export default class TableValidator {
           });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
+          // Any non-builtin key is free-form inline custom metadata.
+          errors.push(
+            ...validateInlineMetadataSetting(name, attrs, {
+              duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
+              invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
+            }));
       }
     });
     return errors;
@@ -362,7 +368,11 @@ export default class TableValidator {
           break;
 
         default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
+          // Any non-builtin key is free-form inline custom metadata.
+          errors.push(...validateInlineMetadataSetting(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
+            invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
+          }));
       }
     });
     return errors;
@@ -397,7 +407,7 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          if (!isValidColor(attr.value)) {
+          if (!isValidHexColor(attr.value)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'headercolor\' must be a color literal', attr.value || attr.name!));
           }
         });
@@ -413,7 +423,11 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
         });
         break;
       default:
-        errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
+        // Any non-builtin key is free-form inline custom metadata.
+        errors.push(...validateInlineMetadataSetting(name, attrs, {
+          duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
+          invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
+        }));
     }
   });
   return new Report(settingMap, errors);
@@ -577,7 +591,13 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         break;
 
       default:
-        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
+        // Any non-builtin key is free-form inline custom metadata.
+        errors.push(
+          ...validateInlineMetadataSetting(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
+            invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
+          }),
+        );
     }
   });
   return new Report(settingMap, errors);

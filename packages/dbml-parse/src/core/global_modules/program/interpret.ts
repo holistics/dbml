@@ -1,22 +1,28 @@
 import Compiler from '@/compiler/index';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { CompileWarning } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ProgramNode } from '@/core/types/nodes';
+import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, Database, DiagramView, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
+  Alias, Color, Column, CustomMetadata, Database, DiagramView,
+  Enum, MetadataElement, Note, Project,
+  Ref, RefEndpoint, SchemaElement, Table,
+  TableGroup, TablePartial, TableRecord, TokenPosition,
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
 import {
+  ALLOWED_METADATA_TARGET_KINDS,
   AliasSymbol,
+  MetadataTargetKind,
   type NodeSymbol,
   ProgramSymbol,
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import { MetadataKind, PartialRefMetadata, RecordsMetadata } from '@/core/types/symbol/metadata';
+import {
+  MetadataElementMetadata, MetadataKind, PartialRefMetadata, RecordsMetadata,
+} from '@/core/types/symbol/metadata';
 import { TableSymbol } from '@/core/types/symbol';
 import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
@@ -30,6 +36,9 @@ import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../reco
 import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '../utils';
+import { OVERLAP_KEYS, OverlapValueKind } from '../metadata/overlap';
+
+type SupportedMetadataSchemaElement = Table | TableGroup | Note | Column;
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -39,6 +48,9 @@ export default class ProgramInterpreter {
   private errors: CompileError[] = [];
   private warnings: CompileWarning[] = [];
   private db: Database;
+  // Maps a metadata-host symbol's interned id to its emitted element object, so
+  // the metadata pass can attach merged values onto the right object.
+  private emittedBySymbol = new Map<string, SupportedMetadataSchemaElement>();
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {
     this.compiler = compiler;
@@ -176,6 +188,18 @@ export default class ProgramInterpreter {
       });
     }
 
+    // Accumulate the merged metadata values per resolved target. Keyed by the
+    // target symbol's interned id, so `Metadata Table users` and
+    // `Metadata Table public.users` merge into the same entry. Values merge
+    // per-key, last-write-wins (Object.assign) in iteration order.
+    const mergedMetadataByTarget = new Map<string, {
+      targetSymbol: NodeSymbol;
+      kind: string;
+      name: string[];
+      values: CustomMetadata;
+      valueTokens: Record<string, TokenPosition>;
+    }>();
+
     for (const meta of metadatas) {
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) continue;
@@ -236,9 +260,124 @@ export default class ProgramInterpreter {
         case MetadataKind.Project:
           this.db.project = value as Project;
           break;
+        case MetadataKind.MetadataElement: {
+          if (meta instanceof MetadataElementMetadata) {
+            // Unresolved targets already raise BINDING_ERROR at bind time; there
+            // is no element to attach to, so skip them here.
+            const targetSymbol = meta.target(this.compiler);
+            const metaEl = value as MetadataElement;
+            if (targetSymbol) {
+              const targetId = targetSymbol.intern();
+              const existing = mergedMetadataByTarget.get(targetId);
+              if (existing) {
+                // Per-key last-write-wins across blocks. Tokens merge in
+                // lockstep so a promoted value's token tracks the winning block.
+                Object.assign(existing.values, metaEl.values);
+                Object.assign(existing.valueTokens, metaEl.valueTokens);
+              } else {
+                mergedMetadataByTarget.set(targetId, {
+                  targetSymbol,
+                  kind: metaEl.target.kind,
+                  name: metaEl.target.name,
+                  values: { ...metaEl.values },
+                  valueTokens: { ...metaEl.valueTokens },
+                });
+              }
+            }
+          }
+          break;
+        }
         default: break;
       }
     }
+
+    // Attach each target's merged metadata onto its emitted element object.
+    for (const { targetSymbol, kind, name, values, valueTokens } of mergedMetadataByTarget.values()) {
+      this.attachMetadata(targetSymbol, kind, name, values, valueTokens);
+    }
+  }
+
+  // Promote any overlap keys present in `values` onto the typed inline fields of
+  // `element`, overriding inline-declared values. Promotion is per-key and only
+  // fires for keys actually present, so absent overlap keys leave the inline
+  // value untouched. Overlap keys also remain in `element.metadata`.
+  private promoteOverlapKeys (
+    element: SupportedMetadataSchemaElement,
+    kind: string,
+    values: CustomMetadata,
+    valueTokens: Record<string, TokenPosition>,
+  ) {
+    const targetKind = (ALLOWED_METADATA_TARGET_KINDS as readonly string[]).includes(kind)
+      ? (kind as MetadataTargetKind)
+      : undefined;
+    const overlaps = targetKind ? OVERLAP_KEYS[targetKind] : undefined;
+    if (!overlaps) return;
+
+    for (const overlap of overlaps) {
+      // `values` is keyed by the original-cased key; match case-insensitively.
+      const matchedKey = Object.keys(values).find((k) => k.toLowerCase() === overlap.metaKey);
+      if (matchedKey === undefined) continue;
+      const value = values[matchedKey];
+      if (value === undefined) continue;
+
+      switch (overlap.reshape) {
+        case OverlapValueKind.Note:
+        // Validation guarantees a quoted string reached here for note overlap
+        // keys; the value is the normalized note text.
+          (element as Table | TableGroup | Column).note = {
+            value: String(value),
+            token: valueTokens[matchedKey],
+          };
+          break;
+
+        case OverlapValueKind.Color:
+        // Validation guarantees a valid Color literal for color overlap keys.
+          (element as TableGroup | Note).color = value as Color;
+          break;
+
+        case OverlapValueKind.HeaderColor:
+        // Validation guarantees a valid Color literal for color overlap keys.
+          (element as Table).headerColor = value as Color;
+          break;
+      }
+    }
+  }
+
+  // Attach merged metadata values onto the emitted element object for a
+  // resolved target symbol. Tables/TableGroups/Notes are top-level emitted
+  // objects looked up via `emittedBySymbol`; Columns are nested inside their
+  // table's `fields`, reached via the column symbol's parent table.
+  private attachMetadata (
+    targetSymbol: NodeSymbol,
+    kind: string,
+    name: string[],
+    values: CustomMetadata,
+    valueTokens: Record<string, TokenPosition>,
+  ) {
+    if (targetSymbol.kind === SymbolKind.Column) {
+      const tableNode = targetSymbol.declaration?.parentOfKind(ElementDeclarationNode);
+      const tableSymbol = tableNode
+        ? this.compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol
+        : undefined;
+      const table = tableSymbol ? this.emittedBySymbol.get(tableSymbol.intern()) as Table | undefined : undefined;
+      // The rightmost name fragment is the column name (e.g. `id` in `public.users.id`).
+      const columnName = name.at(-1);
+      const column = table?.fields.find((f) => f.name === columnName);
+      if (column) {
+        // Per-key merge: block values override inline custom metadata harvested
+        // earlier (in pass 1), inline-only keys survive. Block wins per-key.
+        column.metadata = { ...column.metadata, ...values };
+        this.promoteOverlapKeys(column, kind, values, valueTokens);
+      }
+      return;
+    }
+
+    const element = this.emittedBySymbol.get(targetSymbol.originalSymbol.intern());
+    if (!element) return;
+    // Per-key merge: block values override inline custom metadata harvested
+    // earlier (in pass 1), inline-only keys survive. Block wins per-key.
+    element.metadata = { ...element.metadata, ...values };
+    this.promoteOverlapKeys(element, kind, values, valueTokens);
   }
 
   private interpretAllAliases () {
@@ -390,23 +529,33 @@ export default class ProgramInterpreter {
     switch (symbol.kind) {
       case SymbolKind.Table:
         this.db.tables.push(value as Table);
+        this.recordEmitted(symbol, value as Table);
         break;
       case SymbolKind.Enum:
         this.db.enums.push(value as Enum);
         break;
       case SymbolKind.TableGroup:
         this.db.tableGroups.push(value as TableGroup);
+        this.recordEmitted(symbol, value as TableGroup);
         break;
       case SymbolKind.TablePartial:
         this.db.tablePartials.push(value as TablePartial);
         break;
       case SymbolKind.StickyNote:
         this.db.notes.push(value as Note);
+        this.recordEmitted(symbol, value as Note);
         break;
       case SymbolKind.DiagramView:
         this.db.diagramViews.push(value as DiagramView);
         break;
       default: break;
     }
+  }
+
+  // Record the emitted object for a metadata-host symbol, keyed by the ORIGINAL
+  // symbol's interned id (imports resolve through to the original), so the
+  // metadata pass can find the object regardless of how the target is named.
+  private recordEmitted (symbol: NodeSymbol, value: SupportedMetadataSchemaElement) {
+    this.emittedBySymbol.set(symbol.originalSymbol.intern(), value);
   }
 }

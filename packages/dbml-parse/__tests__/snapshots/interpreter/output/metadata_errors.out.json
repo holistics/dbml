@@ -1,0 +1,106 @@
+{
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "cannot find metadata target element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L5:C15, L5:C29]",
+          "snippet": "public.missing"
+        }
+      }
+    },
+    {
+      "code": "INVALID_METADATA_TARGET_KIND",
+      "diagnostic": "A Metadata target kind must be one of: table, column, tablegroup, note",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@Banana@[L10:C9, L10:C15]",
+          "snippet": "Banana",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_METADATA_TARGET_KIND",
+      "diagnostic": "A Metadata target kind must be one of: table, column, tablegroup, note",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<identifier>@Schema@[L15:C9, L15:C15]",
+          "snippet": "Schema",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_METADATA_FIELD",
+      "diagnostic": "A Metadata field must use the 'key: value' syntax",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@id@[L21:C2, L21:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_COLUMN",
+      "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L27:C17, L27:C29]",
+          "snippet": "public.users"
+        }
+      }
+    },
+    {
+      "code": "INVALID_COLUMN",
+      "diagnostic": "These fields must be some inline settings optionally ended with a setting list",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<block-expression>@@[L27:C30, L29:C3]",
+          "snippet": "{\n    owner: 'x'\n  }"
+        }
+      }
+    },
+    {
+      "code": "INVALID_METADATA_FIELD",
+      "diagnostic": "A Metadata field value must be a scalar value",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L34:C8, L34:C18]",
+          "snippet": "['a', 'b']"
+        }
+      }
+    },
+    {
+      "code": "INVALID_OPERAND",
+      "diagnostic": "Invalid start of operand \"}\"",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "token": {
+        "context": {
+          "id": "token@<rbrace>@}@[L40:C0, L40:C1]",
+          "snippet": "}",
+          "isInvalid": false,
+          "filepath": "/main.dbml"
+        }
+      }
+    }
+  ]
+}

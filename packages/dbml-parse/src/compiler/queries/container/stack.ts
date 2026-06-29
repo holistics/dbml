@@ -9,6 +9,7 @@ import {
   IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
+  MetadataDeclarationNode,
   PrefixExpressionNode,
   SyntaxNode,
   TupleExpressionNode,
@@ -107,7 +108,7 @@ export function containerStack (
 
     if (popOnce) {
       const maybeElement = last(res);
-      if (maybeElement instanceof ElementDeclarationNode && maybeElement.end <= offset) {
+      if ((maybeElement instanceof ElementDeclarationNode || maybeElement instanceof MetadataDeclarationNode) && maybeElement.end <= offset) {
         res.pop();
       }
     }

@@ -117,6 +117,15 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
     'use',
     'reuse',
     'from',
+    'metadata',
+  ],
+
+  metadataTarget: [
+    'table',
+    'tablegroup',
+    'schema',
+    'column',
+    'note',
   ],
 
   dataTypes: [
@@ -281,6 +290,38 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
       ],
 
       [
+        /(@idtf)(\s+)(@idtf)(\s+)(@idtf(?:\.@idtf)*)/,
+        {
+          cases: {
+            '$1@decls': {
+              cases: {
+                '$3@metadataTarget': [
+                  'keyword',
+                  '',
+                  'keyword',
+                  '',
+                  'identifier',
+                ],
+                '@default': [
+                  'keyword',
+                  '',
+                  'identifier',
+                  '',
+                  'identifier',
+                ],
+              },
+            },
+            '@default': [
+              'identifier',
+              '',
+              'identifier',
+              '',
+              'identifier',
+            ],
+          },
+        },
+      ],
+      [
         /(@idtf)(\s+)(@idtf(?:\.@idtf)*)/,
         {
           cases: {
@@ -317,6 +358,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
           cases: {
             '@dataTypes': 'keyword',
             '@decls': 'keyword',
+            '@metadataTarget': 'keyword',
             '@settings': 'keyword',
             '@default': 'identifier',
           },

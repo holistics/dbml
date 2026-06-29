@@ -6,6 +6,7 @@ import {
 import { UNHANDLED } from '@/core/types/module';
 import { SymbolKind } from '@/core/types/symbol';
 import { aggregateSettingList } from '@/core/utils/validate';
+import { TABLEGROUP_BUILTIN_SETTINGS, extractInlineMetadata } from '@/core/global_modules/metadata/interpret';
 import {
   CompileError,
   CompileErrorCode,
@@ -147,7 +148,7 @@ export class TableGroupInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     this.tableGroup.color = settingMap.color?.length
-      ? extractColor(settingMap.color?.at(0)?.value as any)
+      ? extractColor(settingMap.color?.at(0)?.value)
       : undefined;
 
     const [
@@ -157,6 +158,9 @@ export class TableGroupInterpreter {
       value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
+
+    const metadata = extractInlineMetadata(settingMap, TABLEGROUP_BUILTIN_SETTINGS);
+    if (Object.keys(metadata).length > 0) this.tableGroup.metadata = metadata;
 
     return [];
   }

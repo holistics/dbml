@@ -23,6 +23,7 @@ import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
+import { COLUMN_BUILTIN_SETTINGS, TABLE_BUILTIN_SETTINGS, extractInlineMetadata } from '@/core/global_modules/metadata/interpret';
 import {
   extractColor, extractElementName,
   getTokenPosition, normalizeNote,
@@ -148,7 +149,7 @@ export class TableInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     this.table.headerColor = settingMap[SettingName.HeaderColor]?.length
-      ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value as any)
+      ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value)
       : undefined;
 
     const [
@@ -158,6 +159,9 @@ export class TableInterpreter {
       value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
+
+    const metadata = extractInlineMetadata(settingMap, TABLE_BUILTIN_SETTINGS);
+    if (Object.keys(metadata).length > 0) this.table.metadata = metadata;
 
     return [];
   }
@@ -278,6 +282,9 @@ export class TableInterpreter {
     column.note = columnSymbol?.note(this.compiler);
 
     const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
+
+    const metadata = extractInlineMetadata(settingMap, COLUMN_BUILTIN_SETTINGS);
+    if (Object.keys(metadata).length > 0) column.metadata = metadata;
 
     const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);

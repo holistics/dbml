@@ -6,7 +6,9 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
 import {
-  aggregateSettingList, isExpressionAQuotedString, isValidColor, isExpressionAnIdentifierNode,
+  aggregateSettingList, isExpressionAQuotedString, isValidHexColor, isExpressionAnIdentifierNode,
+  validateInlineMetadataSetting,
+  isValidColorOrNone,
 } from '@/core/utils/validate';
 import { NONE_COLOR } from '@/constants';
 
@@ -37,13 +39,14 @@ export default class NoteValidator {
         ElementKind.Table,
         ElementKind.TableGroup,
         ElementKind.TablePartial,
+        ElementKind.Metadata,
         ElementKind.Project,
       ))
     ) {
       return [
         new CompileError(
           CompileErrorCode.INVALID_NOTE_CONTEXT,
-          'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
+          'A Note can only appear inside a Table, a TableGroup, a TablePartial, a Metadata or a Project. Sticky note can only appear at the global scope.',
           this.declarationNode,
         ),
       ];
@@ -94,16 +97,17 @@ export default class NoteValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_NOTE_SETTING, '\'color\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            // color can be `none` (transparent)
-            const isNoneKeyword = isExpressionAnIdentifierNode(attr.value) && attr.value.expression.variable.value.toLowerCase() === NONE_COLOR;
-            // color can be a hex number
-            if (!isValidColor(attr.value) && !isNoneKeyword) {
+            if (!isValidColorOrNone(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, '\'color\' must be a color literal or \'none\'', attr.value || attr.name!));
             }
           });
           break;
         default:
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_NOTE_SETTING, `Unknown '${name}' setting`, attr)));
+          // Any non-builtin key is free-form inline custom metadata.
+          errors.push(...validateInlineMetadataSetting(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_NOTE_SETTING,
+            invalidValue: CompileErrorCode.INVALID_NOTE_SETTING_VALUE,
+          }));
       }
     });
 
