@@ -10,8 +10,8 @@ class TableGroup extends Element {
     name, token, tables = [], schema = {}, note, color, noteToken = null, metadata = {},
   }) {
     super(token);
-    /** @type {{ [key: string]: unknown }} */
-    this._metadata = metadata ?? {};
+    /** @type {import('../../types/model_structure/element').Metadata} */
+    this.metadata = metadata;
     /** @type {string} */
     this.name = name;
     /** @type {import('../../types/model_structure/table').default[]} */

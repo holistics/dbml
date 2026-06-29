@@ -1,6 +1,6 @@
 import { NormalizedModel } from './database';
 import DbState from './dbState';
-import Element, { Token, RawNote } from './element';
+import Element, { Token, RawNote, Metadata } from './element';
 import Endpoint from './endpoint';
 import Enum from './enum';
 import Table from './table';
@@ -85,6 +85,7 @@ declare class Field extends Element {
         increment: boolean;
         injectedPartialId?: number;
         checkIds: number[];
+        metadata: Metadata;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -110,7 +111,7 @@ export interface NormalizedField {
     enumId: number | null;
     injectedPartialId: number | null;
     checkIds: number[];
-    metadata: { [key: string]: unknown };
+    metadata: Metadata;
 }
 
 export interface NormalizedFieldIdMap {

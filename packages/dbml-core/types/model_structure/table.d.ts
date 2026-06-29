@@ -1,4 +1,4 @@
-import Element, { RawNote, Token, Color } from './element';
+import Element, { RawNote, Token, Color, Metadata } from './element';
 import Field from './field';
 import Index from './indexes';
 import Check from './check';
@@ -19,6 +19,7 @@ export interface RawTable {
     token: Token;
     headerColor: Color;
     partials: TablePartial[];
+    metadata?: Metadata;
 }
 
 declare class Table extends Element {
@@ -117,6 +118,7 @@ declare class Table extends Element {
         headerColor: Color;
         partials: TablePartial[];
         recordIds: number[];
+        metadata: Metadata;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -134,7 +136,7 @@ export interface NormalizedTable {
     schemaId: number;
     groupId: number | null;
     partials: TablePartial[];
-    metadata: { [key: string]: unknown };
+    metadata: Metadata;
 }
 
 export interface NormalizedTableIdMap {

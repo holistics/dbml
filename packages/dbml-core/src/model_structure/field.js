@@ -12,8 +12,8 @@ class Field extends Element {
     increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null, metadata = {},
   } = {}) {
     super(token);
-    /** @type {{ [key: string]: unknown }} */
-    this._metadata = metadata ?? {};
+    /** @type {import('../../types/model_structure/element').Metadata} */
+    this.metadata = metadata;
     if (!name) {
       this.error('Field must have a name');
     }

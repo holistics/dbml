@@ -1,6 +1,6 @@
 import { NormalizedModel } from './database';
 import DbState from './dbState';
-import Element, { RawNote, Token, Color } from './element';
+import Element, { RawNote, Token, Color, Metadata } from './element';
 import Schema from './schema';
 import Table from './table';
 
@@ -52,6 +52,7 @@ declare class TableGroup extends Element {
         name: string;
         note: string;
         color: Color;
+        metadata: Metadata;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -62,7 +63,7 @@ export interface NormalizedTableGroup {
     color: Color;
     tableIds: number[];
     schemaId: number;
-    metadata: { [key: string]: unknown };
+    metadata: Metadata;
 }
 
 export interface NormalizedTableGroupIdMap {
