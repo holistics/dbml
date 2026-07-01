@@ -501,7 +501,7 @@ describe('[example - record] simple foreign key constraints', () => {
       }
       Table user_profiles {
         id int [pk]
-        user_id int
+        user_id int [unique]
         bio text
       }
       Table departments {

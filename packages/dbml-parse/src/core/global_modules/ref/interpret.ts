@@ -4,16 +4,18 @@ import {
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   IdentifierStreamNode,
   type ListExpressionNode,
   AttributeNode,
+  SyntaxNode,
 } from '@/core/types/nodes';
 import type { Ref } from '@/core/types/schemaJson';
 import {
+  ColumnSymbol,
   RefMetadata,
   type Filepath,
 } from '@/core/types';
@@ -47,7 +49,8 @@ export class RefInterpreter {
       ...this.interpretName(),
       ...this.interpretBody(),
     ];
-    return Report.create(this.ref as Ref, errors);
+    const warnings = this.validateRefConstraints();
+    return Report.create(this.ref as Ref, errors, warnings);
   }
 
   private interpretName (): CompileError[] {
@@ -152,5 +155,61 @@ export class RefInterpreter {
     }
 
     return [];
+  }
+
+  private validateRefConstraints (): CompileWarning[] {
+    const leftCard = this.metadata.leftCardinality(this.compiler);
+    const rightCard = this.metadata.rightCardinality(this.compiler);
+    if (!leftCard || !rightCard) return [];
+
+    const leftColumns = this.metadata.leftColumns(this.compiler);
+    const rightColumns = this.metadata.rightColumns(this.compiler);
+
+    return [
+      // rightCard: min constrains leftColumns (nullability), max constrains rightColumns (uniqueness)
+      ...this.validateCardinalityConstraints(rightCard, leftColumns, rightColumns, this.metadata.leftToken(), this.metadata.rightToken()),
+      // leftCard: min constrains rightColumns (nullability), max constrains leftColumns (uniqueness)
+      ...this.validateCardinalityConstraints(leftCard, rightColumns, leftColumns, this.metadata.rightToken(), this.metadata.leftToken()),
+    ];
+  }
+
+  // A cardinality constrains:
+  //   min >= 1 → otherColumns must be NOT NULL
+  //   max = 1  → ownColumns must be unique/pk
+  private validateCardinalityConstraints (
+    cardinality: { min: number; max: number | '*' },
+    otherColumns: ColumnSymbol[],
+    ownColumns: ColumnSymbol[],
+    otherNode: SyntaxNode,
+    ownNode: SyntaxNode,
+  ): CompileWarning[] {
+    const warnings: CompileWarning[] = [];
+
+    // min >= 1 -> other side must be NOT NULL
+    if (cardinality.min >= 1 && otherColumns.length > 0) {
+      for (const col of otherColumns) {
+        if (col.nullable(this.compiler) === true) {
+          const msg = `Column '${col.name}' is nullable but relationship requires it to be NOT NULL`;
+          warnings.push(new CompileWarning(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode));
+          if (col.declaration) {
+            warnings.push(new CompileWarning(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
+          }
+        }
+      }
+    }
+
+    // max = 1 -> own side must be unique/pk
+    if (cardinality.max === 1 && ownColumns.length === 1) {
+      const col = ownColumns[0];
+      if (!col.unique(this.compiler) && !col.pk(this.compiler)) {
+        const msg = `Column '${col.name}' should be unique or primary key for a one-side relationship`;
+        warnings.push(new CompileWarning(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode));
+        if (col.declaration) {
+          warnings.push(new CompileWarning(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
+        }
+      }
+    }
+
+    return warnings;
   }
 }

@@ -17,7 +17,7 @@ import type {
 } from '../symbol';
 import type { Internable } from '../internable';
 import type { RelationshipOp, RelationCardinality } from '../relation';
-import { getMultiplicities } from '../relation';
+import { getMultiplicities, parseCardinality } from '../relation';
 import { UNHANDLED } from '../module';
 import { ElementKind, SettingName } from '../keywords';
 import {
@@ -168,6 +168,16 @@ export class RefMetadata extends NodeMetadata {
     return op ? getMultiplicities(op) : undefined;
   }
 
+  leftCardinality (compiler: Compiler): { min: number; max: number | '*' } | undefined {
+    const c = this.cardinalities(compiler);
+    return c ? parseCardinality(c[0]) : undefined;
+  }
+
+  rightCardinality (compiler: Compiler): { min: number; max: number | '*' } | undefined {
+    const c = this.cardinalities(compiler);
+    return c ? parseCardinality(c[1]) : undefined;
+  }
+
   active (compiler: Compiler): boolean {
     if (!(this.declaration instanceof ElementDeclarationNode)) return true;
     const field = getBody(this.declaration)[0];
@@ -288,6 +298,16 @@ export class PartialRefMetadata extends NodeMetadata {
   cardinalities (compiler: Compiler): [RelationCardinality, RelationCardinality] | undefined {
     const op = this.op(compiler);
     return op ? getMultiplicities(op) : undefined;
+  }
+
+  leftCardinality (compiler: Compiler): { min: number; max: number | '*' } | undefined {
+    const c = this.cardinalities(compiler);
+    return c ? parseCardinality(c[0]) : undefined;
+  }
+
+  rightCardinality (compiler: Compiler): { min: number; max: number | '*' } | undefined {
+    const c = this.cardinalities(compiler);
+    return c ? parseCardinality(c[1]) : undefined;
   }
 
   leftToken (): SyntaxNode {

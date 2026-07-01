@@ -256,5 +256,31 @@
         "offset": 0
       }
     }
-  }
+  },
+  "warnings": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'col3' should be unique or primary key for a one-side relationship",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@col3@[L2:C2, L2:C27]",
+          "snippet": "col3 type ... > T.col2]"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'col3' should be unique or primary key for a one-side relationship",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L7:C13, L7:C24]",
+          "snippet": "ref: > col3"
+        }
+      }
+    }
+  ]
 }
