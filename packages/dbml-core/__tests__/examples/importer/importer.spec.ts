@@ -6,58 +6,56 @@ import path from 'path';
 import { test, expect, describe } from 'vitest';
 
 describe('@dbml/core - importer optional refs', () => {
-  const POSTGRES_NULLABLE_FK = `
-    CREATE TABLE users (id int PRIMARY KEY);
-    CREATE TABLE posts (
-      id int PRIMARY KEY,
-      user_id int REFERENCES users(id)
-    );
-  `;
+  describe('postgres', () => {
+    test('NOT NULL FK to PK', () => {
+      const sql = `
+        CREATE TABLE a (id int PRIMARY KEY);
+        CREATE TABLE b (id int PRIMARY KEY, a_id int NOT NULL REFERENCES a(id));
+      `;
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."id" < "b"."a_id"');
+    });
 
-  const POSTGRES_NOT_NULL_FK = `
-    CREATE TABLE users (id int PRIMARY KEY);
-    CREATE TABLE posts (
-      id int PRIMARY KEY,
-      user_id int NOT NULL REFERENCES users(id)
-    );
-  `;
+    test('nullable FK to PK', () => {
+      const sql = `
+        CREATE TABLE a (id int PRIMARY KEY);
+        CREATE TABLE b (id int PRIMARY KEY, a_id int REFERENCES a(id));
+      `;
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."id" <? "b"."a_id"');
+    });
 
-  const MYSQL_NULLABLE_FK = `
-    CREATE TABLE users (id int PRIMARY KEY);
-    CREATE TABLE posts (
-      id int PRIMARY KEY,
-      user_id int,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    );
-  `;
+    test('NOT NULL FK to UNIQUE', () => {
+      const sql = `
+        CREATE TABLE a (id int PRIMARY KEY, code int UNIQUE NOT NULL);
+        CREATE TABLE b (id int PRIMARY KEY, a_code int NOT NULL REFERENCES a(code));
+      `;
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."code" < "b"."a_code"');
+    });
 
-  const MYSQL_NOT_NULL_FK = `
-    CREATE TABLE users (id int PRIMARY KEY);
-    CREATE TABLE posts (
-      id int PRIMARY KEY,
-      user_id int NOT NULL,
-      FOREIGN KEY (user_id) REFERENCES users(id)
-    );
-  `;
-
-  test('postgres: nullable FK column produces optional ref', () => {
-    const res = importer.import(POSTGRES_NULLABLE_FK, 'postgres');
-    expect(res).toContain('Ref:"users"."id" <? "posts"."user_id"');
+    test('nullable FK to UNIQUE', () => {
+      const sql = `
+        CREATE TABLE a (id int PRIMARY KEY, code int UNIQUE NOT NULL);
+        CREATE TABLE b (id int PRIMARY KEY, a_code int REFERENCES a(code));
+      `;
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."code" <? "b"."a_code"');
+    });
   });
 
-  test('postgres: NOT NULL FK column produces required ref', () => {
-    const res = importer.import(POSTGRES_NOT_NULL_FK, 'postgres');
-    expect(res).toContain('Ref:"users"."id" < "posts"."user_id"');
-  });
+  describe('mysql', () => {
+    test('NOT NULL FK to PK', () => {
+      const sql = `
+        CREATE TABLE a (id int PRIMARY KEY);
+        CREATE TABLE b (id int PRIMARY KEY, a_id int NOT NULL, FOREIGN KEY (a_id) REFERENCES a(id));
+      `;
+      expect(importer.import(sql, 'mysql')).toContain('Ref:"a"."id" < "b"."a_id"');
+    });
 
-  test('mysql: nullable FK column produces optional ref', () => {
-    const res = importer.import(MYSQL_NULLABLE_FK, 'mysql');
-    expect(res).toContain('Ref:"users"."id" <? "posts"."user_id"');
-  });
-
-  test('mysql: NOT NULL FK column produces required ref', () => {
-    const res = importer.import(MYSQL_NOT_NULL_FK, 'mysql');
-    expect(res).toContain('Ref:"users"."id" < "posts"."user_id"');
+    test('nullable FK to PK', () => {
+      const sql = `
+        CREATE TABLE a (id int PRIMARY KEY);
+        CREATE TABLE b (id int PRIMARY KEY, a_id int, FOREIGN KEY (a_id) REFERENCES a(id));
+      `;
+      expect(importer.import(sql, 'mysql')).toContain('Ref:"a"."id" <? "b"."a_id"');
+    });
   });
 });
 
