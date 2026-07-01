@@ -1,6 +1,5 @@
 import type Compiler from '@/compiler';
 import { getMemberChain } from '@/core/parser/utils';
-import type { RelationCardinality } from '@/core/types';
 import { UNHANDLED } from '@/core/types/module';
 import {
   InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
@@ -111,31 +110,3 @@ export function nodeRefereeOfLeftExpression (compiler: Compiler, node: SyntaxNod
   return compiler.nodeReferee(leftExpr).getFiltered(UNHANDLED) ?? undefined;
 }
 
-export function getMultiplicities (
-  op: string,
-): [RelationCardinality, RelationCardinality] | undefined {
-  switch (op) {
-    case '<':
-      return [
-        '1',
-        '*',
-      ];
-    case '<>':
-      return [
-        '*',
-        '*',
-      ];
-    case '>':
-      return [
-        '*',
-        '1',
-      ];
-    case '-':
-      return [
-        '1',
-        '1',
-      ];
-    default:
-      return undefined;
-  }
-}

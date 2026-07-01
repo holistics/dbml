@@ -67,7 +67,6 @@ export {
   type Ref,
   type RefEndpointPair,
   type RefEndpoint,
-  type RelationCardinality,
   type Enum,
   type EnumField,
   type TableGroup,
@@ -86,6 +85,11 @@ export {
   type FilterConfig,
   type DiagramView,
 } from '@/core/types/schemaJson';
+
+export {
+  type RelationCardinality,
+  type RelationshipOp,
+} from '@/core/types/relation';
 
 // DiagramView types
 export type {

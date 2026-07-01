@@ -23,7 +23,7 @@ import {
   getTokenPosition,
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
-import { getMultiplicities } from '../utils';
+import { getMultiplicities } from '@/core/types/relation';
 import { zip } from 'lodash-es';
 
 export class RefInterpreter {
