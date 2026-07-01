@@ -15,7 +15,7 @@ export interface RawEndpoint {
 }
 
 declare class Endpoint extends Element {
-    relation: any;
+    relation: RelationCardinality;
     schemaName: string;
     tableName: string;
     fieldNames: string[];
