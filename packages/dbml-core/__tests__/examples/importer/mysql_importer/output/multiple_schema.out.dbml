@@ -70,21 +70,21 @@ Table "orders4" {
   }
 }
 
-Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid" [delete: cascade]
+Ref "FK_1": "schemaA"."locations"."id" < "schemaA"."products"."lid" [delete: cascade]
 
-Ref:"schemaA"."products"."id" < "orders"."pid"
+Ref: "schemaA"."products"."id" < "orders"."pid"
 
-Ref:"schemaA"."products"."id" < "orders2"."pid"
+Ref: "schemaA"."products"."id" < "orders2"."pid"
 
-Ref "CFK_1":"orders".("id1", "id2") < "orders2".("id1", "id2") [update: set null, delete: cascade]
+Ref "CFK_1": "orders".("id1", "id2") < "orders2".("id1", "id2") [update: set null, delete: cascade]
 
-Ref:"users"."id" < "ecommerce"."users"."id"
+Ref: "users"."id" < "ecommerce"."users"."id"
 
-Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
+Ref "name_optional": "users"."name" < "ecommerce"."users"."id"
 
-Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
+Ref: "ecommerce"."users"."id" < "schemaA"."products"."name"
 
-Ref:"users"."id" < "schemaA"."locations"."name"
+Ref: "users"."id" < "schemaA"."locations"."name"
 
 Enum "ecommerce"."users_ejs_enum" {
   "created2"

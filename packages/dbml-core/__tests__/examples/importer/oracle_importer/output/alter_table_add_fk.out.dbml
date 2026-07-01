@@ -58,26 +58,26 @@ Table "task_hours" {
   "hours_worked" NUMBER(5,2)
 }
 
-Ref "fk_emp_dept":"departments"."dept_id" < "employees"."department_id"
+Ref "fk_emp_dept": "departments"."dept_id" < "employees"."department_id"
 
-Ref "fk_dept_location":"locations"."location_id" < "departments"."location_id"
+Ref "fk_dept_location": "locations"."location_id" < "departments"."location_id"
 
-Ref "fk_loc_country":"countries"."country_code" < "locations"."country_code"
+Ref "fk_loc_country": "countries"."country_code" < "locations"."country_code"
 
-Ref "fk_emp_manager":"employees"."emp_id" < "employees"."manager_id"
+Ref "fk_emp_manager": "employees"."emp_id" < "employees"."manager_id"
 
-Ref "fk_dept_manager":"employees"."emp_id" < "departments"."manager_id"
+Ref "fk_dept_manager": "employees"."emp_id" < "departments"."manager_id"
 
-Ref:"departments"."dept_id" < "projects"."dept_id"
+Ref: "departments"."dept_id" < "projects"."dept_id"
 
-Ref:"employees"."emp_id" < "assignments"."emp_id"
+Ref: "employees"."emp_id" < "assignments"."emp_id"
 
-Ref:"projects"."project_id" < "assignments"."project_id"
+Ref: "projects"."project_id" < "assignments"."project_id"
 
-Ref "fk_task_hours_project_task":"project_tasks".("project_id", "task_id") < "task_hours".("project_id", "task_id")
+Ref "fk_task_hours_project_task": "project_tasks".("project_id", "task_id") < "task_hours".("project_id", "task_id")
 
-Ref "fk_proj_lead_emp":"employees"."emp_id" < "projects"."lead_emp_id"
+Ref "fk_proj_lead_emp": "employees"."emp_id" < "projects"."lead_emp_id"
 
-Ref "fk_proj_backup_emp":"employees"."emp_id" < "projects"."backup_emp_id"
+Ref "fk_proj_backup_emp": "employees"."emp_id" < "projects"."backup_emp_id"
 
-Ref "fk_task_assigned_emp":"employees"."emp_id" < "project_tasks"."assigned_emp_id"
+Ref "fk_task_assigned_emp": "employees"."emp_id" < "project_tasks"."assigned_emp_id"

@@ -98,28 +98,28 @@ Table "project_assignments" {
   "project_id" NUMBER(10)
 }
 
-Ref:"departments"."dept_id" < "employees"."dept_id"
+Ref: "departments"."dept_id" < "employees"."dept_id"
 
-Ref "fk_order_cust":"customers"."cust_id" < "orders"."customer_id"
+Ref "fk_order_cust": "customers"."cust_id" < "orders"."customer_id"
 
-Ref "fk_ship_cust":"customers"."cust_id" < "shipments"."customer_id"
+Ref "fk_ship_cust": "customers"."cust_id" < "shipments"."customer_id"
 
-Ref "fk_child_complex":"complex_parent".("id", "code") < "complex_child".("parent_id", "parent_code")
+Ref "fk_child_complex": "complex_parent".("id", "code") < "complex_child".("parent_id", "parent_code")
 
-Ref "fk_detail_item":"inventory"."item_id" < "order_details"."item_id"
+Ref "fk_detail_item": "inventory"."item_id" < "order_details"."item_id"
 
-Ref "fk_assign_dept":"departments"."dept_id" < "assignments"."dept_id"
+Ref "fk_assign_dept": "departments"."dept_id" < "assignments"."dept_id"
 
-Ref "fk_member_dept":"departments"."dept_id" < "project_members"."dept_id"
+Ref "fk_member_dept": "departments"."dept_id" < "project_members"."dept_id"
 
-Ref "fk_dt_number":"test_datatypes"."col_number" < "test_datatypes_fk"."col_number"
+Ref "fk_dt_number": "test_datatypes"."col_number" < "test_datatypes_fk"."col_number"
 
-Ref "fk_dt_varchar2":"test_datatypes"."col_varchar2" < "test_datatypes_fk"."col_varchar2"
+Ref "fk_dt_varchar2": "test_datatypes"."col_varchar2" < "test_datatypes_fk"."col_varchar2"
 
-Ref "fk_self_manager":"employees_self"."emp_id" < "employees_self"."manager_id"
+Ref "fk_self_manager": "employees_self"."emp_id" < "employees_self"."manager_id"
 
-Ref "fk_very_long_constraint_name_for_testing_parser_limits":"orders"."order_id" < "order_history"."order_id"
+Ref "fk_very_long_constraint_name_for_testing_parser_limits": "orders"."order_id" < "order_history"."order_id"
 
-Ref "fk_ship_detail":"shipments"."ship_id" < "shipment_details"."ship_id"
+Ref "fk_ship_detail": "shipments"."ship_id" < "shipment_details"."ship_id"
 
-Ref "fk_assign_emp":"employees"."emp_id" < "project_assignments"."emp_id"
+Ref "fk_assign_emp": "employees"."emp_id" < "project_assignments"."emp_id"

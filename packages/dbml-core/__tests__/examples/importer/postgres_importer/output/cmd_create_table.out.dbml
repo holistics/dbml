@@ -42,6 +42,6 @@ Table "foo" {
   "bar15" "character varying[76]"
 }
 
-Ref:"a"."id" < "b"."id" [delete: no action]
+Ref: "a"."id" < "b"."id" [delete: no action]
 
-Ref "c_time_constraint":"a"."name" < "c"."time"
+Ref "c_time_constraint": "a"."name" < "c"."time"
