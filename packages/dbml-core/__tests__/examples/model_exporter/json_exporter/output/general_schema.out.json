@@ -7,6 +7,9 @@
         {
           "name": "orders",
           "alias": null,
+          "note": null,
+          "partials": [],
+          "recordIds": [],
           "fields": [
             {
               "name": "id",
@@ -15,7 +18,10 @@
                 "args": null
               },
               "pk": true,
-              "increment": true
+              "note": null,
+              "increment": true,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "user_id",
@@ -24,21 +30,30 @@
                 "args": null
               },
               "unique": true,
-              "not_null": true
+              "not_null": true,
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "status",
               "type": {
                 "type_name": "orders_status",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "created_at",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             }
           ],
           "indexes": []
@@ -46,20 +61,29 @@
         {
           "name": "order_items",
           "alias": null,
+          "note": null,
+          "partials": [],
+          "recordIds": [],
           "fields": [
             {
               "name": "order_id",
               "type": {
                 "type_name": "int",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "product_id",
               "type": {
                 "type_name": "int",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "quantity",
@@ -67,10 +91,13 @@
                 "type_name": "int",
                 "args": null
               },
+              "note": null,
               "dbdefault": {
                 "type": "number",
                 "value": 1
-              }
+              },
+              "injectedPartialId": null,
+              "checkIds": []
             }
           ],
           "indexes": []
@@ -78,6 +105,9 @@
         {
           "name": "products",
           "alias": null,
+          "note": null,
+          "partials": [],
+          "recordIds": [],
           "fields": [
             {
               "name": "id",
@@ -85,14 +115,20 @@
                 "type_name": "int",
                 "args": null
               },
-              "pk": true
+              "pk": true,
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "name",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "merchant_id",
@@ -100,21 +136,30 @@
                 "type_name": "int",
                 "args": null
               },
-              "not_null": true
+              "not_null": true,
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "price",
               "type": {
                 "type_name": "int",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "status",
               "type": {
                 "type_name": "product status",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "created_at",
@@ -122,15 +167,19 @@
                 "type_name": "datetime",
                 "args": null
               },
+              "note": null,
               "dbdefault": {
                 "value": "now()",
                 "type": "expression"
-              }
+              },
+              "injectedPartialId": null,
+              "checkIds": []
             }
           ],
           "indexes": [
             {
               "name": "product_status",
+              "note": null,
               "columns": [
                 {
                   "type": "column",
@@ -145,6 +194,7 @@
             {
               "type": "hash",
               "unique": true,
+              "note": null,
               "columns": [
                 {
                   "type": "column",
@@ -157,6 +207,9 @@
         {
           "name": "users",
           "alias": null,
+          "note": null,
+          "partials": [],
+          "recordIds": [],
           "fields": [
             {
               "name": "id",
@@ -164,14 +217,20 @@
                 "type_name": "int",
                 "args": null
               },
-              "pk": true
+              "pk": true,
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "full_name",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "email",
@@ -179,35 +238,50 @@
                 "type_name": "varchar",
                 "args": null
               },
-              "unique": true
+              "unique": true,
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "gender",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "date_of_birth",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "created_at",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "country_code",
               "type": {
                 "type_name": "int",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             }
           ],
           "indexes": []
@@ -215,6 +289,9 @@
         {
           "name": "merchants",
           "alias": null,
+          "note": null,
+          "partials": [],
+          "recordIds": [],
           "fields": [
             {
               "name": "id",
@@ -222,35 +299,50 @@
                 "type_name": "int",
                 "args": null
               },
-              "pk": true
+              "pk": true,
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "merchant_name",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "country_code",
               "type": {
                 "type_name": "int",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "created_at",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "admin_id",
               "type": {
                 "type_name": "int",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             }
           ],
           "indexes": []
@@ -258,6 +350,9 @@
         {
           "name": "countries",
           "alias": null,
+          "note": null,
+          "partials": [],
+          "recordIds": [],
           "fields": [
             {
               "name": "code",
@@ -265,21 +360,30 @@
                 "type_name": "int",
                 "args": null
               },
-              "pk": true
+              "pk": true,
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "name",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             },
             {
               "name": "continent_name",
               "type": {
                 "type_name": "varchar",
                 "args": null
-              }
+              },
+              "note": null,
+              "injectedPartialId": null,
+              "checkIds": []
             }
           ],
           "indexes": []
@@ -288,29 +392,37 @@
       "enums": [
         {
           "name": "orders_status",
+          "note": null,
           "values": [
             {
-              "name": "created"
+              "name": "created",
+              "note": null
             },
             {
-              "name": "running"
+              "name": "running",
+              "note": null
             },
             {
-              "name": "done"
+              "name": "done",
+              "note": null
             },
             {
-              "name": "failure"
+              "name": "failure",
+              "note": null
             }
           ]
         },
         {
           "name": "product status",
+          "note": null,
           "values": [
             {
-              "name": "Out of Stock"
+              "name": "Out of Stock",
+              "note": null
             },
             {
-              "name": "In Stock"
+              "name": "In Stock",
+              "note": null
             }
           ]
         }
@@ -332,7 +444,7 @@
               "fieldNames": [
                 "order_id"
               ],
-              "relation": "*"
+              "relation": "0..*"
             }
           ]
         },
@@ -351,7 +463,7 @@
               "fieldNames": [
                 "product_id"
               ],
-              "relation": "*"
+              "relation": "0..*"
             }
           ]
         },
@@ -370,7 +482,7 @@
               "fieldNames": [
                 "country_code"
               ],
-              "relation": "*"
+              "relation": "0..*"
             }
           ]
         },
@@ -389,7 +501,7 @@
               "fieldNames": [
                 "country_code"
               ],
-              "relation": "*"
+              "relation": "0..*"
             }
           ]
         },
@@ -427,11 +539,13 @@
               "fieldNames": [
                 "admin_id"
               ],
-              "relation": "*"
+              "relation": "0..*"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "notes": [],
+  "records": []
 }

@@ -40,6 +40,7 @@ class Endpoint extends Element {
     this.setFields(fieldNames, table);
 
     // Adjust cardinality based on field nullability
+    // Unspecified not_null means nullable (SQL default)
     if (this.fields.length > 0 && this.fields.every((f) => !f.not_null && !f.pk)) {
       if (this.relation === CARDINALITY_SOME) this.relation = CARDINALITY_MANY;
       else if (this.relation === CARDINALITY_ONE) this.relation = CARDINALITY_MAYBE;

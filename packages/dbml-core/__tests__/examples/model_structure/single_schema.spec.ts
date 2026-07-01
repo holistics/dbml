@@ -106,7 +106,7 @@ describe('@dbml/core - model_structure', () => {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'users',
                 fieldNames: ['country_code'],
-                relation: '*',
+                relation: '0..*',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
@@ -125,7 +125,7 @@ describe('@dbml/core - model_structure', () => {
                   'id',
                   'name',
                 ],
-                relation: '1',
+                relation: '0..1',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
@@ -134,7 +134,7 @@ describe('@dbml/core - model_structure', () => {
                   'product_id',
                   'product_name',
                 ],
-                relation: '*',
+                relation: '0..*',
               },
             ]),
           }),
@@ -473,7 +473,7 @@ describe('@dbml/core - model_structure', () => {
                 schemaName: DEFAULT_SCHEMA_NAME,
                 tableName: 'users',
                 fieldNames: ['country_code'],
-                relation: '*',
+                relation: '0..*',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
@@ -492,7 +492,7 @@ describe('@dbml/core - model_structure', () => {
                   'id',
                   'name',
                 ],
-                relation: '1',
+                relation: '0..1',
               },
               {
                 schemaName: DEFAULT_SCHEMA_NAME,
@@ -501,7 +501,7 @@ describe('@dbml/core - model_structure', () => {
                   'product_id',
                   'product_name',
                 ],
-                relation: '*',
+                relation: '0..*',
               },
             ]),
           }),
