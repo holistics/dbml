@@ -16,7 +16,8 @@ import type {
   TableSymbol,
 } from '../symbol';
 import type { Internable } from '../internable';
-import type { RelationshipOp } from '../relation';
+import type { RelationshipOp, RelationCardinality } from '../relation';
+import { getMultiplicities } from '../relation';
 import { UNHANDLED } from '../module';
 import { ElementKind, SettingName } from '../keywords';
 import {
@@ -162,6 +163,11 @@ export class RefMetadata extends NodeMetadata {
     return undefined;
   }
 
+  cardinalities (compiler: Compiler): [RelationCardinality, RelationCardinality] | undefined {
+    const op = this.op(compiler);
+    return op ? getMultiplicities(op) : undefined;
+  }
+
   active (compiler: Compiler): boolean {
     if (!(this.declaration instanceof ElementDeclarationNode)) return true;
     const field = getBody(this.declaration)[0];
@@ -277,6 +283,11 @@ export class PartialRefMetadata extends NodeMetadata {
     const prefix = this.declaration.value;
     if (!(prefix instanceof PrefixExpressionNode)) return undefined;
     return prefix.op?.value as RelationshipOp | undefined;
+  }
+
+  cardinalities (compiler: Compiler): [RelationCardinality, RelationCardinality] | undefined {
+    const op = this.op(compiler);
+    return op ? getMultiplicities(op) : undefined;
   }
 
   leftToken (): SyntaxNode {
