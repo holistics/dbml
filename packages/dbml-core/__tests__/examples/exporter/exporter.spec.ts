@@ -91,6 +91,58 @@ describe('@dbml/core - ref inactive setting', () => {
   });
 });
 
+describe('@dbml/core - optional ref operators', () => {
+  const OPTIONAL_REF_OPS = [
+    '-', '-?', '?-', '?-?',
+    '>', '>?', '?>', '?>?',
+    '<', '<?', '?<', '?<?',
+    '<>', '<>?', '?<>', '?<>?',
+  ];
+
+  const EXPECTED_OP: Record<string, string> = {
+    '-': '-', '-?': '-?', '?-': '?-', '?-?': '?-?',
+    '>': '<', '>?': '?<', '?>': '<?', '?>?': '?<?',
+    '<': '<', '<?': '<?', '?<': '?<', '?<?': '?<?',
+    '<>': '<>', '<>?': '<>?', '?<>': '?<>', '?<>?': '?<>?',
+  };
+
+  describe('dbml exporter', () => {
+    test.each(OPTIONAL_REF_OPS)('should export ref with operator %s', (op) => {
+      const input = `
+        Table users { id integer [pk] }
+        Table posts { user_id integer }
+        Ref: posts.user_id ${op} users.id
+      `.trim();
+      const res = exporter.export(input, 'dbml');
+      expect(res).toContain(EXPECTED_OP[op]);
+    });
+  });
+
+  describe('sql exporters', () => {
+    const sqlFormats: ExportFormat[] = ['mysql', 'postgres', 'mssql'];
+
+    test.each(sqlFormats)('%s exporter should handle optional ref without error', (format) => {
+      const input = `
+        Table users { id integer [pk] }
+        Table posts { user_id integer }
+        Ref: posts.user_id >? users.id
+      `.trim();
+      expect(() => exporter.export(input, format)).not.toThrow();
+    });
+
+    test.each(sqlFormats)('%s exporter should produce FK constraint for optional ref', (format) => {
+      const input = `
+        Table users { id integer [pk] }
+        Table posts { user_id integer }
+        Ref: posts.user_id >? users.id
+      `.trim();
+      const res = exporter.export(input, format);
+      expect(res).toContain('FOREIGN KEY');
+      expect(res).toContain('REFERENCES');
+    });
+  });
+});
+
 describe('@dbml/core - exporter flags', () => {
   describe('includeRecords', () => {
     test('includes records by default', () => {

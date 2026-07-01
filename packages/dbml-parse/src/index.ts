@@ -92,6 +92,10 @@ export {
   getRelationshipOp,
   getMultiplicities,
   parseCardinality,
+  CARDINALITY_ONE,
+  CARDINALITY_MAYBE,
+  CARDINALITY_SOME,
+  CARDINALITY_MANY,
 } from '@/core/types/relation';
 
 // DiagramView types
