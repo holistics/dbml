@@ -4,12 +4,13 @@ import Ref from './ref';
 import DbState from './dbState';
 import { NormalizedModel } from './database';
 import { Token } from './element';
+import type { RelationCardinality } from '@dbml/parse';
 
 export interface RawEndpoint {
     schemaName: string | null;
     tableName: string;
     fieldNames: string[];
-    relation: '1' | '*';
+    relation: RelationCardinality;
     token: Token;
 }
 
@@ -57,7 +58,7 @@ export interface NormalizedEndpoint {
     tableName: string;
     fieldNames: string[];
     fieldIds: number[];
-    relation: string;
+    relation: RelationCardinality;
     refId: number;
 }
 

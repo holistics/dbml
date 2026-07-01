@@ -6,12 +6,13 @@ import Enum from './enum';
 import Table from './table';
 import TablePartial from './tablePartial';
 import Check from './check';
+import type { RelationshipOp } from '@dbml/parse';
 
 export interface InlineRef {
     schemaName: string | null;
     tableName: string;
     fieldNames: string[];
-    relation: '>' | '<' | '-' | '<>';
+    relation: RelationshipOp;
     token: Token;
 }
 
