@@ -16,6 +16,7 @@ import type {
   TableSymbol,
 } from '../symbol';
 import type { Internable } from '../internable';
+import type { RelationshipOp } from '../relation';
 import { UNHANDLED } from '../module';
 import { ElementKind, SettingName } from '../keywords';
 import {
@@ -145,18 +146,18 @@ export class RefMetadata extends NodeMetadata {
     return undefined;
   }
 
-  op (_compiler: Compiler): '>' | '<' | '-' | '<>' | undefined {
+  op (_compiler: Compiler): RelationshipOp | undefined {
     if (this.declaration instanceof ElementDeclarationNode) {
       const field = getBody(this.declaration)[0];
       if (!(field instanceof FunctionApplicationNode)) return undefined;
       const infix = field.callee;
       if (!(infix instanceof InfixExpressionNode)) return undefined;
-      return infix.op?.value as '>' | '<' | '-' | '<>' | undefined;
+      return infix.op?.value as RelationshipOp | undefined;
     }
     if (this.declaration instanceof AttributeNode) {
       const prefix = this.declaration.value;
       if (!(prefix instanceof PrefixExpressionNode)) return undefined;
-      return prefix.op?.value as '>' | '<' | '-' | '<>' | undefined;
+      return prefix.op?.value as RelationshipOp | undefined;
     }
     return undefined;
   }
@@ -271,11 +272,11 @@ export class PartialRefMetadata extends NodeMetadata {
     return extractTableFromEndpoint(compiler, prefix.expression) ?? this.container(compiler);
   }
 
-  op (_compiler: Compiler): '>' | '<' | '-' | '<>' | undefined {
+  op (_compiler: Compiler): RelationshipOp | undefined {
     if (!(this.declaration instanceof AttributeNode)) return undefined;
     const prefix = this.declaration.value;
     if (!(prefix instanceof PrefixExpressionNode)) return undefined;
-    return prefix.op?.value as '>' | '<' | '-' | '<>' | undefined;
+    return prefix.op?.value as RelationshipOp | undefined;
   }
 
   leftToken (): SyntaxNode {
