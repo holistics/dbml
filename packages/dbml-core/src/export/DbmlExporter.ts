@@ -1,5 +1,5 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, formatRecordValue, getRelationshipOp, parseCardinality } from '@dbml/parse';
+import { formatRecordValue, getRelationshipOp, parseCardinality } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -45,9 +45,9 @@ class DbmlExporter {
       const schema = model.schemas[_enum.schemaId];
 
       return `Enum ${shouldPrintSchema(schema, model)
-        ? `${addDoubleQuoteIfNeeded(schema.name)}.`
-        : ''}${addDoubleQuoteIfNeeded(_enum.name)} {\n${
-        _enum.valueIds.map((valueId) => `  ${addDoubleQuoteIfNeeded(model.enumValues[valueId].name)}${model.enumValues[valueId].note
+        ? `"${schema.name}".`
+        : ''}"${_enum.name}" {\n${
+        _enum.valueIds.map((valueId) => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
           ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note)}]`
           : ''}`).join('\n')}\n}\n`;
     });
@@ -63,10 +63,12 @@ class DbmlExporter {
 
       let schemaName = '';
       if (field.type.schemaName && field.type.schemaName !== DEFAULT_SCHEMA_NAME) {
-        schemaName = `${addDoubleQuoteIfNeeded(field.type.schemaName)}.`;
+        schemaName = DbmlExporter.hasWhiteSpace(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
       }
 
-      let line = `${addDoubleQuoteIfNeeded(field.name)} ${schemaName}${addDoubleQuoteIfNeeded(field.type.type_name)}`;
+      let line = `"${field.name}" ${schemaName}${DbmlExporter.hasWhiteSpace(field.type.type_name) || DbmlExporter.hasSquareBracket(field.type.type_name)
+        ? `"${field.type.type_name}"`
+        : field.type.type_name}`;
 
       const constraints: string[] = [];
       if (field.unique) {
@@ -235,8 +237,8 @@ class DbmlExporter {
       const schema = model.schemas[table.schemaId];
       const tableSettingStr = DbmlExporter.getTableSettings(table);
       // Include schema name if needed
-      let tableName = addDoubleQuoteIfNeeded(table.name);
-      if (shouldPrintSchema(schema, model)) tableName = `${addDoubleQuoteIfNeeded(schema.name)}.${addDoubleQuoteIfNeeded(table.name)}`;
+      let tableName = `"${table.name}"`;
+      if (shouldPrintSchema(schema, model)) tableName = `"${schema.name}"."${table.name}"`;
 
       // Include alias if present
       const aliasStr = table.alias ? ` as ${addDoubleQuoteIfNeeded(table.alias)}` : '';
@@ -264,7 +266,7 @@ class DbmlExporter {
   }
 
   static buildFieldName (fieldIds: number[], model: NormalizedModel): string {
-    const fieldNames = fieldIds.map((fieldId) => addDoubleQuoteIfNeeded(model.fields[fieldId].name)).join(', ');
+    const fieldNames = fieldIds.map((fieldId) => `"${model.fields[fieldId].name}"`).join(', ');
     return fieldIds.length === 1 ? fieldNames : `(${fieldNames})`;
   }
 
@@ -287,13 +289,13 @@ class DbmlExporter {
 
       if (ref.name) {
         line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
-          ? `${addDoubleQuoteIfNeeded(model.schemas[ref.schemaId].name)}.`
-          : ''}${addDoubleQuoteIfNeeded(ref.name)}`;
+          ? `"${model.schemas[ref.schemaId].name}".`
+          : ''}"${ref.name}"`;
       }
       line += ': ';
       line += `${shouldPrintSchema(leftSchema, model)
-        ? `${addDoubleQuoteIfNeeded(leftSchema.name)}.`
-        : ''}${addDoubleQuoteIfNeeded(leftTable.name)}.${leftFieldName} `;
+        ? `"${leftSchema.name}".`
+        : ''}"${leftTable.name}".${leftFieldName} `;
 
       const rightField = model.fields[rightEndpoint.fieldIds[0]];
       const rightTable = model.tables[rightField.tableId];
@@ -302,8 +304,8 @@ class DbmlExporter {
 
       line += `${op} `;
       line += `${shouldPrintSchema(rightSchema, model)
-        ? `${addDoubleQuoteIfNeeded(rightSchema.name)}.`
-        : ''}${addDoubleQuoteIfNeeded(rightTable.name)}.${rightFieldName}`;
+        ? `"${rightSchema.name}".`
+        : ''}"${rightTable.name}".${rightFieldName}`;
 
       const refActions: string[] = [];
       if (ref.onUpdate) {
@@ -341,14 +343,14 @@ class DbmlExporter {
       const groupSettingStr = DbmlExporter.getTableGroupSettings(group);
 
       const groupNote = group.note ? `  Note: ${DbmlExporter.escapeNote(group.note)}\n` : '';
-      const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `${addDoubleQuoteIfNeeded(groupSchema.name)}.` : '';
-      const groupName = `${groupSchemaName}${addDoubleQuoteIfNeeded(group.name)}`;
+      const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `"${groupSchema.name}".` : '';
+      const groupName = `${groupSchemaName}"${group.name}"`;
 
       const tableNames = group.tableIds
         .reduce((result, tableId) => {
           const table = model.tables[tableId];
           const tableSchema = model.schemas[table.schemaId];
-          const tableName = `  ${shouldPrintSchema(tableSchema, model) ? `${addDoubleQuoteIfNeeded(tableSchema.name)}.` : ''}${addDoubleQuoteIfNeeded(table.name)}`;
+          const tableName = `  ${shouldPrintSchema(tableSchema, model) ? `"${tableSchema.name}".` : ''}"${table.name}"`;
           return `${result}${tableName}\n`;
         }, '');
 
