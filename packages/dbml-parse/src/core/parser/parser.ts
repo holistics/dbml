@@ -1545,6 +1545,54 @@ const infixBindingPowerMap: {
     left: 7,
     right: 8,
   },
+  '-?': {
+    left: 9,
+    right: 10,
+  },
+  '?-': {
+    left: 9,
+    right: 10,
+  },
+  '?-?': {
+    left: 9,
+    right: 10,
+  },
+  '?>': {
+    left: 7,
+    right: 8,
+  },
+  '>?': {
+    left: 7,
+    right: 8,
+  },
+  '?<': {
+    left: 7,
+    right: 8,
+  },
+  '<?': {
+    left: 7,
+    right: 8,
+  },
+  '?>?': {
+    left: 7,
+    right: 8,
+  },
+  '?<?': {
+    left: 7,
+    right: 8,
+  },
+  '?<>': {
+    left: 7,
+    right: 8,
+  },
+  '<>?': {
+    left: 7,
+    right: 8,
+  },
+  '?<>?': {
+    left: 7,
+    right: 8,
+  },
   '=': {
     left: 2,
     right: 3,
@@ -1597,6 +1645,54 @@ const prefixBindingPowerMap: {
     right: 15,
   },
   '<>': {
+    left: null,
+    right: 15,
+  },
+  '-?': {
+    left: null,
+    right: 15,
+  },
+  '?-': {
+    left: null,
+    right: 15,
+  },
+  '?-?': {
+    left: null,
+    right: 15,
+  },
+  '?>': {
+    left: null,
+    right: 15,
+  },
+  '>?': {
+    left: null,
+    right: 15,
+  },
+  '?<': {
+    left: null,
+    right: 15,
+  },
+  '<?': {
+    left: null,
+    right: 15,
+  },
+  '?>?': {
+    left: null,
+    right: 15,
+  },
+  '?<?': {
+    left: null,
+    right: 15,
+  },
+  '?<>': {
+    left: null,
+    right: 15,
+  },
+  '<>?': {
+    left: null,
+    right: 15,
+  },
+  '?<>?': {
     left: null,
     right: 15,
   },
