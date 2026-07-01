@@ -1,0 +1,26 @@
+Table users {
+    id integer
+}
+
+Table posts {
+    id integer
+    user_id integer
+
+    Ref: user_id > users.id
+    Ref: user_id >? users.id
+    Ref: user_id ?> users.id
+    Ref: user_id ?>? users.id
+    Ref: user_id - users.id
+    Ref: user_id -? users.id
+    Ref: user_id ?- users.id
+    Ref: user_id ?-? users.id
+    Ref: user_id <> users.id
+    Ref: user_id <>? users.id
+    Ref: user_id ?<> users.id
+    Ref: user_id ?<>? users.id
+}
+
+Ref: posts.user_id < users.id
+Ref: posts.user_id <? users.id
+Ref: posts.user_id ?< users.id
+Ref: posts.user_id ?<? users.id
