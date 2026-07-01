@@ -8,11 +8,13 @@ class Dep extends Element {
    * @param {import('../../types/model_structure/dep').RawDep} param0
    */
   constructor ({
-    name, note, custom, edges, token, schema = {},
+    name, color, note, custom, edges, token, schema = {},
   } = {}) {
     super(token);
     /** @type {string|null} */
     this.name = name ?? null;
+    /** @type {string|undefined} */
+    this.color = color;
     /** @type {string|null} */
     this.note = note ? get(note, 'value', note) : null;
     /** @type {import('../../types/model_structure/element').Token} */
@@ -61,6 +63,7 @@ class Dep extends Element {
   shallowExport () {
     return {
       name: this.name,
+      color: this.color,
       note: this.note,
       custom: this.custom,
     };

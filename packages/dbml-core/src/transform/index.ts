@@ -1,5 +1,8 @@
 import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
-import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit } from '@dbml/parse';
+import type {
+  DiagramViewSyncOperation, DiagramViewBlock, TextEdit,
+  DepSyncOperation, DepBlock,
+} from '@dbml/parse';
 
 type TableName = string | { schema?: string; table: string };
 
@@ -27,4 +30,22 @@ export function findDiagramViewBlocks (dbmlCode: string): DiagramViewBlock[] {
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
   const compiler = new Compiler(layout);
   return compiler.findDiagramViewBlocks(DEFAULT_ENTRY);
+}
+
+export function syncDep (
+  dbmlCode: string,
+  operations: DepSyncOperation[],
+  blocks?: DepBlock[],
+): { newDbml: string; edits: TextEdit[] } {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.syncDep(DEFAULT_ENTRY, operations, blocks);
+}
+
+export function findDepBlocks (dbmlCode: string): DepBlock[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.findDepBlocks(DEFAULT_ENTRY);
 }

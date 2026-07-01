@@ -197,6 +197,7 @@ export interface Dep {
   schemaName: string | null;
   name: string | null;
   edges: DepEdge[];
+  color?: Color;
   note?: {
     value: string;
     token: TokenPosition;

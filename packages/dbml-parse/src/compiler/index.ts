@@ -45,8 +45,10 @@ import {
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
   type DiagramViewBlock,
+  type DepBlock,
   findDiagramViewBlocks,
-  renameTable, syncDiagramView,
+  findDepBlocks,
+  renameTable, syncDiagramView, syncDep,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
@@ -55,11 +57,12 @@ import { DEFAULT_ENTRY } from '@/constants';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type { DiagramViewBlock, TableNameInput, TextEdit } from './queries/transform';
+export type { DiagramViewBlock, DepBlock, TableNameInput, TextEdit } from './queries/transform';
 // Re-export utilities
 export {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
   findDiagramViewBlocks,
+  findDepBlocks,
 };
 
 // Sentinel placed in the cache while a query is being computed.
@@ -390,6 +393,11 @@ export default class Compiler {
   syncDiagramView = syncDiagramView.bind(this);
   findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
     return findDiagramViewBlocks(this.getSource(filepath) ?? '');
+  }
+
+  syncDep = syncDep.bind(this);
+  findDepBlocks (filepath: Filepath): DepBlock[] {
+    return findDepBlocks(this.getSource(filepath) ?? '');
   }
 
   // @deprecated - legacy APIs for services compatibility

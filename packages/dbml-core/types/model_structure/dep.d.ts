@@ -1,4 +1,4 @@
-import Element, { Token } from './element';
+import Element, { Token, Color } from './element';
 import DepEdge from './dep_edge';
 import Schema from './schema';
 import DbState from './dbState';
@@ -18,6 +18,7 @@ export interface RawDepEdgeInput {
 
 export interface RawDep {
     name?: string | null;
+    color?: Color;
     note?: { value?: string; token?: Token } | string | null;
     custom?: Record<string, string | number | boolean | null> | null;
     edges: RawDepEdgeInput[];
@@ -27,6 +28,7 @@ export interface RawDep {
 
 declare class Dep extends Element {
     name: string | null;
+    color?: Color;
     note: string | null;
     noteToken: Token;
     custom: Record<string, string | number | boolean | null> | null;
@@ -40,6 +42,7 @@ declare class Dep extends Element {
     processEdges(rawEdges: RawDepEdgeInput[]): void;
     export(): {
         name: string | null;
+        color?: Color;
         note: string | null;
         custom: Record<string, string | number | boolean | null> | null;
         edges: {
@@ -49,6 +52,7 @@ declare class Dep extends Element {
     };
     shallowExport(): {
         name: string | null;
+        color?: Color;
         note: string | null;
         custom: Record<string, string | number | boolean | null> | null;
     };
@@ -70,6 +74,7 @@ declare class Dep extends Element {
 export interface NormalizedDep {
     id: number;
     name: string | null;
+    color?: Color;
     note: string | null;
     custom: Record<string, string | number | boolean | null> | null;
     schemaId: number;

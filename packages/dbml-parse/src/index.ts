@@ -93,6 +93,11 @@ export type {
   TextEdit,
 } from '@/compiler/queries/transform';
 
+// Dep transform types
+export type {
+  DepSyncOperation, DepSyncEdge, DepEndpointRef, DepBlock,
+} from '@/compiler/queries/transform';
+
 export {
   dbmlLanguageConfig,
   dbmlMonarchTokensProvider,

@@ -17,7 +17,7 @@ import {
 import type { Dep, DepEdge } from '@/core/types/schemaJson';
 import { DepMetadata, type Filepath } from '@/core/types';
 import type Compiler from '@/compiler';
-import { getTokenPosition } from '@/core/utils/interpret';
+import { extractColor, getTokenPosition } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
 
 export class DepInterpreter {
@@ -139,6 +139,11 @@ export class DepInterpreter {
             if (!key) continue;
             const subBody = sub.body;
             if (!(subBody instanceof FunctionApplicationNode)) continue;
+            if (key === 'color') {
+              const color = extractColor(subBody.callee);
+              if (color !== undefined) this.dep.color = color;
+              continue;
+            }
             const rawValue = this.extractAttrValue(subBody.callee);
             if (rawValue === undefined) continue;
             if (key === 'note') {
@@ -162,6 +167,13 @@ export class DepInterpreter {
     for (const [name, attrs] of Object.entries(settingMap)) {
       const attr = attrs[0];
       if (!attr) continue;
+
+      if (name === 'color') {
+        const color = extractColor(attr.value);
+        if (color !== undefined) this.dep.color = color;
+        continue;
+      }
+
       const rawValue = this.extractAttrValue(attr.value);
       if (rawValue === undefined) continue;
 
