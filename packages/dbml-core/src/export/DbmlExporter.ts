@@ -1,5 +1,5 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { formatRecordValue, getRelationshipOp, parseCardinality } from '@dbml/parse';
+import { addDoubleQuoteIfNeeded, formatRecordValue, getRelationshipOp, parseCardinality } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -292,7 +292,7 @@ class DbmlExporter {
           ? `"${model.schemas[ref.schemaId].name}".`
           : ''}"${ref.name}"`;
       }
-      line += ': ';
+      line += ':';
       line += `${shouldPrintSchema(leftSchema, model)
         ? `"${leftSchema.name}".`
         : ''}"${leftTable.name}".${leftFieldName} `;

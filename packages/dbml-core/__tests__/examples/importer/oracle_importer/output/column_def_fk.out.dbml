@@ -188,84 +188,84 @@ Table "test_set_null" {
   "cust_id" NUMBER(10)
 }
 
-Ref "fk_emp_dept": "departments"."dept_id" < "employees"."dept_id"
+Ref "fk_emp_dept":"departments"."dept_id" < "employees"."dept_id"
 
-Ref "fk_emp_manager": "employees"."emp_id" < "employees"."manager_id"
+Ref "fk_emp_manager":"employees"."emp_id" < "employees"."manager_id"
 
-Ref "fk_order_cust": "customers"."cust_id" < "orders"."customer_id"
+Ref "fk_order_cust":"customers"."cust_id" < "orders"."customer_id"
 
-Ref "fk_order_track": "shipments"."tracking_number" < "orders"."tracking_number"
+Ref "fk_order_track":"shipments"."tracking_number" < "orders"."tracking_number"
 
-Ref "fk_ship_cust": "customers"."cust_id" < "shipments"."customer_id"
+Ref "fk_ship_cust":"customers"."cust_id" < "shipments"."customer_id"
 
-Ref "fk_child_complex": "complex_test"."id" < "complex_child"."parent_id"
+Ref "fk_child_complex":"complex_test"."id" < "complex_child"."parent_id"
 
-Ref "fk_child_code": "complex_test"."code" < "complex_child"."parent_code"
+Ref "fk_child_code":"complex_test"."code" < "complex_child"."parent_code"
 
-Ref "fk_enable_dept": "departments"."dept_id" < "test_enable"."dept_id"
+Ref "fk_enable_dept":"departments"."dept_id" < "test_enable"."dept_id"
 
-Ref "fk_enable_supp": "suppliers"."supp_id" < "test_enable"."supp_id"
+Ref "fk_enable_supp":"suppliers"."supp_id" < "test_enable"."supp_id"
 
-Ref "fk_disable_dept": "departments"."dept_id" < "test_disable"."dept_id"
+Ref "fk_disable_dept":"departments"."dept_id" < "test_disable"."dept_id"
 
-Ref "fk_disable_cust": "customers"."cust_id" < "test_disable"."cust_id"
+Ref "fk_disable_cust":"customers"."cust_id" < "test_disable"."cust_id"
 
-Ref "fk_validate_item": "inventory"."item_id" < "test_validate"."item_id"
+Ref "fk_validate_item":"inventory"."item_id" < "test_validate"."item_id"
 
-Ref "fk_validate_supp": "suppliers"."supp_id" < "test_validate"."supp_id"
+Ref "fk_validate_supp":"suppliers"."supp_id" < "test_validate"."supp_id"
 
-Ref "fk_noval_dept": "departments"."dept_id" < "test_novalidate"."dept_id"
+Ref "fk_noval_dept":"departments"."dept_id" < "test_novalidate"."dept_id"
 
-Ref "fk_noval_cust": "customers"."cust_id" < "test_novalidate"."cust_id"
+Ref "fk_noval_cust":"customers"."cust_id" < "test_novalidate"."cust_id"
 
-Ref "fk_dis_noval_item": "inventory"."item_id" < "test_disable_novalidate"."item_id"
+Ref "fk_dis_noval_item":"inventory"."item_id" < "test_disable_novalidate"."item_id"
 
-Ref "fk_dis_noval_supp": "suppliers"."supp_id" < "test_disable_novalidate"."supp_id"
+Ref "fk_dis_noval_supp":"suppliers"."supp_id" < "test_disable_novalidate"."supp_id"
 
-Ref "fk_rely_dept": "departments"."dept_id" < "test_rely"."dept_id"
+Ref "fk_rely_dept":"departments"."dept_id" < "test_rely"."dept_id"
 
-Ref "fk_rely_cust": "customers"."cust_id" < "test_rely"."cust_id"
+Ref "fk_rely_cust":"customers"."cust_id" < "test_rely"."cust_id"
 
-Ref "fk_norely_item": "inventory"."item_id" < "test_norely"."item_id"
+Ref "fk_norely_item":"inventory"."item_id" < "test_norely"."item_id"
 
-Ref "fk_norely_supp": "suppliers"."supp_id" < "test_norely"."supp_id"
+Ref "fk_norely_supp":"suppliers"."supp_id" < "test_norely"."supp_id"
 
-Ref "fk_en_rely_dept": "departments"."dept_id" < "test_enable_rely"."dept_id"
+Ref "fk_en_rely_dept":"departments"."dept_id" < "test_enable_rely"."dept_id"
 
-Ref "fk_en_rely_cust": "customers"."cust_id" < "test_enable_rely"."cust_id"
+Ref "fk_en_rely_cust":"customers"."cust_id" < "test_enable_rely"."cust_id"
 
-Ref "fk_dis_norely_item": "inventory"."item_id" < "test_disable_norely"."item_id"
+Ref "fk_dis_norely_item":"inventory"."item_id" < "test_disable_norely"."item_id"
 
-Ref "fk_dis_norely_supp": "suppliers"."supp_id" < "test_disable_norely"."supp_id"
+Ref "fk_dis_norely_supp":"suppliers"."supp_id" < "test_disable_norely"."supp_id"
 
-Ref "fk_def_deferred_dept": "departments"."dept_id" < "test_deferrable_deferred"."dept_id"
+Ref "fk_def_deferred_dept":"departments"."dept_id" < "test_deferrable_deferred"."dept_id"
 
-Ref "fk_def_deferred_cust": "customers"."cust_id" < "test_deferrable_deferred"."cust_id"
+Ref "fk_def_deferred_cust":"customers"."cust_id" < "test_deferrable_deferred"."cust_id"
 
-Ref "fk_def_immed_item": "inventory"."item_id" < "test_deferrable_immediate"."item_id"
+Ref "fk_def_immed_item":"inventory"."item_id" < "test_deferrable_immediate"."item_id"
 
-Ref "fk_def_immed_supp": "suppliers"."supp_id" < "test_deferrable_immediate"."supp_id"
+Ref "fk_def_immed_supp":"suppliers"."supp_id" < "test_deferrable_immediate"."supp_id"
 
-Ref "fk_not_def_dept": "departments"."dept_id" < "test_not_deferrable"."dept_id"
+Ref "fk_not_def_dept":"departments"."dept_id" < "test_not_deferrable"."dept_id"
 
-Ref "fk_not_def_cust": "customers"."cust_id" < "test_not_deferrable"."cust_id"
+Ref "fk_not_def_cust":"customers"."cust_id" < "test_not_deferrable"."cust_id"
 
-Ref "fk_dt_number": "test_datatypes"."col_number" < "test_datatypes_fk"."col_number"
+Ref "fk_dt_number":"test_datatypes"."col_number" < "test_datatypes_fk"."col_number"
 
-Ref "fk_dt_varchar2": "test_datatypes"."col_varchar2" < "test_datatypes_fk"."col_varchar2"
+Ref "fk_dt_varchar2":"test_datatypes"."col_varchar2" < "test_datatypes_fk"."col_varchar2"
 
-Ref "fk_self_emp": "employees_self"."emp_id" < "employees_self"."manager_id"
+Ref "fk_self_emp":"employees_self"."emp_id" < "employees_self"."manager_id"
 
-Ref "fk_self_dept": "departments"."dept_id" < "employees_self"."dept_id"
+Ref "fk_self_dept":"departments"."dept_id" < "employees_self"."dept_id"
 
-Ref "fk_detail_item": "inventory"."item_id" < "order_details"."item_id"
+Ref "fk_detail_item":"inventory"."item_id" < "order_details"."item_id"
 
-Ref "fk_detail_cust": "customers"."cust_id" < "order_details"."cust_id"
+Ref "fk_detail_cust":"customers"."cust_id" < "order_details"."cust_id"
 
-Ref "fk_cascade_dept": "departments"."dept_id" < "test_cascade"."dept_id"
+Ref "fk_cascade_dept":"departments"."dept_id" < "test_cascade"."dept_id"
 
-Ref "fk_cascade_supp": "suppliers"."supp_id" < "test_cascade"."supp_id"
+Ref "fk_cascade_supp":"suppliers"."supp_id" < "test_cascade"."supp_id"
 
-Ref "fk_set_null_dept": "departments"."dept_id" < "test_set_null"."dept_id"
+Ref "fk_set_null_dept":"departments"."dept_id" < "test_set_null"."dept_id"
 
-Ref "fk_set_null_cust": "customers"."cust_id" < "test_set_null"."cust_id"
+Ref "fk_set_null_cust":"customers"."cust_id" < "test_set_null"."cust_id"

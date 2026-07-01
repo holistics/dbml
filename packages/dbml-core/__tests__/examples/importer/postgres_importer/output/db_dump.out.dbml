@@ -998,182 +998,182 @@ Table "sales"."salestaxrate" {
   Note: 'Tax rate lookup table.'
 }
 
-Ref "FK_EmployeeDepartmentHistory_Department_DepartmentID": "humanresources"."department"."departmentid" < "humanresources"."employeedepartmenthistory"."departmentid"
+Ref "FK_EmployeeDepartmentHistory_Department_DepartmentID":"humanresources"."department"."departmentid" < "humanresources"."employeedepartmenthistory"."departmentid"
 
-Ref "FK_EmployeeDepartmentHistory_Employee_BusinessEntityID": "humanresources"."employee"."businessentityid" < "humanresources"."employeedepartmenthistory"."businessentityid"
+Ref "FK_EmployeeDepartmentHistory_Employee_BusinessEntityID":"humanresources"."employee"."businessentityid" < "humanresources"."employeedepartmenthistory"."businessentityid"
 
-Ref "FK_EmployeeDepartmentHistory_Shift_ShiftID": "humanresources"."shift"."shiftid" < "humanresources"."employeedepartmenthistory"."shiftid"
+Ref "FK_EmployeeDepartmentHistory_Shift_ShiftID":"humanresources"."shift"."shiftid" < "humanresources"."employeedepartmenthistory"."shiftid"
 
-Ref "FK_EmployeePayHistory_Employee_BusinessEntityID": "humanresources"."employee"."businessentityid" < "humanresources"."employeepayhistory"."businessentityid"
+Ref "FK_EmployeePayHistory_Employee_BusinessEntityID":"humanresources"."employee"."businessentityid" < "humanresources"."employeepayhistory"."businessentityid"
 
-Ref "FK_Employee_Person_BusinessEntityID": "person"."person"."businessentityid" < "humanresources"."employee"."businessentityid"
+Ref "FK_Employee_Person_BusinessEntityID":"person"."person"."businessentityid" < "humanresources"."employee"."businessentityid"
 
-Ref "FK_JobCandidate_Employee_BusinessEntityID": "humanresources"."employee"."businessentityid" < "humanresources"."jobcandidate"."businessentityid"
+Ref "FK_JobCandidate_Employee_BusinessEntityID":"humanresources"."employee"."businessentityid" < "humanresources"."jobcandidate"."businessentityid"
 
-Ref "FK_Address_StateProvince_StateProvinceID": "person"."stateprovince"."stateprovinceid" < "person"."address"."stateprovinceid"
+Ref "FK_Address_StateProvince_StateProvinceID":"person"."stateprovince"."stateprovinceid" < "person"."address"."stateprovinceid"
 
-Ref "FK_BusinessEntityAddress_AddressType_AddressTypeID": "person"."addresstype"."addresstypeid" < "person"."businessentityaddress"."addresstypeid"
+Ref "FK_BusinessEntityAddress_AddressType_AddressTypeID":"person"."addresstype"."addresstypeid" < "person"."businessentityaddress"."addresstypeid"
 
-Ref "FK_BusinessEntityAddress_Address_AddressID": "person"."address"."addressid" < "person"."businessentityaddress"."addressid"
+Ref "FK_BusinessEntityAddress_Address_AddressID":"person"."address"."addressid" < "person"."businessentityaddress"."addressid"
 
-Ref "FK_BusinessEntityAddress_BusinessEntity_BusinessEntityID": "person"."businessentity"."businessentityid" < "person"."businessentityaddress"."businessentityid"
+Ref "FK_BusinessEntityAddress_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "person"."businessentityaddress"."businessentityid"
 
-Ref "FK_BusinessEntityContact_BusinessEntity_BusinessEntityID": "person"."businessentity"."businessentityid" < "person"."businessentitycontact"."businessentityid"
+Ref "FK_BusinessEntityContact_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "person"."businessentitycontact"."businessentityid"
 
-Ref "FK_BusinessEntityContact_ContactType_ContactTypeID": "person"."contacttype"."contacttypeid" < "person"."businessentitycontact"."contacttypeid"
+Ref "FK_BusinessEntityContact_ContactType_ContactTypeID":"person"."contacttype"."contacttypeid" < "person"."businessentitycontact"."contacttypeid"
 
-Ref "FK_BusinessEntityContact_Person_PersonID": "person"."person"."businessentityid" < "person"."businessentitycontact"."personid"
+Ref "FK_BusinessEntityContact_Person_PersonID":"person"."person"."businessentityid" < "person"."businessentitycontact"."personid"
 
-Ref "FK_EmailAddress_Person_BusinessEntityID": "person"."person"."businessentityid" < "person"."emailaddress"."businessentityid"
+Ref "FK_EmailAddress_Person_BusinessEntityID":"person"."person"."businessentityid" < "person"."emailaddress"."businessentityid"
 
-Ref "FK_Password_Person_BusinessEntityID": "person"."person"."businessentityid" < "person"."password"."businessentityid"
+Ref "FK_Password_Person_BusinessEntityID":"person"."person"."businessentityid" < "person"."password"."businessentityid"
 
-Ref "FK_PersonPhone_Person_BusinessEntityID": "person"."person"."businessentityid" < "person"."personphone"."businessentityid"
+Ref "FK_PersonPhone_Person_BusinessEntityID":"person"."person"."businessentityid" < "person"."personphone"."businessentityid"
 
-Ref "FK_PersonPhone_PhoneNumberType_PhoneNumberTypeID": "person"."phonenumbertype"."phonenumbertypeid" < "person"."personphone"."phonenumbertypeid"
+Ref "FK_PersonPhone_PhoneNumberType_PhoneNumberTypeID":"person"."phonenumbertype"."phonenumbertypeid" < "person"."personphone"."phonenumbertypeid"
 
-Ref "FK_Person_BusinessEntity_BusinessEntityID": "person"."businessentity"."businessentityid" < "person"."person"."businessentityid"
+Ref "FK_Person_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "person"."person"."businessentityid"
 
-Ref "FK_StateProvince_CountryRegion_CountryRegionCode": "person"."countryregion"."countryregioncode" < "person"."stateprovince"."countryregioncode"
+Ref "FK_StateProvince_CountryRegion_CountryRegionCode":"person"."countryregion"."countryregioncode" < "person"."stateprovince"."countryregioncode"
 
-Ref "FK_StateProvince_SalesTerritory_TerritoryID": "sales"."salesterritory"."territoryid" < "person"."stateprovince"."territoryid"
+Ref "FK_StateProvince_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "person"."stateprovince"."territoryid"
 
-Ref "FK_BillOfMaterials_Product_ComponentID": "production"."product"."productid" < "production"."billofmaterials"."componentid"
+Ref "FK_BillOfMaterials_Product_ComponentID":"production"."product"."productid" < "production"."billofmaterials"."componentid"
 
-Ref "FK_BillOfMaterials_Product_ProductAssemblyID": "production"."product"."productid" < "production"."billofmaterials"."productassemblyid"
+Ref "FK_BillOfMaterials_Product_ProductAssemblyID":"production"."product"."productid" < "production"."billofmaterials"."productassemblyid"
 
-Ref "FK_BillOfMaterials_UnitMeasure_UnitMeasureCode": "production"."unitmeasure"."unitmeasurecode" < "production"."billofmaterials"."unitmeasurecode"
+Ref "FK_BillOfMaterials_UnitMeasure_UnitMeasureCode":"production"."unitmeasure"."unitmeasurecode" < "production"."billofmaterials"."unitmeasurecode"
 
-Ref "FK_Document_Employee_Owner": "humanresources"."employee"."businessentityid" < "production"."document"."owner"
+Ref "FK_Document_Employee_Owner":"humanresources"."employee"."businessentityid" < "production"."document"."owner"
 
-Ref "FK_ProductCostHistory_Product_ProductID": "production"."product"."productid" < "production"."productcosthistory"."productid"
+Ref "FK_ProductCostHistory_Product_ProductID":"production"."product"."productid" < "production"."productcosthistory"."productid"
 
-Ref "FK_ProductDocument_Document_DocumentNode": "production"."document"."documentnode" < "production"."productdocument"."documentnode"
+Ref "FK_ProductDocument_Document_DocumentNode":"production"."document"."documentnode" < "production"."productdocument"."documentnode"
 
-Ref "FK_ProductDocument_Product_ProductID": "production"."product"."productid" < "production"."productdocument"."productid"
+Ref "FK_ProductDocument_Product_ProductID":"production"."product"."productid" < "production"."productdocument"."productid"
 
-Ref "FK_ProductInventory_Location_LocationID": "production"."location"."locationid" < "production"."productinventory"."locationid"
+Ref "FK_ProductInventory_Location_LocationID":"production"."location"."locationid" < "production"."productinventory"."locationid"
 
-Ref "FK_ProductInventory_Product_ProductID": "production"."product"."productid" < "production"."productinventory"."productid"
+Ref "FK_ProductInventory_Product_ProductID":"production"."product"."productid" < "production"."productinventory"."productid"
 
-Ref "FK_ProductListPriceHistory_Product_ProductID": "production"."product"."productid" < "production"."productlistpricehistory"."productid"
+Ref "FK_ProductListPriceHistory_Product_ProductID":"production"."product"."productid" < "production"."productlistpricehistory"."productid"
 
-Ref "FK_ProductModelIllustration_Illustration_IllustrationID": "production"."illustration"."illustrationid" < "production"."productmodelillustration"."illustrationid"
+Ref "FK_ProductModelIllustration_Illustration_IllustrationID":"production"."illustration"."illustrationid" < "production"."productmodelillustration"."illustrationid"
 
-Ref "FK_ProductModelIllustration_ProductModel_ProductModelID": "production"."productmodel"."productmodelid" < "production"."productmodelillustration"."productmodelid"
+Ref "FK_ProductModelIllustration_ProductModel_ProductModelID":"production"."productmodel"."productmodelid" < "production"."productmodelillustration"."productmodelid"
 
-Ref "FK_ProductModelProductDescriptionCulture_Culture_CultureID": "production"."culture"."cultureid" < "production"."productmodelproductdescriptionculture"."cultureid"
+Ref "FK_ProductModelProductDescriptionCulture_Culture_CultureID":"production"."culture"."cultureid" < "production"."productmodelproductdescriptionculture"."cultureid"
 
-Ref "FK_ProductModelProductDescriptionCulture_ProductDescription_Pro": "production"."productdescription"."productdescriptionid" < "production"."productmodelproductdescriptionculture"."productdescriptionid"
+Ref "FK_ProductModelProductDescriptionCulture_ProductDescription_Pro":"production"."productdescription"."productdescriptionid" < "production"."productmodelproductdescriptionculture"."productdescriptionid"
 
-Ref "FK_ProductModelProductDescriptionCulture_ProductModel_ProductMo": "production"."productmodel"."productmodelid" < "production"."productmodelproductdescriptionculture"."productmodelid"
+Ref "FK_ProductModelProductDescriptionCulture_ProductModel_ProductMo":"production"."productmodel"."productmodelid" < "production"."productmodelproductdescriptionculture"."productmodelid"
 
-Ref "FK_ProductProductPhoto_ProductPhoto_ProductPhotoID": "production"."productphoto"."productphotoid" < "production"."productproductphoto"."productphotoid"
+Ref "FK_ProductProductPhoto_ProductPhoto_ProductPhotoID":"production"."productphoto"."productphotoid" < "production"."productproductphoto"."productphotoid"
 
-Ref "FK_ProductProductPhoto_Product_ProductID": "production"."product"."productid" < "production"."productproductphoto"."productid"
+Ref "FK_ProductProductPhoto_Product_ProductID":"production"."product"."productid" < "production"."productproductphoto"."productid"
 
-Ref "FK_ProductReview_Product_ProductID": "production"."product"."productid" < "production"."productreview"."productid"
+Ref "FK_ProductReview_Product_ProductID":"production"."product"."productid" < "production"."productreview"."productid"
 
-Ref "FK_ProductSubcategory_ProductCategory_ProductCategoryID": "production"."productcategory"."productcategoryid" < "production"."productsubcategory"."productcategoryid"
+Ref "FK_ProductSubcategory_ProductCategory_ProductCategoryID":"production"."productcategory"."productcategoryid" < "production"."productsubcategory"."productcategoryid"
 
-Ref "FK_Product_ProductModel_ProductModelID": "production"."productmodel"."productmodelid" < "production"."product"."productmodelid"
+Ref "FK_Product_ProductModel_ProductModelID":"production"."productmodel"."productmodelid" < "production"."product"."productmodelid"
 
-Ref "FK_Product_ProductSubcategory_ProductSubcategoryID": "production"."productsubcategory"."productsubcategoryid" < "production"."product"."productsubcategoryid"
+Ref "FK_Product_ProductSubcategory_ProductSubcategoryID":"production"."productsubcategory"."productsubcategoryid" < "production"."product"."productsubcategoryid"
 
-Ref "FK_Product_UnitMeasure_SizeUnitMeasureCode": "production"."unitmeasure"."unitmeasurecode" < "production"."product"."sizeunitmeasurecode"
+Ref "FK_Product_UnitMeasure_SizeUnitMeasureCode":"production"."unitmeasure"."unitmeasurecode" < "production"."product"."sizeunitmeasurecode"
 
-Ref "FK_Product_UnitMeasure_WeightUnitMeasureCode": "production"."unitmeasure"."unitmeasurecode" < "production"."product"."weightunitmeasurecode"
+Ref "FK_Product_UnitMeasure_WeightUnitMeasureCode":"production"."unitmeasure"."unitmeasurecode" < "production"."product"."weightunitmeasurecode"
 
-Ref "FK_TransactionHistory_Product_ProductID": "production"."product"."productid" < "production"."transactionhistory"."productid"
+Ref "FK_TransactionHistory_Product_ProductID":"production"."product"."productid" < "production"."transactionhistory"."productid"
 
-Ref "FK_WorkOrderRouting_Location_LocationID": "production"."location"."locationid" < "production"."workorderrouting"."locationid"
+Ref "FK_WorkOrderRouting_Location_LocationID":"production"."location"."locationid" < "production"."workorderrouting"."locationid"
 
-Ref "FK_WorkOrderRouting_WorkOrder_WorkOrderID": "production"."workorder"."workorderid" < "production"."workorderrouting"."workorderid"
+Ref "FK_WorkOrderRouting_WorkOrder_WorkOrderID":"production"."workorder"."workorderid" < "production"."workorderrouting"."workorderid"
 
-Ref "FK_WorkOrder_Product_ProductID": "production"."product"."productid" < "production"."workorder"."productid"
+Ref "FK_WorkOrder_Product_ProductID":"production"."product"."productid" < "production"."workorder"."productid"
 
-Ref "FK_WorkOrder_ScrapReason_ScrapReasonID": "production"."scrapreason"."scrapreasonid" < "production"."workorder"."scrapreasonid"
+Ref "FK_WorkOrder_ScrapReason_ScrapReasonID":"production"."scrapreason"."scrapreasonid" < "production"."workorder"."scrapreasonid"
 
-Ref "FK_ProductVendor_Product_ProductID": "production"."product"."productid" < "purchasing"."productvendor"."productid"
+Ref "FK_ProductVendor_Product_ProductID":"production"."product"."productid" < "purchasing"."productvendor"."productid"
 
-Ref "FK_ProductVendor_UnitMeasure_UnitMeasureCode": "production"."unitmeasure"."unitmeasurecode" < "purchasing"."productvendor"."unitmeasurecode"
+Ref "FK_ProductVendor_UnitMeasure_UnitMeasureCode":"production"."unitmeasure"."unitmeasurecode" < "purchasing"."productvendor"."unitmeasurecode"
 
-Ref "FK_ProductVendor_Vendor_BusinessEntityID": "purchasing"."vendor"."businessentityid" < "purchasing"."productvendor"."businessentityid"
+Ref "FK_ProductVendor_Vendor_BusinessEntityID":"purchasing"."vendor"."businessentityid" < "purchasing"."productvendor"."businessentityid"
 
-Ref "FK_PurchaseOrderDetail_Product_ProductID": "production"."product"."productid" < "purchasing"."purchaseorderdetail"."productid"
+Ref "FK_PurchaseOrderDetail_Product_ProductID":"production"."product"."productid" < "purchasing"."purchaseorderdetail"."productid"
 
-Ref "FK_PurchaseOrderDetail_PurchaseOrderHeader_PurchaseOrderID": "purchasing"."purchaseorderheader"."purchaseorderid" < "purchasing"."purchaseorderdetail"."purchaseorderid"
+Ref "FK_PurchaseOrderDetail_PurchaseOrderHeader_PurchaseOrderID":"purchasing"."purchaseorderheader"."purchaseorderid" < "purchasing"."purchaseorderdetail"."purchaseorderid"
 
-Ref "FK_PurchaseOrderHeader_Employee_EmployeeID": "humanresources"."employee"."businessentityid" < "purchasing"."purchaseorderheader"."employeeid"
+Ref "FK_PurchaseOrderHeader_Employee_EmployeeID":"humanresources"."employee"."businessentityid" < "purchasing"."purchaseorderheader"."employeeid"
 
-Ref "FK_PurchaseOrderHeader_ShipMethod_ShipMethodID": "purchasing"."shipmethod"."shipmethodid" < "purchasing"."purchaseorderheader"."shipmethodid"
+Ref "FK_PurchaseOrderHeader_ShipMethod_ShipMethodID":"purchasing"."shipmethod"."shipmethodid" < "purchasing"."purchaseorderheader"."shipmethodid"
 
-Ref "FK_PurchaseOrderHeader_Vendor_VendorID": "purchasing"."vendor"."businessentityid" < "purchasing"."purchaseorderheader"."vendorid"
+Ref "FK_PurchaseOrderHeader_Vendor_VendorID":"purchasing"."vendor"."businessentityid" < "purchasing"."purchaseorderheader"."vendorid"
 
-Ref "FK_Vendor_BusinessEntity_BusinessEntityID": "person"."businessentity"."businessentityid" < "purchasing"."vendor"."businessentityid"
+Ref "FK_Vendor_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "purchasing"."vendor"."businessentityid"
 
-Ref "FK_CountryRegionCurrency_CountryRegion_CountryRegionCode": "person"."countryregion"."countryregioncode" < "sales"."countryregioncurrency"."countryregioncode"
+Ref "FK_CountryRegionCurrency_CountryRegion_CountryRegionCode":"person"."countryregion"."countryregioncode" < "sales"."countryregioncurrency"."countryregioncode"
 
-Ref "FK_CountryRegionCurrency_Currency_CurrencyCode": "sales"."currency"."currencycode" < "sales"."countryregioncurrency"."currencycode"
+Ref "FK_CountryRegionCurrency_Currency_CurrencyCode":"sales"."currency"."currencycode" < "sales"."countryregioncurrency"."currencycode"
 
-Ref "FK_CurrencyRate_Currency_FromCurrencyCode": "sales"."currency"."currencycode" < "sales"."currencyrate"."fromcurrencycode"
+Ref "FK_CurrencyRate_Currency_FromCurrencyCode":"sales"."currency"."currencycode" < "sales"."currencyrate"."fromcurrencycode"
 
-Ref "FK_CurrencyRate_Currency_ToCurrencyCode": "sales"."currency"."currencycode" < "sales"."currencyrate"."tocurrencycode"
+Ref "FK_CurrencyRate_Currency_ToCurrencyCode":"sales"."currency"."currencycode" < "sales"."currencyrate"."tocurrencycode"
 
-Ref "FK_Customer_Person_PersonID": "person"."person"."businessentityid" < "sales"."customer"."personid"
+Ref "FK_Customer_Person_PersonID":"person"."person"."businessentityid" < "sales"."customer"."personid"
 
-Ref "FK_Customer_SalesTerritory_TerritoryID": "sales"."salesterritory"."territoryid" < "sales"."customer"."territoryid"
+Ref "FK_Customer_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "sales"."customer"."territoryid"
 
-Ref "FK_Customer_Store_StoreID": "sales"."store"."businessentityid" < "sales"."customer"."storeid"
+Ref "FK_Customer_Store_StoreID":"sales"."store"."businessentityid" < "sales"."customer"."storeid"
 
-Ref "FK_PersonCreditCard_CreditCard_CreditCardID": "sales"."creditcard"."creditcardid" < "sales"."personcreditcard"."creditcardid"
+Ref "FK_PersonCreditCard_CreditCard_CreditCardID":"sales"."creditcard"."creditcardid" < "sales"."personcreditcard"."creditcardid"
 
-Ref "FK_PersonCreditCard_Person_BusinessEntityID": "person"."person"."businessentityid" < "sales"."personcreditcard"."businessentityid"
+Ref "FK_PersonCreditCard_Person_BusinessEntityID":"person"."person"."businessentityid" < "sales"."personcreditcard"."businessentityid"
 
-Ref "FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID": "sales"."salesorderheader"."salesorderid" < "sales"."salesorderdetail"."salesorderid" [delete: cascade]
+Ref "FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID":"sales"."salesorderheader"."salesorderid" < "sales"."salesorderdetail"."salesorderid" [delete: cascade]
 
-Ref "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID": "sales"."specialofferproduct".("specialofferid", "productid") < "sales"."salesorderdetail".("specialofferid", "productid")
+Ref "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID":"sales"."specialofferproduct".("specialofferid", "productid") < "sales"."salesorderdetail".("specialofferid", "productid")
 
-Ref "FK_SalesOrderHeaderSalesReason_SalesOrderHeader_SalesOrderID": "sales"."salesorderheader"."salesorderid" < "sales"."salesorderheadersalesreason"."salesorderid" [delete: cascade]
+Ref "FK_SalesOrderHeaderSalesReason_SalesOrderHeader_SalesOrderID":"sales"."salesorderheader"."salesorderid" < "sales"."salesorderheadersalesreason"."salesorderid" [delete: cascade]
 
-Ref "FK_SalesOrderHeaderSalesReason_SalesReason_SalesReasonID": "sales"."salesreason"."salesreasonid" < "sales"."salesorderheadersalesreason"."salesreasonid"
+Ref "FK_SalesOrderHeaderSalesReason_SalesReason_SalesReasonID":"sales"."salesreason"."salesreasonid" < "sales"."salesorderheadersalesreason"."salesreasonid"
 
-Ref "FK_SalesOrderHeader_Address_BillToAddressID": "person"."address"."addressid" < "sales"."salesorderheader"."billtoaddressid"
+Ref "FK_SalesOrderHeader_Address_BillToAddressID":"person"."address"."addressid" < "sales"."salesorderheader"."billtoaddressid"
 
-Ref "FK_SalesOrderHeader_Address_ShipToAddressID": "person"."address"."addressid" < "sales"."salesorderheader"."shiptoaddressid"
+Ref "FK_SalesOrderHeader_Address_ShipToAddressID":"person"."address"."addressid" < "sales"."salesorderheader"."shiptoaddressid"
 
-Ref "FK_SalesOrderHeader_CreditCard_CreditCardID": "sales"."creditcard"."creditcardid" < "sales"."salesorderheader"."creditcardid"
+Ref "FK_SalesOrderHeader_CreditCard_CreditCardID":"sales"."creditcard"."creditcardid" < "sales"."salesorderheader"."creditcardid"
 
-Ref "FK_SalesOrderHeader_CurrencyRate_CurrencyRateID": "sales"."currencyrate"."currencyrateid" < "sales"."salesorderheader"."currencyrateid"
+Ref "FK_SalesOrderHeader_CurrencyRate_CurrencyRateID":"sales"."currencyrate"."currencyrateid" < "sales"."salesorderheader"."currencyrateid"
 
-Ref "FK_SalesOrderHeader_Customer_CustomerID": "sales"."customer"."customerid" < "sales"."salesorderheader"."customerid"
+Ref "FK_SalesOrderHeader_Customer_CustomerID":"sales"."customer"."customerid" < "sales"."salesorderheader"."customerid"
 
-Ref "FK_SalesOrderHeader_SalesPerson_SalesPersonID": "sales"."salesperson"."businessentityid" < "sales"."salesorderheader"."salespersonid"
+Ref "FK_SalesOrderHeader_SalesPerson_SalesPersonID":"sales"."salesperson"."businessentityid" < "sales"."salesorderheader"."salespersonid"
 
-Ref "FK_SalesOrderHeader_SalesTerritory_TerritoryID": "sales"."salesterritory"."territoryid" < "sales"."salesorderheader"."territoryid"
+Ref "FK_SalesOrderHeader_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "sales"."salesorderheader"."territoryid"
 
-Ref "FK_SalesOrderHeader_ShipMethod_ShipMethodID": "purchasing"."shipmethod"."shipmethodid" < "sales"."salesorderheader"."shipmethodid"
+Ref "FK_SalesOrderHeader_ShipMethod_ShipMethodID":"purchasing"."shipmethod"."shipmethodid" < "sales"."salesorderheader"."shipmethodid"
 
-Ref "FK_SalesPersonQuotaHistory_SalesPerson_BusinessEntityID": "sales"."salesperson"."businessentityid" < "sales"."salespersonquotahistory"."businessentityid"
+Ref "FK_SalesPersonQuotaHistory_SalesPerson_BusinessEntityID":"sales"."salesperson"."businessentityid" < "sales"."salespersonquotahistory"."businessentityid"
 
-Ref "FK_SalesPerson_Employee_BusinessEntityID": "humanresources"."employee"."businessentityid" < "sales"."salesperson"."businessentityid"
+Ref "FK_SalesPerson_Employee_BusinessEntityID":"humanresources"."employee"."businessentityid" < "sales"."salesperson"."businessentityid"
 
-Ref "FK_SalesPerson_SalesTerritory_TerritoryID": "sales"."salesterritory"."territoryid" < "sales"."salesperson"."territoryid"
+Ref "FK_SalesPerson_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "sales"."salesperson"."territoryid"
 
-Ref "FK_SalesTaxRate_StateProvince_StateProvinceID": "person"."stateprovince"."stateprovinceid" < "sales"."salestaxrate"."stateprovinceid"
+Ref "FK_SalesTaxRate_StateProvince_StateProvinceID":"person"."stateprovince"."stateprovinceid" < "sales"."salestaxrate"."stateprovinceid"
 
-Ref "FK_SalesTerritoryHistory_SalesPerson_BusinessEntityID": "sales"."salesperson"."businessentityid" < "sales"."salesterritoryhistory"."businessentityid"
+Ref "FK_SalesTerritoryHistory_SalesPerson_BusinessEntityID":"sales"."salesperson"."businessentityid" < "sales"."salesterritoryhistory"."businessentityid"
 
-Ref "FK_SalesTerritoryHistory_SalesTerritory_TerritoryID": "sales"."salesterritory"."territoryid" < "sales"."salesterritoryhistory"."territoryid"
+Ref "FK_SalesTerritoryHistory_SalesTerritory_TerritoryID":"sales"."salesterritory"."territoryid" < "sales"."salesterritoryhistory"."territoryid"
 
-Ref "FK_SalesTerritory_CountryRegion_CountryRegionCode": "person"."countryregion"."countryregioncode" < "sales"."salesterritory"."countryregioncode"
+Ref "FK_SalesTerritory_CountryRegion_CountryRegionCode":"person"."countryregion"."countryregioncode" < "sales"."salesterritory"."countryregioncode"
 
-Ref "FK_ShoppingCartItem_Product_ProductID": "production"."product"."productid" < "sales"."shoppingcartitem"."productid"
+Ref "FK_ShoppingCartItem_Product_ProductID":"production"."product"."productid" < "sales"."shoppingcartitem"."productid"
 
-Ref "FK_SpecialOfferProduct_Product_ProductID": "production"."product"."productid" < "sales"."specialofferproduct"."productid"
+Ref "FK_SpecialOfferProduct_Product_ProductID":"production"."product"."productid" < "sales"."specialofferproduct"."productid"
 
-Ref "FK_SpecialOfferProduct_SpecialOffer_SpecialOfferID": "sales"."specialoffer"."specialofferid" < "sales"."specialofferproduct"."specialofferid"
+Ref "FK_SpecialOfferProduct_SpecialOffer_SpecialOfferID":"sales"."specialoffer"."specialofferid" < "sales"."specialofferproduct"."specialofferid"
 
-Ref "FK_Store_BusinessEntity_BusinessEntityID": "person"."businessentity"."businessentityid" < "sales"."store"."businessentityid"
+Ref "FK_Store_BusinessEntity_BusinessEntityID":"person"."businessentity"."businessentityid" < "sales"."store"."businessentityid"
 
-Ref "FK_Store_SalesPerson_SalesPersonID": "sales"."salesperson"."businessentityid" < "sales"."store"."salespersonid"
+Ref "FK_Store_SalesPerson_SalesPersonID":"sales"."salesperson"."businessentityid" < "sales"."store"."salespersonid"

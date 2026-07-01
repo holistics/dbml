@@ -35,6 +35,6 @@ Table "countries" {
   "continent_name" varchar
 }
 
-Ref "fk_country_code": "countries"."code" < "users"."country_code"
+Ref "fk_country_code":"countries"."code" < "users"."country_code"
 
-Ref "fk_composite": "booking_reference".("reference_id", "cust_id") < "br_flight".("reference_id", "cust_id")
+Ref "fk_composite":"booking_reference".("reference_id", "cust_id") < "br_flight".("reference_id", "cust_id")

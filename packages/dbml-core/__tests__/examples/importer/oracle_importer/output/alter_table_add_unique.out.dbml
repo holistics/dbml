@@ -61,4 +61,4 @@ Table "combo_test" {
   "col2" VARCHAR2(50)
 }
 
-Ref "fk_complex_parent": "complex_test"."id" < "complex_test"."parent_id"
+Ref "fk_complex_parent":"complex_test"."id" < "complex_test"."parent_id"

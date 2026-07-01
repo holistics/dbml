@@ -159,7 +159,7 @@ Table "Order Details#2023" {
   }
 }
 
-Ref "fk_order_cust": "customers"."cust_id" < "order details"."cust_id"
+Ref "fk_order_cust":"customers"."cust_id" < "order details"."cust_id"
 
 Table "hr"."employees" {
   "emp_id" NUMBER(10)

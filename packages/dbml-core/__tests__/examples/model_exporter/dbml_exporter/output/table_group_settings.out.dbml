@@ -90,18 +90,18 @@ TableGroup "e_commerce_orders" [color: #24BAB1] {
   "ecommerce"."order_items"
 }
 
-Ref: "users"."id" < "ecommerce"."merchants"."admin_id"
+Ref:"users"."id" < "ecommerce"."merchants"."admin_id"
 
-Ref: "countries"."code" < "users"."country_code"
+Ref:"countries"."code" < "users"."country_code"
 
-Ref: "countries"."code" < "ecommerce"."merchants"."country_code"
+Ref:"countries"."code" < "ecommerce"."merchants"."country_code"
 
-Ref: "ecommerce"."orders"."id" < "ecommerce"."order_items"."order_id"
+Ref:"ecommerce"."orders"."id" < "ecommerce"."order_items"."order_id"
 
-Ref: "ecommerce"."products"."id" < "ecommerce"."order_items"."product_id"
+Ref:"ecommerce"."products"."id" < "ecommerce"."order_items"."product_id"
 
-Ref: "ecommerce"."merchants"."id" < "ecommerce"."products"."merchant_id"
+Ref:"ecommerce"."merchants"."id" < "ecommerce"."products"."merchant_id"
 
-Ref: "ecommerce"."product_tags"."id" <> "ecommerce"."products"."id"
+Ref:"ecommerce"."product_tags"."id" <> "ecommerce"."products"."id"
 
-Ref: "ecommerce"."merchants".("id", "country_code") < "ecommerce"."merchant_periods".("merchant_id", "country_code")
+Ref:"ecommerce"."merchants".("id", "country_code") < "ecommerce"."merchant_periods".("merchant_id", "country_code")

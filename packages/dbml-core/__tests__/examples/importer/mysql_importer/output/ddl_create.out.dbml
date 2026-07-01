@@ -531,4 +531,4 @@ Table "tab1" {
   "mi" MIDDLEINT
 }
 
-Ref: "parent_table"."id" < "child_table"."id_parent" [update: cascade, delete: set null]
+Ref:"parent_table"."id" < "child_table"."id_parent" [update: cascade, delete: set null]
