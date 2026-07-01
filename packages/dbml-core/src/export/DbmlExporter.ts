@@ -1,5 +1,5 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
+import { addDoubleQuoteIfNeeded, formatRecordValue, getRelationshipOp } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -45,9 +45,9 @@ class DbmlExporter {
       const schema = model.schemas[_enum.schemaId];
 
       return `Enum ${shouldPrintSchema(schema, model)
-        ? `"${schema.name}".`
-        : ''}"${_enum.name}" {\n${
-        _enum.valueIds.map((valueId) => `  "${model.enumValues[valueId].name}"${model.enumValues[valueId].note
+        ? `${addDoubleQuoteIfNeeded(schema.name)}.`
+        : ''}${addDoubleQuoteIfNeeded(_enum.name)} {\n${
+        _enum.valueIds.map((valueId) => `  ${addDoubleQuoteIfNeeded(model.enumValues[valueId].name)}${model.enumValues[valueId].note
           ? ` [note: ${DbmlExporter.escapeNote(model.enumValues[valueId].note)}]`
           : ''}`).join('\n')}\n}\n`;
     });
@@ -63,12 +63,10 @@ class DbmlExporter {
 
       let schemaName = '';
       if (field.type.schemaName && field.type.schemaName !== DEFAULT_SCHEMA_NAME) {
-        schemaName = DbmlExporter.hasWhiteSpace(field.type.schemaName) ? `"${field.type.schemaName}".` : `${field.type.schemaName}.`;
+        schemaName = `${addDoubleQuoteIfNeeded(field.type.schemaName)}.`;
       }
 
-      let line = `"${field.name}" ${schemaName}${DbmlExporter.hasWhiteSpace(field.type.type_name) || DbmlExporter.hasSquareBracket(field.type.type_name)
-        ? `"${field.type.type_name}"`
-        : field.type.type_name}`;
+      let line = `${addDoubleQuoteIfNeeded(field.name)} ${schemaName}${addDoubleQuoteIfNeeded(field.type.type_name)}`;
 
       const constraints: string[] = [];
       if (field.unique) {
@@ -237,8 +235,8 @@ class DbmlExporter {
       const schema = model.schemas[table.schemaId];
       const tableSettingStr = DbmlExporter.getTableSettings(table);
       // Include schema name if needed
-      let tableName = `"${table.name}"`;
-      if (shouldPrintSchema(schema, model)) tableName = `"${schema.name}"."${table.name}"`;
+      let tableName = addDoubleQuoteIfNeeded(table.name);
+      if (shouldPrintSchema(schema, model)) tableName = `${addDoubleQuoteIfNeeded(schema.name)}.${addDoubleQuoteIfNeeded(table.name)}`;
 
       // Include alias if present
       const aliasStr = table.alias ? ` as ${addDoubleQuoteIfNeeded(table.alias)}` : '';
@@ -266,49 +264,43 @@ class DbmlExporter {
   }
 
   static buildFieldName (fieldIds: number[], model: NormalizedModel): string {
-    const fieldNames = fieldIds.map((fieldId) => `"${model.fields[fieldId].name}"`).join(', ');
+    const fieldNames = fieldIds.map((fieldId) => addDoubleQuoteIfNeeded(model.fields[fieldId].name)).join(', ');
     return fieldIds.length === 1 ? fieldNames : `(${fieldNames})`;
   }
 
   static exportRefs (refIds: number[], model: NormalizedModel): string {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
-      const oneRelationEndpointIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
-      const isManyToMany = oneRelationEndpointIndex === -1;
-      const refEndpointIndex = isManyToMany ? 0 : oneRelationEndpointIndex;
-      const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
-      const refEndpointId = ref.endpointIds[refEndpointIndex];
-      const foreignEndpoint = model.endpoints[foreignEndpointId];
-      const refEndpoint = model.endpoints[refEndpointId];
+      const endpoint1 = model.endpoints[ref.endpointIds[0]];
+      const endpoint2 = model.endpoints[ref.endpointIds[1]];
+      const op = getRelationshipOp(endpoint1.relation, endpoint2.relation);
+
+      const ep1Field = model.fields[endpoint1.fieldIds[0]];
+      const ep1Table = model.tables[ep1Field.tableId];
+      const ep1Schema = model.schemas[ep1Table.schemaId];
+      const ep1FieldName = DbmlExporter.buildFieldName(endpoint1.fieldIds, model);
 
       let line = 'Ref';
-      const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
-      const refEndpointTable = model.tables[refEndpointField.tableId];
-      const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = DbmlExporter.buildFieldName(refEndpoint.fieldIds, model);
 
       if (ref.name) {
         line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
-          ? `"${model.schemas[ref.schemaId].name}".`
-          : ''}"${ref.name}"`;
+          ? `${addDoubleQuoteIfNeeded(model.schemas[ref.schemaId].name)}.`
+          : ''}${addDoubleQuoteIfNeeded(ref.name)}`;
       }
       line += ':';
-      line += `${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".`
-        : ''}"${refEndpointTable.name}".${refEndpointFieldName} `;
+      line += `${shouldPrintSchema(ep1Schema, model)
+        ? `${addDoubleQuoteIfNeeded(ep1Schema.name)}.`
+        : ''}${addDoubleQuoteIfNeeded(ep1Table.name)}.${ep1FieldName} `;
 
-      const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
-      const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
-      const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = DbmlExporter.buildFieldName(foreignEndpoint.fieldIds, model);
+      const ep2Field = model.fields[endpoint2.fieldIds[0]];
+      const ep2Table = model.tables[ep2Field.tableId];
+      const ep2Schema = model.schemas[ep2Table.schemaId];
+      const ep2FieldName = DbmlExporter.buildFieldName(endpoint2.fieldIds, model);
 
-      if (isManyToMany) line += '<> ';
-      else
-        if (foreignEndpoint.relation === '1') line += '- ';
-        else line += '< ';
-      line += `${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".`
-        : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
+      line += `${op} `;
+      line += `${shouldPrintSchema(ep2Schema, model)
+        ? `${addDoubleQuoteIfNeeded(ep2Schema.name)}.`
+        : ''}${addDoubleQuoteIfNeeded(ep2Table.name)}.${ep2FieldName}`;
 
       const refActions: string[] = [];
       if (ref.onUpdate) {
@@ -346,14 +338,14 @@ class DbmlExporter {
       const groupSettingStr = DbmlExporter.getTableGroupSettings(group);
 
       const groupNote = group.note ? `  Note: ${DbmlExporter.escapeNote(group.note)}\n` : '';
-      const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `"${groupSchema.name}".` : '';
-      const groupName = `${groupSchemaName}"${group.name}"`;
+      const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `${addDoubleQuoteIfNeeded(groupSchema.name)}.` : '';
+      const groupName = `${groupSchemaName}${addDoubleQuoteIfNeeded(group.name)}`;
 
       const tableNames = group.tableIds
         .reduce((result, tableId) => {
           const table = model.tables[tableId];
           const tableSchema = model.schemas[table.schemaId];
-          const tableName = `  ${shouldPrintSchema(tableSchema, model) ? `"${tableSchema.name}".` : ''}"${table.name}"`;
+          const tableName = `  ${shouldPrintSchema(tableSchema, model) ? `${addDoubleQuoteIfNeeded(tableSchema.name)}.` : ''}${addDoubleQuoteIfNeeded(table.name)}`;
           return `${result}${tableName}\n`;
         }, '');
 
