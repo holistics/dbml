@@ -1,3 +1,4 @@
+import { CARDINALITY_SOME, CARDINALITY_MANY, CARDINALITY_ONE, CARDINALITY_MAYBE } from '@dbml/parse';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import Element from './element';
 import { shouldPrintSchema, shouldPrintSchemaName } from './utils';
@@ -37,6 +38,12 @@ class Endpoint extends Element {
         : ''}"${tableName}"`);
     }
     this.setFields(fieldNames, table);
+
+    // Adjust cardinality based on field nullability
+    if (this.fields.length > 0 && this.fields.every((f) => !f.not_null && !f.pk)) {
+      if (this.relation === CARDINALITY_SOME) this.relation = CARDINALITY_MANY;
+      else if (this.relation === CARDINALITY_ONE) this.relation = CARDINALITY_MAYBE;
+    }
   }
 
   generateId () {
