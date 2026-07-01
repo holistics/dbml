@@ -18,6 +18,7 @@ export default defineConfig(
       ignores: [
         'node_modules/*',
         'dist/*',
+        'dist-profile/*',
         'vite.config.ts',
         'vite.profile.config.ts',
         'eslint.config.ts',

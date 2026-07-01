@@ -29,7 +29,7 @@ import type { ElementRef } from '@/core/types/schemaJson';
 import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../records/utils/constraints';
 import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
-import { getMultiplicities } from '../utils';
+import { getMultiplicities } from '@/core/types/relation';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;

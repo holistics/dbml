@@ -1,5 +1,5 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
+import { addDoubleQuoteIfNeeded, formatRecordValue, getRelationshipOp, parseCardinality } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -273,19 +273,19 @@ class DbmlExporter {
   static exportRefs (refIds: number[], model: NormalizedModel): string {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
-      const oneRelationEndpointIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
-      const isManyToMany = oneRelationEndpointIndex === -1;
-      const refEndpointIndex = isManyToMany ? 0 : oneRelationEndpointIndex;
-      const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
-      const refEndpointId = ref.endpointIds[refEndpointIndex];
-      const foreignEndpoint = model.endpoints[foreignEndpointId];
-      const refEndpoint = model.endpoints[refEndpointId];
+      // Put the "one" side on the left to preserve canonical order (one < many)
+      const oneIndex = ref.endpointIds.findIndex((id) => parseCardinality(model.endpoints[id].relation).max === 1);
+      const leftIndex = oneIndex === -1 ? 0 : oneIndex;
+      const leftEndpoint = model.endpoints[ref.endpointIds[leftIndex]];
+      const rightEndpoint = model.endpoints[ref.endpointIds[1 - leftIndex]];
+      const op = getRelationshipOp(leftEndpoint.relation, rightEndpoint.relation);
+
+      const leftField = model.fields[leftEndpoint.fieldIds[0]];
+      const leftTable = model.tables[leftField.tableId];
+      const leftSchema = model.schemas[leftTable.schemaId];
+      const leftFieldName = DbmlExporter.buildFieldName(leftEndpoint.fieldIds, model);
 
       let line = 'Ref';
-      const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
-      const refEndpointTable = model.tables[refEndpointField.tableId];
-      const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = DbmlExporter.buildFieldName(refEndpoint.fieldIds, model);
 
       if (ref.name) {
         line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
@@ -293,22 +293,19 @@ class DbmlExporter {
           : ''}"${ref.name}"`;
       }
       line += ':';
-      line += `${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".`
-        : ''}"${refEndpointTable.name}".${refEndpointFieldName} `;
+      line += `${shouldPrintSchema(leftSchema, model)
+        ? `"${leftSchema.name}".`
+        : ''}"${leftTable.name}".${leftFieldName} `;
 
-      const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
-      const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
-      const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = DbmlExporter.buildFieldName(foreignEndpoint.fieldIds, model);
+      const rightField = model.fields[rightEndpoint.fieldIds[0]];
+      const rightTable = model.tables[rightField.tableId];
+      const rightSchema = model.schemas[rightTable.schemaId];
+      const rightFieldName = DbmlExporter.buildFieldName(rightEndpoint.fieldIds, model);
 
-      if (isManyToMany) line += '<> ';
-      else
-        if (foreignEndpoint.relation === '1') line += '- ';
-        else line += '< ';
-      line += `${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".`
-        : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
+      line += `${op} `;
+      line += `${shouldPrintSchema(rightSchema, model)
+        ? `"${rightSchema.name}".`
+        : ''}"${rightTable.name}".${rightFieldName}`;
 
       const refActions: string[] = [];
       if (ref.onUpdate) {
