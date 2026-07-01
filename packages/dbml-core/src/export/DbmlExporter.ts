@@ -1,5 +1,5 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, formatRecordValue, getRelationshipOp } from '@dbml/parse';
+import { addDoubleQuoteIfNeeded, formatRecordValue, getRelationshipOp, parseCardinality } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -271,14 +271,17 @@ class DbmlExporter {
   static exportRefs (refIds: number[], model: NormalizedModel): string {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
-      const endpoint1 = model.endpoints[ref.endpointIds[0]];
-      const endpoint2 = model.endpoints[ref.endpointIds[1]];
-      const op = getRelationshipOp(endpoint1.relation, endpoint2.relation);
+      // Put the "one" side on the left to preserve canonical order (one < many)
+      const oneIndex = ref.endpointIds.findIndex((id) => parseCardinality(model.endpoints[id].relation).max === 1);
+      const leftIndex = oneIndex === -1 ? 0 : oneIndex;
+      const leftEndpoint = model.endpoints[ref.endpointIds[leftIndex]];
+      const rightEndpoint = model.endpoints[ref.endpointIds[1 - leftIndex]];
+      const op = getRelationshipOp(leftEndpoint.relation, rightEndpoint.relation);
 
-      const ep1Field = model.fields[endpoint1.fieldIds[0]];
-      const ep1Table = model.tables[ep1Field.tableId];
-      const ep1Schema = model.schemas[ep1Table.schemaId];
-      const ep1FieldName = DbmlExporter.buildFieldName(endpoint1.fieldIds, model);
+      const leftField = model.fields[leftEndpoint.fieldIds[0]];
+      const leftTable = model.tables[leftField.tableId];
+      const leftSchema = model.schemas[leftTable.schemaId];
+      const leftFieldName = DbmlExporter.buildFieldName(leftEndpoint.fieldIds, model);
 
       let line = 'Ref';
 
@@ -287,20 +290,20 @@ class DbmlExporter {
           ? `${addDoubleQuoteIfNeeded(model.schemas[ref.schemaId].name)}.`
           : ''}${addDoubleQuoteIfNeeded(ref.name)}`;
       }
-      line += ':';
-      line += `${shouldPrintSchema(ep1Schema, model)
-        ? `${addDoubleQuoteIfNeeded(ep1Schema.name)}.`
-        : ''}${addDoubleQuoteIfNeeded(ep1Table.name)}.${ep1FieldName} `;
+      line += ': ';
+      line += `${shouldPrintSchema(leftSchema, model)
+        ? `${addDoubleQuoteIfNeeded(leftSchema.name)}.`
+        : ''}${addDoubleQuoteIfNeeded(leftTable.name)}.${leftFieldName} `;
 
-      const ep2Field = model.fields[endpoint2.fieldIds[0]];
-      const ep2Table = model.tables[ep2Field.tableId];
-      const ep2Schema = model.schemas[ep2Table.schemaId];
-      const ep2FieldName = DbmlExporter.buildFieldName(endpoint2.fieldIds, model);
+      const rightField = model.fields[rightEndpoint.fieldIds[0]];
+      const rightTable = model.tables[rightField.tableId];
+      const rightSchema = model.schemas[rightTable.schemaId];
+      const rightFieldName = DbmlExporter.buildFieldName(rightEndpoint.fieldIds, model);
 
       line += `${op} `;
-      line += `${shouldPrintSchema(ep2Schema, model)
-        ? `${addDoubleQuoteIfNeeded(ep2Schema.name)}.`
-        : ''}${addDoubleQuoteIfNeeded(ep2Table.name)}.${ep2FieldName}`;
+      line += `${shouldPrintSchema(rightSchema, model)
+        ? `${addDoubleQuoteIfNeeded(rightSchema.name)}.`
+        : ''}${addDoubleQuoteIfNeeded(rightTable.name)}.${rightFieldName}`;
 
       const refActions: string[] = [];
       if (ref.onUpdate) {

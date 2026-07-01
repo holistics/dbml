@@ -91,6 +91,7 @@ export {
   type RelationshipOp,
   getRelationshipOp,
   getMultiplicities,
+  parseCardinality,
 } from '@/core/types/relation';
 
 // DiagramView types
