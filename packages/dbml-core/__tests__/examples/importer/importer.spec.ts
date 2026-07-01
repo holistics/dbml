@@ -5,6 +5,62 @@ import { readFileSync } from 'fs';
 import path from 'path';
 import { test, expect, describe } from 'vitest';
 
+describe('@dbml/core - importer optional refs', () => {
+  const POSTGRES_NULLABLE_FK = `
+    CREATE TABLE users (id int PRIMARY KEY);
+    CREATE TABLE posts (
+      id int PRIMARY KEY,
+      user_id int REFERENCES users(id)
+    );
+  `;
+
+  const POSTGRES_NOT_NULL_FK = `
+    CREATE TABLE users (id int PRIMARY KEY);
+    CREATE TABLE posts (
+      id int PRIMARY KEY,
+      user_id int NOT NULL REFERENCES users(id)
+    );
+  `;
+
+  const MYSQL_NULLABLE_FK = `
+    CREATE TABLE users (id int PRIMARY KEY);
+    CREATE TABLE posts (
+      id int PRIMARY KEY,
+      user_id int,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+  `;
+
+  const MYSQL_NOT_NULL_FK = `
+    CREATE TABLE users (id int PRIMARY KEY);
+    CREATE TABLE posts (
+      id int PRIMARY KEY,
+      user_id int NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+  `;
+
+  test('postgres: nullable FK column produces optional ref', () => {
+    const res = importer.import(POSTGRES_NULLABLE_FK, 'postgres');
+    expect(res).toContain('Ref:"users"."id" <? "posts"."user_id"');
+  });
+
+  test('postgres: NOT NULL FK column produces required ref', () => {
+    const res = importer.import(POSTGRES_NOT_NULL_FK, 'postgres');
+    expect(res).toContain('Ref:"users"."id" < "posts"."user_id"');
+  });
+
+  test('mysql: nullable FK column produces optional ref', () => {
+    const res = importer.import(MYSQL_NULLABLE_FK, 'mysql');
+    expect(res).toContain('Ref:"users"."id" <? "posts"."user_id"');
+  });
+
+  test('mysql: NOT NULL FK column produces required ref', () => {
+    const res = importer.import(MYSQL_NOT_NULL_FK, 'mysql');
+    expect(res).toContain('Ref:"users"."id" < "posts"."user_id"');
+  });
+});
+
 describe('@dbml/core - importer', () => {
   const runTest = async (fileName: string, testDir: string, format: ParseFormat) => {
     const fileExtension = getFileExtension(format);
