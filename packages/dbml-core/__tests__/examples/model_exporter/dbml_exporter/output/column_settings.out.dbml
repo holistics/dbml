@@ -94,7 +94,7 @@ Ref:"ecommerce"."orders"."id" < "ecommerce"."order_items"."order_id"
 
 Ref:"ecommerce"."products"."id" < "ecommerce"."order_items"."product_id"
 
-Ref:"ecommerce"."merchants"."id" < "ecommerce"."products"."merchant_id"
+Ref:"ecommerce"."merchants"."id" ?< "ecommerce"."products"."merchant_id"
 
 Ref:"ecommerce"."product_tags"."id" <> "ecommerce"."products"."id"
 

@@ -33,7 +33,7 @@ TableGroup "tablegroup_name" {
 
 Ref:"users"."id" < "ecommerce"."users"."id"
 
-Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
+Ref "name_optional":"users"."name" ?< "ecommerce"."users"."id"
 
 Enum "schemaB"."gender" {
   "male"
@@ -59,6 +59,6 @@ Table "schemaA"."locations" {
   "name" varchar
 }
 
-Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
+Ref:"ecommerce"."users"."id" <? "schemaA"."products"."name"
 
-Ref:"users"."id" < "schemaA"."locations"."name"
+Ref:"users"."id" <? "schemaA"."locations"."name"

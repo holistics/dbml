@@ -20,11 +20,11 @@ Table "posts" {
   "created_at" timestamp
 }
 
-Ref:"users"."id" < "posts"."user_id"
+Ref:"users"."id" <? "posts"."user_id"
 
-Ref:"users"."id" < "follows"."following_user_id"
+Ref:"users"."id" <? "follows"."following_user_id"
 
-Ref:"users"."id" < "follows"."followed_user_id"
+Ref:"users"."id" <? "follows"."followed_user_id"
 
 Note note1 {
   'sticky note with one line content'
