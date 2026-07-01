@@ -109,4 +109,3 @@ export function nodeRefereeOfLeftExpression (compiler: Compiler, node: SyntaxNod
   }
   return compiler.nodeReferee(leftExpr).getFiltered(UNHANDLED) ?? undefined;
 }
-
