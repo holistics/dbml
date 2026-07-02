@@ -106,7 +106,7 @@ export const refModule: GlobalModule = {
   },
 };
 
-function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): NodeSymbol | undefined {
+export function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): NodeSymbol | undefined {
   const membersList = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
   if (!membersList) return undefined;
 

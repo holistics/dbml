@@ -9,6 +9,33 @@ import {
 } from '../constants';
 import { getOriginalText } from '../helpers';
 
+function extractSourceTablesFromCtx (ctx, refClassNames) {
+  if (!ctx) return [];
+  const seen = new Map();
+  const stack = [ctx];
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!node) continue;
+    const className = node.constructor && node.constructor.name;
+    if (className && refClassNames.includes(className)) {
+      const text = (node.getText && node.getText()) || '';
+      const cleaned = text.replace(/`/g, '').replace(/"/g, '').split(/\s+/)[0];
+      const parts = cleaned.split('.');
+      const tableName = parts[parts.length - 1];
+      const schemaName = parts.length > 1 ? parts[parts.length - 2] : undefined;
+      const key = `${schemaName || 'public'}.${tableName}`;
+      if (tableName && !seen.has(key)) {
+        seen.set(key, { name: tableName, schemaName });
+      }
+    }
+    const childCount = typeof node.getChildCount === 'function' ? node.getChildCount() : 0;
+    for (let i = 0; i < childCount; i++) {
+      stack.push(node.getChild(i));
+    }
+  }
+  return Array.from(seen.values());
+}
+
 const TABLE_OPTIONS_KIND = {
   NOTE: 'note',
 };
@@ -51,12 +78,49 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       schemas: [],
       tables: [],
       refs: [],
+      deps: [],
       enums: [],
       tableGroups: [],
       aliases: [],
       project: {},
       records: [],
     };
+  }
+
+  visitCreateView (ctx) {
+    const fullId = ctx.fullId();
+    const ids = fullId ? fullId.getText().replace(/`/g, '').split('.') : [];
+    if (ids.length === 0) return;
+    const tableName = ids[ids.length - 1];
+    const schemaName = ids.length > 1 ? ids[ids.length - 2] : undefined;
+    const ddl = ctx.getText();
+    this.data.tables.push({
+      name: tableName,
+      schemaName,
+      fields: [],
+      indexes: [],
+      checks: [],
+      note: null,
+      headerColor: null,
+      custom: { query: ddl, kind: 'view' },
+    });
+    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
+  }
+
+  _emitDepsFromViewSelect (ctx, viewName, viewSchemaName) {
+    const sources = extractSourceTablesFromCtx(ctx, ['TableNameContext', 'TableSourceItemContext']);
+    sources.forEach((src) => {
+      if (src.name === viewName && (src.schemaName || 'public') === (viewSchemaName || 'public')) return;
+      if (!this.findTable(src.schemaName, src.name)) return;
+      this.data.deps.push({
+        edges: [{
+          upstream: { schemaName: src.schemaName, tableName: src.name, fieldNames: [] },
+          downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
+        }],
+        note: null,
+        custom: {},
+      });
+    });
   }
 
   // TODO: support configurable default schema name other than 'public'

@@ -15,6 +15,33 @@ import {
 } from '../constants';
 import { getOriginalText } from '../helpers';
 
+function extractSourceTablesFromOracleCtx (ctx) {
+  if (!ctx) return [];
+  const seen = new Map();
+  const stack = [ctx];
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!node) continue;
+    const className = node.constructor && node.constructor.name;
+    if (className === 'Tableview_nameContext' || className === 'DML_table_expression_clauseContext') {
+      const text = (node.getText && node.getText()) || '';
+      const cleaned = text.replace(/"/g, '').split(/\s+/)[0];
+      const parts = cleaned.split('.');
+      const tableName = parts[parts.length - 1];
+      const schemaName = parts.length > 1 ? parts[parts.length - 2] : undefined;
+      const key = `${schemaName || ''}.${tableName}`;
+      if (tableName && !seen.has(key)) {
+        seen.set(key, { name: tableName, schemaName });
+      }
+    }
+    const childCount = typeof node.getChildCount === 'function' ? node.getChildCount() : 0;
+    for (let i = 0; i < childCount; i++) {
+      stack.push(node.getChild(i));
+    }
+  }
+  return Array.from(seen.values());
+}
+
 // We cannot use TABLE_CONSTRAINT_KIND and COLUMN_CONSTRAINT_KIND from '../constants' as their values are indistinguishable from each other
 // For example: TABLE_CONSTRAINT_KIND.UNIQUE === COLUMN_CONSTRAINT_KIND.UNIQUE
 // Therefore, we redefine them to be different
@@ -117,12 +144,69 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
       schemas: [],
       tables: [],
       refs: [],
+      deps: [],
       enums: [],
       tableGroups: [],
       aliases: [],
       project: {},
       records: [],
     };
+  }
+
+  visitCreate_view (ctx) {
+    const idExpr = ctx.id_expression ? ctx.id_expression() : null;
+    if (!idExpr) return;
+    const tableName = idExpr.getText().replace(/"/g, '');
+    const schemaNameNode = ctx.schema_name ? ctx.schema_name() : null;
+    const schemaName = schemaNameNode ? schemaNameNode.getText().replace(/"/g, '') : undefined;
+    const ddl = getOriginalText(ctx);
+    this.data.tables.push({
+      name: tableName,
+      schemaName,
+      fields: [],
+      indexes: [],
+      checks: [],
+      note: null,
+      headerColor: null,
+      custom: { query: ddl, kind: 'view' },
+    });
+    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
+  }
+
+  visitCreate_materialized_view (ctx) {
+    const text = ctx.getText ? ctx.getText() : '';
+    const m = text.match(/MATERIALIZEDVIEW(?:IFNOTEXISTS)?(?:"([^"]+)"\.)?"?([^("\s]+)"?/i);
+    if (!m) return;
+    const schemaName = m[1] || undefined;
+    const tableName = m[2];
+    const ddl = getOriginalText(ctx);
+    this.data.tables.push({
+      name: tableName,
+      schemaName,
+      fields: [],
+      indexes: [],
+      checks: [],
+      note: null,
+      headerColor: null,
+      custom: { query: ddl, kind: 'materialized_view', materialized: true },
+    });
+    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
+  }
+
+  _emitDepsFromViewSelect (ctx, viewName, viewSchemaName) {
+    const sources = extractSourceTablesFromOracleCtx(ctx);
+    sources.forEach((src) => {
+      if (src.name === viewName && (src.schemaName || '') === (viewSchemaName || '')) return;
+      if (!findTable(this.data.tables, src.schemaName, src.name)) return;
+      this.data.deps.push({
+        edges: [{
+          upstream: { schemaName: src.schemaName, tableName: src.name, fieldNames: [] },
+          downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
+        }],
+        note: null,
+        custom: {},
+      });
+    });
   }
 
   //  sql_script

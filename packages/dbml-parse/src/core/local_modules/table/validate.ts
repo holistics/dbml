@@ -130,6 +130,8 @@ export default class TableValidator {
             }
           });
           break;
+        case SettingName.Dep:
+          break;
         default:
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
       }
@@ -360,6 +362,15 @@ export default class TableValidator {
             }
           });
           break;
+        case SettingName.Dep:
+          attrs.forEach((attr) => {
+            const isValidDep = attr.value instanceof PrefixExpressionNode
+              && (attr.value.op?.value === '->' || attr.value.op?.value === '<-');
+            if (!isValidDep) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'dep\' must be `-> target.col` or `<- source.col`', attr.value || attr.name!));
+            }
+          });
+          break;
 
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
@@ -572,6 +583,13 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         attrs.forEach((attr) => {
           if (!(attr.value instanceof FunctionExpressionNode)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attr.value || attr.name!));
+          }
+        });
+        break;
+      case SettingName.Dep:
+        attrs.forEach((attr) => {
+          if (!isUnaryRelationship(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'dep\' must be a valid unary relationship', attr.value || attr.name!));
           }
         });
         break;

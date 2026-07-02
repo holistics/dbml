@@ -12,6 +12,33 @@ const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
 
 const DEFAULT_SCHEMA = 'dbo';
 
+function extractSourceTablesFromMssqlCtx (ctx) {
+  if (!ctx) return [];
+  const seen = new Map();
+  const stack = [ctx];
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!node) continue;
+    const className = node.constructor && node.constructor.name;
+    if (className === 'Full_table_nameContext') {
+      const text = (node.getText && node.getText()) || '';
+      const cleaned = text.replace(/\[|\]|"|`/g, '').split(/\s+/)[0];
+      const parts = cleaned.split('.');
+      const tableName = parts[parts.length - 1];
+      const schemaName = parts.length > 1 ? parts[parts.length - 2] : undefined;
+      const key = `${schemaName || DEFAULT_SCHEMA}.${tableName}`;
+      if (tableName && !seen.has(key)) {
+        seen.set(key, { name: tableName, schemaName });
+      }
+    }
+    const childCount = typeof node.getChildCount === 'function' ? node.getChildCount() : 0;
+    for (let i = 0; i < childCount; i++) {
+      stack.push(node.getChild(i));
+    }
+  }
+  return Array.from(seen.values());
+}
+
 const getSchemaAndTableName = (names) => {
   const tableName = last(names);
   const schemaName = names.length > 1 ? nth(names, -2) : undefined;
@@ -104,12 +131,50 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       schemas: [],
       tables: [],
       refs: [],
+      deps: [],
       enums: [],
       tableGroups: [],
       aliases: [],
       project: {},
       records: [],
     };
+  }
+
+  visitCreate_view (ctx) {
+    const simpleName = ctx.simple_name();
+    if (!simpleName) return;
+    const text = simpleName.getText();
+    const ids = text.split('.').map((p) => p.replace(/\[|\]|"|`/g, ''));
+    const tableName = ids[ids.length - 1];
+    const schemaName = ids.length > 1 ? ids[ids.length - 2] : undefined;
+    const ddl = getOriginalText(ctx);
+    this.data.tables.push({
+      name: tableName,
+      schemaName,
+      fields: [],
+      indexes: [],
+      checks: [],
+      note: null,
+      headerColor: null,
+      custom: { query: ddl, kind: 'view' },
+    });
+    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
+  }
+
+  _emitDepsFromViewSelect (ctx, viewName, viewSchemaName) {
+    const sources = extractSourceTablesFromMssqlCtx(ctx);
+    sources.forEach((src) => {
+      if (src.name === viewName && (src.schemaName || DEFAULT_SCHEMA) === (viewSchemaName || DEFAULT_SCHEMA)) return;
+      if (!this.findTable(src.schemaName, src.name)) return;
+      this.data.deps.push({
+        edges: [{
+          upstream: { schemaName: src.schemaName, tableName: src.name, fieldNames: [] },
+          downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
+        }],
+        note: null,
+        custom: {},
+      });
+    });
   }
 
   findTable (schemaName, tableName) {

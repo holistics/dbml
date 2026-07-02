@@ -1,0 +1,20 @@
+Table users { id int }
+Table orders { id int }
+Table events { id int }
+
+// header attribute form
+Dep dep_header [color: #aabbcc] {
+  users -> orders
+}
+
+// body sub-declaration form
+Dep dep_body {
+  orders -> events
+  color: #123456
+}
+
+// short / inline-setting form
+Dep: users -> events [color: #abcdef]
+
+// uncolored — no color slot
+Dep: events -> users

@@ -30,11 +30,61 @@ export interface SampleCategory {
   readonly content: string;
 }
 
+export const DATA_LINEAGE_SAMPLE_CONTENT = `Table raw_orders {
+  id int [pk]
+  user_id int
+  amount decimal
+  created_at timestamp
+}
+
+Table stg_orders {
+  id int [pk]
+  user_id int
+  amount decimal
+}
+
+Table fct_orders {
+  id int [pk]
+  user_id int
+  revenue decimal
+}
+
+// Short form
+Dep: raw_orders -> stg_orders
+
+// Long form with custom attrs
+Dep {
+  stg_orders -> fct_orders
+
+  note: 'Aggregate staging orders into facts'
+  materialized: table
+  owner: 'data-team'
+}
+
+// Reverse direction (sugar — same edge as stg_orders -> fct_orders)
+Dep: fct_orders <- stg_orders
+
+// Column-level
+Dep {
+  stg_orders.amount -> fct_orders.revenue
+}
+
+// Inline on table header
+Table mart_orders [dep: <- fct_orders] {
+  id int [pk]
+  total decimal
+}`;
+
 export const SAMPLE_CATEGORIES: readonly SampleCategory[] = [
   {
     name: 'Basic Example',
     description: 'Simple tables with relationships',
     content: DEFAULT_SAMPLE_CONTENT,
+  },
+  {
+    name: 'Data Lineage',
+    description: 'Dep blocks (data flow) — short, long, reverse, column-level, inline',
+    content: DATA_LINEAGE_SAMPLE_CONTENT,
   },
   {
     name: 'E-commerce Schema',

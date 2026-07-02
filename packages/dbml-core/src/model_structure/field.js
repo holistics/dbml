@@ -41,6 +41,8 @@ class Field extends Element {
     this.checks = [];
     /** @type {import('../../types/model_structure/endpoint').default[]} */
     this.endpoints = [];
+    /** @type {import('../../types/model_structure/dep_edge').default[]} */
+    this.depEdges = [];
     /** @type {import('../../types/model_structure/table').default} */
     this.table = table;
     /** @type {import('../../types/model_structure/tablePartial').default} */
@@ -93,6 +95,13 @@ class Field extends Element {
     this.endpoints.push(endpoint);
   }
 
+  /**
+   * @param {import('../../types/model_structure/dep_edge').default} depEdge
+   */
+  pushDepEdge (depEdge) {
+    this.depEdges.push(depEdge);
+  }
+
   export () {
     return {
       ...this.shallowExport(),
@@ -109,6 +118,7 @@ class Field extends Element {
   exportChildIds () {
     return {
       endpointIds: this.endpoints.map((e) => e.id),
+      depEdgeIds: this.depEdges.map((e) => e.id),
     };
   }
 

@@ -1,0 +1,21 @@
+// Duplicate Dep edges (same direction) produce a "same endpoints" diagnostic.
+// Reversed direction is a distinct edge and is allowed.
+
+Table a {
+  id int [pk]
+}
+
+Table b {
+  id int [pk]
+}
+
+// table-level duplicate -> error
+Dep: a -> b
+Dep: a -> b
+
+// column-level duplicate -> error
+Dep: a.id -> b.id
+Dep: a.id -> b.id
+
+// reversed direction is not a duplicate -> no error
+Dep: b -> a

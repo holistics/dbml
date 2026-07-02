@@ -1,4 +1,7 @@
-import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit } from '@dbml/parse';
+import type {
+  DiagramViewSyncOperation, DiagramViewBlock, TextEdit,
+  DepSyncOperation, DepBlock,
+} from '@dbml/parse';
 
 export type TableNameInput = string | { schema?: string; table: string };
 
@@ -17,3 +20,13 @@ export function syncDiagramView(
 export function findDiagramViewBlocks(
   dbmlCode: string,
 ): DiagramViewBlock[];
+
+export function syncDep(
+  dbmlCode: string,
+  operations: DepSyncOperation[],
+  blocks?: DepBlock[],
+): { newDbml: string; edits: TextEdit[] };
+
+export function findDepBlocks(
+  dbmlCode: string,
+): DepBlock[];

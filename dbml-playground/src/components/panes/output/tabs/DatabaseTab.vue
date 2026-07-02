@@ -234,6 +234,40 @@
           </div>
         </DbSection>
 
+        <!-- Deps -->
+        <DbSection
+          v-if="database.deps?.length"
+          label="Deps"
+          :count="database.deps.length"
+          :icon="PhArrowRight"
+          icon-color="text-orange-500"
+        >
+          <template
+            v-for="(dep, di) in database.deps"
+            :key="di"
+          >
+            <div
+              v-for="(edge, ei) in dep.edges"
+              :key="`${di}-${ei}`"
+              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+            >
+              <VTooltip
+                placement="right"
+                :distance="6"
+              >
+                <PhArrowRight class="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
+                <template #popper>
+                  <span class="text-xs">Dep</span>
+                </template>
+              </VTooltip>
+              <span class="text-blue-500">{{ depEndpointLabel(edge.upstream) }}</span>
+              <span class="text-gray-400">→</span>
+              <span class="text-blue-500">{{ depEndpointLabel(edge.downstream) }}</span>
+            </div>
+          </template>
+        </DbSection>
+
         <!-- Enums -->
         <DbSection
           label="Enums"
@@ -541,6 +575,7 @@ import {
   PhListBullets,
   PhArrowsLeftRight,
   PhArrowsDownUp,
+  PhArrowRight,
   PhTextAa,
   PhNumberSquareOne,
   PhFolder,
@@ -557,6 +592,7 @@ import TabSettingsButton from './common/TabSettingsButton.vue';
 import type { Database } from '@dbml/parse';
 
 type RefEndpoint = Database['refs'][number]['endpoints'][number];
+type DepEndpoint = NonNullable<Database['deps']>[number]['edges'][number]['upstream'];
 type IndexEntry = Database['tables'][number]['indexes'][number];
 
 import DbSection from './common/DbSection.vue';
@@ -594,7 +630,7 @@ const totalCount = computed(() => {
   const db = database;
   if (!db) return 0;
   const indexCount = db.tables.reduce((n, t) => n + t.indexes.length, 0);
-  return db.tables.length + indexCount + db.refs.length + db.enums.length
+  return db.tables.length + indexCount + db.refs.length + (db.deps?.length ?? 0) + db.enums.length
     + db.tableGroups.length + (db.records?.length ?? 0) + (db.tablePartials?.length ?? 0)
     + (db.notes?.length ?? 0) + (db.diagramViews?.length ?? 0) + externalsCount.value;
 });
@@ -719,5 +755,12 @@ function colRefs (table: TableEntry, col: FieldEntry): {
 function endpointLabel (ep: RefEndpoint): string {
   const fields = ep.fieldNames.length === 1 ? ep.fieldNames[0] : `(${ep.fieldNames.join(', ')})`;
   return ep.schemaName ? `${ep.schemaName}.${ep.tableName}.${fields}` : `${ep.tableName}.${fields}`;
+}
+
+function depEndpointLabel (ep: DepEndpoint): string {
+  const base = ep.schemaName ? `${ep.schemaName}.${ep.tableName}` : ep.tableName;
+  if (ep.fieldNames.length === 0) return base;
+  const fields = ep.fieldNames.length === 1 ? ep.fieldNames[0] : `(${ep.fieldNames.join(', ')})`;
+  return `${base}.${fields}`;
 }
 </script>

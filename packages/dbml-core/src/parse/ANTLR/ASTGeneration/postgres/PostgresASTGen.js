@@ -8,6 +8,34 @@ import {
 } from '../constants';
 import { getOriginalText } from '../helpers';
 
+function extractSourceTablesFromCtx (ctx) {
+  if (!ctx) return [];
+  const seen = new Map();
+  const stack = [ctx];
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!node) continue;
+    const ruleIdx = node.ruleIndex;
+    if (ruleIdx !== undefined && node.constructor && node.constructor.name === 'Relation_exprContext') {
+      const qn = node.qualified_name && node.qualified_name();
+      if (qn) {
+        const tokens = qn.getText().split('.').map((t) => t.replace(/^"(.*)"$/, '$1'));
+        const tableName = tokens[tokens.length - 1];
+        const schemaName = tokens.length > 1 ? tokens[tokens.length - 2] : undefined;
+        const key = `${schemaName || 'public'}.${tableName}`;
+        if (tableName && !seen.has(key)) {
+          seen.set(key, { name: tableName, schemaName });
+        }
+      }
+    }
+    const childCount = typeof node.getChildCount === 'function' ? node.getChildCount() : 0;
+    for (let i = 0; i < childCount; i++) {
+      stack.push(node.getChild(i));
+    }
+  }
+  return Array.from(seen.values());
+}
+
 const COMMAND_KIND = {
   REF: 'ref',
 };
@@ -39,12 +67,67 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       schemas: [],
       tables: [],
       refs: [],
+      deps: [],
       enums: [],
       tableGroups: [],
       aliases: [],
       project: {},
       records: [],
     };
+  }
+
+  visitViewstmt (ctx) {
+    const names = ctx.qualified_name().accept(this);
+    const tableName = last(names);
+    const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
+    const ddl = getOriginalText(ctx);
+    this.data.tables.push({
+      name: tableName,
+      schemaName,
+      fields: [],
+      indexes: [],
+      checks: [],
+      note: null,
+      headerColor: null,
+      custom: { query: ddl, kind: 'view' },
+    });
+    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
+  }
+
+  visitCreatematviewstmt (ctx) {
+    const target = ctx.create_mv_target();
+    if (!target) return;
+    const names = target.qualified_name().accept(this);
+    const tableName = last(names);
+    const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
+    const ddl = getOriginalText(ctx);
+    this.data.tables.push({
+      name: tableName,
+      schemaName,
+      fields: [],
+      indexes: [],
+      checks: [],
+      note: null,
+      headerColor: null,
+      custom: { query: ddl, kind: 'materialized_view', materialized: true },
+    });
+    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
+  }
+
+  _emitDepsFromViewSelect (ctx, viewName, viewSchemaName) {
+    const sources = extractSourceTablesFromCtx(ctx);
+    sources.forEach((src) => {
+      if (src.name === viewName && (src.schemaName || 'public') === (viewSchemaName || 'public')) return;
+      if (!findTable(this.data.tables, src.schemaName, src.name)) return;
+      this.data.deps.push({
+        edges: [{
+          upstream: { schemaName: src.schemaName, tableName: src.name, fieldNames: [] },
+          downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
+        }],
+        note: null,
+        custom: {},
+      });
+    });
   }
 
   // stmtblock EOF

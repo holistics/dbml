@@ -32,6 +32,11 @@ const SidebarConfigs: SidebarsConfig = {
           label: 'Enrichment & Visualization',
         },
         {
+          id: 'syntax/data-dependency',
+          type: 'doc',
+          label: 'Data Dependency',
+        },
+        {
           id: 'syntax/language-basics',
           type: 'doc',
           label: 'Language Basics',

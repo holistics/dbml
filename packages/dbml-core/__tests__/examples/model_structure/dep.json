@@ -1,0 +1,43 @@
+{
+  "schemas": [],
+  "aliases": [],
+  "project": { "database_type": "Lineage", "name": "lineage_test" },
+  "tables": [
+    { "name": "raw_orders", "schemaName": "public", "fields": [{ "name": "id", "type": { "type_name": "int" }, "pk": true }] },
+    { "name": "stg_orders", "schemaName": "public", "fields": [{ "name": "id", "type": { "type_name": "int" }, "pk": true }] },
+    { "name": "fct_orders", "schemaName": "public", "fields": [{ "name": "id", "type": { "type_name": "int" }, "pk": true }, { "name": "amount", "type": { "type_name": "decimal" } }] },
+    { "name": "events", "schemaName": "analytics", "fields": [{ "name": "id", "type": { "type_name": "int" }, "pk": true }, { "name": "ts", "type": { "type_name": "timestamp" } }] }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "notes": [],
+  "records": [],
+  "tablePartials": [],
+  "deps": [
+    {
+      "name": null,
+      "schemaName": "public",
+      "edges": [
+        { "upstream": { "schemaName": null, "tableName": "raw_orders", "fieldNames": [] }, "downstream": { "schemaName": null, "tableName": "stg_orders", "fieldNames": [] } }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": "public",
+      "note": { "value": "Aggregate staging into facts" },
+      "custom": { "materialized": "table", "owner": "data-team" },
+      "edges": [
+        { "upstream": { "schemaName": null, "tableName": "stg_orders", "fieldNames": [] }, "downstream": { "schemaName": null, "tableName": "fct_orders", "fieldNames": [] } },
+        { "upstream": { "schemaName": null, "tableName": "stg_orders", "fieldNames": ["id"] }, "downstream": { "schemaName": null, "tableName": "fct_orders", "fieldNames": ["amount"] } }
+      ]
+    },
+    {
+      "name": null,
+      "schemaName": "public",
+      "edges": [
+        { "upstream": { "schemaName": "analytics", "tableName": "events", "fieldNames": ["ts"] }, "downstream": { "schemaName": "public", "tableName": "fct_orders", "fieldNames": ["id"] } }
+      ]
+    }
+  ]
+}

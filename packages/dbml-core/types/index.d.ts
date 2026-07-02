@@ -6,11 +6,15 @@ import {
   renameTable,
   syncDiagramView,
   findDiagramViewBlocks,
+  syncDep,
+  findDepBlocks,
 } from './transform';
 export {
   renameTable,
   syncDiagramView,
   findDiagramViewBlocks,
+  syncDep,
+  findDepBlocks,
   importer,
   exporter,
   ModelExporter,
@@ -51,5 +55,9 @@ export type {
   FilterConfig,
   DiagramViewSyncOperation,
   DiagramViewBlock,
+  DepSyncOperation,
+  DepSyncEdge,
+  DepEndpointRef,
+  DepBlock,
   TextEdit,
 } from '@dbml/parse';

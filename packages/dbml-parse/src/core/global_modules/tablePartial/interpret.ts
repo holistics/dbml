@@ -221,6 +221,8 @@ export class TablePartialInterpreter {
       return inlineRef;
     });
 
+    column.inline_deps = [];
+
     const checkNodes = settingMap[SettingName.Check] || [];
     column.checks = checkNodes.map((checkNode) => {
       const token = getTokenPosition(checkNode);

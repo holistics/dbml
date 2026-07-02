@@ -1,0 +1,2718 @@
+{
+  "errors": [
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'unknown_table' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_table@[L46:C14, L46:C27]",
+          "snippet": "unknown_table"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Column 'unknown_col' does not exist in Table 'public.users'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_col@[L47:C11, L47:C22]",
+          "snippet": "unknown_col"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Schema or Table 'unknown_schema' does not exist",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_schema@[L48:C5, L48:C19]",
+          "snippet": "unknown_schema"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table or schema 'unknown_table' does not exist",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_table@[L49:C15, L49:C28]",
+          "snippet": "unknown_table"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Column 'unknown_col' does not exist in Table 'my_schema.events'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_col@[L50:C22, L50:C33]",
+          "snippet": "unknown_col"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'unknown_a' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_a@[L55:C11, L55:C20]",
+          "snippet": "unknown_a"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'unknown_b' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_b@[L56:C22, L56:C31]",
+          "snippet": "unknown_b"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Schema or Table 'unknown_c' does not exist",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_c@[L57:C14, L57:C23]",
+          "snippet": "unknown_c"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Column 'unknown_d' does not exist in Table 'public.users'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_d@[L58:C31, L58:C40]",
+          "snippet": "unknown_d"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'unknown_source' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_source@[L63:C31, L63:C45]",
+          "snippet": "unknown_source"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Schema 'unknown_schema' does not exist",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_schema@[L64:C33, L64:C47]",
+          "snippet": "unknown_schema"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table 'unknown_table' does not exist in Schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_table@[L68:C37, L68:C50]",
+          "snippet": "unknown_table"
+        }
+      }
+    },
+    {
+      "code": "BINDING_ERROR",
+      "diagnostic": "Table or schema 'unknown_table' does not exist",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@unknown_table@[L69:C49, L69:C62]",
+          "snippet": "unknown_table"
+        }
+      }
+    }
+  ],
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L19:C5, L19:C10]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L19:C5, L19:C10]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L19:C5, L19:C10]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "users"
+            }
+          },
+          "fullEnd": 192,
+          "fullStart": 186
+        }
+      },
+      "fullEnd": 192,
+      "fullStart": 186,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@orders@[L19:C14, L19:C20]",
+        "snippet": "orders"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@orders@[L19:C14, L19:C20]",
+            "snippet": "orders"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@orders@[L19:C14, L19:C20]",
+                "snippet": "orders"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "orders"
+            }
+          },
+          "fullEnd": 202,
+          "fullStart": 195
+        }
+      },
+      "fullEnd": 202,
+      "fullStart": 195,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@orders@[L3:C0, L5:C1]",
+          "snippet": "Table orde...r_id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@orders@[L20:C5, L20:C11]",
+        "snippet": "orders"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@orders@[L20:C5, L20:C11]",
+            "snippet": "orders"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@orders@[L20:C5, L20:C11]",
+                "snippet": "orders"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "orders"
+            }
+          },
+          "fullEnd": 213,
+          "fullStart": 207
+        }
+      },
+      "fullEnd": 213,
+      "fullStart": 207,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@orders@[L3:C0, L5:C1]",
+          "snippet": "Table orde...r_id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@user_id@[L20:C12, L20:C19]",
+        "snippet": "user_id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@user_id@[L20:C12, L20:C19]",
+            "snippet": "user_id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@user_id@[L20:C12, L20:C19]",
+                "snippet": "user_id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "user_id"
+            }
+          },
+          "fullEnd": 222,
+          "fullStart": 214
+        }
+      },
+      "fullEnd": 222,
+      "fullStart": 214,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@user_id@[L4:C2, L4:C13]",
+          "snippet": "user_id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L20:C23, L20:C28]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L20:C23, L20:C28]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L20:C23, L20:C28]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 230,
+          "fullStart": 225
+        }
+      },
+      "fullEnd": 230,
+      "fullStart": 225,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L20:C29, L20:C31]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L20:C29, L20:C31]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L20:C29, L20:C31]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " \n",
+              "value": "id"
+            }
+          },
+          "fullEnd": 235,
+          "fullStart": 231
+        }
+      },
+      "fullEnd": 235,
+      "fullStart": 231,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L21:C5, L21:C14]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L21:C5, L21:C14]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L21:C5, L21:C14]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 249,
+          "fullStart": 240
+        }
+      },
+      "fullEnd": 249,
+      "fullStart": 240,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L21:C15, L21:C21]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L21:C15, L21:C21]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L21:C15, L21:C21]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "events"
+            }
+          },
+          "fullEnd": 257,
+          "fullStart": 250
+        }
+      },
+      "fullEnd": 257,
+      "fullStart": 250,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L21:C25, L21:C30]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L21:C25, L21:C30]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L21:C25, L21:C30]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "users"
+            }
+          },
+          "fullEnd": 266,
+          "fullStart": 260
+        }
+      },
+      "fullEnd": 266,
+      "fullStart": 260,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L22:C5, L22:C14]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L22:C5, L22:C14]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L22:C5, L22:C14]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 280,
+          "fullStart": 271
+        }
+      },
+      "fullEnd": 280,
+      "fullStart": 271,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L22:C15, L22:C21]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L22:C15, L22:C21]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L22:C15, L22:C21]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "events"
+            }
+          },
+          "fullEnd": 287,
+          "fullStart": 281
+        }
+      },
+      "fullEnd": 287,
+      "fullStart": 281,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L22:C22, L22:C24]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L22:C22, L22:C24]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L22:C22, L22:C24]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "id"
+            }
+          },
+          "fullEnd": 291,
+          "fullStart": 288
+        }
+      },
+      "fullEnd": 291,
+      "fullStart": 288,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L7:C2, L7:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L22:C28, L22:C33]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L22:C28, L22:C33]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L22:C28, L22:C33]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 299,
+          "fullStart": 294
+        }
+      },
+      "fullEnd": 299,
+      "fullStart": 294,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L22:C34, L22:C36]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L22:C34, L22:C36]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L22:C34, L22:C36]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "id"
+            }
+          },
+          "fullEnd": 303,
+          "fullStart": 300
+        }
+      },
+      "fullEnd": 303,
+      "fullStart": 300,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L23:C5, L23:C14]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L23:C5, L23:C14]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L23:C5, L23:C14]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 317,
+          "fullStart": 308
+        }
+      },
+      "fullEnd": 317,
+      "fullStart": 308,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L23:C15, L23:C21]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L23:C15, L23:C21]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L23:C15, L23:C21]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "events"
+            }
+          },
+          "fullEnd": 324,
+          "fullStart": 318
+        }
+      },
+      "fullEnd": 324,
+      "fullStart": 318,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L23:C22, L23:C24]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L23:C22, L23:C24]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L23:C22, L23:C24]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "id"
+            }
+          },
+          "fullEnd": 328,
+          "fullStart": 325
+        }
+      },
+      "fullEnd": 328,
+      "fullStart": 325,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L7:C2, L7:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@another_schema@[L23:C28, L23:C42]",
+        "snippet": "another_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@another_schema@[L23:C28, L23:C42]",
+            "snippet": "another_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@another_schema@[L23:C28, L23:C42]",
+                "snippet": "another_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "another_schema"
+            }
+          },
+          "fullEnd": 345,
+          "fullStart": 331
+        }
+      },
+      "fullEnd": 345,
+      "fullStart": 331,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@another_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@booking@[L23:C43, L23:C50]",
+        "snippet": "booking"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@booking@[L23:C43, L23:C50]",
+            "snippet": "booking"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@booking@[L23:C43, L23:C50]",
+                "snippet": "booking"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "booking"
+            }
+          },
+          "fullEnd": 353,
+          "fullStart": 346
+        }
+      },
+      "fullEnd": 353,
+      "fullStart": 346,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@another_schema.booking@[L11:C0, L14:C1]",
+          "snippet": "Table anot...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L23:C51, L23:C53]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L23:C51, L23:C53]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L23:C51, L23:C53]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "id"
+            }
+          },
+          "fullEnd": 357,
+          "fullStart": 354
+        }
+      },
+      "fullEnd": 357,
+      "fullStart": 354,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L12:C2, L12:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L28:C2, L28:C7]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L28:C2, L28:C7]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L28:C2, L28:C7]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": " ",
+              "value": "users"
+            }
+          },
+          "fullEnd": 397,
+          "fullStart": 389
+        }
+      },
+      "fullEnd": 397,
+      "fullStart": 389,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@orders@[L28:C11, L28:C17]",
+        "snippet": "orders"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@orders@[L28:C11, L28:C17]",
+            "snippet": "orders"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@orders@[L28:C11, L28:C17]",
+                "snippet": "orders"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "orders"
+            }
+          },
+          "fullEnd": 407,
+          "fullStart": 400
+        }
+      },
+      "fullEnd": 407,
+      "fullStart": 400,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@orders@[L3:C0, L5:C1]",
+          "snippet": "Table orde...r_id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L29:C2, L29:C11]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L29:C2, L29:C11]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L29:C2, L29:C11]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 418,
+          "fullStart": 407
+        }
+      },
+      "fullEnd": 418,
+      "fullStart": 407,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L29:C12, L29:C18]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L29:C12, L29:C18]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L29:C12, L29:C18]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "events"
+            }
+          },
+          "fullEnd": 426,
+          "fullStart": 419
+        }
+      },
+      "fullEnd": 426,
+      "fullStart": 419,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L29:C22, L29:C27]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L29:C22, L29:C27]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L29:C22, L29:C27]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "users"
+            }
+          },
+          "fullEnd": 435,
+          "fullStart": 429
+        }
+      },
+      "fullEnd": 435,
+      "fullStart": 429,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L30:C2, L30:C7]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L30:C2, L30:C7]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L30:C2, L30:C7]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 442,
+          "fullStart": 435
+        }
+      },
+      "fullEnd": 442,
+      "fullStart": 435,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L30:C8, L30:C10]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L30:C8, L30:C10]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L30:C8, L30:C10]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "id"
+            }
+          },
+          "fullEnd": 446,
+          "fullStart": 443
+        }
+      },
+      "fullEnd": 446,
+      "fullStart": 443,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@orders@[L30:C14, L30:C20]",
+        "snippet": "orders"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@orders@[L30:C14, L30:C20]",
+            "snippet": "orders"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@orders@[L30:C14, L30:C20]",
+                "snippet": "orders"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "orders"
+            }
+          },
+          "fullEnd": 455,
+          "fullStart": 449
+        }
+      },
+      "fullEnd": 455,
+      "fullStart": 449,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@orders@[L3:C0, L5:C1]",
+          "snippet": "Table orde...r_id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@user_id@[L30:C21, L30:C28]",
+        "snippet": "user_id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@user_id@[L30:C21, L30:C28]",
+            "snippet": "user_id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@user_id@[L30:C21, L30:C28]",
+                "snippet": "user_id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "user_id"
+            }
+          },
+          "fullEnd": 464,
+          "fullStart": 456
+        }
+      },
+      "fullEnd": 464,
+      "fullStart": 456,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@user_id@[L4:C2, L4:C13]",
+          "snippet": "user_id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L31:C2, L31:C11]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L31:C2, L31:C11]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L31:C2, L31:C11]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 475,
+          "fullStart": 464
+        }
+      },
+      "fullEnd": 475,
+      "fullStart": 464,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L31:C12, L31:C18]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L31:C12, L31:C18]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L31:C12, L31:C18]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "events"
+            }
+          },
+          "fullEnd": 482,
+          "fullStart": 476
+        }
+      },
+      "fullEnd": 482,
+      "fullStart": 476,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L31:C19, L31:C21]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L31:C19, L31:C21]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L31:C19, L31:C21]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "id"
+            }
+          },
+          "fullEnd": 486,
+          "fullStart": 483
+        }
+      },
+      "fullEnd": 486,
+      "fullStart": 483,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L7:C2, L7:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L31:C25, L31:C30]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L31:C25, L31:C30]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L31:C25, L31:C30]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 494,
+          "fullStart": 489
+        }
+      },
+      "fullEnd": 494,
+      "fullStart": 489,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L31:C31, L31:C33]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L31:C31, L31:C33]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L31:C31, L31:C33]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "id"
+            }
+          },
+          "fullEnd": 498,
+          "fullStart": 495
+        }
+      },
+      "fullEnd": 498,
+      "fullStart": 495,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L36:C32, L36:C37]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L36:C32, L36:C37]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L36:C32, L36:C37]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 576,
+          "fullStart": 571
+        }
+      },
+      "fullEnd": 576,
+      "fullStart": 571,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L37:C34, L37:C43]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L37:C34, L37:C43]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L37:C34, L37:C43]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 632,
+          "fullStart": 623
+        }
+      },
+      "fullEnd": 632,
+      "fullStart": 623,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L37:C44, L37:C50]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L37:C44, L37:C50]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L37:C44, L37:C50]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "events"
+            }
+          },
+          "fullEnd": 639,
+          "fullStart": 633
+        }
+      },
+      "fullEnd": 639,
+      "fullStart": 633,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L41:C38, L41:C43]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L41:C38, L41:C43]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L41:C38, L41:C43]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 728,
+          "fullStart": 723
+        }
+      },
+      "fullEnd": 728,
+      "fullStart": 723,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L41:C44, L41:C46]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L41:C44, L41:C46]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L41:C44, L41:C46]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "id"
+            }
+          },
+          "fullEnd": 731,
+          "fullStart": 729
+        }
+      },
+      "fullEnd": 731,
+      "fullStart": 729,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L42:C40, L42:C49]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L42:C40, L42:C49]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L42:C40, L42:C49]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 784,
+          "fullStart": 775
+        }
+      },
+      "fullEnd": 784,
+      "fullStart": 775,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L42:C50, L42:C56]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L42:C50, L42:C56]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L42:C50, L42:C56]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "events"
+            }
+          },
+          "fullEnd": 791,
+          "fullStart": 785
+        }
+      },
+      "fullEnd": 791,
+      "fullStart": 785,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L42:C57, L42:C59]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L42:C57, L42:C59]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L42:C57, L42:C59]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "id"
+            }
+          },
+          "fullEnd": 794,
+          "fullStart": 792
+        }
+      },
+      "fullEnd": 794,
+      "fullStart": 792,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L7:C2, L7:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L46:C5, L46:C10]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L46:C5, L46:C10]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L46:C5, L46:C10]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "users"
+            }
+          },
+          "fullEnd": 849,
+          "fullStart": 843
+        }
+      },
+      "fullEnd": 849,
+      "fullStart": 843,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L47:C5, L47:C10]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L47:C5, L47:C10]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L47:C5, L47:C10]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 876,
+          "fullStart": 871
+        }
+      },
+      "fullEnd": 876,
+      "fullStart": 871,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L47:C26, L47:C31]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L47:C26, L47:C31]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L47:C26, L47:C31]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 897,
+          "fullStart": 892
+        }
+      },
+      "fullEnd": 897,
+      "fullStart": 892,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L47:C32, L47:C34]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L47:C32, L47:C34]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L47:C32, L47:C34]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "id"
+            }
+          },
+          "fullEnd": 901,
+          "fullStart": 898
+        }
+      },
+      "fullEnd": 901,
+      "fullStart": 898,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L48:C30, L48:C35]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L48:C30, L48:C35]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L48:C30, L48:C35]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "users"
+            }
+          },
+          "fullEnd": 937,
+          "fullStart": 931
+        }
+      },
+      "fullEnd": 937,
+      "fullStart": 931,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L49:C5, L49:C14]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L49:C5, L49:C14]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L49:C5, L49:C14]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 951,
+          "fullStart": 942
+        }
+      },
+      "fullEnd": 951,
+      "fullStart": 942,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L49:C32, L49:C37]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L49:C32, L49:C37]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L49:C32, L49:C37]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "users"
+            }
+          },
+          "fullEnd": 975,
+          "fullStart": 969
+        }
+      },
+      "fullEnd": 975,
+      "fullStart": 969,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L50:C5, L50:C14]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L50:C5, L50:C14]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L50:C5, L50:C14]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 989,
+          "fullStart": 980
+        }
+      },
+      "fullEnd": 989,
+      "fullStart": 980,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L50:C15, L50:C21]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L50:C15, L50:C21]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L50:C15, L50:C21]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "events"
+            }
+          },
+          "fullEnd": 996,
+          "fullStart": 990
+        }
+      },
+      "fullEnd": 996,
+      "fullStart": 990,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L50:C37, L50:C42]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L50:C37, L50:C42]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L50:C37, L50:C42]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 1017,
+          "fullStart": 1012
+        }
+      },
+      "fullEnd": 1017,
+      "fullStart": 1012,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L50:C43, L50:C45]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L50:C43, L50:C45]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L50:C43, L50:C45]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "\n",
+              "value": "id"
+            }
+          },
+          "fullEnd": 1021,
+          "fullStart": 1018
+        }
+      },
+      "fullEnd": 1021,
+      "fullStart": 1018,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L55:C2, L55:C7]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L55:C2, L55:C7]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L55:C2, L55:C7]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": " ",
+              "value": "users"
+            }
+          },
+          "fullEnd": 1074,
+          "fullStart": 1066
+        }
+      },
+      "fullEnd": 1074,
+      "fullStart": 1066,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L56:C2, L56:C11]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L56:C2, L56:C11]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L56:C2, L56:C11]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 1098,
+          "fullStart": 1087
+        }
+      },
+      "fullEnd": 1098,
+      "fullStart": 1087,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L56:C12, L56:C18]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L56:C12, L56:C18]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L56:C12, L56:C18]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "events"
+            }
+          },
+          "fullEnd": 1106,
+          "fullStart": 1099
+        }
+      },
+      "fullEnd": 1106,
+      "fullStart": 1099,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L57:C2, L57:C7]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L57:C2, L57:C7]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L57:C2, L57:C7]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 1126,
+          "fullStart": 1119
+        }
+      },
+      "fullEnd": 1126,
+      "fullStart": 1119,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L57:C8, L57:C10]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L57:C8, L57:C10]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L57:C8, L57:C10]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "id"
+            }
+          },
+          "fullEnd": 1130,
+          "fullStart": 1127
+        }
+      },
+      "fullEnd": 1130,
+      "fullStart": 1127,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L1:C2, L1:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L58:C2, L58:C11]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L58:C2, L58:C11]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L58:C2, L58:C11]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 1158,
+          "fullStart": 1147
+        }
+      },
+      "fullEnd": 1158,
+      "fullStart": 1147,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@events@[L58:C12, L58:C18]",
+        "snippet": "events"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@events@[L58:C12, L58:C18]",
+            "snippet": "events"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@events@[L58:C12, L58:C18]",
+                "snippet": "events"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "events"
+            }
+          },
+          "fullEnd": 1165,
+          "fullStart": 1159
+        }
+      },
+      "fullEnd": 1165,
+      "fullStart": 1159,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+          "snippet": "Table my_s...  ts int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@id@[L58:C19, L58:C21]",
+        "snippet": "id"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@id@[L58:C19, L58:C21]",
+            "snippet": "id"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@id@[L58:C19, L58:C21]",
+                "snippet": "id"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": " ",
+              "value": "id"
+            }
+          },
+          "fullEnd": 1169,
+          "fullStart": 1166
+        }
+      },
+      "fullEnd": 1169,
+      "fullStart": 1166,
+      "referee": {
+        "context": {
+          "id": "symbol@Column@id@[L7:C2, L7:C8]",
+          "snippet": "id int"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@users@[L58:C25, L58:C30]",
+        "snippet": "users"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@users@[L58:C25, L58:C30]",
+            "snippet": "users"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@users@[L58:C25, L58:C30]",
+                "snippet": "users"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "users"
+            }
+          },
+          "fullEnd": 1177,
+          "fullStart": 1172
+        }
+      },
+      "fullEnd": 1177,
+      "fullStart": 1172,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        }
+      }
+    },
+    {
+      "context": {
+        "id": "node@<primary-expression>@my_schema@[L69:C39, L69:C48]",
+        "snippet": "my_schema"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@my_schema@[L69:C39, L69:C48]",
+            "snippet": "my_schema"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@my_schema@[L69:C39, L69:C48]",
+                "snippet": "my_schema"
+              },
+              "leadingTrivia": "",
+              "trailingTrivia": "",
+              "value": "my_schema"
+            }
+          },
+          "fullEnd": 1506,
+          "fullStart": 1497
+        }
+      },
+      "fullEnd": 1506,
+      "fullStart": 1497,
+      "referee": {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@users@[L0:C0, L2:C1]",
+          "snippet": "Table user...  id int\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C2, L1:C8]",
+              "snippet": "id int"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@users@[L19:C5, L19:C10]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L20:C23, L20:C28]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L21:C25, L21:C30]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L22:C28, L22:C33]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L28:C2, L28:C7]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L29:C22, L29:C27]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L30:C2, L30:C7]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L31:C25, L31:C30]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L36:C32, L36:C37]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L41:C38, L41:C43]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L46:C5, L46:C10]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L47:C26, L47:C31]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L47:C5, L47:C10]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L48:C30, L48:C35]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L49:C32, L49:C37]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L50:C37, L50:C42]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L55:C2, L55:C7]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L57:C2, L57:C7]",
+            "snippet": "users"
+          },
+          {
+            "id": "node@<primary-expression>@users@[L58:C25, L58:C30]",
+            "snippet": "users"
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@orders@[L3:C0, L5:C1]",
+          "snippet": "Table orde...r_id int\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@orders@[L3:C0, L5:C1]",
+          "snippet": "Table orde...r_id int\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@user_id@[L4:C2, L4:C13]",
+              "snippet": "user_id int"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@orders@[L19:C14, L19:C20]",
+            "snippet": "orders"
+          },
+          {
+            "id": "node@<primary-expression>@orders@[L20:C5, L20:C11]",
+            "snippet": "orders"
+          },
+          {
+            "id": "node@<primary-expression>@orders@[L28:C11, L28:C17]",
+            "snippet": "orders"
+          },
+          {
+            "id": "node@<primary-expression>@orders@[L30:C14, L30:C20]",
+            "snippet": "orders"
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@good_header_bare@[L36:C0, L36:C49]",
+          "snippet": "Table good...{ id int }"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@good_header_bare@[L36:C0, L36:C49]",
+          "snippet": "Table good...{ id int }"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L36:C41, L36:C47]",
+              "snippet": "id int"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@good_header_schema@[L37:C0, L37:C62]",
+          "snippet": "Table good...{ id int }"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@good_header_schema@[L37:C0, L37:C62]",
+          "snippet": "Table good...{ id int }"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L37:C54, L37:C60]",
+              "snippet": "id int"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@good_col_bare@[L41:C0, L41:C49]",
+          "snippet": "Table good...sers.id] }"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@good_col_bare@[L41:C0, L41:C49]",
+          "snippet": "Table good...sers.id] }"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L41:C22, L41:C47]",
+              "snippet": "id int [de... users.id]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@good_col_schema@[L42:C0, L42:C62]",
+          "snippet": "Table good...ents.id] }"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@good_col_schema@[L42:C0, L42:C62]",
+          "snippet": "Table good...ents.id] }"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L42:C24, L42:C60]",
+              "snippet": "id int [de...events.id]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@bad_header_bare@[L63:C0, L63:C57]",
+          "snippet": "Table bad_...{ id int }"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@bad_header_bare@[L63:C0, L63:C57]",
+          "snippet": "Table bad_...{ id int }"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L63:C49, L63:C55]",
+              "snippet": "id int"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@bad_header_schema@[L64:C0, L64:C66]",
+          "snippet": "Table bad_...{ id int }"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@bad_header_schema@[L64:C0, L64:C66]",
+          "snippet": "Table bad_...{ id int }"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L64:C58, L64:C64]",
+              "snippet": "id int"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@bad_col_bare@[L68:C0, L68:C57]",
+          "snippet": "Table bad_...ble.col] }"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@bad_col_bare@[L68:C0, L68:C57]",
+          "snippet": "Table bad_...ble.col] }"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L68:C21, L68:C55]",
+              "snippet": "id int [de...table.col]"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@bad_col_schema@[L69:C0, L69:C69]",
+          "snippet": "Table bad_...ble.col] }"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@bad_col_schema@[L69:C0, L69:C69]",
+          "snippet": "Table bad_...ble.col] }"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L69:C23, L69:C67]",
+              "snippet": "id int [de...table.col]"
+            }
+          }
+        ]
+      }
+    ],
+    "schemas": [
+      {
+        "context": {
+          "id": "symbol@Schema@my_schema@[L?:C?, L?:C?]"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Table@my_schema.events@[L6:C0, L9:C1]",
+              "snippet": "Table my_s...  ts int\n}"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@my_schema@[L21:C5, L21:C14]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L22:C5, L22:C14]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L23:C5, L23:C14]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L29:C2, L29:C11]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L31:C2, L31:C11]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L37:C34, L37:C43]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L42:C40, L42:C49]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L49:C5, L49:C14]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L50:C5, L50:C14]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L56:C2, L56:C11]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L58:C2, L58:C11]",
+            "snippet": "my_schema"
+          },
+          {
+            "id": "node@<primary-expression>@my_schema@[L69:C39, L69:C48]",
+            "snippet": "my_schema"
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Schema@another_schema@[L?:C?, L?:C?]"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Table@another_schema.booking@[L11:C0, L14:C1]",
+              "snippet": "Table anot...  ts int\n}"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@another_schema@[L23:C28, L23:C42]",
+            "snippet": "another_schema"
+          }
+        ]
+      }
+    ]
+  }
+}

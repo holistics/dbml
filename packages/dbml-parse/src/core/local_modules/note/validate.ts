@@ -38,6 +38,7 @@ export default class NoteValidator {
         ElementKind.TableGroup,
         ElementKind.TablePartial,
         ElementKind.Project,
+        ElementKind.Dep,
       ))
     ) {
       return [

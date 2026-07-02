@@ -193,6 +193,16 @@ export const tableModule: GlobalModule = {
   },
 
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
+    if (isInsideSettingValue(node, SettingName.Dep)) {
+      const enclosingDecl = node.parent;
+      if (enclosingDecl instanceof ElementDeclarationNode && enclosingDecl.isKind(ElementKind.Table)) {
+        const programNode = compiler.parseFile(node.filepath).getValue().ast;
+        const globalSymbol = compiler.nodeSymbol(programNode).getValue();
+        if (globalSymbol === UNHANDLED) return Report.create(undefined);
+        return nodeRefereeOfInlineDep(compiler, globalSymbol, node);
+      }
+    }
+
     if (!isInsideElementBody(node, ElementKind.Table)) {
       return Report.create(PASS_THROUGH);
     }
@@ -219,6 +229,10 @@ export const tableModule: GlobalModule = {
     // Case 2: Column's inline ref
     if (isInsideSettingValue(node, SettingName.Ref)) {
       return nodeRefereeOfInlineRef(compiler, globalSymbol, node);
+    }
+
+    if (isInsideSettingValue(node, SettingName.Dep)) {
+      return nodeRefereeOfInlineDep(compiler, globalSymbol, node);
     }
 
     // Case 3: Column's default value being an enum value
@@ -393,6 +407,44 @@ function nodeRefereeOfInlineRef (compiler: Compiler, globalSymbol: NodeSymbol, n
 
     return new Report(undefined, [
       new CompileError(CompileErrorCode.BINDING_ERROR, `Table '${name}' does not exist in Schema 'public'`, node),
+    ]);
+  }
+
+  return new Report(undefined);
+}
+
+function nodeRefereeOfInlineDep (compiler: Compiler, globalSymbol: NodeSymbol, node: SyntaxNode): Report<NodeSymbol | undefined> {
+  const enclosingFa = node.parentOfKind(FunctionApplicationNode);
+  if (enclosingFa) {
+    return nodeRefereeOfInlineRef(compiler, globalSymbol, node);
+  }
+
+  if (!isExpressionAVariableNode(node)) return new Report(undefined);
+  const name = extractVarNameFromPrimaryVariable(node) ?? '';
+
+  if (!isAccessExpression(node.parentNode)) {
+    const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Table, name);
+    if (symbol) return Report.create(symbol);
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Table '${name}' does not exist in Schema 'public'`, node),
+    ]);
+  }
+
+  const left = nodeRefereeOfLeftExpression(compiler, node);
+  if (left?.isKind(SymbolKind.Schema)) {
+    const symbol = compiler.lookupMembers(left, [SymbolKind.Table, SymbolKind.Schema], name);
+    if (symbol) return Report.create(symbol);
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Table or schema '${name}' does not exist`, node),
+    ]);
+  }
+
+  const parent = node.parentNode as InfixExpressionNode;
+  if (parent?.leftExpression === node) {
+    const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
+    if (symbol) return Report.create(symbol);
+    return new Report(undefined, [
+      new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist`, node),
     ]);
   }
 

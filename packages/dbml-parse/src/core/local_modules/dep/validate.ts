@@ -1,0 +1,127 @@
+import { last, partition } from 'lodash-es';
+import Compiler from '@/compiler';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import {
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import { destructureComplexVariableTuple } from '@/core/utils/expression';
+import {
+  Settings, aggregateSettingList, isSimpleName,
+} from '@/core/utils/validate';
+
+export default class DepValidator {
+  private declarationNode: ElementDeclarationNode;
+  private compiler: Compiler;
+
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
+    this.declarationNode = declarationNode;
+  }
+
+  validate (): CompileError[] {
+    return [
+      ...this.validateContext(),
+      ...this.validateName(this.declarationNode.name),
+      ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateBody(this.declarationNode.body),
+    ];
+  }
+
+  private validateContext (): CompileError[] {
+    if (this.declarationNode.parent instanceof ProgramNode) {
+      return [];
+    }
+    return [
+      new CompileError(CompileErrorCode.INVALID_DEP_CONTEXT, 'A Dep must appear top-level', this.declarationNode),
+    ];
+  }
+
+  private validateName (nameNode?: SyntaxNode): CompileError[] {
+    if (!nameNode) return [];
+    if (nameNode instanceof WildcardNode) {
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'Wildcard (*) is not allowed as a Dep name', nameNode),
+      ];
+    }
+    if (!isSimpleName(nameNode)) {
+      return [
+        new CompileError(CompileErrorCode.INVALID_NAME, 'A Dep\'s name is optional or must be an identifier or a quoted identifier', nameNode),
+      ];
+    }
+    return [];
+  }
+
+  private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
+    if (aliasNode) {
+      return [
+        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'A Dep shouldn\'t have an alias', aliasNode),
+      ];
+    }
+    return [];
+  }
+
+  validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+    if (!body) return [];
+    if (body instanceof FunctionApplicationNode) {
+      return this.validateFields([body]);
+    }
+
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    return [
+      ...this.validateFields(fields as FunctionApplicationNode[]),
+      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+    ];
+  }
+
+  validateFields (fields: FunctionApplicationNode[]): CompileError[] {
+    const errors: CompileError[] = [];
+
+    fields.forEach((field) => {
+      if (!field.callee) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'A Dep field must be a binary relationship', field));
+        return;
+      }
+      if (!(field.callee instanceof InfixExpressionNode)) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'A Dep field must be a binary relationship', field.callee));
+        return;
+      }
+
+      const infix = field.callee;
+      if (infix.op?.value !== '->' && infix.op?.value !== '<-') {
+        errors.push(new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'Dep edges must use the \'->\' or \'<-\' operator', field.callee));
+      }
+
+      const leftFragment = destructureComplexVariableTuple(infix.leftExpression) ?? { variables: [], tupleElements: [] };
+      const rightFragment = destructureComplexVariableTuple(infix.rightExpression) ?? { variables: [], tupleElements: [] };
+      if (leftFragment.variables.length === 0 && leftFragment.tupleElements.length === 0) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'Invalid Dep endpoint', infix.leftExpression || field.callee));
+      }
+      if (rightFragment.variables.length === 0 && rightFragment.tupleElements.length === 0) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'Invalid Dep endpoint', infix.rightExpression || field.callee));
+      }
+
+      const args = [...field.args];
+      if (last(args) instanceof ListExpressionNode) args.pop();
+      else if (args[0] instanceof ListExpressionNode) args.shift();
+
+      if (args.length > 0) {
+        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'A Dep field should only have a single binary relationship', arg)));
+      }
+    });
+
+    return errors;
+  }
+
+  private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+    return subs.flatMap((sub) => {
+      if (!sub.type) return [];
+      return this.compiler.validateNode(sub).getErrors();
+    });
+  }
+}
+
+export function validateDepSettings (settings: ListExpressionNode): Report<Settings> {
+  const aggReport = aggregateSettingList(settings);
+  return new Report(aggReport.getValue(), aggReport.getErrors());
+}

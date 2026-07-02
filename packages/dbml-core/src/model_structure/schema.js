@@ -1,4 +1,5 @@
 import { get } from 'lodash-es';
+import Dep from './dep';
 import Element from './element';
 import Enum from './enum';
 import Ref from './ref';
@@ -11,7 +12,7 @@ class Schema extends Element {
    * @param {import('../../types/model_structure/schema').RawSchema} param0
    */
   constructor ({
-    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
+    name, alias, note, tables = [], refs = [], deps = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
   } = {}) {
     super(token);
     /** @type {import('../../types/model_structure/table').default[]} */
@@ -22,6 +23,8 @@ class Schema extends Element {
     this.tableGroups = [];
     /** @type {import('../../types/model_structure/ref').default[]} */
     this.refs = [];
+    /** @type {import('./dep').default[]} */
+    this.deps = [];
     /** @type {string} */
     this.name = name;
     /** @type {string} */
@@ -39,6 +42,7 @@ class Schema extends Element {
     this.processEnums(enums);
     this.processTables(tables);
     this.processRefs(refs);
+    this.processDeps(deps);
     this.processTableGroups(tableGroups);
   }
 
@@ -142,6 +146,22 @@ class Schema extends Element {
   }
 
   /**
+   * @param {any[]} rawDeps
+   */
+  processDeps (rawDeps) {
+    rawDeps.forEach((dep) => {
+      this.pushDep(new Dep({ ...dep, schema: this }));
+    });
+  }
+
+  /**
+   * @param {import('./dep').default} dep
+   */
+  pushDep (dep) {
+    this.deps.push(dep);
+  }
+
+  /**
    * @param {any[]} rawTableGroups
    */
   processTableGroups (rawTableGroups) {
@@ -191,6 +211,7 @@ class Schema extends Element {
       enums: this.enums.map((e) => e.export()),
       tableGroups: this.tableGroups.map((tg) => tg.export()),
       refs: this.refs.map((r) => r.export()),
+      deps: this.deps.map((d) => d.export()),
     };
   }
 
@@ -200,6 +221,7 @@ class Schema extends Element {
       enumIds: this.enums.map((e) => e.id),
       tableGroupIds: this.tableGroups.map((tg) => tg.id),
       refIds: this.refs.map((r) => r.id),
+      depIds: this.deps.map((d) => d.id),
     };
   }
 
@@ -232,6 +254,7 @@ class Schema extends Element {
     this.enums.forEach((_enum) => _enum.normalize(model));
     this.tableGroups.forEach((tableGroup) => tableGroup.normalize(model));
     this.refs.forEach((ref) => ref.normalize(model));
+    this.deps.forEach((dep) => dep.normalize(model));
   }
 }
 

@@ -6,7 +6,7 @@ import { UNHANDLED } from '@/core/types/module';
 import { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, Database, DiagramView, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
+  Alias, Database, Dep, DiagramView, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
 import {
@@ -16,7 +16,7 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import { MetadataKind, PartialRefMetadata, RecordsMetadata } from '@/core/types/symbol/metadata';
+import { MetadataKind, PartialRefMetadata, RecordsMetadata, DepMetadata } from '@/core/types/symbol/metadata';
 import { TableSymbol } from '@/core/types/symbol';
 import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
@@ -50,6 +50,7 @@ export default class ProgramInterpreter {
       tables: [],
       notes: [],
       refs: [],
+      deps: [],
       enums: [],
       tableGroups: [],
       aliases: [],
@@ -157,6 +158,7 @@ export default class ProgramInterpreter {
   private interpretAllMetadata () {
     const metadatas = this.compiler.symbolMetadata(this.programSymbol) ?? [];
     const seenRefEndpoints = new Set<string>();
+    const seenDepEndpoints = new Set<string>();
 
     // Pre-scan: count records blocks per table to detect duplicates
     const recordsTableCount = new Map<string, {
@@ -214,6 +216,34 @@ export default class ProgramInterpreter {
             seenRefEndpoints.add(key);
           }
           this.db.refs.push(ref);
+          break;
+        }
+        case MetadataKind.Dep: {
+          const dep = value as Dep;
+          // Per-edge `a -> b` nodes, index-aligned with dep.edges, for a precise error location.
+          const edgeNodes = meta instanceof DepMetadata ? meta.edgeExpressions() : [];
+          // Directed src-target uniqueness: a -> b and b -> a are distinct, so no reverse key.
+          let duplicateEdgeIndex = -1;
+          (dep.edges ?? []).some((edge, i) => {
+            const { upstream: up, downstream: down } = edge;
+            const key = [
+              up.schemaName, up.tableName, up.fieldNames.join(','),
+              down.schemaName, down.tableName, down.fieldNames.join(','),
+            ].join('|');
+            if (seenDepEndpoints.has(key)) {
+              duplicateEdgeIndex = i;
+              return true;
+            }
+            seenDepEndpoints.add(key);
+            return false;
+          });
+          if (duplicateEdgeIndex >= 0) {
+            // Point at the duplicate `a -> b` line; fall back to the whole declaration (inline form).
+            const errorNode = edgeNodes[duplicateEdgeIndex] ?? meta.declaration;
+            this.errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Dep with same endpoints already exists', errorNode));
+            break;
+          }
+          this.db.deps.push(dep);
           break;
         }
         case MetadataKind.Records: {
