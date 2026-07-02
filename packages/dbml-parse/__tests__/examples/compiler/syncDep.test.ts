@@ -129,3 +129,77 @@ Dep {
     expect(db.deps[0].color).toBe('#abcabc');
   });
 });
+
+describe('syncDep - remove existing block color', () => {
+  it('removes a sole header [color] together with its [...] list', () => {
+    const dbml = `${PRELUDE}
+Dep [color: #000000] {
+  a -> b
+}`;
+    const { newDbml } = syncDep(dbml, [
+      { operation: 'remove', edge: tableEdge('a', 'b') },
+    ]);
+    expect(newDbml).not.toContain('color');
+    expect(newDbml).not.toContain('[');
+    const db = interpret(newDbml).getValue()!;
+    expect(db.deps[0].color).toBeUndefined();
+  });
+
+  it('removes a header [color] but keeps other settings and one comma', () => {
+    const dbml = `${PRELUDE}
+Dep [note: "x", color: #000000] {
+  a -> b
+}`;
+    const { newDbml } = syncDep(dbml, [
+      { operation: 'remove', edge: tableEdge('a', 'b') },
+    ]);
+    expect(newDbml).not.toContain('color');
+    expect(newDbml).toContain('note: "x"');
+    const db = interpret(newDbml).getValue()!;
+    expect(db.deps[0].color).toBeUndefined();
+  });
+
+  it('removes a body sub-declaration color', () => {
+    const dbml = `${PRELUDE}
+Dep {
+  a -> b
+  color: #000000
+}`;
+    const { newDbml } = syncDep(dbml, [
+      { operation: 'remove', edge: tableEdge('a', 'b') },
+    ]);
+    expect(newDbml).not.toContain('#000000');
+    const db = interpret(newDbml).getValue()!;
+    expect(db.deps[0].color).toBeUndefined();
+  });
+
+  it('removes an inline short-form [color]', () => {
+    const dbml = `${PRELUDE}
+Dep: a -> b [color: #000000]`;
+    const { newDbml } = syncDep(dbml, [
+      { operation: 'remove', edge: tableEdge('a', 'b') },
+    ]);
+    expect(newDbml).not.toContain('color');
+    const db = interpret(newDbml).getValue()!;
+    expect(db.deps[0].color).toBeUndefined();
+  });
+
+  it('is a no-op for an edge with no block', () => {
+    const { newDbml, edits } = syncDep(PRELUDE, [
+      { operation: 'remove', edge: tableEdge('a', 'b') },
+    ]);
+    expect(edits).toHaveLength(0);
+    expect(newDbml).toBe(PRELUDE);
+  });
+
+  it('is a no-op for a block that has no color', () => {
+    const dbml = `${PRELUDE}
+Dep {
+  a -> b
+}`;
+    const { edits } = syncDep(dbml, [
+      { operation: 'remove', edge: tableEdge('a', 'b') },
+    ]);
+    expect(edits).toHaveLength(0);
+  });
+});

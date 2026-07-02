@@ -7,9 +7,11 @@
  * `[color]`:
  *   - `update` an existing block's `[color]`, or
  *   - `create` a direct `Dep { a -> b } [color: <hex>]` when the picked
- *     (table-level) line has no backing block.
- * There is no delete operation. `create` treats an already-matching block as
- * an `update`, so it never produces a duplicate `Dep`.
+ *     (table-level) line has no backing block, or
+ *   - `remove` an existing block's `[color]` so the dep falls back to its
+ *     upstream -> group -> grey default.
+ * `create` treats an already-matching block as an `update`, so it never
+ * produces a duplicate `Dep`. `remove` on an edge with no block is a no-op.
  */
 
 import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
@@ -47,7 +49,7 @@ export interface DepSyncEdge {
 }
 
 export interface DepSyncOperation {
-  operation: 'create' | 'update';
+  operation: 'create' | 'update' | 'remove';
   /** The edge that identifies the target block (table-level: empty fieldNames). */
   edge: DepSyncEdge;
   color?: string;
@@ -66,6 +68,14 @@ interface ColorSetting {
   kind: 'attribute' | 'subDeclaration';
   start: number;
   end: number;
+  /**
+   * Range to delete when removing the color (revert to default). Wider than
+   * `start..end`: for an attribute it swallows the whole enclosing `[...]` when
+   * color is the sole setting, otherwise one adjacent comma; for a
+   * sub-declaration it is the same as `start..end` (the whole body line).
+   */
+  stripStart: number;
+  stripEnd: number;
 }
 
 export interface DepBlock {
@@ -167,12 +177,28 @@ function attrName (attr: AttributeNode): string | undefined {
   return undefined;
 }
 
-/** Find a `color` attribute inside a `[...]` setting list, capturing its own range. */
+/** Find a `color` attribute inside a `[...]` setting list, capturing its own range and a strip range. */
 function colorFromAttributeList (list: ListExpressionNode): ColorSetting | undefined {
-  for (const attr of list.elementList) {
-    if (attrName(attr) === 'color' && attr.value) {
-      return { kind: 'attribute', start: attr.start, end: attr.end };
+  const elements = list.elementList;
+  for (let i = 0; i < elements.length; i += 1) {
+    const attr = elements[i];
+    if (attrName(attr) !== 'color' || !attr.value) continue;
+
+    // Strip range: sole setting → the whole `[...]`; otherwise the attr plus one adjacent comma.
+    let stripStart = attr.start;
+    let stripEnd = attr.end;
+    if (elements.length === 1) {
+      stripStart = list.start;
+      stripEnd = list.end;
+    } else if (i < elements.length - 1) {
+      stripEnd = elements[i + 1].start;
+    } else {
+      stripStart = elements[i - 1].end;
     }
+
+    return {
+      kind: 'attribute', start: attr.start, end: attr.end, stripStart, stripEnd,
+    };
   }
   return undefined;
 }
@@ -234,7 +260,9 @@ export function findDepBlocks (source: string): DepBlock[] {
         } else if (field instanceof ElementDeclarationNode && field.type?.value?.toLowerCase() === 'color') {
           const subBody = field.body;
           if (subBody instanceof FunctionApplicationNode && subBody.callee) {
-            color = { kind: 'subDeclaration', start: field.start, end: field.end };
+            color = {
+              kind: 'subDeclaration', start: field.start, end: field.end, stripStart: field.start, stripEnd: field.end,
+            };
           }
         }
       }
@@ -396,6 +424,12 @@ function computeCreateEdit (dbml: string, operation: DepSyncOperation, blocks: D
   return [createEdit];
 }
 
+function computeRemoveEdit (block: DepBlock): TextEdit[] {
+  // No color setting to strip - nothing to do.
+  if (!block.color) return [];
+  return [{ start: block.color.stripStart, end: block.color.stripEnd, newText: '' }];
+}
+
 function applyOperation (dbml: string, operation: DepSyncOperation, blocks: DepBlock[], inlineDeps: InlineDep[]): TextEdit[] {
   switch (operation.operation) {
     case 'create':
@@ -403,6 +437,10 @@ function applyOperation (dbml: string, operation: DepSyncOperation, blocks: DepB
     case 'update': {
       const block = findBlockForEdge(blocks, operation.edge);
       return block ? computeUpdateEdit(operation, block) : [];
+    }
+    case 'remove': {
+      const block = findBlockForEdge(blocks, operation.edge);
+      return block ? computeRemoveEdit(block) : [];
     }
     default:
       return [];
