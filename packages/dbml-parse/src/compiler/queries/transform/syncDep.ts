@@ -242,13 +242,22 @@ export function findDepBlocks (source: string): DepBlock[] {
     const body = element.body;
     if (body instanceof FunctionApplicationNode) {
       // short form: Dep: a -> b [setting]
-      shortFormEnd = element.end;
       if (body.callee instanceof InfixExpressionNode) {
         const edge = edgeFromInfix(body.callee);
         if (edge) edges.push(edge);
       }
       const settingList = body.args.find((a) => a instanceof ListExpressionNode) as ListExpressionNode | undefined;
-      if (!color && settingList) color = colorFromAttributeList(settingList);
+      if (settingList) {
+        // Merge the color into the existing `[...]` (e.g. `[note: '…']`) rather than appending a
+        // second setting block, which would be a syntax error.
+        if (!color) color = colorFromAttributeList(settingList);
+        if (!color && settingList.listCloseBracket) {
+          attributeListInsertAt = settingList.listCloseBracket.start;
+          attributeListIsEmpty = settingList.elementList.length === 0;
+        }
+      } else {
+        shortFormEnd = element.end;
+      }
     } else if (body) {
       bodyOpenAt = body.start;
       for (const field of body.body) {
