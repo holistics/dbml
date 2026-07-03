@@ -272,8 +272,7 @@ export class TableInterpreter {
     column.pk = columnSymbol?.pk(this.compiler) || false;
     column.unique = columnSymbol?.unique(this.compiler) || false;
     column.increment = columnSymbol?.increment(this.compiler) || undefined;
-    const nullable = columnSymbol?.nullable(this.compiler);
-    column.not_null = nullable === undefined ? undefined : !nullable;
+    column.not_null = columnSymbol?.isNotNullSet(this.compiler);
     column.dbdefault = columnSymbol?.default(this.compiler);
     column.note = columnSymbol?.note(this.compiler);
 

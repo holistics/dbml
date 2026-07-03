@@ -505,12 +505,27 @@ export class ColumnSymbol extends NodeSymbol {
     return !!s?.[SettingName.Unique]?.length;
   }
 
-  nullable (compiler: Compiler): boolean | undefined {
+  // Returns whether the column is nullable, considering all constraints:
+  // pk, increment -> not nullable
+  // [not null] -> not nullable
+  // [null] -> nullable
+  // unspecified -> nullable (SQL default)
+  nullable (compiler: Compiler): boolean {
+    if (!this.declaration) return true;
+    if (this.pk(compiler)) return false;
+    if (this.increment(compiler)) return false;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+    if (s?.[SettingName.NotNull]?.length) return false;
+    return true;
+  }
+
+  // Returns whether [not null] or [null] is explicitly set
+  // true if [not null], false if [null], undefined if unspecified
+  isNotNullSet (compiler: Compiler): boolean | undefined {
     if (!this.declaration) return undefined;
     const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
-
-    if (s?.[SettingName.NotNull]?.length) return false;
-    if (s?.[SettingName.Null]?.length) return true;
+    if (s?.[SettingName.NotNull]?.length) return true;
+    if (s?.[SettingName.Null]?.length) return false;
     return undefined;
   }
 

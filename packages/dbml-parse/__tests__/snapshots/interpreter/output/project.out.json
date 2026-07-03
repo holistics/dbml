@@ -1374,5 +1374,127 @@
         "offset": 0
       }
     }
-  }
+  },
+  "infos": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'order_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@order_id@[L31:C2, L31:C16]",
+          "snippet": "\"order_id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'product_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@product_id@[L32:C2, L32:C18]",
+          "snippet": "\"product_id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'country_code' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@country_code@[L58:C2, L58:C20]",
+          "snippet": "\"country_code\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'country_code' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@country_code@[L74:C2, L74:C20]",
+          "snippet": "\"country_code\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'admin_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@admin_id@[L76:C2, L76:C16]",
+          "snippet": "\"admin_id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'order_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L85:C20, L85:C44]",
+          "snippet": "\"order_ite...\"order_id\""
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'product_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L87:C22, L87:C48]",
+          "snippet": "\"order_ite...roduct_id\""
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'country_code' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L89:C25, L89:C47]",
+          "snippet": "\"users\".\"c...ntry_code\""
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'country_code' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L91:C25, L91:C51]",
+          "snippet": "\"merchants...ntry_code\""
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'admin_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L95:C19, L95:C41]",
+          "snippet": "\"merchants...\"admin_id\""
+        }
+      }
+    }
+  ]
 }

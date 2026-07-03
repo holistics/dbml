@@ -922,5 +922,127 @@
         "offset": 0
       }
     }
-  }
+  },
+  "infos": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'name' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@name@[L5:C2, L5:C21]",
+          "snippet": "\"name\" varchar(255)"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'order_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@order_id@[L16:C2, L16:C16]",
+          "snippet": "\"order_id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'product_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@product_id@[L17:C2, L17:C18]",
+          "snippet": "\"product_id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'product_name' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@product_name@[L18:C2, L18:C29]",
+          "snippet": "\"product_n...rchar(255)"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@id@[L23:C2, L23:C10]",
+          "snippet": "\"id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'order_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L50:C20, L50:C44]",
+          "snippet": "\"order_ite...\"order_id\""
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L52:C4, L52:C29]",
+          "snippet": "\"products\"...\", \"name\")"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'name' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L52:C4, L52:C29]",
+          "snippet": "\"products\"...\", \"name\")"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'product_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L52:C32, L52:C76]",
+          "snippet": "\"order_ite...uct_name\")"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'product_name' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L52:C32, L52:C76]",
+          "snippet": "\"order_ite...uct_name\")"
+        }
+      }
+    }
+  ]
 }

@@ -579,5 +579,79 @@
         "offset": 87
       }
     }
-  }
+  },
+  "infos": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'following_user_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@following_user_id@[L4:C2, L4:C27]",
+          "snippet": "following_...id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'followed_user_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@followed_user_id@[L5:C2, L5:C26]",
+          "snippet": "followed_u...id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'user_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@user_id@[L50:C2, L50:C17]",
+          "snippet": "user_id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'user_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L65:C5, L65:C18]",
+          "snippet": "posts.user_id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'following_user_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L67:C16, L67:C41]",
+          "snippet": "follows.fo...ng_user_id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'followed_user_id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L69:C16, L69:C40]",
+          "snippet": "follows.fo...ed_user_id"
+        }
+      }
+    }
+  ]
 }

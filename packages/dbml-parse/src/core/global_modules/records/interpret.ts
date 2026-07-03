@@ -233,7 +233,7 @@ function extractValue (
   const typeName = (typeInfo?.name ?? '').split('(')[0];
   const isEnum = !!typeInfo?.enumSymbol;
   const increment = colSymbol.increment(compiler);
-  const notNull = colSymbol.nullable(compiler) === false;
+  const notNull = colSymbol.isNotNullSet(compiler) === true;
   const dbdefault = colSymbol.default(compiler);
   const colName = colSymbol.name ?? '';
   const valueType = getRecordValueType(typeName, isEnum);

@@ -2,6 +2,18 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@id@[L1:C1, L1:C11]",
+          "snippet": "id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
       "filepath": "/main.dbml",
       "level": "info",
@@ -14,6 +26,30 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'referrer' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
+          "snippet": "referrer i...[ref: -id]"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'referrer' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
+          "snippet": "referrer i...[ref: -id]"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'referrer' should be unique or primary key for a one-side relationship",
       "filepath": "/main.dbml",
       "level": "info",
@@ -33,6 +69,18 @@
         "context": {
           "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
           "snippet": "referrer i...[ref: -id]"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L4:C22, L4:C30]",
+          "snippet": "ref: -id"
         }
       }
     },

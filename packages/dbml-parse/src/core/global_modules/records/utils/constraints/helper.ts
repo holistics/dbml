@@ -25,7 +25,7 @@ export function columnInfoFromSymbol (col: ColumnSymbol, compiler: Compiler): Co
     pk: col.pk(compiler),
     unique: col.unique(compiler),
     increment: col.increment(compiler),
-    notNull: col.nullable(compiler) === false,
+    notNull: col.isNotNullSet(compiler) === true,
     dbdefault: def,
     typeName: type?.name ?? '',
   };
