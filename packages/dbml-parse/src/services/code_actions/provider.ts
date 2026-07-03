@@ -1,8 +1,9 @@
 import type Compiler from '@/compiler';
-import type { QuickFix } from '@/core/types/errors';
+import type { CompileInfo, QuickFix } from '@/core/types/errors';
+import { CompileErrorCode } from '@/core/types/errors';
 import type {
-  CodeActionProvider, CodeActionList, CodeAction,
-  TextModel, WorkspaceEdit,
+  CodeActionProvider, CodeActionList, CodeAction, CodeActionContext,
+  TextModel, Range, CancellationToken, WorkspaceEdit, MarkerData,
 } from '../types';
 
 export default class DBMLCodeActionProvider implements CodeActionProvider {
@@ -14,15 +15,22 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
 
   provideCodeActions (
     model: TextModel,
+    _range: Range,
+    context: CodeActionContext,
+    _token: CancellationToken,
   ): CodeActionList | undefined {
-    const infos = this.compiler.interpretProject().getInfos();
-    const withFixes = infos.filter((info) => info.quickFixes?.length);
-    if (!withFixes.length) return undefined;
+    const markers = context.markers;
+    if (!markers.length) return undefined;
 
+    const infos = this.compiler.interpretProject().getInfos();
     const actions: CodeAction[] = [];
-    for (const info of withFixes) {
-      for (const fix of info.quickFixes ?? []) {
-        actions.push(this.quickFixToCodeAction(fix, model));
+
+    for (const marker of markers) {
+      const matchingInfos = this.findInfosForMarker(infos, marker);
+      for (const info of matchingInfos) {
+        for (const fix of info.quickFixes ?? []) {
+          actions.push(this.quickFixToCodeAction(fix, model, marker));
+        }
       }
     }
 
@@ -30,7 +38,18 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     return { actions, dispose () {} };
   }
 
-  private quickFixToCodeAction (fix: QuickFix, model: TextModel): CodeAction {
+  private findInfosForMarker (infos: CompileInfo[], marker: MarkerData): CompileInfo[] {
+    return infos.filter((info) => {
+      const node = info.nodeOrToken;
+      return info.quickFixes?.length
+        && node.startPos.line + 1 === marker.startLineNumber
+        && node.startPos.column + 1 === marker.startColumn
+        && node.endPos.line + 1 === marker.endLineNumber
+        && node.endPos.column + 1 === marker.endColumn;
+    });
+  }
+
+  private quickFixToCodeAction (fix: QuickFix, model: TextModel, marker: MarkerData): CodeAction {
     const edit: WorkspaceEdit = {
       edits: fix.edits.map((e) => ({
         resource: model.uri,
@@ -46,6 +65,12 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
         versionId: model.getVersionId(),
       })),
     };
-    return { title: fix.title, edit };
+    return {
+      title: fix.title,
+      edit,
+      diagnostics: [
+        marker,
+      ],
+    };
   }
 }
