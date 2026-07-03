@@ -90,7 +90,6 @@ export type CodeActionList = languages.CodeActionList;
 export type CodeAction = languages.CodeAction;
 export type CodeActionContext = languages.CodeActionContext;
 export type WorkspaceEdit = languages.WorkspaceEdit;
-export type WorkspaceTextEdit = languages.IWorkspaceTextEdit;
 
 // Show references
 export type ReferenceProvider = languages.ReferenceProvider;

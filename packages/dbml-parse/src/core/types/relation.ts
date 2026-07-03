@@ -191,3 +191,27 @@ export function getRelationshipOp (
 
   return '<>';
 }
+
+// Cardinality transforms: adjust min or max while preserving the other.
+// Used by code actions to suggest operator changes.
+
+// Set min to 0 (allow null): 1 -> 0..1, * -> 0..*
+export function makeCardinalityOptional (rel: RelationCardinality): RelationCardinality {
+  const { min, max } = parseCardinality(rel);
+  if (min === 0) return rel;
+  return max === '*' ? CARDINALITY_MANY : CARDINALITY_MAYBE;
+}
+
+// Set min to 1 (require not null): 0..1 -> 1, 0..* -> *
+export function makeCardinalityRequired (rel: RelationCardinality): RelationCardinality {
+  const { min, max } = parseCardinality(rel);
+  if (min >= 1) return rel;
+  return max === '*' ? CARDINALITY_SOME : CARDINALITY_ONE;
+}
+
+// Set max to * (allow many): 1 -> *, 0..1 -> 0..*
+export function makeCardinalityMany (rel: RelationCardinality): RelationCardinality {
+  const { min, max } = parseCardinality(rel);
+  if (max === '*') return rel;
+  return min === 0 ? CARDINALITY_MANY : CARDINALITY_SOME;
+}

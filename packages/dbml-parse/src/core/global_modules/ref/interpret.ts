@@ -5,13 +5,15 @@ import {
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
+import type { SyntaxToken } from '@/core/types/tokens';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
+  InfixExpressionNode,
   IdentifierStreamNode,
   type ListExpressionNode,
   AttributeNode,
-  SyntaxNode,
+  PrefixExpressionNode,
 } from '@/core/types/nodes';
 import type { Ref } from '@/core/types/schemaJson';
 import {
@@ -25,7 +27,12 @@ import {
   getTokenPosition,
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
-import { getMultiplicities } from '@/core/types/relation';
+import {
+  getMultiplicities, getRelationshipOp, parseCardinality,
+  makeCardinalityOptional, makeCardinalityRequired, makeCardinalityMany,
+} from '@/core/types/relation';
+import type { RelationCardinality } from '@/core/types/relation';
+import type { QuickFix } from '@/core/types/errors';
 import { zip } from 'lodash-es';
 
 export class RefInterpreter {
@@ -158,75 +165,109 @@ export class RefInterpreter {
   }
 
   private validateRefConstraints (): { infos: CompileInfo[] } {
-    const leftCard = this.metadata.leftCardinality(this.compiler);
-    const rightCard = this.metadata.rightCardinality(this.compiler);
-    if (!leftCard || !rightCard) return { infos: [] };
-
-    const leftColumns = this.metadata.leftColumns(this.compiler);
-    const rightColumns = this.metadata.rightColumns(this.compiler);
-
-    const r1 = this.validateCardinalityConstraints(rightCard, leftColumns, rightColumns, this.metadata.leftToken(), this.metadata.rightToken());
-    const r2 = this.validateCardinalityConstraints(leftCard, rightColumns, leftColumns, this.metadata.rightToken(), this.metadata.leftToken());
-
+    if (!this.metadata.cardinalities(this.compiler)) return { infos: [] };
     return {
       infos: [
-        ...r1,
-        ...r2,
+        ...this.validateCardinality('right'),
+        ...this.validateCardinality('left'),
       ],
     };
   }
 
+  private getOpToken (): SyntaxToken | undefined {
+    if (this.declarationNode instanceof ElementDeclarationNode) {
+      const field = getBody(this.declarationNode)[0];
+      if (!(field instanceof FunctionApplicationNode)) return undefined;
+      const infix = field.callee;
+      if (!(infix instanceof InfixExpressionNode)) return undefined;
+      return infix.op;
+    }
+    if (this.declarationNode instanceof AttributeNode) {
+      const prefix = this.declarationNode.value;
+      if (!(prefix instanceof PrefixExpressionNode)) return undefined;
+      return prefix.op;
+    }
+    return undefined;
+  }
+
   // A cardinality constrains:
-  //   min >= 1 → otherColumns must be NOT NULL
-  //   min = 0  → otherColumns may be nullable; info if NOT NULL (operator is more permissive)
-  //   max = 1  → ownColumns must be unique/pk
-  private validateCardinalityConstraints (
-    cardinality: { min: number; max: number | '*' },
-    otherColumns: ColumnSymbol[],
-    ownColumns: ColumnSymbol[],
-    otherNode: SyntaxNode,
-    ownNode: SyntaxNode,
-  ): CompileInfo[] {
+  //   min >= 1 -> otherColumns must be NOT NULL
+  //   min = 0  -> otherColumns may be nullable; info if NOT NULL
+  //   max = 1  -> ownColumns must be unique/pk
+  private validateCardinality (side: 'left' | 'right'): CompileInfo[] {
+    const cardinalities = this.metadata.cardinalities(this.compiler)!;
+    const thisRel = side === 'left' ? cardinalities[0] : cardinalities[1];
+    const otherRel = side === 'left' ? cardinalities[1] : cardinalities[0];
+    const card = parseCardinality(thisRel);
+
+    const otherColumns = side === 'left' ? this.metadata.rightColumns(this.compiler) : this.metadata.leftColumns(this.compiler);
+    const ownColumns = side === 'left' ? this.metadata.leftColumns(this.compiler) : this.metadata.rightColumns(this.compiler);
+    const otherNode = side === 'left' ? this.metadata.rightToken() : this.metadata.leftToken();
+    const ownNode = side === 'left' ? this.metadata.leftToken() : this.metadata.rightToken();
+    const opToken = this.getOpToken();
+
     const infos: CompileInfo[] = [];
 
-    // min >= 1 -> other side must be NOT NULL
-    if (cardinality.min >= 1 && otherColumns.length > 0) {
+    if (card.min >= 1) {
       for (const col of otherColumns) {
-        if (col.nullable(this.compiler) === true) {
+        if (col.nullable(this.compiler)) {
           const msg = `Column '${col.name}' is nullable but operator implies mandatory`;
-          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode));
-          if (col.declaration) {
-            infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
-          }
+          const fixes = [
+            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel),
+            suggestAddSetting(col, 'not null'),
+          ].filter((f): f is QuickFix => !!f);
+          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, fixes));
+          if (col.declaration) infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, fixes));
         }
       }
     }
 
-    // min = 0 -> other side may be nullable; info if NOT NULL
-    if (cardinality.min === 0 && otherColumns.length > 0) {
+    if (card.min === 0) {
       for (const col of otherColumns) {
         if (col.nullable(this.compiler) === false) {
           const msg = `Column '${col.name}' is NOT NULL but operator marks it optional`;
-          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode));
-          if (col.declaration) {
-            infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
-          }
+          const fixes = [
+            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel),
+          ].filter((f): f is QuickFix => !!f);
+          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, fixes));
+          if (col.declaration) infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, fixes));
         }
       }
     }
 
-    // max = 1 -> own side must be unique/pk
-    if (cardinality.max === 1 && ownColumns.length === 1) {
+    if (card.max === 1 && ownColumns.length === 1) {
       const col = ownColumns[0];
       if (!col.unique(this.compiler) && !col.pk(this.compiler)) {
         const msg = `Column '${col.name}' should be unique or primary key for a one-side relationship`;
-        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode));
-        if (col.declaration) {
-          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
-        }
+        const fixes = [
+          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel),
+          suggestAddSetting(col, 'unique'),
+        ].filter((f): f is QuickFix => !!f);
+        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, fixes));
+        if (col.declaration) infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, fixes));
       }
     }
 
     return infos;
   }
+}
+
+function suggestChangeOp (opToken: SyntaxToken, newThisRel: RelationCardinality, otherRel: RelationCardinality): QuickFix {
+  const newOp = getRelationshipOp(newThisRel, otherRel);
+  return {
+    title: `Change operator to '${newOp}'`,
+    edits: [
+      { range: { start: opToken.startPos, end: opToken.endPos }, newText: newOp, filepath: opToken.filepath },
+    ],
+  };
+}
+
+function suggestAddSetting (col: ColumnSymbol, setting: string): QuickFix | undefined {
+  if (!col.declaration) return undefined;
+  return {
+    title: `Add [${setting}] to '${col.name}'`,
+    edits: [
+      { range: { start: col.declaration.endPos, end: col.declaration.endPos }, newText: ` [${setting}]`, filepath: col.declaration.filepath },
+    ],
+  };
 }

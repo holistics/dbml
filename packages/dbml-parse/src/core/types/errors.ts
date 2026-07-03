@@ -1,5 +1,6 @@
 import { Filepath } from './filepath';
 import { SyntaxNode } from '@/core/types/nodes';
+import type { Position } from './position';
 import { SyntaxToken } from '@/core/types/tokens';
 
 export enum CompileErrorCode {
@@ -201,6 +202,17 @@ export class CompileWarning extends Error {
   }
 }
 
+export interface QuickFix {
+  title: string;
+  edits: TextEdit[];
+}
+
+export interface TextEdit {
+  range: { start: Position; end: Position };
+  newText: string;
+  filepath: Filepath;
+}
+
 export class CompileInfo extends Error {
   code: Readonly<CompileErrorCode>;
 
@@ -212,13 +224,16 @@ export class CompileInfo extends Error {
 
   end: Readonly<number>;
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  quickFixes?: QuickFix[];
+
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken, quickFixes?: QuickFix[]) {
     super(message);
     this.code = code;
     this.diagnostic = message;
     this.nodeOrToken = nodeOrToken;
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;
+    this.quickFixes = quickFixes;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileInfo.prototype);
   }
