@@ -11,7 +11,7 @@ import {
   FunctionApplicationNode,
   InfixExpressionNode,
   IdentifierStreamNode,
-  type ListExpressionNode,
+  ListExpressionNode,
   AttributeNode,
   PrefixExpressionNode,
 } from '@/core/types/nodes';
@@ -27,6 +27,7 @@ import {
   getTokenPosition,
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
+import { addSettingEdit } from '@/compiler/queries/transform/addSetting';
 import {
   getMultiplicities, getRelationshipOp, parseCardinality,
   makeCardinalityOptional, makeCardinalityRequired, makeCardinalityMany,
@@ -213,7 +214,7 @@ export class RefInterpreter {
         if (col.nullable(this.compiler)) {
           const msg = `Column '${col.name}' is nullable but operator implies mandatory`;
           const fixes = [
-            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel),
+            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `make '${col.name}' optional`),
             suggestAddSetting(col, 'not null'),
           ].filter((f): f is QuickFix => !!f);
           infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, fixes));
@@ -227,7 +228,7 @@ export class RefInterpreter {
         if (col.nullable(this.compiler) === false) {
           const msg = `Column '${col.name}' is NOT NULL but operator marks it optional`;
           const fixes = [
-            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel),
+            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `make '${col.name}' required`),
           ].filter((f): f is QuickFix => !!f);
           infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, fixes));
           if (col.declaration) infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, fixes));
@@ -240,7 +241,7 @@ export class RefInterpreter {
       if (!col.unique(this.compiler) && !col.pk(this.compiler)) {
         const msg = `Column '${col.name}' should be unique or primary key for a one-side relationship`;
         const fixes = [
-          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel),
+          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `make '${col.name}' many`),
           suggestAddSetting(col, 'unique'),
         ].filter((f): f is QuickFix => !!f);
         infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, fixes));
@@ -252,22 +253,35 @@ export class RefInterpreter {
   }
 }
 
-function suggestChangeOp (opToken: SyntaxToken, newThisRel: RelationCardinality, otherRel: RelationCardinality): QuickFix {
-  const newOp = getRelationshipOp(newThisRel, otherRel);
+function suggestChangeOp (
+  opToken: SyntaxToken,
+  newThisRel: RelationCardinality,
+  otherRel: RelationCardinality,
+  side: 'left' | 'right',
+  description: string,
+): QuickFix {
+  const newLeft = side === 'left' ? newThisRel : otherRel;
+  const newRight = side === 'right' ? newThisRel : otherRel;
+  const newOp = getRelationshipOp(newLeft, newRight);
   return {
-    title: `Change operator to '${newOp}'`,
+    title: `Change operator to '${newOp}' (${description})`,
+    filepath: opToken.filepath,
     edits: [
-      { range: { start: opToken.startPos, end: opToken.endPos }, newText: newOp, filepath: opToken.filepath },
+      { start: opToken.start, end: opToken.end, newText: newOp },
     ],
   };
 }
 
 function suggestAddSetting (col: ColumnSymbol, setting: string): QuickFix | undefined {
   if (!col.declaration) return undefined;
+  const edit = addSettingEdit(col.declaration, setting);
+  if (!edit) return undefined;
+
   return {
-    title: `Add [${setting}] to '${col.name}'`,
+    title: `Make '${col.name}' ${setting}`,
+    filepath: col.declaration.filepath,
     edits: [
-      { range: { start: col.declaration.endPos, end: col.declaration.endPos }, newText: ` [${setting}]`, filepath: col.declaration.filepath },
+      edit,
     ],
   };
 }

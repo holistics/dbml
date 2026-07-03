@@ -19,7 +19,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       `;
       const fixes = getQuickFixes(source);
       expect(fixes.some((f) => f.title.includes('Change operator'))).toBe(true);
-      expect(fixes.some((f) => f.title.includes('[not null]'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('not null'))).toBe(true);
     });
 
     test('NOT NULL column with optional ref suggests changing op', () => {
@@ -52,7 +52,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       `;
       const fixes = getQuickFixes(source);
       expect(fixes.some((f) => f.title.includes('Change operator'))).toBe(true);
-      expect(fixes.some((f) => f.title.includes('[unique]'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('unique'))).toBe(true);
     });
 
     test('no uniqueness fix when column is pk', () => {
@@ -62,13 +62,13 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      const uniqueFixes = fixes.filter((f) => f.title.includes('[unique]'));
+      const uniqueFixes = fixes.filter((f) => f.title.includes('unique'));
       expect(uniqueFixes).toHaveLength(0);
     });
   });
 
   describe('operator change produces correct new op', () => {
-    test('> with nullable column suggests ?<', () => {
+    test('> with nullable column suggests >?', () => {
       const source = `
         Table users { id int [pk] }
         Table posts { user_id int [null] }
@@ -76,8 +76,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       `;
       const fixes = getQuickFixes(source);
       const opFix = fixes.find((f) => f.title.includes('Change operator'));
-      // right card (1,1) becomes (0,1), getRelationshipOp(0..1, *) = ?<
-      expect(opFix?.title).toContain('?<');
+      expect(opFix?.title).toContain('>?');
     });
 
     test('- with non-unique column suggests >', () => {

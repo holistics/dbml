@@ -6,4 +6,5 @@ export {
   type DiagramViewBlock,
 } from './syncDiagramView';
 export { applyTextEdits, type TextEdit } from './applyTextEdits';
+export { addSetting, addSettingEdit } from './addSetting';
 export { type TableNameInput } from './utils';

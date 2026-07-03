@@ -1,10 +1,10 @@
 import type Compiler from '@/compiler';
 import type { CompileInfo, QuickFix } from '@/core/types/errors';
-import { CompileErrorCode } from '@/core/types/errors';
 import type {
   CodeActionProvider, CodeActionList, CodeAction, CodeActionContext,
   TextModel, Range, CancellationToken, WorkspaceEdit, MarkerData,
 } from '../types';
+import { Uri } from '../types';
 
 export default class DBMLCodeActionProvider implements CodeActionProvider {
   private compiler: Compiler;
@@ -50,20 +50,26 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
   }
 
   private quickFixToCodeAction (fix: QuickFix, model: TextModel, marker: MarkerData): CodeAction {
+    const uri = model.uri;
+    const resource = Uri.parse(fix.filepath.toUri({ protocol: uri.scheme }));
     const edit: WorkspaceEdit = {
-      edits: fix.edits.map((e) => ({
-        resource: model.uri,
-        textEdit: {
-          range: {
-            startLineNumber: e.range.start.line + 1,
-            startColumn: e.range.start.column + 1,
-            endLineNumber: e.range.end.line + 1,
-            endColumn: e.range.end.column + 1,
+      edits: fix.edits.map((e) => {
+        const startPos = model.getPositionAt(e.start);
+        const endPos = model.getPositionAt(e.end);
+        return {
+          resource,
+          textEdit: {
+            range: {
+              startLineNumber: startPos.lineNumber,
+              startColumn: startPos.column,
+              endLineNumber: endPos.lineNumber,
+              endColumn: endPos.column,
+            },
+            text: e.newText,
           },
-          text: e.newText,
-        },
-        versionId: model.getVersionId(),
-      })),
+          versionId: model.getVersionId(),
+        };
+      }),
     };
     return {
       title: fix.title,

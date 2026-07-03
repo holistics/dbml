@@ -1,6 +1,5 @@
 import { Filepath } from './filepath';
 import { SyntaxNode } from '@/core/types/nodes';
-import type { Position } from './position';
 import { SyntaxToken } from '@/core/types/tokens';
 
 export enum CompileErrorCode {
@@ -204,13 +203,8 @@ export class CompileWarning extends Error {
 
 export interface QuickFix {
   title: string;
-  edits: TextEdit[];
-}
-
-export interface TextEdit {
-  range: { start: Position; end: Position };
-  newText: string;
   filepath: Filepath;
+  edits: import('@/compiler/queries/transform/applyTextEdits').TextEdit[];
 }
 
 export class CompileInfo extends Error {
