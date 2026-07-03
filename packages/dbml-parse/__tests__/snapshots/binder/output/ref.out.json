@@ -1,4 +1,30 @@
 {
+  "infos": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'referrer_id' should be unique or primary key for a one-side relationship",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@referrer_id@[L2:C4, L2:C23]",
+          "snippet": "referrer_id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'referrer_id' should be unique or primary key for a one-side relationship",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L6:C15, L6:C32]",
+          "snippet": "Users.referrer_id"
+        }
+      }
+    }
+  ],
   "nodeReferees": [
     {
       "context": {
@@ -178,31 +204,5 @@
         ]
       }
     ]
-  },
-  "warnings": [
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer_id' should be unique or primary key for a one-side relationship",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@referrer_id@[L2:C4, L2:C23]",
-          "snippet": "referrer_id integer"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer_id' should be unique or primary key for a one-side relationship",
-      "filepath": "/main.dbml",
-      "level": "error",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L6:C15, L6:C32]",
-          "snippet": "Users.referrer_id"
-        }
-      }
-    }
-  ]
+  }
 }

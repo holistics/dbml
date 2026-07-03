@@ -200,3 +200,30 @@ export class CompileWarning extends Error {
     return this.nodeOrToken.filepath;
   }
 }
+
+export class CompileInfo extends Error {
+  code: Readonly<CompileErrorCode>;
+
+  diagnostic: Readonly<string>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
+
+  start: Readonly<number>;
+
+  end: Readonly<number>;
+
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+    super(message);
+    this.code = code;
+    this.diagnostic = message;
+    this.nodeOrToken = nodeOrToken;
+    this.start = nodeOrToken.start;
+    this.end = nodeOrToken.end;
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, CompileInfo.prototype);
+  }
+
+  get filepath (): Filepath {
+    return this.nodeOrToken.filepath;
+  }
+}

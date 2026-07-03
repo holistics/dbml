@@ -17,11 +17,13 @@ import type Report from '@/core/types/report';
 function serializeInterpreterResult (compiler: Compiler, report: Report<Database | undefined>): string {
   const errors = report.getErrors();
   const warnings = report.getWarnings();
+  const infos = report.getInfos();
   const value = errors.length > 0 ? undefined : report.getValue();
   return JSON.stringify(toSnapshot(compiler, {
     database: value as any,
     errors,
     warnings,
+    infos,
   }), null, 2);
 }
 

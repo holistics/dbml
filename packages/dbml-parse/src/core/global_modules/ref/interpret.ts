@@ -4,7 +4,7 @@ import {
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -49,8 +49,8 @@ export class RefInterpreter {
       ...this.interpretName(),
       ...this.interpretBody(),
     ];
-    const warnings = this.validateRefConstraints();
-    return Report.create(this.ref as Ref, errors, warnings);
+    const { infos } = this.validateRefConstraints();
+    return Report.create(this.ref as Ref, errors, undefined, infos);
   }
 
   private interpretName (): CompileError[] {
@@ -157,24 +157,28 @@ export class RefInterpreter {
     return [];
   }
 
-  private validateRefConstraints (): CompileWarning[] {
+  private validateRefConstraints (): { infos: CompileInfo[] } {
     const leftCard = this.metadata.leftCardinality(this.compiler);
     const rightCard = this.metadata.rightCardinality(this.compiler);
-    if (!leftCard || !rightCard) return [];
+    if (!leftCard || !rightCard) return { infos: [] };
 
     const leftColumns = this.metadata.leftColumns(this.compiler);
     const rightColumns = this.metadata.rightColumns(this.compiler);
 
-    return [
-      // rightCard: min constrains leftColumns (nullability), max constrains rightColumns (uniqueness)
-      ...this.validateCardinalityConstraints(rightCard, leftColumns, rightColumns, this.metadata.leftToken(), this.metadata.rightToken()),
-      // leftCard: min constrains rightColumns (nullability), max constrains leftColumns (uniqueness)
-      ...this.validateCardinalityConstraints(leftCard, rightColumns, leftColumns, this.metadata.rightToken(), this.metadata.leftToken()),
-    ];
+    const r1 = this.validateCardinalityConstraints(rightCard, leftColumns, rightColumns, this.metadata.leftToken(), this.metadata.rightToken());
+    const r2 = this.validateCardinalityConstraints(leftCard, rightColumns, leftColumns, this.metadata.rightToken(), this.metadata.leftToken());
+
+    return {
+      infos: [
+        ...r1,
+        ...r2,
+      ],
+    };
   }
 
   // A cardinality constrains:
   //   min >= 1 → otherColumns must be NOT NULL
+  //   min = 0  → otherColumns may be nullable; info if NOT NULL (operator is more permissive)
   //   max = 1  → ownColumns must be unique/pk
   private validateCardinalityConstraints (
     cardinality: { min: number; max: number | '*' },
@@ -182,17 +186,30 @@ export class RefInterpreter {
     ownColumns: ColumnSymbol[],
     otherNode: SyntaxNode,
     ownNode: SyntaxNode,
-  ): CompileWarning[] {
-    const warnings: CompileWarning[] = [];
+  ): CompileInfo[] {
+    const infos: CompileInfo[] = [];
 
     // min >= 1 -> other side must be NOT NULL
     if (cardinality.min >= 1 && otherColumns.length > 0) {
       for (const col of otherColumns) {
         if (col.nullable(this.compiler) === true) {
-          const msg = `Column '${col.name}' is nullable but relationship requires it to be NOT NULL`;
-          warnings.push(new CompileWarning(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode));
+          const msg = `Column '${col.name}' is nullable but operator implies mandatory`;
+          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode));
           if (col.declaration) {
-            warnings.push(new CompileWarning(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
+            infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
+          }
+        }
+      }
+    }
+
+    // min = 0 -> other side may be nullable; info if NOT NULL
+    if (cardinality.min === 0 && otherColumns.length > 0) {
+      for (const col of otherColumns) {
+        if (col.nullable(this.compiler) === false) {
+          const msg = `Column '${col.name}' is NOT NULL but operator marks it optional`;
+          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode));
+          if (col.declaration) {
+            infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
           }
         }
       }
@@ -203,13 +220,13 @@ export class RefInterpreter {
       const col = ownColumns[0];
       if (!col.unique(this.compiler) && !col.pk(this.compiler)) {
         const msg = `Column '${col.name}' should be unique or primary key for a one-side relationship`;
-        warnings.push(new CompileWarning(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode));
+        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode));
         if (col.declaration) {
-          warnings.push(new CompileWarning(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
+          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration));
         }
       }
     }
 
-    return warnings;
+    return infos;
   }
 }

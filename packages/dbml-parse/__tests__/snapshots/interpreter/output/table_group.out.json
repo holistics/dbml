@@ -358,12 +358,12 @@
       }
     }
   },
-  "warnings": [
+  "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
       "filepath": "/main.dbml",
-      "level": "error",
+      "level": "info",
       "node": {
         "context": {
           "id": "node@<function-application>@id@[L1:C2, L1:C8]",
@@ -375,7 +375,7 @@
       "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
       "filepath": "/main.dbml",
-      "level": "error",
+      "level": "info",
       "node": {
         "context": {
           "id": "node@<attribute>@@[L12:C16, L12:C27]",

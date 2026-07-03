@@ -41,6 +41,11 @@ export function getNodeMemberSymbols (compiler: Compiler, node: SyntaxNode): Rep
           ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getWarnings()),
           ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getWarnings()),
         ],
+        [
+          ...report.getInfos(),
+          ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getInfos()),
+          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getInfos()),
+        ],
       );
     },
     new Report<NodeSymbol[]>([]),

@@ -103,6 +103,7 @@ export function interpret (source: string): Report<Readonly<Database> | undefine
     db ? db as Database : undefined,
     [...parseResult.getErrors(), ...bindResult.getErrors(), ...interpretResult.getErrors()],
     [...parseResult.getWarnings(), ...bindResult.getWarnings(), ...interpretResult.getWarnings()],
+    [...parseResult.getInfos(), ...bindResult.getInfos(), ...interpretResult.getInfos()],
   );
 }
 

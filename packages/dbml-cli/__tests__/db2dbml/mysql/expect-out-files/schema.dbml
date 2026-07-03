@@ -197,4 +197,4 @@ Ref "fk_detail_items_orders":"orders"."order_id" < "order_items"."order_id" [del
 
 Ref "fk_detail_items_products":"products"."id" < "order_items"."product_id"
 
-Ref "fk_order_user":"users"."user_id" < "orders"."user_id" [delete: set null]
+Ref "fk_order_user":"users"."user_id" <? "orders"."user_id" [delete: set null]
