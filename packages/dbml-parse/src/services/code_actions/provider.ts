@@ -6,6 +6,7 @@ import type {
   TextModel, Range, CancellationToken, WorkspaceEdit, MarkerData,
 } from '../types';
 import { Uri } from '../types';
+import { Filepath } from '@/core/types/filepath';
 import { getEditorRange } from '../utils';
 
 // Provides quick fixes for diagnostics that have attached QuickFix data.
@@ -58,7 +59,11 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
 
   // Convert a QuickFix (offset-based) to a Monaco CodeAction (line/column-based).
   private quickFixToCodeAction (fix: QuickFix, model: TextModel, marker: MarkerData): CodeAction {
-    const resource = Uri.parse(fix.filepath.toUri({ protocol: model.uri.scheme }));
+    const uri = model.uri;
+    const modelFilepath = Filepath.fromUri(String(uri));
+    const resource = fix.filepath.equals(modelFilepath)
+      ? uri
+      : Uri.parse(fix.filepath.toUri({ protocol: uri.scheme }));
     const edit: WorkspaceEdit = {
       edits: fix.edits.map((e) => {
         const startPos = model.getPositionAt(e.start);
