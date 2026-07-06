@@ -284,6 +284,72 @@ describe('[example - record] simple primary key constraints', () => {
     expect(warnings[0].diagnostic).toBe('NULL in PK: users.id cannot be NULL');
   });
 
+  test('should not crash when composite PK has unspecified increment column with null in specified column', () => {
+    const source = `
+      Table users {
+        id int [increment]
+        tenant_id int
+
+        indexes {
+          (id, tenant_id) [pk]
+        }
+      }
+      records users(tenant_id) {
+        null
+        1
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    expect(warnings.length).toBeGreaterThanOrEqual(1);
+    expect(warnings[0].diagnostic).toContain('NULL');
+  });
+
+  test('should not crash when composite PK has unspecified default column with null in specified column', () => {
+    const source = `
+      Table orders {
+        id int [default: 0]
+        code int
+
+        indexes {
+          (id, code) [pk]
+        }
+      }
+      records orders(code) {
+        null
+        1
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    expect(warnings.length).toBeGreaterThanOrEqual(1);
+    expect(warnings[0].diagnostic).toContain('NULL');
+  });
+
+  test('should not crash when composite PK has unspecified increment column with duplicates in specified column', () => {
+    const source = `
+      Table users {
+        id int [increment]
+        tenant_id int
+
+        indexes {
+          (id, tenant_id) [pk]
+        }
+      }
+      records users(tenant_id) {
+        1
+        1
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    expect(warnings.length).toBeGreaterThanOrEqual(1);
+    expect(warnings[0].diagnostic).toContain('Duplicate');
+  });
+
   test('should validate PK alias syntax (primary key)', () => {
     const source = `
       Table users {
