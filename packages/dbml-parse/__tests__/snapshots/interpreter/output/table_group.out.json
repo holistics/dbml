@@ -361,7 +361,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'users.id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -373,7 +373,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for operator '>'",
+      "diagnostic": "Column 'users.id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -385,7 +385,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'admin_id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'merchants.admin_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -397,7 +397,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'admin_id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'merchants.admin_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -409,7 +409,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'users.id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -421,7 +421,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for operator '>'",
+      "diagnostic": "Column 'users.id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {

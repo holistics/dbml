@@ -2,7 +2,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '-' requires it to be NOT NULL",
+      "diagnostic": "Column 'Users.id' is nullable but operator '-' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -14,7 +14,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for operator '-'",
+      "diagnostic": "Column 'Users.id' should be unique or primary key for operator '-'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -26,7 +26,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer' is nullable but operator '-' requires it to be NOT NULL",
+      "diagnostic": "Column 'Users.referrer' is nullable but operator '-' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -38,7 +38,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer' is nullable but operator '-' requires it to be NOT NULL",
+      "diagnostic": "Column 'Users.referrer' is nullable but operator '-' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -50,7 +50,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer' should be unique or primary key for operator '-'",
+      "diagnostic": "Column 'Users.referrer' should be unique or primary key for operator '-'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -62,7 +62,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer' should be unique or primary key for operator '-'",
+      "diagnostic": "Column 'Users.referrer' should be unique or primary key for operator '-'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -74,7 +74,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '-' requires it to be NOT NULL",
+      "diagnostic": "Column 'Users.id' is nullable but operator '-' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -86,7 +86,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for operator '-'",
+      "diagnostic": "Column 'Users.id' should be unique or primary key for operator '-'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {

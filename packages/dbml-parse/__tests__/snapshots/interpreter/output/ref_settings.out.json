@@ -259,7 +259,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'A.id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -271,7 +271,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'A.code' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -283,7 +283,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'B.id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -295,7 +295,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for operator '>'",
+      "diagnostic": "Column 'B.id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -307,7 +307,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'B.code' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -319,7 +319,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' should be unique or primary key for operator '>'",
+      "diagnostic": "Column 'B.code' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -331,7 +331,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'A.id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -343,7 +343,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'B.id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -355,7 +355,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for operator '>'",
+      "diagnostic": "Column 'B.id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -367,7 +367,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'A.code' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -379,7 +379,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'B.code' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -391,7 +391,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' should be unique or primary key for operator '>'",
+      "diagnostic": "Column 'B.code' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {

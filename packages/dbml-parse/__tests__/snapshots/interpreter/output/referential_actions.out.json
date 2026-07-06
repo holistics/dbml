@@ -926,7 +926,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'name' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'name.name' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -938,7 +938,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'order_items.order_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -950,7 +950,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'order_items.product_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -962,7 +962,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_name' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'order_items.product_name' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -974,7 +974,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'products.id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -986,7 +986,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'order_items.order_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -998,7 +998,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'name.name' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -1010,7 +1010,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'name' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'products.id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -1022,7 +1022,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'order_items.product_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -1034,7 +1034,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_name' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'order_items.product_name' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {

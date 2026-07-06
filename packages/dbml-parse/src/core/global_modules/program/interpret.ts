@@ -30,6 +30,7 @@ import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../reco
 import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '@/core/types/relation';
+import { validatePartialRef } from '../ref/constraint_fixes';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -72,6 +73,7 @@ export default class ProgramInterpreter {
     this.interpretAllSymbols();
     this.interpretAllMetadata();
     this.interpretAllAliases();
+    this.validatePartialRefs();
     this.warnings.push(...this.validateRecords());
     return new Report(this.db, this.errors, this.warnings, this.hints);
   }
@@ -320,6 +322,14 @@ export default class ProgramInterpreter {
       ...partialRefs,
     ], fkTableMap, this.filepath));
     return warnings;
+  }
+
+  private validatePartialRefs () {
+    const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
+      .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
+    for (const meta of partialMetas) {
+      this.hints.push(...validatePartialRef(this.compiler, meta));
+    }
   }
 
   private collectPartialRefs (fkTableMap: Map<InternedNodeSymbol, TableInfo>): Ref[] {

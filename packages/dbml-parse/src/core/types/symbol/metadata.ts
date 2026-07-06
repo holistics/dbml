@@ -8,6 +8,7 @@ import {
   PrefixExpressionNode,
   type SyntaxNode,
 } from '../nodes';
+import type { SyntaxToken } from '../tokens';
 import type {
   ColumnSymbol,
   NodeSymbol,
@@ -148,17 +149,21 @@ export class RefMetadata extends NodeMetadata {
   }
 
   op (_compiler: Compiler): RelationshipOp | undefined {
+    return this.opToken()?.value as RelationshipOp | undefined;
+  }
+
+  opToken (): SyntaxToken | undefined {
     if (this.declaration instanceof ElementDeclarationNode) {
       const field = getBody(this.declaration)[0];
       if (!(field instanceof FunctionApplicationNode)) return undefined;
       const infix = field.callee;
       if (!(infix instanceof InfixExpressionNode)) return undefined;
-      return infix.op?.value as RelationshipOp | undefined;
+      return infix.op;
     }
     if (this.declaration instanceof AttributeNode) {
       const prefix = this.declaration.value;
       if (!(prefix instanceof PrefixExpressionNode)) return undefined;
-      return prefix.op?.value as RelationshipOp | undefined;
+      return prefix.op;
     }
     return undefined;
   }
@@ -289,10 +294,14 @@ export class PartialRefMetadata extends NodeMetadata {
   }
 
   op (_compiler: Compiler): RelationshipOp | undefined {
+    return this.opToken()?.value as RelationshipOp | undefined;
+  }
+
+  opToken (): SyntaxToken | undefined {
     if (!(this.declaration instanceof AttributeNode)) return undefined;
     const prefix = this.declaration.value;
     if (!(prefix instanceof PrefixExpressionNode)) return undefined;
-    return prefix.op?.value as RelationshipOp | undefined;
+    return prefix.op;
   }
 
   cardinalities (compiler: Compiler): [RelationCardinality, RelationCardinality] | undefined {

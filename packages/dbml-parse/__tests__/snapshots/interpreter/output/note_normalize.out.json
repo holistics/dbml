@@ -583,7 +583,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'following_user_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'follows.following_user_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -595,7 +595,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'followed_user_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'follows.followed_user_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -607,7 +607,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'user_id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'posts.user_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -619,7 +619,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'user_id' is nullable but operator '>' requires it to be NOT NULL",
+      "diagnostic": "Column 'posts.user_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -631,7 +631,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'following_user_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'follows.following_user_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -643,7 +643,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'followed_user_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Column 'follows.followed_user_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
