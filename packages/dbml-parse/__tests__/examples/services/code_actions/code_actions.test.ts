@@ -143,11 +143,14 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       expect(fixes.some((f) => f.title.includes('user_id'))).toBe(true);
     });
 
-    test('composite > with all not-null columns produces no fixes', () => {
+    test('composite > with all not-null columns and composite unique index produces no fixes', () => {
       const source = `
         Table users {
           id int [pk]
           tenant_id int [not null]
+          indexes {
+            (id, tenant_id) [unique]
+          }
         }
         Table posts {
           user_id int [not null]

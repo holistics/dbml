@@ -2,7 +2,10 @@ import type Compiler from '@/compiler';
 import { CompileErrorCode, CompileInfo } from '@/core/types/errors';
 import type { QuickFix } from '@/core/types/errors';
 import type { SyntaxToken } from '@/core/types/tokens';
-import type { ColumnSymbol } from '@/core/types/symbol';
+import type { ColumnSymbol, TableSymbol } from '@/core/types/symbol';
+import { ElementDeclarationNode } from '@/core/types/nodes';
+import { UNHANDLED } from '@/core/types/module';
+import type { Index } from '@/core/types/schemaJson';
 import type { RelationCardinality } from '@/core/types/relation';
 import {
   getRelationshipOp, parseCardinality,
@@ -87,18 +90,18 @@ export function validateCardinality (
     }
   }
 
-  // TODO: support composite uniqueness check via table indexes
-  if (card.max === 1 && ownColumns.length === 1) {
-    const col = ownColumns[0];
-    if (!col.unique(compiler) && !col.pk(compiler)) {
-      const qname = col.qualifiedName(compiler);
-      const msg = `Column '${qname}' should be unique or primary key for operator '${op}'`;
-      const fixes = [
-        opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `Make '${qname}' many in the ref`),
-        allowOwnColFix && suggestMakeUnique(col, compiler),
-      ].filter((f): f is QuickFix => !!f);
+  if (card.max === 1 && !isColumnsUnique(compiler, ownColumns)) {
+    const qnames = ownColumns.map((c) => c.qualifiedName(compiler)).join(', ');
+    const msg = ownColumns.length === 1
+      ? `Column '${qnames}' should be unique or primary key for operator '${op}'`
+      : `Columns (${qnames}) should have a composite unique index for operator '${op}'`;
+    const fixes = [
+      opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `Make '${qnames}' many in the ref`),
+      allowOwnColFix && ownColumns.length === 1 && suggestMakeUnique(ownColumns[0], compiler),
+    ].filter((f): f is QuickFix => !!f);
 
-      hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, { quickFixes: fixes }));
+    hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, { quickFixes: fixes }));
+    for (const col of ownColumns) {
       if (col.declaration) {
         hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
       }
@@ -174,6 +177,41 @@ function suggestMakeNullable (col: ColumnSymbol, compiler: Compiler): QuickFix |
     edits: [
       edit,
     ] };
+}
+
+// Check if a set of columns is covered by a unique or pk constraint.
+// Single column: check col.unique() or col.pk().
+// Composite: check if any composite unique/pk index on the table matches exactly these columns.
+function isColumnsUnique (compiler: Compiler, columns: ColumnSymbol[]): boolean {
+  if (columns.length === 0) return false;
+
+  if (columns.length === 1) {
+    return columns[0].unique(compiler) || columns[0].pk(compiler);
+  }
+
+  // Find the owner table from the first column's declaration
+  const tableNode = columns[0].declaration?.parentOfKind(ElementDeclarationNode);
+  if (!tableNode) return false;
+  const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
+  if (!tableSymbol) return false;
+
+  // Get all interpreted indexes from the table
+  const indexMetas = tableSymbol.mergedIndexes(compiler);
+  const colNames = new Set(columns.map((c) => c.name));
+
+  for (const meta of indexMetas) {
+    const result = compiler.interpretMetadata(meta, columns[0].filepath);
+    const indexes = result.getValue();
+    if (!indexes || !Array.isArray(indexes)) continue;
+
+    for (const idx of indexes as Index[]) {
+      if (!idx.unique && !idx.pk) continue;
+      if (idx.columns.length !== colNames.size) continue;
+      if (idx.columns.every((c) => colNames.has(c.value))) return true;
+    }
+  }
+
+  return false;
 }
 
 function suggestMakeUnique (col: ColumnSymbol, compiler: Compiler): QuickFix | undefined {
