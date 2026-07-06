@@ -86,6 +86,7 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     // Link the action to the marker so Monaco shows it as a quick fix.
     return {
       title: fix.title,
+      kind: 'quickfix', // required for Monaco to show it in the diagnostic hover dropdown
       edit,
       diagnostics: [
         marker,
