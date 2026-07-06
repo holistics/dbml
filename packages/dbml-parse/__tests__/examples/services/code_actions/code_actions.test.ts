@@ -11,15 +11,15 @@ function getQuickFixes (source: string) {
 
 describe('[example] code actions - ref constraint quick fixes', () => {
   describe('nullability fixes', () => {
-    test('nullable column with required ref suggests changing op or adding [not null]', () => {
+    test('nullable column with required ref suggests changing op or marking NOT NULL', () => {
       const source = `
         Table users { id int [pk] }
         Table posts { user_id int [null] }
         Ref: posts.user_id > users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('Change operator'))).toBe(true);
-      expect(fixes.some((f) => f.title.includes('not null'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('change operator'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('NOT NULL'))).toBe(true);
     });
 
     test('NOT NULL column with optional ref suggests changing op', () => {
@@ -29,7 +29,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.user_id >? users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('Change operator'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('change operator'))).toBe(true);
     });
 
     test('no fixes when nullability matches operator', () => {
@@ -44,15 +44,15 @@ describe('[example] code actions - ref constraint quick fixes', () => {
   });
 
   describe('uniqueness fixes', () => {
-    test('non-unique column in one-to-one ref suggests changing op or adding [unique]', () => {
+    test('non-unique column in one-to-one ref suggests changing op or marking UNIQUE', () => {
       const source = `
         Table users { id int [pk] }
         Table profiles { user_id int }
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('Change operator'))).toBe(true);
-      expect(fixes.some((f) => f.title.includes('unique'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('change operator'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
     });
 
     test('no uniqueness fix when column is pk', () => {
@@ -62,7 +62,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      const uniqueFixes = fixes.filter((f) => f.title.includes('unique'));
+      const uniqueFixes = fixes.filter((f) => f.title.includes('UNIQUE'));
       expect(uniqueFixes).toHaveLength(0);
     });
   });
@@ -75,7 +75,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.user_id > users.id
       `;
       const fixes = getQuickFixes(source);
-      const opFix = fixes.find((f) => f.title.includes('Change operator'));
+      const opFix = fixes.find((f) => f.title.includes('change operator'));
       expect(opFix?.title).toContain('>?');
     });
 
@@ -86,8 +86,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      const opFix = fixes.find((f) => f.title.includes('Change operator'));
-      // left card (1,1) max becomes *, getRelationshipOp(*, 1) = >
+      const opFix = fixes.find((f) => f.title.includes('change operator'));
       expect(opFix?.title).toContain('>');
     });
   });
