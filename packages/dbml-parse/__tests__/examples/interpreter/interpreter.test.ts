@@ -2104,6 +2104,46 @@ describe('[example] interpreter', () => {
       // Should not crash
       expect(result.getValue()).toBeDefined();
     });
+
+    test('should interpret sticky note with color', () => {
+      const source = `
+        Note my_note [color: #FF5733] {
+          'A colored note'
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.notes[0].color).toBe('#FF5733');
+    });
+
+    test('should interpret sticky note with color none', () => {
+      const source = `
+        Note my_note [color: none] {
+          'A note without color'
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.notes[0].color).toBe('none');
+    });
+
+    test('should interpret sticky note with double-quoted content', () => {
+      const source = `
+        Note my_note {
+          "A double-quoted note"
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.notes[0].content).toBe('A double-quoted note');
+    });
+
+    test('should interpret sticky note without color setting', () => {
+      const source = `
+        Note my_note {
+          'A plain note'
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      expect(db.notes[0].color).toBeUndefined();
+    });
   });
 
   describe('multiple table verification', () => {

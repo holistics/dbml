@@ -4,7 +4,7 @@ import Enum, { NormalizedEnumIdMap } from './enum';
 import TableGroup, { NormalizedTableGroupIdMap } from './tableGroup';
 import Table, { NormalizedTableIdMap } from './table';
 import StickyNote, { NormalizedNoteIdMap } from './stickyNote';
-import Element, { RawNote, Token } from './element';
+import Element, { RawNote, Token, Color } from './element';
 import DbState from './dbState';
 import { NormalizedEndpointIdMap } from './endpoint';
 import { NormalizedEnumValueIdMap } from './enumValue';
@@ -113,7 +113,7 @@ declare class Database extends Element {
                 name: string;
                 alias: string;
                 note: string;
-                headerColor: string;
+                headerColor: Color;
             }[];
             enums: {
                 values: {
@@ -149,7 +149,7 @@ declare class Database extends Element {
             id: number;
             name: string;
             content: string;
-            headerColor: string;
+            headerColor: Color;
         }[];
         records: {
             id: number;
@@ -164,7 +164,7 @@ declare class Database extends Element {
         tablePartials: {
             name: string;
             note: string;
-            headerColor: string;
+            headerColor: Color;
             fields: {
                 name: string;
                 type: any;
@@ -222,7 +222,7 @@ declare class Database extends Element {
                 name: string;
                 alias: string;
                 note: string;
-                headerColor: string;
+                headerColor: Color;
             }[];
             enums: {
                 values: {
@@ -258,12 +258,12 @@ declare class Database extends Element {
             id: number;
             name: string;
             content: string;
-            headerColor: string;
+            headerColor: Color;
         }[];
         tablePartials: {
             name: string;
             note: string;
-            headerColor: string;
+            headerColor: Color;
             fields: {
                 name: string;
                 type: any;

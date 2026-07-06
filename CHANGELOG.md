@@ -1,3 +1,34 @@
+## v8.3.1 (2026-06-30)
+
+#### :robot: Dependencies Update
+* `dbml-connector`
+  * [#935](https://github.com/holistics/dbml/pull/935) misc(connector): bump @google-cloud/bigquery to v8.3.1 ([@huyleminh01](https://github.com/huyleminh01))
+* Other
+  * [#928](https://github.com/holistics/dbml/pull/928) chore(deps): bump axios from 1.15.2 to 1.18.0 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `dbml-parse`
+  * [#786](https://github.com/holistics/dbml/pull/786) chore(deps): bump mdast-util-to-hast from 13.1.0 to 13.2.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
+## v8.3.0 (2026-06-16)
+
+#### :running_woman: Performance
+* `dbml-parse`
+  * [#925](https://github.com/holistics/dbml/pull/925) Optimize the performance of the multifile parser by x6 ([@huydo862003](https://github.com/huydo862003))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#915](https://github.com/holistics/dbml/pull/915) Support sticky note color ([@huydo862003](https://github.com/huydo862003))
+
+#### :house_with_garden: Internal
+* `dbml-parse`
+  * [#925](https://github.com/holistics/dbml/pull/925) Add benchmark ci ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.2.5 (2026-06-03)
 
 #### :bug: Bug Fix

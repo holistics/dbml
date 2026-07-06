@@ -193,6 +193,7 @@ const dbmlMonarchTokensProvider: MonarchLanguage = {
     'name',
     'as',
     'color',
+    'none',
     'check',
     'tables',
     'tablegroups',

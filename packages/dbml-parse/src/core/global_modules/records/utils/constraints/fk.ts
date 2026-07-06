@@ -1,5 +1,4 @@
 import { flatMap, isEmpty } from 'lodash-es';
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '@/compiler/index';
 import type { CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
@@ -13,6 +12,7 @@ import {
   formatFullColumnNames,
   formatValues,
   hasNullWithoutDefaultInKey,
+  makeTableKey,
   toKeyedRows,
 } from './helper';
 
@@ -23,13 +23,47 @@ export type TableInfo = {
   recordBlock: SyntaxNode | undefined;
 };
 
+// Prebuild a map from a table's qualified name to the table info
+// This allows for O(1) accesses later
+function buildTableInfoLookup (
+  allRecords: Map<InternedNodeSymbol, TableInfo>,
+  compiler: Compiler,
+  filepath: Filepath,
+): Map<string, TableInfo> {
+  const lookup = new Map<string, TableInfo>();
+  for (const info of allRecords.values()) {
+    const { name, schema } = info.tableSymbol.interpretedName(compiler, filepath);
+    lookup.set(makeTableKey(schema, name), info);
+  }
+  return lookup;
+}
+
 export function validateForeignKeys (
   compiler: Compiler,
   allRefs: Ref[],
   allRecords: Map<InternedNodeSymbol, TableInfo>,
   filepath: Filepath,
 ): CompileWarning[] {
-  return flatMap(allRefs, (ref) => validateRef(compiler, ref, allRecords, filepath));
+  const tableInfoLookup = buildTableInfoLookup(allRecords, compiler, filepath);
+
+  // Pre-filter: only validate refs where at least one endpoint has records
+  // There's no use validating refs where both endpoints have no records
+  const tablesWithRecords = new Set<string>();
+  for (const [
+    key,
+    info,
+  ] of tableInfoLookup) {
+    if (info.record && !isEmpty(info.record.values)) {
+      tablesWithRecords.add(key);
+    }
+  }
+
+  const relevantRefs = allRefs.filter((ref) => {
+    if (!ref.endpoints) return false;
+    return ref.endpoints.some((ep) => tablesWithRecords.has(makeTableKey(ep.schemaName, ep.tableName)));
+  });
+
+  return flatMap(relevantRefs, (ref) => validateRef(compiler, ref, tableInfoLookup, filepath));
 }
 
 // Validate that source's FK values exist in target's values
@@ -85,31 +119,15 @@ function validateFkSourceToTarget (
   });
 }
 
-function findTableInfo (
-  tableInfoMap: Map<InternedNodeSymbol, TableInfo>,
-  endpoint: RefEndpoint,
-  compiler: Compiler,
-  filepath: Filepath,
-): TableInfo | undefined {
-  const normalizedEndpointSchema = endpoint.schemaName === DEFAULT_SCHEMA_NAME ? null : endpoint.schemaName;
-  for (const info of tableInfoMap.values()) {
-    const {
-      name, schema,
-    } = info.tableSymbol.interpretedName(compiler, filepath);
-    if (name === endpoint.tableName && schema === normalizedEndpointSchema) return info;
-  }
-  return undefined;
-}
-
-function validateRef (compiler: Compiler, ref: Ref, tableInfoMap: Map<InternedNodeSymbol, TableInfo>, filepath: Filepath): CompileWarning[] {
+function validateRef (compiler: Compiler, ref: Ref, tableInfoLookup: Map<string, TableInfo>, filepath: Filepath): CompileWarning[] {
   if (!ref.endpoints) return [];
 
   const [
     endpoint1,
     endpoint2,
   ] = ref.endpoints;
-  const table1 = findTableInfo(tableInfoMap, endpoint1, compiler, filepath);
-  const table2 = findTableInfo(tableInfoMap, endpoint2, compiler, filepath);
+  const table1 = tableInfoLookup.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
+  const table2 = tableInfoLookup.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
 
   if (!table1 || !table2) return [];
 

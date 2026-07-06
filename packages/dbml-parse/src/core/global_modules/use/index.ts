@@ -34,10 +34,11 @@ export const useUtils = {
       }
     }
     if (!node) return undefined;
-    return compiler.nodeAlias(node).mapFiltered((a) => [
-      a,
-    ], UNHANDLED, undefined).getFiltered(UNHANDLED)
-    || compiler.nodeFullname(node).getFiltered(UNHANDLED);
+    const alias = compiler.nodeAlias(node).getFiltered(UNHANDLED);
+    if (alias !== undefined) return [
+      alias,
+    ];
+    return compiler.nodeFullname(node).getFiltered(UNHANDLED);
   },
 };
 
