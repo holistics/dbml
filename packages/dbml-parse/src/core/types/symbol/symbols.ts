@@ -62,7 +62,6 @@ export const ImportKind = {
   TablePartial: SymbolKind.TablePartial,
   Note: SymbolKind.StickyNote,
   Schema: SymbolKind.Schema,
-  Metadata: SymbolKind.Metadata,
 };
 export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];
 

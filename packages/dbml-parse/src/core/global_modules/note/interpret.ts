@@ -14,14 +14,14 @@ import {
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
-import { isExpressionAnIdentifierNode } from '@/core/utils/validate';
-import { NOTE_BUILTIN_SETTINGS, extractInlineMetadata } from '@/core/global_modules/metadata/interpret';
+import { NOTE_BUILTIN_SETTINGS } from '@/core/global_modules/metadata/interpret';
 import { extractQuotedStringToken } from '@/core/utils/expression';
 import type {
   Filepath,
   NoteSymbol,
 } from '@/core/types';
 import Report from '@/core/types/report';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
 
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -71,8 +71,7 @@ export class StickyNoteInterpreter {
       this.note.color = extractColor(settingMap.color.at(0)?.value);
     }
 
-    const metadata = extractInlineMetadata(settingMap, NOTE_BUILTIN_SETTINGS);
-    if (Object.keys(metadata).length > 0) this.note.metadata = metadata;
+    this.note.metadata = extractCustomInlineMetadata(settingMap, NOTE_BUILTIN_SETTINGS);
 
     return [];
   }

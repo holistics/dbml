@@ -5,21 +5,14 @@ import {
   ArrayNode,
   BlockExpressionNode,
   ElementDeclarationNode,
-  EmptyNode,
   FunctionApplicationNode,
   MetadataDeclarationNode,
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import {
-  isExpressionAQuotedString,
-  isValidColorOrNone,
-  isValidMetadataValue,
-  isValidName,
-} from '@/core/utils/validate';
+import { isValidMetadataValue, isValidName } from '@/core/utils/validate';
 import { ALLOWED_METADATA_TARGET_KINDS } from '@/core/types';
-import { extractValue } from '@/core/global_modules/metadata/interpret';
-import { OverlapValueKind, findOverlapKey } from '@/core/global_modules/metadata/overlap';
+import { BUILTIN_METADATA_FIELD_HELPERS, findBuiltinSettingName } from '@/core/global_modules/metadata/builtin';
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: MetadataDeclarationNode) {}
@@ -88,9 +81,8 @@ export default class MetadataValidator {
   }
 
   private validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
-    if (!body) {
-      return [];
-    }
+    if (!body) return [];
+
     if (body instanceof FunctionApplicationNode) {
       return [
         new CompileError(
@@ -101,20 +93,17 @@ export default class MetadataValidator {
       ];
     }
 
-    const [
-      fields,
-      subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+
     return [
-      ...this.validateFields(fields as FunctionApplicationNode[]),
-      ...this.validateSubElements(subs as ElementDeclarationNode[]),
+      ...this.validateFields(fields),
+      ...this.validateSubElements(subs),
     ];
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
-    // A Metadata body may only contain 'key: value' fields (parsed as
-    // ElementDeclarationNode). A bare expression such as `id int` parses as a
-    // FunctionApplicationNode and is never valid here.
+    // A Metadata body may only contain 'key: value' fields (parsed as ElementDeclarationNode).
+    // => A expression such as `id int` parses as a FunctionApplicationNode and is never valid here.
     return fields.map((field) => new CompileError(
       CompileErrorCode.INVALID_METADATA_FIELD,
       'A Metadata field must use the \'key: value\' syntax',
@@ -123,24 +112,25 @@ export default class MetadataValidator {
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
-    const subKindMap: Record<string, ElementDeclarationNode[]> = {};
+    const keyValuesMap: Record<string, ElementDeclarationNode[]> = {};
     const targetKind = this.declarationNode.getTargetKind();
 
     const errors = subs.flatMap((sub) => {
-      if (!sub.type) {
-        return [];
-      }
+      if (!sub.type) return [];
 
-      const subKind = sub.type.value.toLowerCase();
-      if (!subKindMap[subKind]) subKindMap[subKind] = [];
-      subKindMap[subKind].push(sub);
+      const key = sub.type.value.toLowerCase();
+      if (!keyValuesMap[key]) keyValuesMap[key] = [];
+      keyValuesMap[key].push(sub);
 
-      // A key that overlaps a supported inline setting for this target kind is
-      // validated as that inline value type (it will be promoted onto the typed
-      // field). Color-/note-named keys on a target that does NOT support them
-      // fall through to generic scalar validation and stay as custom metadata.
-      const overlap = findOverlapKey(targetKind, subKind);
-      if (overlap) {
+      // A key that names a builtin setting for this target kind is validated as
+      // that inline value type (it will be written onto the typed field).
+      // Color-/note-named keys on a target that does NOT support them fall
+      // through to generic scalar validation and stay as custom metadata.
+      const builtinKey = findBuiltinSettingName(targetKind, key);
+      // A matrixed key without a spec falls through to generic custom-metadata
+      // validation (the write pass skips it too), so the two stay in agreement.
+      const spec = builtinKey ? BUILTIN_METADATA_FIELD_HELPERS[builtinKey] : undefined;
+      if (builtinKey && spec) {
         if (sub.body instanceof BlockExpressionNode) {
           return [
             new CompileError(
@@ -151,23 +141,11 @@ export default class MetadataValidator {
           ];
         }
 
-        const isColorReshape = overlap.reshape === OverlapValueKind.Color
-          || overlap.reshape === OverlapValueKind.HeaderColor;
-        if (isColorReshape && !isValidColorOrNone(sub.body?.callee)) {
+        if (!spec.validate(sub.body?.callee)) {
           return [
             new CompileError(
               CompileErrorCode.INVALID_METADATA_FIELD,
-              `'${sub.type.value}' must be a color literal or 'none'`,
-              sub,
-            ),
-          ];
-        }
-
-        if (overlap.reshape === OverlapValueKind.Note && !isExpressionAQuotedString(sub.body?.callee)) {
-          return [
-            new CompileError(
-              CompileErrorCode.INVALID_METADATA_FIELD,
-              `'${sub.type.value}' must be a string`,
+              `'${sub.type.value}' must be ${spec.message}`,
               sub,
             ),
           ];
@@ -198,7 +176,7 @@ export default class MetadataValidator {
         return [
           new CompileError(
             CompileErrorCode.INVALID_METADATA_FIELD,
-            'A Metadata field value must be a scalar value',
+            'A Metadata field value must be a string or a color literal',
             sub.body ?? sub,
           ),
         ];
@@ -207,7 +185,7 @@ export default class MetadataValidator {
       return [];
     });
 
-    errors.push(...Object.values(subKindMap).flatMap((subList) => {
+    errors.push(...Object.values(keyValuesMap).flatMap((subList) => {
       if (subList.length <= 1) return [];
 
       return subList.map((sub) => new CompileError(

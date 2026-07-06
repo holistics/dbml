@@ -8,8 +8,7 @@ import {
 import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import {
-  Settings, aggregateSettingList, isSimpleName, isValidHexColor, isExpressionAQuotedString,
-  validateInlineMetadataSetting,
+  Settings, aggregateSettingList, isSimpleName, isValidHexColor, isExpressionAQuotedString, validateCustomInlineMetadata,
 } from '@/core/utils/validate';
 
 export default class TableGroupValidator {
@@ -133,7 +132,7 @@ export default class TableGroupValidator {
           break;
         default:
           // Any non-builtin key is free-form inline custom metadata.
-          errors.push(...validateInlineMetadataSetting(name, attrs, {
+          errors.push(...validateCustomInlineMetadata(name, attrs, {
             duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
             invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
           }));
@@ -248,7 +247,7 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
         // Any non-builtin key is free-form inline custom metadata. Keep it in
         // the returned map so the interpreter can harvest it onto `metadata`.
         errors.push(
-          ...validateInlineMetadataSetting(name, attrs, {
+          ...validateCustomInlineMetadata(name, attrs, {
             duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
             invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
           }));

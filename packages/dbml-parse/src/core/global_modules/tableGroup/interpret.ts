@@ -6,7 +6,7 @@ import {
 import { UNHANDLED } from '@/core/types/module';
 import { SymbolKind } from '@/core/types/symbol';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { TABLEGROUP_BUILTIN_SETTINGS, extractInlineMetadata } from '@/core/global_modules/metadata/interpret';
+import { TABLEGROUP_BUILTIN_SETTINGS } from '@/core/global_modules/metadata/interpret';
 import {
   CompileError,
   CompileErrorCode,
@@ -32,6 +32,7 @@ import {
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
 
 export class TableGroupInterpreter {
   private compiler: Compiler;
@@ -159,8 +160,7 @@ export class TableGroupInterpreter {
       token: getTokenPosition(noteNode),
     };
 
-    const metadata = extractInlineMetadata(settingMap, TABLEGROUP_BUILTIN_SETTINGS);
-    if (Object.keys(metadata).length > 0) this.tableGroup.metadata = metadata;
+    this.tableGroup.metadata = extractCustomInlineMetadata(settingMap, TABLEGROUP_BUILTIN_SETTINGS);
 
     return [];
   }

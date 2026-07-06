@@ -434,20 +434,7 @@ export default class Parser {
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
     }
 
-    // Metadata imports carry a target-kind identifier before the name:
-    //   `use { metadata <subKind> <qualified-name> }`.
-    // Consume it as a bare identifier; the target name follows it.
-    if (
-      args.importKind?.value.toLowerCase() === ElementKind.Metadata
-      && this.check(SyntaxTokenKind.IDENTIFIER)
-    ) {
-      this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
-      args.subKind = this.previous();
-    }
-
-    if (
-      this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)
-    ) {
+    if (this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)) {
       try {
         args.name = this.normalExpression();
       } catch (e) {

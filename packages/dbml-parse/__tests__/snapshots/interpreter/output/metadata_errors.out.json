@@ -78,7 +78,7 @@
     },
     {
       "code": "INVALID_METADATA_FIELD",
-      "diagnostic": "A Metadata field value must be a scalar value",
+      "diagnostic": "A Metadata field value must be a string or a color literal",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -99,6 +99,18 @@
           "snippet": "}",
           "isInvalid": false,
           "filepath": "/main.dbml"
+        }
+      }
+    },
+    {
+      "code": "INVALID_METADATA_FIELD",
+      "diagnostic": "A Metadata field value must be a string or a color literal",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@@[L40:C1, L40:C1]",
+          "snippet": ""
         }
       }
     }

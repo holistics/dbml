@@ -1,4 +1,4 @@
-import { head, last, partition } from 'lodash-es';
+import { head, partition } from 'lodash-es';
 import Compiler from '@/compiler/index';
 import { CompileError } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -19,13 +19,14 @@ import type { Filepath } from '@/core/types/filepath';
 import type { ColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
 import { extractQuotedStringToken, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { COLUMN_BUILTIN_SETTINGS, extractInlineMetadata } from '@/core/global_modules/metadata/interpret';
+import { COLUMN_BUILTIN_SETTINGS } from '@/core/global_modules/metadata/interpret';
 import {
   extractColor, extractElementName, getTokenPosition,
   normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
 import { UNHANDLED } from '@/core/types/module';
 import { PartialRefMetadata } from '@/core/types/symbol/metadata';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -193,8 +194,7 @@ export class TablePartialInterpreter {
 
     const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
 
-    const metadata = extractInlineMetadata(settingMap, COLUMN_BUILTIN_SETTINGS);
-    if (Object.keys(metadata).length > 0) column.metadata = metadata;
+    column.metadata = extractCustomInlineMetadata(settingMap, COLUMN_BUILTIN_SETTINGS);
 
     const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);

@@ -292,10 +292,6 @@ export class UseDeclarationNode extends SyntaxNode {
 export class UseSpecifierNode extends SyntaxNode {
   importKind?: SyntaxToken;
 
-  // Optional target-kind identifier for metadata imports, sitting between
-  // `importKind` and `name`: `use { metadata <subKind> <name> }`.
-  subKind?: SyntaxToken;
-
   name?: NormalExpressionNode;
 
   asKeyword?: SyntaxToken;
@@ -304,10 +300,9 @@ export class UseSpecifierNode extends SyntaxNode {
 
   constructor (
     {
-      importKind, subKind, name, asKeyword, alias,
+      importKind, name, asKeyword, alias,
     }: {
       importKind?: SyntaxToken;
-      subKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -321,14 +316,12 @@ export class UseSpecifierNode extends SyntaxNode {
       filepath,
       [
         importKind,
-        subKind,
         name,
         asKeyword,
         alias,
       ],
     );
     this.importKind = importKind;
-    this.subKind = subKind;
     this.name = name;
     this.asKeyword = asKeyword;
     this.alias = alias;

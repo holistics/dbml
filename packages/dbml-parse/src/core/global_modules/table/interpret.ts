@@ -1,4 +1,4 @@
-import { last, partition } from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -23,12 +23,13 @@ import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
-import { COLUMN_BUILTIN_SETTINGS, TABLE_BUILTIN_SETTINGS, extractInlineMetadata } from '@/core/global_modules/metadata/interpret';
+import { COLUMN_BUILTIN_SETTINGS, TABLE_BUILTIN_SETTINGS } from '@/core/global_modules/metadata/interpret';
 import {
   extractColor, extractElementName,
   getTokenPosition, normalizeNote,
   processColumnType,
 } from '@/core/utils/interpret';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -160,8 +161,7 @@ export class TableInterpreter {
       token: getTokenPosition(noteNode),
     };
 
-    const metadata = extractInlineMetadata(settingMap, TABLE_BUILTIN_SETTINGS);
-    if (Object.keys(metadata).length > 0) this.table.metadata = metadata;
+    this.table.metadata = extractCustomInlineMetadata(settingMap, TABLE_BUILTIN_SETTINGS);
 
     return [];
   }
@@ -283,8 +283,7 @@ export class TableInterpreter {
 
     const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
 
-    const metadata = extractInlineMetadata(settingMap, COLUMN_BUILTIN_SETTINGS);
-    if (Object.keys(metadata).length > 0) column.metadata = metadata;
+    column.metadata = extractCustomInlineMetadata(settingMap, COLUMN_BUILTIN_SETTINGS);
 
     const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);

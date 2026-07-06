@@ -25,7 +25,7 @@ import {
   isValidColumnType,
   isValidDefaultValue,
   isValidHexColor,
-  validateInlineMetadataSetting,
+  validateCustomInlineMetadata,
 } from '@/core/utils/validate';
 
 export default class TablePartialValidator {
@@ -359,7 +359,7 @@ export default class TablePartialValidator {
 
         default:
           // Any non-builtin key is free-form inline custom metadata.
-          errors.push(...validateInlineMetadataSetting(name, attrs, {
+          errors.push(...validateCustomInlineMetadata(name, attrs, {
             duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
             invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
           }));
@@ -599,7 +599,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
 
       default:
         // Any non-builtin key is free-form inline custom metadata.
-        errors.push(...validateInlineMetadataSetting(name, attrs, {
+        errors.push(...validateCustomInlineMetadata(name, attrs, {
           duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
           invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
         }));
