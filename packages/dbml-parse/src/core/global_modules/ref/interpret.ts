@@ -210,14 +210,10 @@ export class RefInterpreter {
 
     const hints: CompileInfo[] = [];
     const refNode = this.declarationNode;
-    const opRelated = opToken
-      ? [
-          { nodeOrToken: opToken, message: `operator '${op}'` },
-        ]
-      : [];
 
     const addHint = (msg: string, fixes: QuickFix[], col: ColumnSymbol) => {
-      const opts = { quickFixes: fixes, relatedLocations: opRelated };
+      const related = opToken ? [{ nodeOrToken: opToken, message: msg }] : [];
+      const opts = { quickFixes: fixes, relatedLocations: related };
       hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, refNode, opts));
       if (col.declaration) {
         hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, opts));
