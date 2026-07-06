@@ -1,11 +1,15 @@
+import { uniqBy } from 'lodash-es';
 import type Compiler from '@/compiler';
 import type { QuickFix } from '@/core/types/errors';
 import type {
   CodeActionProvider, CodeActionList, CodeAction, CodeActionContext,
-  TextModel, Range, CancellationToken, WorkspaceEdit,
+  TextModel, Range, CancellationToken, WorkspaceEdit, MarkerData,
 } from '../types';
 import { Uri } from '../types';
+import { getEditorRange } from '../utils';
 
+// Provides quick fixes for diagnostics that have attached QuickFix data.
+// Monaco calls this when the user hovers over or clicks on a marker.
 export default class DBMLCodeActionProvider implements CodeActionProvider {
   private compiler: Compiler;
 
@@ -15,37 +19,46 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
 
   provideCodeActions (
     model: TextModel,
-    range: Range,
-    _context: CodeActionContext,
+    _range: Range,
+    context: CodeActionContext,
     _token: CancellationToken,
   ): CodeActionList | undefined {
-    const hints = this.compiler.interpretProject().getHints();
-    const overlapping = hints.filter((hint) => {
-      if (!hint.quickFixes?.length) return false;
-      const startLine = hint.nodeOrToken.startPos.line + 1;
-      const endLine = hint.nodeOrToken.endPos.line + 1;
-      return startLine <= range.endLineNumber && endLine >= range.startLineNumber;
-    });
+    // Only proceed if Monaco passed markers at the cursor position.
+    if (!context.markers.length) return undefined;
 
-    if (!overlapping.length) return undefined;
+    // Collect all hints that have quick fixes attached.
+    const hints = this.compiler.interpretProject().getHints()
+      .filter((h) => h.quickFixes?.length);
+    if (!hints.length) return undefined;
 
+    // Match each marker to its corresponding hint by exact position,
+    // then collect the quick fixes.
     const actions: CodeAction[] = [];
-    const seen = new Set<string>();
-    for (const hint of overlapping) {
-      for (const fix of hint.quickFixes ?? []) {
-        if (seen.has(fix.title)) continue;
-        seen.add(fix.title);
-        actions.push(this.quickFixToCodeAction(fix, model));
+
+    for (const marker of context.markers) {
+      for (const hint of hints) {
+        const range = getEditorRange(model, hint.nodeOrToken);
+        if (range.startLineNumber !== marker.startLineNumber
+          || range.startColumn !== marker.startColumn
+          || range.endLineNumber !== marker.endLineNumber
+          || range.endColumn !== marker.endColumn) continue;
+
+        for (const fix of hint.quickFixes ?? []) {
+          actions.push(this.quickFixToCodeAction(fix, model, marker));
+        }
       }
     }
 
-    if (!actions.length) return undefined;
-    return { actions, dispose () {} };
+    // Deduplicate by title since the same fix may appear on
+    // multiple hints (ref node + column declaration).
+    const unique = uniqBy(actions, (a) => a.title);
+    if (!unique.length) return undefined;
+    return { actions: unique, dispose () {} };
   }
 
-  private quickFixToCodeAction (fix: QuickFix, model: TextModel): CodeAction {
-    const uri = model.uri;
-    const resource = Uri.parse(fix.filepath.toUri({ protocol: uri.scheme }));
+  // Convert a QuickFix (offset-based) to a Monaco CodeAction (line/column-based).
+  private quickFixToCodeAction (fix: QuickFix, model: TextModel, marker: MarkerData): CodeAction {
+    const resource = Uri.parse(fix.filepath.toUri({ protocol: model.uri.scheme }));
     const edit: WorkspaceEdit = {
       edits: fix.edits.map((e) => {
         const startPos = model.getPositionAt(e.start);
@@ -65,6 +78,14 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
         };
       }),
     };
-    return { title: fix.title, edit };
+
+    // Link the action to the marker so Monaco shows it as a quick fix.
+    return {
+      title: fix.title,
+      edit,
+      diagnostics: [
+        marker,
+      ],
+    };
   }
 }

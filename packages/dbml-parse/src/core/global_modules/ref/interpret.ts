@@ -298,7 +298,9 @@ function suggestChangeOp (
   return {
     title: `Change operator to '${newOp}' (${description})`,
     filepath: opToken.filepath,
-    edits: [{ start: opToken.start, end: opToken.end, newText: newOp }],
+    edits: [
+      { start: opToken.start, end: opToken.end, newText: newOp },
+    ],
   };
 }
 
@@ -312,6 +314,8 @@ function suggestAddSetting (col: ColumnSymbol, setting: string): QuickFix | unde
   return {
     title: `Make '${col.name}' ${setting}`,
     filepath: col.declaration.filepath,
-    edits: [edit],
+    edits: [
+      edit,
+    ],
   };
 }
