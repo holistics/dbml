@@ -28,6 +28,7 @@ import {
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
 import { addSettingEdit } from '@/compiler/queries/transform/addSetting';
+import { removeSettingEdit } from '@/compiler/queries/transform/updateSetting';
 import {
   getMultiplicities, getRelationshipOp, parseCardinality,
   makeCardinalityOptional, makeCardinalityRequired, makeCardinalityMany,
@@ -231,8 +232,8 @@ export class RefInterpreter {
         if (col.nullable(this.compiler)) {
           const msg = `Column '${col.name}' is nullable but operator '${op}' requires it to be NOT NULL`;
           const fixes = [
-            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `Allow '${col.name}' to be optional`),
-            suggestAddSetting(col, 'not null'),
+            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `Make '${col.name}' optional in the ref`),
+            suggestMakeNotNull(col, this.compiler),
           ].filter((f): f is QuickFix => !!f);
 
           hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
@@ -250,7 +251,8 @@ export class RefInterpreter {
         if (col.nullable(this.compiler) === false) {
           const msg = `Column '${col.name}' is NOT NULL but operator '${op}' allows it to be optional`;
           const fixes = [
-            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `Make '${col.name}' required`),
+            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `Make '${col.name}' required in the ref`),
+            suggestMakeNullable(col, this.compiler),
           ].filter((f): f is QuickFix => !!f);
 
           hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
@@ -267,8 +269,8 @@ export class RefInterpreter {
       if (!col.unique(this.compiler) && !col.pk(this.compiler)) {
         const msg = `Column '${col.name}' should be unique or primary key for operator '${op}'`;
         const fixes = [
-          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `Allow '${col.name}' to have many`),
-          suggestAddSetting(col, 'unique'),
+          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `Make '${col.name}' many in the ref`),
+          suggestMakeUnique(col, this.compiler),
         ].filter((f): f is QuickFix => !!f);
 
         hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, { quickFixes: fixes }));
@@ -304,15 +306,69 @@ function suggestChangeOp (
   };
 }
 
-// Suggest adding a setting (e.g. 'not null', 'unique') to a column declaration.
-// Merges into existing settings block if present, otherwise appends a new one.
-function suggestAddSetting (col: ColumnSymbol, setting: string): QuickFix | undefined {
+// Suggest making a column NOT NULL.
+// If column has [null], suggest removing it instead of adding [not null].
+// Skip if column is already NOT NULL via [pk], [increment], or [not null].
+function suggestMakeNotNull (col: ColumnSymbol, compiler: Compiler): QuickFix | undefined {
   if (!col.declaration) return undefined;
-  const edit = addSettingEdit(col.declaration, setting);
+  if (col.pk(compiler) || col.increment(compiler) || col.isNotNullSet(compiler)) return undefined;
+
+  const source = compiler.getSource(col.declaration.filepath);
+  if (!source) return undefined;
+
+  // If [null] is set, remove it instead of adding [not null].
+  const removeNull = removeSettingEdit(col.declaration, 'null', source);
+  if (removeNull) {
+    return {
+      title: `Mark '${col.name}' as NOT NULL`,
+      filepath: col.declaration.filepath,
+      edits: [
+        removeNull,
+      ],
+    };
+  }
+
+  const edit = addSettingEdit(col.declaration, 'not null');
   if (!edit) return undefined;
+  return {
+    title: `Mark '${col.name}' as NOT NULL`,
+    filepath: col.declaration.filepath,
+    edits: [
+      edit,
+    ],
+  };
+}
+
+// Suggest making a column nullable.
+// Only if the column has an explicit [not null] setting, remove it.
+// If NOT NULL is implied by [pk] or [increment], no column fix is offered.
+function suggestMakeNullable (col: ColumnSymbol, compiler: Compiler): QuickFix | undefined {
+  if (!col.declaration) return undefined;
+
+  const source = compiler.getSource(col.declaration.filepath);
+  if (!source) return undefined;
+
+  const removeNotNull = removeSettingEdit(col.declaration, 'not null', source);
+  if (!removeNotNull) return undefined;
 
   return {
-    title: `Mark '${col.name}' as ${setting.toUpperCase()}`,
+    title: `Mark '${col.name}' as NULL`,
+    filepath: col.declaration.filepath,
+    edits: [
+      removeNotNull,
+    ],
+  };
+}
+
+// Suggest adding [unique] to a column.
+function suggestMakeUnique (col: ColumnSymbol, compiler: Compiler): QuickFix | undefined {
+  if (!col.declaration) return undefined;
+  if (col.unique(compiler) || col.pk(compiler)) return undefined;
+
+  const edit = addSettingEdit(col.declaration, 'unique');
+  if (!edit) return undefined;
+  return {
+    title: `Mark '${col.name}' as UNIQUE`,
     filepath: col.declaration.filepath,
     edits: [
       edit,

@@ -18,7 +18,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.user_id > users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('change operator'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('in the ref'))).toBe(true);
       expect(fixes.some((f) => f.title.includes('NOT NULL'))).toBe(true);
     });
 
@@ -29,7 +29,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.user_id >? users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('change operator'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('in the ref'))).toBe(true);
     });
 
     test('no fixes when nullability matches operator', () => {
@@ -44,14 +44,44 @@ describe('[example] code actions - ref constraint quick fixes', () => {
   });
 
   describe('uniqueness fixes', () => {
-    test('non-unique column in one-to-one ref suggests changing op or marking UNIQUE', () => {
+    test('- with non-unique column suggests UNIQUE or op change', () => {
       const source = `
         Table users { id int [pk] }
-        Table profiles { user_id int }
+        Table profiles { user_id int [not null] }
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('change operator'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
+      expect(fixes.some((f) => f.title.includes('in the ref'))).toBe(true);
+    });
+
+    test('-? with non-unique column suggests UNIQUE or op change', () => {
+      const source = `
+        Table users { id int [pk] }
+        Table profiles { user_id int [not null] }
+        Ref: profiles.user_id -? users.id
+      `;
+      const fixes = getQuickFixes(source);
+      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
+    });
+
+    test('?- with non-unique column suggests UNIQUE or op change', () => {
+      const source = `
+        Table users { id int [pk] }
+        Table profiles { user_id int [not null] }
+        Ref: profiles.user_id ?- users.id
+      `;
+      const fixes = getQuickFixes(source);
+      expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
+    });
+
+    test('?-? with non-unique column suggests UNIQUE or op change', () => {
+      const source = `
+        Table users { id int [pk] }
+        Table profiles { user_id int }
+        Ref: profiles.user_id ?-? users.id
+      `;
+      const fixes = getQuickFixes(source);
       expect(fixes.some((f) => f.title.includes('UNIQUE'))).toBe(true);
     });
 
@@ -59,6 +89,17 @@ describe('[example] code actions - ref constraint quick fixes', () => {
       const source = `
         Table users { id int [pk] }
         Table profiles { user_id int [pk] }
+        Ref: profiles.user_id - users.id
+      `;
+      const fixes = getQuickFixes(source);
+      const uniqueFixes = fixes.filter((f) => f.title.includes('UNIQUE'));
+      expect(uniqueFixes).toHaveLength(0);
+    });
+
+    test('no uniqueness fix when column is unique', () => {
+      const source = `
+        Table users { id int [pk] }
+        Table profiles { user_id int [unique, not null] }
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
@@ -75,7 +116,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.user_id > users.id
       `;
       const fixes = getQuickFixes(source);
-      const opFix = fixes.find((f) => f.title.includes('change operator'));
+      const opFix = fixes.find((f) => f.title.includes('in the ref'));
       expect(opFix?.title).toContain('>?');
     });
 
@@ -86,7 +127,7 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: profiles.user_id - users.id
       `;
       const fixes = getQuickFixes(source);
-      const opFix = fixes.find((f) => f.title.includes('change operator'));
+      const opFix = fixes.find((f) => f.title.includes('in the ref'));
       expect(opFix?.title).toContain('>');
     });
   });

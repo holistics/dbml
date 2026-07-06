@@ -46,7 +46,7 @@ import { symbolUses } from './queries/symbol/symbolUses';
 import {
   type DiagramViewBlock,
   findDiagramViewBlocks,
-  renameTable, syncDiagramView, addSetting,
+  renameTable, syncDiagramView, addSetting, updateSetting, removeSetting,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
@@ -389,6 +389,8 @@ export default class Compiler {
   renameTable = renameTable.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
   addSetting = addSetting.bind(this);
+  updateSetting = updateSetting.bind(this);
+  removeSetting = removeSetting.bind(this);
   findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
     return findDiagramViewBlocks(this.getSource(filepath) ?? '');
   }

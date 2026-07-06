@@ -1,3 +1,4 @@
+import { uniqBy } from 'lodash-es';
 import type Compiler from '@/compiler';
 import type { QuickFix } from '@/core/types/errors';
 import type {
@@ -26,9 +27,10 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     // Only proceed if Monaco passed markers at the cursor position.
     if (!context.markers.length) return undefined;
 
-    // Collect all hints that have quick fixes attached.
+    // Collect hints for the current file that have quick fixes attached.
+    const filepath = Filepath.fromUri(String(model.uri));
     const hints = this.compiler.interpretProject().getHints()
-      .filter((h) => h.quickFixes?.length);
+      .filter((h) => h.quickFixes?.length && h.filepath.equals(filepath));
     if (!hints.length) return undefined;
 
     // Match each marker to its corresponding hint by exact position,
@@ -49,17 +51,18 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
       }
     }
 
-    if (!actions.length) return undefined;
-    return { actions, dispose () {} };
+    // Deduplicate by title + marker position.
+    const unique = uniqBy(actions, (a) => {
+      const d = a.diagnostics?.[0] as MarkerData | undefined;
+      return `${a.title}@${d?.startLineNumber}:${d?.startColumn}`;
+    });
+    if (!unique.length) return undefined;
+    return { actions: unique, dispose () {} };
   }
 
   // Convert a QuickFix (offset-based) to a Monaco CodeAction (line/column-based).
   private quickFixToCodeAction (fix: QuickFix, model: TextModel, marker: MarkerData): CodeAction {
-    const uri = model.uri;
-    const modelFilepath = Filepath.fromUri(String(uri));
-    const resource = fix.filepath.equals(modelFilepath)
-      ? uri
-      : Uri.parse(fix.filepath.toUri({ protocol: uri.scheme }));
+    const resource = Uri.parse(fix.filepath.toUri({ protocol: model.uri.scheme }));
     const edit: WorkspaceEdit = {
       edits: fix.edits.map((e) => {
         const startPos = model.getPositionAt(e.start);
