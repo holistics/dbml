@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import type { Database, MasterDatabase } from '@/core/types/schemaJson';
-import type { CompileError, CompileWarning, CompileInfo } from '@/core/types/errors';
+import type { CompileError, CompileWarning, CompileHint } from '@/core/types/errors';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import Report from '@/core/types/report';
@@ -18,7 +18,7 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
 export function interpretProject (this: Compiler): Report<MasterDatabase> {
   const errors: CompileError[] = [];
   const warnings: CompileWarning[] = [];
-  const infos: CompileInfo[] = [];
+  const hints: CompileHint[] = [];
 
   // Collect all reachable files from all entry points
   const visited = new Set<FilepathId>();
@@ -38,12 +38,12 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     const parseResult = this.parseFile(file);
     errors.push(...parseResult.getErrors());
     warnings.push(...parseResult.getWarnings());
-    infos.push(...parseResult.getInfos());
+    hints.push(...parseResult.getHints());
 
     const bindResult = this.bindFile(file);
     errors.push(...bindResult.getErrors());
     warnings.push(...bindResult.getWarnings());
-    infos.push(...bindResult.getInfos());
+    hints.push(...bindResult.getHints());
 
     const {
       ast,
@@ -56,7 +56,7 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     }
     errors.push(...result.getErrors());
     warnings.push(...result.getWarnings());
-    infos.push(...result.getInfos());
+    hints.push(...result.getHints());
   }
 
   const files: Record<string, Database> = {};
@@ -70,5 +70,5 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
 
   return new Report({
     files,
-  }, errors, warnings, infos);
+  }, errors, warnings, hints);
 }

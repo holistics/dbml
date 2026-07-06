@@ -1,13 +1,13 @@
 import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
-import type { CompileError, CompileWarning, CompileInfo } from '@/core/types/errors';
+import type { CompileError, CompileWarning, CompileHint } from '@/core/types/errors';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
-import { MarkerData, MarkerSeverity } from '@/services/types';
+import { MarkerData, MarkerSeverity, Uri } from '@/services/types';
 
 // This is the same format that dbdiagram-frontend uses
 export interface Diagnostic {
-  type: 'error' | 'warning' | 'info';
+  type: 'error' | 'warning' | 'hint';
   text: string;
   startRow: number;
   startColumn: number;
@@ -15,6 +15,7 @@ export interface Diagnostic {
   endColumn: number;
   code?: string | number;
   filepath: Filepath;
+  relatedLocations?: RelatedLocation[];
 }
 
 export default class DBMLDiagnosticsProvider {
@@ -31,7 +32,7 @@ export default class DBMLDiagnosticsProvider {
     return [
       ...this.provideErrors(filepath),
       ...this.provideWarnings(filepath),
-      ...this.provideInfos(filepath),
+      ...this.provideHints(filepath),
     ];
   }
 
@@ -60,15 +61,15 @@ export default class DBMLDiagnosticsProvider {
   }
 
   /**
-   * Get only infos from the current compilation
+   * Get only hints from the current compilation
    */
-  provideInfos (filepath?: Filepath): Diagnostic[] {
+  provideHints (filepath?: Filepath): Diagnostic[] {
     if (!filepath) {
-      const infosResult = this.compiler.interpretProject().getInfos();
-      return infosResult.map((info) => this.createDiagnostic(info, 'info'));
+      const hints = this.compiler.interpretProject().getHints();
+      return hints.map((hint) => this.createDiagnostic(hint, 'hint'));
     }
-    const infosResult = this.compiler.interpretFile(filepath).getInfos();
-    return infosResult.map((info) => this.createDiagnostic(info, 'info'));
+    const hints = this.compiler.interpretFile(filepath).getHints();
+    return hints.map((hint) => this.createDiagnostic(hint, 'hint'));
   }
 
   /**
@@ -78,7 +79,7 @@ export default class DBMLDiagnosticsProvider {
     const diagnostics = this.provideDiagnostics(filepath).filter((diag) => diag.filepath.equals(filepath)); // only provide markers for this file
     return diagnostics.map((diag) => {
       const severity = this.getSeverityValue(diag.type);
-      return {
+      const marker: MarkerData = {
         severity,
         message: diag.text,
         startLineNumber: diag.startRow,
@@ -87,12 +88,23 @@ export default class DBMLDiagnosticsProvider {
         endColumn: diag.endColumn,
         code: diag.code ? String(diag.code) : undefined,
       };
+      if (diag.relatedLocations?.length) {
+        marker.relatedInformation = diag.relatedLocations.map((loc) => ({
+          resource: Uri.parse(loc.nodeOrToken.filepath.toUri()),
+          message: loc.message,
+          startLineNumber: loc.nodeOrToken.startPos.line + 1,
+          startColumn: loc.nodeOrToken.startPos.column + 1,
+          endLineNumber: loc.nodeOrToken.endPos.line + 1,
+          endColumn: loc.nodeOrToken.endPos.column + 1,
+        }));
+      }
+      return marker;
     });
   }
 
   private createDiagnostic (
-    errorOrWarning: CompileError | CompileWarning | CompileInfo,
-    severity: 'error' | 'warning' | 'info',
+    errorOrWarning: CompileError | CompileWarning | CompileHint,
+    severity: 'error' | 'warning' | 'hint',
   ): Diagnostic {
     const nodeOrToken = errorOrWarning.nodeOrToken;
 
@@ -111,12 +123,13 @@ export default class DBMLDiagnosticsProvider {
       endColumn: endPos.column + 1,
       code: errorOrWarning.code,
       filepath: errorOrWarning.filepath,
+      relatedLocations: errorOrWarning.relatedLocations,
     };
   }
 
-  private getSeverityValue (severity: 'error' | 'warning' | 'info'): MarkerSeverity {
+  private getSeverityValue (severity: 'error' | 'warning' | 'hint'): MarkerSeverity {
     if (severity === 'error') return MarkerSeverity.Error;
     if (severity === 'warning') return MarkerSeverity.Warning;
-    return MarkerSeverity.Info;
+    return MarkerSeverity.Hint;
   }
 }

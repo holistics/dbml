@@ -139,16 +139,23 @@ export enum CompileErrorCode {
   TABLE_REAPPEAR_IN_TABLEGROUP,
 }
 
+export interface RelatedLocation {
+  nodeOrToken: SyntaxNode | SyntaxToken;
+  message: string;
+}
+
 export class CompileError extends Error {
   code: Readonly<CompileErrorCode>;
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
   end: Readonly<number>;
+
+  relatedLocations?: RelatedLocation[];
 
   constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
@@ -179,11 +186,13 @@ export class CompileWarning extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
   end: Readonly<number>;
+
+  relatedLocations?: RelatedLocation[];
 
   constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
@@ -207,7 +216,7 @@ export interface QuickFix {
   edits: import('@/compiler/queries/transform/applyTextEdits').TextEdit[];
 }
 
-export class CompileInfo extends Error {
+export class CompileHint extends Error {
   code: Readonly<CompileErrorCode>;
 
   diagnostic: Readonly<string>;
@@ -220,16 +229,24 @@ export class CompileInfo extends Error {
 
   quickFixes?: QuickFix[];
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken, quickFixes?: QuickFix[]) {
+  relatedLocations?: RelatedLocation[];
+
+  constructor (
+    code: number,
+    message: string,
+    nodeOrToken: SyntaxNode | SyntaxToken,
+    options?: { quickFixes?: QuickFix[]; relatedLocations?: RelatedLocation[] },
+  ) {
     super(message);
     this.code = code;
     this.diagnostic = message;
     this.nodeOrToken = nodeOrToken;
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;
-    this.quickFixes = quickFixes;
+    this.quickFixes = options?.quickFixes;
+    this.relatedLocations = options?.relatedLocations;
     this.name = this.constructor.name;
-    Object.setPrototypeOf(this, CompileInfo.prototype);
+    Object.setPrototypeOf(this, CompileHint.prototype);
   }
 
   get filepath (): Filepath {

@@ -2,7 +2,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -14,7 +14,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'referrer_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -26,7 +26,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer_id' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'referrer_id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -38,37 +38,37 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L6:C4, L6:C12]",
-          "snippet": "Users.id"
+          "id": "node@<element-declaration>@@[L5:C0, L7:C1]",
+          "snippet": "Ref {\n    ...errer_id\n}"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'referrer_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L6:C15, L6:C32]",
-          "snippet": "Users.referrer_id"
+          "id": "node@<element-declaration>@@[L5:C0, L7:C1]",
+          "snippet": "Ref {\n    ...errer_id\n}"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer_id' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'referrer_id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L6:C15, L6:C32]",
-          "snippet": "Users.referrer_id"
+          "id": "node@<element-declaration>@@[L5:C0, L7:C1]",
+          "snippet": "Ref {\n    ...errer_id\n}"
         }
       }
     }

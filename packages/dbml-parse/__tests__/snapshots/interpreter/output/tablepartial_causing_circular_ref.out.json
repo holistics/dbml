@@ -260,7 +260,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'col3' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'col3' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -272,7 +272,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'col3' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'col3' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -284,7 +284,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'col2' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'col2' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -296,19 +296,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'col2' is nullable but operator implies mandatory",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@col2@[L7:C2, L7:C25]",
-          "snippet": "col2 type ...f: > col3]"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'col3' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'col2' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -320,7 +308,19 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'col3' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'col3' is nullable but operator '>' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L7:C13, L7:C24]",
+          "snippet": "ref: > col3"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'col3' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {

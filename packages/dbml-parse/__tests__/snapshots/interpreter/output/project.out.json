@@ -1378,7 +1378,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'order_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -1390,7 +1390,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'product_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -1402,7 +1402,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'country_code' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'country_code' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -1414,7 +1414,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'country_code' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'country_code' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -1426,7 +1426,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'admin_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'admin_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -1438,61 +1438,61 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'order_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L85:C20, L85:C44]",
-          "snippet": "\"order_ite...\"order_id\""
+          "id": "node@<element-declaration>@@[L85:C0, L85:C44]",
+          "snippet": "Ref:\"order...\"order_id\""
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'product_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L87:C22, L87:C48]",
-          "snippet": "\"order_ite...roduct_id\""
+          "id": "node@<element-declaration>@@[L87:C0, L87:C48]",
+          "snippet": "Ref:\"produ...roduct_id\""
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'country_code' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'country_code' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L89:C25, L89:C47]",
-          "snippet": "\"users\".\"c...ntry_code\""
+          "id": "node@<element-declaration>@@[L89:C0, L89:C47]",
+          "snippet": "Ref:\"count...ntry_code\""
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'country_code' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'country_code' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L91:C25, L91:C51]",
-          "snippet": "\"merchants...ntry_code\""
+          "id": "node@<element-declaration>@@[L91:C0, L91:C51]",
+          "snippet": "Ref:\"count...ntry_code\""
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'admin_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'admin_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L95:C19, L95:C41]",
-          "snippet": "\"merchants...\"admin_id\""
+          "id": "node@<element-declaration>@@[L95:C0, L95:C41]",
+          "snippet": "Ref:\"users...\"admin_id\""
         }
       }
     }

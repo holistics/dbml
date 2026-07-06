@@ -1,6 +1,6 @@
 import Compiler from '@/compiler/index';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { CompileWarning, CompileInfo } from '@/core/types/errors';
+import type { CompileWarning, CompileHint } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import { ProgramNode } from '@/core/types/nodes';
@@ -38,7 +38,7 @@ export default class ProgramInterpreter {
   private filepath: Filepath;
   private errors: CompileError[] = [];
   private warnings: CompileWarning[] = [];
-  private infos: CompileInfo[] = [];
+  private hints: CompileHint[] = [];
   private db: Database;
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {
@@ -73,7 +73,7 @@ export default class ProgramInterpreter {
     this.interpretAllMetadata();
     this.interpretAllAliases();
     this.warnings.push(...this.validateRecords());
-    return new Report(this.db, this.errors, this.warnings, this.infos);
+    return new Report(this.db, this.errors, this.warnings, this.hints);
   }
 
   private interpretAllSymbols () {
@@ -86,7 +86,7 @@ export default class ProgramInterpreter {
       if (result.hasValue(UNHANDLED)) continue;
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
-      this.infos.push(...result.getInfos());
+      this.hints.push(...result.getHints());
       const value = result.getValue();
       if (value) this.pushElement(symbol, value);
     }
@@ -125,7 +125,7 @@ export default class ProgramInterpreter {
     if (!result.hasValue(UNHANDLED)) {
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
-      this.infos.push(...result.getInfos());
+      this.hints.push(...result.getHints());
       const value = result.getValue();
       if (value) this.pushElement(use, value);
     }
@@ -184,7 +184,7 @@ export default class ProgramInterpreter {
       if (result.hasValue(UNHANDLED)) continue;
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
-      this.infos.push(...result.getInfos());
+      this.hints.push(...result.getHints());
       const value = result.getValue();
       if (value === undefined) continue;
       switch (meta.kind) {

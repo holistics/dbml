@@ -259,7 +259,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -271,7 +271,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'code' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -283,7 +283,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -295,7 +295,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -307,7 +307,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'code' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -319,7 +319,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'code' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -331,73 +331,73 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L10:C5, L10:C9]",
-          "snippet": "A.id"
+          "id": "node@<element-declaration>@@[L10:C0, L10:C53]",
+          "snippet": "Ref: A.id ...no action]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L10:C12, L10:C16]",
-          "snippet": "B.id"
+          "id": "node@<element-declaration>@@[L10:C0, L10:C53]",
+          "snippet": "Ref: A.id ...no action]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L10:C12, L10:C16]",
-          "snippet": "B.id"
+          "id": "node@<element-declaration>@@[L10:C0, L10:C53]",
+          "snippet": "Ref: A.id ...no action]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'code' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L11:C5, L11:C11]",
-          "snippet": "A.code"
+          "id": "node@<element-declaration>@@[L11:C0, L11:C60]",
+          "snippet": "Ref: A.cod...t default]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'code' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L11:C14, L11:C20]",
-          "snippet": "B.code"
+          "id": "node@<element-declaration>@@[L11:C0, L11:C60]",
+          "snippet": "Ref: A.cod...t default]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'code' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'code' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L11:C14, L11:C20]",
-          "snippet": "B.code"
+          "id": "node@<element-declaration>@@[L11:C0, L11:C60]",
+          "snippet": "Ref: A.cod...t default]"
         }
       }
     }

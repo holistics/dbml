@@ -583,7 +583,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'following_user_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'following_user_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -595,7 +595,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'followed_user_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'followed_user_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -607,7 +607,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'user_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'user_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -619,37 +619,37 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'user_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'user_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L60:C5, L60:C18]",
-          "snippet": "posts.user_id"
+          "id": "node@<element-declaration>@@[L60:C0, L60:C29]",
+          "snippet": "Ref: posts...> users.id"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'following_user_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'following_user_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L62:C16, L62:C41]",
-          "snippet": "follows.fo...ng_user_id"
+          "id": "node@<element-declaration>@@[L62:C0, L62:C41]",
+          "snippet": "Ref: users...ng_user_id"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'followed_user_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'followed_user_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L64:C16, L64:C40]",
-          "snippet": "follows.fo...ed_user_id"
+          "id": "node@<element-declaration>@@[L64:C0, L64:C40]",
+          "snippet": "Ref: users...ed_user_id"
         }
       }
     }

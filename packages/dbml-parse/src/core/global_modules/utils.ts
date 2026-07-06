@@ -42,9 +42,9 @@ export function getNodeMemberSymbols (compiler: Compiler, node: SyntaxNode): Rep
           ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getWarnings()),
         ],
         [
-          ...report.getInfos(),
-          ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getInfos()),
-          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getInfos()),
+          ...report.getHints(),
+          ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getHints()),
+          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getHints()),
         ],
       );
     },

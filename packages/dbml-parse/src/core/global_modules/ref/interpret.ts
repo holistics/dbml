@@ -4,7 +4,7 @@ import {
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileHint } from '@/core/types/errors';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
   ElementDeclarationNode,
@@ -57,8 +57,8 @@ export class RefInterpreter {
       ...this.interpretName(),
       ...this.interpretBody(),
     ];
-    const { infos } = this.validateRefConstraints();
-    return Report.create(this.ref as Ref, errors, undefined, infos);
+    const { hints } = this.validateRefConstraints();
+    return Report.create(this.ref as Ref, errors, undefined, hints);
   }
 
   private interpretName (): CompileError[] {
@@ -165,10 +165,10 @@ export class RefInterpreter {
     return [];
   }
 
-  private validateRefConstraints (): { infos: CompileInfo[] } {
-    if (!this.metadata.cardinalities(this.compiler)) return { infos: [] };
+  private validateRefConstraints (): { hints: CompileHint[] } {
+    if (!this.metadata.cardinalities(this.compiler)) return { hints: [] };
     return {
-      infos: [
+      hints: [
         ...this.validateCardinality('right'),
         ...this.validateCardinality('left'),
       ],
@@ -195,7 +195,7 @@ export class RefInterpreter {
   //   min >= 1 -> otherColumns must be NOT NULL
   //   min = 0  -> otherColumns may be nullable; info if NOT NULL
   //   max = 1  -> ownColumns must be unique/pk
-  private validateCardinality (side: 'left' | 'right'): CompileInfo[] {
+  private validateCardinality (side: 'left' | 'right'): CompileHint[] {
     const cardinalities = this.metadata.cardinalities(this.compiler)!;
     const thisRel = side === 'left' ? cardinalities[0] : cardinalities[1];
     const otherRel = side === 'left' ? cardinalities[1] : cardinalities[0];
@@ -206,19 +206,35 @@ export class RefInterpreter {
     const otherNode = side === 'left' ? this.metadata.rightToken() : this.metadata.leftToken();
     const ownNode = side === 'left' ? this.metadata.leftToken() : this.metadata.rightToken();
     const opToken = this.getOpToken();
+    const op = this.metadata.op(this.compiler) ?? '?';
 
-    const infos: CompileInfo[] = [];
+    const hints: CompileHint[] = [];
+    const refNode = this.declarationNode;
+    const opRelated = opToken
+      ? [
+          { nodeOrToken: opToken as SyntaxNode, message: `operator '${op}'` },
+        ]
+      : [];
+
+    const addHint = (msg: string, fixes: QuickFix[], col: ColumnSymbol) => {
+      const opts = { quickFixes: fixes, relatedLocations: opRelated };
+      hints.push(new CompileHint(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, refNode, opts));
+      if (col.declaration) {
+        hints.push(new CompileHint(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, opts));
+      }
+    };
 
     if (card.min >= 1) {
       for (const col of otherColumns) {
         if (col.nullable(this.compiler)) {
-          const msg = `Column '${col.name}' is nullable but operator implies mandatory`;
-          const fixes = [
-            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `make '${col.name}' optional`),
-            suggestAddSetting(col, 'not null'),
-          ].filter((f): f is QuickFix => !!f);
-          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, fixes));
-          if (col.declaration) infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, fixes));
+          addHint(
+            `Column '${col.name}' is nullable but operator '${op}' requires it to be NOT NULL`,
+            [
+              opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `make '${col.name}' optional`),
+              suggestAddSetting(col, 'not null'),
+            ].filter((f): f is QuickFix => !!f),
+            col,
+          );
         }
       }
     }
@@ -226,12 +242,13 @@ export class RefInterpreter {
     if (card.min === 0) {
       for (const col of otherColumns) {
         if (col.nullable(this.compiler) === false) {
-          const msg = `Column '${col.name}' is NOT NULL but operator marks it optional`;
-          const fixes = [
-            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `make '${col.name}' required`),
-          ].filter((f): f is QuickFix => !!f);
-          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, fixes));
-          if (col.declaration) infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, fixes));
+          addHint(
+            `Column '${col.name}' is NOT NULL but operator '${op}' allows it to be optional`,
+            [
+              opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `make '${col.name}' required`),
+            ].filter((f): f is QuickFix => !!f),
+            col,
+          );
         }
       }
     }
@@ -239,17 +256,18 @@ export class RefInterpreter {
     if (card.max === 1 && ownColumns.length === 1) {
       const col = ownColumns[0];
       if (!col.unique(this.compiler) && !col.pk(this.compiler)) {
-        const msg = `Column '${col.name}' should be unique or primary key for a one-side relationship`;
-        const fixes = [
-          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `make '${col.name}' many`),
-          suggestAddSetting(col, 'unique'),
-        ].filter((f): f is QuickFix => !!f);
-        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, fixes));
-        if (col.declaration) infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, fixes));
+        addHint(
+          `Column '${col.name}' should be unique or primary key for operator '${op}'`,
+          [
+            opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `make '${col.name}' many`),
+            suggestAddSetting(col, 'unique'),
+          ].filter((f): f is QuickFix => !!f),
+          col,
+        );
       }
     }
 
-    return infos;
+    return hints;
   }
 }
 

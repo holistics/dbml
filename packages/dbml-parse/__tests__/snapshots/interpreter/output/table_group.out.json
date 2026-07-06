@@ -361,7 +361,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -373,7 +373,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -385,7 +385,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'admin_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'admin_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -397,19 +397,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'admin_id' is nullable but operator implies mandatory",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@admin_id@[L12:C2, L12:C28]",
-          "snippet": "admin_id i...f: > U.id]"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'admin_id' is nullable but operator '>' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -421,7 +409,19 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'id' is nullable but operator '>' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L12:C16, L12:C27]",
+          "snippet": "ref: > U.id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'id' should be unique or primary key for operator '>'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {

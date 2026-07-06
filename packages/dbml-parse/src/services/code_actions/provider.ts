@@ -1,5 +1,5 @@
 import type Compiler from '@/compiler';
-import type { CompileInfo, QuickFix } from '@/core/types/errors';
+import type { CompileHint, QuickFix } from '@/core/types/errors';
 import type {
   CodeActionProvider, CodeActionList, CodeAction, CodeActionContext,
   TextModel, Range, CancellationToken, WorkspaceEdit, MarkerData,
@@ -22,7 +22,7 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     const markers = context.markers;
     if (!markers.length) return undefined;
 
-    const infos = this.compiler.interpretProject().getInfos();
+    const infos = this.compiler.interpretProject().getHints();
     const actions: CodeAction[] = [];
 
     for (const marker of markers) {
@@ -38,7 +38,7 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     return { actions, dispose () {} };
   }
 
-  private findInfosForMarker (infos: CompileInfo[], marker: MarkerData): CompileInfo[] {
+  private findInfosForMarker (infos: CompileHint[], marker: MarkerData): CompileHint[] {
     return infos.filter((info) => {
       const node = info.nodeOrToken;
       return info.quickFixes?.length

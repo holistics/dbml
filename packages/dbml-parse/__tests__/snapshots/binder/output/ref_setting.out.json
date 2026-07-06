@@ -2,7 +2,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '-' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -14,7 +14,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'id' should be unique or primary key for operator '-'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -26,7 +26,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'referrer' is nullable but operator '-' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -38,7 +38,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'referrer' should be unique or primary key for operator '-'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -50,31 +50,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer' should be unique or primary key for a one-side relationship",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
-          "snippet": "referrer i...[ref: -id]"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'referrer' should be unique or primary key for a one-side relationship",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
-          "snippet": "referrer i...[ref: -id]"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '-' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -86,7 +62,31 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' should be unique or primary key for a one-side relationship",
+      "diagnostic": "Column 'id' should be unique or primary key for operator '-'",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L4:C22, L4:C30]",
+          "snippet": "ref: -id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'referrer' is nullable but operator '-' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<attribute>@@[L4:C22, L4:C30]",
+          "snippet": "ref: -id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'referrer' should be unique or primary key for operator '-'",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {

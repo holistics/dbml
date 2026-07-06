@@ -926,7 +926,7 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'name' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'name' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -938,7 +938,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'order_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -950,7 +950,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'product_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -962,7 +962,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_name' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'product_name' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -974,7 +974,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -986,61 +986,61 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'order_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L50:C20, L50:C44]",
-          "snippet": "\"order_ite...\"order_id\""
+          "id": "node@<element-declaration>@@[L50:C0, L50:C62]",
+          "snippet": "Ref:\"order...: cascade]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L52:C4, L52:C29]",
-          "snippet": "\"products\"...\", \"name\")"
+          "id": "node@<element-declaration>@@[L52:C0, L52:C95]",
+          "snippet": "Ref:\"produ... set null]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'name' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'name' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L52:C4, L52:C29]",
-          "snippet": "\"products\"...\", \"name\")"
+          "id": "node@<element-declaration>@@[L52:C0, L52:C95]",
+          "snippet": "Ref:\"produ... set null]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_id' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'product_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L52:C32, L52:C76]",
-          "snippet": "\"order_ite...uct_name\")"
+          "id": "node@<element-declaration>@@[L52:C0, L52:C95]",
+          "snippet": "Ref:\"produ... set null]"
         }
       }
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'product_name' is nullable but operator implies mandatory",
+      "diagnostic": "Column 'product_name' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<infix-expression>@@[L52:C32, L52:C76]",
-          "snippet": "\"order_ite...uct_name\")"
+          "id": "node@<element-declaration>@@[L52:C0, L52:C95]",
+          "snippet": "Ref:\"produ... set null]"
         }
       }
     }
