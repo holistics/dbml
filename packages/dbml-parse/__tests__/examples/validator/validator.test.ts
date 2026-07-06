@@ -88,14 +88,14 @@ describe('[example] validator', () => {
 
     test('accepts unknown table settings as custom metadata', () => {
       // A non-builtin key is now free-form inline custom metadata, not an error.
-      const source = 'Table users [unknown_setting: value] { id int }';
+      const source = 'Table users [unknown_setting: "value"] { id int }';
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(0);
     });
 
-    test('rejects a non-scalar custom metadata value on a table', () => {
-      const source = 'Table users [owner: (a, b)] { id int }';
+    test('rejects a non-string and non-color custom metadata value on a table', () => {
+      const source = 'Table users [pii: true] { id int }';
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
@@ -207,11 +207,19 @@ describe('[example] validator', () => {
       expect(errors[0].code).toBe(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE);
     });
 
-    test('should accept a custom column setting with a scalar value', () => {
-      const source = 'Table users { id int [pii: true] }';
+    test('should accept a custom column setting with a string value', () => {
+      const source = 'Table users { id int [owner: "scott"] }';
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(0);
+    });
+
+    test('should reject a custom column setting with a non-string value', () => {
+      const source = 'Table users { id int [pii: true] }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE);
     });
 
     test('should accept column with null setting', () => {
@@ -741,7 +749,7 @@ describe('[example] validator', () => {
     test('accepts unknown setting on sticky note as custom metadata', () => {
       // A non-builtin key on a sticky note is now free-form custom metadata.
       const source = `
-        Note my_note [unknown: value] {
+        Note my_note [unknown: "value"] {
           'A note'
         }
       `;

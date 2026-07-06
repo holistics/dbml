@@ -1,8 +1,9 @@
 import { NONE_COLOR } from '@/constants';
 import type { Filepath } from './filepath';
 import type { Position } from './position';
+import { MetadataTargetKind } from './symbol';
 
-export type CustomMetadata = Record<string, unknown>;
+export type CustomMetadata = Record<string, string>;
 
 export type Color = `#${string}` | typeof NONE_COLOR;
 
@@ -280,7 +281,7 @@ export interface TableRecord {
 // (Table/Column/TableGroup/Note). This shape only lives inside the metadata pass.
 export interface MetadataElement {
   target: {
-    kind: string; // target element type keyword: 'table' | 'column' | 'tablegroup' | 'note'
+    kind: MetadataTargetKind;
     name: string[];
   };
   values: CustomMetadata;

@@ -30,7 +30,7 @@
     },
     {
       "code": "INVALID_COLUMN_SETTING_VALUE",
-      "diagnostic": "'diagram_id' must be a scalar value (string, number, boolean, identifier, or color)",
+      "diagnostic": "Custom setting 'diagram_id' must be a string or a color literal",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

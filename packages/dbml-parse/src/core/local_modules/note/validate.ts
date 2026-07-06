@@ -6,11 +6,8 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
 import {
-  aggregateSettingList, isExpressionAQuotedString, isValidHexColor, isExpressionAnIdentifierNode,
-  validateInlineMetadataSetting,
-  isValidColorOrNone,
+  aggregateSettingList, isExpressionAQuotedString, validateCustomInlineMetadata, isValidColorOrNone,
 } from '@/core/utils/validate';
-import { NONE_COLOR } from '@/constants';
 
 export default class NoteValidator {
   private compiler: Compiler;
@@ -39,14 +36,13 @@ export default class NoteValidator {
         ElementKind.Table,
         ElementKind.TableGroup,
         ElementKind.TablePartial,
-        ElementKind.Metadata,
         ElementKind.Project,
       ))
     ) {
       return [
         new CompileError(
           CompileErrorCode.INVALID_NOTE_CONTEXT,
-          'A Note can only appear inside a Table, a TableGroup, a TablePartial, a Metadata or a Project. Sticky note can only appear at the global scope.',
+          'A Note can only appear inside a Table, a TableGroup, a TablePartial or a Project. Sticky note can only appear at the global scope.',
           this.declarationNode,
         ),
       ];
@@ -104,10 +100,12 @@ export default class NoteValidator {
           break;
         default:
           // Any non-builtin key is free-form inline custom metadata.
-          errors.push(...validateInlineMetadataSetting(name, attrs, {
-            duplicate: CompileErrorCode.DUPLICATE_NOTE_SETTING,
-            invalidValue: CompileErrorCode.INVALID_NOTE_SETTING_VALUE,
-          }));
+          errors.push(
+            ...validateCustomInlineMetadata(name, attrs, {
+              duplicate: CompileErrorCode.DUPLICATE_NOTE_SETTING,
+              invalidValue: CompileErrorCode.INVALID_NOTE_SETTING_VALUE,
+            }),
+          );
       }
     });
 

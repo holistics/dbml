@@ -246,20 +246,16 @@ export function isValidMetadataValue (value?: SyntaxNode): boolean {
   return isExpressionAQuotedString(value) || isValidHexColor(value);
 }
 
-// Validate a custom-metadata key in a setting list (the `default` branch of an
-// element's settings switch). A duplicate key, a valueless key, or a non-scalar
-// value is an error, reported with the element's own settings error codes so the
-// diagnostics stay in the user's "settings" vocabulary. Returns the errors.
-export function validateInlineMetadataSetting (
+export function validateCustomInlineMetadata (
   name: string,
   attrs: AttributeNode[],
-  codes: { duplicate: CompileErrorCode; invalidValue: CompileErrorCode },
+  errorCodes: { duplicate: CompileErrorCode; invalidValue: CompileErrorCode },
 ): CompileError[] {
   const errors: CompileError[] = [];
 
   if (attrs.length > 1) {
     errors.push(...attrs.map((attr) => new CompileError(
-      codes.duplicate,
+      errorCodes.duplicate,
       `'${name}' can only appear once`,
       attr,
     )));
@@ -268,8 +264,8 @@ export function validateInlineMetadataSetting (
   attrs.forEach((attr) => {
     if (!isValidMetadataValue(attr.value)) {
       errors.push(new CompileError(
-        codes.invalidValue,
-        `'${name}' must be a string or a color literal`,
+        errorCodes.invalidValue,
+        `Custom setting '${name}' must be a string or a color literal`,
         attr.value || attr.name || attr,
       ));
     }

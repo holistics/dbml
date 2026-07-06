@@ -26,10 +26,7 @@ export default class CustomValidator {
   }
 
   private validateContext (): CompileError[] {
-    const parent = this.declarationNode.parent;
-    // Custom (key-value) fields are allowed inside a Project and inside a
-    // Metadata element body (e.g. `owner: 'scott'`).
-    if (!(parent instanceof ElementDeclarationNode && (parent.isKind(ElementKind.Project) || parent.isKind(ElementKind.Metadata)))) {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode && this.declarationNode.parent.isKind(ElementKind.Project))) {
       return [
         new CompileError(CompileErrorCode.INVALID_CUSTOM_CONTEXT, 'A Custom element can only appear in a Project', this.declarationNode),
       ];

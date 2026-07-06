@@ -70,7 +70,10 @@ Metadata Table public.users {
 });
 
 describe('[example] Metadata field value grammar', () => {
-  describe('accepts scalar values and stores them', () => {
+  // A Metadata field value must be a string or a color literal. Numbers,
+  // booleans, and bare identifiers are NOT accepted (see `isValidMetadataValue`
+  // in src/core/utils/validate.ts).
+  describe('accepts string and color values and stores them', () => {
     it('accepts a quoted string value', () => {
       const result = interpret(`${TABLE}Metadata Table public.users {
   owner: 'scott'
@@ -81,38 +84,6 @@ describe('[example] Metadata field value grammar', () => {
 }`)).toMatchObject({ owner: 'scott' });
     });
 
-    it('accepts a number value', () => {
-      const result = interpret(`${TABLE}Metadata Table public.users {
-  count: 42
-}`);
-      expect(result.getErrors()).toHaveLength(0);
-      expect(metadataValues(`Metadata Table public.users {
-  count: 42
-}`)).toMatchObject({ count: 42 });
-    });
-
-    it('accepts boolean values (true and false)', () => {
-      const result = interpret(`${TABLE}Metadata Table public.users {
-  pii: true
-  archived: false
-}`);
-      expect(result.getErrors()).toHaveLength(0);
-      expect(metadataValues(`Metadata Table public.users {
-  pii: true
-  archived: false
-}`)).toMatchObject({ pii: true, archived: false });
-    });
-
-    it('accepts a bare identifier value', () => {
-      const result = interpret(`${TABLE}Metadata Table public.users {
-  masking: partial
-}`);
-      expect(result.getErrors()).toHaveLength(0);
-      expect(metadataValues(`Metadata Table public.users {
-  masking: partial
-}`)).toMatchObject({ masking: 'partial' });
-    });
-
     it('accepts a color value', () => {
       const result = interpret(`${TABLE}Metadata Table public.users {
   color: #aaa
@@ -121,6 +92,46 @@ describe('[example] Metadata field value grammar', () => {
       expect(metadataValues(`Metadata Table public.users {
   color: #aaa
 }`)).toMatchObject({ color: '#aaa' });
+    });
+  });
+
+  describe('rejects values that are not a string or color literal', () => {
+    it('rejects a number value', () => {
+      const result = interpret(`${TABLE}Metadata Table public.users {
+  count: 42
+}`);
+      const codes = result.getErrors().map((e) => e.code);
+      expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
+      // The invalid value must never be silently captured.
+      expect(metadataValues(`Metadata Table public.users {
+  count: 42
+}`) ?? {}).not.toHaveProperty('count');
+    });
+
+    it('rejects boolean values (true and false)', () => {
+      const result = interpret(`${TABLE}Metadata Table public.users {
+  pii: true
+  archived: false
+}`);
+      const codes = result.getErrors().map((e) => e.code);
+      expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
+      const values = metadataValues(`Metadata Table public.users {
+  pii: true
+  archived: false
+}`) ?? {};
+      expect(values).not.toHaveProperty('pii');
+      expect(values).not.toHaveProperty('archived');
+    });
+
+    it('rejects a bare identifier value', () => {
+      const result = interpret(`${TABLE}Metadata Table public.users {
+  masking: partial
+}`);
+      const codes = result.getErrors().map((e) => e.code);
+      expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
+      expect(metadataValues(`Metadata Table public.users {
+  masking: partial
+}`) ?? {}).not.toHaveProperty('masking');
     });
   });
 
@@ -213,7 +224,7 @@ Metadata Table public.users {
     });
   });
 
-  describe('rejects non-scalar values with INVALID_METADATA_FIELD', () => {
+  describe('rejects complex and empty values with INVALID_METADATA_FIELD', () => {
     it('rejects a list/array literal value', () => {
       const result = interpret(`${TABLE}Metadata Table public.users {
   tags: ['a', 'b']

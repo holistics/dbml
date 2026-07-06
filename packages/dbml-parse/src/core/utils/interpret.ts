@@ -1,6 +1,8 @@
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { Color, ColumnType, TokenPosition } from '@/core/types/schemaJson';
+import type {
+  Color, ColumnType, CustomMetadata, TokenPosition,
+} from '@/core/types/schemaJson';
 import { ArrayNode, CallExpressionNode, FunctionExpressionNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
@@ -9,9 +11,11 @@ import {
 } from './expression';
 import {
   isExpressionASignedNumberExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode, isValidHexColor,
+  Settings,
 } from './validate';
 import { extractNumber, getNumberTextFromExpression } from './numbers';
 import { NONE_COLOR } from '@/constants';
+import { SettingName } from '../types';
 
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
@@ -166,4 +170,38 @@ export function processColumnType (
     type_name: `${typeName}${typeSuffix}`,
     args: typeArgs,
   });
+}
+
+/**
+  * Extract inline custom metadata from an aggregated setting list,
+  * excluding keys that are natively attached to the element (headercolor and note in `table`, color in `tablegroup`, .etc).
+  *
+  * NOTE: This is used during interpret phase, so no need to validate values, just extract them
+  */
+export function extractCustomInlineMetadata (settingMap: Settings, builtinSettings: readonly SettingName[]): CustomMetadata {
+  const builtins = new Set(builtinSettings.map((n) => n.toLowerCase()));
+  const values: CustomMetadata = {};
+
+  for (const [name, attrs] of Object.entries(settingMap)) {
+    if (builtins.has(name.toLowerCase())) continue;
+    const attr = attrs[0];
+    const value = extractMetadataValue(attr.value);
+    if (value !== undefined) values[name] = value;
+  }
+
+  return values;
+}
+
+// Best-effort scalar extraction for a free-form metadata value node.
+// Tries: quoted string -> color.
+export function extractMetadataValue (node?: SyntaxNode): string | Color | undefined {
+  if (!node) return undefined;
+
+  const quoted = extractQuotedStringToken(node);
+  if (quoted !== undefined) return quoted;
+
+  const color = extractColor(node);
+  if (color !== undefined) return color;
+
+  return undefined;
 }

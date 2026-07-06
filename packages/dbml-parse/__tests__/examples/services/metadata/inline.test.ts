@@ -13,13 +13,13 @@ function table (source: string, name = 'users') {
 describe('[example] Inline custom metadata (settings list)', () => {
   describe('Table', () => {
     it('harvests non-builtin keys into metadata', () => {
-      const source = `Table users [owner: "data-team", sla_hours: 24, active: true] {
+      const source = `Table users [owner: "data-team", sla_hours: "24", active: "true"] {
   id int
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
-      expect(t.metadata).toMatchObject({ owner: 'data-team', sla_hours: 24, active: true });
+      expect(t.metadata).toMatchObject({ owner: 'data-team', sla_hours: '24', active: 'true' });
     });
 
     it('keeps builtin headercolor/note typed and out of metadata', () => {
@@ -106,13 +106,13 @@ TableGroup g1 [color: #123, note: "gn", team: "growth"] {
   describe('Column', () => {
     it('harvests non-builtin keys into the column metadata', () => {
       const source = `Table users {
-  id int [pk, pii: true, classification: "internal"]
+  id int [pk, pii: "true", classification: "internal"]
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const col = table(source)!.fields.find((f) => f.name === 'id')!;
       expect(col.pk).toBe(true);
-      expect(col.metadata).toMatchObject({ pii: true, classification: 'internal' });
+      expect(col.metadata).toMatchObject({ pii: 'true', classification: 'internal' });
     });
 
     it('harvests inline metadata on a TablePartial column', () => {
@@ -142,13 +142,13 @@ Table users {
 
 Metadata Table public.users {
   owner: "from-block"
-  sla: 24
+  sla: "24"
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       // block overrides owner; inline-only `region` survives; block adds `sla`.
-      expect(t.metadata).toMatchObject({ owner: 'from-block', region: 'us', sla: 24 });
+      expect(t.metadata).toMatchObject({ owner: 'from-block', region: 'us', sla: '24' });
     });
 
     it('keeps inline metadata when no block targets the element', () => {

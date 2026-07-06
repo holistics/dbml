@@ -31,7 +31,7 @@ import {
   isValidHexColor,
   isValidName,
   isValidPartialInjection,
-  validateInlineMetadataSetting,
+  validateCustomInlineMetadata,
 } from '@/core/utils/validate';
 
 export default class TableValidator {
@@ -105,42 +105,7 @@ export default class TableValidator {
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    const aggReport = aggregateSettingList(settingList);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-
-    forIn(settingMap, (attrs, name) => {
-      switch (name) {
-        case SettingName.HeaderColor:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidHexColor(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'headercolor\' must be a color literal', attr.value || attr.name!));
-            }
-          });
-          break;
-        case SettingName.Note:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'note\' must be a string literal', attr.value || attr.name!));
-            }
-          });
-          break;
-        default:
-          // Any non-builtin key is free-form inline custom metadata.
-          errors.push(
-            ...validateInlineMetadataSetting(name, attrs, {
-              duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
-              invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-            }));
-      }
-    });
-    return errors;
+    return validateTableSettings(settingList).getErrors();
   }
 
   private validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -211,171 +176,7 @@ export default class TableValidator {
 
   // This is needed to support legacy inline settings
   private validateFieldSetting (parts: ExpressionNode[]): CompileError[] {
-    if (!parts.slice(0, -1).every(isExpressionAnIdentifierNode) || !parts.slice(-1).every((p) => isExpressionAnIdentifierNode(p) || p instanceof ListExpressionNode)) {
-      return parts.map((part) => new CompileError(CompileErrorCode.INVALID_COLUMN, 'These fields must be some inline settings optionally ended with a setting list', part));
-    }
-
-    if (parts.length === 0) {
-      return [];
-    }
-
-    let settingList: ListExpressionNode | undefined;
-    if (last(parts) instanceof ListExpressionNode) {
-      settingList = parts.pop() as ListExpressionNode;
-    }
-
-    const aggReport = aggregateSettingList(settingList);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-
-    parts.forEach((part) => {
-      const name = (extractVariableFromExpression(part) ?? '').toLowerCase();
-      if (name !== SettingName.PK && name !== SettingName.Unique) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Inline column settings can only be `pk` or `unique`', part));
-        return;
-      }
-      if (settingMap[name] === undefined) {
-        settingMap[name] = [
-          part as PrimaryExpressionNode,
-        ];
-      } else {
-        settingMap[name]!.push(part as PrimaryExpressionNode);
-      }
-    });
-
-    const pkAttrs = settingMap[SettingName.PK] || [];
-    const pkeyAttrs = settingMap[SettingName.PrimaryKey] || [];
-    if (pkAttrs.length >= 1 && pkeyAttrs.length >= 1) {
-      errors.push(
-        ...[
-          ...pkAttrs,
-          ...pkeyAttrs,
-        ]
-          .map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'Either one of \'primary key\' and \'pk\' can appear', attr)),
-      );
-    }
-
-    forIn(settingMap, (attrs, name) => {
-      switch (name) {
-        case SettingName.Note:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'note can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'note\' must be a quoted string', attr.value || attr.name!));
-            }
-          });
-          break;
-        case SettingName.Ref:
-          attrs.forEach((attr) => {
-            if (!isUnaryRelationship(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'ref\' must be a valid unary relationship', attr.value || attr.name!));
-            }
-          });
-          break;
-        case SettingName.PrimaryKey:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'primary key can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'primary key\' must not have a value', attr.value || attr.name!));
-            }
-          });
-          break;
-        case SettingName.PK:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'pk\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'pk\' must not have a value', attr.value || attr.name!));
-            }
-          });
-          break;
-        case SettingName.NotNull: {
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'not null\' can only appear once', attr)));
-          }
-          const nullAttrs = settingMap[SettingName.Null] || [];
-          if (attrs.length >= 1 && nullAttrs.length >= 1) {
-            errors.push(
-              ...[
-                ...attrs,
-                ...nullAttrs,
-              ]
-                .map((attr) => new CompileError(CompileErrorCode.CONFLICTING_SETTING, '\'not null\' and \'null\' can not be set at the same time', attr)),
-            );
-          }
-          attrs.forEach((attr) => {
-            if (attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'not null\' must not have a value', attr.value || attr.name!));
-            }
-          });
-          break;
-        }
-        case SettingName.Null:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'null\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'null\' must not have a value', attr.value || attr.name!));
-            }
-          });
-          break;
-        case SettingName.Unique:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'unique\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'unique\' must not have a value', attr.value || attr.name!));
-            }
-          });
-          break;
-        case SettingName.Increment:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'increment\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (attr instanceof AttributeNode && attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'increment\' must not have a value', attr.value || attr.name!));
-            }
-          });
-          break;
-        case SettingName.Default:
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, '\'default\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidDefaultValue(attr.value)) {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
-                '\'default\' must be an enum value, a string literal, number literal, function expression, true, false or null',
-                attr.value || attr.name!,
-              ));
-            }
-          });
-          break;
-        case SettingName.Check:
-          attrs.forEach((attr) => {
-            if (!(attr.value instanceof FunctionExpressionNode)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attr.value || attr.name!));
-            }
-          });
-          break;
-
-        default:
-          // Any non-builtin key is free-form inline custom metadata.
-          errors.push(...validateInlineMetadataSetting(name, attrs, {
-            duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
-            invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
-          }));
-      }
-    });
-    return errors;
+    return validateFieldSetting(parts).getErrors();
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -424,10 +225,12 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
         break;
       default:
         // Any non-builtin key is free-form inline custom metadata.
-        errors.push(...validateInlineMetadataSetting(name, attrs, {
-          duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
-          invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-        }));
+        errors.push(
+          ...validateCustomInlineMetadata(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
+            invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
+          }),
+        );
     }
   });
   return new Report(settingMap, errors);
@@ -593,7 +396,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
       default:
         // Any non-builtin key is free-form inline custom metadata.
         errors.push(
-          ...validateInlineMetadataSetting(name, attrs, {
+          ...validateCustomInlineMetadata(name, attrs, {
             duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
             invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
           }),
