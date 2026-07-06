@@ -10,20 +10,21 @@ export declare interface EditorPosition {
   column: number;
 }
 
-export interface CompilerDiagnostic {
+export declare interface CompilerDiagnostic {
   readonly message: Readonly<string>;
   readonly filepath?: Readonly<string>;
   readonly stack?: Readonly<unknown>;
   readonly location: {
       start: Readonly<EditorPosition>,
-      // in monaco, if an end position is not specified
-      // it consumes the word containing the start position
       end?: Readonly<EditorPosition>,
   };
   readonly type?: Readonly<WarningLevel>;
-  readonly code?: Readonly<ErrorCode>; // the error code
+  readonly code?: Readonly<ErrorCode>;
 }
 
-export interface CompilerError {
-  readonly diags: CompilerDiagnostic[];
+export declare class CompilerError {
+  diags: CompilerDiagnostic[];
+  constructor(diags: CompilerDiagnostic[]);
+  static create(nestedDiags: unknown): CompilerError;
+  map(callback: (diag: CompilerDiagnostic) => CompilerDiagnostic): CompilerError;
 }

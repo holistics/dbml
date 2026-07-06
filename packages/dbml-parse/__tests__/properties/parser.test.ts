@@ -1,15 +1,31 @@
-import { describe, expect, it } from 'vitest';
+import {
+  describe, expect, it,
+} from 'vitest';
 import * as fc from 'fast-check';
-import { dbmlSchemaArbitrary, tableArbitrary, enumArbitrary, tablePartialArbitrary, partialInjectionArbitrary } from '../utils/arbitraries';
-import { isEqual } from 'lodash-es';
-import { parse, print, lex } from '../utils';
-import { SyntaxNodeKind, BlockExpressionNode } from '@/core/parser/nodes';
+import {
+  dbmlSchemaArbitrary, tableArbitrary, enumArbitrary, tablePartialArbitrary, partialInjectionArbitrary,
+} from '../utils/arbitraries';
+import {
+  isEqual,
+} from 'lodash-es';
+import {
+  parse, print, lex,
+} from '../utils';
+import {
+  SyntaxNodeKind, BlockExpressionNode,
+} from '@/core/types/nodes';
 
-const PROPERTY_TEST_CONFIG = { numRuns: 50 };
-const EXTENDED_CONFIG = { numRuns: 25 };
+const PROPERTY_TEST_CONFIG = {
+  numRuns: 50,
+};
+const EXTENDED_CONFIG = {
+  numRuns: 25,
+};
 
 describe('[property] parser', () => {
-  it('should produce consistent ASTs', { timeout: 30000 }, () => {
+  it('should produce consistent ASTs', {
+    timeout: 30000,
+  }, () => {
     // Property: Parsing the same source twice should produce the same ASTs
     fc.assert(
       fc.property(dbmlSchemaArbitrary, (source: string) => {
@@ -51,7 +67,9 @@ describe('[property] parser', () => {
     // Property: Source 1 -parse-> ast -print-> Source 2
     // Then: Source 1 === Source 2
     fc.assert(
-      fc.property(dbmlSchemaArbitrary, fc.nat({ max: 10 }), fc.string(), (source: string, injectedPos: number, injectSource: string) => {
+      fc.property(dbmlSchemaArbitrary, fc.nat({
+        max: 10,
+      }), fc.string(), (source: string, injectedPos: number, injectSource: string) => {
         const injectedSource = `${source.slice(0, injectedPos)}${injectSource}${source.slice(injectedPos)}`;
         const ast = parse(injectedSource).getValue().ast;
         const newSource = print(injectedSource, ast);
@@ -220,7 +238,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
         const ast = result.getValue().ast;
 
-        ast.body.forEach((node) => {
+        ast.declarations.forEach((node) => {
           if (node.kind === SyntaxNodeKind.ELEMENT_DECLARATION) {
             expect(node.type).toBeDefined();
             expect(node.type?.value).toBeDefined();
@@ -239,7 +257,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
 
         const ast = result.getValue().ast;
-        const table = ast.body[0];
+        const table = ast.declarations[0];
 
         expect(table.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
         expect(table.type?.value?.toLowerCase()).toBe('table');
@@ -257,7 +275,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
 
         const ast = result.getValue().ast;
-        const enumDecl = ast.body[0];
+        const enumDecl = ast.declarations[0];
 
         expect(enumDecl.kind).toBe(SyntaxNodeKind.ELEMENT_DECLARATION);
         expect(enumDecl.type?.value?.toLowerCase()).toBe('enum');
@@ -276,7 +294,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
 
         const ast = result.getValue().ast;
-        const table = ast.body[0];
+        const table = ast.declarations[0];
 
         // Name should be defined and within source bounds
         expect(table.name).toBeDefined();
@@ -303,7 +321,7 @@ describe('[property] parser - AST structure semantics', () => {
         const result = parse(source);
         const ast = result.getValue().ast;
 
-        const ref = ast.body[0];
+        const ref = ast.declarations[0];
         expect(ref.type?.value?.toLowerCase()).toBe('ref');
         expect(ref.bodyColon).toBeDefined();
       }),
@@ -351,7 +369,9 @@ describe('[property] parser - AST structure semantics', () => {
 
         ast.body.forEach((elem) => checkNested(elem, 0, source.length));
       }),
-      { numRuns: 50 },
+      {
+        numRuns: 50,
+      },
     );
   });
 });
@@ -361,7 +381,10 @@ describe('[property] parser - negative tests', () => {
   it('should report errors for unclosed braces', () => {
     fc.assert(
       fc.property(
-        fc.integer({ min: 1, max: 10 }),
+        fc.integer({
+          min: 1,
+          max: 10,
+        }),
         (count: number) => {
           const source = 'Table t '.repeat(count) + '{'.repeat(count);
           const result = parse(source);

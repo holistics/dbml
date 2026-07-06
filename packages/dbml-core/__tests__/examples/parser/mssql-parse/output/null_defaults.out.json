@@ -1,0 +1,100 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "test_nulls",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "nullable_varchar",
+          "type": {
+            "type_name": "VARCHAR(255)",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "null",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "nullable_int",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "null",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "nullable_text",
+          "type": {
+            "type_name": "TEXT",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "null",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "nullable_date",
+          "type": {
+            "type_name": "DATE",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "null",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "nullable_datetime",
+          "type": {
+            "type_name": "DATETIME",
+            "schemaName": null
+          },
+          "dbdefault": {
+            "value": "null",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "not_null_with_default",
+          "type": {
+            "type_name": "VARCHAR(50)",
+            "schemaName": null
+          },
+          "not_null": true,
+          "dbdefault": {
+            "value": "value",
+            "type": "string"
+          }
+        },
+        {
+          "name": "just_nullable",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
+}

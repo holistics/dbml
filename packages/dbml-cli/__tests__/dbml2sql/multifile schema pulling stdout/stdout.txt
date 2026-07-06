@@ -1,0 +1,14 @@
+CREATE SCHEMA "auth";
+
+CREATE TABLE "auth"."users" (
+  "id" int PRIMARY KEY,
+  "email" varchar
+);
+
+CREATE TABLE "auth"."roles" (
+  "id" int PRIMARY KEY,
+  "name" varchar
+);
+
+ALTER TABLE "auth"."users" ADD FOREIGN KEY ("id") REFERENCES "auth"."roles" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+

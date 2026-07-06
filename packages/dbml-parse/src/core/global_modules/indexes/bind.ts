@@ -1,0 +1,121 @@
+import { partition } from 'lodash-es';
+import Compiler from '@/compiler';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { UNHANDLED } from '@/core/types/module';
+import {
+  BlockExpressionNode,
+  ElementDeclarationNode,
+  FunctionApplicationNode,
+} from '@/core/types/nodes';
+import { ElementKind } from '@/core/types/keywords';
+import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils/expression';
+import { scanNonListNodeForBinding } from '../utils';
+
+export default class IndexesBinder {
+  private compiler: Compiler;
+  private declarationNode: ElementDeclarationNode;
+
+  constructor (compiler: Compiler, declarationNode: ElementDeclarationNode) {
+    this.compiler = compiler;
+    this.declarationNode = declarationNode;
+  }
+
+  bind (): CompileError[] {
+    if (!(this.declarationNode.parent instanceof ElementDeclarationNode)
+      || (!this.declarationNode.parent.isKind(ElementKind.Table)
+        && !this.declarationNode.parent.isKind(ElementKind.TablePartial))) {
+      return [];
+    }
+
+    if (!(this.declarationNode.body instanceof BlockExpressionNode)) {
+      return [];
+    }
+
+    return this.bindBody(this.declarationNode.body);
+  }
+
+  private get ownerContainerKind (): string {
+    const parent = this.declarationNode.parent as ElementDeclarationNode;
+    return parent.isKind(ElementKind.TablePartial) ? 'TablePartial' : 'Table';
+  }
+
+  private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+    if (!body) {
+      return [];
+    }
+    if (body instanceof FunctionApplicationNode) {
+      return this.bindFields([
+        body,
+      ]);
+    }
+
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+
+    return [
+      ...this.bindFields(fields as FunctionApplicationNode[]),
+      ...this.bindSubElements(subs as ElementDeclarationNode[]),
+    ];
+  }
+
+  private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
+    return fields.flatMap((field) => {
+      if (!field.callee) {
+        return [];
+      }
+      const ownerTableName = destructureComplexVariable(
+        (this.declarationNode.parent as ElementDeclarationNode).name,
+      )?.join('.') ?? '<unnamed>';
+
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
+      const bindees = args.flatMap(scanNonListNodeForBinding)
+        .flatMap((bindee) => {
+          // Indexes can never be schema-qualified (they reference table columns)
+          if (bindee.variables.length > 1) {
+            return [];
+          }
+          // Indexes is a simple column
+          // e.g
+          // Indexes {
+          //   id
+          // }
+          if (bindee.variables.length) {
+            return bindee.variables[0];
+          }
+
+          // Indexes is a tuple
+          // e.g
+          // Indexes {
+          //   (id, name, age)
+          // }
+          return bindee.tupleElements;
+        });
+
+      return bindees.flatMap((bindee) => {
+        const columnName = extractVarNameFromPrimaryVariable(bindee);
+        if (columnName === undefined) return [];
+        const column = this.compiler.nodeReferee(bindee);
+        if (!column.getValue() || column.hasValue(UNHANDLED)) {
+          return new CompileError(CompileErrorCode.BINDING_ERROR, `No column named '${columnName}' inside ${this.ownerContainerKind} '${ownerTableName}'`, bindee);
+        }
+
+        return [];
+      });
+    });
+  }
+
+  private bindSubElements (subs: ElementDeclarationNode[]): CompileError[] {
+    return subs.flatMap((sub) => {
+      if (!sub.type) {
+        return [];
+      }
+
+      return this.compiler.bindNode(sub).getErrors();
+    });
+  }
+}

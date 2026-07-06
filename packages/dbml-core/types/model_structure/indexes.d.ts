@@ -4,7 +4,7 @@ import Element, { RawNote, Token } from './element';
 import IndexColumn from './indexColumn';
 import Table from './table';
 import TablePartial from './tablePartial';
-interface RawIndex {
+export interface RawIndex {
     columns: IndexColumn;
     type: any;
     unique: boolean;

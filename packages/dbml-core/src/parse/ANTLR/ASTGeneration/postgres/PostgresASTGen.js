@@ -1,10 +1,10 @@
-import { last, flatten, flattenDepth } from 'lodash';
+import { flatten, flattenDepth, last } from 'lodash-es';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
 import {
-  Enum, Field, Index, TableRecord, Table,
+  Enum, Field, Index, Table, TableRecord,
 } from '../AST';
 import {
-  TABLE_CONSTRAINT_KIND, CONSTRAINT_TYPE, COLUMN_CONSTRAINT_KIND, DATA_TYPE,
+  COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND,
 } from '../constants';
 import { getOriginalText } from '../helpers';
 
@@ -467,7 +467,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
 
     if (ctx.TRUE_P() || ctx.FALSE_P() || ctx.NULL_P()) {
       return {
-        value: ctx.getText(),
+        value: ctx.getText().toLowerCase(),
         type: DATA_TYPE.BOOLEAN,
       };
     }
@@ -1057,7 +1057,15 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-    const { columns, values } = ctx.insert_rest().accept(this);
+    let { columns, values } = ctx.insert_rest().accept(this);
+
+    // When no columns are specified, lookup table and use all its columns
+    if (columns.length === 0) {
+      const table = findTable(this.data.tables, schemaName, tableName);
+      if (table && table.fields) {
+        columns = table.fields.map((field) => field.name);
+      }
+    }
 
     const record = new TableRecord({
       schemaName,

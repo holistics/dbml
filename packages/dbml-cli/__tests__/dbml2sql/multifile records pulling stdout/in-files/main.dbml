@@ -1,0 +1,6 @@
+use * from './base.dbml'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > users.id]
+}

@@ -2,7 +2,7 @@ Table "customers" {
   "cust_id" NUMBER(10) [default: 1]
   "cust_name" VARCHAR2(100)
   "email" VARCHAR2(100) [default: 'email@example.com']
-  "phone" VARCHAR2(20) [default: null]
+  "phone" VARCHAR2(20)
   "address" VARCHAR2(200)
   "status" VARCHAR2(20) [default: 'churned']
   "reg_date" DATE [default: `SYSDATE`]

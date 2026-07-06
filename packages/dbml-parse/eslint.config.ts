@@ -4,7 +4,7 @@ import stylistic from '@stylistic/eslint-plugin';
 import tseslint from 'typescript-eslint';
 import tsparser from '@typescript-eslint/parser';
 
-export default defineConfig( 
+export default defineConfig(
   eslint.configs.recommended,
   tseslint.configs.recommended,
   stylistic.configs.customize({
@@ -19,7 +19,9 @@ export default defineConfig(
         'node_modules/*',
         'dist/*',
         'vite.config.ts',
+        'vite.profile.config.ts',
         'eslint.config.ts',
+        '__tests__/*',
       ],
     },
     {
@@ -30,6 +32,7 @@ export default defineConfig(
           sourceType: 'module',
           ecmaVersion: 2020,
           project: './tsconfig.json',
+          tsconfigRootDir: import.meta.dirname,
         },
       },
       plugins: {
@@ -52,17 +55,18 @@ export default defineConfig(
         '@typescript-eslint/consistent-return': [
           'error',
         ],
-        '@stylistic/quotes': ['error', 'single', { 'avoidEscape': true }],
+        '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
         '@stylistic/max-statements-per-line': 'off',
         '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
-      },
-      settings: {
-        'import/resolver': {
-          typescript: {
-            alwaysTryTypes: true,
-            project: 'packages/*/{ts,js}config.json',
-          },
-        },
+        '@stylistic/object-curly-newline': ['error', {
+          ImportDeclaration: { multiline: true, minProperties: 4 },
+          ExportDeclaration: { multiline: true, minProperties: 4 },
+          TSInterfaceBody: { multiline: true, minProperties: 1 },
+        }],
+        '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
+        '@stylistic/array-bracket-newline': ['error', { multiline: true, minItems: 1 }],
+        '@stylistic/array-element-newline': ['error', { multiline: true, minItems: 1 }],
+        '@stylistic/function-call-argument-newline': ['error', 'consistent'],
       },
     },
   ],

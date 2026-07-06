@@ -6,7 +6,22 @@ import Enum from './enum';
 import Table from './table';
 import TablePartial from './tablePartial';
 import Check from './check';
-interface RawField {
+
+export interface InlineRef {
+    schemaName: string | null;
+    tableName: string;
+    fieldNames: string[];
+    relation: '>' | '<' | '-' | '<>';
+    token: Token;
+}
+
+export interface ColumnType {
+    schemaName: string | null;
+    type_name: string;
+    args: string | null;
+}
+
+export interface RawField {
     name: string;
     type: any;
     unique: boolean;
@@ -19,6 +34,7 @@ interface RawField {
     checks?: any[];
     table: Table;
 }
+
 declare class Field extends Element {
     name: string;
     type: any;
@@ -72,6 +88,7 @@ declare class Field extends Element {
     };
     normalize(model: NormalizedModel): void;
 }
+
 export interface NormalizedField {
     id: number;
     name: string;
@@ -83,7 +100,10 @@ export interface NormalizedField {
     pk: boolean;
     not_null: boolean;
     note: string | null;
-    dbdefault: unknown;
+    dbdefault?: {
+        type: 'number' | 'string' | 'boolean' | 'expression';
+        value: number | string;
+    };
     increment: boolean;
     endpointIds: number[];
     tableId: number;

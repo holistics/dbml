@@ -1,24 +1,26 @@
-import Element, { Token } from './element';
+import Element, { Token, Color } from './element';
 import Endpoint from './endpoint';
 import Schema from './schema';
 import DbState from './dbState';
 import Database, { NormalizedModel } from './database';
 import TablePartial from './tablePartial';
-interface RawRef {
+export interface RawRef {
     name: string;
-    color?: string;
+    color?: Color;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
+    inactive?: boolean;
     token: Token;
     schema: Schema;
 }
 declare class Ref extends Element {
     name: string;
-    color?: string;
+    color?: Color;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
+    inactive?: boolean;
     schema: Schema;
     dbState: DbState;
     id: number;
@@ -65,9 +67,10 @@ declare class Ref extends Element {
 export interface NormalizedRef {
     id: number;
     name: string | null;
-    color?: string;
+    color?: Color;
     onUpdate?: string;
     onDelete?: string;
+    inactive?: boolean;
     schemaId: number;
     endpointIds: number[];
     injectedPartialId?: number;

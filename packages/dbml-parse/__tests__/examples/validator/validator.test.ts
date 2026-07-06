@@ -1,7 +1,15 @@
-import { describe, expect } from 'vitest';
-import { CompileErrorCode } from '@/core/errors';
-import { SyntaxToken } from '@/core/lexer/tokens';
-import { analyze } from '@tests/utils';
+import {
+  describe, expect,
+} from 'vitest';
+import {
+  CompileErrorCode,
+} from '@/core/types/errors';
+import {
+  SyntaxToken,
+} from '@/core/types/tokens';
+import {
+  analyze,
+} from '@tests/utils';
 
 describe('[example] validator', () => {
   describe('table validation', () => {
@@ -21,7 +29,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_NAME);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'public'");
 
       // Error should point to the SECOND (duplicate) table, not the first
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).toBe(2);
@@ -109,7 +117,7 @@ describe('[example] validator', () => {
       // Two errors - one for each occurrence of the duplicate
       expect(errors).toHaveLength(2);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_COLUMN_NAME);
-      expect(errors[0].diagnostic).toBe('Duplicate column id');
+      expect(errors[0].diagnostic).toBe('Duplicate column \'id\'');
 
       // Verify both errors point to different lines
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).not.toBe((errors[1].nodeOrToken as SyntaxToken).startPos.line);
@@ -214,7 +222,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_NAME);
-      expect(errors[0].diagnostic).toBe("Enum name status already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Enum 'status' already exists in schema 'public'");
 
       // Error should be on second enum
       expect((errors[0].nodeOrToken as SyntaxToken).startPos.line).toBe(2);
@@ -231,7 +239,7 @@ describe('[example] validator', () => {
 
       // Two errors - one for each duplicate occurrence
       expect(errors).toHaveLength(2);
-      expect(errors[0].diagnostic).toBe('Duplicate enum field active');
+      expect(errors[0].diagnostic).toBe('Duplicate enum field \'active\'');
     });
 
     test('should accept enum field with note', () => {
@@ -297,12 +305,12 @@ describe('[example] validator', () => {
 
     test('should accept all ref relationship types', () => {
       const source = `
-        Table a { id int }
-        Table b { a_id int }
+        Table a { id int\n name varchar }
+        Table b { a_id int\n a_name varchar\n a_id2 int\n a_name2 varchar }
         Ref: b.a_id > a.id
-        Ref: b.a_id < a.id
-        Ref: b.a_id - a.id
-        Ref: b.a_id <> a.id
+        Ref: b.a_name < a.name
+        Ref: b.a_id2 - a.id
+        Ref: b.a_name2 <> a.name
       `;
       const errors = analyze(source).getErrors();
 
@@ -331,7 +339,7 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(1);
       expect(errors[0].code).toBe(CompileErrorCode.BINDING_ERROR);
-      expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'posts'");
+      expect(errors[0].diagnostic).toBe("Column 'nonexistent' does not exist in Table 'public.posts'");
     });
 
     test('should accept ref with named ref and settings in block form', () => {
@@ -685,6 +693,64 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(0);
     });
+
+    test('should accept sticky note with color setting', () => {
+      const source = `
+        Note my_note [color: #FF5733] {
+          'A colored note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept sticky note with color none', () => {
+      const source = `
+        Note my_note [color: none] {
+          'A note without color'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should reject unknown setting on sticky note', () => {
+      const source = `
+        Note my_note [unknown: value] {
+          'A note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.UNKNOWN_NOTE_SETTING);
+    });
+
+    test('should reject invalid color value on sticky note', () => {
+      const source = `
+        Note my_note [color: invalid] {
+          'A note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_NOTE_SETTING_VALUE);
+    });
+
+    test('should reject duplicate color setting on sticky note', () => {
+      const source = `
+        Note my_note [color: #FF5733, color: #00FF00] {
+          'A note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(2);
+      expect(errors[0].code).toBe(CompileErrorCode.DUPLICATE_NOTE_SETTING);
+    });
   });
 
   describe('context validation', () => {
@@ -865,8 +931,8 @@ Table users { name varchar }`;
       // - Duplicate enum field (2 - one for each occurrence, uses same code as duplicate column)
       // - Unknown table in ref (1)
       expect(errors).toHaveLength(5);
-      expect(errors.filter((e) => e.diagnostic === 'Duplicate column id')).toHaveLength(2);
-      expect(errors.filter((e) => e.diagnostic === 'Duplicate enum field active')).toHaveLength(2);
+      expect(errors.filter((e) => e.diagnostic === 'Duplicate column \'id\'')).toHaveLength(2);
+      expect(errors.filter((e) => e.diagnostic === 'Duplicate enum field \'active\'')).toHaveLength(2);
       expect(errors.filter((e) => e.code === CompileErrorCode.BINDING_ERROR)).toHaveLength(1);
     });
 
@@ -957,7 +1023,9 @@ Table users { name varchar }`;
     });
 
     test('should handle table with many columns', () => {
-      const columns = Array.from({ length: 100 }, (_, i) => `col${i} int`).join('\n');
+      const columns = Array.from({
+        length: 100,
+      }, (_, i) => `col${i} int`).join('\n');
       const source = `Table big_table { ${columns} }`;
       const errors = analyze(source).getErrors();
 
@@ -965,7 +1033,9 @@ Table users { name varchar }`;
     });
 
     test('should handle many tables', () => {
-      const tables = Array.from({ length: 50 }, (_, i) => `Table t${i} { id int }`).join('\n');
+      const tables = Array.from({
+        length: 50,
+      }, (_, i) => `Table t${i} { id int }`).join('\n');
       const errors = analyze(tables).getErrors();
 
       expect(errors).toHaveLength(0);
@@ -1018,6 +1088,50 @@ Table users { name varchar }`;
     });
   });
 
+  describe('DiagramView validation', () => {
+    test('should accept DiagramView with body-level wildcard {*}', () => {
+      const source = 'DiagramView name { * }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept DiagramView with Tables sub-block', () => {
+      const source = `
+        Table users { id int }
+        DiagramView name {
+          Tables {
+            users
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should reject DiagramView body-level non-wildcard field', () => {
+      const source = `
+        Table users { id int }
+        DiagramView name {
+          users
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_DIAGRAMVIEW_FIELD);
+    });
+
+    test('should reject DiagramView without a name', () => {
+      const source = 'DiagramView { * }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.NAME_NOT_FOUND);
+    });
+  });
+
   describe('error message quality', () => {
     test('should include entity name in duplicate error messages', () => {
       const source = `
@@ -1027,7 +1141,7 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'public'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'public'");
     });
 
     test('should include schema context in error messages when relevant', () => {
@@ -1038,7 +1152,7 @@ Table users { name varchar }`;
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].diagnostic).toBe("Table name 'users' already exists in schema 'auth'");
+      expect(errors[0].diagnostic).toBe("Table 'users' already exists in schema 'auth'");
     });
 
     test('should provide actionable error messages for unknown references', () => {
@@ -1055,7 +1169,7 @@ Table users { name varchar }`;
       const dupColSource = 'Table users { id int\nid varchar }';
       const dupColErrors = analyze(dupColSource).getErrors();
       expect(dupColErrors).toHaveLength(2);
-      expect(dupColErrors[0].diagnostic).toBe('Duplicate column id');
+      expect(dupColErrors[0].diagnostic).toBe('Duplicate column \'id\'');
 
       // Test missing table name
       const missingNameErrors = analyze('Table { id int }').getErrors();
@@ -1066,7 +1180,7 @@ Table users { name varchar }`;
       const dupEnumSource = 'Enum status { active\nactive }';
       const dupEnumErrors = analyze(dupEnumSource).getErrors();
       expect(dupEnumErrors).toHaveLength(2);
-      expect(dupEnumErrors[0].diagnostic).toBe('Duplicate enum field active');
+      expect(dupEnumErrors[0].diagnostic).toBe('Duplicate enum field \'active\'');
 
       // Test unknown setting
       const unknownErrors = analyze('Table users [unknown: value] { id int }').getErrors();

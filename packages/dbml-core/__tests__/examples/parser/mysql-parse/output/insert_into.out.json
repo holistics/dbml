@@ -8,13 +8,14 @@
   "project": {},
   "records": [
     {
-      "tableName": "users",
       "columns": [
         "id",
         "name",
         "email",
         "created_at"
       ],
+      "schemaName": null,
+      "tableName": "users",
       "values": [
         [
           {
@@ -37,13 +38,14 @@
       ]
     },
     {
-      "tableName": "users",
       "columns": [
         "id",
         "name",
         "email",
         "created_at"
       ],
+      "schemaName": null,
+      "tableName": "users",
       "values": [
         [
           {
@@ -268,8 +270,9 @@
       ]
     },
     {
+      "columns": null,
+      "schemaName": null,
       "tableName": "users",
-      "columns": [],
       "values": [
         [
           {
@@ -292,8 +295,6 @@
       ]
     },
     {
-      "tableName": "users",
-      "schemaName": "app",
       "columns": [
         "id",
         "name",
@@ -301,7 +302,9 @@
         "preferences",
         "created_at"
       ],
-      "values": []
+      "schemaName": "app",
+      "tableName": "users",
+      "values": null
     }
   ]
 }

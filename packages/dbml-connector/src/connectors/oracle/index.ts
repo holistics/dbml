@@ -1,9 +1,9 @@
-import { getConnection, Connection } from 'oracledb';
+import { Connection, getConnection } from 'oracledb';
 import { DatabaseSchema } from '../types';
-import { generateTablesAndFields } from './tables';
-import { generateRawRefs } from './refs';
 import { generateConstraints } from './constraints';
 import { generateIndexes } from './indexes';
+import { generateRawRefs } from './refs';
+import { generateTablesAndFields } from './tables';
 import { processEasyConnectString } from './utils';
 
 const getValidatedClient = async (username: string, password: string, dbidentifier: string): Promise<Connection> => {

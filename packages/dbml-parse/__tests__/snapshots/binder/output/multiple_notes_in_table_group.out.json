@@ -1,0 +1,123 @@
+{
+  "errors": [
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L5:C2, L5:C21]",
+          "snippet": "note: 'inline note'"
+        }
+      }
+    },
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L7:C2, L13:C3]",
+          "snippet": "note: '''\n...syntax\n'''"
+        }
+      }
+    },
+    {
+      "code": "NOTE_REDEFINED",
+      "diagnostic": "Duplicate notes are defined",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@@[L15:C2, L17:C3]",
+          "snippet": "note {\n   ... note'\n  }"
+        }
+      }
+    }
+  ],
+  "nodeReferees": [
+    {
+      "context": {
+        "id": "node@<primary-expression>@table1@[L6:C2, L6:C8]",
+        "snippet": "table1"
+      },
+      "children": {
+        "expression": {
+          "context": {
+            "id": "node@<variable>@table1@[L6:C2, L6:C8]",
+            "snippet": "table1"
+          },
+          "children": {
+            "variable": {
+              "context": {
+                "id": "token@<identifier>@table1@[L6:C2, L6:C8]",
+                "snippet": "table1"
+              },
+              "leadingTrivia": "  ",
+              "trailingTrivia": "\n",
+              "value": "table1"
+            }
+          },
+          "fullEnd": 83,
+          "fullStart": 74
+        }
+      },
+      "fullEnd": 83,
+      "fullStart": 74,
+      "referee": {
+        "context": {
+          "id": "symbol@Table@table1@[L0:C0, L2:C1]",
+          "snippet": "Table tabl...int [pk]\n}"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@table1@[L0:C0, L2:C1]",
+          "snippet": "Table tabl...int [pk]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@table1@[L0:C0, L2:C1]",
+          "snippet": "Table tabl...int [pk]\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C2, L1:C13]",
+              "snippet": "id int [pk]"
+            }
+          }
+        ],
+        "references": [
+          {
+            "id": "node@<primary-expression>@table1@[L6:C2, L6:C8]",
+            "snippet": "table1"
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@TableGroup@group1@[L4:C0, L18:C1]",
+          "snippet": "TableGroup...ote'\n  }\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@group1@[L4:C0, L18:C1]",
+          "snippet": "TableGroup...ote'\n  }\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@TableGroup field@table1@[L6:C2, L6:C8]",
+              "snippet": "table1"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

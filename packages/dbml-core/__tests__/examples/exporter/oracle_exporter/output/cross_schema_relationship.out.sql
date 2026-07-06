@@ -65,20 +65,20 @@ GRANT REFERENCES ON "products" TO PUBLIC;
 
 GRANT REFERENCES ON "C##test02"."products" TO PUBLIC;
 
-ALTER TABLE "products" ADD FOREIGN KEY ("user_id") REFERENCES "C##test01"."users" ("id");
+ALTER TABLE "products" ADD FOREIGN KEY ("user_id") REFERENCES "C##test01"."users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##test01"."products" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
+ALTER TABLE "C##test01"."products" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##test01"."products" ADD FOREIGN KEY ("user_id") REFERENCES "C##test01"."users" ("id");
+ALTER TABLE "C##test01"."products" ADD FOREIGN KEY ("user_id") REFERENCES "C##test01"."users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##test02"."users_products" ADD FOREIGN KEY ("users_id") REFERENCES "C##test02"."users" ("id");
+ALTER TABLE "C##test02"."users_products" ADD FOREIGN KEY ("users_id") REFERENCES "C##test02"."users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##test02"."users_products" ADD FOREIGN KEY ("products_id") REFERENCES "products" ("id");
+ALTER TABLE "C##test02"."users_products" ADD FOREIGN KEY ("products_id") REFERENCES "products" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "users_products" ADD FOREIGN KEY ("users_id") REFERENCES "users" ("id");
+ALTER TABLE "users_products" ADD FOREIGN KEY ("users_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "users_products" ADD FOREIGN KEY ("products_id") REFERENCES "C##test02"."products" ("id");
+ALTER TABLE "users_products" ADD FOREIGN KEY ("products_id") REFERENCES "C##test02"."products" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##test01"."users_products" ADD FOREIGN KEY ("users_id") REFERENCES "C##test01"."users" ("id");
+ALTER TABLE "C##test01"."users_products" ADD FOREIGN KEY ("users_id") REFERENCES "C##test01"."users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "C##test01"."users_products" ADD FOREIGN KEY ("products_id") REFERENCES "C##test02"."products" ("id");
+ALTER TABLE "C##test01"."users_products" ADD FOREIGN KEY ("products_id") REFERENCES "C##test02"."products" ("id") DEFERRABLE INITIALLY IMMEDIATE;

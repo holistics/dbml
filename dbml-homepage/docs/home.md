@@ -20,7 +20,7 @@ title: Home
 
 ## Intro
 
-**DBML (Database Markup Language)** is an open-source DSL language designed to define and document database schemas and structures. It is designed to be simple, consistent and highly-readable.
+**DBML (Database Markup Language)** is an open-source DSL designed to define and document database schemas and structures. It is designed to be simple, consistent and highly-readable.
 
 It also comes with command-line tool and open-source module to help you convert between DBML and SQL.
 
@@ -145,6 +145,7 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 
 ## Community Contributions
 
+* [Elixir DBML parser, Ecto schema and migrations generator](https://github.com/saleyn/dbml)
 * [Emacs Mode for DBML by ccod](https://github.com/ccod/dbd-mode)
 * [Vim Plugin for DBML by jidn](https://github.com/jidn/vim-dbml)
 * [VSCode Plugin for DBML by duynvu](https://marketplace.visualstudio.com/items?itemName=duynvu.dbml-language)
@@ -165,3 +166,4 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 * [prisma-dbml-generator: Generate DBML schema from Prisma Schema by Marc Stammerjohann](https://github.com/notiz-dev/prisma-dbml-generator)
 * [C# parser for Dbml by Niels Bosma](https://github.com/Ivy-Interactive/Ivy.Dbml.Parser)
 * [Scafoldr: DBML-Powered Code Scaffolding Tool](https://scafoldr.com/code-generator)
+* [Jetbrains IDEs (Intellij/PyCharm/Datagrip etc.) Plugin for DBML by LiamClarkeNZ](https://plugins.jetbrains.com/plugin/30905-dbml)

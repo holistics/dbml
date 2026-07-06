@@ -1,0 +1,164 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          },
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "email",
+          "type": {
+            "type_name": "VARCHAR(100)",
+            "schemaName": null
+          }
+        },
+        {
+          "name": "age",
+          "type": {
+            "type_name": "INT",
+            "schemaName": null
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": []
+    }
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "age"
+      ],
+      "values": [
+        [
+          {
+            "value": "1",
+            "type": "number"
+          },
+          {
+            "value": "Alice",
+            "type": "string"
+          },
+          {
+            "value": "alice@example.com",
+            "type": "string"
+          },
+          {
+            "value": "25",
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "age"
+      ],
+      "values": [
+        [
+          {
+            "value": "2",
+            "type": "number"
+          },
+          {
+            "value": "Bob",
+            "type": "string"
+          },
+          {
+            "value": null,
+            "type": "boolean"
+          },
+          {
+            "value": "30",
+            "type": "number"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "age"
+      ],
+      "values": [
+        [
+          {
+            "value": "3",
+            "type": "number"
+          },
+          {
+            "value": null,
+            "type": "boolean"
+          },
+          {
+            "value": null,
+            "type": "boolean"
+          },
+          {
+            "value": null,
+            "type": "boolean"
+          }
+        ]
+      ]
+    },
+    {
+      "tableName": "users",
+      "columns": [
+        "id",
+        "name",
+        "email",
+        "age"
+      ],
+      "values": [
+        [
+          {
+            "value": "4",
+            "type": "number"
+          },
+          {
+            "value": "Charlie",
+            "type": "string"
+          },
+          {
+            "value": null,
+            "type": "boolean"
+          },
+          {
+            "value": null,
+            "type": "boolean"
+          }
+        ]
+      ]
+    }
+  ]
+}

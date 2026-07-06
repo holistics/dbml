@@ -1,0 +1,176 @@
+{
+  "errors": [
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Table 'Users' already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@Users@[L4:C6, L4:C11]",
+          "snippet": "Users"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "TableGroup 'Users' already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@Users@[L12:C11, L12:C16]",
+          "snippet": "Users"
+        }
+      }
+    },
+    {
+      "code": "EMPTY_ENUM",
+      "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@Users@[L16:C0, L18:C1]",
+          "snippet": "Enum Users {\r\n\r\n}"
+        }
+      }
+    },
+    {
+      "code": "EMPTY_ENUM",
+      "diagnostic": "An Enum must have at least one element",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<element-declaration>@Users@[L20:C0, L22:C1]",
+          "snippet": "Enum Users {\r\n\r\n}"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "Enum 'Users' already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@Users@[L20:C5, L20:C10]",
+          "snippet": "Users"
+        }
+      }
+    },
+    {
+      "code": "DUPLICATE_NAME",
+      "diagnostic": "TablePartial 'Users' already exists in schema 'public'",
+      "filepath": "/main.dbml",
+      "level": "error",
+      "node": {
+        "context": {
+          "id": "node@<primary-expression>@Users@[L28:C13, L28:C18]",
+          "snippet": "Users"
+        }
+      }
+    }
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L0:C0, L2:C1]",
+          "snippet": "Table User...integer\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L0:C0, L2:C1]",
+          "snippet": "Table User...integer\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@id@[L1:C2, L1:C12]",
+              "snippet": "id integer"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@Table@Users@[L4:C0, L6:C1]",
+          "snippet": "Table User...ar(255)\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L4:C0, L6:C1]",
+          "snippet": "Table User...ar(255)\r\n}"
+        },
+        "members": [
+          {
+            "context": {
+              "id": "symbol@Column@name@[L5:C2, L5:C16]",
+              "snippet": "name char(255)"
+            }
+          }
+        ]
+      },
+      {
+        "context": {
+          "id": "symbol@TableGroup@Users@[L8:C0, L10:C1]",
+          "snippet": "TableGroup...ers {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L8:C0, L10:C1]",
+          "snippet": "TableGroup...ers {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@TableGroup@Users@[L12:C0, L14:C1]",
+          "snippet": "TableGroup...ers {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L12:C0, L14:C1]",
+          "snippet": "TableGroup...ers {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Enum@Users@[L16:C0, L18:C1]",
+          "snippet": "Enum Users {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L16:C0, L18:C1]",
+          "snippet": "Enum Users {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Enum@Users@[L20:C0, L22:C1]",
+          "snippet": "Enum Users {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L20:C0, L22:C1]",
+          "snippet": "Enum Users {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@TablePartial@Users@[L24:C0, L26:C1]",
+          "snippet": "TableParti...ers {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L24:C0, L26:C1]",
+          "snippet": "TableParti...ers {\r\n\r\n}"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@TablePartial@Users@[L28:C0, L30:C1]",
+          "snippet": "TableParti...ers {\r\n\r\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@Users@[L28:C0, L30:C1]",
+          "snippet": "TableParti...ers {\r\n\r\n}"
+        }
+      }
+    ]
+  }
+}

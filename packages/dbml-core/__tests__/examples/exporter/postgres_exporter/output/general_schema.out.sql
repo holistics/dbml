@@ -69,14 +69,14 @@ COMMENT ON TABLE "products" IS 'This is a note in table ''products''';
 
 COMMENT ON TABLE "users" IS 'This is a note in table "users"';
 
-ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
+ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");
+ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "users" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code");
+ALTER TABLE "users" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "merchants" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code");
+ALTER TABLE "merchants" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "products" ADD FOREIGN KEY ("merchant_id") REFERENCES "merchants" ("id");
+ALTER TABLE "products" ADD FOREIGN KEY ("merchant_id") REFERENCES "merchants" ("id") DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "merchants" ADD FOREIGN KEY ("admin_id") REFERENCES "users" ("id");
+ALTER TABLE "merchants" ADD FOREIGN KEY ("admin_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;

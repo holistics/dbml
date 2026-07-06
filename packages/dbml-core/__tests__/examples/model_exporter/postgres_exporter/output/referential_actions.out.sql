@@ -35,10 +35,10 @@ CREATE TABLE "countries" (
   "continent_name" varchar(255)
 );
 
-ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE RESTRICT;
+ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE RESTRICT DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE CASCADE;
+ALTER TABLE "order_items" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id", "product_name") REFERENCES "products" ("id", "name") ON DELETE SET NULL;
+ALTER TABLE "order_items" ADD FOREIGN KEY ("product_id", "product_name") REFERENCES "products" ("id", "name") ON DELETE SET NULL DEFERRABLE INITIALLY IMMEDIATE;
 
-ALTER TABLE "users" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code") ON DELETE NO ACTION;
+ALTER TABLE "users" ADD FOREIGN KEY ("country_code") REFERENCES "countries" ("code") ON DELETE NO ACTION DEFERRABLE INITIALLY IMMEDIATE;

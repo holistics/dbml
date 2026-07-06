@@ -4,6 +4,7 @@ import Parser from '../../../src/parse/Parser';
 import { NormalizedModel } from '../../../types/model_structure/database';
 import { isEqualExcludeTokenEmpty } from '../testHelpers';
 import path from 'path';
+import { test, beforeAll, describe } from 'vitest';
 
 describe('@dbml/core - model_structure', () => {
   let normalizedModel: NormalizedModel;
@@ -16,9 +17,8 @@ describe('@dbml/core - model_structure', () => {
 
   describe('multiple_schema', () => {
     describe('normalized_structure', () => {
-      test('normalized database - contains all properties', (done) => {
+      test('normalized database - contains all properties', () => {
         isEqualExcludeTokenEmpty(normalizedModel, expectedNormalizeModel);
-        done();
       });
     });
   });

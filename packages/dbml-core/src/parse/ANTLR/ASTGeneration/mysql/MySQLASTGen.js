@@ -1,11 +1,11 @@
-import { last, flatten, flattenDepth } from 'lodash';
+import { flatten, flattenDepth, last } from 'lodash-es';
 import MySQLParserVisitor from '../../parsers/mysql/MySqlParserVisitor';
 import {
-  Endpoint, Enum, Field, Index, Table, Ref,
+  Endpoint, Enum, Field, Index, Ref, Table,
   TableRecord,
 } from '../AST';
 import {
-  TABLE_CONSTRAINT_KIND, COLUMN_CONSTRAINT_KIND, DATA_TYPE, CONSTRAINT_TYPE,
+  COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND,
 } from '../constants';
 import { getOriginalText } from '../helpers';
 
@@ -596,7 +596,7 @@ export default class MySQLASTGen extends MySQLParserVisitor {
   visitDefaultValue (ctx) {
     if (ctx.NULL_LITERAL()) {
       return {
-        value: ctx.NULL_LITERAL().getText(),
+        value: ctx.NULL_LITERAL().getText().toLowerCase(),
         type: DATA_TYPE.BOOLEAN, // same behavior as the legacy parser
       };
     }
@@ -687,6 +687,13 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       return {
         value: ctx.BIT_STRING().getText(),
         type: DATA_TYPE.STRING,
+      };
+    }
+
+    if (ctx.NULL_LITERAL()) {
+      return {
+        value: ctx.NULL_LITERAL().getText().toLowerCase(),
+        type: DATA_TYPE.BOOLEAN,
       };
     }
 
@@ -1061,8 +1068,11 @@ export default class MySQLASTGen extends MySQLParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
 
-    // insert without specified columns
-    const columns = ctx.fullColumnNameList() ? ctx.fullColumnNameList().accept(this) : [];
+    // Get explicit columns if specified, otherwise lookup table definition
+    const columns = ctx.fullColumnNameList()
+      ? ctx.fullColumnNameList().accept(this)
+      : this.findTable(schemaName, tableName)?.fields.map((field) => field.name) || [];
+
     const values = ctx.insertStatementValue().accept(this);
 
     const record = new TableRecord({

@@ -1,14 +1,14 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
-import Analyzer from '@/core/analyzer/analyzer';
+import { DEFAULT_ENTRY } from '@/constants';
+import { UNHANDLED } from '@/core/types/module';
 import {
   ProgramNode,
   SyntaxNode,
-  SyntaxNodeIdGenerator,
   SyntaxNodeKind,
   ElementDeclarationNode,
   AttributeNode,
-  IdentiferStreamNode,
+  IdentifierStreamNode,
   PrefixExpressionNode,
   InfixExpressionNode,
   PostfixExpressionNode,
@@ -17,33 +17,93 @@ import {
   BlockExpressionNode,
   ListExpressionNode,
   TupleExpressionNode,
+  CommaExpressionNode,
   CallExpressionNode,
   LiteralNode,
   VariableNode,
   PrimaryExpressionNode,
   ArrayNode,
-} from '@/core/parser/nodes';
-import { NodeSymbolIdGenerator } from '@/core/analyzer/symbol/symbols';
-import Report from '@/core/report';
-import { CompileError, Compiler, SyntaxToken } from '@/index';
-import { Database } from '@/core/interpreter/types';
+  WildcardNode,
+  SyntaxNodeIdGenerator,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
+} from '@/core/types/nodes';
+import Report from '@/core/types/report';
+import { Compiler, SyntaxToken } from '@/index';
+import type { Database } from '@/core/types/schemaJson';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
-export function lex (source: string): Report<SyntaxToken[], CompileError> {
-  return new Lexer(source).lex();
+export function lex (source: string): Report<SyntaxToken[]> {
+  return new Lexer(source, DEFAULT_ENTRY).lex();
 }
 
-export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }, CompileError> {
-  return new Lexer(source).lex().chain((tokens) => new Parser(tokens, new SyntaxNodeIdGenerator()).parse());
+export function parse (source: string): Report<{ ast: ProgramNode; tokens: SyntaxToken[] }> {
+  return new Lexer(source, DEFAULT_ENTRY).lex().chain((tokens) => new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse());
 }
 
-export function analyze (source: string): Report<ProgramNode, CompileError> {
-  return parse(source).chain(({ ast }) => new Analyzer(ast, new NodeSymbolIdGenerator()).analyze());
+export function validate (source: string) {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, source);
+  const compiler = new Compiler(layout);
+
+  const astResult = compiler.parseFile(DEFAULT_ENTRY);
+  const ast = astResult.getValue().ast;
+  const validateResult = compiler.validateNode(ast);
+
+  return Report.create(
+    {
+      ast: astResult,
+      compiler,
+    },
+    [...astResult.getErrors(), ...validateResult.getErrors()],
+    [...astResult.getWarnings(), ...validateResult.getWarnings()],
+  );
 }
 
-export function interpret (source: string): Report<Database | undefined, CompileError> {
-  const compiler = new Compiler();
-  compiler.setSource(source);
-  return compiler.parse._().map(({ rawDb }) => rawDb);
+export function analyze (source: string) {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, source);
+  const compiler = new Compiler(layout);
+
+  const parseResult = compiler.parseFile(DEFAULT_ENTRY);
+  const ast = parseResult.getValue().ast;
+
+  const validateResult = compiler.validateNode(ast);
+  const bindResult = compiler.bindNode(ast);
+
+  const errors = [...parseResult.getErrors(), ...validateResult.getErrors(), ...bindResult.getErrors()];
+  const warnings = [...parseResult.getWarnings(), ...validateResult.getWarnings(), ...bindResult.getWarnings()];
+
+  return Report.create(
+    {
+      ast,
+      compiler,
+    },
+    errors,
+    warnings,
+  );
+}
+
+export function interpret (source: string): Report<Readonly<Database> | undefined> {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, source);
+  const compiler = new Compiler(layout);
+
+  const parseResult = compiler.parseFile(DEFAULT_ENTRY);
+  const ast = parseResult.getValue().ast;
+
+  const bindResult = compiler.bindNode(ast);
+
+  const symbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+  const interpretResult = symbol ? compiler.interpretSymbol(symbol, DEFAULT_ENTRY) : Report.create(UNHANDLED);
+  const db = interpretResult.getFiltered(UNHANDLED);
+
+  return new Report(
+    db ? db as Database : undefined,
+    [...parseResult.getErrors(), ...bindResult.getErrors(), ...interpretResult.getErrors()],
+    [...parseResult.getWarnings(), ...bindResult.getWarnings(), ...interpretResult.getWarnings()],
+  );
 }
 
 export function flattenTokens (token: SyntaxToken): SyntaxToken[] {
@@ -106,7 +166,7 @@ export function print (source: string, ast: SyntaxNode): string {
       }
 
       case SyntaxNodeKind.IDENTIFIER_STREAM: {
-        const stream = node as IdentiferStreamNode;
+        const stream = node as IdentifierStreamNode;
         stream.identifiers.forEach(collectTokens);
         break;
       }
@@ -173,6 +233,13 @@ export function print (source: string, ast: SyntaxNode): string {
         break;
       }
 
+      case SyntaxNodeKind.COMMA_EXPRESSION: {
+        const comma = node as CommaExpressionNode;
+        comma.elementList.forEach(collectTokens);
+        comma.commaList.forEach(collectTokens);
+        break;
+      }
+
       case SyntaxNodeKind.CALL_EXPRESSION: {
         const call = node as CallExpressionNode;
         if (call.callee) collectTokens(call.callee);
@@ -205,9 +272,38 @@ export function print (source: string, ast: SyntaxNode): string {
         break;
       }
 
-      case SyntaxNodeKind.DUMMY:
-        // Dummy nodes don't contribute to output
+      case SyntaxNodeKind.EMPTY:
         break;
+
+      case SyntaxNodeKind.USE_DECLARATION: {
+        const use = node as UseDeclarationNode;
+        if (use.useKeyword) collectTokens(use.useKeyword);
+        if (use.specifiers) collectTokens(use.specifiers);
+        if (use.fromKeyword) collectTokens(use.fromKeyword);
+        if (use.importPath) collectTokens(use.importPath);
+        break;
+      }
+
+      case SyntaxNodeKind.USE_SPECIFIER: {
+        const list = node as UseSpecifierListNode;
+        if (list.openBrace) collectTokens(list.openBrace);
+        list.specifiers.forEach(collectTokens);
+        if (list.closeBrace) collectTokens(list.closeBrace);
+        break;
+      }
+
+      case SyntaxNodeKind.USE_SPECIFIER_LIST: {
+        const spec = node as UseSpecifierNode;
+        if (spec.importKind) collectTokens(spec.importKind);
+        if (spec.name) collectTokens(spec.name);
+        break;
+      }
+
+      case SyntaxNodeKind.WILDCARD: {
+        const wildcard = node as WildcardNode;
+        if (wildcard.token) collectTokens(wildcard.token);
+        break;
+      }
 
       default: {
         // TypeScript exhaustiveness check - this should never be reached

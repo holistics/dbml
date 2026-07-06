@@ -4,7 +4,7 @@ import Element, { Token, RawNote } from './element';
 import EnumValue from './enumValue';
 import Field from './field';
 import Schema from './schema';
-interface RawEnum {
+export interface RawEnum {
     name: string;
     token: Token;
     values: EnumValue[];
