@@ -1,8 +1,8 @@
 import type Compiler from '@/compiler';
-import type { CompileHint, QuickFix } from '@/core/types/errors';
+import type { QuickFix } from '@/core/types/errors';
 import type {
   CodeActionProvider, CodeActionList, CodeAction, CodeActionContext,
-  TextModel, Range, CancellationToken, WorkspaceEdit, MarkerData,
+  TextModel, Range, CancellationToken, WorkspaceEdit,
 } from '../types';
 import { Uri } from '../types';
 
@@ -15,22 +15,27 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
 
   provideCodeActions (
     model: TextModel,
-    _range: Range,
-    context: CodeActionContext,
+    range: Range,
+    _context: CodeActionContext,
     _token: CancellationToken,
   ): CodeActionList | undefined {
-    const markers = context.markers;
-    if (!markers.length) return undefined;
+    const hints = this.compiler.interpretProject().getHints();
+    const overlapping = hints.filter((hint) => {
+      if (!hint.quickFixes?.length) return false;
+      const startLine = hint.nodeOrToken.startPos.line + 1;
+      const endLine = hint.nodeOrToken.endPos.line + 1;
+      return startLine <= range.endLineNumber && endLine >= range.startLineNumber;
+    });
 
-    const infos = this.compiler.interpretProject().getHints();
+    if (!overlapping.length) return undefined;
+
     const actions: CodeAction[] = [];
-
-    for (const marker of markers) {
-      const matchingInfos = this.findInfosForMarker(infos, marker);
-      for (const info of matchingInfos) {
-        for (const fix of info.quickFixes ?? []) {
-          actions.push(this.quickFixToCodeAction(fix, model, marker));
-        }
+    const seen = new Set<string>();
+    for (const hint of overlapping) {
+      for (const fix of hint.quickFixes ?? []) {
+        if (seen.has(fix.title)) continue;
+        seen.add(fix.title);
+        actions.push(this.quickFixToCodeAction(fix, model));
       }
     }
 
@@ -38,18 +43,7 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     return { actions, dispose () {} };
   }
 
-  private findInfosForMarker (infos: CompileHint[], marker: MarkerData): CompileHint[] {
-    return infos.filter((info) => {
-      const node = info.nodeOrToken;
-      return info.quickFixes?.length
-        && node.startPos.line + 1 === marker.startLineNumber
-        && node.startPos.column + 1 === marker.startColumn
-        && node.endPos.line + 1 === marker.endLineNumber
-        && node.endPos.column + 1 === marker.endColumn;
-    });
-  }
-
-  private quickFixToCodeAction (fix: QuickFix, model: TextModel, marker: MarkerData): CodeAction {
+  private quickFixToCodeAction (fix: QuickFix, model: TextModel): CodeAction {
     const uri = model.uri;
     const resource = Uri.parse(fix.filepath.toUri({ protocol: uri.scheme }));
     const edit: WorkspaceEdit = {
@@ -71,12 +65,6 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
         };
       }),
     };
-    return {
-      title: fix.title,
-      edit,
-      diagnostics: [
-        marker,
-      ],
-    };
+    return { title: fix.title, edit };
   }
 }

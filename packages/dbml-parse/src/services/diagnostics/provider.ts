@@ -1,6 +1,8 @@
 import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
-import type { CompileError, CompileWarning, CompileHint } from '@/core/types/errors';
+import type {
+  CompileError, CompileWarning, CompileHint, RelatedLocation,
+} from '@/core/types/errors';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
 import { MarkerData, MarkerSeverity, Uri } from '@/services/types';

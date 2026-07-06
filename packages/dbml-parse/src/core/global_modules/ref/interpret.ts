@@ -212,7 +212,7 @@ export class RefInterpreter {
     const refNode = this.declarationNode;
     const opRelated = opToken
       ? [
-          { nodeOrToken: opToken as SyntaxNode, message: `operator '${op}'` },
+          { nodeOrToken: opToken, message: `operator '${op}'` },
         ]
       : [];
 
