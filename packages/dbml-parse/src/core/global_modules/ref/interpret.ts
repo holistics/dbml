@@ -231,7 +231,7 @@ export class RefInterpreter {
         if (col.nullable(this.compiler)) {
           const msg = `Column '${col.name}' is nullable but operator '${op}' requires it to be NOT NULL`;
           const fixes = [
-            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `make '${col.name}' optional`),
+            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `Allow '${col.name}' to be optional`),
             suggestAddSetting(col, 'not null'),
           ].filter((f): f is QuickFix => !!f);
 
@@ -250,7 +250,7 @@ export class RefInterpreter {
         if (col.nullable(this.compiler) === false) {
           const msg = `Column '${col.name}' is NOT NULL but operator '${op}' allows it to be optional`;
           const fixes = [
-            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `make '${col.name}' required`),
+            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `Make '${col.name}' required`),
           ].filter((f): f is QuickFix => !!f);
 
           hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
@@ -267,7 +267,7 @@ export class RefInterpreter {
       if (!col.unique(this.compiler) && !col.pk(this.compiler)) {
         const msg = `Column '${col.name}' should be unique or primary key for operator '${op}'`;
         const fixes = [
-          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `make '${col.name}' many`),
+          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `Allow '${col.name}' to have many`),
           suggestAddSetting(col, 'unique'),
         ].filter((f): f is QuickFix => !!f);
 
@@ -296,7 +296,7 @@ function suggestChangeOp (
   const newOp = getRelationshipOp(newLeft, newRight);
 
   return {
-    title: `Change operator to '${newOp}' (${description})`,
+    title: `${description} (change operator to '${newOp}')`,
     filepath: opToken.filepath,
     edits: [
       { start: opToken.start, end: opToken.end, newText: newOp },
@@ -312,7 +312,7 @@ function suggestAddSetting (col: ColumnSymbol, setting: string): QuickFix | unde
   if (!edit) return undefined;
 
   return {
-    title: `Make '${col.name}' ${setting}`,
+    title: `Mark '${col.name}' as ${setting.toUpperCase()}`,
     filepath: col.declaration.filepath,
     edits: [
       edit,

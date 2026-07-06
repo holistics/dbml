@@ -1,4 +1,3 @@
-import { uniqBy } from 'lodash-es';
 import type Compiler from '@/compiler';
 import type { QuickFix } from '@/core/types/errors';
 import type {
@@ -50,11 +49,8 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
       }
     }
 
-    // Deduplicate by title since the same fix may appear on
-    // multiple hints (ref node + column declaration).
-    const unique = uniqBy(actions, (a) => a.title);
-    if (!unique.length) return undefined;
-    return { actions: unique, dispose () {} };
+    if (!actions.length) return undefined;
+    return { actions, dispose () {} };
   }
 
   // Convert a QuickFix (offset-based) to a Monaco CodeAction (line/column-based).
