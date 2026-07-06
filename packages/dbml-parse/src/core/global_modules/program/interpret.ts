@@ -1,6 +1,6 @@
 import Compiler from '@/compiler/index';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { CompileWarning, CompileHint } from '@/core/types/errors';
+import type { CompileWarning, CompileInfo } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import { ProgramNode } from '@/core/types/nodes';
@@ -38,7 +38,7 @@ export default class ProgramInterpreter {
   private filepath: Filepath;
   private errors: CompileError[] = [];
   private warnings: CompileWarning[] = [];
-  private hints: CompileHint[] = [];
+  private hints: CompileInfo[] = [];
   private db: Database;
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {

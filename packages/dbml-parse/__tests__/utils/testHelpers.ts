@@ -3,7 +3,7 @@ import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementDeclarationNode, FunctionApplicationNode, FunctionExpressionNode, LiteralNode, PrimaryExpressionNode, ProgramNode, SyntaxNode, VariableNode } from '@/core/types/nodes';
 import { getElementNameString } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode, CompileWarning, CompileHint } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileWarning, CompileInfo } from '@/core/types/errors';
 import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/core/types/module';
 import { Filepath, SchemaElement, TokenPosition } from '@/core/types';
@@ -78,7 +78,7 @@ export type Snappable =
   | string | number | null | undefined | boolean | bigint | symbol
   | CompileWarning
   | CompileError
-  | CompileHint
+  | CompileInfo
   | SyntaxNode
   | SyntaxToken
   | NodeSymbol
@@ -113,7 +113,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (typeof s === 'boolean') return 2;
     if (typeof s === 'bigint') return 3;
     if (typeof s === 'symbol') return 4;
-    if (s instanceof CompileHint) return 5;
+    if (s instanceof CompileInfo) return 5;
     if (s instanceof CompileWarning) return 6;
     if (s instanceof CompileError) return 7;
     if (s instanceof SyntaxNode) return 7;
@@ -129,7 +129,7 @@ function sortArray (array: unknown[]): unknown[] {
     if (typeof s === 'boolean') return Number(s);
     if (typeof s === 'bigint') return Number(s);
     if (typeof s === 'symbol') return s.toString();
-    if (s instanceof CompileHint || s instanceof CompileWarning || s instanceof CompileError) return (s as any).nodeOrToken?.start ?? 0;
+    if (s instanceof CompileInfo || s instanceof CompileWarning || s instanceof CompileError) return (s as any).nodeOrToken?.start ?? 0;
     if (s instanceof SyntaxNode) return s.start;
     if (s instanceof SyntaxToken) return s.start;
     if ((s as any)?.declaration) return getIntraKindRank((s as any).declaration);
@@ -146,7 +146,7 @@ function sortArray (array: unknown[]): unknown[] {
 
   // Secondary tiebreaker when primary rank is equal
   function getTiebreakerRank (s: unknown): number | string {
-    if (s instanceof CompileHint || s instanceof CompileWarning || s instanceof CompileError) return s.diagnostic;
+    if (s instanceof CompileInfo || s instanceof CompileWarning || s instanceof CompileError) return s.diagnostic;
     if (s instanceof SyntaxNode) return s.id;
     if (s instanceof SyntaxToken) return s.value ?? '';
     if ((s as any)?.id !== undefined) return (s as any).id;
@@ -173,7 +173,7 @@ export function toSnapshot (
   if (Array.isArray(value)) {
     return sortArray([...value]).map((v) => toSnapshot(compiler, v as Snappable, { simple, includeReferences, includeSymbols, includeReferee }));
   }
-  if (value instanceof CompileHint) {
+  if (value instanceof CompileInfo) {
     return infoToSnapshot(compiler, value, {
       simple,
     });
@@ -260,7 +260,7 @@ export function errorToSnapshot (
 
 export function infoToSnapshot (
   compiler: Compiler,
-  info: CompileHint,
+  info: CompileInfo,
   {
     simple = false,
   }: { simple?: boolean } = {},

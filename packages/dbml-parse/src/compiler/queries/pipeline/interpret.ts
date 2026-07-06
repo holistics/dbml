@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import type { Database, MasterDatabase } from '@/core/types/schemaJson';
-import type { CompileError, CompileWarning, CompileHint } from '@/core/types/errors';
+import type { CompileError, CompileWarning, CompileInfo } from '@/core/types/errors';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import Report from '@/core/types/report';
@@ -18,7 +18,7 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
 export function interpretProject (this: Compiler): Report<MasterDatabase> {
   const errors: CompileError[] = [];
   const warnings: CompileWarning[] = [];
-  const hints: CompileHint[] = [];
+  const hints: CompileInfo[] = [];
 
   // Collect all reachable files from all entry points
   const visited = new Set<FilepathId>();

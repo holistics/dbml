@@ -179,3 +179,9 @@ code, pre {
 .hl-element-indexes    { outline: 1px solid rgba(var(--sym-ref-rgb),        0.30); background: rgba(var(--sym-ref-rgb),        0.05); }
 .hl-element-project    { outline: 1px solid rgba(var(--sym-schema-rgb),     0.30); background: rgba(var(--sym-schema-rgb),     0.05); }
 .hl-element-diagram    { outline: 1px solid rgba(var(--sym-ref-rgb),        0.30); background: rgba(var(--sym-ref-rgb),        0.05); }
+
+/* Style info markers like subtle hints with a distinct color */
+.monaco-editor .squiggly-info {
+  background: none !important;
+  border-bottom: 1px dotted rgba(100, 160, 220, 0.6);
+}

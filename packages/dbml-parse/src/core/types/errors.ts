@@ -216,7 +216,7 @@ export interface QuickFix {
   edits: import('@/compiler/queries/transform/applyTextEdits').TextEdit[];
 }
 
-export class CompileHint extends Error {
+export class CompileInfo extends Error {
   code: Readonly<CompileErrorCode>;
 
   diagnostic: Readonly<string>;
@@ -246,7 +246,7 @@ export class CompileHint extends Error {
     this.quickFixes = options?.quickFixes;
     this.relatedLocations = options?.relatedLocations;
     this.name = this.constructor.name;
-    Object.setPrototypeOf(this, CompileHint.prototype);
+    Object.setPrototypeOf(this, CompileInfo.prototype);
   }
 
   get filepath (): Filepath {

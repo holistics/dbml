@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import type {
-  CompileError, CompileWarning, CompileHint, RelatedLocation,
+  CompileError, CompileWarning, CompileInfo, RelatedLocation,
 } from '@/core/types/errors';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
@@ -105,7 +105,7 @@ export default class DBMLDiagnosticsProvider {
   }
 
   private createDiagnostic (
-    errorOrWarning: CompileError | CompileWarning | CompileHint,
+    errorOrWarning: CompileError | CompileWarning | CompileInfo,
     severity: 'error' | 'warning' | 'hint',
   ): Diagnostic {
     const nodeOrToken = errorOrWarning.nodeOrToken;
@@ -132,6 +132,6 @@ export default class DBMLDiagnosticsProvider {
   private getSeverityValue (severity: 'error' | 'warning' | 'hint'): MarkerSeverity {
     if (severity === 'error') return MarkerSeverity.Error;
     if (severity === 'warning') return MarkerSeverity.Warning;
-    return MarkerSeverity.Hint;
+    return MarkerSeverity.Info;
   }
 }

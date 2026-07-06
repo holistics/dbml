@@ -1,4 +1,4 @@
-import { CompileError, CompileWarning, CompileHint } from './errors';
+import { CompileError, CompileWarning, CompileInfo } from './errors';
 
 // Used to hold the result of a computation and any errors/warnings/infos along the way
 export default class Report<T> {
@@ -8,13 +8,13 @@ export default class Report<T> {
 
   private warnings?: CompileWarning[];
 
-  private hints?: CompileHint[];
+  private hints?: CompileInfo[];
 
   static create<T> (
     value: T,
     errors?: CompileError[],
     warnings?: CompileWarning[],
-    hints?: CompileHint[],
+    hints?: CompileInfo[],
   ) {
     return new Report(value, errors, warnings, hints);
   }
@@ -23,7 +23,7 @@ export default class Report<T> {
     value: T,
     errors?: CompileError[],
     warnings?: CompileWarning[],
-    hints?: CompileHint[],
+    hints?: CompileInfo[],
   ) {
     this.value = value;
     this.errors = errors ?? [];
@@ -58,7 +58,7 @@ export default class Report<T> {
     return this.warnings ?? [];
   }
 
-  getHints (): CompileHint[] {
+  getHints (): CompileInfo[] {
     return this.hints ?? [];
   }
 

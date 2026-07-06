@@ -4,7 +4,7 @@ import {
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode, CompileHint } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
   ElementDeclarationNode,
@@ -165,7 +165,7 @@ export class RefInterpreter {
     return [];
   }
 
-  private validateRefConstraints (): { hints: CompileHint[] } {
+  private validateRefConstraints (): { hints: CompileInfo[] } {
     if (!this.metadata.cardinalities(this.compiler)) return { hints: [] };
     return {
       hints: [
@@ -195,7 +195,7 @@ export class RefInterpreter {
   //   min >= 1 -> otherColumns must be NOT NULL
   //   min = 0  -> otherColumns may be nullable; info if NOT NULL
   //   max = 1  -> ownColumns must be unique/pk
-  private validateCardinality (side: 'left' | 'right'): CompileHint[] {
+  private validateCardinality (side: 'left' | 'right'): CompileInfo[] {
     const cardinalities = this.metadata.cardinalities(this.compiler)!;
     const thisRel = side === 'left' ? cardinalities[0] : cardinalities[1];
     const otherRel = side === 'left' ? cardinalities[1] : cardinalities[0];
@@ -208,7 +208,7 @@ export class RefInterpreter {
     const opToken = this.getOpToken();
     const op = this.metadata.op(this.compiler) ?? '?';
 
-    const hints: CompileHint[] = [];
+    const hints: CompileInfo[] = [];
     const refNode = this.declarationNode;
     const opRelated = opToken
       ? [
@@ -218,9 +218,9 @@ export class RefInterpreter {
 
     const addHint = (msg: string, fixes: QuickFix[], col: ColumnSymbol) => {
       const opts = { quickFixes: fixes, relatedLocations: opRelated };
-      hints.push(new CompileHint(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, refNode, opts));
+      hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, refNode, opts));
       if (col.declaration) {
-        hints.push(new CompileHint(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, opts));
+        hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, opts));
       }
     };
 
