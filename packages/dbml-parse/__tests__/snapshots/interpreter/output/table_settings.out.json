@@ -520,8 +520,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L23:C0, L23:C38]",
-          "snippet": "Ref:\"user\"....\"user_id\""
+          "id": "node@<infix-expression>@@[L23:C18, L23:C38]",
+          "snippet": "\"merchant\".\"user_id\""
         }
       }
     },
@@ -532,8 +532,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L25:C0, L25:C44]",
-          "snippet": "Ref:\"produ...roduct_id\""
+          "id": "node@<infix-expression>@@[L25:C21, L25:C44]",
+          "snippet": "\"merchant\"...roduct_id\""
         }
       }
     }

@@ -991,8 +991,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L50:C0, L50:C62]",
-          "snippet": "Ref:\"order...: cascade]"
+          "id": "node@<infix-expression>@@[L50:C20, L50:C44]",
+          "snippet": "\"order_ite...\"order_id\""
         }
       }
     },
@@ -1003,8 +1003,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L52:C0, L52:C95]",
-          "snippet": "Ref:\"produ... set null]"
+          "id": "node@<infix-expression>@@[L52:C4, L52:C29]",
+          "snippet": "\"products\"...\", \"name\")"
         }
       }
     },
@@ -1015,8 +1015,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L52:C0, L52:C95]",
-          "snippet": "Ref:\"produ... set null]"
+          "id": "node@<infix-expression>@@[L52:C4, L52:C29]",
+          "snippet": "\"products\"...\", \"name\")"
         }
       }
     },
@@ -1027,8 +1027,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L52:C0, L52:C95]",
-          "snippet": "Ref:\"produ... set null]"
+          "id": "node@<infix-expression>@@[L52:C32, L52:C76]",
+          "snippet": "\"order_ite...uct_name\")"
         }
       }
     },
@@ -1039,8 +1039,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L52:C0, L52:C95]",
-          "snippet": "Ref:\"produ... set null]"
+          "id": "node@<infix-expression>@@[L52:C32, L52:C76]",
+          "snippet": "\"order_ite...uct_name\")"
         }
       }
     }

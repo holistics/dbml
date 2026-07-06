@@ -624,8 +624,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L65:C0, L65:C29]",
-          "snippet": "Ref: posts...> users.id"
+          "id": "node@<infix-expression>@@[L65:C5, L65:C18]",
+          "snippet": "posts.user_id"
         }
       }
     },
@@ -636,8 +636,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L67:C0, L67:C41]",
-          "snippet": "Ref: users...ng_user_id"
+          "id": "node@<infix-expression>@@[L67:C16, L67:C41]",
+          "snippet": "follows.fo...ng_user_id"
         }
       }
     },
@@ -648,8 +648,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L69:C0, L69:C40]",
-          "snippet": "Ref: users...ed_user_id"
+          "id": "node@<infix-expression>@@[L69:C16, L69:C40]",
+          "snippet": "follows.fo...ed_user_id"
         }
       }
     }

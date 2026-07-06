@@ -1443,8 +1443,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L85:C0, L85:C44]",
-          "snippet": "Ref:\"order...\"order_id\""
+          "id": "node@<infix-expression>@@[L85:C20, L85:C44]",
+          "snippet": "\"order_ite...\"order_id\""
         }
       }
     },
@@ -1455,8 +1455,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L87:C0, L87:C48]",
-          "snippet": "Ref:\"produ...roduct_id\""
+          "id": "node@<infix-expression>@@[L87:C22, L87:C48]",
+          "snippet": "\"order_ite...roduct_id\""
         }
       }
     },
@@ -1467,8 +1467,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L89:C0, L89:C47]",
-          "snippet": "Ref:\"count...ntry_code\""
+          "id": "node@<infix-expression>@@[L89:C25, L89:C47]",
+          "snippet": "\"users\".\"c...ntry_code\""
         }
       }
     },
@@ -1479,8 +1479,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L91:C0, L91:C51]",
-          "snippet": "Ref:\"count...ntry_code\""
+          "id": "node@<infix-expression>@@[L91:C25, L91:C51]",
+          "snippet": "\"merchants...ntry_code\""
         }
       }
     },
@@ -1491,8 +1491,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L95:C0, L95:C41]",
-          "snippet": "Ref:\"users...\"admin_id\""
+          "id": "node@<infix-expression>@@[L95:C19, L95:C41]",
+          "snippet": "\"merchants...\"admin_id\""
         }
       }
     }

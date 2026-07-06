@@ -165,6 +165,7 @@ export class RefInterpreter {
     return [];
   }
 
+  // Validate that column constraints match the ref operator.
   private validateRefConstraints (): { hints: CompileInfo[] } {
     if (!this.metadata.cardinalities(this.compiler)) return { hints: [] };
     return {
@@ -175,6 +176,7 @@ export class RefInterpreter {
     };
   }
 
+  // Extract the operator token from the ref declaration.
   private getOpToken (): SyntaxToken | undefined {
     if (this.declarationNode instanceof ElementDeclarationNode) {
       const field = getBody(this.declarationNode)[0];
@@ -191,75 +193,88 @@ export class RefInterpreter {
     return undefined;
   }
 
+  // Validate one side of the ref operator against column constraints.
   // A cardinality constrains:
   //   min >= 1 -> otherColumns must be NOT NULL
-  //   min = 0  -> otherColumns may be nullable; info if NOT NULL
+  //   min = 0  -> otherColumns may be nullable, hint if column is NOT NULL
   //   max = 1  -> ownColumns must be unique/pk
+  //
+  // For each mismatch, two hints are emitted:
+  //   1. On the ref endpoint node (in the Ref declaration)
+  //   2. On the column declaration (in the Table)
   private validateCardinality (side: 'left' | 'right'): CompileInfo[] {
     const cardinalities = this.metadata.cardinalities(this.compiler)!;
     const thisRel = side === 'left' ? cardinalities[0] : cardinalities[1];
     const otherRel = side === 'left' ? cardinalities[1] : cardinalities[0];
     const card = parseCardinality(thisRel);
 
-    const otherColumns = side === 'left' ? this.metadata.rightColumns(this.compiler) : this.metadata.leftColumns(this.compiler);
-    const ownColumns = side === 'left' ? this.metadata.leftColumns(this.compiler) : this.metadata.rightColumns(this.compiler);
-    const otherNode = side === 'left' ? this.metadata.rightToken() : this.metadata.leftToken();
-    const ownNode = side === 'left' ? this.metadata.leftToken() : this.metadata.rightToken();
+    const otherColumns = side === 'left'
+      ? this.metadata.rightColumns(this.compiler)
+      : this.metadata.leftColumns(this.compiler);
+    const ownColumns = side === 'left'
+      ? this.metadata.leftColumns(this.compiler)
+      : this.metadata.rightColumns(this.compiler);
+    const otherNode = side === 'left'
+      ? this.metadata.rightToken()
+      : this.metadata.leftToken();
+    const ownNode = side === 'left'
+      ? this.metadata.leftToken()
+      : this.metadata.rightToken();
+
     const opToken = this.getOpToken();
     const op = this.metadata.op(this.compiler) ?? '?';
-
     const hints: CompileInfo[] = [];
-    const refNode = this.declarationNode;
 
-    const addHint = (msg: string, fixes: QuickFix[], col: ColumnSymbol) => {
-      const related = opToken ? [{ nodeOrToken: opToken, message: msg }] : [];
-      const opts = { quickFixes: fixes, relatedLocations: related };
-      hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, refNode, opts));
-      if (col.declaration) {
-        hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, opts));
-      }
-    };
-
+    // min >= 1: the other side's columns must be NOT NULL.
     if (card.min >= 1) {
       for (const col of otherColumns) {
         if (col.nullable(this.compiler)) {
-          addHint(
-            `Column '${col.name}' is nullable but operator '${op}' requires it to be NOT NULL`,
-            [
-              opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `make '${col.name}' optional`),
-              suggestAddSetting(col, 'not null'),
-            ].filter((f): f is QuickFix => !!f),
-            col,
-          );
+          const msg = `Column '${col.name}' is nullable but operator '${op}' requires it to be NOT NULL`;
+          const fixes = [
+            opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `make '${col.name}' optional`),
+            suggestAddSetting(col, 'not null'),
+          ].filter((f): f is QuickFix => !!f);
+
+          hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
+          if (col.declaration) {
+            hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
+          }
         }
       }
     }
 
+    // min = 0: the other side may be nullable.
+    // Emit a hint if the column is actually NOT NULL.
     if (card.min === 0) {
       for (const col of otherColumns) {
         if (col.nullable(this.compiler) === false) {
-          addHint(
-            `Column '${col.name}' is NOT NULL but operator '${op}' allows it to be optional`,
-            [
-              opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `make '${col.name}' required`),
-            ].filter((f): f is QuickFix => !!f),
-            col,
-          );
+          const msg = `Column '${col.name}' is NOT NULL but operator '${op}' allows it to be optional`;
+          const fixes = [
+            opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `make '${col.name}' required`),
+          ].filter((f): f is QuickFix => !!f);
+
+          hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
+          if (col.declaration) {
+            hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
+          }
         }
       }
     }
 
+    // max = 1: the own side's columns must be unique or primary key.
     if (card.max === 1 && ownColumns.length === 1) {
       const col = ownColumns[0];
       if (!col.unique(this.compiler) && !col.pk(this.compiler)) {
-        addHint(
-          `Column '${col.name}' should be unique or primary key for operator '${op}'`,
-          [
-            opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `make '${col.name}' many`),
-            suggestAddSetting(col, 'unique'),
-          ].filter((f): f is QuickFix => !!f),
-          col,
-        );
+        const msg = `Column '${col.name}' should be unique or primary key for operator '${op}'`;
+        const fixes = [
+          opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `make '${col.name}' many`),
+          suggestAddSetting(col, 'unique'),
+        ].filter((f): f is QuickFix => !!f);
+
+        hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, { quickFixes: fixes }));
+        if (col.declaration) {
+          hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
+        }
       }
     }
 
@@ -267,6 +282,8 @@ export class RefInterpreter {
   }
 }
 
+// Suggest changing the ref operator to resolve a constraint mismatch.
+// Preserves the left/right ordering when computing the new operator.
 function suggestChangeOp (
   opToken: SyntaxToken,
   newThisRel: RelationCardinality,
@@ -277,15 +294,16 @@ function suggestChangeOp (
   const newLeft = side === 'left' ? newThisRel : otherRel;
   const newRight = side === 'right' ? newThisRel : otherRel;
   const newOp = getRelationshipOp(newLeft, newRight);
+
   return {
     title: `Change operator to '${newOp}' (${description})`,
     filepath: opToken.filepath,
-    edits: [
-      { start: opToken.start, end: opToken.end, newText: newOp },
-    ],
+    edits: [{ start: opToken.start, end: opToken.end, newText: newOp }],
   };
 }
 
+// Suggest adding a setting (e.g. 'not null', 'unique') to a column declaration.
+// Merges into existing settings block if present, otherwise appends a new one.
 function suggestAddSetting (col: ColumnSymbol, setting: string): QuickFix | undefined {
   if (!col.declaration) return undefined;
   const edit = addSettingEdit(col.declaration, setting);
@@ -294,8 +312,6 @@ function suggestAddSetting (col: ColumnSymbol, setting: string): QuickFix | unde
   return {
     title: `Make '${col.name}' ${setting}`,
     filepath: col.declaration.filepath,
-    edits: [
-      edit,
-    ],
+    edits: [edit],
   };
 }

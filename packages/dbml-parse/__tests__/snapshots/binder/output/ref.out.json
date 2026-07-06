@@ -43,8 +43,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L5:C0, L7:C1]",
-          "snippet": "Ref {\n    ...errer_id\n}"
+          "id": "node@<infix-expression>@@[L6:C4, L6:C12]",
+          "snippet": "Users.id"
         }
       }
     },
@@ -55,8 +55,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L5:C0, L7:C1]",
-          "snippet": "Ref {\n    ...errer_id\n}"
+          "id": "node@<infix-expression>@@[L6:C15, L6:C32]",
+          "snippet": "Users.referrer_id"
         }
       }
     },
@@ -67,8 +67,8 @@
       "level": "info",
       "node": {
         "context": {
-          "id": "node@<element-declaration>@@[L5:C0, L7:C1]",
-          "snippet": "Ref {\n    ...errer_id\n}"
+          "id": "node@<infix-expression>@@[L6:C15, L6:C32]",
+          "snippet": "Users.referrer_id"
         }
       }
     }
