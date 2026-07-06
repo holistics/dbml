@@ -43,7 +43,6 @@ function validatePkConstraint (
   pkColumnSymbols: ColumnSymbol[],
   record: TableRecord,
 ): CompileWarning[] {
-  const pkColumns = pkColumnSymbols.map((c) => c.name ?? '');
   const rows = toKeyedRows(record);
 
   const missingErrors = checkMissingPkColumns(compiler, tableSymbol, recordBlock, pkColumnSymbols, record);
