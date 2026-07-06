@@ -4,11 +4,15 @@ on:
     branches: [master]
     paths-ignore:
       - "dbml-homepage/**"
+      - "!dbml-homepage/yarn.lock"
+      - "!dbml-homepage/package.json"
   pull_request:
     branches: [master]
     types: [opened, synchronize]
     paths-ignore:
       - "dbml-homepage/**"
+      - "!dbml-homepage/yarn.lock"
+      - "!dbml-homepage/package.json"
 jobs:
   build:
     runs-on: blacksmith-2vcpu-ubuntu-2204
