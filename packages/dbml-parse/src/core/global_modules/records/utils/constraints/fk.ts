@@ -1,4 +1,6 @@
-import { compact, flatMap, isEmpty, keyBy } from 'lodash-es';
+import {
+  compact, flatMap, isEmpty, keyBy,
+} from 'lodash-es';
 import type Compiler from '@/compiler/index';
 import type { CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';

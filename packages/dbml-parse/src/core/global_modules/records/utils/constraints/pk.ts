@@ -166,7 +166,9 @@ function collectPkConstraints (tableSymbol: TableSymbol, compiler: Compiler): Co
   const columnSymbolMap = keyBy(columns, (c) => c.name ?? '');
 
   return [
-    ...columns.filter((col) => col.pk(compiler)).map((col) => [col]),
+    ...columns.filter((col) => col.pk(compiler)).map((col) => [
+      col,
+    ]),
     ...tableSymbol.mergedIndexes(compiler).flatMap((index) => {
       const result = compiler.interpretMetadata(index, index.declaration.filepath).getValue();
       if (!Array.isArray(result)) return [];
