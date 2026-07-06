@@ -284,6 +284,44 @@ describe('[example - record] simple primary key constraints', () => {
     expect(warnings[0].diagnostic).toBe('NULL in PK: users.id cannot be NULL');
   });
 
+  test('should not crash when simple PK with default is unspecified and records have duplicates', () => {
+    const source = `
+      Table items {
+        id int [pk, default: 0]
+        name varchar
+      }
+      records items(name) {
+        "Alice"
+        "Bob"
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    // id defaults to 0 for both rows, so both have PK = 0 - duplicates
+    expect(warnings.length).toBeGreaterThanOrEqual(1);
+    expect(warnings[0].diagnostic).toContain('Duplicate PK');
+    expect(warnings[0].diagnostic).toContain('= 0');
+  });
+
+  test('should not crash when simple PK with increment is unspecified', () => {
+    const source = `
+      Table items {
+        id int [pk, increment]
+        name varchar
+      }
+      records items(name) {
+        "Alice"
+        "Bob"
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    // id is auto-increment, each row gets a unique PK - no warnings
+    expect(warnings.length).toBe(0);
+  });
+
   test('should not crash when composite PK has unspecified increment column with null in specified column', () => {
     const source = `
       Table users {
@@ -346,8 +384,32 @@ describe('[example - record] simple primary key constraints', () => {
     const result = interpret(source);
     const warnings = result.getWarnings();
 
+    // id is auto-increment, so each row gets a unique (id, tenant_id) pair - no warnings
+    expect(warnings.length).toBe(0);
+  });
+
+  test('should not crash when composite PK has unspecified default column with duplicates in specified column', () => {
+    const source = `
+      Table orders {
+        id int [default: 0]
+        code int
+
+        indexes {
+          (id, code) [pk]
+        }
+      }
+      records orders(code) {
+        1
+        1
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    // id defaults to 0 for both rows, so (0, 1) and (0, 1) are duplicates
     expect(warnings.length).toBeGreaterThanOrEqual(1);
     expect(warnings[0].diagnostic).toContain('Duplicate');
+    expect(warnings[0].diagnostic).toContain('(0, 1)');
   });
 
   test('should validate PK alias syntax (primary key)', () => {

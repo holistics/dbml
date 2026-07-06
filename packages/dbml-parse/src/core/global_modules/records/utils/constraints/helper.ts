@@ -116,11 +116,16 @@ export function formatFullColumnNames (
 export function formatValues (
   row: Record<string, RecordValue>,
   columnNames: string[],
+  columns?: (ColumnInfo | undefined)[],
 ): string {
   if (columnNames.length === 1) {
-    return JSON.stringify(row[columnNames[0]]?.value);
+    const value = row[columnNames[0]]?.value ?? columns?.[0]?.dbdefault?.value;
+    return JSON.stringify(value);
   }
-  const values = columnNames.map((col) => JSON.stringify(row[col]?.value)).join(', ');
+  const values = columnNames.map((col, idx) => {
+    const value = row[col]?.value ?? columns?.[idx]?.dbdefault?.value;
+    return JSON.stringify(value);
+  }).join(', ');
   return `(${values})`;
 }
 

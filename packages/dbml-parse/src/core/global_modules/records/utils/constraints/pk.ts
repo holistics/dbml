@@ -42,6 +42,8 @@ export function validatePrimaryKey (compiler: Compiler, tableSymbol: TableSymbol
   );
 }
 
+// Validate a single PK constraint (single or composite) against all rows.
+// Returns warnings for missing columns, null values, and duplicates.
 function validatePkConstraint (
   compiler: Compiler,
   tableSymbol: TableSymbol,
@@ -59,22 +61,29 @@ function validatePkConstraint (
   if (!isEmpty(missingErrors)) return missingErrors;
 
   const pkColumnFields = compact(pkColumns.map((col) => columnMap[col]));
-  const areAllAutoIncrement = pkColumnFields.every((col) => col && isAutoIncrementColumn(col));
+
+  // Only check null for PK columns that are not auto-increment and have no default
+  const nullCheckColumns = pkColumns.filter((col) => {
+    const field = columnMap[col];
+    return field && !isAutoIncrementColumn(field) && !field.dbdefault;
+  });
+  const nullCheckFields = compact(nullCheckColumns.map((col) => columnMap[col]));
 
   const [
     rowsWithNull,
     rowsWithoutNull,
   ] = partition(
     rows,
-    (row) => hasNullWithoutDefaultInKey(row, pkColumns, pkColumnFields),
+    (row) => hasNullWithoutDefaultInKey(row, nullCheckColumns, nullCheckFields),
   );
 
-  // NULL in PK only errors when not all columns are auto-increment
-  const nullErrors = areAllAutoIncrement
-    ? []
-    : createNullErrors(compiler, rowsWithNull, pkColumns, schemaName, tableName);
+  const nullErrors = createNullErrors(compiler, rowsWithNull, nullCheckColumns, schemaName, tableName);
 
-  const duplicateErrors = findDuplicateErrors(compiler, rowsWithoutNull, pkColumns, pkColumnFields, schemaName, tableName);
+  // If any PK column is auto-increment, the whole key is guaranteed unique
+  const hasAutoIncrement = pkColumnFields.some((col) => isAutoIncrementColumn(col));
+  const duplicateErrors = hasAutoIncrement
+    ? []
+    : findDuplicateErrors(compiler, rowsWithoutNull, pkColumns, pkColumnFields, schemaName, tableName);
 
   return [
     ...nullErrors,
@@ -82,6 +91,8 @@ function validatePkConstraint (
   ];
 }
 
+// Create warnings for rows that have NULL in PK columns.
+// Returns one warning per specified PK column per row.
 function createNullErrors (
   compiler: Compiler,
   rowsWithNull: Record<string, RecordValue>[],
@@ -95,11 +106,18 @@ function createNullErrors (
   const columnRef = formatFullColumnNames(schemaName, tableName, pkColumns);
   const message = `NULL in ${constraintType}: ${columnRef} cannot be NULL`;
 
-  return flatMap(rowsWithNull, (row) =>
-    pkColumns.map((col) => createConstraintWarning(compiler, row[col], message)),
-  );
+  return flatMap(rowsWithNull, (row) => {
+    const presentCols = pkColumns.filter((col) => row[col]);
+    // If PK column is present, anchor warning on it; otherwise span all columns in the row
+    const anchors = presentCols.length > 0
+      ? presentCols.map((col) => row[col])
+      : Object.values(row).filter(Boolean);
+    return anchors.map((v) => createConstraintWarning(compiler, v, message));
+  });
 }
 
+// Find rows with duplicate PK values.
+// Returns warnings for each duplicate row.
 function findDuplicateErrors (
   compiler: Compiler,
   rows: Record<string, RecordValue>[],
@@ -108,9 +126,7 @@ function findDuplicateErrors (
   schemaName: string | null,
   tableName: string,
 ): CompileWarning[] {
-  // Group rows by their PK value
   const rowsByKeyValue = groupBy(rows, (row) => extractKeyValueWithDefault(row, pkColumns, pkColumnFields));
-
   const duplicateGroups = filter(rowsByKeyValue, (group) => group.length > 1);
 
   return flatMap(duplicateGroups, (duplicateRows) => {
@@ -118,13 +134,20 @@ function findDuplicateErrors (
     const columnRef = formatFullColumnNames(schemaName, tableName, pkColumns);
 
     return flatMap(duplicateRows, (row) => {
-      const valueStr = formatValues(row, pkColumns);
+      const valueStr = formatValues(row, pkColumns, pkColumnFields);
       const message = `Duplicate ${constraintType}: ${columnRef} = ${valueStr}`;
-      return pkColumns.map((col) => createConstraintWarning(compiler, row[col], message));
+      const presentCols = pkColumns.filter((col) => row[col]);
+      // If PK column is present, anchor warning on it; otherwise span all columns in the row
+      const anchors = presentCols.length > 0
+        ? presentCols.map((col) => row[col])
+        : Object.values(row).filter(Boolean);
+      return anchors.map((v) => createConstraintWarning(compiler, v, message));
     });
   });
 }
 
+// Check if any PK columns are missing from the record column list.
+// Returns warnings if missing columns have no default or auto-increment.
 function checkMissingPkColumns (
   recordBlock: SyntaxNode,
   pkColumns: string[],
@@ -154,6 +177,8 @@ function checkMissingPkColumns (
   ));
 }
 
+// Collect all PK constraints for a table.
+// Returns an array of column name arrays: single-column PKs and composite PKs from indexes.
 function collectPkConstraints (tableSymbol: TableSymbol, columnInfos: ColumnInfo[], compiler: Compiler): string[][] {
   return [
     ...columnInfos.filter((col) => col.pk).map((col) => [
