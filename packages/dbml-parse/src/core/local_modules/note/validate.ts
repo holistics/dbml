@@ -8,6 +8,16 @@ import {
 import {
   aggregateSettingList, isExpressionAQuotedString, validateCustomInlineMetadata, isValidColorOrNone,
 } from '@/core/utils/validate';
+import type { FieldValidateMap } from '@/core/global_modules/metadata/fieldSpec';
+
+// Builtin metadata field validation for a Note (sticky note) target. Shared by
+// the inline setting list and the metadata block. Note color allows 'none'.
+export const NOTE_FIELD_SPECS: FieldValidateMap<SettingName.Color> = {
+  [SettingName.Color]: {
+    predicate: isValidColorOrNone,
+    message: "'color' must be a color literal or 'none'",
+  },
+};
 
 export default class NoteValidator {
   private compiler: Compiler;
@@ -88,16 +98,18 @@ export default class NoteValidator {
     forIn(settingMap, (attrs, name) => {
       switch (name) {
         // Sticky note color
-        case SettingName.Color:
+        case SettingName.Color: {
+          const spec = NOTE_FIELD_SPECS[SettingName.Color]!;
           if (attrs.length > 1) {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_NOTE_SETTING, '\'color\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!isValidColorOrNone(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, '\'color\' must be a color literal or \'none\'', attr.value || attr.name!));
+            if (!spec.predicate(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, spec.message, attr.value || attr.name!));
             }
           });
           break;
+        }
         default:
           // Any non-builtin key is free-form inline custom metadata.
           errors.push(

@@ -1,11 +1,23 @@
 import { describe, expect, it } from 'vitest';
 import { CompileErrorCode } from '@/index';
 import { SettingName } from '@/core/types';
+import type {
+  MetadataTarget,
+  FieldValidateMap,
+  FieldAssignMap,
+} from '@/core/global_modules/metadata/fieldSpec';
 import {
-  BUILTIN_METADATA_FIELD_HELPERS,
-  BUILTIN_METADATA_KEYS,
-  type MetadataTarget,
-} from '@/core/global_modules/metadata/builtin';
+  COLUMN_FIELD_SPECS,
+  TABLE_FIELD_SPECS,
+} from '@/core/local_modules/table/validate';
+import { TABLEGROUP_FIELD_SPECS } from '@/core/local_modules/tableGroup/validate';
+import { NOTE_FIELD_SPECS } from '@/core/local_modules/note/validate';
+import {
+  COLUMN_FIELD_ASSIGNS,
+  TABLE_FIELD_ASSIGNS,
+} from '@/core/global_modules/table/interpret';
+import { TABLEGROUP_FIELD_ASSIGNS } from '@/core/global_modules/tableGroup/interpret';
+import { NOTE_FIELD_ASSIGNS } from '@/core/global_modules/note/interpret';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -13,7 +25,7 @@ import {
   ProgramNode,
   SyntaxNode,
 } from '@/core/types/nodes';
-import { TokenPosition } from '@/core/types/schemaJson';
+import { Column, Table, TableGroup, TokenPosition } from '@/core/types/schemaJson';
 import { interpret, parse } from '../../../utils';
 
 function db (source: string) {
@@ -75,7 +87,7 @@ Metadata Table public.users {
       expect(table(source)!.headerColor).toBe('#abc');
     });
 
-    it('writes none as a valid color that overrides the inline value', () => {
+    it("rejects 'none' for headercolor in a metadata block (hex-only, matching the inline setting)", () => {
       const source = `Table users [headercolor: #fff] {
   id int
 }
@@ -83,9 +95,8 @@ Metadata Table public.users {
 Metadata Table public.users {
   headercolor: none
 }`;
-      const result = interpret(source);
-      expect(result.getErrors()).toHaveLength(0);
-      expect(table(source)!.headerColor).toBe('none');
+      const codes = interpret(source).getErrors().map((e) => e.code);
+      expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
     });
 
     it('does NOT write `color` on a Table (not a builtin key for Table)', () => {
@@ -248,9 +259,8 @@ Metadata Column public.users.id {
 
 // Pluck the inline value node of the first `key: value` field inside the body
 // of the first element in `source` — i.e. exactly the `sub.body?.callee` that
-// the validation pass feeds to BUILTIN_METADATA_FIELDS[...].validate. Parsing a
-// real snippet (rather than fabricating AST) keeps this test honest about the
-// input type.
+// the validation pass feeds to a FieldValidateSpec's predicate. Parsing a real
+// snippet (rather than fabricating AST) keeps this test honest about input type.
 function fieldValueNode (source: string): SyntaxNode | undefined {
   const ast = (parse(source).getValue() as { ast: ProgramNode }).ast;
   const element = ast.body[0] as ElementDeclarationNode;
@@ -269,77 +279,89 @@ const boolFieldNode = (value: string) =>
 
 const TOKEN = { start: { offset: 0, line: 1, column: 1 }, end: { offset: 0, line: 1, column: 1 } } as TokenPosition;
 
-describe('[unit] BUILTIN_METADATA_FIELD_HELPERS spec table', () => {
-  it('is a superset of every key used in BUILTIN_METADATA_KEYS', () => {
-    const matrixKeys = new Set(Object.values(BUILTIN_METADATA_KEYS).flat());
-    const specKeys = new Set(Object.keys(BUILTIN_METADATA_FIELD_HELPERS));
-    for (const key of matrixKeys) {
-      expect(specKeys.has(key)).toBe(true);
-    }
+describe('[unit] element-owned field validate specs', () => {
+  it('Note accepts a quoted string and rejects a non-string', () => {
+    expect(TABLE_FIELD_SPECS[SettingName.Note]!.predicate(noteFieldNode("'hi'"))).toBe(true);
+    expect(TABLE_FIELD_SPECS[SettingName.Note]!.predicate(noteFieldNode('42'))).toBe(false);
   });
 
-  describe('validate (pre-extraction, against the value AST node)', () => {
-    it('Note accepts a quoted string and rejects a non-string', () => {
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Note]!.validate(noteFieldNode("'hi'"))).toBe(true);
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Note]!.validate(noteFieldNode('42'))).toBe(false);
-    });
-
-    it('Color/HeaderColor accept a color literal or none and reject a string', () => {
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Color]!.validate(colorFieldNode('#fff'))).toBe(true);
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Color]!.validate(colorFieldNode('none'))).toBe(true);
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Color]!.validate(colorFieldNode("'red'"))).toBe(false);
-
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.HeaderColor]!.validate(colorFieldNode('#fff'))).toBe(true);
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.HeaderColor]!.validate(colorFieldNode("'red'"))).toBe(false);
-    });
-
-    it("Unique accepts 'true'/'false' string literals and rejects others", () => {
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Unique]!.validate(boolFieldNode("'true'"))).toBe(true);
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Unique]!.validate(boolFieldNode("'false'"))).toBe(true);
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Unique]!.validate(boolFieldNode("'banana'"))).toBe(false);
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Unique]!.validate(boolFieldNode('42'))).toBe(false);
-      // bare (unquoted) true is not a string literal in this iteration.
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Unique]!.validate(boolFieldNode('true'))).toBe(false);
-    });
-
-    it('treats an absent value node as invalid (caller skips it separately)', () => {
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Note]!.validate(undefined)).toBe(false);
-    });
-
-    it('carries the value-type message fragment the caller splices into the diagnostic', () => {
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Note]!.message).toBe('a string');
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Color]!.message).toBe("a color literal or 'none'");
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.HeaderColor]!.message).toBe("a color literal or 'none'");
-      expect(BUILTIN_METADATA_FIELD_HELPERS[SettingName.Unique]!.message).toBe("'true' or 'false'");
-    });
+  it("HeaderColor accepts a hex color but NOT 'none' (hex-only, matching inline)", () => {
+    expect(TABLE_FIELD_SPECS[SettingName.HeaderColor]!.predicate(colorFieldNode('#fff'))).toBe(true);
+    expect(TABLE_FIELD_SPECS[SettingName.HeaderColor]!.predicate(colorFieldNode('none'))).toBe(false);
+    expect(TABLE_FIELD_SPECS[SettingName.HeaderColor]!.predicate(colorFieldNode("'red'"))).toBe(false);
   });
 
-  describe('assign (post-extraction, writes the value onto the typed field)', () => {
-    it('Note writes { value, token } onto .note, stringifying the value', () => {
-      const el = {} as MetadataTarget;
-      BUILTIN_METADATA_FIELD_HELPERS[SettingName.Note]!.assign(el, '42', TOKEN);
-      expect((el as { note?: unknown }).note).toEqual({ value: '42', token: TOKEN });
-    });
+  it("TableGroup color is hex-only; Note color allows 'none'", () => {
+    expect(TABLEGROUP_FIELD_SPECS[SettingName.Color]!.predicate(colorFieldNode('#fff'))).toBe(true);
+    expect(TABLEGROUP_FIELD_SPECS[SettingName.Color]!.predicate(colorFieldNode('none'))).toBe(false);
+    expect(NOTE_FIELD_SPECS[SettingName.Color]!.predicate(colorFieldNode('#fff'))).toBe(true);
+    expect(NOTE_FIELD_SPECS[SettingName.Color]!.predicate(colorFieldNode('none'))).toBe(true);
+  });
 
-    it('Color writes the raw value onto .color', () => {
-      const el = {} as MetadataTarget;
-      BUILTIN_METADATA_FIELD_HELPERS[SettingName.Color]!.assign(el, '#fff', TOKEN);
-      expect((el as { color?: unknown }).color).toBe('#fff');
-    });
+  it("Column boolean flag accepts 'true'/'false' string literals and rejects others", () => {
+    expect(COLUMN_FIELD_SPECS[SettingName.Unique]!.predicate(boolFieldNode("'true'"))).toBe(true);
+    expect(COLUMN_FIELD_SPECS[SettingName.Unique]!.predicate(boolFieldNode("'false'"))).toBe(true);
+    expect(COLUMN_FIELD_SPECS[SettingName.Unique]!.predicate(boolFieldNode("'banana'"))).toBe(false);
+    expect(COLUMN_FIELD_SPECS[SettingName.Unique]!.predicate(boolFieldNode('42'))).toBe(false);
+    expect(COLUMN_FIELD_SPECS[SettingName.Unique]!.predicate(boolFieldNode('true'))).toBe(false);
+  });
 
-    it('HeaderColor writes the raw value onto .headerColor (not .color)', () => {
-      const el = {} as MetadataTarget;
-      BUILTIN_METADATA_FIELD_HELPERS[SettingName.HeaderColor]!.assign(el, '#fff', TOKEN);
-      expect((el as { headerColor?: unknown }).headerColor).toBe('#fff');
-      expect((el as { color?: unknown }).color).toBeUndefined();
-    });
+  it('treats an absent value node as invalid', () => {
+    expect(TABLE_FIELD_SPECS[SettingName.Note]!.predicate(undefined)).toBe(false);
+  });
 
-    it("Unique parses the string literal into the boolean field", () => {
-      const el = {} as MetadataTarget;
-      BUILTIN_METADATA_FIELD_HELPERS[SettingName.Unique]!.assign(el, 'true', TOKEN);
-      expect((el as { unique?: unknown }).unique).toBe(true);
-      BUILTIN_METADATA_FIELD_HELPERS[SettingName.Unique]!.assign(el, 'false', TOKEN);
-      expect((el as { unique?: unknown }).unique).toBe(false);
-    });
+  it('carries the complete, ready-to-emit diagnostic message', () => {
+    expect(TABLE_FIELD_SPECS[SettingName.Note]!.message).toBe("'note' must be a string literal");
+    expect(TABLE_FIELD_SPECS[SettingName.HeaderColor]!.message).toBe("'headercolor' must be a color literal");
+    expect(TABLEGROUP_FIELD_SPECS[SettingName.Color]!.message).toBe("'color' must be a color literal");
+    expect(NOTE_FIELD_SPECS[SettingName.Color]!.message).toBe("'color' must be a color literal or 'none'");
+    expect(COLUMN_FIELD_SPECS[SettingName.Unique]!.message).toBe("'unique' must be 'true' or 'false'");
+  });
+});
+
+describe('[unit] element-owned field assign maps', () => {
+  it('Note writes { value, token } onto .note', () => {
+    const el = {} as Table;
+    TABLE_FIELD_ASSIGNS[SettingName.Note]!(el, '42', TOKEN);
+    expect((el as { note?: unknown }).note).toEqual({ value: '42', token: TOKEN });
+  });
+
+  it('Color writes the raw value onto .color', () => {
+    const el = {} as TableGroup;
+    TABLEGROUP_FIELD_ASSIGNS[SettingName.Color]!(el, '#fff', TOKEN);
+    expect((el as { color?: unknown }).color).toBe('#fff');
+  });
+
+  it('HeaderColor writes the raw value onto .headerColor (not .color)', () => {
+    const el = {} as Table;
+    TABLE_FIELD_ASSIGNS[SettingName.HeaderColor]!(el, '#fff', TOKEN);
+    expect((el as { headerColor?: unknown }).headerColor).toBe('#fff');
+    expect((el as { color?: unknown }).color).toBeUndefined();
+  });
+
+  it('boolean flag parses the string literal into the boolean field', () => {
+    const el = {} as Column;
+    COLUMN_FIELD_ASSIGNS[SettingName.Unique]!(el, 'true', TOKEN);
+    expect((el as { unique?: unknown }).unique).toBe(true);
+    COLUMN_FIELD_ASSIGNS[SettingName.Unique]!(el, 'false', TOKEN);
+    expect((el as { unique?: unknown }).unique).toBe(false);
+  });
+});
+
+// The guard that replaces the old validate/assign co-location: for every target
+// kind, the validate map and assign map MUST cover exactly the same settings.
+// A drift here means a setting is validated-but-never-written or vice versa.
+describe('[unit] validate/assign key parity per target kind', () => {
+  const KINDS: [string, FieldValidateMap<any>, FieldAssignMap<any, any>][] = [
+    ['Table', TABLE_FIELD_SPECS, TABLE_FIELD_ASSIGNS],
+    ['Column', COLUMN_FIELD_SPECS, COLUMN_FIELD_ASSIGNS],
+    ['TableGroup', TABLEGROUP_FIELD_SPECS, TABLEGROUP_FIELD_ASSIGNS],
+    ['Note', NOTE_FIELD_SPECS, NOTE_FIELD_ASSIGNS],
+  ];
+
+  it.each(KINDS)('%s validate keys equal assign keys', (_name, validateMap, assignMap) => {
+    const vKeys = Object.keys(validateMap).sort();
+    const aKeys = Object.keys(assignMap).sort();
+    expect(vKeys).toEqual(aKeys);
   });
 });

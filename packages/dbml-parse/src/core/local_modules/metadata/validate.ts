@@ -11,8 +11,24 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import { isValidMetadataValue, isValidName } from '@/core/utils/validate';
-import { ALLOWED_METADATA_TARGET_KINDS } from '@/core/types';
-import { BUILTIN_METADATA_FIELD_HELPERS, findBuiltinSettingName } from '@/core/global_modules/metadata/builtin';
+import { ALLOWED_METADATA_TARGET_KINDS, SettingName } from '@/core/types';
+import { MetadataTargetKind } from '@/core/types/symbol';
+import { COLUMN_FIELD_SPECS, TABLE_FIELD_SPECS } from '@/core/local_modules/table/validate';
+import { TABLEGROUP_FIELD_SPECS } from '@/core/local_modules/tableGroup/validate';
+import { NOTE_FIELD_SPECS } from '@/core/local_modules/note/validate';
+import { FieldValidateMap } from '@/core/global_modules/metadata/fieldSpec';
+
+// Static per-target-kind routing to each element's builtin-field validation map.
+// The metadata element depends on the target element's rules; this record is the
+// only place that knows which element owns which kind. Kinds without builtin
+// promotable fields (e.g. Schema) are simply absent -> generic custom-metadata
+// validation for every key.
+const METADATA_VALIDATE_MAPS: Partial<Record<MetadataTargetKind, FieldValidateMap<any>>> = {
+  [MetadataTargetKind.Table]: TABLE_FIELD_SPECS,
+  [MetadataTargetKind.Column]: COLUMN_FIELD_SPECS,
+  [MetadataTargetKind.TableGroup]: TABLEGROUP_FIELD_SPECS,
+  [MetadataTargetKind.Note]: NOTE_FIELD_SPECS,
+};
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: MetadataDeclarationNode) {}
@@ -122,15 +138,16 @@ export default class MetadataValidator {
       if (!keyValuesMap[key]) keyValuesMap[key] = [];
       keyValuesMap[key].push(sub);
 
-      // A key that names a builtin setting for this target kind is validated as
-      // that inline value type (it will be written onto the typed field).
-      // Color-/note-named keys on a target that does NOT support them fall
-      // through to generic scalar validation and stay as custom metadata.
-      const builtinKey = findBuiltinSettingName(targetKind, key);
-      // A matrixed key without a spec falls through to generic custom-metadata
-      // validation (the write pass skips it too), so the two stay in agreement.
-      const spec = builtinKey ? BUILTIN_METADATA_FIELD_HELPERS[builtinKey] : undefined;
-      if (builtinKey && spec) {
+      // A key that names a builtin setting for this target kind is validated by
+      // the target element's own spec (it will be written onto the typed field).
+      // Color-/note-named keys on a target that does NOT support them are absent
+      // from the map and fall through to generic scalar validation, staying as
+      // custom metadata. The write pass routes through the same per-kind maps, so
+      // validation and writing agree by construction.
+      // `key` is a free-form lowercased string; a non-builtin key simply misses
+      // the map (undefined) and falls through to generic validation below.
+      const spec = targetKind ? METADATA_VALIDATE_MAPS[targetKind]?.[key as SettingName] : undefined;
+      if (spec) {
         if (sub.body instanceof BlockExpressionNode) {
           return [
             new CompileError(
@@ -141,11 +158,11 @@ export default class MetadataValidator {
           ];
         }
 
-        if (!spec.validate(sub.body?.callee)) {
+        if (!spec.predicate(sub.body?.callee)) {
           return [
             new CompileError(
               CompileErrorCode.INVALID_METADATA_FIELD,
-              `'${sub.type.value}' must be ${spec.message}`,
+              spec.message,
               sub,
             ),
           ];

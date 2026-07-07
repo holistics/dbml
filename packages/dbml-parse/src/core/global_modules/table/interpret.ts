@@ -10,9 +10,10 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  Check, Column, Index, InlineRef, Ref,
+  Check, Color, Column, Index, InlineRef, Ref,
   Table, TablePartialInjection,
 } from '@/core/types/schemaJson';
+import type { FieldAssignMap } from '@/core/global_modules/metadata/fieldSpec';
 import type { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import { RefMetadata } from '@/core/types/symbol/metadata';
@@ -357,3 +358,32 @@ export class TableInterpreter {
     return result.getErrors();
   }
 }
+
+// Assignment of builtin metadata-block keys onto the typed fields of an emitted
+// Table. Each entry's key set MUST match TABLE_FIELD_SPECS (asserted by a test).
+export const TABLE_FIELD_ASSIGNS: FieldAssignMap<Table, SettingName.Note | SettingName.HeaderColor> = {
+  [SettingName.Note]: (element, value, token) => {
+    (element as Table).note = { value, token };
+  },
+  [SettingName.HeaderColor]: (element, value) => {
+    (element as Table).headerColor = value as Color;
+  },
+};
+
+// Assignment of builtin metadata-block keys onto the typed fields of an emitted
+// Column. Key set MUST match COLUMN_FIELD_SPECS. The boolean flags parse the
+// validated 'true'/'false' string; note writes the {value, token} shape.
+export const COLUMN_FIELD_ASSIGNS: FieldAssignMap<Column, SettingName.Note | SettingName.PK | SettingName.Unique | SettingName.Increment> = {
+  [SettingName.Note]: (element, value, token) => {
+    (element as Column).note = { value, token };
+  },
+  [SettingName.PK]: (element, value) => {
+    (element as Column).pk = value === 'true';
+  },
+  [SettingName.Unique]: (element, value) => {
+    (element as Column).unique = value === 'true';
+  },
+  [SettingName.Increment]: (element, value) => {
+    (element as Column).increment = value === 'true';
+  },
+};

@@ -35,7 +35,21 @@ import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../reco
 import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '../utils';
-import { BUILTIN_METADATA_KEYS, MetadataTarget, BUILTIN_METADATA_FIELD_HELPERS } from '../metadata/builtin';
+import type { MetadataTarget, FieldAssignMap } from '../metadata/fieldSpec';
+import { COLUMN_FIELD_ASSIGNS, TABLE_FIELD_ASSIGNS } from '../table/interpret';
+import { TABLEGROUP_FIELD_ASSIGNS } from '../tableGroup/interpret';
+import { NOTE_FIELD_ASSIGNS } from '../note/interpret';
+
+// Static per-target-kind routing to each element's builtin-field assign map. The
+// mirror of METADATA_VALIDATE_MAPS on the write side; the promotable key set for
+// a kind IS this map's key set (no separate matrix). Kinds absent here promote
+// nothing.
+const METADATA_ASSIGN_MAPS: Partial<Record<MetadataTargetKind, FieldAssignMap<any, any>>> = {
+  [MetadataTargetKind.Table]: TABLE_FIELD_ASSIGNS,
+  [MetadataTargetKind.Column]: COLUMN_FIELD_ASSIGNS,
+  [MetadataTargetKind.TableGroup]: TABLEGROUP_FIELD_ASSIGNS,
+  [MetadataTargetKind.Note]: NOTE_FIELD_ASSIGNS,
+};
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -304,8 +318,8 @@ export default class ProgramInterpreter {
     values: CustomMetadata,
     valueTokens: Record<string, TokenPosition>,
   ) {
-    const builtinKeys = BUILTIN_METADATA_KEYS[kind];
-    if (!builtinKeys) return;
+    const assignMap = METADATA_ASSIGN_MAPS[kind];
+    if (!assignMap) return;
 
     const lowerCaseKeyedValues = Object.fromEntries(Object.entries(values).map(([
       key,
@@ -315,14 +329,15 @@ export default class ProgramInterpreter {
       value,
     ]));
 
-    for (const builtinKey of builtinKeys) {
+    // The promotable keys for this kind are exactly the assign map's keys.
+    for (const [
+      builtinKey,
+      assign,
+    ] of Object.entries(assignMap)) {
       const value = lowerCaseKeyedValues[builtinKey];
       if (value === undefined) continue;
 
-      // A matrixed key without a spec is treated as plain custom metadata (not
-      // promoted), keeping the matrix/spec relationship fail-safe.
-      const spec = BUILTIN_METADATA_FIELD_HELPERS[builtinKey];
-      spec?.assign(element, value, valueTokens[builtinKey]);
+      assign(element, value, valueTokens[builtinKey]);
     }
   }
 
