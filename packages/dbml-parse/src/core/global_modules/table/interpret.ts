@@ -271,7 +271,7 @@ export class TableInterpreter {
 
     column.pk = columnSymbol?.pk(this.compiler) || false;
     column.unique = columnSymbol?.unique(this.compiler) || false;
-    column.increment = columnSymbol?.increment(this.compiler) || undefined;
+    column.increment = columnSymbol?.isIncrementSet(this.compiler) || undefined;
     column.not_null = columnSymbol?.isNotNullSet(this.compiler);
     column.dbdefault = columnSymbol?.default(this.compiler);
     column.note = columnSymbol?.note(this.compiler);

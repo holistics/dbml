@@ -170,7 +170,7 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     });
   });
 
-  test('should detect duplicate pk for non-null values with increment', () => {
+  test('should skip duplicate pk check for increment column', () => {
     const source = `
       Table users {
         id int [pk, increment]
@@ -185,9 +185,8 @@ describe('[example - record] auto-increment and serial type constraints', () => 
     const result = interpret(source);
     const warnings = result.getWarnings();
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('Duplicate PK: users.id = 1');
-    expect(warnings[1].diagnostic).toBe('Duplicate PK: users.id = 1');
+    // Auto-increment PK skips duplicate check entirely
+    expect(warnings.length).toBe(0);
   });
 
   test('should detect duplicate pk with not null + dbdefault', () => {

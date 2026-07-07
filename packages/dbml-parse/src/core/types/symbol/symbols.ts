@@ -1,4 +1,5 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { isSerialType } from '@/core/global_modules/records/utils/data';
 import type { Filepath } from '@/core/types/filepath';
 import type { Internable } from '@/core/types/internable';
 import { UNHANDLED } from '@/core/types/module';
@@ -541,11 +542,15 @@ export class ColumnSymbol extends NodeSymbol {
     return undefined;
   }
 
-  increment (compiler: Compiler): boolean {
+  isIncrementSet (compiler: Compiler): boolean {
     if (!this.declaration) return false;
     const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
 
     return !!s?.[SettingName.Increment]?.length;
+  }
+
+  increment (compiler: Compiler): boolean {
+    return this.isIncrementSet(compiler) || isSerialType(this.type(compiler)?.name ?? '');
   }
 
   default (compiler: Compiler): {

@@ -1,18 +1,19 @@
-import { flatMap, isEmpty } from 'lodash-es';
+import { compact, flatMap, isEmpty } from 'lodash-es';
 import type Compiler from '@/compiler/index';
 import type { CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import type { SyntaxNode } from '@/core/types/nodes';
 import { parseCardinality } from '@/core/types/relation';
 import type { RelationCardinality } from '@/core/types/relation';
-import type { Ref, RefEndpoint, TableRecord } from '@/core/types/schemaJson';
+import type { Ref, TableRecord } from '@/core/types/schemaJson';
 import type { TableSymbol } from '@/core/types/symbol';
-import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
+import type { ColumnSymbol, InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
   createConstraintWarning,
   extractKeyValueWithDefault,
   formatFullColumnNames,
   formatValues,
+  getDiagnosticAnchorValues,
   hasNullWithoutDefaultInKey,
   makeTableKey,
   toKeyedRows,
@@ -78,19 +79,23 @@ function validateForeignKey (
   if (!ref.endpoints) return [];
 
   const [
-    endpoint1,
-    endpoint2,
+    rawEndpoint1,
+    rawEndpoint2,
   ] = ref.endpoints;
-  const table1 = tableInfoLookup.get(makeTableKey(endpoint1.schemaName, endpoint1.tableName));
-  const table2 = tableInfoLookup.get(makeTableKey(endpoint2.schemaName, endpoint2.tableName));
+  const table1 = tableInfoLookup.get(makeTableKey(rawEndpoint1.schemaName, rawEndpoint1.tableName));
+
+  const table2 = tableInfoLookup.get(makeTableKey(rawEndpoint2.schemaName, rawEndpoint2.tableName));
 
   if (!table1 || !table2) return [];
 
+  const endpoint1 = table1.tableSymbol.mergedColumns(compiler).filter((c) => typeof c.name === 'string' && rawEndpoint1.fieldNames.includes(c.name));
+  const endpoint2 = table2.tableSymbol.mergedColumns(compiler).filter((c) => typeof c.name === 'string' && rawEndpoint2.fieldNames.includes(c.name));
+
   return [
     // card2 constrains table1's rows
-    ...validateEndpoint(compiler, table1, endpoint1, table2, endpoint2, endpoint2.relation, filepath),
+    ...validateEndpoint(compiler, table1, endpoint1, table2, endpoint2, rawEndpoint2.relation, filepath),
     // card1 constrains table2's rows
-    ...validateEndpoint(compiler, table2, endpoint2, table1, endpoint1, endpoint1.relation, filepath),
+    ...validateEndpoint(compiler, table2, endpoint2, table1, endpoint1, rawEndpoint1.relation, filepath),
   ];
 }
 
@@ -102,15 +107,18 @@ function validateForeignKey (
 function validateEndpoint (
   compiler: Compiler,
   leftTable: TableInfo,
-  leftEndpoint: RefEndpoint,
+  leftEndpoint: ColumnSymbol[],
   rightTable: TableInfo,
-  rightEndpoint: RefEndpoint,
+  rightEndpoint: ColumnSymbol[],
   rightCard: RelationCardinality, // This will constrains the left table's records
   filepath: Filepath,
 ): CompileWarning[] {
   if (!leftTable.record || isEmpty(leftTable.record.values)) return [];
 
   const { min: rightMin } = parseCardinality(rightCard);
+
+  const leftColumnNames = compact(leftEndpoint.map((c) => c.name));
+  const rightColumnNames = compact(rightEndpoint.map((c) => c.name));
 
   // right min = 0 -> left FK values may be NULL (optional relationship)
   // right min >= 1 -> left FK values must not be NULL
@@ -120,37 +128,36 @@ function validateEndpoint (
   const rightRows = rightTable.record ? toKeyedRows(rightTable.record) : [];
 
   const validFkValues = new Set(
-    rightRows.map((row) => extractKeyValueWithDefault(row, rightEndpoint.fieldNames)),
+    rightRows.map((row) => extractKeyValueWithDefault(compiler, row, rightEndpoint)),
   );
 
   const leftName = leftTable.tableSymbol.interpretedName(compiler, filepath);
   const rightName = rightTable.tableSymbol.interpretedName(compiler, filepath);
 
   return flatMap(leftRows, (row) => {
-    const isNull = hasNullWithoutDefaultInKey(row, leftEndpoint.fieldNames);
+    const isNull = hasNullWithoutDefaultInKey(compiler, row, leftEndpoint);
 
     if (isNull) {
       if (allowNull) return [];
-      const leftColumnRef = formatFullColumnNames(leftName.schema, leftName.name, leftEndpoint.fieldNames);
-      const valueStr = formatValues(row, leftEndpoint.fieldNames);
+      const leftColumnRef = formatFullColumnNames(leftName.schema, leftName.name, leftColumnNames);
+      const valueStr = formatValues(compiler, row, leftEndpoint);
       const message = `FK violation: ${leftColumnRef} = ${valueStr} must not be null`;
-      return leftEndpoint.fieldNames.map((col) =>
-        createConstraintWarning(compiler, row[col], message),
-      );
+
+      return getDiagnosticAnchorValues(row, leftColumnNames)
+        .map((v) => createConstraintWarning(compiler, v, message));
     }
 
     // right max = 1 -> non-null left value must map to exactly 1 right row
     // right max = * -> non-null left value must exist in right
     // Both cases: left value must exist in right values
-    const fkValue = extractKeyValueWithDefault(row, leftEndpoint.fieldNames);
+    const fkValue = extractKeyValueWithDefault(compiler, row, leftEndpoint);
     if (validFkValues.has(fkValue)) return [];
 
-    const leftColumnRef = formatFullColumnNames(leftName.schema, leftName.name, leftEndpoint.fieldNames);
-    const rightColumnRef = formatFullColumnNames(rightName.schema, rightName.name, rightEndpoint.fieldNames);
-    const valueStr = formatValues(row, leftEndpoint.fieldNames);
+    const leftColumnRef = formatFullColumnNames(leftName.schema, leftName.name, leftColumnNames);
+    const rightColumnRef = formatFullColumnNames(rightName.schema, rightName.name, rightColumnNames);
+    const valueStr = formatValues(compiler, row, leftEndpoint);
     const message = `FK violation: ${leftColumnRef} = ${valueStr} does not exist in ${rightColumnRef}`;
-    return leftEndpoint.fieldNames.map((col) =>
-      createConstraintWarning(compiler, row[col], message),
-    );
+    return getDiagnosticAnchorValues(row, leftColumnNames)
+      .map((v) => createConstraintWarning(compiler, v, message));
   });
 }
