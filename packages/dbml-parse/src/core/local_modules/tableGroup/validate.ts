@@ -1,7 +1,7 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ElementKind } from '@/core/types/keywords';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
@@ -10,6 +10,21 @@ import { destructureComplexVariable } from '@/core/utils/expression';
 import {
   Settings, aggregateSettingList, isSimpleName, isValidHexColor, isExpressionAQuotedString, validateCustomInlineMetadata,
 } from '@/core/utils/validate';
+import type { FieldValidateMap } from '@/core/global_modules/metadata/fieldSpec';
+
+// Builtin metadata field validation for a TableGroup target. Shared by both
+// inline setting-list validators below and the metadata block. TableGroup color
+// is hex-only (no 'none'), consistent with the inline setting list.
+export const TABLEGROUP_FIELD_SPECS: FieldValidateMap<SettingName.Note | SettingName.Color> = {
+  [SettingName.Note]: {
+    predicate: isExpressionAQuotedString,
+    message: "'note' must be a string literal",
+  },
+  [SettingName.Color]: {
+    predicate: isValidHexColor,
+    message: "'color' must be a color literal",
+  },
+};
 
 export default class TableGroupValidator {
   private declarationNode: ElementDeclarationNode;
@@ -94,42 +109,27 @@ export default class TableGroupValidator {
       attrs,
     ] of Object.entries(settingMap)) {
       switch (name) {
-        case 'color':
+        case SettingName.Color:
+        case SettingName.Note: {
+          const spec = TABLEGROUP_FIELD_SPECS[name]!;
           if (attrs.length > 1) {
             errors.push(...attrs.map((attr) => new CompileError(
               CompileErrorCode.DUPLICATE_TABLE_SETTING,
-              '\'color\' can only appear once',
+              `'${name}' can only appear once`,
               attr,
             )));
           }
           attrs.forEach((attr) => {
-            if (!isValidHexColor(attr.value)) {
+            if (!spec.predicate(attr.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-                '\'color\' must be a color literal',
+                spec.message,
                 attr.value || attr.name!,
               ));
             }
           });
           break;
-        case 'note':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_TABLE_SETTING,
-              '\'note\' can only appear once',
-              attr,
-            )));
-          }
-          attrs
-            .filter((attr) => !isExpressionAQuotedString(attr.value))
-            .forEach((attr) => {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-                '\'note\' must be a string literal',
-                attr.value || attr.name!,
-              ));
-            });
-          break;
+        }
         default:
           // Any non-builtin key is free-form inline custom metadata.
           errors.push(...validateCustomInlineMetadata(name, attrs, {
@@ -205,44 +205,28 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
     attrs,
   ] of Object.entries(settingMap)) {
     switch (name) {
-      case 'color':
+      case SettingName.Color:
+      case SettingName.Note: {
+        const spec = TABLEGROUP_FIELD_SPECS[name]!;
         if (attrs.length > 1) {
           errors.push(...attrs.map((attr) => new CompileError(
             CompileErrorCode.DUPLICATE_TABLE_SETTING,
-            '\'color\' can only appear once',
+            `'${name}' can only appear once`,
             attr,
           )));
         }
         attrs.forEach((attr) => {
-          if (!isValidHexColor(attr.value)) {
+          if (!spec.predicate(attr.value)) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-              '\'color\' must be a color literal',
+              spec.message,
               attr.value || attr.name!,
             ));
           }
         });
         clean[name] = attrs;
         break;
-      case 'note':
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.DUPLICATE_TABLE_SETTING,
-            '\'note\' can only appear once',
-            attr,
-          )));
-        }
-        attrs
-          .filter((attr) => !isExpressionAQuotedString(attr.value))
-          .forEach((attr) => {
-            errors.push(new CompileError(
-              CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-              '\'note\' must be a string literal',
-              attr.value || attr.name!,
-            ));
-          });
-        clean[name] = attrs;
-        break;
+      }
       default:
         // Any non-builtin key is free-form inline custom metadata. Keep it in
         // the returned map so the interpreter can harvest it onto `metadata`.

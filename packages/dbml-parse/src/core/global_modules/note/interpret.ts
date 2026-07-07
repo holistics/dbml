@@ -16,10 +16,13 @@ import {
 } from '@/core/utils/interpret';
 import { NOTE_BUILTIN_SETTINGS } from '@/core/global_modules/metadata/interpret';
 import { extractQuotedStringToken } from '@/core/utils/expression';
-import type {
-  Filepath,
-  NoteSymbol,
+import {
+  SettingName,
+  type Filepath,
+  type NoteSymbol,
 } from '@/core/types';
+import type { Color } from '@/core/types/schemaJson';
+import type { FieldAssignMap } from '@/core/global_modules/metadata/fieldSpec';
 import Report from '@/core/types/report';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
 
@@ -100,3 +103,11 @@ export class StickyNoteInterpreter {
     return [];
   }
 }
+
+// Assignment of builtin metadata-block keys onto the typed fields of an emitted
+// Note. Key set MUST match NOTE_FIELD_SPECS (asserted by a test).
+export const NOTE_FIELD_ASSIGNS: FieldAssignMap<Note, SettingName.Color> = {
+  [SettingName.Color]: (element, value) => {
+    element.color = value as Color;
+  },
+};

@@ -15,22 +15,20 @@ import MetadataInterpreter from './interpret';
 import { resolveMetadataTarget } from './resolve';
 
 export const metadataModule: GlobalModule = {
-  // A Metadata element auto-attaches to its target element (like records/refs):
-  // owners() returns every reachable program that can see the target, so it
-  // travels with the target without an explicit import.
+  /** A metadata element does not have its own settings/metadata */
   nodeMetadata (compiler: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<PassThrough> {
     if (!(node instanceof MetadataDeclarationNode)) return new Report(PASS_THROUGH);
 
     return new Report(new MetadataElementMetadata(node));
   },
 
-  // Resolve the target identifier inside a Metadata header so go-to-definition
-  // and reference highlighting jump to the annotated element.
+  // Resolve the target element
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node)) return new Report(PASS_THROUGH);
 
     const metadataNode = node.parentOfKind(MetadataDeclarationNode);
     if (!metadataNode) return new Report(PASS_THROUGH);
+
     // Only the header target name, not anything inside the body.
     if (!metadataNode.targetName?.containsEq(node)) return new Report(PASS_THROUGH);
 

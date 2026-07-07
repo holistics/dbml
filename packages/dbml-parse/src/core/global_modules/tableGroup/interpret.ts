@@ -22,9 +22,12 @@ import type { TableGroup } from '@/core/types/schemaJson';
 import type Compiler from '@/compiler';
 import {
   ElementKind,
+  SettingName,
   type Filepath,
   type TableGroupSymbol,
 } from '@/core/types';
+import type { Color } from '@/core/types/schemaJson';
+import type { FieldAssignMap } from '@/core/global_modules/metadata/fieldSpec';
 import Report from '@/core/types/report';
 import {
   extractColor,
@@ -165,3 +168,14 @@ export class TableGroupInterpreter {
     return [];
   }
 }
+
+// Assignment of builtin metadata-block keys onto the typed fields of an emitted
+// TableGroup. Key set MUST match TABLEGROUP_FIELD_SPECS (asserted by a test).
+export const TABLEGROUP_FIELD_ASSIGNS: FieldAssignMap<TableGroup, SettingName.Note | SettingName.Color> = {
+  [SettingName.Note]: (element, value, token) => {
+    (element as TableGroup).note = { value, token };
+  },
+  [SettingName.Color]: (element, value) => {
+    (element as TableGroup).color = value as Color;
+  },
+};
