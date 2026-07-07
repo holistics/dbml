@@ -1,3 +1,4 @@
+import { TextEdit } from '@/compiler';
 import { Filepath } from './filepath';
 import { SyntaxNode } from '@/core/types/nodes';
 import { SyntaxToken } from '@/core/types/tokens';
@@ -209,7 +210,7 @@ export class CompileWarning extends Error {
 export interface QuickFix {
   title: string;
   filepath: Filepath;
-  edits: import('@/compiler/queries/transform/applyTextEdits').TextEdit[];
+  edits: TextEdit[];
 }
 
 export class CompileInfo extends Error {
