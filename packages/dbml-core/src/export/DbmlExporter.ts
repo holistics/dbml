@@ -342,12 +342,10 @@ class DbmlExporter {
   static exportTableGroups (tableGroupIds: number[], model: NormalizedModel): string {
     const tableGroupStrs = tableGroupIds.map((groupId) => {
       const group = model.tableGroups[groupId];
-      const groupSchema = model.schemas[group.schemaId];
       const groupSettingStr = DbmlExporter.getTableGroupSettings(group);
 
       const groupNote = group.note ? `  Note: ${DbmlExporter.escapeNote(group.note)}\n` : '';
-      const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `"${groupSchema.name}".` : '';
-      const groupName = `${groupSchemaName}"${group.name}"`;
+      const groupName = `"${group.name}"`;
 
       const tableNames = group.tableIds
         .reduce((result, tableId) => {
