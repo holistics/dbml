@@ -1,7 +1,7 @@
 import { NONE_COLOR } from '@/constants';
-import type { Filepath } from './filepath';
-import type { Position } from './position';
-import type { RelationshipOp, RelationCardinality } from './relation';
+import type { Filepath } from '../filepath';
+import type { Position } from '../position';
+import type { RelationshipOp, RelationCardinality } from '../relation';
 
 export type Color = `#${string}` | typeof NONE_COLOR;
 
