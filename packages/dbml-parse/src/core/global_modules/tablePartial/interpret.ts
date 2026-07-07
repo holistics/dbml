@@ -1,4 +1,4 @@
-import { head, last, partition } from 'lodash-es';
+import { head, partition } from 'lodash-es';
 import Compiler from '@/compiler/index';
 import { CompileError } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
