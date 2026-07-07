@@ -51,8 +51,9 @@ export {
   CARDINALITY_MANY,
   getMultiplicities,
   getRelationshipOp,
-  inferMultiplicitiesFromColumns,
 } from '@dbml/parse';
+
+export { inferMultiplicitiesFromColumns } from './transform/relations';
 
 // Re-export types
 export type {

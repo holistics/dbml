@@ -1,27 +1,27 @@
-import type { Column } from './types';
-import type { RelationCardinality } from '../relation';
+import type { NormalizedField } from '../../types/model_structure/field';
+import type { RelationCardinality } from '@dbml/parse';
 import {
   CARDINALITY_ONE,
   CARDINALITY_MAYBE,
   CARDINALITY_SOME,
   CARDINALITY_MANY,
-} from '../relation';
+} from '@dbml/parse';
 
 // Infer the cardinality pair for a ref from column constraints.
 // For each side:
 //   - max is determined by own column uniqueness (unique/pk -> 1, otherwise -> *)
 //   - min is determined by other column nullability (not_null -> 1, otherwise -> 0)
 export function inferMultiplicitiesFromColumns (
-  sourceColumn: Pick<Column, 'pk' | 'unique' | 'not_null'>,
-  targetColumn: Pick<Column, 'pk' | 'unique' | 'not_null'>,
+  sourceColumn: NormalizedField,
+  targetColumn: NormalizedField,
 ): [RelationCardinality, RelationCardinality] {
   /// TODO: Should we treat increment as unique + not null?
   /// As when we validate in ColumnSymbol, we do treat them as such...
   /// But i fear this may cause confusion
-  const sourceUnique = !!(sourceColumn.pk || sourceColumn.unique);
-  const targetUnique = !!(targetColumn.pk || targetColumn.unique);
-  const sourceNotNull = !!sourceColumn.not_null;
-  const targetNotNull = !!targetColumn.not_null;
+  const sourceUnique = sourceColumn.pk || sourceColumn.unique;
+  const targetUnique = targetColumn.pk || targetColumn.unique;
+  const sourceNotNull = sourceColumn.not_null;
+  const targetNotNull = targetColumn.not_null;
 
   const sourceCardinality: RelationCardinality = sourceUnique
     ? (targetNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE)
