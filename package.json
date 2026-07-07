@@ -36,7 +36,9 @@
   },
   "resolutions": {
     "**/tmp": "0.2.5",
-    "**/uuid": "11.1.1"
+    "**/uuid": "11.1.1",
+    "**/form-data": "^4.0.6",
+    "**/sigstore": "^4.1.1"
   },
   "license": "Apache-2.0",
   "repository": {
