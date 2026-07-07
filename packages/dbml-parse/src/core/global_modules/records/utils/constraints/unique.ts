@@ -26,14 +26,14 @@ export function validateUnique (compiler: Compiler, tableSymbol: TableSymbol, re
   if (isEmpty(record.values)) return [];
 
   const rows = toKeyedRows(record);
-  const uniqueConstraints = collectUniqueConstraints(tableSymbol, compiler);
+  const uniqueConstraints = collectUniqueConstraints(compiler, tableSymbol);
 
   return flatMap(uniqueConstraints, (uniqueColumnSymbols) =>
     checkUniqueDuplicates(compiler, tableSymbol, uniqueColumnSymbols, rows),
   );
 }
 
-function collectUniqueConstraints (tableSymbol: TableSymbol, compiler: Compiler): ColumnSymbol[][] {
+function collectUniqueConstraints (compiler: Compiler, tableSymbol: TableSymbol): ColumnSymbol[][] {
   const columns = tableSymbol.mergedColumns(compiler);
   const columnSymbolMap = keyBy(columns, (c) => c.name ?? '');
 
