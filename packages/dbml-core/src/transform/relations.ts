@@ -20,8 +20,8 @@ export function inferMultiplicitiesFromColumns (
   /// But i fear this may cause confusion
   const sourceUnique = sourceColumn.pk || sourceColumn.unique;
   const targetUnique = targetColumn.pk || targetColumn.unique;
-  const sourceNotNull = sourceColumn.not_null;
-  const targetNotNull = targetColumn.not_null;
+  const sourceNotNull = sourceColumn.not_null || sourceColumn.pk;
+  const targetNotNull = targetColumn.not_null || targetColumn.pk;
 
   const sourceCardinality: RelationCardinality = sourceUnique
     ? (targetNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE)
