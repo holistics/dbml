@@ -14,7 +14,7 @@ function serializeBinderResult (compiler: Compiler, ast: ProgramNode): string {
   const report = compiler.interpretFile(DEFAULT_ENTRY);
   const errors = report.getErrors();
   const warnings = report.getWarnings();
-  const infos = report.getHints();
+  const infos = report.getInfos();
   const nodeReferees = collectNodesWithReferee(compiler, ast);
 
   // FIXME: this snapshot manually splits the program's symbol table into

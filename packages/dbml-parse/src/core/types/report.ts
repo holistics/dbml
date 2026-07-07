@@ -8,31 +8,31 @@ export default class Report<T> {
 
   private warnings?: CompileWarning[];
 
-  private hints?: CompileInfo[];
+  private infos?: CompileInfo[];
 
   static create<T> (
     value: T,
     errors?: CompileError[],
     warnings?: CompileWarning[],
-    hints?: CompileInfo[],
+    infos?: CompileInfo[],
   ) {
-    return new Report(value, errors, warnings, hints);
+    return new Report(value, errors, warnings, infos);
   }
 
   constructor (
     value: T,
     errors?: CompileError[],
     warnings?: CompileWarning[],
-    hints?: CompileInfo[],
+    infos?: CompileInfo[],
   ) {
     this.value = value;
     this.errors = errors ?? [];
     this.warnings = warnings;
-    this.hints = hints;
+    this.infos = infos;
   }
 
   filter<S extends symbol> (filteredValue: S): Report<undefined | Exclude<T, S>> {
-    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings, this.hints);
+    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings, this.infos);
     return this as Report<Exclude<T, S>>;
   }
 
@@ -58,8 +58,8 @@ export default class Report<T> {
     return this.warnings ?? [];
   }
 
-  getHints (): CompileInfo[] {
-    return this.hints ?? [];
+  getInfos (): CompileInfo[] {
+    return this.infos ?? [];
   }
 
   // Chain the reported value
@@ -67,7 +67,7 @@ export default class Report<T> {
   // 2. If `fn` produces further warnings or errors, accumulate
   // If the reported value is filteredValue, return undefined
   chainFiltered<S extends symbol | undefined | null, U>(fn: (_: Exclude<T, S>) => Report<U>, filteredValue: S): Report<U | undefined> {
-    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings, this.hints);
+    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings, this.infos);
     const res = fn(this.value as Exclude<T, S>);
     const errors = [
       ...this.errors,
@@ -78,8 +78,8 @@ export default class Report<T> {
       ...res.getWarnings(),
     ];
     const infos = [
-      ...this.getHints(),
-      ...res.getHints(),
+      ...this.getInfos(),
+      ...res.getInfos(),
     ];
 
     return new Report<U>(res.value, errors, warnings, infos);
@@ -96,8 +96,8 @@ export default class Report<T> {
       ...res.getWarnings(),
     ];
     const infos = [
-      ...this.getHints(),
-      ...res.getHints(),
+      ...this.getInfos(),
+      ...res.getInfos(),
     ];
 
     return new Report<U>(res.value, errors, warnings, infos);
@@ -108,11 +108,11 @@ export default class Report<T> {
   // 2. `fn` cannot produce further warnings or errors
   // If the reported value is filteredValue, return undefined
   mapFiltered<S extends symbol | undefined | null, U>(fn: (_: Exclude<T, S>) => U, filteredValue: S): Report<U | undefined> {
-    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings, this.hints);
-    return new Report<U>(fn(this.value as Exclude<T, S>), this.errors, this.warnings, this.hints);
+    if (this.value as any === filteredValue) return new Report(undefined, this.errors, this.warnings, this.infos);
+    return new Report<U>(fn(this.value as Exclude<T, S>), this.errors, this.warnings, this.infos);
   }
 
   map<U>(fn: (_: T) => U): Report<U> {
-    return new Report<U>(fn(this.value), this.errors, this.warnings, this.hints);
+    return new Report<U>(fn(this.value), this.errors, this.warnings, this.infos);
   }
 }

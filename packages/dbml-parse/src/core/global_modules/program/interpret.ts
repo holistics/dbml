@@ -39,7 +39,7 @@ export default class ProgramInterpreter {
   private filepath: Filepath;
   private errors: CompileError[] = [];
   private warnings: CompileWarning[] = [];
-  private hints: CompileInfo[] = [];
+  private infos: CompileInfo[] = [];
   private db: Database;
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {
@@ -75,7 +75,7 @@ export default class ProgramInterpreter {
     this.interpretAllAliases();
     this.validatePartialRefs();
     this.warnings.push(...this.validateRecords());
-    return new Report(this.db, this.errors, this.warnings, this.hints);
+    return new Report(this.db, this.errors, this.warnings, this.infos);
   }
 
   private interpretAllSymbols () {
@@ -88,7 +88,7 @@ export default class ProgramInterpreter {
       if (result.hasValue(UNHANDLED)) continue;
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
-      this.hints.push(...result.getHints());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value) this.pushElement(symbol, value);
     }
@@ -127,7 +127,7 @@ export default class ProgramInterpreter {
     if (!result.hasValue(UNHANDLED)) {
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
-      this.hints.push(...result.getHints());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value) this.pushElement(use, value);
     }
@@ -186,7 +186,7 @@ export default class ProgramInterpreter {
       if (result.hasValue(UNHANDLED)) continue;
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
-      this.hints.push(...result.getHints());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value === undefined) continue;
       switch (meta.kind) {
@@ -328,7 +328,7 @@ export default class ProgramInterpreter {
     const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
       .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
     for (const meta of partialMetas) {
-      this.hints.push(...validatePartialRef(this.compiler, meta));
+      this.infos.push(...validatePartialRef(this.compiler, meta));
     }
   }
 

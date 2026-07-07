@@ -155,8 +155,6 @@ export class CompileError extends Error {
 
   end: Readonly<number>;
 
-  relatedLocations?: RelatedLocation[];
-
   constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
     this.code = code;
@@ -191,8 +189,6 @@ export class CompileWarning extends Error {
   start: Readonly<number>;
 
   end: Readonly<number>;
-
-  relatedLocations?: RelatedLocation[];
 
   constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
     super(message);
@@ -229,13 +225,11 @@ export class CompileInfo extends Error {
 
   quickFixes?: QuickFix[];
 
-  relatedLocations?: RelatedLocation[];
-
   constructor (
     code: number,
     message: string,
     nodeOrToken: SyntaxNode | SyntaxToken,
-    options?: { quickFixes?: QuickFix[]; relatedLocations?: RelatedLocation[] },
+    options?: { quickFixes?: QuickFix[] },
   ) {
     super(message);
     this.code = code;
@@ -244,7 +238,6 @@ export class CompileInfo extends Error {
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;
     this.quickFixes = options?.quickFixes;
-    this.relatedLocations = options?.relatedLocations;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileInfo.prototype);
   }

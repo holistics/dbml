@@ -27,18 +27,18 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     // Only proceed if Monaco passed markers at the cursor position.
     if (!context.markers.length) return undefined;
 
-    // Collect hints for the current file that have quick fixes attached.
+    // Collect infos for the current file that have quick fixes attached.
     const filepath = Filepath.fromUri(String(model.uri));
-    const hints = this.compiler.interpretProject().getHints()
+    const infos = this.compiler.interpretProject().getInfos()
       .filter((h) => h.quickFixes?.length && h.filepath.equals(filepath));
-    if (!hints.length) return undefined;
+    if (!infos.length) return undefined;
 
     // Match each marker to its corresponding hint by exact position,
     // then collect the quick fixes.
     const actions: CodeAction[] = [];
 
     for (const marker of context.markers) {
-      for (const hint of hints) {
+      for (const hint of infos) {
         const range = getEditorRange(model, hint.nodeOrToken);
         if (range.startLineNumber !== marker.startLineNumber
           || range.startColumn !== marker.startColumn

@@ -52,8 +52,8 @@ export class RefInterpreter {
       ...this.interpretName(),
       ...this.interpretBody(),
     ];
-    const { hints } = this.validateRefConstraints();
-    return Report.create(this.ref as Ref, errors, undefined, hints);
+    const { infos } = this.validateRefConstraints();
+    return Report.create(this.ref as Ref, errors, undefined, infos);
   }
 
   private interpretName (): CompileError[] {
@@ -160,10 +160,10 @@ export class RefInterpreter {
     return [];
   }
 
-  private validateRefConstraints (): { hints: CompileInfo[] } {
-    if (!this.metadata.cardinalities(this.compiler)) return { hints: [] };
+  private validateRefConstraints (): { infos: CompileInfo[] } {
+    if (!this.metadata.cardinalities(this.compiler)) return { infos: [] };
     return {
-      hints: [
+      infos: [
         ...validateCardinality(this.compiler, this.metadata, 'right'),
         ...validateCardinality(this.compiler, this.metadata, 'left'),
       ],

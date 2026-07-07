@@ -18,7 +18,7 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
 export function interpretProject (this: Compiler): Report<MasterDatabase> {
   const errors: CompileError[] = [];
   const warnings: CompileWarning[] = [];
-  const hints: CompileInfo[] = [];
+  const infos: CompileInfo[] = [];
 
   // Collect all reachable files from all entry points
   const visited = new Set<FilepathId>();
@@ -38,12 +38,12 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     const parseResult = this.parseFile(file);
     errors.push(...parseResult.getErrors());
     warnings.push(...parseResult.getWarnings());
-    hints.push(...parseResult.getHints());
+    infos.push(...parseResult.getInfos());
 
     const bindResult = this.bindFile(file);
     errors.push(...bindResult.getErrors());
     warnings.push(...bindResult.getWarnings());
-    hints.push(...bindResult.getHints());
+    infos.push(...bindResult.getInfos());
 
     const {
       ast,
@@ -56,7 +56,7 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     }
     errors.push(...result.getErrors());
     warnings.push(...result.getWarnings());
-    hints.push(...result.getHints());
+    infos.push(...result.getInfos());
   }
 
   const files: Record<string, Database> = {};
@@ -70,5 +70,5 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
 
   return new Report({
     files,
-  }, errors, warnings, hints);
+  }, errors, warnings, infos);
 }

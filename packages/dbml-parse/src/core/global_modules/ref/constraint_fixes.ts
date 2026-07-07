@@ -18,10 +18,10 @@ import type { RefMetadata, PartialRefMetadata } from '@/core/types/symbol/metada
 // Validate one side of a ref operator against column constraints.
 // A cardinality constrains:
 //   min >= 1 -> otherColumns must be NOT NULL
-//   min = 0  -> otherColumns may be nullable, hint if column is NOT NULL
+//   min = 0  -> otherColumns may be nullable, info if column is NOT NULL
 //   max = 1  -> ownColumns must be unique/pk
 //
-// For each mismatch, two hints are emitted:
+// For each mismatch, two infos are emitted:
 //   1. On the ref endpoint node
 //   2. On the column declaration
 export function validateCardinality (
@@ -52,7 +52,7 @@ export function validateCardinality (
     : meta.rightToken();
 
   const op = meta.op(compiler) ?? '?';
-  const hints: CompileInfo[] = [];
+  const infos: CompileInfo[] = [];
 
   if (card.min >= 1) {
     for (const col of otherColumns) {
@@ -64,9 +64,9 @@ export function validateCardinality (
           allowOtherColFix && suggestMakeNotNull(col, compiler),
         ].filter((f): f is QuickFix => !!f);
 
-        hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
+        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
         if (col.declaration) {
-          hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
+          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
         }
       }
     }
@@ -82,9 +82,9 @@ export function validateCardinality (
           allowOtherColFix && suggestMakeNullable(col, compiler),
         ].filter((f): f is QuickFix => !!f);
 
-        hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
+        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
         if (col.declaration) {
-          hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
+          infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
         }
       }
     }
@@ -100,15 +100,15 @@ export function validateCardinality (
       allowOwnColFix && ownColumns.length === 1 && suggestMakeUnique(ownColumns[0], compiler),
     ].filter((f): f is QuickFix => !!f);
 
-    hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, { quickFixes: fixes }));
+    infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, { quickFixes: fixes }));
     for (const col of ownColumns) {
       if (col.declaration) {
-        hints.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
+        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
       }
     }
   }
 
-  return hints;
+  return infos;
 }
 
 export function validatePartialRef (compiler: Compiler, meta: PartialRefMetadata): CompileInfo[] {

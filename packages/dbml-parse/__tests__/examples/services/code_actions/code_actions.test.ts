@@ -5,7 +5,7 @@ import { interpret } from '@tests/utils';
 
 function getQuickFixes (source: string) {
   const result = interpret(source);
-  const infos = result.getHints();
+  const infos = result.getInfos();
   return infos.flatMap((info) => info.quickFixes ?? []);
 }
 
