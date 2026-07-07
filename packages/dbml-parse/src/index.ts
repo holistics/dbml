@@ -98,9 +98,7 @@ export {
   CARDINALITY_MANY,
 } from '@/core/types/relation';
 
-export {
-  inferMultiplicitiesFromColumns,
-} from '@/core/types/schemaJson';
+export { inferMultiplicitiesFromColumns } from '@/core/types/schemaJson';
 
 // DiagramView types
 export type {
