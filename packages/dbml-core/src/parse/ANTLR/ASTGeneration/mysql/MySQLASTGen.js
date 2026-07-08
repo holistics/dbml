@@ -8,6 +8,7 @@ import {
   COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND,
 } from '../constants';
 import { getOriginalText } from '../helpers';
+import { CARDINALITY_MANY, CARDINALITY_MAYBE } from '@dbml/parse';
 
 const TABLE_OPTIONS_KIND = {
   NOTE: 'note',
@@ -718,14 +719,14 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       tableName: null,
       schemaName: null,
       fieldNames: null,
-      relation: '*',
+      relation: CARDINALITY_MANY,
     });
 
     const endpoint1 = new Endpoint({
       tableName,
       schemaName,
       fieldNames,
-      relation: '1',
+      relation: CARDINALITY_MAYBE,
     });
 
     return new Ref({

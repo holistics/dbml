@@ -938,6 +938,18 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'orders.user_id' is unique but operator '<' allows many",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@user_id@[L10:C2, L10:C34]",
+          "snippet": "\"user_id\" ... not null]"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'order_items.order_id' is nullable but operator '<' requires it to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
@@ -981,6 +993,18 @@
         "context": {
           "id": "node@<function-application>@id@[L23:C2, L23:C10]",
           "snippet": "\"id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'orders.user_id' is unique but operator '<' allows many",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L48:C19, L48:C37]",
+          "snippet": "\"orders\".\"user_id\""
         }
       }
     },

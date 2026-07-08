@@ -511,11 +511,16 @@ export class ColumnSymbol extends NodeSymbol {
     return !!(s?.[SettingName.PK]?.length || s?.[SettingName.PrimaryKey]?.length);
   }
 
-  unique (compiler: Compiler): boolean {
+  isUniqueSet (compiler: Compiler): boolean {
     if (!this.declaration) return false;
     const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
 
     return !!s?.[SettingName.Unique]?.length;
+  }
+
+  unique (compiler: Compiler): boolean {
+    if (!this.declaration) return false;
+    return this.isUniqueSet(compiler) || this.pk(compiler) || this.increment(compiler);
   }
 
   // Returns whether the column is nullable, considering all constraints:

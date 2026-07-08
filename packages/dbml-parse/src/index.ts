@@ -92,6 +92,8 @@ export {
   getRelationshipOp,
   getMultiplicities,
   parseCardinality,
+  makeCardinalityRequired,
+  makeCardinalityOptional,
   CARDINALITY_ONE,
   CARDINALITY_MAYBE,
   CARDINALITY_SOME,

@@ -109,10 +109,10 @@ Table "posts" {
   "user_id" integer [unique]
 }
 
-Ref:"posts"."user_id" ?-? "users"."id"`);
+Ref:"posts"."user_id" -? "users"."id"`);
     });
 
-    test('should export ref with operator >? (flipped to ?<)', () => {
+    test('should export ref with operator >? (flipped to < due to non-nullability inference)', () => {
       const input = `
 Table users { id integer [pk] }
 Table posts { user_id integer [not null] }
@@ -128,7 +128,7 @@ Table "posts" {
   "user_id" integer [not null]
 }
 
-Ref:"users"."id" ?< "posts"."user_id"`);
+Ref:"users"."id" < "posts"."user_id"`);
     });
 
     test('should export ref with operator ?<?', () => {
@@ -147,7 +147,7 @@ Table "posts" {
   "user_id" integer
 }
 
-Ref:"posts"."user_id" ?<? "users"."id"`);
+Ref:"posts"."user_id" <? "users"."id"`);
     });
   });
 

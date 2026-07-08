@@ -24,6 +24,6 @@ Table "merchant" [headerColor: #08DAFF] {
   Note: 'merchants sell a lot'
 }
 
-Ref:"user"."id" <? "merchant"."user_id"
+Ref:"user"."id" < "merchant"."user_id"
 
-Ref:"product"."id" <? "merchant"."product_id"
+Ref:"product"."id" < "merchant"."product_id"

@@ -20,6 +20,6 @@ Table "CodeDef" {
   }
 }
 
-Ref "fk__CodeDef__ParentCdKey__CodeDef__CdKey":"CodeDef"."CdKey" <? "CodeDef"."ParentCdKey"
+Ref "fk__CodeDef__ParentCdKey__CodeDef__CdKey":"CodeDef"."CdKey" < "CodeDef"."ParentCdKey"
 
-Ref "fk__CodeDef__UserMasterKeyLastEditedBy__UserMaster_UserMasterKey":"UserMaster"."UserMasterKey" <? "CodeDef"."UserMasterKeyLastEditedBy"
+Ref "fk__CodeDef__UserMasterKeyLastEditedBy__UserMaster_UserMasterKey":"UserMaster"."UserMasterKey" < "CodeDef"."UserMasterKeyLastEditedBy"

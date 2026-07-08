@@ -326,14 +326,14 @@
           "fieldNames": [
             "parent_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "complex_test",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     }

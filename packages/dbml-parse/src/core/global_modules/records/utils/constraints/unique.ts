@@ -40,7 +40,7 @@ function collectUniqueConstraints (compiler: Compiler, tableSymbol: TableSymbol)
 
   return [
     ...columns
-      .filter((col) => col.unique(compiler))
+      .filter((col) => col.isUniqueSet(compiler))
       .map((col) => [
         col,
       ]),

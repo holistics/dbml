@@ -40,8 +40,8 @@ Table "countries" {
 
 Ref:"users"."id" < "orders"."user_id" [delete: restrict]
 
-Ref:"orders"."id" <? "order_items"."order_id" [delete: cascade]
+Ref:"orders"."id" < "order_items"."order_id" [delete: cascade]
 
-Ref:"products".("id", "name") ?<? "order_items".("product_id", "product_name") [delete: set null]
+Ref:"products".("id", "name") < "order_items".("product_id", "product_name") [delete: set null]
 
 Ref:"countries"."code" < "users"."country_code" [delete: no action]

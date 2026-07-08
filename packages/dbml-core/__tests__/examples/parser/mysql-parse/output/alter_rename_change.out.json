@@ -663,14 +663,14 @@
           "fieldNames": [
             "parent_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "fk_parent",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     }

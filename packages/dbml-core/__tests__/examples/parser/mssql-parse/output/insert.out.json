@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "T1",
@@ -7,18 +8,27 @@
         {
           "name": "column_1",
           "type": {
-            "type_name": "int IDENTITY"
+            "type_name": "int IDENTITY",
+            "schemaName": null
           }
         },
         {
           "name": "column_2",
           "type": {
-            "type_name": "VARCHAR(30)"
+            "type_name": "VARCHAR(30)",
+            "schemaName": null
           }
         }
-      ]
+      ],
+      "indexes": [],
+      "checks": []
     }
   ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
   "records": [
     {
       "tableName": "UnitMeasure",
@@ -165,6 +175,7 @@
     {
       "tableName": "UnitMeasure",
       "schemaName": "Production",
+      "columns": [],
       "values": [
         [
           {

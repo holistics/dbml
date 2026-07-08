@@ -25,4 +25,4 @@ Table "employees" {
   "department" VARCHAR(50)
 }
 
-Ref:"customers"."customer_id" ?<? "orders"."customer_id"
+Ref:"customers"."customer_id" < "orders"."customer_id"

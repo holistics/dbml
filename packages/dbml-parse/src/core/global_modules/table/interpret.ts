@@ -270,7 +270,7 @@ export class TableInterpreter {
     errors.push(...typeReport.getErrors());
 
     column.pk = columnSymbol?.pk(this.compiler) || false;
-    column.unique = columnSymbol?.unique(this.compiler) || false;
+    column.unique = columnSymbol?.isUniqueSet(this.compiler) || false;
     column.increment = columnSymbol?.isIncrementSet(this.compiler) || undefined;
     column.not_null = columnSymbol?.isNotNullSet(this.compiler);
     column.dbdefault = columnSymbol?.default(this.compiler);

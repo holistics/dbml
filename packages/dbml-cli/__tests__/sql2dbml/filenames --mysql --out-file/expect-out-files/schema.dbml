@@ -39,15 +39,15 @@ Table "rental" {
   "last_update" timestamp
 }
 
-Ref:"store"."id" <? "staff"."store_id"
+Ref:"store"."id" ?<? "staff"."store_id"
 
-Ref:"staff"."id" <? "store"."manager_staff_id"
+Ref:"staff"."id" ?<? "store"."manager_staff_id"
 
-Ref:"staff"."id" <? "payment"."staff_id"
+Ref:"staff"."id" ?<? "payment"."staff_id"
 
-Ref:"rental"."id" <? "payment"."rental_id"
+Ref:"rental"."id" ?<? "payment"."rental_id"
 
-Ref:"staff"."id" <? "rental"."staff_id"
+Ref:"staff"."id" ?<? "rental"."staff_id"
 Table "country" {
   "id" int [pk]
   "country" varchar(255)
@@ -88,11 +88,11 @@ Table "customer" {
   }
 }
 
-Ref:"country"."id" <? "city"."country_id"
+Ref:"country"."id" ?<? "city"."country_id"
 
-Ref:"city"."id" <? "address"."city_id"
+Ref:"city"."id" ?<? "address"."city_id"
 
-Ref:"address"."id" <? "customer"."address_id"
+Ref:"address"."id" ?<? "customer"."address_id"
 Table "category" {
   "id" int [pk]
   "name" varchar(255)
@@ -155,16 +155,16 @@ Table "inventory" {
   "last_update" timestamp
 }
 
-Ref:"category"."id" <? "film_category"."category_id"
+Ref:"category"."id" ?<? "film_category"."category_id"
 
 Ref:"inventory"."film_id" ?<? "film_text"."film_id"
 
-Ref:"language"."id" <? "film"."language_id"
+Ref:"language"."id" ?<? "film"."language_id"
 
-Ref:"language"."id" <? "film"."original_language_id"
+Ref:"language"."id" ?<? "film"."original_language_id"
 
-Ref:"film"."id" <? "film_actor"."film_id"
+Ref:"film"."id" ?<? "film_actor"."film_id"
 
-Ref:"actor"."id" <? "film_actor"."actor_id"
+Ref:"actor"."id" ?<? "film_actor"."actor_id"
 
-Ref:"film"."id" <? "inventory"."film_id"
+Ref:"film"."id" ?<? "inventory"."film_id"

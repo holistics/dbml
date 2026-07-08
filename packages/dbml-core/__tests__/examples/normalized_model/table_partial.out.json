@@ -333,7 +333,7 @@
       "fieldNames": [
         "id2"
       ],
-      "relation": "0..1",
+      "relation": "1",
       "refId": 1,
       "fieldIds": [
         2
@@ -346,7 +346,7 @@
       "fieldNames": [
         "refColumn1"
       ],
-      "relation": "0..*",
+      "relation": "*",
       "refId": 1,
       "fieldIds": [
         6
@@ -359,7 +359,7 @@
       "fieldNames": [
         "refColumn2"
       ],
-      "relation": "0..*",
+      "relation": "*",
       "refId": 2,
       "fieldIds": [
         7
@@ -372,7 +372,7 @@
       "fieldNames": [
         "id"
       ],
-      "relation": "0..1",
+      "relation": "1",
       "refId": 2,
       "fieldIds": [
         3

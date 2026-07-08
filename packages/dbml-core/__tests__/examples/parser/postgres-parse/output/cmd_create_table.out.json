@@ -295,14 +295,14 @@
           "fieldNames": [
             "time"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "a",
           "fieldNames": [
             "name"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": null,

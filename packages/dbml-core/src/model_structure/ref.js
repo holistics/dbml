@@ -1,4 +1,3 @@
-import { CARDINALITY_SOME, CARDINALITY_MANY, CARDINALITY_ONE, CARDINALITY_MAYBE } from '@dbml/parse';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import Element from './element';
 import Endpoint from './endpoint';
@@ -66,16 +65,6 @@ class Ref extends Element {
 
     if (this.endpoints[0].fields.length !== this.endpoints[1].fields.length) {
       this.error('Two endpoints have unequal number of fields');
-    }
-
-    // If an endpoint's FK fields are all nullable, both sides become optional
-    for (const ep of this.endpoints) {
-      const allNullable = ep.fields.length > 0
-        && ep.fields.every((f) => !f.not_null && !f.pk);
-      if (allNullable) {
-        if (ep.relation === CARDINALITY_SOME) ep.relation = CARDINALITY_MANY;
-        else if (ep.relation === CARDINALITY_ONE) ep.relation = CARDINALITY_MAYBE;
-      }
     }
   }
 

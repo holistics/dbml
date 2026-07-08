@@ -111,20 +111,20 @@ Table "Cities" {
   }
 }
 
-Ref "FK_States_Countries_CountryId":"Countries"."Id" < "States"."CountryId" [delete: cascade]
+Ref "FK_States_Countries_CountryId":"Countries"."Id" <? "States"."CountryId" [delete: cascade]
 
-Ref "FK_Cities_Countries_CountryId":"Countries"."Id" < "Cities"."CountryId" [delete: cascade]
+Ref "FK_Cities_Countries_CountryId":"Countries"."Id" <? "Cities"."CountryId" [delete: cascade]
 
-Ref "FK_Cities_States_StateId_CountryId":"States".("Id", "CountryId") < "Cities".("StateId", "CountryId") [delete: cascade]
+Ref "FK_Cities_States_StateId_CountryId":"States".("Id", "CountryId") <? "Cities".("StateId", "CountryId") [delete: cascade]
 
-Ref:"orders"."id" <? "order_items"."order_id"
+Ref:"orders"."id" ?<? "order_items"."order_id"
 
 Ref:"products"."id" ?<? "order_items"."product_id"
 
-Ref:"countries"."code" <? "users"."country_code"
+Ref:"countries"."code" ?<? "users"."country_code"
 
-Ref:"countries"."code" <? "merchants"."country_code"
+Ref:"countries"."code" ?<? "merchants"."country_code"
 
-Ref:"merchants"."id" < "products"."merchant_id"
+Ref:"merchants"."id" <? "products"."merchant_id"
 
-Ref:"users"."id" <? "merchants"."admin_id"
+Ref:"users"."id" ?<? "merchants"."admin_id"

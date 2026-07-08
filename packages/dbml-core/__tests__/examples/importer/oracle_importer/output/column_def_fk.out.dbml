@@ -194,9 +194,9 @@ Ref "fk_emp_manager":"employees"."emp_id" ?<? "employees"."manager_id"
 
 Ref "fk_order_cust":"customers"."cust_id" ?<? "orders"."customer_id"
 
-Ref "fk_order_track":"shipments"."tracking_number" <? "orders"."tracking_number"
+Ref "fk_order_track":"shipments"."tracking_number" ?<? "orders"."tracking_number"
 
-Ref "fk_ship_cust":"customers"."cust_id" ?< "shipments"."customer_id"
+Ref "fk_ship_cust":"customers"."cust_id" <? "shipments"."customer_id"
 
 Ref "fk_child_complex":"complex_test"."id" ?<? "complex_child"."parent_id"
 

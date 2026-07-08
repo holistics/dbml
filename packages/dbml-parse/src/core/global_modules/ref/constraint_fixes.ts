@@ -10,6 +10,7 @@ import type { RelationCardinality } from '@/core/types/relation';
 import {
   getRelationshipOp, parseCardinality,
   makeCardinalityOptional, makeCardinalityRequired, makeCardinalityMany,
+  CARDINALITY_ONE,
 } from '@/core/types/relation';
 import { addSettingEdit } from '@/compiler/queries/transform/addSetting';
 import { removeSettingEdit } from '@/compiler/queries/transform/updateSetting';
@@ -18,8 +19,9 @@ import type { RefMetadata, PartialRefMetadata } from '@/core/types/symbol/metada
 // Validate one side of a ref operator against column constraints.
 // A cardinality constrains:
 //   min >= 1 -> otherColumns must be NOT NULL
-//   min = 0  -> otherColumns may be nullable, info if column is NOT NULL
 //   max = 1  -> ownColumns must be unique/pk
+// A column not nullability constrains the other side's cardinality to be min >= 1
+// A column unique constraint its side's cardinality to be max = 1
 //
 // For each mismatch, two infos are emitted:
 //   1. On the ref endpoint node
@@ -72,20 +74,42 @@ export function validateCardinality (
     }
   }
 
+  // Reverse: column NOT NULL constrains other side's cardinality min >= 1
   if (card.min === 0) {
-    for (const col of otherColumns) {
-      if (col.nullable(compiler) === false) {
-        const qname = col.qualifiedName(compiler);
-        const msg = `Column '${qname}' is NOT NULL but operator '${op}' allows it to be optional`;
-        const fixes = [
-          opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `Make '${qname}' required in the ref`),
-          allowOtherColFix && suggestMakeNullable(col, compiler),
-        ].filter((f): f is QuickFix => !!f);
+    const allOtherNotNull = otherColumns.length > 0 && otherColumns.every((col) => col.nullable(compiler) === false);
+    if (allOtherNotNull) {
+      const qnames = otherColumns.map((c) => c.qualifiedName(compiler)).join(', ');
+      const msg = otherColumns.length === 1
+        ? `Column '${qnames}' is NOT NULL but operator '${op}' allows it to be optional`
+        : `Columns (${qnames}) are NOT NULL but operator '${op}' allows them to be optional`;
+      const fixes = [
+        opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `Make '${qnames}' required in the ref`),
+        ...(allowOtherColFix ? otherColumns.map((col) => suggestMakeNullable(col, compiler)).filter((f): f is QuickFix => !!f) : []),
+      ].filter((f): f is QuickFix => !!f);
 
-        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
+      infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
+      for (const col of otherColumns) {
         if (col.declaration) {
           infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
         }
+      }
+    }
+  }
+
+  // Reverse: column unique/pk constrains own side's cardinality max = 1
+  if (card.max === '*' && isColumnsUnique(compiler, ownColumns)) {
+    const qnames = ownColumns.map((c) => c.qualifiedName(compiler)).join(', ');
+    const msg = ownColumns.length === 1
+      ? `Column '${qnames}' is unique but operator '${op}' allows many`
+      : `Columns (${qnames}) have a unique index but operator '${op}' allows many`;
+    const fixes = [
+      opToken && suggestChangeOp(opToken, CARDINALITY_ONE, otherRel, side, `Make '${qnames}' one in the ref`),
+    ].filter((f): f is QuickFix => !!f);
+
+    infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, { quickFixes: fixes }));
+    for (const col of ownColumns) {
+      if (col.declaration) {
+        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
       }
     }
   }
@@ -186,7 +210,7 @@ function isColumnsUnique (compiler: Compiler, columns: ColumnSymbol[]): boolean 
   if (columns.length === 0) return false;
 
   if (columns.length === 1) {
-    return columns[0].unique(compiler) || columns[0].pk(compiler);
+    return columns[0].unique(compiler);
   }
 
   // Find the owner table from the first column's declaration
@@ -216,7 +240,7 @@ function isColumnsUnique (compiler: Compiler, columns: ColumnSymbol[]): boolean 
 
 function suggestMakeUnique (col: ColumnSymbol, compiler: Compiler): QuickFix | undefined {
   if (!col.declaration) return undefined;
-  if (col.unique(compiler) || col.pk(compiler)) return undefined;
+  if (col.isUniqueSet(compiler) || col.pk(compiler)) return undefined;
 
   const edit = addSettingEdit(col.declaration, 'unique');
   if (!edit) return undefined;
