@@ -5,9 +5,9 @@ import { UNHANDLED } from '@/core/types/module';
 import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, CustomMetadata, Database, DiagramView,
-  Enum, MetadataElement, Note, Project,
-  Ref, RefEndpoint, SchemaElement, Table,
+  Alias, Database, DiagramView, Enum,
+  MetadataElement, Note, Project, Ref,
+  RefEndpoint, SchemaElement, Table,
   TableGroup, TablePartial, TableRecord, TokenPosition,
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
@@ -207,8 +207,7 @@ export default class ProgramInterpreter {
       targetSymbol: NodeSymbol;
       kind: MetadataTargetKind;
       name: string[];
-      values: CustomMetadata;
-      valueTokens: Record<string, TokenPosition>;
+      lowerKeyMap: Record<string, { originalKey: string; value: string; token: TokenPosition }>;
     }>();
 
     for (const meta of metadatas) {
@@ -280,18 +279,14 @@ export default class ProgramInterpreter {
             if (targetSymbol) {
               const targetId = targetSymbol.intern();
               const existing = mergedMetadataByTarget.get(targetId);
+              const valueToAssign = Object.fromEntries(Object.entries(metaEl.valueWithTokens).map(([originalKey, valueAndToken]) => [originalKey.toLowerCase(), { originalKey, ...valueAndToken }]));
               if (existing) {
-                // Per-key last-write-wins across blocks. Tokens merge in
-                // lockstep so a promoted value's token tracks the winning block.
-                Object.assign(existing.values, metaEl.values);
-                Object.assign(existing.valueTokens, metaEl.valueTokens);
+                existing.lowerKeyMap = { ...existing.lowerKeyMap, ...valueToAssign };
               } else {
                 mergedMetadataByTarget.set(targetId, {
                   targetSymbol,
-                  kind: metaEl.target.kind,
-                  name: metaEl.target.name,
-                  values: { ...metaEl.values },
-                  valueTokens: { ...metaEl.valueTokens },
+                  lowerKeyMap: valueToAssign,
+                  ...metaEl.target,
                 });
               }
             }
@@ -303,79 +298,55 @@ export default class ProgramInterpreter {
     }
 
     // Attach each target's merged metadata onto its emitted element object.
-    for (const { targetSymbol, kind, name, values, valueTokens } of mergedMetadataByTarget.values()) {
-      this.attachMetadata(targetSymbol, kind, name, values, valueTokens);
-    }
-  }
+    for (const { targetSymbol, kind, name, lowerKeyMap } of mergedMetadataByTarget.values()) {
+      if (targetSymbol.kind === SymbolKind.Column) {
+        const tableNode = targetSymbol.declaration?.parentOfKind(ElementDeclarationNode);
+        const tableSymbol = tableNode
+          ? this.compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol
+          : undefined;
+        const table = tableSymbol ? this.emittedBySymbol.get(tableSymbol.intern()) as Table | undefined : undefined;
+        // The rightmost name fragment is the column name (e.g. `id` in `public.users.id`).
+        const columnName = name.at(-1);
+        const column = table?.fields.find((f) => f.name === columnName);
+        if (column) {
+          const assignMap = COLUMN_FIELD_ASSIGNS;
+          if (!assignMap) return;
 
-  // Write any builtin keys present in `values` onto the typed inline fields of
-  // `element`, overriding inline-declared values. This is per-key and only fires
-  // for keys actually present, so absent builtin keys leave the inline value
-  // untouched. Builtin keys also remain in `element.metadata`.
-  private writeBuiltinFields (
-    element: MetadataTarget,
-    kind: MetadataTargetKind,
-    values: CustomMetadata,
-    valueTokens: Record<string, TokenPosition>,
-  ) {
-    const assignMap = METADATA_ASSIGN_MAPS[kind];
-    if (!assignMap) return;
+          const mappedAssign = Object.fromEntries(Object.entries(assignMap).map(([builtinKey, assign]) => [builtinKey.toLowerCase(), { builtinKey, assign }]));
 
-    const lowerCaseKeyedValues = Object.fromEntries(Object.entries(values).map(([
-      key,
-      value,
-    ]) => [
-      key.toLowerCase(),
-      value,
-    ]));
+          const inlineMetadata = column.metadata ? Object.fromEntries(Object.entries(column.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }])) : {};
+          column.metadata = {};
 
-    // The promotable keys for this kind are exactly the assign map's keys.
-    for (const [
-      builtinKey,
-      assign,
-    ] of Object.entries(assignMap)) {
-      const value = lowerCaseKeyedValues[builtinKey];
-      if (value === undefined) continue;
+          Object.entries(lowerKeyMap).forEach(([lowerCaseKey, metadata]) => {
+            const { originalKey, value, token } = metadata;
+            if (mappedAssign[lowerCaseKey]) mappedAssign[lowerCaseKey].assign(column, value, token);
+            else column.metadata = { ...column.metadata, [originalKey]: value };
+            delete inlineMetadata[lowerCaseKey];
+          });
 
-      assign(element, value, valueTokens[builtinKey]);
-    }
-  }
-
-  // Attach merged metadata values onto the emitted element object for a
-  // resolved target symbol. Tables/TableGroups/Notes are top-level emitted
-  // objects looked up via `emittedBySymbol`; Columns are nested inside their
-  // table's `fields`, reached via the column symbol's parent table.
-  private attachMetadata (
-    targetSymbol: NodeSymbol,
-    kind: MetadataTargetKind,
-    name: string[],
-    values: CustomMetadata,
-    valueTokens: Record<string, TokenPosition>,
-  ) {
-    if (targetSymbol.kind === SymbolKind.Column) {
-      const tableNode = targetSymbol.declaration?.parentOfKind(ElementDeclarationNode);
-      const tableSymbol = tableNode
-        ? this.compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol
-        : undefined;
-      const table = tableSymbol ? this.emittedBySymbol.get(tableSymbol.intern()) as Table | undefined : undefined;
-      // The rightmost name fragment is the column name (e.g. `id` in `public.users.id`).
-      const columnName = name.at(-1);
-      const column = table?.fields.find((f) => f.name === columnName);
-      if (column) {
-        // Per-key merge: block values override inline custom metadata harvested
-        // earlier (in pass 1), inline-only keys survive. Block wins per-key.
-        column.metadata = { ...column.metadata, ...values };
-        this.writeBuiltinFields(column, kind, values, valueTokens);
+          column.metadata = { ...column.metadata, ...Object.fromEntries(Object.entries(inlineMetadata).map(([_, metadata]) => [metadata.originalKey, metadata.value])) };
+        }
+        return;
       }
-      return;
-    }
 
-    const element = this.emittedBySymbol.get(targetSymbol.originalSymbol.intern());
-    if (!element) return;
-    // Per-key merge: block values override inline custom metadata harvested
-    // earlier (in pass 1), inline-only keys survive. Block wins per-key.
-    element.metadata = { ...element.metadata, ...values };
-    this.writeBuiltinFields(element, kind, values, valueTokens);
+      const element = this.emittedBySymbol.get(targetSymbol.originalSymbol.intern());
+      const assignMap = METADATA_ASSIGN_MAPS[kind];
+
+      if (!element || !assignMap) return;
+
+      const mappedAssign = Object.fromEntries(Object.entries(assignMap).map(([builtinKey, assign]) => [builtinKey.toLowerCase(), { builtinKey, assign }]));
+
+      const inlineMetadata = element.metadata ? Object.fromEntries(Object.entries(element.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }])) : {};
+      element.metadata = {};
+
+      Object.entries(lowerKeyMap).forEach(([lowerCaseKey, metadata]) => {
+        const { originalKey, value, token } = metadata;
+        if (mappedAssign[lowerCaseKey]) mappedAssign[lowerCaseKey].assign(element, value, token);
+        else element.metadata![originalKey] = value;
+        delete inlineMetadata[lowerCaseKey];
+      });
+      element.metadata = { ...element.metadata, ...Object.fromEntries(Object.entries(inlineMetadata).map(([_, metadata]) => [metadata.originalKey, metadata.value])) };
+    }
   }
 
   private interpretAllAliases () {

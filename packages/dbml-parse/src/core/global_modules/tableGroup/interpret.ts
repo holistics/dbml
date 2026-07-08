@@ -173,9 +173,9 @@ export class TableGroupInterpreter {
 // TableGroup. Key set MUST match TABLEGROUP_FIELD_SPECS (asserted by a test).
 export const TABLEGROUP_FIELD_ASSIGNS: FieldAssignMap<TableGroup, SettingName.Note | SettingName.Color> = {
   [SettingName.Note]: (element, value, token) => {
-    (element as TableGroup).note = { value, token };
+    element.note = { value, token };
   },
   [SettingName.Color]: (element, value) => {
-    (element as TableGroup).color = value as Color;
+    element.color = value as Color;
   },
 };

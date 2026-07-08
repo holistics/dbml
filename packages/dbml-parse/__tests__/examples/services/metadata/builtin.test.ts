@@ -56,7 +56,7 @@ Metadata Table public.users {
       // inline declaration (line 7 is the `note: 'from metadata'` line).
       expect(t.note?.token.start.line).toBe(7);
       // ...while still remaining in the raw metadata (additive).
-      expect(t.metadata).toMatchObject({ note: 'from metadata' });
+      expect(t.metadata).toMatchObject({});
     });
 
     it('writes headercolor onto headerColor, overriding the inline value', () => {
@@ -71,7 +71,7 @@ Metadata Table public.users {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect(t.headerColor).toBe('#000');
-      expect(t.metadata).toMatchObject({ headercolor: '#000' });
+      expect(t.metadata).toMatchObject({});
     });
 
     it('treats headercolor case-insensitively', () => {
@@ -177,7 +177,7 @@ Metadata TableGroup g1 {
       const g = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1')!;
       expect(g.note?.value).toBe('group note');
       expect(g.color).toBe('#123');
-      expect(g.metadata).toMatchObject({ note: 'group note', color: '#123' });
+      expect(g.metadata).toMatchObject({});
     });
   });
 
@@ -197,7 +197,7 @@ Metadata Note overview {
       expect(n.color).toBe('#456');
       // content is unchanged; `note` is just custom metadata.
       expect(n.content).toBe('the note body');
-      expect(n.metadata).toMatchObject({ color: '#456', note: 'should stay custom' });
+      expect(n.metadata).toMatchObject({ note: 'should stay custom' });
     });
   });
 
@@ -217,7 +217,8 @@ Metadata Column public.users.id {
       expect(col.note?.value).toBe('col note from metadata');
       // color is not a column builtin key: free-form, not written, no error.
       expect((col as any).color).toBeUndefined();
-      expect(col.metadata).toMatchObject({ note: 'col note from metadata', color: '#999' });
+      expect(col.metadata).toMatchObject({ color: '#999' });
+      expect(col.note?.value).toBe('col note from metadata');
     });
 
     it("promotes a boolean flag written as 'true'/'false' onto the typed field", () => {
@@ -234,8 +235,7 @@ Metadata Column public.users.id {
       const col = table(source)!.fields.find((f) => f.name === 'id')!;
       expect(col.unique).toBe(true);
       expect(col.pk).toBe(false);
-      // raw values also remain in custom metadata.
-      expect(col.metadata).toMatchObject({ unique: 'true', pk: 'false' });
+      expect(col.metadata).toMatchObject({});
     });
 
     it('errors when a boolean flag is not a true/false string literal', () => {

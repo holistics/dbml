@@ -363,10 +363,10 @@ export class TableInterpreter {
 // Table. Each entry's key set MUST match TABLE_FIELD_SPECS (asserted by a test).
 export const TABLE_FIELD_ASSIGNS: FieldAssignMap<Table, SettingName.Note | SettingName.HeaderColor> = {
   [SettingName.Note]: (element, value, token) => {
-    (element as Table).note = { value, token };
+    element.note = { value, token };
   },
   [SettingName.HeaderColor]: (element, value) => {
-    (element as Table).headerColor = value as Color;
+    element.headerColor = value as Color;
   },
 };
 
@@ -375,15 +375,15 @@ export const TABLE_FIELD_ASSIGNS: FieldAssignMap<Table, SettingName.Note | Setti
 // validated 'true'/'false' string; note writes the {value, token} shape.
 export const COLUMN_FIELD_ASSIGNS: FieldAssignMap<Column, SettingName.Note | SettingName.PK | SettingName.Unique | SettingName.Increment> = {
   [SettingName.Note]: (element, value, token) => {
-    (element as Column).note = { value, token };
+    element.note = { value, token };
   },
   [SettingName.PK]: (element, value) => {
-    (element as Column).pk = value === 'true';
+    element.pk = value === 'true';
   },
   [SettingName.Unique]: (element, value) => {
-    (element as Column).unique = value === 'true';
+    element.unique = value === 'true';
   },
   [SettingName.Increment]: (element, value) => {
-    (element as Column).increment = value === 'true';
+    element.increment = value === 'true';
   },
 };

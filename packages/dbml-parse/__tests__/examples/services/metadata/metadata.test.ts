@@ -25,6 +25,12 @@ function usersTableMetadata (source: string) {
   return db?.tables?.find((t) => t.name === 'users')?.metadata;
 }
 
+function usersTable (source: string) {
+  const result = interpret(TABLE + source);
+  const db = result.getValue();
+  return db?.tables?.find((t) => t.name === 'users');
+}
+
 describe('[example] Metadata element', () => {
   it('go-to-definition on the metadata target jumps to the table declaration', () => {
     const program = `Table users {
@@ -210,7 +216,8 @@ Metadata Table public.users {
 
       expect(result.getWarnings()).toHaveLength(0);
       expect(result.getErrors()).toHaveLength(0);
-      expect(usersTableMetadata(source)).toMatchObject({ color: '#aaa', note: 'hello' });
+      expect(usersTableMetadata(source)).toMatchObject({ color: '#aaa' });
+      expect(usersTable(source)?.note?.value).toBe('hello');
     });
   });
 

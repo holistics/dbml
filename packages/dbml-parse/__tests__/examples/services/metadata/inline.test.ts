@@ -162,18 +162,20 @@ Metadata Table public.users {
 
     it('promotes an inline-only overlap key from a block onto the typed field, over the inline metadata base', () => {
       // headercolor inline-as-setting is the base; block headercolor overrides it.
-      const source = `Table users [headercolor: #111, owner: "x"] {
+      const source = `
+Table users [headercolor: #111, owner: "x"] {
   id int
 }
 
 Metadata Table public.users {
   headercolor: #222
-}`;
+}
+      `;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect(t.headerColor).toBe('#222');
-      expect(t.metadata).toMatchObject({ owner: 'x', headercolor: '#222' });
+      expect(t.metadata).toMatchObject({ owner: 'x' });
     });
   });
 });

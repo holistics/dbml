@@ -58,8 +58,7 @@ export default class MetadataInterpreter {
     this.filepath = filepath;
     this.metadata = {
       target: undefined,
-      values: {},
-      valueTokens: {},
+      valueWithTokens: {},
       token: undefined,
     };
   }
@@ -101,10 +100,12 @@ export default class MetadataInterpreter {
         : undefined;
 
       const value = extractMetadataValue(valueNode);
-      if (value) {
-        this.metadata.values![key] = key === 'note' ? normalizeNote(value) : value;
-        this.metadata.valueTokens![key] = getTokenPosition(stmt);
-      }
+      if (!value) continue;
+
+      this.metadata.valueWithTokens![key] = {
+        value: key === 'note' ? normalizeNote(value) : value,
+        token: getTokenPosition(stmt),
+      };
     }
 
     return [];

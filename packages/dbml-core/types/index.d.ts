@@ -53,4 +53,5 @@ export type {
   DiagramViewSyncOperation,
   DiagramViewBlock,
   TextEdit,
+  CustomMetadata,
 } from '@dbml/parse';

@@ -1,4 +1,4 @@
-import type { Filepath } from '@dbml/parse';
+import type { CustomMetadata, Filepath } from '@dbml/parse';
 
 export type Color = `#${string}` | 'none';
 
@@ -21,7 +21,7 @@ export interface RawNote {
     token: Token;
 }
 
-export type Metadata = Record<string, unknown>;
+export type Metadata = CustomMetadata;
 
 declare class Element {
     token: Token;
