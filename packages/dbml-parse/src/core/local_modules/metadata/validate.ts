@@ -13,22 +13,7 @@ import {
 import { isValidMetadataValue, isValidName } from '@/core/utils/validate';
 import { ALLOWED_METADATA_TARGET_KINDS, SettingName } from '@/core/types';
 import { MetadataTargetKind } from '@/core/types/symbol';
-import { COLUMN_FIELD_SPECS, TABLE_FIELD_SPECS } from '@/core/local_modules/table/validate';
-import { TABLEGROUP_FIELD_SPECS } from '@/core/local_modules/tableGroup/validate';
-import { NOTE_FIELD_SPECS } from '@/core/local_modules/note/validate';
-import { FieldValidateMap } from '@/core/global_modules/metadata/fieldSpec';
-
-// Static per-target-kind routing to each element's builtin-field validation map.
-// The metadata element depends on the target element's rules; this record is the
-// only place that knows which element owns which kind. Kinds without builtin
-// promotable fields (e.g. Schema) are simply absent -> generic custom-metadata
-// validation for every key.
-const METADATA_VALIDATE_MAPS: Partial<Record<MetadataTargetKind, FieldValidateMap<any>>> = {
-  [MetadataTargetKind.Table]: TABLE_FIELD_SPECS,
-  [MetadataTargetKind.Column]: COLUMN_FIELD_SPECS,
-  [MetadataTargetKind.TableGroup]: TABLEGROUP_FIELD_SPECS,
-  [MetadataTargetKind.Note]: NOTE_FIELD_SPECS,
-};
+import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/fieldRegistry';
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: MetadataDeclarationNode) {}
@@ -146,8 +131,8 @@ export default class MetadataValidator {
       // validation and writing agree by construction.
       // `key` is a free-form lowercased string; a non-builtin key simply misses
       // the map (undefined) and falls through to generic validation below.
-      const spec = targetKind ? METADATA_VALIDATE_MAPS[targetKind]?.[key as SettingName] : undefined;
-      if (spec) {
+      const field = targetKind ? METADATA_FIELDS_BY_KIND[targetKind]?.[key as SettingName] : undefined;
+      if (field) {
         if (sub.body instanceof BlockExpressionNode) {
           return [
             new CompileError(
@@ -158,11 +143,11 @@ export default class MetadataValidator {
           ];
         }
 
-        if (!spec.predicate(sub.body?.callee)) {
+        if (!field.validate(sub.body?.callee)) {
           return [
             new CompileError(
               CompileErrorCode.INVALID_METADATA_FIELD,
-              spec.message,
+              field.message,
               sub,
             ),
           ];

@@ -8,23 +8,9 @@ import {
 import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import {
-  Settings, aggregateSettingList, isSimpleName, isValidHexColor, isExpressionAQuotedString, validateCustomInlineMetadata,
+  Settings, aggregateSettingList, isSimpleName, validateCustomInlineMetadata,
 } from '@/core/utils/validate';
-import type { FieldValidateMap } from '@/core/global_modules/metadata/fieldSpec';
-
-// Builtin metadata field validation for a TableGroup target. Shared by both
-// inline setting-list validators below and the metadata block. TableGroup color
-// is hex-only (no 'none'), consistent with the inline setting list.
-export const TABLEGROUP_FIELD_SPECS: FieldValidateMap<SettingName.Note | SettingName.Color> = {
-  [SettingName.Note]: {
-    predicate: isExpressionAQuotedString,
-    message: "'note' must be a string literal",
-  },
-  [SettingName.Color]: {
-    predicate: isValidHexColor,
-    message: "'color' must be a color literal",
-  },
-};
+import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
 
 export default class TableGroupValidator {
   private declarationNode: ElementDeclarationNode;
@@ -111,7 +97,7 @@ export default class TableGroupValidator {
       switch (name) {
         case SettingName.Color:
         case SettingName.Note: {
-          const spec = TABLEGROUP_FIELD_SPECS[name]!;
+          const spec = TABLEGROUP_METADATA_FIELDS[name as SettingName.Color | SettingName.Note]!;
           if (attrs.length > 1) {
             errors.push(...attrs.map((attr) => new CompileError(
               CompileErrorCode.DUPLICATE_TABLE_SETTING,
@@ -120,7 +106,7 @@ export default class TableGroupValidator {
             )));
           }
           attrs.forEach((attr) => {
-            if (!spec.predicate(attr.value)) {
+            if (!spec.validate(attr.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 spec.message,
@@ -207,7 +193,7 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
     switch (name) {
       case SettingName.Color:
       case SettingName.Note: {
-        const spec = TABLEGROUP_FIELD_SPECS[name]!;
+        const field = TABLEGROUP_METADATA_FIELDS[name as SettingName.Color | SettingName.Note]!;
         if (attrs.length > 1) {
           errors.push(...attrs.map((attr) => new CompileError(
             CompileErrorCode.DUPLICATE_TABLE_SETTING,
@@ -216,10 +202,10 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
           )));
         }
         attrs.forEach((attr) => {
-          if (!spec.predicate(attr.value)) {
+          if (!field.validate(attr.value)) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-              spec.message,
+              field.message,
               attr.value || attr.name!,
             ));
           }

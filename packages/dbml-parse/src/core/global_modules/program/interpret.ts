@@ -35,21 +35,8 @@ import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../reco
 import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '../utils';
-import type { MetadataTarget, FieldAssignMap } from '../metadata/fieldSpec';
-import { COLUMN_FIELD_ASSIGNS, TABLE_FIELD_ASSIGNS } from '../table/interpret';
-import { TABLEGROUP_FIELD_ASSIGNS } from '../tableGroup/interpret';
-import { NOTE_FIELD_ASSIGNS } from '../note/interpret';
-
-// Static per-target-kind routing to each element's builtin-field assign map. The
-// mirror of METADATA_VALIDATE_MAPS on the write side; the promotable key set for
-// a kind IS this map's key set (no separate matrix). Kinds absent here promote
-// nothing.
-const METADATA_ASSIGN_MAPS: Partial<Record<MetadataTargetKind, FieldAssignMap<any, any>>> = {
-  [MetadataTargetKind.Table]: TABLE_FIELD_ASSIGNS,
-  [MetadataTargetKind.Column]: COLUMN_FIELD_ASSIGNS,
-  [MetadataTargetKind.TableGroup]: TABLEGROUP_FIELD_ASSIGNS,
-  [MetadataTargetKind.Note]: NOTE_FIELD_ASSIGNS,
-};
+import type { MetadataTarget } from '../metadata/metadataField';
+import { METADATA_FIELDS_BY_KIND } from '../metadata/fieldRegistry';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -309,10 +296,10 @@ export default class ProgramInterpreter {
         const columnName = name.at(-1);
         const column = table?.fields.find((f) => f.name === columnName);
         if (column) {
-          const assignMap = COLUMN_FIELD_ASSIGNS;
-          if (!assignMap) return;
+          const fieldsRegistry = METADATA_FIELDS_BY_KIND[MetadataTargetKind.Column];
+          if (!fieldsRegistry) return;
 
-          const mappedAssign = Object.fromEntries(Object.entries(assignMap).map(([builtinKey, assign]) => [builtinKey.toLowerCase(), { builtinKey, assign }]));
+          const mappedAssign = Object.fromEntries(Object.entries(fieldsRegistry).map(([builtinKey, field]) => [builtinKey.toLowerCase(), { builtinKey, assign: field.assign }]));
 
           const inlineMetadata = column.metadata ? Object.fromEntries(Object.entries(column.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }])) : {};
           column.metadata = {};
@@ -330,11 +317,11 @@ export default class ProgramInterpreter {
       }
 
       const element = this.emittedBySymbol.get(targetSymbol.originalSymbol.intern());
-      const assignMap = METADATA_ASSIGN_MAPS[kind];
+      const fieldsRegistry = METADATA_FIELDS_BY_KIND[kind];
 
-      if (!element || !assignMap) return;
+      if (!element || !fieldsRegistry) return;
 
-      const mappedAssign = Object.fromEntries(Object.entries(assignMap).map(([builtinKey, assign]) => [builtinKey.toLowerCase(), { builtinKey, assign }]));
+      const mappedAssign = Object.fromEntries(Object.entries(fieldsRegistry).map(([builtinKey, field]) => [builtinKey.toLowerCase(), { builtinKey, assign: field.assign }]));
 
       const inlineMetadata = element.metadata ? Object.fromEntries(Object.entries(element.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }])) : {};
       element.metadata = {};

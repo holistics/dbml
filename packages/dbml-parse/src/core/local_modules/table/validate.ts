@@ -17,9 +17,8 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import { extractQuotedStringToken, extractVariableFromExpression } from '@/core/utils/expression';
+import { extractVariableFromExpression } from '@/core/utils/expression';
 import {
-  isExpressionAQuotedString,
   isExpressionAVariableNode,
   isExpressionAnIdentifierNode,
   Settings,
@@ -28,57 +27,11 @@ import {
   isValidAlias,
   isValidColumnType,
   isValidDefaultValue,
-  isValidHexColor,
   isValidName,
   isValidPartialInjection,
   validateCustomInlineMetadata,
 } from '@/core/utils/validate';
-import type { FieldValidateMap } from '@/core/global_modules/metadata/fieldSpec';
-
-// Value is the quoted string literal 'true'/'false' (used by boolean column
-// settings in a metadata block, where — unlike the inline `[pk]` flag — a value
-// is required).
-function isBooleanStringLiteral (node?: SyntaxNode): boolean {
-  if (!isExpressionAQuotedString(node)) return false;
-  const value = extractQuotedStringToken(node)?.toLowerCase();
-  return value === 'true' || value === 'false';
-}
-
-// Builtin metadata field validation for a Table target. Shared by the inline
-// setting list (validateTableSettings) and the metadata block.
-export const TABLE_FIELD_SPECS: FieldValidateMap<SettingName.Note | SettingName.HeaderColor> = {
-  [SettingName.Note]: {
-    predicate: isExpressionAQuotedString,
-    message: "'note' must be a string literal",
-  },
-  [SettingName.HeaderColor]: {
-    predicate: isValidHexColor,
-    message: "'headercolor' must be a color literal",
-  },
-};
-
-// Builtin metadata field validation for a Column target. `note` is shared with
-// the inline column setting list; the boolean settings (pk/unique/increment) are
-// metadata-block-only — inline `[pk]` forbids a value, so their predicate has no
-// inline counterpart to share.
-export const COLUMN_FIELD_SPECS: FieldValidateMap<SettingName.Note | SettingName.PK | SettingName.Unique | SettingName.Increment> = {
-  [SettingName.Note]: {
-    predicate: isExpressionAQuotedString,
-    message: "'note' must be a quoted string",
-  },
-  [SettingName.PK]: {
-    predicate: isBooleanStringLiteral,
-    message: "'pk' must be 'true' or 'false'",
-  },
-  [SettingName.Unique]: {
-    predicate: isBooleanStringLiteral,
-    message: "'unique' must be 'true' or 'false'",
-  },
-  [SettingName.Increment]: {
-    predicate: isBooleanStringLiteral,
-    message: "'increment' must be 'true' or 'false'",
-  },
-};
+import { TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
 
 export default class TableValidator {
   private declarationNode: ElementDeclarationNode;
@@ -254,9 +207,9 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'headercolor\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          const spec = TABLE_FIELD_SPECS[SettingName.HeaderColor]!;
-          if (!spec.predicate(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, spec.message, attr.value || attr.name!));
+          const field = TABLE_METADATA_FIELDS[SettingName.HeaderColor];
+          if (!field.validate(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, field.message, attr.value || attr.name!));
           }
         });
         break;
@@ -265,9 +218,9 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLE_SETTING, '\'note\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          const spec = TABLE_FIELD_SPECS[SettingName.Note]!;
-          if (!spec.predicate(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, spec.message, attr.value || attr.name!));
+          const field = TABLE_METADATA_FIELDS[SettingName.Note];
+          if (!field.validate(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, field.message, attr.value || attr.name!));
           }
         });
         break;
@@ -336,9 +289,9 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_COLUMN_SETTING, 'note can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          const spec = COLUMN_FIELD_SPECS[SettingName.Note]!;
-          if (!spec.predicate(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, spec.message, attr.value || attr.name!));
+          const field = COLUMN_METADATA_FIELDS[SettingName.Note];
+          if (!field.validate(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, field.message, attr.value || attr.name!));
           }
         });
         break;

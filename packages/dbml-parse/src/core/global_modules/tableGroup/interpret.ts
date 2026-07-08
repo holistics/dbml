@@ -6,7 +6,6 @@ import {
 import { UNHANDLED } from '@/core/types/module';
 import { SymbolKind } from '@/core/types/symbol';
 import { aggregateSettingList } from '@/core/utils/validate';
-import { TABLEGROUP_BUILTIN_SETTINGS } from '@/core/global_modules/metadata/interpret';
 import {
   CompileError,
   CompileErrorCode,
@@ -27,7 +26,8 @@ import {
   type TableGroupSymbol,
 } from '@/core/types';
 import type { Color } from '@/core/types/schemaJson';
-import type { FieldAssignMap } from '@/core/global_modules/metadata/fieldSpec';
+import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/metadataField';
+import { isExpressionAQuotedString, isValidHexColor } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import {
   extractColor,
@@ -36,6 +36,25 @@ import {
   normalizeNote,
 } from '@/core/utils/interpret';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
+
+// Per-kind registry for TableGroup: validate + assign bundled per promotable setting.
+// Defined before the class so the class method can reference it.
+export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, SettingName.Note | SettingName.Color> = {
+  [SettingName.Note]: {
+    validate: isExpressionAQuotedString,
+    message: "'note' must be a string literal",
+    assign (element, value, token) {
+      element.note = { value, token };
+    },
+  },
+  [SettingName.Color]: {
+    validate: isValidHexColor,
+    message: "'color' must be a color literal",
+    assign (element, value) {
+      element.color = value as Color;
+    },
+  },
+};
 
 export class TableGroupInterpreter {
   private compiler: Compiler;
@@ -163,19 +182,9 @@ export class TableGroupInterpreter {
       token: getTokenPosition(noteNode),
     };
 
-    this.tableGroup.metadata = extractCustomInlineMetadata(settingMap, TABLEGROUP_BUILTIN_SETTINGS);
+    this.tableGroup.metadata = extractCustomInlineMetadata(settingMap, Object.keys(TABLEGROUP_METADATA_FIELDS) as SettingName[]);
 
     return [];
   }
 }
 
-// Assignment of builtin metadata-block keys onto the typed fields of an emitted
-// TableGroup. Key set MUST match TABLEGROUP_FIELD_SPECS (asserted by a test).
-export const TABLEGROUP_FIELD_ASSIGNS: FieldAssignMap<TableGroup, SettingName.Note | SettingName.Color> = {
-  [SettingName.Note]: (element, value, token) => {
-    element.note = { value, token };
-  },
-  [SettingName.Color]: (element, value) => {
-    element.color = value as Color;
-  },
-};

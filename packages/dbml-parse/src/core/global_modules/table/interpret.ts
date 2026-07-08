@@ -13,7 +13,7 @@ import {
   Check, Color, Column, Index, InlineRef, Ref,
   Table, TablePartialInjection,
 } from '@/core/types/schemaJson';
-import type { FieldAssignMap } from '@/core/global_modules/metadata/fieldSpec';
+import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/metadataField';
 import type { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import { RefMetadata } from '@/core/types/symbol/metadata';
@@ -23,8 +23,9 @@ import {
   extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
-import { COLUMN_BUILTIN_SETTINGS, TABLE_BUILTIN_SETTINGS } from '@/core/global_modules/metadata/interpret';
+import {
+  aggregateSettingList, isExpressionAQuotedString, isValidHexColor, isValidPartialInjection,
+} from '@/core/utils/validate';
 import {
   extractColor, extractElementName,
   getTokenPosition, normalizeNote,
@@ -162,7 +163,7 @@ export class TableInterpreter {
       token: getTokenPosition(noteNode),
     };
 
-    this.table.metadata = extractCustomInlineMetadata(settingMap, TABLE_BUILTIN_SETTINGS);
+    this.table.metadata = extractCustomInlineMetadata(settingMap, Object.keys(TABLE_METADATA_FIELDS) as SettingName[]);
 
     return [];
   }
@@ -284,7 +285,7 @@ export class TableInterpreter {
 
     const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
 
-    column.metadata = extractCustomInlineMetadata(settingMap, COLUMN_BUILTIN_SETTINGS);
+    column.metadata = extractCustomInlineMetadata(settingMap, RECOGNIZED_COLUMN_SETTINGS);
 
     const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
@@ -359,31 +360,54 @@ export class TableInterpreter {
   }
 }
 
-// Assignment of builtin metadata-block keys onto the typed fields of an emitted
-// Table. Each entry's key set MUST match TABLE_FIELD_SPECS (asserted by a test).
-export const TABLE_FIELD_ASSIGNS: FieldAssignMap<Table, SettingName.Note | SettingName.HeaderColor> = {
-  [SettingName.Note]: (element, value, token) => {
-    element.note = { value, token };
+// The full set of grammar-recognized column setting names — the case labels of
+// validateFieldSetting's switch in local_modules/table/validate.ts. Exported here
+// (in global_modules alongside the registries) so that local_modules can import
+// upward without creating a circular dependency. Used by extractCustomInlineMetadata
+// in both table/interpret.ts and tablePartial/interpret.ts to exclude recognized
+// column settings from the free-form metadata bag.
+export const RECOGNIZED_COLUMN_SETTINGS: readonly SettingName[] = [
+  SettingName.Note,
+  SettingName.Ref,
+  SettingName.PrimaryKey,
+  SettingName.PK,
+  SettingName.NotNull,
+  SettingName.Null,
+  SettingName.Unique,
+  SettingName.Increment,
+  SettingName.Default,
+  SettingName.Check,
+];
+
+// Per-kind registry for Table: validate + assign bundled in one object per
+// promotable setting. validate/assign key parity is structural (same object).
+export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Note | SettingName.HeaderColor> = {
+  [SettingName.Note]: {
+    validate: isExpressionAQuotedString,
+    message: "'note' must be a string literal",
+    assign (element, value, token) {
+      element.note = { value, token };
+    },
   },
-  [SettingName.HeaderColor]: (element, value) => {
-    element.headerColor = value as Color;
+  [SettingName.HeaderColor]: {
+    validate: isValidHexColor,
+    message: "'headercolor' must be a color literal",
+    assign (element, value) {
+      element.headerColor = value as Color;
+    },
   },
 };
 
-// Assignment of builtin metadata-block keys onto the typed fields of an emitted
-// Column. Key set MUST match COLUMN_FIELD_SPECS. The boolean flags parse the
-// validated 'true'/'false' string; note writes the {value, token} shape.
-export const COLUMN_FIELD_ASSIGNS: FieldAssignMap<Column, SettingName.Note | SettingName.PK | SettingName.Unique | SettingName.Increment> = {
-  [SettingName.Note]: (element, value, token) => {
-    element.note = { value, token };
-  },
-  [SettingName.PK]: (element, value) => {
-    element.pk = value === 'true';
-  },
-  [SettingName.Unique]: (element, value) => {
-    element.unique = value === 'true';
-  },
-  [SettingName.Increment]: (element, value) => {
-    element.increment = value === 'true';
+// Per-kind registry for Column (block form). Only `note` is block-promotable.
+// pk/unique/increment are intentionally dropped: `Metadata Column x { pk: 'true' }`
+// now writes `pk` to the free-form metadata bag instead of the typed field.
+// Inline `[pk]` behaviour is unchanged (handled by interpretColumn via columnSymbol).
+export const COLUMN_METADATA_FIELDS: MetadataFieldRegistry<Column, SettingName.Note> = {
+  [SettingName.Note]: {
+    validate: isExpressionAQuotedString,
+    message: "'note' must be a quoted string",
+    assign (element, value, token) {
+      element.note = { value, token };
+    },
   },
 };

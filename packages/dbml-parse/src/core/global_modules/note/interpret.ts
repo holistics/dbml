@@ -14,7 +14,6 @@ import {
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
-import { NOTE_BUILTIN_SETTINGS } from '@/core/global_modules/metadata/interpret';
 import { extractQuotedStringToken } from '@/core/utils/expression';
 import {
   SettingName,
@@ -22,9 +21,23 @@ import {
   type NoteSymbol,
 } from '@/core/types';
 import type { Color } from '@/core/types/schemaJson';
-import type { FieldAssignMap } from '@/core/global_modules/metadata/fieldSpec';
+import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/metadataField';
+import { isValidColorOrNone } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
+
+// Per-kind registry for Note (sticky): validate + assign bundled per promotable setting.
+// Note color allows 'none' (isValidColorOrNone), unlike TableGroup which is hex-only.
+// Defined before the class so the class method can reference it.
+export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color> = {
+  [SettingName.Color]: {
+    validate: isValidColorOrNone,
+    message: "'color' must be a color literal or 'none'",
+    assign (element, value) {
+      element.color = value as Color;
+    },
+  },
+};
 
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -74,7 +87,7 @@ export class StickyNoteInterpreter {
       this.note.color = extractColor(settingMap.color.at(0)?.value);
     }
 
-    this.note.metadata = extractCustomInlineMetadata(settingMap, NOTE_BUILTIN_SETTINGS);
+    this.note.metadata = extractCustomInlineMetadata(settingMap, Object.keys(NOTE_METADATA_FIELDS) as SettingName[]);
 
     return [];
   }
@@ -103,11 +116,3 @@ export class StickyNoteInterpreter {
     return [];
   }
 }
-
-// Assignment of builtin metadata-block keys onto the typed fields of an emitted
-// Note. Key set MUST match NOTE_FIELD_SPECS (asserted by a test).
-export const NOTE_FIELD_ASSIGNS: FieldAssignMap<Note, SettingName.Color> = {
-  [SettingName.Color]: (element, value) => {
-    element.color = value as Color;
-  },
-};
