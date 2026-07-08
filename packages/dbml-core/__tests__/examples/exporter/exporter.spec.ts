@@ -92,53 +92,124 @@ describe('@dbml/core - ref inactive setting', () => {
 });
 
 describe('@dbml/core - optional ref operators', () => {
-  const OPTIONAL_REF_OPS = [
-    '-', '-?', '?-', '?-?',
-    '>', '>?', '?>', '?>?',
-    '<', '<?', '?<', '?<?',
-    '<>', '<>?', '?<>', '?<>?',
-  ];
-
-  const EXPECTED_OP: Record<string, string> = {
-    '-': '-', '-?': '-?', '?-': '?-', '?-?': '?-?',
-    '>': '<', '>?': '?<', '?>': '<?', '?>?': '?<?',
-    '<': '<', '<?': '<?', '?<': '?<', '?<?': '?<?',
-    '<>': '<>', '<>?': '<>?', '?<>': '?<>', '?<>?': '?<>?',
-  };
-
   describe('dbml exporter', () => {
-    test.each(OPTIONAL_REF_OPS)('should export ref with operator %s', (op) => {
+    test('should export ref with operator -?', () => {
       const input = `
-        Table users { id integer [pk] }
-        Table posts { user_id integer }
-        Ref: posts.user_id ${op} users.id
+Table users { id integer [pk] }
+Table posts { user_id integer [unique] }
+Ref: posts.user_id -? users.id
       `.trim();
       const res = exporter.export(input, 'dbml');
-      expect(res).toContain(EXPECTED_OP[op]);
+      expect(res.trim()).toBe(
+`Table "users" {
+  "id" integer [pk]
+}
+
+Table "posts" {
+  "user_id" integer [unique]
+}
+
+Ref:"posts"."user_id" ?-? "users"."id"`);
+    });
+
+    test('should export ref with operator >? (flipped to ?<)', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer [not null] }
+Ref: posts.user_id >? users.id
+      `.trim();
+      const res = exporter.export(input, 'dbml');
+      expect(res.trim()).toBe(
+`Table "users" {
+  "id" integer [pk]
+}
+
+Table "posts" {
+  "user_id" integer [not null]
+}
+
+Ref:"users"."id" ?< "posts"."user_id"`);
+    });
+
+    test('should export ref with operator ?<?', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer }
+Ref: posts.user_id ?<? users.id
+      `.trim();
+      const res = exporter.export(input, 'dbml');
+      expect(res.trim()).toBe(
+`Table "users" {
+  "id" integer [pk]
+}
+
+Table "posts" {
+  "user_id" integer
+}
+
+Ref:"posts"."user_id" ?<? "users"."id"`);
     });
   });
 
   describe('sql exporters', () => {
-    const sqlFormats: ExportFormat[] = ['mysql', 'postgres', 'mssql'];
-
-    test.each(sqlFormats)('%s exporter should handle optional ref without error', (format) => {
+    test('mysql exporter should produce FK constraint for optional ref', () => {
       const input = `
-        Table users { id integer [pk] }
-        Table posts { user_id integer }
-        Ref: posts.user_id >? users.id
+Table users { id integer [pk] }
+Table posts { user_id integer [not null] }
+Ref: posts.user_id >? users.id
       `.trim();
-      expect(() => exporter.export(input, format)).not.toThrow();
+      const res = exporter.export(input, 'mysql');
+      expect(res.trim()).toBe(
+`CREATE TABLE \`users\` (
+  \`id\` integer PRIMARY KEY
+);
+
+CREATE TABLE \`posts\` (
+  \`user_id\` integer NOT NULL
+);
+
+ALTER TABLE \`posts\` ADD FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`);`);
     });
 
-    test.each(sqlFormats)('%s exporter should produce FK constraint for optional ref', (format) => {
+    test('postgres exporter should produce FK constraint for optional ref', () => {
       const input = `
-        Table users { id integer [pk] }
-        Table posts { user_id integer }
-        Ref: posts.user_id >? users.id
+Table users { id integer [pk] }
+Table posts { user_id integer [not null] }
+Ref: posts.user_id >? users.id
       `.trim();
-      const res = exporter.export(input, format);
-      expect(res).toContain('FOREIGN KEY');
-      expect(res).toContain('REFERENCES');
+      const res = exporter.export(input, 'postgres');
+      expect(res.trim()).toBe(
+`CREATE TABLE "users" (
+  "id" integer PRIMARY KEY
+);
+
+CREATE TABLE "posts" (
+  "user_id" integer NOT NULL
+);
+
+ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;`);
+    });
+
+    test('mssql exporter should produce FK constraint for optional ref', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer [not null] }
+Ref: posts.user_id >? users.id
+      `.trim();
+      const res = exporter.export(input, 'mssql');
+      expect(res.trim()).toBe(
+`CREATE TABLE [users] (
+  [id] integer PRIMARY KEY
+)
+GO
+
+CREATE TABLE [posts] (
+  [user_id] integer NOT NULL
+)
+GO
+
+ALTER TABLE [posts] ADD FOREIGN KEY ([user_id]) REFERENCES [users] ([id])
+GO`);
     });
   });
 });
