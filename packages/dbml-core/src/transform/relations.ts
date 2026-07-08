@@ -20,19 +20,29 @@ export function inferMultiplicitiesFromColumns (
   const sourceNotNull = sourceColumn.not_null || sourceColumn.pk || sourceColumn.increment;
   const targetNotNull = targetColumn.not_null || targetColumn.pk || targetColumn.increment;
 
-  const isManyToMany = !sourceUnique && !targetUnique;
-  const isOneToOne = sourceUnique && targetUnique;
+  let sourceCardinality: RelationCardinality;
+  let targetCardinality: RelationCardinality;
 
-  // For one-to-many, many-to-one, and one-to-one: ignore target nullability on the source side.
-  // The target being NOT NULL (e.g. PK) doesn't constrain the source cardinality min.
-  // For many-to-many, still consider nullability on both sides.
-  const sourceCardinality: RelationCardinality = sourceUnique
-    ? (isOneToOne ? CARDINALITY_MAYBE : (targetNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE))
-    : (isManyToMany ? (targetNotNull ? CARDINALITY_SOME : CARDINALITY_MANY) : CARDINALITY_MANY);
-
-  const targetCardinality: RelationCardinality = targetUnique
-    ? (sourceNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE)
-    : (isManyToMany ? (sourceNotNull ? CARDINALITY_SOME : CARDINALITY_MANY) : CARDINALITY_MANY);
+  if (sourceUnique && targetUnique) {
+    // One-to-one: ignore target nullability on source side.
+    // Source (left/target by convention) always gets 0..1.
+    // Target (right/source by convention) respects source nullability.
+    sourceCardinality = CARDINALITY_MAYBE;
+    targetCardinality = sourceNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE;
+  } else if (!sourceUnique && !targetUnique) {
+    // Many-to-many: consider nullability on both sides.
+    sourceCardinality = targetNotNull ? CARDINALITY_SOME : CARDINALITY_MANY;
+    targetCardinality = sourceNotNull ? CARDINALITY_SOME : CARDINALITY_MANY;
+  } else {
+    // One-to-many / many-to-one: the many side (not unique) always gets 0..*,
+    // ignoring the other column's nullability. The one side respects nullability.
+    sourceCardinality = sourceUnique
+      ? (targetNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE)
+      : CARDINALITY_MANY;
+    targetCardinality = targetUnique
+      ? (sourceNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE)
+      : CARDINALITY_MANY;
+  }
 
   return [
     sourceCardinality,
