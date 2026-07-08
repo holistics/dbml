@@ -12,7 +12,7 @@ describe('@dbml/core - importer optional refs', () => {
         CREATE TABLE a (id int PRIMARY KEY);
         CREATE TABLE b (id int PRIMARY KEY, a_id int NOT NULL REFERENCES a(id));
       `;
-      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."id" < "b"."a_id"');
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."id" <? "b"."a_id"');
     });
 
     test('nullable FK to PK', () => {
@@ -20,7 +20,7 @@ describe('@dbml/core - importer optional refs', () => {
         CREATE TABLE a (id int PRIMARY KEY);
         CREATE TABLE b (id int PRIMARY KEY, a_id int REFERENCES a(id));
       `;
-      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."id" < "b"."a_id"');
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."id" ?<? "b"."a_id"');
     });
 
     test('NOT NULL FK to UNIQUE', () => {
@@ -28,7 +28,7 @@ describe('@dbml/core - importer optional refs', () => {
         CREATE TABLE a (id int PRIMARY KEY, code int UNIQUE NOT NULL);
         CREATE TABLE b (id int PRIMARY KEY, a_code int NOT NULL REFERENCES a(code));
       `;
-      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."code" < "b"."a_code"');
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."code" ?< "b"."a_code"');
     });
 
     test('nullable FK to UNIQUE', () => {
@@ -36,7 +36,7 @@ describe('@dbml/core - importer optional refs', () => {
         CREATE TABLE a (id int PRIMARY KEY, code int UNIQUE NOT NULL);
         CREATE TABLE b (id int PRIMARY KEY, a_code int REFERENCES a(code));
       `;
-      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."code" < "b"."a_code"');
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."code" ?<? "b"."a_code"');
     });
   });
 
