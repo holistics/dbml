@@ -273,9 +273,13 @@ class DbmlExporter {
   static exportRefs (refIds: number[], model: NormalizedModel): string {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
-      // Put the "one" side on the left to preserve canonical order (one < many)
+      // Find the "one" side (max=1) to place on the left, ensuring canonical DBML form:
+      // left = REFERENCES target (PK/unique), right = FK source (many side).
       const oneIndex = ref.endpointIds.findIndex((id) => parseCardinality(model.endpoints[id].relation).max === 1);
+      // For one-to-one (both max=1), keeps index 0 on left (SQL exporter convention).
+      // For many-to-many (no max=1), also keeps index 0 on left.
       const leftIndex = oneIndex === -1 ? 0 : oneIndex;
+
       const leftEndpoint = model.endpoints[ref.endpointIds[leftIndex]];
       const rightEndpoint = model.endpoints[ref.endpointIds[1 - leftIndex]];
       const op = getRelationshipOp(leftEndpoint.relation, rightEndpoint.relation);

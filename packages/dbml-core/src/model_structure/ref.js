@@ -66,6 +66,7 @@ class Ref extends Element {
     if (this.endpoints[0].fields.length !== this.endpoints[1].fields.length) {
       this.error('Two endpoints have unequal number of fields');
     }
+    // TODO: Handle Error with different number of fields
   }
 
   /**
