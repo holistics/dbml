@@ -258,14 +258,14 @@
           "fieldNames": [
             "order_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "orders",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "CASCADE",

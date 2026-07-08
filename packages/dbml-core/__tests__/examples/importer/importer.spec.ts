@@ -28,7 +28,7 @@ describe('@dbml/core - importer optional refs', () => {
         CREATE TABLE a (id int PRIMARY KEY, code int UNIQUE NOT NULL);
         CREATE TABLE b (id int PRIMARY KEY, a_code int NOT NULL REFERENCES a(code));
       `;
-      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."code" ?< "b"."a_code"');
+      expect(importer.import(sql, 'postgres')).toContain('Ref:"a"."code" <? "b"."a_code"');
     });
 
     test('nullable FK to UNIQUE', () => {

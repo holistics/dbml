@@ -275,14 +275,14 @@
           "fieldNames": [
             "id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "a",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "NO ACTION",
