@@ -15,21 +15,24 @@ export function inferMultiplicitiesFromColumns (
   sourceColumn: NormalizedField,
   targetColumn: NormalizedField,
 ): [RelationCardinality, RelationCardinality] {
-  /// TODO: Should we treat increment as unique + not null?
-  /// As when we validate in ColumnSymbol, we do treat them as such...
-  /// But i fear this may cause confusion
-  const sourceUnique = sourceColumn.pk || sourceColumn.unique;
-  const targetUnique = targetColumn.pk || targetColumn.unique;
-  const sourceNotNull = sourceColumn.not_null || sourceColumn.pk;
-  const targetNotNull = targetColumn.not_null || targetColumn.pk;
+  const sourceUnique = sourceColumn.pk || sourceColumn.unique || sourceColumn.increment;
+  const targetUnique = targetColumn.pk || targetColumn.unique || targetColumn.increment;
+  const sourceNotNull = sourceColumn.not_null || sourceColumn.pk || sourceColumn.increment;
+  const targetNotNull = targetColumn.not_null || targetColumn.pk || targetColumn.increment;
 
+  const isManyToMany = !sourceUnique && !targetUnique;
+  const isOneToOne = sourceUnique && targetUnique;
+
+  // For one-to-many, many-to-one, and one-to-one: ignore target nullability on the source side.
+  // The target being NOT NULL (e.g. PK) doesn't constrain the source cardinality min.
+  // For many-to-many, still consider nullability on both sides.
   const sourceCardinality: RelationCardinality = sourceUnique
-    ? (targetNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE)
-    : (targetNotNull ? CARDINALITY_SOME : CARDINALITY_MANY);
+    ? (isOneToOne ? CARDINALITY_MAYBE : (targetNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE))
+    : (isManyToMany ? (targetNotNull ? CARDINALITY_SOME : CARDINALITY_MANY) : CARDINALITY_MANY);
 
   const targetCardinality: RelationCardinality = targetUnique
     ? (sourceNotNull ? CARDINALITY_ONE : CARDINALITY_MAYBE)
-    : (sourceNotNull ? CARDINALITY_SOME : CARDINALITY_MANY);
+    : (isManyToMany ? (sourceNotNull ? CARDINALITY_SOME : CARDINALITY_MANY) : CARDINALITY_MANY);
 
   return [
     sourceCardinality,
