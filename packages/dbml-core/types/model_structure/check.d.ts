@@ -1,10 +1,10 @@
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 import Element, { Token } from './element';
 import Field from './field';
 import Table from './table';
 import TablePartial from './tablePartial';
 
-interface RawCheck {
+export interface RawCheck {
     token: Token;
     name: string;
     expression: string;
@@ -35,18 +35,20 @@ declare class Check extends Element {
         name: string;
         expression: string;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 
 export interface NormalizedCheck {
-    [_id: number]: {
-        id: number;
-        name: string;
-        expression: string;
-        tableId: number;
-        columnId: number | null;
-        injectedPartialId: number | null;
-    };
+    id: number;
+    name: string;
+    expression: string;
+    tableId: number;
+    columnId: number | null;
+    injectedPartialId: number | null;
+}
+
+export interface NormalizedCheckIdMap {
+    [_id: number]: NormalizedCheck;
 }
 
 export default Check;

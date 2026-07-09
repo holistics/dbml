@@ -1,5 +1,7 @@
 import fc from 'fast-check';
-import { orRegex, chainRegex, matchFullRegex, oneOrManyRegex, zeroOrManyRegex } from './utils';
+import {
+  orRegex, chainRegex, matchFullRegex, oneOrManyRegex, zeroOrManyRegex,
+} from './utils';
 
 // Matches decimal numbers: integers (123), floats (1.23), or trailing dot decimals (5.)
 const numberRegex = /(\d+\.\d*|\d+)/;

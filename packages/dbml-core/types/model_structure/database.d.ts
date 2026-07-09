@@ -1,40 +1,53 @@
-import Schema, { NormalizedSchema, RawSchema } from './schema';
-import Ref, { NormalizedRef } from './ref';
-import Enum, { NormalizedEnum } from './enum';
-import TableGroup, { NormalizedTableGroup } from './tableGroup';
-import Table, { NormalizedTable } from './table';
-import StickyNote, { NormalizedStickyNote } from './stickyNote';
-import Element, { RawNote, Token } from './element';
+import Schema, { NormalizedSchemaIdMap, RawSchema } from './schema';
+import Ref, { NormalizedRefIdMap } from './ref';
+import Enum, { NormalizedEnumIdMap } from './enum';
+import TableGroup, { NormalizedTableGroupIdMap } from './tableGroup';
+import Table, { NormalizedTableIdMap } from './table';
+import StickyNote, { NormalizedNoteIdMap } from './stickyNote';
+import Element, { RawNote, Token, Color } from './element';
 import DbState from './dbState';
-import { NormalizedEndpoint } from './endpoint';
-import { NormalizedEnumValue } from './enumValue';
-import { NormalizedField } from './field';
-import { NormalizedIndexColumn } from './indexColumn';
-import { NormalizedIndex } from './indexes';
-import { NormalizedCheck } from './check';
-import TablePartial, { NormalizedTablePartial } from './tablePartial';
+import { NormalizedEndpointIdMap } from './endpoint';
+import { NormalizedEnumValueIdMap } from './enumValue';
+import { NormalizedFieldIdMap } from './field';
+import { NormalizedIndexColumnIdMap } from './indexColumn';
+import { NormalizedIndexIdMap } from './indexes';
+import { NormalizedCheckIdMap } from './check';
+import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
+import { TokenPosition, DiagramView } from '@dbml/parse';
 export interface Project {
     note: RawNote;
     database_type: string;
     name: string;
 }
 
-interface RawTableRecord {
+export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+
+export interface RecordValue {
+    value: any;
+    type: RecordValueType;
+    token: TokenPosition;
+}
+
+export interface RawTableRecord {
     schemaName: string | undefined;
     tableName: string;
     columns: string[];
+    token: Token;
     values: {
         value: any;
-        type: string;
+        type: RecordValueType;
     }[][];
 }
 
 export interface TableRecord extends RawTableRecord {
     id: number;
+    tableId?: number;
 }
 
-export interface NormalizedRecords {
-    [_id: number]: TableRecord;
+export type NormalizedRecord = TableRecord;
+
+export interface NormalizedRecordIdMap {
+    [_id: number]: NormalizedRecord;
 }
 
 export interface RawDatabase {
@@ -47,7 +60,9 @@ export interface RawDatabase {
     project: Project;
     records: RawTableRecord[];
     tablePartials: TablePartial[];
+    diagramViews: DiagramView[];
 }
+
 declare class Database extends Element {
     dbState: DbState;
     hasDefaultSchema: boolean;
@@ -58,6 +73,7 @@ declare class Database extends Element {
     databaseType: string;
     name: string;
     records: TableRecord[];
+    diagramViews: DiagramView[];
     id: number;
     constructor({ schemas, tables, enums, refs, tableGroups, project, records }: RawDatabase);
     generateId(): void;
@@ -97,7 +113,7 @@ declare class Database extends Element {
                 name: string;
                 alias: string;
                 note: string;
-                headerColor: string;
+                headerColor: Color;
             }[];
             enums: {
                 values: {
@@ -133,7 +149,7 @@ declare class Database extends Element {
             id: number;
             name: string;
             content: string;
-            headerColor: string;
+            headerColor: Color;
         }[];
         records: {
             id: number;
@@ -148,7 +164,7 @@ declare class Database extends Element {
         tablePartials: {
             name: string;
             note: string;
-            headerColor: string;
+            headerColor: Color;
             fields: {
                 name: string;
                 type: any;
@@ -206,7 +222,7 @@ declare class Database extends Element {
                 name: string;
                 alias: string;
                 note: string;
-                headerColor: string;
+                headerColor: Color;
             }[];
             enums: {
                 values: {
@@ -242,12 +258,12 @@ declare class Database extends Element {
             id: number;
             name: string;
             content: string;
-            headerColor: string;
+            headerColor: Color;
         }[];
         tablePartials: {
             name: string;
             note: string;
-            headerColor: string;
+            headerColor: Color;
             fields: {
                 name: string;
                 type: any;
@@ -276,33 +292,37 @@ declare class Database extends Element {
         schemaIds: number[];
         noteIds: number[];
     };
-    normalize(): NormalizedDatabase;
+    normalize(): NormalizedModel;
 }
 export interface NormalizedDatabase {
-    database: {
-        [_id: number]: {
-            id: number;
-            hasDefaultSchema: boolean;
-            note: string;
-            databaseType: string;
-            name: string;
-            schemaIds: number[];
-            noteIds: number[];
-        };
-    };
-    schemas: NormalizedSchema;
-    notes: NormalizedStickyNote;
-    refs: NormalizedRef;
-    enums: NormalizedEnum;
-    tableGroups: NormalizedTableGroup;
-    tables: NormalizedTable;
-    endpoints: NormalizedEndpoint;
-    enumValues: NormalizedEnumValue;
-    indexes: NormalizedIndex;
-    indexColumns: NormalizedIndexColumn;
-    checks: NormalizedCheck;
-    fields: NormalizedField;
-    records: NormalizedRecords;
-    tablePartials: NormalizedTablePartial;
+    id: number;
+    hasDefaultSchema: boolean;
+    note: string | null;
+    databaseType: string;
+    name: string;
+    schemaIds: number[];
+    noteIds: number[];
+}
+
+export interface NormalizedDatabaseIdMap {
+    [_id: number]: NormalizedDatabase;
+}
+
+export interface NormalizedModel {
+    database: NormalizedDatabaseIdMap;
+    schemas: NormalizedSchemaIdMap;
+    endpoints: NormalizedEndpointIdMap;
+    refs: NormalizedRefIdMap;
+    fields: NormalizedFieldIdMap;
+    tables: NormalizedTableIdMap;
+    tableGroups: NormalizedTableGroupIdMap;
+    enums: NormalizedEnumIdMap;
+    enumValues: NormalizedEnumValueIdMap;
+    indexes: NormalizedIndexIdMap;
+    indexColumns: NormalizedIndexColumnIdMap;
+    notes: NormalizedNoteIdMap;
+    checks: NormalizedCheckIdMap;
+    tablePartials: NormalizedTablePartialIdMap;
+    records: NormalizedRecordIdMap;
 }
 export default Database;

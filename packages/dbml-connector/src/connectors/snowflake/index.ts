@@ -7,7 +7,7 @@
 //
 
 import snowflake from 'snowflake-sdk';
-import type { Connection, LogLevel, ConnectionOptions } from 'snowflake-sdk';
+import type { Connection, ConnectionOptions, LogLevel } from 'snowflake-sdk';
 import { parseSchema } from '../../utils/parseSchema';
 import {
   DatabaseSchema,

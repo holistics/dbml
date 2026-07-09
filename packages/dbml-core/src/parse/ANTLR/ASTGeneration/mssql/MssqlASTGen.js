@@ -1,14 +1,16 @@
 import {
   first, flatten, flattenDepth, last, nth,
-} from 'lodash';
+} from 'lodash-es';
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
-import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
-import { getOriginalText } from '../helpers';
 import {
   Field, Index, Table, TableRecord,
 } from '../AST';
+import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
+import { getOriginalText } from '../helpers';
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
+
+const DEFAULT_SCHEMA = 'dbo';
 
 const getSchemaAndTableName = (names) => {
   const tableName = last(names);
@@ -110,6 +112,15 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     };
   }
 
+  findTable (schemaName, tableName) {
+    const realSchemaName = schemaName || DEFAULT_SCHEMA;
+    const table = this.data.tables.find((t) => {
+      const targetSchemaName = t.schemaName || DEFAULT_SCHEMA;
+      return targetSchemaName === realSchemaName && t.name === tableName;
+    });
+    return table;
+  }
+
   // tsql_file
   //   : batch* EOF
   //   | execute_body_batch go_statement* EOF
@@ -185,7 +196,10 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const tableName = last(names);
     const schemaName = names.length > 1 ? nth(names, -2) : undefined;
 
-    const columns = ctx.insert_column_name_list() ? ctx.insert_column_name_list().accept(this) : [];
+    const columns = ctx.insert_column_name_list()
+      ? ctx.insert_column_name_list().accept(this)
+      : this.findTable(schemaName, tableName)?.fields.map((field) => field.name) || [];
+
     const values = ctx.insert_statement_value().accept(this);
 
     const record = new TableRecord({
@@ -468,7 +482,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
   visitPrimitive_expression (ctx) {
     if (ctx.NULL_()) {
       return {
-        value: ctx.getText(),
+        value: ctx.getText().toLowerCase(),
         type: DATA_TYPE.BOOLEAN,
       };
     }
@@ -1045,6 +1059,45 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     const table = this.data.tables.find((t) => t.name === tableName && t.schemaName === schemaName);
     if (!table) return; // ALTER TABLE should appear after CREATE TABLE, so skip if table is not created yet
 
+    // Handle WITH CHECK/NOCHECK ADD CONSTRAINT FK
+    if (ctx.WITH() && (ctx.CHECK() || ctx.NOCHECK()) && ctx.FOREIGN()) {
+      const constraintName = ctx.constraint ? ctx.constraint.accept(this) : undefined;
+      const localColumns = ctx.fk.accept(this);
+
+      // table_name()[1] is the referenced table (table_name()[0] is the table being altered)
+      const refTableNames = ctx.table_name()[1].accept(this);
+      const { schemaName: refSchemaName, tableName: refTableName } = getSchemaAndTableName(refTableNames);
+
+      // pk is optional - if not specified, assume same column names as fk
+      const refColumns = ctx.pk ? ctx.pk.accept(this) : localColumns;
+
+      const onDelete = ctx.on_delete().length > 0 ? ctx.on_delete()[0].accept(this) : null;
+      const onUpdate = ctx.on_update().length > 0 ? ctx.on_update()[0].accept(this) : null;
+
+      const ref = {
+        name: constraintName,
+        endpoints: [
+          {
+            tableName,
+            schemaName,
+            fieldNames: localColumns,
+            relation: '*',
+          },
+          {
+            tableName: refTableName,
+            schemaName: refSchemaName,
+            fieldNames: refColumns,
+            relation: '1',
+          },
+        ],
+        onDelete,
+        onUpdate,
+      };
+
+      this.data.refs.push(ref);
+      return;
+    }
+
     const columnDefTableConstraints = ctx.column_def_table_constraints() ? ctx.column_def_table_constraints().accept(this) : [];
     const {
       fieldsData, indexes, tableRefs, columnDefaults, checkConstraints,
@@ -1180,7 +1233,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
 
       if (!level0Type.includes('schema')) return;
 
-      const schemaName = argsObj.level0name !== 'dbo' ? argsObj.level0name : undefined;
+      const schemaName = argsObj.level0name !== DEFAULT_SCHEMA ? argsObj.level0name : undefined;
 
       const level1Type = argsObj.level1type.toLowerCase();
       const tableName = level1Type.includes('table') ? argsObj.level1name : null;

@@ -1,0 +1,7 @@
+TablePartial with_timestamp {
+  timestamp uuid
+}
+
+Table users {
+  ~with_timestamp
+}

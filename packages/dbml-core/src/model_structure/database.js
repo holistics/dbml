@@ -1,18 +1,21 @@
-import _, { get } from 'lodash';
-import Schema from './schema';
-import Ref from './ref';
-import Enum from './enum';
-import TableGroup from './tableGroup';
-import Table from './table';
-import StickyNote from './stickyNote';
-import Element from './element';
+import { capitalize, get } from 'lodash-es';
 import {
-  DEFAULT_SCHEMA_NAME, TABLE, TABLE_GROUP, ENUM, REF, NOTE,
+  DEFAULT_SCHEMA_NAME, ENUM, NOTE, REF, TABLE, TABLE_GROUP,
 } from './config';
 import DbState from './dbState';
+import Element from './element';
+import Enum from './enum';
+import Ref from './ref';
+import Schema from './schema';
+import StickyNote from './stickyNote';
+import Table from './table';
+import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
 
 class Database extends Element {
+  /**
+    * @param {import('../../types/model_structure/database').RawDatabase} param0
+    */
   constructor ({
     schemas = [],
     tables = [],
@@ -24,11 +27,13 @@ class Database extends Element {
     aliases = [],
     records = [],
     tablePartials = [],
+    diagramViews = [],
   }) {
     super();
     this.dbState = new DbState();
     this.generateId();
     this.hasDefaultSchema = false;
+    /** @type {import('../../types/model_structure/schema').default[]} */
     this.schemas = [];
     this.notes = [];
     this.note = project.note ? get(project, 'note.value', project.note) : null;
@@ -39,6 +44,7 @@ class Database extends Element {
     this.aliases = aliases;
     this.records = [];
     this.tablePartials = [];
+    this.diagramViews = diagramViews;
 
     // The global array containing references with 1 endpoint being a field injected from a partial to a table
     // These refs are add to this array when resolving partials in tables (`Table.processPartials()`)
@@ -51,6 +57,7 @@ class Database extends Element {
     this.processSchemas(schemas);
     this.processSchemaElements(enums, ENUM);
     this.processSchemaElements(tables, TABLE);
+    this.linkRecordsToTables();
     this.processSchemaElements(notes, NOTE);
     this.processSchemaElements(refs, REF);
     this.processSchemaElements(tableGroups, TABLE_GROUP);
@@ -75,7 +82,7 @@ class Database extends Element {
 
   processRecords (rawRecords) {
     rawRecords.forEach(({
-      schemaName, tableName, columns, values,
+      schemaName, tableName, columns, values, token,
     }) => {
       this.records.push({
         id: this.dbState.generateId('recordId'),
@@ -83,6 +90,7 @@ class Database extends Element {
         tableName,
         columns,
         values,
+        token,
       });
     });
   }
@@ -157,6 +165,28 @@ class Database extends Element {
     });
   }
 
+  linkRecordsToTables () {
+    // Build a map of [schemaName][tableName] -> table for O(1) lookup
+    const tableMap = {};
+    this.schemas.forEach((schema) => {
+      tableMap[schema.name] = {};
+      schema.tables.forEach((table) => {
+        tableMap[schema.name][table.name] = table;
+      });
+    });
+
+    // Link records to tables using the map
+    this.records.forEach((record) => {
+      // Fallback to 'public' if schemaName is null, undefined
+      const schemaName = record.schemaName ?? DEFAULT_SCHEMA_NAME;
+      const table = tableMap[schemaName]?.[record.tableName];
+      if (!table) return;
+
+      record.tableId = table.id;
+      table.records.push(record);
+    });
+  }
+
   findOrCreateSchema (schemaName) {
     let schema = this.schemas.find((s) => s.name === schemaName || s.alias === schemaName);
     // create new schema if schema not found
@@ -164,7 +194,7 @@ class Database extends Element {
       schema = new Schema({
         name: schemaName,
         note: {
-          value: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${_.capitalize(DEFAULT_SCHEMA_NAME)} Schema` : null,
+          value: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${capitalize(DEFAULT_SCHEMA_NAME)} Schema` : null,
         },
         database: this,
       });

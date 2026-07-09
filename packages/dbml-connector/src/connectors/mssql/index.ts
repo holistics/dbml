@@ -528,6 +528,7 @@ const generateIndexesAndConstraints = async (client: sql.ConnectionPool, schemas
       check_expression,
     } = row;
     const key = `${table_schema}.${table_name}`;
+    if (!check_expression) return;
     if (column_name) {
       if (!tableConstraints[key]) tableConstraints[key] = {};
       if (!tableConstraints[key][column_name]) tableConstraints[key][column_name] = { checks: [] };

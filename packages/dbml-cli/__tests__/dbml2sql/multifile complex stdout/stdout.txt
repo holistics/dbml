@@ -1,0 +1,32 @@
+CREATE TYPE "Status" AS ENUM (
+  'pending',
+  'shipped',
+  'delivered'
+);
+
+CREATE TABLE "orders" (
+  "id" int PRIMARY KEY,
+  "user_id" int,
+  "product_id" int,
+  "status" "Status"
+);
+
+CREATE TABLE "u" (
+  "id" int PRIMARY KEY,
+  "email" varchar
+);
+
+CREATE TABLE "products" (
+  "id" int PRIMARY KEY,
+  "name" varchar,
+  "price" decimal
+);
+
+CREATE UNIQUE INDEX "products_name_price_idx" ON "products" ("name", "price");
+
+CREATE INDEX ON "products" ("price");
+
+ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "u" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+
+ALTER TABLE "orders" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+

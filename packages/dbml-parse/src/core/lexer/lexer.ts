@@ -1,11 +1,12 @@
-import { CompileError, CompileErrorCode } from '@/core/errors';
-import Report from '@/core/report';
-import { isAlphaOrUnderscore, isAlphaNumeric, isDigit } from '@/core/utils';
+import { isInvalidToken } from '@/core/utils/tokens';
+import { Position } from '@/core/types/position';
+import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { Filepath } from '@/core/types/filepath';
+import Report from '@/core/types/report';
 import {
   SyntaxToken, SyntaxTokenKind, isOp, isTriviaToken,
-} from '@/core/lexer/tokens';
-import { Position } from '@/core/types';
-import { isInvalidToken } from '@/core/parser/utils';
+} from '@/core/types/tokens';
+import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 
 export default class Lexer {
   private start: Position = {
@@ -22,12 +23,15 @@ export default class Lexer {
 
   private text: string;
 
+  private filepath: Filepath;
+
   private tokens: SyntaxToken[] = []; // list of lexed tokens, not including invalid tokens
 
   private errors: CompileError[] = []; // list of errors during lexing
 
-  constructor (text: string) {
+  constructor (text: string, filepath: Filepath) {
     this.text = text;
+    this.filepath = filepath;
   }
 
   private isAtEnd (): boolean {
@@ -36,7 +40,9 @@ export default class Lexer {
 
   private advance (): string {
     const c = this.peek();
-    this.current = { ...this.current };
+    this.current = {
+      ...this.current,
+    };
     if (c === '\n') {
       this.current.line += 1;
       this.current.column = 0;
@@ -85,6 +91,7 @@ export default class Lexer {
   private createToken (kind: SyntaxTokenKind, isInvalid: boolean = false): SyntaxToken {
     return SyntaxToken.create(
       kind,
+      this.filepath,
       this.start,
       this.current,
       this.text.substring(this.start.offset, this.current.offset),
@@ -92,9 +99,9 @@ export default class Lexer {
     );
   }
 
-  lex (): Report<SyntaxToken[], CompileError> {
+  lex (): Report<SyntaxToken[]> {
     this.scanTokens();
-    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.start, this.current, '', false));
+    this.tokens.push(SyntaxToken.create(SyntaxTokenKind.EOF, this.filepath, this.start, this.current, '', false));
     this.gatherTrivia();
     this.gatherInvalid();
 
@@ -143,11 +150,8 @@ export default class Lexer {
         case ':':
           this.addToken(SyntaxTokenKind.COLON);
           break;
-        case '~':
-          this.addToken(SyntaxTokenKind.TILDE);
-          break;
-        case '\'':
-          if (this.match('\'\'')) {
+        case "'":
+          if (this.match("''")) {
             this.multilineStringLiteral();
           } else {
             this.singleLineStringLiteral();
@@ -170,6 +174,9 @@ export default class Lexer {
           } else {
             this.operator(c);
           }
+          break;
+        case '*':
+          this.addToken(SyntaxTokenKind.WILDCARD);
           break;
         default:
           if (isOp(c)) {
@@ -194,7 +201,9 @@ export default class Lexer {
           );
           break;
       }
-      this.start = { ...this.current };
+      this.start = {
+        ...this.current,
+      };
     }
   }
 
@@ -245,7 +254,10 @@ export default class Lexer {
     }
 
     let prevValidToken = this.tokens[i];
-    prevValidToken.leadingInvalid = [...leadingInvalidList, ...prevValidToken.leadingInvalid];
+    prevValidToken.leadingInvalid = [
+      ...leadingInvalidList,
+      ...prevValidToken.leadingInvalid,
+    ];
 
     for (; i < this.tokens.length; i += 1) {
       const token = this.tokens[i];
@@ -269,7 +281,10 @@ export default class Lexer {
       allowEof, // Whether EOF is allowed
       raw, // Whether to interpret '\' as a backlash
       consumeStopSequence = true,
-    }: { allowNewline: boolean; allowEof: boolean; raw: boolean; consumeStopSequence?: boolean },
+    }: { allowNewline: boolean;
+      allowEof: boolean;
+      raw: boolean;
+      consumeStopSequence?: boolean; },
   ) {
     let string = '';
 
@@ -309,7 +324,7 @@ export default class Lexer {
     if (consumeStopSequence) {
       this.match(stopSequence);
     }
-    this.tokens.push(SyntaxToken.create(tokenKind, this.start, this.current, string, false));
+    this.tokens.push(SyntaxToken.create(tokenKind, this.filepath, this.start, this.current, string, false));
   }
 
   singleLineStringLiteral () {
@@ -371,7 +386,10 @@ export default class Lexer {
   operator (c: string) {
     switch (c) {
       case '<':
-        if (['>', '='].includes(this.peek()!)) this.advance(); // <, >, <=
+        if ([
+          '>',
+          '=',
+        ].includes(this.peek()!)) this.advance(); // <, >, <=
         break;
       case '>':
         if (this.peek() === '=') this.advance(); // >, >=
@@ -389,15 +407,46 @@ export default class Lexer {
   }
 
   // we accept identifiers starting with digits but must contain at least one char or underscore
+  // supports scientific notation: 1e2, 1E2, 1e+2, 1e-2, 1.5e10, 3.14e-5
   numericLiteralOrIdentifier () {
     let nDots = 0;
+
     if (this.isAtEnd()) {
       return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
     }
+
     while (!this.isAtEnd()) {
       const isDot = this.check('.');
       nDots += isDot ? 1 : 0;
       if (nDots > 1) {
+        break;
+      }
+
+      // Check for scientific notation: e or E followed by optional sign and digits
+      // Only consume if we have a valid exponent (peek ahead first)
+      if (this.check('e') || this.check('E')) {
+        const charAfterE = this.peek(1);
+        const hasSign = charAfterE === '+' || charAfterE === '-';
+        const digitPos = hasSign ? this.peek(2) : charAfterE;
+
+        // Valid exponent: e/E followed by digit, or e/E followed by sign and digit
+        if (digitPos && isDigit(digitPos)) {
+          this.advance(); // consume 'e' or 'E'
+          if (hasSign) {
+            this.advance(); // consume '+' or '-'
+          }
+          // Consume exponent digits
+          while (!this.isAtEnd() && isDigit(this.peek()!)) {
+            this.advance();
+          }
+          // After exponent, check if we can return
+          if (this.isAtEnd() || !isAlphaNumeric(this.peek()!)) {
+            return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);
+          }
+          // If there are more alphanumeric chars, it's an identifier (e.g., 1e2abc)
+          break;
+        }
+        // If 'e' is not followed by valid exponent, treat as identifier break
         break;
       }
 
@@ -455,7 +504,11 @@ export default class Lexer {
   }
 
   escapedString (): string {
-    const prevPos: Position = { column: this.current.column - 1, offset: this.current.offset - 1, line: this.current.line };
+    const prevPos: Position = {
+      column: this.current.column - 1,
+      offset: this.current.offset - 1,
+      line: this.current.line,
+    };
     if (this.isAtEnd()) {
       return '\\';
     }
@@ -499,7 +552,7 @@ export default class Lexer {
             this.errors.push(new CompileError(
               CompileErrorCode.INVALID_ESCAPE_SEQUENCE,
               `Invalid unicode escape sequence '\\u${hex}', only unicode escape sequences of the form '\\uHHHH' where H is a hexadecimal number are allowed`,
-              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, prevPos, this.current, `\\u${hex}`, true),
+              SyntaxToken.create(SyntaxTokenKind.STRING_LITERAL, this.filepath, prevPos, this.current, `\\u${hex}`, true),
             ));
 
             return `\\u${hex}`;

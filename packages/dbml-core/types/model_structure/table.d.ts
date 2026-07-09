@@ -1,4 +1,4 @@
-import Element, { RawNote, Token } from './element';
+import Element, { RawNote, Token, Color } from './element';
 import Field from './field';
 import Index from './indexes';
 import Check from './check';
@@ -6,9 +6,9 @@ import Schema from './schema';
 import DbState from './dbState';
 import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
-import { NormalizedDatabase } from './database';
+import { NormalizedModel, TableRecord } from './database';
 
-interface RawTable {
+export interface RawTable {
     name: string;
     alias: string;
     note: RawNote;
@@ -17,7 +17,7 @@ interface RawTable {
     checks?: any[];
     schema: Schema;
     token: Token;
-    headerColor: string;
+    headerColor: Color;
     partials: TablePartial[];
 }
 
@@ -30,11 +30,12 @@ declare class Table extends Element {
     indexes: Index[];
     checks: Check[];
     schema: Schema;
-    headerColor: string;
+    headerColor: Color;
     dbState: DbState;
     id: number;
     group: TableGroup;
     partials: TablePartial[];
+    records: TableRecord[];
 
     constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor }: RawTable);
     generateId(): void;
@@ -74,7 +75,7 @@ declare class Table extends Element {
         name: string;
         alias: string;
         note: string;
-        headerColor: string;
+        headerColor: Color;
         partials: TablePartial[];
     };
     exportChild(): {
@@ -113,26 +114,30 @@ declare class Table extends Element {
         name: string;
         alias: string;
         note: string;
-        headerColor: string;
+        headerColor: Color;
         partials: TablePartial[];
+        recordIds: number[];
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 
 export interface NormalizedTable {
-    [id: number]: {
-        id: number;
-        name: string;
-        alias: string;
-        note: string;
-        headerColor: string;
-        fieldIds: number[];
-        indexIds: number[];
-        checkIds: number[];
-        schemaId: number;
-        groupId: number;
-        partials: TablePartial[];
-    };
+    id: number;
+    name: string;
+    alias: string | null;
+    note: string | null;
+    headerColor: Color;
+    fieldIds: number[];
+    indexIds: number[];
+    checkIds: number[];
+    recordIds: number[];
+    schemaId: number;
+    groupId: number | null;
+    partials: TablePartial[];
+}
+
+export interface NormalizedTableIdMap {
+    [id: number]: NormalizedTable;
 }
 
 export default Table;

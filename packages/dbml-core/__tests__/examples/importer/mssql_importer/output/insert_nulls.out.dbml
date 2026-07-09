@@ -1,0 +1,14 @@
+Table "test_table" {
+  "id" INT [pk]
+  "name" VARCHAR(100)
+  "email" VARCHAR(100)
+  "age" INT
+  "active" BIT [default: 1]
+}
+
+Records test_table(id, name, email, age, active) {
+  1, 'Alice', 'alice@example.com', 25, 1
+  2, 'Bob', null, 30, 0
+  3, null, null, null, null
+  4, 'Charlie', null, null, 1
+}

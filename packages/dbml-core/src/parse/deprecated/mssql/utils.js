@@ -1,0 +1,49 @@
+import P from 'parsimmon';
+import { last } from 'lodash-es';
+import {
+  LParen, RParen, Comma,
+} from './keyword_parsers.js';
+
+import wss from './whitespaces.js';
+
+export function makeNode() {
+  return function (parser) {
+    return P.seqMap(P.index, parser, P.index, (start, value, end) => {
+      if (!value) return parser;
+      if (typeof value.value !== 'object') value.value = { value: value.value };
+      value.value.token = {
+        start,
+        end,
+      };
+      return value;
+    }).skip(wss);
+  };
+}
+
+export function makeList(parser, isZero = false) {
+  let seperator = parser.sepBy1(Comma);
+  if (isZero) seperator = parser.sepBy(Comma);
+  return P.seq(LParen, seperator, RParen).map((value) => {
+    return value[1];
+  });
+}
+
+export function streamline(type) {
+  return function (parser) {
+    return parser.skip(wss).map((value) => {
+      if (value !== 0 && !value) value = '';
+      return {
+        type,
+        value,
+      };
+    });
+  };
+}
+
+export function getFullTableName(nameList) {
+  let schemaName = null;
+  if (nameList.length > 1) {
+    schemaName = nameList[nameList.length - 2];
+  }
+  return { name: last(nameList), schemaName };
+}

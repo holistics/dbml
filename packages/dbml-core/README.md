@@ -160,13 +160,13 @@ For more detailed documentation on each SQL parser, see the individual parser RE
 | Feature | PostgreSQL | MySQL | MSSQL | Oracle | Snowflake |
 |---------|------------|-------|-------|--------|-----------|
 | Basic `INSERT` ... VALUES | ✓ | ✓ | ✓ | ✓ | ✗ |
-| Multi-row `INSERT` | ✓ | ✓ | ✓ | — | ✓ |
+| Multi-row `INSERT` | ✓ | ✓ | ✓ | ✓ | ✓ |
 | `INSERT` ... SELECT | ✗ | ✗ | ✗ | ✗ | ✗ |
 | `INSERT` ... with returned rows (`RETURNING`, `OUTPUT`) | ◐ | — | ◐ | ◐ | — |
 | `INSERT` ... ON CONFLICT/DUPLICATE KEY | ◐ | ◐ | — | — | — |
 
 **Notes:**
-- **Oracle**: Uses `INSERT ALL` syntax for multi-row inserts (not supported)
+- **Oracle**: Multi-row inserts use `INSERT ALL ... SELECT * FROM dual` syntax, which is fully supported.
 
 ---
 

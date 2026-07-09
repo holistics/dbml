@@ -12,12 +12,6 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#plsqlroot.
-	visitPlsqlroot(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by PostgreSQLParser#stmtblock.
 	visitStmtblock(ctx) {
 	  return this.visitChildren(ctx);
@@ -36,12 +30,6 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#plsqlconsolecommand.
-	visitPlsqlconsolecommand(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by PostgreSQLParser#callstmt.
 	visitCallstmt(ctx) {
 	  return this.visitChildren(ctx);
@@ -54,8 +42,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_with.
-	visitOpt_with(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#with_.
+	visitWith_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -96,8 +84,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_in_database.
-	visitOpt_in_database(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#in_database_.
+	visitIn_database_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -204,8 +192,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_boolean_or_string.
-	visitOpt_boolean_or_string(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#boolean_or_string_.
+	visitBoolean_or_string_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -216,8 +204,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_encoding.
-	visitOpt_encoding(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#encoding_.
+	visitEncoding_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -330,14 +318,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_drop_behavior.
-	visitOpt_drop_behavior(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#drop_behavior_.
+	visitDrop_behavior_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_collate_clause.
-	visitOpt_collate_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#collate_clause_.
+	visitCollate_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -360,8 +348,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_reloptions.
-	visitOpt_reloptions(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#reloptions_.
+	visitReloptions_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -444,8 +432,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_program.
-	visitOpt_program(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#program_.
+	visitProgram_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -474,8 +462,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_binary.
-	visitOpt_binary(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#binary_.
+	visitBinary_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -486,8 +474,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_using.
-	visitOpt_using(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#using_.
+	visitUsing_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -642,14 +630,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_no_inherit.
-	visitOpt_no_inherit(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#no_inherit_.
+	visitNo_inherit_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_column_list.
-	visitOpt_column_list(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#column_list_.
+	visitColumn_list_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -666,8 +654,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_c_include.
-	visitOpt_c_include(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#c_include_.
+	visitC_include_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -810,8 +798,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_with_data.
-	visitOpt_with_data(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#with_data_.
+	visitWith_data_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -876,8 +864,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_by.
-	visitOpt_by(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#by_.
+	visitBy_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -900,8 +888,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_trusted.
-	visitOpt_trusted(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#trusted_.
+	visitTrusted_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -912,8 +900,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_inline_handler.
-	visitOpt_inline_handler(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#inline_handler_.
+	visitInline_handler_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -924,14 +912,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_validator.
-	visitOpt_validator(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#validator_.
+	visitValidator_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_procedural.
-	visitOpt_procedural(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#procedural_.
+	visitProcedural_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1014,8 +1002,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_fdw_options.
-	visitOpt_fdw_options(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#fdw_options_.
+	visitFdw_options_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1080,8 +1068,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_type.
-	visitOpt_type(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#type_.
+	visitType_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1092,8 +1080,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_foreign_server_version.
-	visitOpt_foreign_server_version(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#foreign_server_version_.
+	visitForeign_server_version_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1428,8 +1416,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_enum_val_list.
-	visitOpt_enum_val_list(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#enum_val_list_.
+	visitEnum_val_list_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1446,8 +1434,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_if_not_exists.
-	visitOpt_if_not_exists(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#if_not_exists_.
+	visitIf_not_exists_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1470,14 +1458,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_default.
-	visitOpt_default(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#default_.
+	visitDefault_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_opfamily.
-	visitOpt_opfamily(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#opfamily_.
+	visitOpfamily_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1488,8 +1476,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_recheck.
-	visitOpt_recheck(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#recheck_.
+	visitRecheck_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1572,8 +1560,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#any_name_list.
-	visitAny_name_list(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#any_name_list_.
+	visitAny_name_list_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1602,8 +1590,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_restart_seqs.
-	visitOpt_restart_seqs(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#restart_seqs_.
+	visitRestart_seqs_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1626,8 +1614,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_provider.
-	visitOpt_provider(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#provider_.
+	visitProvider_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1656,8 +1644,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_from_in.
-	visitOpt_from_in(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#from_in_.
+	visitFrom_in_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1710,8 +1698,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_grant_grant_option.
-	visitOpt_grant_grant_option(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#grant_grant_option_.
+	visitGrant_grant_option_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1728,14 +1716,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_grant_admin_option.
-	visitOpt_grant_admin_option(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#grant_admin_option_.
+	visitGrant_admin_option_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_granted_by.
-	visitOpt_granted_by(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#granted_by_.
+	visitGranted_by_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1776,20 +1764,32 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_unique.
-	visitOpt_unique(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#unique_.
+	visitUnique_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_concurrently.
-	visitOpt_concurrently(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#nulls_distinct.
+	visitNulls_distinct(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_index_name.
-	visitOpt_index_name(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#single_name_.
+	visitSingle_name_(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#concurrently_.
+	visitConcurrently_(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#index_name_.
+	visitIndex_name_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1818,8 +1818,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_include.
-	visitOpt_include(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#include_.
+	visitInclude_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1830,26 +1830,26 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_collate.
-	visitOpt_collate(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#collate_.
+	visitCollate_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_class.
-	visitOpt_class(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#class_.
+	visitClass_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_asc_desc.
-	visitOpt_asc_desc(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#asc_desc_.
+	visitAsc_desc_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_nulls_order.
-	visitOpt_nulls_order(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#nulls_order_.
+	visitNulls_order_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1860,8 +1860,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_or_replace.
-	visitOpt_or_replace(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#or_replace_.
+	visitOr_replace_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -1998,8 +1998,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_definition.
-	visitOpt_definition(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#definition_.
+	visitDefinition_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2028,8 +2028,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_restrict.
-	visitOpt_restrict(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#restrict_.
+	visitRestrict_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2112,8 +2112,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_if_exists.
-	visitOpt_if_exists(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#if_exists_.
+	visitIf_exists_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2142,26 +2142,20 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#reindex_target_type.
-	visitReindex_target_type(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#reindex_target_relation.
+	visitReindex_target_relation(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#reindex_target_multitable.
-	visitReindex_target_multitable(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#reindex_target_all.
+	visitReindex_target_all(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
 	// Visit a parse tree produced by PostgreSQLParser#reindex_option_list.
 	visitReindex_option_list(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#reindex_option_elem.
-	visitReindex_option_elem(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2178,14 +2172,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_column.
-	visitOpt_column(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#column_.
+	visitColumn_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_set_data.
-	visitOpt_set_data(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#set_data_.
+	visitSet_data_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2196,8 +2190,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_no.
-	visitOpt_no(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#no_.
+	visitNo_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2250,8 +2244,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_publication_for_tables.
-	visitOpt_publication_for_tables(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#publication_for_tables_.
+	visitPublication_for_tables_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2334,8 +2328,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_instead.
-	visitOpt_instead(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#instead_.
+	visitInstead_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2370,8 +2364,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_transaction.
-	visitOpt_transaction(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#transaction_.
+	visitTransaction_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2394,8 +2388,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_transaction_chain.
-	visitOpt_transaction_chain(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#transaction_chain_.
+	visitTransaction_chain_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2406,8 +2400,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_check_option.
-	visitOpt_check_option(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#check_option_.
+	visitCheck_option_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2448,8 +2442,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_equal.
-	visitOpt_equal(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#equal_.
+	visitEqual_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2508,8 +2502,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_as.
-	visitOpt_as(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#as_.
+	visitAs_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2562,6 +2556,12 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
+	// Visit a parse tree produced by PostgreSQLParser#utility_option_list.
+	visitUtility_option_list(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
 	// Visit a parse tree produced by PostgreSQLParser#vac_analyze_option_list.
 	visitVac_analyze_option_list(ctx) {
 	  return this.visitChildren(ctx);
@@ -2570,6 +2570,24 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 
 	// Visit a parse tree produced by PostgreSQLParser#analyze_keyword.
 	visitAnalyze_keyword(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#utility_option_elem.
+	visitUtility_option_elem(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#utility_option_name.
+	visitUtility_option_name(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#utility_option_arg.
+	visitUtility_option_arg(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2592,32 +2610,32 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_analyze.
-	visitOpt_analyze(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#analyze_.
+	visitAnalyze_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_verbose.
-	visitOpt_verbose(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#verbose_.
+	visitVerbose_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_full.
-	visitOpt_full(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#full_.
+	visitFull_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_freeze.
-	visitOpt_freeze(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#freeze_.
+	visitFreeze_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_name_list.
-	visitOpt_name_list(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#name_list_.
+	visitName_list_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2634,8 +2652,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_vacuum_relation_list.
-	visitOpt_vacuum_relation_list(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#vacuum_relation_list_.
+	visitVacuum_relation_list_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2748,14 +2766,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_on_conflict.
-	visitOpt_on_conflict(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#on_conflict_.
+	visitOn_conflict_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_conf_expr.
-	visitOpt_conf_expr(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#conf_expr_.
+	visitConf_expr_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2808,8 +2826,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_lock.
-	visitOpt_lock(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#lock_.
+	visitLock_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2820,14 +2838,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_nowait.
-	visitOpt_nowait(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#nowait_.
+	visitNowait_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_nowait_or_skip.
-	visitOpt_nowait_or_skip(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#nowait_or_skip_.
+	visitNowait_or_skip_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2880,8 +2898,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_hold.
-	visitOpt_hold(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#hold_.
+	visitHold_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2910,32 +2928,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#simple_select.
-	visitSimple_select(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#simple_select_intersect.
+	visitSimple_select_intersect(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#union.
-	visitUnion(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#intersect.
-	visitIntersect(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#except.
-	visitExcept(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#set_operator_with_all_or_distinct.
-	visitSet_operator_with_all_or_distinct(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#simple_select_pramary.
+	visitSimple_select_pramary(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2958,14 +2958,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_materialized.
-	visitOpt_materialized(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#materialized_.
+	visitMaterialized_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_with_clause.
-	visitOpt_with_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#with_clause_.
+	visitWith_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2976,8 +2976,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_strict.
-	visitOpt_strict(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#strict_.
+	visitStrict_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -2988,8 +2988,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_table.
-	visitOpt_table(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#table_.
+	visitTable_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3006,14 +3006,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_all_clause.
-	visitOpt_all_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#all_clause_.
+	visitAll_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_sort_clause.
-	visitOpt_sort_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#sort_clause_.
+	visitSort_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3042,8 +3042,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_select_limit.
-	visitOpt_select_limit(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#select_limit_.
+	visitSelect_limit_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3150,8 +3150,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_for_locking_clause.
-	visitOpt_for_locking_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#for_locking_clause_.
+	visitFor_locking_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3198,12 +3198,6 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#non_ansi_join.
-	visitNon_ansi_join(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by PostgreSQLParser#table_ref.
 	visitTable_ref(ctx) {
 	  return this.visitChildren(ctx);
@@ -3212,18 +3206,6 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 
 	// Visit a parse tree produced by PostgreSQLParser#alias_clause.
 	visitAlias_clause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_alias_clause.
-	visitOpt_alias_clause(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#table_alias_clause.
-	visitTable_alias_clause(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3270,8 +3252,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_repeatable_clause.
-	visitOpt_repeatable_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#repeatable_clause_.
+	visitRepeatable_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3294,14 +3276,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_col_def_list.
-	visitOpt_col_def_list(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#col_def_list_.
+	visitCol_def_list_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_ordinality.
-	visitOpt_ordinality(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#ordinality_.
+	visitOrdinality_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3408,8 +3390,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_type_modifiers.
-	visitOpt_type_modifiers(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#type_modifiers_.
+	visitType_modifiers_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3420,8 +3402,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_float.
-	visitOpt_float(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#float_.
+	visitFloat_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3468,8 +3450,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_varying.
-	visitOpt_varying(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#varying_.
+	visitVarying_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3486,14 +3468,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_timezone.
-	visitOpt_timezone(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#timezone_.
+	visitTimezone_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_interval.
-	visitOpt_interval(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#interval_.
+	visitInterval_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3504,8 +3486,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_escape.
-	visitOpt_escape(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#jsonType.
+	visitJsonType(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#escape_.
+	visitEscape_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3696,8 +3684,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_xml_root_standalone.
-	visitOpt_xml_root_standalone(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#xml_root_standalone_.
+	visitXml_root_standalone_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3786,20 +3774,20 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_existing_window_name.
-	visitOpt_existing_window_name(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#existing_window_name_.
+	visitExisting_window_name_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_partition_clause.
-	visitOpt_partition_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#partition_clause_.
+	visitPartition_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_frame_clause.
-	visitOpt_frame_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#frame_clause_.
+	visitFrame_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -3816,8 +3804,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_window_exclusion_clause.
-	visitOpt_window_exclusion_clause(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#window_exclusion_clause_.
+	visitWindow_exclusion_clause_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -4008,8 +3996,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_slice_bound.
-	visitOpt_slice_bound(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#slice_bound_.
+	visitSlice_bound_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -4026,8 +4014,134 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_target_list.
-	visitOpt_target_list(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#json_passing_clause.
+	visitJson_passing_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_arguments.
+	visitJson_arguments(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_argument.
+	visitJson_argument(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_wrapper_behavior.
+	visitJson_wrapper_behavior(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_behavior.
+	visitJson_behavior(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_behavior_type.
+	visitJson_behavior_type(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_behavior_clause.
+	visitJson_behavior_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_on_error_clause.
+	visitJson_on_error_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_value_expr.
+	visitJson_value_expr(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_format_clause.
+	visitJson_format_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_quotes_clause.
+	visitJson_quotes_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_returning_clause.
+	visitJson_returning_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_predicate_type_constraint.
+	visitJson_predicate_type_constraint(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_key_uniqueness_constraint.
+	visitJson_key_uniqueness_constraint(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_name_and_value_list.
+	visitJson_name_and_value_list(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_name_and_value.
+	visitJson_name_and_value(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_object_constructor_null_clause.
+	visitJson_object_constructor_null_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_array_constructor_null_clause.
+	visitJson_array_constructor_null_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_value_expr_list.
+	visitJson_value_expr_list(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_aggregate_func.
+	visitJson_aggregate_func(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#json_array_aggregate_order_by_clause.
+	visitJson_array_aggregate_order_by_clause(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by PostgreSQLParser#target_list_.
+	visitTarget_list_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -4134,8 +4248,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#opt_uescape.
-	visitOpt_uescape(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#uescape_.
+	visitUescape_(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -4170,12 +4284,6 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#table_alias.
-	visitTable_alias(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by PostgreSQLParser#type_function_name.
 	visitType_function_name(ctx) {
 	  return this.visitChildren(ctx);
@@ -4188,20 +4296,14 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#collabel.
-	visitCollabel(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#colLabel.
+	visitColLabel(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#identifier.
-	visitIdentifier(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#plsqlidentifier.
-	visitPlsqlidentifier(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#bareColLabel.
+	visitBareColLabel(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -4230,638 +4332,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#builtin_function_name.
-	visitBuiltin_function_name(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#pl_function.
-	visitPl_function(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#comp_options.
-	visitComp_options(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#comp_option.
-	visitComp_option(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#sharp.
-	visitSharp(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#option_value.
-	visitOption_value(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_semi.
-	visitOpt_semi(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#pl_block.
-	visitPl_block(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_sect.
-	visitDecl_sect(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_start.
-	visitDecl_start(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_stmts.
-	visitDecl_stmts(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#label_decl.
-	visitLabel_decl(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_stmt.
-	visitDecl_stmt(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_statement.
-	visitDecl_statement(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_scrollable.
-	visitOpt_scrollable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_cursor_query.
-	visitDecl_cursor_query(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_cursor_args.
-	visitDecl_cursor_args(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_cursor_arglist.
-	visitDecl_cursor_arglist(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_cursor_arg.
-	visitDecl_cursor_arg(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_is_for.
-	visitDecl_is_for(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_aliasitem.
-	visitDecl_aliasitem(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_varname.
-	visitDecl_varname(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_const.
-	visitDecl_const(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_datatype.
-	visitDecl_datatype(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_collate.
-	visitDecl_collate(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_notnull.
-	visitDecl_notnull(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_defval.
-	visitDecl_defval(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#decl_defkey.
-	visitDecl_defkey(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#assign_operator.
-	visitAssign_operator(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#proc_sect.
-	visitProc_sect(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#proc_stmt.
-	visitProc_stmt(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_perform.
-	visitStmt_perform(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_call.
-	visitStmt_call(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_expr_list.
-	visitOpt_expr_list(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_assign.
-	visitStmt_assign(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_getdiag.
-	visitStmt_getdiag(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#getdiag_area_opt.
-	visitGetdiag_area_opt(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#getdiag_list.
-	visitGetdiag_list(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#getdiag_list_item.
-	visitGetdiag_list_item(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#getdiag_item.
-	visitGetdiag_item(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#getdiag_target.
-	visitGetdiag_target(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#assign_var.
-	visitAssign_var(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_if.
-	visitStmt_if(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_elsifs.
-	visitStmt_elsifs(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_else.
-	visitStmt_else(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_case.
-	visitStmt_case(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_expr_until_when.
-	visitOpt_expr_until_when(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#case_when_list.
-	visitCase_when_list(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#case_when.
-	visitCase_when(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_case_else.
-	visitOpt_case_else(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_loop.
-	visitStmt_loop(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_while.
-	visitStmt_while(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_for.
-	visitStmt_for(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#for_control.
-	visitFor_control(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_for_using_expression.
-	visitOpt_for_using_expression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_cursor_parameters.
-	visitOpt_cursor_parameters(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_reverse.
-	visitOpt_reverse(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_by_expression.
-	visitOpt_by_expression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#for_variable.
-	visitFor_variable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_foreach_a.
-	visitStmt_foreach_a(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#foreach_slice.
-	visitForeach_slice(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_exit.
-	visitStmt_exit(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#exit_type.
-	visitExit_type(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_return.
-	visitStmt_return(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_return_result.
-	visitOpt_return_result(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_raise.
-	visitStmt_raise(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_stmt_raise_level.
-	visitOpt_stmt_raise_level(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_raise_list.
-	visitOpt_raise_list(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_raise_using.
-	visitOpt_raise_using(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_raise_using_elem.
-	visitOpt_raise_using_elem(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_raise_using_elem_list.
-	visitOpt_raise_using_elem_list(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_assert.
-	visitStmt_assert(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_stmt_assert_message.
-	visitOpt_stmt_assert_message(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#loop_body.
-	visitLoop_body(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_execsql.
-	visitStmt_execsql(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_dynexecute.
-	visitStmt_dynexecute(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_execute_using.
-	visitOpt_execute_using(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_execute_using_list.
-	visitOpt_execute_using_list(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_execute_into.
-	visitOpt_execute_into(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_open.
-	visitStmt_open(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_open_bound_list_item.
-	visitOpt_open_bound_list_item(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_open_bound_list.
-	visitOpt_open_bound_list(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_open_using.
-	visitOpt_open_using(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_scroll_option.
-	visitOpt_scroll_option(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_scroll_option_no.
-	visitOpt_scroll_option_no(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_fetch.
-	visitStmt_fetch(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#into_target.
-	visitInto_target(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_cursor_from.
-	visitOpt_cursor_from(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_fetch_direction.
-	visitOpt_fetch_direction(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_move.
-	visitStmt_move(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_close.
-	visitStmt_close(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_null.
-	visitStmt_null(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_commit.
-	visitStmt_commit(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_rollback.
-	visitStmt_rollback(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#plsql_opt_transaction_chain.
-	visitPlsql_opt_transaction_chain(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#stmt_set.
-	visitStmt_set(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#cursor_variable.
-	visitCursor_variable(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#exception_sect.
-	visitException_sect(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#proc_exceptions.
-	visitProc_exceptions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#proc_exception.
-	visitProc_exception(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#proc_conditions.
-	visitProc_conditions(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#proc_condition.
-	visitProc_condition(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_block_label.
-	visitOpt_block_label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_loop_label.
-	visitOpt_loop_label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_label.
-	visitOpt_label(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_exitcond.
-	visitOpt_exitcond(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#bare_label_keyword.
+	visitBare_label_keyword(ctx) {
 	  return this.visitChildren(ctx);
 	}
 
@@ -4872,50 +4344,8 @@ export default class PostgreSQLParserVisitor extends antlr4.tree.ParseTreeVisito
 	}
 
 
-	// Visit a parse tree produced by PostgreSQLParser#plsql_unreserved_keyword.
-	visitPlsql_unreserved_keyword(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#sql_expression.
-	visitSql_expression(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#expr_until_then.
-	visitExpr_until_then(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#expr_until_semi.
-	visitExpr_until_semi(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#expr_until_rightbracket.
-	visitExpr_until_rightbracket(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#expr_until_loop.
-	visitExpr_until_loop(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#make_execsql_stmt.
-	visitMake_execsql_stmt(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
-	// Visit a parse tree produced by PostgreSQLParser#opt_returning_clause_into.
-	visitOpt_returning_clause_into(ctx) {
+	// Visit a parse tree produced by PostgreSQLParser#identifier.
+	visitIdentifier(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

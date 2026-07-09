@@ -1,0 +1,204 @@
+{
+  "schemas": [],
+  "tables": [
+    {
+      "name": "users",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 10, "line": 1, "column": 11 } },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "name",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 2, "column": 1 }, "end": { "offset": 10, "line": 2, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "email",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 3, "column": 1 }, "end": { "offset": 10, "line": 3, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "active",
+          "type": {
+            "schemaName": null,
+            "type_name": "boolean",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 4, "column": 1 }, "end": { "offset": 10, "line": 4, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "schemaName": null,
+            "type_name": "timestamp",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 5, "column": 1 }, "end": { "offset": 10, "line": 5, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 100, "line": 6, "column": 2 } },
+      "indexes": []
+    },
+    {
+      "name": "posts",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 10, "line": 1, "column": 11 } },
+          "inline_refs": [],
+          "pk": true,
+          "unique": false
+        },
+        {
+          "name": "user_id",
+          "type": {
+            "schemaName": null,
+            "type_name": "integer",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 2, "column": 1 }, "end": { "offset": 10, "line": 2, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "title",
+          "type": {
+            "schemaName": null,
+            "type_name": "varchar",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 3, "column": 1 }, "end": { "offset": 10, "line": 3, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        },
+        {
+          "name": "content",
+          "type": {
+            "schemaName": null,
+            "type_name": "text",
+            "args": null
+          },
+          "token": { "start": { "offset": 0, "line": 4, "column": 1 }, "end": { "offset": 10, "line": 4, "column": 11 } },
+          "inline_refs": [],
+          "pk": false,
+          "unique": false
+        }
+      ],
+      "token": { "start": { "offset": 0, "line": 1, "column": 1 }, "end": { "offset": 100, "line": 5, "column": 2 } },
+      "indexes": []
+    }
+  ],
+  "notes": [],
+  "refs": [
+    {
+      "name": null,
+      "endpoints": [
+        {
+          "schemaName": null,
+          "tableName": "posts",
+          "fieldNames": ["user_id"],
+          "relation": "1"
+        },
+        {
+          "schemaName": null,
+          "tableName": "users",
+          "fieldNames": ["id"],
+          "relation": "*"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": [
+    {
+      "schemaName": null,
+      "tableName": "users",
+      "columns": ["id", "name", "email", "active", "created_at"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": "Alice", "type": "string" },
+          { "value": "alice@example.com", "type": "string" },
+          { "value": true, "type": "bool" },
+          { "value": "2024-01-15 10:30:00", "type": "timestamp" }
+        ],
+        [
+          { "value": 2, "type": "integer" },
+          { "value": "Bob", "type": "string" },
+          { "value": "bob@example.com", "type": "string" },
+          { "value": false, "type": "bool" },
+          { "value": "2024-01-16 14:20:00", "type": "timestamp" }
+        ],
+        [
+          { "value": 3, "type": "integer" },
+          { "value": "Charlie", "type": "string" },
+          { "value": null, "type": "string" },
+          { "value": true, "type": "bool" },
+          { "value": "2024-01-17 09:15:00", "type": "timestamp" }
+        ]
+      ]
+    },
+    {
+      "schemaName": null,
+      "tableName": "posts",
+      "columns": ["id", "user_id", "title", "content"],
+      "values": [
+        [
+          { "value": 1, "type": "integer" },
+          { "value": 1, "type": "integer" },
+          { "value": "First Post", "type": "string" },
+          { "value": "Hello World", "type": "text" }
+        ],
+        [
+          { "value": 2, "type": "integer" },
+          { "value": 1, "type": "integer" },
+          { "value": "Second Post", "type": "string" },
+          { "value": "It's a beautiful day", "type": "text" }
+        ]
+      ]
+    }
+  ]
+}

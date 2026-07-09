@@ -1,18 +1,18 @@
-import Element, { RawNote, Token } from './element';
+import Element, { RawNote, Token, Color } from './element';
 import Field from './field';
 import Index from './indexes';
 import Check from './check';
 import DbState from './dbState';
-import { NormalizedDatabase } from './database';
+import { NormalizedModel } from './database';
 
-interface RawTablePartial {
+export interface RawTablePartial {
     name: string;
     note: RawNote;
     fields: Field[];
     indexes: Index[];
     checks?: any[];
     token: Token;
-    headerColor: string;
+    headerColor: Color;
     dbState: DbState;
 }
 
@@ -23,7 +23,7 @@ declare class TablePartial extends Element {
     fields: Field[];
     indexes: Index[];
     checks: Check[];
-    headerColor: string;
+    headerColor: Color;
     dbState: DbState;
     id: number;
 
@@ -32,7 +32,7 @@ declare class TablePartial extends Element {
     export(): {
         name: string;
         note: string;
-        headerColor: string;
+        headerColor: Color;
         fields: {
             name: string;
             type: any;
@@ -59,7 +59,7 @@ declare class TablePartial extends Element {
     shallowExport(): {
         name: string;
         note: string;
-        headerColor: string;
+        headerColor: Color;
         fields: {
             name: string;
             type: any;
@@ -83,18 +83,21 @@ declare class TablePartial extends Element {
             note: string;
         }[];
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
 
 export interface NormalizedTablePartial {
-    [id: number]: {
-        id: number;
-        name: string;
-        note: string;
-        headerColor: string;
-        fieldIds: number[];
-        indexIds: number[];
-    };
+    id: number;
+    name: string;
+    note: string;
+    headerColor: Color;
+    fieldIds: number[];
+    indexIds: number[];
+    checkIds: number[];
+}
+
+export interface NormalizedTablePartialIdMap {
+    [id: number]: NormalizedTablePartial;
 }
 
 export default TablePartial;

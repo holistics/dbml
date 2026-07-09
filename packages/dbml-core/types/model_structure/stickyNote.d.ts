@@ -1,37 +1,42 @@
-import Element, { Token } from './element';
+import Element, { Token, Color } from './element';
 import Database from './database';
 import DbState from './dbState';
-import { NormalizedDatabase } from './database';
-interface RawStickyNote {
+import { NormalizedModel } from './database';
+
+export interface RawStickyNote {
     name: string;
     content: string;
     database: Database;
     token: Token;
-    headerColor: string;
+    color?: Color;
 }
+
 declare class StickyNote extends Element {
     name: string;
     content: string;
     noteToken: Token;
-    headerColor: string;
+    color?: Color;
     database: Database;
     dbState: DbState;
     id: number;
-    constructor({ name, content, token, headerColor, database }: RawStickyNote);
+    constructor({ name, content, token, color, database }: RawStickyNote);
     generateId(): void;
     export(): {
         name: string;
         content: string;
-        headerColor: string;
+        color?: Color;
     };
-    normalize(model: NormalizedDatabase): void;
+    normalize(model: NormalizedModel): void;
 }
-export interface NormalizedStickyNote {
-    [id: number]: {
-        id: number;
-        name: string;
-        content: string;
-        headerColor: string;
-    };
+export interface NormalizedNote {
+    id: number;
+    name: string;
+    content: string;
+    color?: Color;
 }
+
+export interface NormalizedNoteIdMap {
+    [id: number]: NormalizedNote;
+}
+
 export default StickyNote;

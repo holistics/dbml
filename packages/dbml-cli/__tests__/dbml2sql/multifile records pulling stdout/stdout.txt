@@ -1,0 +1,23 @@
+CREATE TABLE "orders" (
+  "id" int PRIMARY KEY,
+  "user_id" int
+);
+
+CREATE TABLE "users" (
+  "id" int PRIMARY KEY,
+  "name" varchar
+);
+
+ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;
+
+-- Defer constraint checking for INSERT
+BEGIN;
+SET CONSTRAINTS ALL DEFERRED;
+
+INSERT INTO "users" ("id", "name")
+VALUES
+  (1, 'Alice'),
+  (2, 'Bob');
+
+SET CONSTRAINTS ALL IMMEDIATE;
+COMMIT;

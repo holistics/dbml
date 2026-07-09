@@ -1,15 +1,23 @@
-import { describe, expect, test } from 'vitest';
+import {
+  describe, expect, test,
+} from 'vitest';
+import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler/index';
+import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { TableNameInput } from '@/compiler/queries/transform';
+import { Filepath } from '@/core/types/filepath';
+import { setupCompiler, fp } from '../interpreter/multifile/utils';
 
 function renameTable (
   oldName: TableNameInput,
   newName: TableNameInput,
   input: string,
 ): string {
-  const compiler = new Compiler();
-  compiler.setSource(input);
-  return compiler.renameTable(oldName, newName);
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, input);
+  const compiler = new Compiler(layout);
+  const changes = compiler.renameTable(DEFAULT_ENTRY, oldName, newName);
+  return changes.get(DEFAULT_ENTRY.absolute) ?? input;
 }
 
 describe('[example] renameTable (string format)', () => {
@@ -106,7 +114,9 @@ Table users {
   id int [pk]
 }
 `;
-    const result = renameTable('users', { table: 'customers' }, input);
+    const result = renameTable('users', {
+      table: 'customers',
+    }, input);
     expect(result).toContain('Table customers');
     expect(result).not.toContain('Table users');
   });
@@ -117,7 +127,9 @@ Table users {
   id int [pk]
 }
 `;
-    const result = renameTable({ table: 'users' }, 'customers', input);
+    const result = renameTable({
+      table: 'users',
+    }, 'customers', input);
     expect(result).toContain('Table customers');
     expect(result).not.toContain('Table users');
   });
@@ -240,7 +252,11 @@ Table users {
   name varchar
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
       expect(result).not.toContain('Table users');
     });
@@ -259,7 +275,11 @@ Table posts {
 
 Ref: posts.user_id > users.id
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
       expect(result).not.toContain('Table users');
       expect(result).toContain('customers.id');
@@ -282,7 +302,11 @@ TableGroup group1 {
   posts
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
       expect(result).not.toContain('Table users');
       expect(result).toContain('customers');
@@ -301,7 +325,11 @@ Table posts {
   user_id int [ref: > users.id]
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('"users"');
       expect(result).toContain('customers.id');
@@ -314,7 +342,11 @@ Table users {
   name varchar
 }
 `;
-      const result = renameTable({ table: 'non_existent_table' }, { table: 'new_name' }, input);
+      const result = renameTable({
+        table: 'non_existent_table',
+      }, {
+        table: 'new_name',
+      }, input);
       expect(result.trim()).toBe(input.trim());
     });
 
@@ -334,7 +366,11 @@ Table posts {
 Ref: posts.author_id > users.id
 Ref: posts.reviewer_id > users.id
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('users');
       const customerReferences = result.match(/customers\.id/g);
@@ -349,7 +385,11 @@ Table users {
   Note: 'User table'
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).toContain("Note: 'User table'");
       expect(result).toContain('[pk]');
@@ -368,7 +408,11 @@ Table users {
   }
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('users');
       expect(result).toContain('email');
@@ -383,7 +427,11 @@ Table users {
   Note: 'This is a users table'
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('"users"');
       expect(result).toContain("Note: 'This is a users table'");
@@ -406,8 +454,14 @@ Table public.posts {
 Ref: public.posts.user_id > public.users.id
 `;
       const result = renameTable(
-        { schema: 'public', table: 'users' },
-        { schema: 'public', table: 'customers' },
+        {
+          schema: 'public',
+          table: 'users',
+        },
+        {
+          schema: 'public',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('customers');
@@ -436,8 +490,14 @@ Ref: public.posts.author_id > auth.users.id
 Ref: public.comments.author_id > auth.users.id
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -468,8 +528,14 @@ Ref: public.posts.auth_user_id > auth.users.id
 Ref: public.posts.public_user_id > public.users.id
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -494,8 +560,14 @@ Table public.posts {
 Ref: public.posts.user_id > public.users.id
 `;
       const result = renameTable(
-        { schema: 'public', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'public',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -516,8 +588,13 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'ecommerce', table: 'users' },
-        { table: 'users' },
+        {
+          schema: 'ecommerce',
+          table: 'users',
+        },
+        {
+          table: 'users',
+        },
         input,
       );
       expect(result).toContain('Table users');
@@ -537,7 +614,11 @@ Table posts {
 
 Ref: posts.id > users.id
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('"users"');
     });
@@ -558,14 +639,18 @@ Table posts {
 
 Ref: posts.user_id > U.id
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('users');
       expect(result).toContain('as U');
       expect(result).toContain('U.id');
     });
 
-    test('should handle table aliases - rename by alias', () => {
+    test('renaming by inline alias is a no-op - only direct names are renameable', () => {
       const input = `
 Table users as U {
   id int [pk]
@@ -579,11 +664,12 @@ Table posts {
 
 Ref: posts.user_id > U.id
 `;
-      const result = renameTable({ table: 'U' }, { table: 'customers' }, input);
-      expect(result).toContain('customers');
-      expect(result).not.toContain('"users"');
-      expect(result).toContain('as U');
-      expect(result).toContain('customers.id');
+      const result = renameTable({
+        table: 'U',
+      }, {
+        table: 'customers',
+      }, input);
+      expect(result).toBe(input);
     });
 
     test('should handle table aliases with schema names', () => {
@@ -601,8 +687,14 @@ Table public.posts {
 Ref: public.posts.author_id > AuthUser.id
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -628,7 +720,11 @@ TableGroup group1 {
   P
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('"users"');
       expect(result).toContain('posts');
@@ -650,7 +746,11 @@ Table posts {
 Ref: posts.user_id > users.id
 Ref: posts.reviewer_id > U.id
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('users');
       expect(result).toContain('as U');
@@ -679,8 +779,13 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'ecommerce', table: 'users' },
-        { table: 'users' },
+        {
+          schema: 'ecommerce',
+          table: 'users',
+        },
+        {
+          table: 'users',
+        },
         input,
       );
       expect(result.trim()).toBe(input.trim());
@@ -700,8 +805,13 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'ecommerce', table: 'users' },
-        { table: 'users' },
+        {
+          schema: 'ecommerce',
+          table: 'users',
+        },
+        {
+          table: 'users',
+        },
         input,
       );
       expect(result).toContain('Table users');
@@ -722,8 +832,14 @@ Table auth.customers {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'customers' },
-        { schema: 'public', table: 'users' },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
+        {
+          schema: 'public',
+          table: 'users',
+        },
         input,
       );
       expect(result.trim()).toBe(input.trim());
@@ -741,8 +857,14 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'public', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'public',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('Table customers');
@@ -760,7 +882,11 @@ Table "customers" {
   id int [pk]
 }
 `;
-      const result = renameTable({ table: 'app users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'app users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('"app users"');
       expect(result).toContain('"customers"');
       expect(result.trim()).toBe(input.trim());
@@ -778,8 +904,14 @@ Table auth.customers {
 }
 `;
       const result = renameTable(
-        { schema: 'ecommerce', table: 'users' },
-        { schema: 'auth', table: 'users' },
+        {
+          schema: 'ecommerce',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
         input,
       );
       expect(result).toContain('auth.users');
@@ -797,8 +929,13 @@ Table auth.admins {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'admins' },
-        { table: 'users' },
+        {
+          schema: 'auth',
+          table: 'admins',
+        },
+        {
+          table: 'users',
+        },
         input,
       );
       expect(result).toContain('Table users');
@@ -812,7 +949,11 @@ Table users {
   id int [pk]
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'users' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'users',
+      }, input);
       expect(result).toContain('Table users');
     });
   });
@@ -820,7 +961,11 @@ Table users {
   describe('quoting', () => {
     test('should preserve quotes when original table uses quotes', () => {
       const input = 'Table "users" { id int }';
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('"customers"');
       expect(result).not.toContain('users');
     });
@@ -830,7 +975,11 @@ Table users {
 Table users { id int }
 Table posts { user_id int [ref: > users.id] }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'app users' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'app users',
+      }, input);
       expect(result).toContain('"app users"');
       expect(result).toContain('"app users".id');
       expect(result).not.toContain('Table users');
@@ -838,28 +987,46 @@ Table posts { user_id int [ref: > users.id] }
 
     test('should add quotes when new name contains hyphens', () => {
       const input = 'Table users { id int }';
-      const result = renameTable({ table: 'users' }, { table: 'app-users' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'app-users',
+      }, input);
       expect(result).toContain('"app-users"');
     });
 
     test('should not add quotes for valid identifiers', () => {
       const input = 'Table users { id int }';
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
       expect(result).not.toContain('"customers"');
     });
 
     test('should handle special characters in quoted names', () => {
       const input = 'Table users { id int }';
-      const result = renameTable({ table: 'users' }, { table: 'user@domain' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'user@domain',
+      }, input);
       expect(result).toContain('"user@domain"');
     });
 
     test('should preserve quotes when schema-qualified table uses quotes', () => {
       const input = 'Table "schema1"."users" { id int }';
       const result = renameTable(
-        { schema: 'schema1', table: 'users' },
-        { schema: 'schema1', table: 'customers' },
+        {
+          schema: 'schema1',
+          table: 'users',
+        },
+        {
+          schema: 'schema1',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('"customers"');
@@ -868,7 +1035,11 @@ Table posts { user_id int [ref: > users.id] }
 
     test('should add quotes only to table name when needed, not schema', () => {
       const input = 'Table users { id int }';
-      const result = renameTable({ table: 'users' }, { table: 'my users' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'my users',
+      }, input);
       expect(result).toContain('Table "my users"');
       expect(result).not.toContain('public');
     });
@@ -888,7 +1059,11 @@ TableGroup group1 {
   posts
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table "customers"');
       expect(result).toContain('"customers".id');
       expect(result).toContain('"customers"');
@@ -914,7 +1089,11 @@ Table posts {
   title varchar
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('users');
       const customerRefs = result.match(/customers\.id/g);
@@ -938,8 +1117,14 @@ Table public.posts {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -963,7 +1148,11 @@ Table posts {
   user_id int [ref: > users.id]
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('created_at');
       expect(result).toContain('updated_at');
       expect(result).toContain('customers');
@@ -990,7 +1179,11 @@ Table orders {
   product_id int [ref: > products.id]
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).not.toContain('users');
       expect(result).toContain('products');
@@ -1015,7 +1208,11 @@ Table users_extended {
   user_id int [ref: > users.id]
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       expect(result).toContain('Table customers');
       expect(result).toContain('Table users_extended');
@@ -1057,8 +1254,14 @@ TableGroup social {
 }
 `;
       const result = renameTable(
-        { schema: 'auth', table: 'users' },
-        { schema: 'auth', table: 'customers' },
+        {
+          schema: 'auth',
+          table: 'users',
+        },
+        {
+          schema: 'auth',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('auth.customers');
@@ -1071,13 +1274,21 @@ TableGroup social {
 
   describe('malformed and edge cases', () => {
     test('should handle empty input', () => {
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, '');
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, '');
       expect(result).toBe('');
     });
 
     test('should handle whitespace-only input', () => {
       const input = '   \n\t\n   ';
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toBe(input);
     });
 
@@ -1086,7 +1297,11 @@ TableGroup social {
 // This is a comment
 // Another comment
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toBe(input);
     });
 
@@ -1095,7 +1310,11 @@ TableGroup social {
 Table users {
   id int [pk]
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
     });
 
@@ -1106,7 +1325,11 @@ Table users {
   name varchar
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
     });
 
@@ -1120,7 +1343,11 @@ Table posts {
   user_id int [ref: > ]
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
     });
 
@@ -1129,7 +1356,11 @@ Table posts {
 Table users {
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
     });
 
@@ -1143,7 +1374,11 @@ Table posts {
   user_id int [ref: > "用户".id]
 }
 `;
-      const result = renameTable({ table: '用户' }, { table: '客户' }, input);
+      const result = renameTable({
+        table: '用户',
+      }, {
+        table: '客户',
+      }, input);
       expect(result).toContain('"客户"');
       expect(result).not.toContain('"用户"');
     });
@@ -1154,7 +1389,11 @@ Table users2024 {
   id int [pk]
 }
 `;
-      const result = renameTable({ table: 'users2024' }, { table: 'customers2024' }, input);
+      const result = renameTable({
+        table: 'users2024',
+      }, {
+        table: 'customers2024',
+      }, input);
       expect(result).toContain('customers2024');
       expect(result).not.toContain('users2024');
     });
@@ -1166,7 +1405,11 @@ Table employees {
   manager_id int [ref: > employees.id]
 }
 `;
-      const result = renameTable({ table: 'employees' }, { table: 'staff' }, input);
+      const result = renameTable({
+        table: 'employees',
+      }, {
+        table: 'staff',
+      }, input);
       expect(result).toContain('Table staff');
       expect(result).toContain('staff.id');
       expect(result).not.toContain('employees');
@@ -1180,7 +1423,11 @@ Table categories {
   root_id int [ref: > categories.id]
 }
 `;
-      const result = renameTable({ table: 'categories' }, { table: 'groups' }, input);
+      const result = renameTable({
+        table: 'categories',
+      }, {
+        table: 'groups',
+      }, input);
       expect(result).toContain('Table groups');
       const groupRefs = result.match(/groups\.id/g);
       expect(groupRefs).toHaveLength(2);
@@ -1190,7 +1437,11 @@ Table categories {
       const longName = 'a'.repeat(100);
       const newLongName = 'b'.repeat(100);
       const input = `Table ${longName} { id int [pk] }`;
-      const result = renameTable({ table: longName }, { table: newLongName }, input);
+      const result = renameTable({
+        table: longName,
+      }, {
+        table: newLongName,
+      }, input);
       expect(result).toContain(newLongName);
       expect(result).not.toContain(longName);
     });
@@ -1211,7 +1462,11 @@ Table user_profiles {
   user_id int [ref: > user.id]
 }
 `;
-      const result = renameTable({ table: 'user' }, { table: 'account' }, input);
+      const result = renameTable({
+        table: 'user',
+      }, {
+        table: 'account',
+      }, input);
       expect(result).toContain('Table account');
       expect(result).toContain('Table users');
       expect(result).toContain('Table user_profiles');
@@ -1224,7 +1479,11 @@ Table users {
   id int [pk]
 }
 `;
-      const result = renameTable({ table: '' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: '',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toBe(input);
     });
 
@@ -1235,7 +1494,11 @@ Table users {
 }
 `;
       // Empty new name is not a valid identifier, so it gets quoted
-      const result = renameTable({ table: 'users' }, { table: '' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: '',
+      }, input);
       expect(result).toContain('Table ""');
     });
 
@@ -1257,7 +1520,11 @@ Table posts {
   status status
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
       expect(result).toContain('customers.id');
       expect(result).toContain('Enum status');
@@ -1279,7 +1546,11 @@ Table user_permission {
   user_id int [ref: > user.id]
 }
 `;
-      const result = renameTable({ table: 'user' }, { table: 'account' }, input);
+      const result = renameTable({
+        table: 'user',
+      }, {
+        table: 'account',
+      }, input);
       expect(result).toContain('Table account {');
       expect(result).toContain('Table user_role {');
       expect(result).toContain('Table user_permission {');
@@ -1297,7 +1568,11 @@ Table users {
   id int [pk]
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Project my_project');
       expect(result).toContain('Table customers');
     });
@@ -1319,7 +1594,11 @@ Table posts {
   }
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
     });
 
@@ -1334,7 +1613,11 @@ Table users {
   '''
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
       expect(result).toContain('about the users table');
     });
@@ -1344,7 +1627,11 @@ Table users {
   id    int    [pk]
   name  varchar(255)
 }`;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('  id    int    [pk]');
       expect(result).toContain('  name  varchar(255)');
     });
@@ -1359,7 +1646,11 @@ Table posts {
   user_id int [ref: > "my.users".id]
 }
 `;
-      const result = renameTable({ table: 'my.users' }, { table: 'my.customers' }, input);
+      const result = renameTable({
+        table: 'my.users',
+      }, {
+        table: 'my.customers',
+      }, input);
       expect(result).toContain('"my.customers"');
       expect(result).not.toContain('"my.users"');
     });
@@ -1375,8 +1666,14 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'my.schema', table: 'my.users' },
-        { schema: 'my.schema', table: 'my.customers' },
+        {
+          schema: 'my.schema',
+          table: 'my.users',
+        },
+        {
+          schema: 'my.schema',
+          table: 'my.customers',
+        },
         input,
       );
       expect(result).toContain('"my.customers"');
@@ -1390,8 +1687,12 @@ Table "my.special.users" {
 }
 `;
       const result = renameTable(
-        { table: 'my.special.users' },
-        { table: 'my.special.customers' },
+        {
+          table: 'my.special.users',
+        },
+        {
+          table: 'my.special.customers',
+        },
         input,
       );
       expect(result).toContain('"my.special.customers"');
@@ -1404,7 +1705,11 @@ Table users {
   id int [pk]
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: '2024_users' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: '2024_users',
+      }, input);
       expect(result).toContain('"2024_users"');
     });
 
@@ -1418,7 +1723,11 @@ Table posts {
   user_id int [ref: > "2024_users".id]
 }
 `;
-      const result = renameTable({ table: '2024_users' }, { table: 'users' }, input);
+      const result = renameTable({
+        table: '2024_users',
+      }, {
+        table: 'users',
+      }, input);
       expect(result).toContain('Table "users"');
       expect(result).toContain('"users".id');
     });
@@ -1430,8 +1739,14 @@ Table "my-schema".users {
 }
 `;
       const result = renameTable(
-        { schema: 'my-schema', table: 'users' },
-        { schema: 'my-schema', table: 'customers' },
+        {
+          schema: 'my-schema',
+          table: 'users',
+        },
+        {
+          schema: 'my-schema',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('customers');
@@ -1449,8 +1764,14 @@ Table posts {
 }
 `;
       const result = renameTable(
-        { schema: 'public', table: 'users' },
-        { schema: 'public', table: 'customers' },
+        {
+          schema: 'public',
+          table: 'users',
+        },
+        {
+          schema: 'public',
+          table: 'customers',
+        },
         input,
       );
       expect(result).toContain('customers');
@@ -1467,13 +1788,21 @@ Table posts {
 }
 `;
       // First rename
-      let result = renameTable({ table: 'users' }, { table: 'accounts' }, input);
+      let result = renameTable({
+        table: 'users',
+      }, {
+        table: 'accounts',
+      }, input);
       expect(result).toContain('Table accounts');
       expect(result).toContain('accounts.id');
 
       // Simulate second rename by using the result
       input = result;
-      result = renameTable({ table: 'accounts' }, { table: 'customers' }, input);
+      result = renameTable({
+        table: 'accounts',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
       expect(result).toContain('customers.id');
     });
@@ -1492,7 +1821,11 @@ Table posts {
 Ref: posts.user_id > users.id
 Ref many_to_many: posts.id <> users.id
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('customers');
       const customerRefs = result.match(/customers\.id/g);
       expect(customerRefs?.length).toBeGreaterThanOrEqual(2);
@@ -1505,7 +1838,11 @@ Table users {
   Note: 'This users table stores user data'
 }
 `;
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table customers');
       expect(result).toContain('This users table stores');
     });
@@ -1520,7 +1857,11 @@ Table posts {
   select_id int [ref: > "select".id]
 }
 `;
-      const result = renameTable({ table: 'select' }, { table: 'chosen' }, input);
+      const result = renameTable({
+        table: 'select',
+      }, {
+        table: 'chosen',
+      }, input);
       expect(result).toContain('"chosen"');
       expect(result).not.toContain('"select"');
     });
@@ -1535,7 +1876,11 @@ Table posts {
   user_id int [ref: > Users.id]
 }
 `;
-      const result = renameTable({ table: 'Users' }, { table: 'Customers' }, input);
+      const result = renameTable({
+        table: 'Users',
+      }, {
+        table: 'Customers',
+      }, input);
       expect(result).toContain('Table Customers');
       expect(result).toContain('Customers.id');
       expect(result).not.toContain('Table Users');
@@ -1548,9 +1893,301 @@ Table Users {
 }
 `;
       // Trying to rename 'users' (lowercase) when table is 'Users' (capitalized)
-      const result = renameTable({ table: 'users' }, { table: 'customers' }, input);
+      const result = renameTable({
+        table: 'users',
+      }, {
+        table: 'customers',
+      }, input);
       expect(result).toContain('Table Users');
       expect(result).not.toContain('customers');
+    });
+  });
+});
+
+
+describe('[example] renameTable cross-file', () => {
+
+  test('renaming a table updates declaration and same-file references', () => {
+    // The table 'users' is defined in base.dbml and has a self-referencing FK
+    const base = `
+Table users {
+  id int [pk]
+  manager_id int [ref: > users.id]
+}
+`;
+    const layout = new MemoryProjectLayout();
+    const fp = Filepath.from('/base.dbml');
+    layout.setSource(fp, base);
+    const compiler = new Compiler(layout);
+
+    const result = compiler.renameTable(fp, 'users', 'accounts').get(fp.absolute)!;
+    expect(result).toContain('Table accounts');
+    expect(result).toContain('accounts.id');  // ref updated
+    expect(result).not.toContain('users');
+  });
+
+  test('renaming the table from the consumer file cascades to both files', () => {
+    // base.dbml defines 'users'; consumer.dbml imports it (no alias) and adds a ref.
+    // Cross-file rename: invoking renameTable through the consumer's UseSymbol
+    // resolves to the original declaration and rewrites every file that touches it.
+    const { compiler } = setupCompiler({
+      '/base.dbml': 'Table users { id int [pk] }',
+      '/consumer.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
+    });
+
+    const changes = compiler.renameTable(fp('/consumer.dbml'), 'users', 'accounts');
+    const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+    const consumerAfter = changes.get(fp('/consumer.dbml').absolute)!;
+
+    expect(baseAfter).toContain('Table accounts');
+    expect(baseAfter).not.toContain('Table users');
+    expect(consumerAfter).toContain('use { table accounts }');
+    expect(consumerAfter).toContain('ref: > accounts.id');
+    expect(consumerAfter).not.toContain('users');
+  });
+
+  test('renaming a table in the declaring file updates declaration, inline refs, and importers', () => {
+    const { compiler } = setupCompiler({
+      '/base.dbml': `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > users.id]
+}
+`,
+      '/main.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
+    });
+
+    const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+    const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+
+    expect(baseAfter).toContain('Table accounts');
+    expect(baseAfter).toContain('accounts.id');   // ref in same file updated
+    expect(baseAfter).not.toContain('Table users');
+
+    // Cascade reaches the importer: both the use specifier and the inline ref are rewritten.
+    expect(mainAfter).toContain('use { table accounts }');
+    expect(mainAfter).toContain('ref: > accounts.id');
+    expect(mainAfter).not.toContain('users');
+  });
+
+  test('renaming a table that does not exist returns source unchanged', () => {
+    const source = 'Table users { id int [pk] }';
+    const layout = new MemoryProjectLayout();
+    const fp = Filepath.from('/main.dbml');
+    layout.setSource(fp, source);
+    const compiler = new Compiler(layout);
+
+    const changes = compiler.renameTable(fp, 'nonexistent', 'other');
+    expect(changes.size).toBe(0);
+  });
+
+  test('renaming to a colliding name in same file is a no-op', () => {
+    const source = `
+Table users { id int [pk] }
+Table accounts { id int [pk] }
+`;
+    const layout = new MemoryProjectLayout();
+    const fp = Filepath.from('/main.dbml');
+    layout.setSource(fp, source);
+    const compiler = new Compiler(layout);
+
+    const changes = compiler.renameTable(fp, 'users', 'accounts');
+    expect(changes.size).toBe(0);  // unchanged - collision detected
+  });
+
+  test('renaming with schema qualification updates schema-qualified references', () => {
+    const source = `
+Table auth.users {
+  id int [pk]
+}
+
+Table posts {
+  user_id int [ref: > auth.users.id]
+}
+`;
+    const layout = new MemoryProjectLayout();
+    const fp = Filepath.from('/main.dbml');
+    layout.setSource(fp, source);
+    const compiler = new Compiler(layout);
+
+    const result = compiler.renameTable(fp, 'auth.users', 'auth.members').get(fp.absolute)!;
+    expect(result).toContain('auth.members');
+    expect(result).toContain('auth.members.id');
+    expect(result).not.toContain('auth.users');
+  });
+
+  test('renaming an alias only rewrites the alias-introducing file', () => {
+    const { compiler } = setupCompiler({
+      '/base.dbml': 'Table users { id int [pk] }',
+      '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
+    });
+
+    const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
+    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+
+    // Original declaration left alone - alias rename never touches the source file.
+    expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
+    expect(mainAfter).toContain('use { table users as member }');
+    expect(mainAfter).toContain('ref: > member.id');
+    expect(mainAfter).not.toContain(' u.');
+    expect(mainAfter).not.toContain(' u ');
+  });
+
+  test('renaming the source name from the alias-introducing file is a lookup miss', () => {
+    // Only the alias 'u' is visible in main.dbml - 'users' is not in scope there.
+    const { compiler } = setupCompiler({
+      '/base.dbml': 'Table users { id int [pk] }',
+      '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
+    });
+
+    const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+    // Lookup miss - nothing changed.
+    expect(changes.size).toBe(0);
+  });
+
+  test('cross-file rename with alias: source-name token in the use specifier flips, alias stays', () => {
+    const { compiler } = setupCompiler({
+      '/base.dbml': 'Table users { id int [pk] }',
+      '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
+    });
+
+    const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+
+    // The source-side token gets the new name; the local alias `u` is preserved
+    // because alias-side refs do not resolve to the original symbol.
+    expect(mainAfter).toContain('use { table accounts as u }');
+    expect(mainAfter).toContain('ref: > u.id');
+  });
+});
+
+describe('[example] renameTable - alias/use renameability rules', () => {
+
+  describe('inline alias (Table users as U) - rename is ignored', () => {
+    test('renaming by alias single-file is a no-op', () => {
+      const input = `
+Table users as U {
+  id int [pk]
+}
+
+Ref: U.id < U.id
+`;
+      const result = renameTable({ table: 'U' }, { table: 'customers' }, input);
+      expect(result).toBe(input);
+    });
+
+    test('renaming by alias with schema is a no-op', () => {
+      const input = `
+Table auth.users as AuthUser {
+  id int [pk]
+}
+
+Table posts {
+  author_id int [ref: > AuthUser.id]
+}
+`;
+      const result = renameTable({ table: 'AuthUser' }, { table: 'customers' }, input);
+      expect(result).toBe(input);
+    });
+
+    test('renaming by direct name still works while alias is untouched', () => {
+      const input = `
+Table users as U {
+  id int [pk]
+}
+
+Ref: U.id < U.id
+`;
+      const result = renameTable({ table: 'users' }, { table: 'accounts' }, input);
+      expect(result).toContain('Table accounts as U');
+      expect(result).toContain('U.id');
+    });
+  });
+
+  describe('use without alias - renames the real declaration and cascades', () => {
+    test('rename from the importing file cascades to base + importer', () => {
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
+      });
+
+      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+
+      expect(baseAfter).toContain('Table accounts');
+      expect(baseAfter).not.toContain('Table users');
+      expect(mainAfter).toContain('use { table accounts }');
+      expect(mainAfter).toContain('ref: > accounts.id');
+      expect(mainAfter).not.toContain('users');
+    });
+
+    test('rename from the declaring file cascades to all unaliased importers', () => {
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/a.dbml': `use { table users } from './base.dbml'\nTable orders { user_id int [ref: > users.id] }`,
+        '/b.dbml': `use { table users } from './base.dbml'\nTable carts { user_id int [ref: > users.id] }`,
+      });
+
+      const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+      expect(changes.get(fp('/base.dbml').absolute)!).toContain('Table accounts');
+      expect(changes.get(fp('/a.dbml').absolute)!).toContain('use { table accounts }');
+      expect(changes.get(fp('/a.dbml').absolute)!).toContain('ref: > accounts.id');
+      expect(changes.get(fp('/b.dbml').absolute)!).toContain('use { table accounts }');
+      expect(changes.get(fp('/b.dbml').absolute)!).toContain('ref: > accounts.id');
+    });
+  });
+
+  describe('use with alias - rename only affects the alias scope', () => {
+    test('renaming by the alias only rewrites the alias-introducing file', () => {
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
+      });
+
+      const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
+      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
+
+      // Base file untouched - alias rename never propagates to the source.
+      expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
+      // Only the alias token and its refs change; source-side `users` stays.
+      expect(mainAfter).toContain('use { table users as member }');
+      expect(mainAfter).toContain('ref: > member.id');
+    });
+
+    test('aliased importer is insulated when renaming the original declaration', () => {
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/aliased.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
+        '/unaliased.dbml': `use { table users } from './base.dbml'\nTable carts { user_id int [ref: > users.id] }`,
+      });
+
+      const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
+      const aliasedAfter = changes.get(fp('/aliased.dbml').absolute)!;
+      const unaliasedAfter = changes.get(fp('/unaliased.dbml').absolute)!;
+
+      // Aliased importer: source-name token in specifier flips, alias + refs preserved.
+      expect(aliasedAfter).toContain('use { table accounts as u }');
+      expect(aliasedAfter).toContain('ref: > u.id');
+      // Unaliased importer: fully cascaded.
+      expect(unaliasedAfter).toContain('use { table accounts }');
+      expect(unaliasedAfter).toContain('ref: > accounts.id');
+    });
+
+    test('renaming the source name from an alias-introducing file is a lookup miss', () => {
+      // Only `u` is visible in main - `users` is not in scope.
+      const { compiler } = setupCompiler({
+        '/base.dbml': 'Table users { id int [pk] }',
+        '/main.dbml': `use { table users as u } from './base.dbml'\nTable orders { user_id int [ref: > u.id] }`,
+      });
+
+      const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
+      // Lookup miss - nothing changed.
+      expect(changes.size).toBe(0);
     });
   });
 });

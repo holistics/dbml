@@ -1,0 +1,25 @@
+Table "products" {
+  "id" integer [pk]
+  "name" nvarchar(255)
+  "price" decimal(10,2)
+  "in_stock" bit
+}
+
+Table "orders" {
+  "id" integer [pk]
+  "product_id" integer
+  "quantity" integer
+}
+
+Records products(id, name, price, in_stock) {
+  1, 'Laptop', 999.99, 1
+  2, 'Mouse', 29.99, 1
+  3, 'Keyboard', 79.99, 0
+  4, 'Monitor', 149.99, 1
+}
+
+Records orders(id, product_id, quantity) {
+  1, 1, 2
+  2, 2, 5
+  3, 1, 1
+}
