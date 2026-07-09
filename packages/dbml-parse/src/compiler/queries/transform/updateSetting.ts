@@ -1,4 +1,6 @@
-import { FunctionApplicationNode, ListExpressionNode, AttributeNode } from '@/core/types/nodes';
+import {
+  FunctionApplicationNode, ListExpressionNode, AttributeNode, ElementDeclarationNode,
+} from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { Filepath } from '@/core/types/filepath';
 import type Compiler from '../../index';
@@ -10,8 +12,8 @@ function findSetting (declaration: SyntaxNode, settingName: string, source: stri
   settingNode: AttributeNode;
   settingIndex: number;
 } | undefined {
-  if (!(declaration instanceof FunctionApplicationNode)) return undefined;
-  const settingsList = declaration.args.find((a): a is ListExpressionNode => a instanceof ListExpressionNode);
+  if (!(declaration instanceof FunctionApplicationNode) && !(declaration instanceof ElementDeclarationNode)) return undefined;
+  const settingsList = declaration instanceof FunctionApplicationNode ? declaration.args.find((a): a is ListExpressionNode => a instanceof ListExpressionNode) : declaration.attributeList;
   if (!settingsList) return undefined;
 
   const elements = settingsList.elementList ?? [];
@@ -51,7 +53,7 @@ export function removeSettingEdit (
   const { settingsList, settingIndex } = found;
   const elements = settingsList.elementList ?? [];
 
-  // Only setting — remove the entire settings block including surrounding whitespace.
+  // Only setting - remove the entire settings block including surrounding whitespace.
   if (elements.length === 1) {
     // Find leading whitespace before the [
     let removeStart = settingsList.start;
@@ -59,7 +61,7 @@ export function removeSettingEdit (
     return { start: removeStart, end: settingsList.end, newText: '' };
   }
 
-  // Multiple settings — remove the setting and its separator.
+  // Multiple settings - remove the setting and its separator.
   const settingNode = elements[settingIndex];
   if (settingIndex === 0) {
     // First setting: remove from start to beginning of next setting.
