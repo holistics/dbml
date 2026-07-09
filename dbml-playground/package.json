@@ -33,7 +33,7 @@
     "monaco-editor": "^0.52.2",
     "monaco-vim": "^0.4.4",
     "pinia": "^2.3.1",
-    "vue": "^3.4.0"
+    "vue": "^3.5.31"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.5.0",
@@ -51,7 +51,7 @@
     "typescript": "^5.7.3",
     "vite": "^7.1.7",
     "vue-eslint-parser": "^10.2.0",
-    "vue-tsc": "^3.0.1"
+    "vue-tsc": "^3.3.7"
   },
   "engines": {
     "node": ">=18"
