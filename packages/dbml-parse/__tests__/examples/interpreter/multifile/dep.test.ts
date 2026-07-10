@@ -286,7 +286,7 @@ use { table fct_orders } from './source.dbml'
     expect(db.deps).toHaveLength(1);
     const dep = db.deps[0];
     expect(dep.note?.value).toBe('Pipeline from raw to fact');
-    expect(dep.custom).toEqual({
+    expect(dep.metadata).toEqual({
       materialized: 'table',
       owner: 'data-team',
     });

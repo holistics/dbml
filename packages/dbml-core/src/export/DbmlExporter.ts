@@ -361,7 +361,7 @@ class DbmlExporter {
       const edges = dep.edgeIds.map((eid: number) => (model as any).depEdges[eid]);
 
       const hasNote = !!dep.note;
-      const customEntries = dep.custom ? Object.entries(dep.custom) : [];
+      const customEntries = dep.metadata ? Object.entries(dep.metadata) : [];
       const hasAttrs = hasNote || customEntries.length > 0;
 
       if (edges.length === 1 && !hasAttrs) {

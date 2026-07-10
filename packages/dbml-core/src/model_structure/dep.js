@@ -8,7 +8,7 @@ class Dep extends Element {
    * @param {import('../../types/model_structure/dep').RawDep} param0
    */
   constructor ({
-    name, color, note, custom, edges, token, schema = {},
+    name, color, note, metadata, edges, token, schema = {},
   } = {}) {
     super(token);
     /** @type {string|null} */
@@ -20,7 +20,7 @@ class Dep extends Element {
     /** @type {import('../../types/model_structure/element').Token} */
     this.noteToken = note ? get(note, 'token', null) : null;
     /** @type {Record<string, string|number|boolean|null>|null} */
-    this.custom = custom ?? null;
+    this.metadata = metadata ?? null;
     /** @type {import('./dep_edge').default[]} */
     this.edges = [];
     /** @type {import('./schema').default} */
@@ -65,7 +65,7 @@ class Dep extends Element {
       name: this.name,
       color: this.color,
       note: this.note,
-      custom: this.custom,
+      metadata: this.metadata,
     };
   }
 

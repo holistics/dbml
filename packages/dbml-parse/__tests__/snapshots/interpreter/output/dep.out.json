@@ -344,11 +344,6 @@
         }
       },
       {
-        "custom": {
-          "materialized": "view",
-          "owner": "team-data",
-          "priority": 1
-        },
         "edges": [
           {
             "downstream": {
@@ -553,6 +548,11 @@
             }
           }
         ],
+        "metadata": {
+          "materialized": "view",
+          "owner": "team-data",
+          "priority": 1
+        },
         "note": {
           "token": {
             "end": {

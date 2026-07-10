@@ -66,10 +66,6 @@
         }
       },
       {
-        "custom": {
-          "materialized": "table",
-          "owner": "data-team"
-        },
         "edges": [
           {
             "downstream": {
@@ -119,6 +115,10 @@
             }
           }
         ],
+        "metadata": {
+          "materialized": "table",
+          "owner": "data-team"
+        },
         "note": {
           "token": {
             "end": {

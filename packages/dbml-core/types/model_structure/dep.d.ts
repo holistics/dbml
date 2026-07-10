@@ -20,7 +20,7 @@ export interface RawDep {
     name?: string | null;
     color?: Color;
     note?: { value?: string; token?: Token } | string | null;
-    custom?: Record<string, string | number | boolean | null> | null;
+    metadata?: Record<string, string | number | boolean | null> | null;
     edges: RawDepEdgeInput[];
     token?: Token;
     schema: Schema;
@@ -31,20 +31,20 @@ declare class Dep extends Element {
     color?: Color;
     note: string | null;
     noteToken: Token;
-    custom: Record<string, string | number | boolean | null> | null;
+    metadata: Record<string, string | number | boolean | null> | null;
     edges: DepEdge[];
     schema: Schema;
     dbState: DbState;
     id: number;
     database: Database;
-    constructor({ name, note, custom, edges, token, schema }: RawDep);
+    constructor({ name, note, metadata, edges, token, schema }: RawDep);
     generateId(): void;
     processEdges(rawEdges: RawDepEdgeInput[]): void;
     export(): {
         name: string | null;
         color?: Color;
         note: string | null;
-        custom: Record<string, string | number | boolean | null> | null;
+        metadata: Record<string, string | number | boolean | null> | null;
         edges: {
             upstream: { schemaName: string | null; tableName: string; fieldNames: string[] };
             downstream: { schemaName: string | null; tableName: string; fieldNames: string[] };
@@ -54,7 +54,7 @@ declare class Dep extends Element {
         name: string | null;
         color?: Color;
         note: string | null;
-        custom: Record<string, string | number | boolean | null> | null;
+        metadata: Record<string, string | number | boolean | null> | null;
     };
     exportChild(): {
         edges: {
@@ -76,7 +76,7 @@ export interface NormalizedDep {
     name: string | null;
     color?: Color;
     note: string | null;
-    custom: Record<string, string | number | boolean | null> | null;
+    metadata: Record<string, string | number | boolean | null> | null;
     schemaId: number;
     edgeIds: number[];
 }

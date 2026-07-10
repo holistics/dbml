@@ -7,8 +7,10 @@ import {
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   AttributeNode,
+  BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   IdentifierStreamNode,
@@ -99,7 +101,7 @@ export class DepInterpreter {
   }
 
   /**
-   * Read settings into `dep.note` and `dep.custom`.
+   * Read settings into `dep.note` and `dep.metadata`.
    *
    * Settings come from THREE sources, in this order:
    *   1. The top-level attribute list on the Dep header
@@ -109,17 +111,17 @@ export class DepInterpreter {
    *   3. Sub-element declarations inside the body
    *      (e.g. `Dep { a -> b; note: 'x'; materialized: 'view' }`).
    *
-   * All three sources write into the same `custom` object (with `note`
+   * All three sources write into the same `metadata` object (with `note`
    * routed to the typed slot instead). Precedence is last-write-wins by
    * virtue of plain object assignment — settings later in the source
    * file overwrite earlier ones with the same key.
    */
   private interpretSettings (): CompileError[] {
-    const custom: Record<string, string | number | boolean | null> = {};
+    const metadata: Record<string, string | number | boolean | null> = {};
 
     if (this.declarationNode instanceof ElementDeclarationNode) {
       if (this.declarationNode.attributeList) {
-        this.consumeSettings(this.declarationNode.attributeList, custom);
+        this.consumeSettings(this.declarationNode.attributeList, metadata);
       }
       const body = this.declarationNode.body;
       if (body) {
@@ -131,7 +133,7 @@ export class DepInterpreter {
         for (const field of fields) {
           const settingsList = field.args.find((arg) => arg instanceof ListExpressionNode) as ListExpressionNode | undefined;
           if (settingsList) {
-            this.consumeSettings(settingsList, custom);
+            this.consumeSettings(settingsList, metadata);
           }
         }
         if (!(body instanceof FunctionApplicationNode)) {
@@ -140,31 +142,42 @@ export class DepInterpreter {
             const key = sub.type?.value?.toLowerCase();
             if (!key) continue;
             const subBody = sub.body;
+            // Note { 'text' } block form - extract from the inner FunctionApplicationNode
+            if (sub.isKind(ElementKind.Note) && subBody instanceof BlockExpressionNode) {
+              const inner = subBody.body[0];
+              if (inner instanceof FunctionApplicationNode && inner.callee) {
+                const rawValue = this.extractAttrValue(inner.callee);
+                if (rawValue !== undefined) {
+                  this.dep.note = { value: String(rawValue), token: getTokenPosition(sub) };
+                }
+              }
+              continue;
+            }
             if (!(subBody instanceof FunctionApplicationNode)) continue;
-            if (key === 'color') {
+            if (key === SettingName.Color) {
               const color = extractColor(subBody.callee);
               if (color !== undefined) this.dep.color = color;
               continue;
             }
             const rawValue = this.extractAttrValue(subBody.callee);
             if (rawValue === undefined) continue;
-            if (key === 'note') {
+            if (sub.isKind(ElementKind.Note)) {
               this.dep.note = { value: String(rawValue), token: getTokenPosition(sub) };
             } else {
-              custom[key] = rawValue;
+              metadata[key] = rawValue;
             }
           }
         }
       }
     }
 
-    if (Object.keys(custom).length > 0) {
-      this.dep.custom = custom;
+    if (Object.keys(metadata).length > 0) {
+      this.dep.metadata = metadata;
     }
     return [];
   }
 
-  private consumeSettings (settings: ListExpressionNode, custom: Record<string, string | number | boolean | null>): void {
+  private consumeSettings (settings: ListExpressionNode, metadata: Record<string, string | number | boolean | null>): void {
     const settingMap = aggregateSettingList(settings).getValue();
     for (const [
       name,
@@ -173,7 +186,7 @@ export class DepInterpreter {
       const attr = attrs[0];
       if (!attr) continue;
 
-      if (name === 'color') {
+      if (name === SettingName.Color) {
         const color = extractColor(attr.value);
         if (color !== undefined) this.dep.color = color;
         continue;
@@ -182,10 +195,10 @@ export class DepInterpreter {
       const rawValue = this.extractAttrValue(attr.value);
       if (rawValue === undefined) continue;
 
-      if (name === 'note') {
+      if (name === SettingName.Note) {
         this.dep.note = { value: String(rawValue), token: getTokenPosition(attr) };
       } else {
-        custom[name] = rawValue;
+        metadata[name] = rawValue;
       }
     }
   }

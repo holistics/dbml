@@ -202,7 +202,7 @@ export interface Dep {
     value: string;
     token: TokenPosition;
   };
-  custom?: Record<string, string | number | boolean | null>;
+  metadata?: Record<string, string | number | boolean | null>;
   token: TokenPosition;
 }
 
