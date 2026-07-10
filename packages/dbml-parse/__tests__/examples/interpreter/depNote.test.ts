@@ -149,3 +149,70 @@ describe('dep settings validation', () => {
     expect(errors.some((e) => e.message.includes('note'))).toBe(true);
   });
 });
+
+describe('dep body sub-element validation', () => {
+  it('valid: color body sub-declaration', () => {
+    const errors = analyze(`${PRELUDE}
+Dep {
+  a -> b
+  color: #aabbcc
+}`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: note body sub-declaration', () => {
+    const errors = analyze(`${PRELUDE}
+Dep {
+  a -> b
+  note: 'hello'
+}`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: custom string body sub-declaration', () => {
+    const errors = analyze(`${PRELUDE}
+Dep {
+  a -> b
+  owner: 'data-team'
+}`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: custom identifier body sub-declaration', () => {
+    const errors = analyze(`${PRELUDE}
+Dep {
+  a -> b
+  materialized: view
+}`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: custom numeric body sub-declaration', () => {
+    const errors = analyze(`${PRELUDE}
+Dep {
+  a -> b
+  priority: 1
+}`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('invalid: color body sub-declaration with non-color', () => {
+    const errors = analyze(`${PRELUDE}
+Dep {
+  a -> b
+  color: notacolor
+}`).getErrors();
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.some((e) => e.message.includes('color'))).toBe(true);
+  });
+
+  it('invalid: note body sub-declaration with non-string', () => {
+    const errors = analyze(`${PRELUDE}
+Dep {
+  a -> b
+  note: 123
+}`).getErrors();
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.some((e) => e.message.includes('note'))).toBe(true);
+  });
+});

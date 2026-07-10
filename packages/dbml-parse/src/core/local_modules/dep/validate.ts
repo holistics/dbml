@@ -144,37 +144,61 @@ export default class DepValidator {
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
       if (!sub.type) return [];
-      return this.compiler.validateNode(sub).getErrors();
+      const key = sub.type.value?.toLowerCase();
+      const subBody = sub.body;
+      if (!key || !(subBody instanceof FunctionApplicationNode) || !subBody.callee) return [];
+
+      switch (key) {
+        case SettingName.Color:
+          if (!isValidColor(subBody.callee)) {
+            return [new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', sub)];
+          }
+          return [];
+        case SettingName.Note:
+          if (!isExpressionAQuotedString(subBody.callee)) {
+            return [new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', sub)];
+          }
+          return [];
+        default:
+          if (!isExpressionAQuotedString(subBody.callee)
+            && !isValidColor(subBody.callee)
+            && !isExpressionASignedNumberExpression(subBody.callee)
+            && !isSimpleName(subBody.callee)) {
+            return [new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for '${key}'. Expected a string, number, color, or identifier`, sub)];
+          }
+          return [];
+      }
     });
   }
 }
 
 export function validateDepSettings (settings: ListExpressionNode): Report<Settings> {
   const aggReport = aggregateSettingList(settings);
-  const errors: CompileError[] = [
-    ...aggReport.getErrors(),
-  ];
+  const errors: CompileError[] = [...aggReport.getErrors()];
   const settingMap = aggReport.getValue();
 
-  for (const [
-    name,
-    attrs,
-  ] of Object.entries(settingMap)) {
+  for (const [name, attrs] of Object.entries(settingMap)) {
     for (const attr of attrs) {
-      if (name === SettingName.Color) {
-        if (!isValidColor(attr.value)) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', attr));
-        }
-      } else if (name === SettingName.Note) {
-        if (!isExpressionAQuotedString(attr.value)) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', attr));
-        }
-      } else if (attr.value
-        && !isExpressionAQuotedString(attr.value)
-        && !isValidColor(attr.value)
-        && !isExpressionASignedNumberExpression(attr.value)
-        && !isSimpleName(attr.value)) {
-        errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for setting '${name}'. Expected a string, number, color, or identifier`, attr));
+      switch (name) {
+        case SettingName.Color:
+          if (!isValidColor(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', attr));
+          }
+          break;
+        case SettingName.Note:
+          if (!isExpressionAQuotedString(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', attr));
+          }
+          break;
+        default:
+          if (attr.value
+            && !isExpressionAQuotedString(attr.value)
+            && !isValidColor(attr.value)
+            && !isExpressionASignedNumberExpression(attr.value)
+            && !isSimpleName(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for setting '${name}'. Expected a string, number, color, or identifier`, attr));
+          }
+          break;
       }
     }
   }
