@@ -8,6 +8,7 @@ import {
   PrefixExpressionNode,
   type SyntaxNode,
 } from '../nodes';
+import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '../schemaJson';
 import type {
   ColumnSymbol,
   NodeSymbol,
@@ -255,7 +256,7 @@ export class DepMetadata extends NodeMetadata {
   upstreamColumns (compiler: Compiler): ColumnSymbol[][] {
     if (this.declaration instanceof ElementDeclarationNode) {
       return this.edgeExpressions().map((infix) => {
-        const upstream = infix.op?.value === '<-' ? infix.rightExpression : infix.leftExpression;
+        const upstream = infix.op?.value === DEP_UPSTREAM ? infix.rightExpression : infix.leftExpression;
         return extractColumnsFromEndpoint(compiler, upstream);
       });
     }
@@ -265,8 +266,16 @@ export class DepMetadata extends NodeMetadata {
       const op = prefix.op?.value;
       const hostCol = this.hostColumn(compiler);
       const otherCols = extractColumnsFromEndpoint(compiler, prefix.expression);
-      if (op === '->') return [hostCol ? [hostCol] : []];
-      if (op === '<-') return [otherCols];
+      if (op === DEP_DOWNSTREAM) return [
+        hostCol
+          ? [
+              hostCol,
+            ]
+          : [],
+      ];
+      if (op === DEP_UPSTREAM) return [
+        otherCols,
+      ];
     }
     return [];
   }
@@ -274,7 +283,7 @@ export class DepMetadata extends NodeMetadata {
   downstreamColumns (compiler: Compiler): ColumnSymbol[][] {
     if (this.declaration instanceof ElementDeclarationNode) {
       return this.edgeExpressions().map((infix) => {
-        const downstream = infix.op?.value === '<-' ? infix.leftExpression : infix.rightExpression;
+        const downstream = infix.op?.value === DEP_UPSTREAM ? infix.leftExpression : infix.rightExpression;
         return extractColumnsFromEndpoint(compiler, downstream);
       });
     }
@@ -284,8 +293,16 @@ export class DepMetadata extends NodeMetadata {
       const op = prefix.op?.value;
       const hostCol = this.hostColumn(compiler);
       const otherCols = extractColumnsFromEndpoint(compiler, prefix.expression);
-      if (op === '->') return [otherCols];
-      if (op === '<-') return [hostCol ? [hostCol] : []];
+      if (op === DEP_DOWNSTREAM) return [
+        otherCols,
+      ];
+      if (op === DEP_UPSTREAM) return [
+        hostCol
+          ? [
+              hostCol,
+            ]
+          : [],
+      ];
     }
     return [];
   }
@@ -293,7 +310,7 @@ export class DepMetadata extends NodeMetadata {
   upstreamTables (compiler: Compiler): (TableSymbol | undefined)[] {
     if (this.declaration instanceof ElementDeclarationNode) {
       return this.edgeExpressions().map((infix) => {
-        const upstream = infix.op?.value === '<-' ? infix.rightExpression : infix.leftExpression;
+        const upstream = infix.op?.value === DEP_UPSTREAM ? infix.rightExpression : infix.leftExpression;
         return extractTableFromDepEndpoint(compiler, upstream);
       });
     }
@@ -302,8 +319,12 @@ export class DepMetadata extends NodeMetadata {
       if (!(prefix instanceof PrefixExpressionNode)) return [];
       const op = prefix.op?.value;
       const otherTbl = extractTableFromDepEndpoint(compiler, prefix.expression);
-      if (op === '->') return [this.container(compiler)];
-      if (op === '<-') return [otherTbl];
+      if (op === DEP_DOWNSTREAM) return [
+        this.container(compiler),
+      ];
+      if (op === DEP_UPSTREAM) return [
+        otherTbl,
+      ];
     }
     return [];
   }
@@ -311,7 +332,7 @@ export class DepMetadata extends NodeMetadata {
   downstreamTables (compiler: Compiler): (TableSymbol | undefined)[] {
     if (this.declaration instanceof ElementDeclarationNode) {
       return this.edgeExpressions().map((infix) => {
-        const downstream = infix.op?.value === '<-' ? infix.leftExpression : infix.rightExpression;
+        const downstream = infix.op?.value === DEP_UPSTREAM ? infix.leftExpression : infix.rightExpression;
         return extractTableFromDepEndpoint(compiler, downstream);
       });
     }
@@ -320,8 +341,12 @@ export class DepMetadata extends NodeMetadata {
       if (!(prefix instanceof PrefixExpressionNode)) return [];
       const op = prefix.op?.value;
       const otherTbl = extractTableFromDepEndpoint(compiler, prefix.expression);
-      if (op === '->') return [otherTbl];
-      if (op === '<-') return [this.container(compiler)];
+      if (op === DEP_DOWNSTREAM) return [
+        otherTbl,
+      ];
+      if (op === DEP_UPSTREAM) return [
+        this.container(compiler),
+      ];
     }
     return [];
   }
@@ -337,7 +362,10 @@ export class DepMetadata extends NodeMetadata {
     const upstreamTbls = this.upstreamTables(compiler);
     const downstreamTbls = this.downstreamTables(compiler);
 
-    const tableSymbols = [...upstreamTbls, ...downstreamTbls].filter((t): t is TableSymbol => !!t);
+    const tableSymbols = [
+      ...upstreamTbls,
+      ...downstreamTbls,
+    ].filter((t): t is TableSymbol => !!t);
     if (tableSymbols.length === 0) return [];
 
     const declarationFilepath = this.declaration.filepath;

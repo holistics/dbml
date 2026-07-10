@@ -16,7 +16,9 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import { MetadataKind, PartialRefMetadata, RecordsMetadata, DepMetadata } from '@/core/types/symbol/metadata';
+import {
+  MetadataKind, PartialRefMetadata, RecordsMetadata, DepMetadata,
+} from '@/core/types/symbol/metadata';
 import { TableSymbol } from '@/core/types/symbol';
 import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
@@ -227,8 +229,12 @@ export default class ProgramInterpreter {
           (dep.edges ?? []).some((edge, i) => {
             const { upstream: up, downstream: down } = edge;
             const key = [
-              up.schemaName, up.tableName, up.fieldNames.join(','),
-              down.schemaName, down.tableName, down.fieldNames.join(','),
+              up.schemaName,
+              up.tableName,
+              up.fieldNames.join(','),
+              down.schemaName,
+              down.tableName,
+              down.fieldNames.join(','),
             ].join('|');
             if (seenDepEndpoints.has(key)) {
               duplicateEdgeIndex = i;

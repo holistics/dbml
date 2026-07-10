@@ -219,11 +219,15 @@ export interface DepEndpoint {
   token: TokenPosition;
 }
 
+export const DEP_DOWNSTREAM = '->' as const;
+export const DEP_UPSTREAM = '<-' as const;
+export type DepDirection = typeof DEP_DOWNSTREAM | typeof DEP_UPSTREAM;
+
 export interface InlineDep {
   schemaName: string | null;
   tableName: string;
   fieldNames: string[];
-  direction: '->' | '<-';
+  direction: DepDirection;
   token: TokenPosition;
 }
 

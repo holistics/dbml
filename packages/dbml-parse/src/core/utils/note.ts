@@ -1,12 +1,12 @@
 /**
- * General-purpose note transforms for any element (table, table group, dep, etc.).
+ * General-purpose note edit utilities for any element (table, table group, dep, etc.).
  *
- * Notes appear in two forms:
+ * Notes appear in three forms:
  *   - Body sub-element: `Note { 'text' }` or `Note: 'text'` (tables, table groups)
  *   - Body sub-declaration: `note: 'text'` (deps)
  *   - Setting attribute: `[note: 'text']` in a `[...]` list
  *
- * These transforms prioritize body notes over setting notes.
+ * These utilities prioritize body notes over setting notes.
  */
 
 import {
@@ -19,18 +19,13 @@ import type { SyntaxNode } from '@/core/types/nodes';
 import { SyntaxNodeKind } from '@/core/types/nodes';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import { aggregateSettingList } from '@/core/utils/validate';
-import type { TextEdit } from './applyTextEdits';
-import { applyTextEdits } from './applyTextEdits';
-import type { Filepath } from '@/core/types/filepath';
-import type Compiler from '../../index';
-import { quoteNoteValue } from '../utils';
+import type { TextEdit } from '@/compiler/queries/transform/applyTextEdits';
+import { quoteNoteValue } from '@/compiler/queries/utils';
 
 interface NoteSetting {
   kind: SyntaxNodeKind.ELEMENT_DECLARATION | SyntaxNodeKind.ATTRIBUTE;
-  /** Range of the note value (the quoted string). */
   noteValueStart: number;
   noteValueEnd: number;
-  /** Range to delete when removing the note entirely. */
   fullNoteStart: number;
   fullNoteEnd: number;
 }
@@ -86,70 +81,8 @@ export function addNoteEdit (declaration: SyntaxNode, value: string): TextEdit |
   return undefined;
 }
 
-/**
- * Updates an existing note. If no note exists, adds one.
- */
-export function updateNote (
-  this: Compiler,
-  filepath: Filepath,
-  declaration: SyntaxNode,
-  newValue: string,
-): string | undefined {
-  const source = this.getSource(filepath);
-  if (!source) return undefined;
+// Private helpers
 
-  const edit = updateNoteEdit(declaration, newValue) ?? addNoteEdit(declaration, newValue);
-  if (!edit) return undefined;
-
-  return applyTextEdits(source, [
-    edit,
-  ]);
-}
-
-/**
- * Removes an existing note.
- */
-export function removeNote (
-  this: Compiler,
-  filepath: Filepath,
-  declaration: SyntaxNode,
-): string | undefined {
-  const source = this.getSource(filepath);
-  if (!source) return undefined;
-
-  const edit = removeNoteEdit(declaration);
-  if (!edit) return undefined;
-
-  return applyTextEdits(source, [
-    edit,
-  ]);
-}
-
-/**
- * Adds a note. Returns undefined if a note already exists.
- */
-export function addNote (
-  this: Compiler,
-  filepath: Filepath,
-  declaration: SyntaxNode,
-  value: string,
-): string | undefined {
-  const source = this.getSource(filepath);
-  if (!source) return undefined;
-
-  const edit = addNoteEdit(declaration, value);
-  if (!edit) return undefined;
-
-  return applyTextEdits(source, [
-    edit,
-  ]);
-}
-
-/**
- * Find an existing note in a declaration.
- * Checks body sub-elements first (Note { ... }), then body sub-declarations (note: '...'),
- * then setting attributes ([note: '...']).
- */
 function findNote (declaration: SyntaxNode): NoteSetting | undefined {
   if (!(declaration instanceof ElementDeclarationNode)) return undefined;
 
@@ -185,10 +118,6 @@ function findNote (declaration: SyntaxNode): NoteSetting | undefined {
   return undefined;
 }
 
-/**
- * Find where to insert a body note in a block-form element.
- * Returns the offset just before the closing `}`, or undefined for short-form elements.
- */
 function findBodyInsertionPoint (declaration: ElementDeclarationNode): number | undefined {
   const body = declaration.body;
   if (!body || body instanceof FunctionApplicationNode) return undefined;
@@ -196,7 +125,6 @@ function findBodyInsertionPoint (declaration: ElementDeclarationNode): number | 
   return undefined;
 }
 
-/** Extract the value node from a Note sub-element (short-form or block-form). */
 function extractNoteValueNode (noteElement: ElementDeclarationNode): SyntaxNode | undefined {
   const subBody = noteElement.body;
   if (subBody instanceof FunctionApplicationNode) return subBody.callee ?? undefined;
@@ -206,7 +134,6 @@ function extractNoteValueNode (noteElement: ElementDeclarationNode): SyntaxNode 
   return undefined;
 }
 
-/** Find a note attribute inside a [...] setting list. */
 function findNoteInSettingsList (settingsList: ListExpressionNode): NoteSetting | undefined {
   const settings = aggregateSettingList(settingsList).getValue();
   const noteAttrs = settings[SettingName.Note];

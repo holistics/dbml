@@ -107,7 +107,10 @@ function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol,
   if (parent.rightExpression === node) {
     const left = nodeRefereeOfLeftExpression(compiler, node);
     if (left?.isKind(SymbolKind.Schema)) {
-      const symbol = compiler.lookupMembers(left, [SymbolKind.Table, SymbolKind.Schema], name);
+      const symbol = compiler.lookupMembers(left, [
+        SymbolKind.Table,
+        SymbolKind.Schema,
+      ], name);
       if (symbol) return Report.create(symbol);
       return new Report(undefined, [
         new CompileError(CompileErrorCode.BINDING_ERROR, `Table or schema '${name}' does not exist`, node),

@@ -43,7 +43,10 @@ export default class TableBinder {
   private bindInlineDepValue (value: SyntaxNode): CompileError[] {
     const bindees = scanNonListNodeForBinding(value);
     return bindees.flatMap((bindee) => {
-      const nodes = [...bindee.variables, ...bindee.tupleElements];
+      const nodes = [
+        ...bindee.variables,
+        ...bindee.tupleElements,
+      ];
       return nodes.flatMap((b) => this.compiler.nodeReferee(b).getErrors());
     });
   }

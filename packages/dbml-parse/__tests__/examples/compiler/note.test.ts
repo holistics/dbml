@@ -6,7 +6,7 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { DEFAULT_ENTRY } from '@/constants';
 import { ElementDeclarationNode } from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
-import { updateNoteEdit, removeNoteEdit, addNoteEdit } from '@/compiler/queries/transform/note';
+import { updateNoteEdit, removeNoteEdit, addNoteEdit } from '@/core/utils/note';
 import { applyTextEdits } from '@/compiler/queries/transform/applyTextEdits';
 
 function parse (dbml: string) {

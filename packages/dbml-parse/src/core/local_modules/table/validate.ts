@@ -2,6 +2,7 @@ import { forIn, last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
+import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import {
   ArrayNode,
   AttributeNode,
@@ -365,7 +366,7 @@ export default class TableValidator {
         case SettingName.Dep:
           attrs.forEach((attr) => {
             const isValidDep = attr.value instanceof PrefixExpressionNode
-              && (attr.value.op?.value === '->' || attr.value.op?.value === '<-');
+              && (attr.value.op?.value === DEP_DOWNSTREAM || attr.value.op?.value === DEP_UPSTREAM);
             if (!isValidDep) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'dep\' must be `-> target.col` or `<- source.col`', attr.value || attr.name!));
             }

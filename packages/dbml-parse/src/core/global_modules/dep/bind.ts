@@ -30,10 +30,15 @@ export default class DepBinder {
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) return [];
     if (body instanceof FunctionApplicationNode) {
-      return this.bindFields([body]);
+      return this.bindFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.bindFields(fields as FunctionApplicationNode[]),
       ...this.bindSubElements(subs as ElementDeclarationNode[]),
@@ -43,11 +48,17 @@ export default class DepBinder {
   private bindFields (fields: FunctionApplicationNode[]): CompileError[] {
     return fields.flatMap((field) => {
       if (!field.callee) return [];
-      const args = [field.callee, ...field.args];
+      const args = [
+        field.callee,
+        ...field.args,
+      ];
       const bindees = args.flatMap(scanNonListNodeForBinding);
 
       return bindees.flatMap((bindee) => {
-        const nodes = [...bindee.variables, ...bindee.tupleElements];
+        const nodes = [
+          ...bindee.variables,
+          ...bindee.tupleElements,
+        ];
         return nodes.flatMap((b) => this.compiler.nodeReferee(b).getErrors());
       });
     });

@@ -5,10 +5,9 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
+import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
-import {
-  Settings, aggregateSettingList, isSimpleName,
-} from '@/core/utils/validate';
+import { Settings, aggregateSettingList, isSimpleName } from '@/core/utils/validate';
 
 export default class DepValidator {
   private declarationNode: ElementDeclarationNode;
@@ -64,10 +63,15 @@ export default class DepValidator {
   validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
     if (!body) return [];
     if (body instanceof FunctionApplicationNode) {
-      return this.validateFields([body]);
+      return this.validateFields([
+        body,
+      ]);
     }
 
-    const [fields, subs] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [
+      fields,
+      subs,
+    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -88,7 +92,7 @@ export default class DepValidator {
       }
 
       const infix = field.callee;
-      if (infix.op?.value !== '->' && infix.op?.value !== '<-') {
+      if (infix.op?.value !== DEP_DOWNSTREAM && infix.op?.value !== DEP_UPSTREAM) {
         errors.push(new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'Dep edges must use the \'->\' or \'<-\' operator', field.callee));
       }
 
@@ -101,7 +105,9 @@ export default class DepValidator {
         errors.push(new CompileError(CompileErrorCode.INVALID_DEP_FIELD, 'Invalid Dep endpoint', infix.rightExpression || field.callee));
       }
 
-      const args = [...field.args];
+      const args = [
+        ...field.args,
+      ];
       if (last(args) instanceof ListExpressionNode) args.pop();
       else if (args[0] instanceof ListExpressionNode) args.shift();
 

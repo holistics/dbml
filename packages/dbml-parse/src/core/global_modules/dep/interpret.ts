@@ -124,7 +124,9 @@ export class DepInterpreter {
       const body = this.declarationNode.body;
       if (body) {
         const fields = body instanceof FunctionApplicationNode
-          ? [body]
+          ? [
+              body,
+            ]
           : body.body.filter((e): e is FunctionApplicationNode => e instanceof FunctionApplicationNode);
         for (const field of fields) {
           const settingsList = field.args.find((arg) => arg instanceof ListExpressionNode) as ListExpressionNode | undefined;
@@ -164,7 +166,10 @@ export class DepInterpreter {
 
   private consumeSettings (settings: ListExpressionNode, custom: Record<string, string | number | boolean | null>): void {
     const settingMap = aggregateSettingList(settings).getValue();
-    for (const [name, attrs] of Object.entries(settingMap)) {
+    for (const [
+      name,
+      attrs,
+    ] of Object.entries(settingMap)) {
       const attr = attrs[0];
       if (!attr) continue;
 

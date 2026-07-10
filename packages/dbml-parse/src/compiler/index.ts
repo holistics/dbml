@@ -57,7 +57,9 @@ import { DEFAULT_ENTRY } from '@/constants';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type { DiagramViewBlock, DepBlock, TableNameInput, TextEdit } from './queries/transform';
+export type {
+  DiagramViewBlock, DepBlock, TableNameInput, TextEdit,
+} from './queries/transform';
 // Re-export utilities
 export {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,

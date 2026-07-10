@@ -59,7 +59,9 @@ export const depModule: LocalModule = {
       return new Report({});
     }
     if (isElementFieldNode(node, ElementKind.Dep)) {
-      const args = [...node.args];
+      const args = [
+        ...node.args,
+      ];
       let settingsList: ListExpressionNode | undefined;
       if (last(args) instanceof ListExpressionNode) {
         settingsList = last(args) as ListExpressionNode;

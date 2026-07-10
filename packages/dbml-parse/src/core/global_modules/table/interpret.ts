@@ -10,8 +10,9 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  Check, Column, Dep, Index, InlineDep, InlineRef, Ref,
+  Check, Column, DEP_DOWNSTREAM, DEP_UPSTREAM, Dep, Index, InlineDep, InlineRef, Ref,
   Table, TablePartialInjection,
+  type DepDirection,
 } from '@/core/types/schemaJson';
 import type { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
@@ -328,11 +329,11 @@ export class TableInterpreter {
 
       const prefix = (depAttr as any).value;
       if (!(prefix instanceof PrefixExpressionNode)) return [];
-      const direction = prefix.op?.value as '->' | '<-' | undefined;
-      if (direction !== '->' && direction !== '<-') return [];
+      const direction = prefix.op?.value as DepDirection | undefined;
+      if (direction !== DEP_DOWNSTREAM && direction !== DEP_UPSTREAM) return [];
 
       const edge = value.edges[0];
-      const other = direction === '->' ? edge.downstream : edge.upstream;
+      const other = direction === DEP_DOWNSTREAM ? edge.downstream : edge.upstream;
 
       const inlineDep: InlineDep = {
         schemaName: other.schemaName,

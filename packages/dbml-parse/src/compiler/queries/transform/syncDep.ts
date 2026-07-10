@@ -18,10 +18,10 @@ import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import type { Filepath } from '@/core/types/filepath';
-import { ElementKind } from '@/core/types/keywords';
+import { ElementKind, SettingName } from '@/core/types/keywords';
+import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import {
   AttributeNode,
-  BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
   IdentifierStreamNode,
@@ -29,14 +29,15 @@ import {
   ListExpressionNode,
   PrefixExpressionNode,
   SyntaxNodeIdGenerator,
+  SyntaxNodeKind,
 } from '@/core/types/nodes';
-import type { NormalExpressionNode } from '@/core/types/nodes';
 import { destructureComplexVariable, extractStringFromIdentifierStream } from '@/core/utils/expression';
 import type Compiler from '../../index';
 import { addDoubleQuoteIfNeeded } from '../utils';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
+import { updateNoteEdit, removeNoteEdit, addNoteEdit } from '@/core/utils/note';
+import { addSettingEdit, updateSettingEdit, removeSettingEdit } from '@/core/utils/setting';
 
-/** One endpoint of a dep edge. `fieldNames` is empty for a table-level edge. */
 export interface DepEndpointRef {
   schemaName?: string | null;
   tableName: string;
@@ -52,55 +53,161 @@ export interface DepSyncOperation {
   operation: 'create' | 'update' | 'remove';
   /** The edge that identifies the target block (table-level: empty fieldNames). */
   edge: DepSyncEdge;
-  color?: string;
-}
-
-/**
- * A `color` setting found on a block.
- *
- * `kind` says how to overwrite it:
- *  - `attribute` -> replace just the `color: <hex>` attribute at `start..end`
- *    (inside a `[...]` list that may hold other settings).
- *  - `subDeclaration` -> replace the whole `color: <hex>` body line at
- *    `start..end`.
- */
-interface ColorSetting {
-  kind: 'attribute' | 'subDeclaration';
-  start: number;
-  end: number;
-  /**
-   * Range to delete when removing the color (revert to default). Wider than
-   * `start..end`: for an attribute it swallows the whole enclosing `[...]` when
-   * color is the sole setting, otherwise one adjacent comma; for a
-   * sub-declaration it is the same as `start..end` (the whole body line).
-   */
-  stripStart: number;
-  stripEnd: number;
+  /** Set to a value to create/update, null to remove, undefined to leave unchanged. */
+  color?: string | null;
+  /** Set to a value to create/update, null to remove, undefined to leave unchanged. */
+  note?: string | null;
 }
 
 export interface DepBlock {
   startIndex: number;
   endIndex: number;
+  declaration: ElementDeclarationNode;
   edges: DepSyncEdge[];
-  /**
-   * An existing header `[...]` attribute list (without a color setting), so a
-   * color can be inserted into it instead of adding a second `[...]`.
-   * Records the offset just before the list's closing `]`.
-   */
-  attributeListInsertAt?: number;
-  attributeListIsEmpty?: boolean;
-  /**
-   * Offset of the block body `{` - where to add a header `[color: ...]` for a
-   * block-form Dep that has no attribute list.
-   */
-  bodyOpenAt?: number;
-  /**
-   * End offset of a short-form (`Dep: a -> b`) body that has no setting list -
-   * where to append ` [color: ...]`.
-   */
-  shortFormEnd?: number;
-  /** The existing color setting (header list, inline list, or sub-declaration), if any. */
-  color?: ColorSetting;
+}
+
+export interface InlineDep {
+  edge: DepSyncEdge;
+  stripStart: number;
+  stripEnd: number;
+}
+
+/**
+ * Returns every `Dep` block in `source`.
+ * On any lex or parse error, returns [] - there is no reliable way to read
+ * dep blocks from malformed DBML (mirrors findDiagramViewBlocks).
+ */
+export function findDepBlocks (source: string): DepBlock[] {
+  const blocks: DepBlock[] = [];
+
+  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
+  if (lexerResult.getErrors().length > 0) return blocks;
+  const tokens = lexerResult.getValue();
+
+  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+  if (ast.getErrors().length > 0) return blocks;
+
+  const program = ast.getValue().ast;
+
+  for (const element of program.declarations) {
+    if (!(element instanceof ElementDeclarationNode) || !element.isKind(ElementKind.Dep)) continue;
+
+    const edges: DepSyncEdge[] = [];
+
+    const body = element.body;
+    if (body instanceof FunctionApplicationNode) {
+      if (body.callee instanceof InfixExpressionNode) {
+        const edge = edgeFromInfix(body.callee);
+        if (edge) edges.push(edge);
+      }
+    } else if (body) {
+      for (const field of body.body) {
+        if (field instanceof FunctionApplicationNode && field.callee instanceof InfixExpressionNode) {
+          const edge = edgeFromInfix(field.callee);
+          if (edge) edges.push(edge);
+        }
+      }
+    }
+
+    blocks.push({
+      startIndex: element.start,
+      endIndex: element.end,
+      declaration: element,
+      edges,
+    });
+  }
+
+  return blocks;
+}
+
+// Inline deps (`Table a { x [dep: -> b.y] }`) have no `Dep` block. To color one we strip the inline
+// setting and create a real block in the same pass, so the edge isn't duplicated.
+export function findInlineDeps (source: string): InlineDep[] {
+  const result: InlineDep[] = [];
+
+  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
+  if (lexerResult.getErrors().length > 0) return result;
+  const tokens = lexerResult.getValue();
+  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+  if (ast.getErrors().length > 0) return result;
+  const program = ast.getValue().ast;
+
+  for (const element of program.declarations) {
+    if (!(element instanceof ElementDeclarationNode) || !element.isKind(ElementKind.Table)) continue;
+    const tableFragments = element.name ? destructureComplexVariable(element.name) ?? [] : [];
+    if (tableFragments.length === 0) continue;
+
+    const tableName = tableFragments[tableFragments.length - 1];
+    const schemaName = tableFragments.length > 1 ? tableFragments[tableFragments.length - 2] : null;
+
+    const body = element.body;
+    if (!body || body instanceof FunctionApplicationNode) continue;
+    for (const field of body.body) {
+      if (!(field instanceof FunctionApplicationNode) || !field.callee) continue;
+      const columnName = destructureComplexVariable(field.callee)?.at(-1);
+      if (!columnName) continue;
+
+      const host: DepEndpointRef = {
+        schemaName,
+        tableName,
+        fieldNames: [
+          columnName,
+        ],
+      };
+      // Compute the strip range once per field - all dep edges on this field share the same setting removal
+      const edit = removeSettingEdit(field, SettingName.Dep, source);
+      if (!edit) continue;
+      for (const dep of extractInlineDepEdges(field, host)) {
+        result.push({ edge: dep, stripStart: edit.start, stripEnd: edit.end });
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Emit a `Dep` block for one edge with a `[color]` setting:
+ *
+ *   Dep [color: <hex>] {
+ *     <upstream> -> <downstream>
+ *   }
+ */
+export function generateDepBlock (edge: DepSyncEdge, color: string): string {
+  const up = formatEndpoint(edge.upstream);
+  const down = formatEndpoint(edge.downstream);
+  return `Dep [color: ${color}] {\n  ${up} -> ${down}\n}`;
+}
+
+/**
+ * Synchronizes `Dep` blocks in the DBML source at `filepath`.
+ *
+ * @param filepath   The file whose source should be rewritten.
+ * @param operations Array of create/update operations to apply.
+ * @param blocks     Optional pre-parsed blocks from findDepBlocks.
+ * @returns The new DBML source and the text edits applied.
+ */
+export function syncDep (
+  this: Compiler,
+  filepath: Filepath,
+  operations: DepSyncOperation[],
+  blocks?: DepBlock[],
+): {
+  newDbml: string;
+  edits: TextEdit[];
+} {
+  const dbml = this.getSource(filepath) ?? '';
+  const originalBlocks = blocks ?? findDepBlocks(dbml);
+  const inlineDeps = findInlineDeps(dbml);
+  const allEdits: TextEdit[] = [];
+
+  for (const op of operations) {
+    allEdits.push(...applyOperation(dbml, op, originalBlocks, inlineDeps));
+  }
+
+  allEdits.sort((a, b) => b.start - a.start);
+  const newDbml = applyTextEdits(dbml, allEdits, true);
+  return { newDbml, edits: allEdits };
 }
 
 function normalizeSchema (schema?: string | null): string {
@@ -152,13 +259,13 @@ function blockHasEdge (block: DepBlock, edge: DepSyncEdge): boolean {
 /** Extract one edge's endpoints from a body `a -> b` / `a <- b` infix node. */
 function edgeFromInfix (infix: InfixExpressionNode): DepSyncEdge | undefined {
   const op = infix.op?.value;
-  if (op !== '->' && op !== '<-') return undefined;
+  if (op !== DEP_DOWNSTREAM && op !== DEP_UPSTREAM) return undefined;
   const left = infix.leftExpression;
   const right = infix.rightExpression;
   if (!left || !right) return undefined;
 
-  const upstreamNode = op === '<-' ? right : left;
-  const downstreamNode = op === '<-' ? left : right;
+  const upstreamNode = op === DEP_UPSTREAM ? right : left;
+  const downstreamNode = op === DEP_UPSTREAM ? left : right;
 
   const upFragments = destructureComplexVariable(upstreamNode);
   const downFragments = destructureComplexVariable(downstreamNode);
@@ -179,196 +286,6 @@ function attrName (attr: AttributeNode): string | undefined {
   return undefined;
 }
 
-/** Find a `color` attribute inside a `[...]` setting list, capturing its own range and a strip range. */
-function colorFromAttributeList (list: ListExpressionNode): ColorSetting | undefined {
-  const elements = list.elementList;
-  for (let i = 0; i < elements.length; i += 1) {
-    const attr = elements[i];
-    if (attrName(attr) !== 'color' || !attr.value) continue;
-
-    // Strip range: sole setting → the whole `[...]`; otherwise the attr plus one adjacent comma.
-    let stripStart = attr.start;
-    let stripEnd = attr.end;
-    if (elements.length === 1) {
-      stripStart = list.start;
-      stripEnd = list.end;
-    } else if (i < elements.length - 1) {
-      stripEnd = elements[i + 1].start;
-    } else {
-      stripStart = elements[i - 1].end;
-    }
-
-    return {
-      kind: 'attribute', start: attr.start, end: attr.end, stripStart, stripEnd,
-    };
-  }
-  return undefined;
-}
-
-/**
- * Returns every `Dep` block in `source`.
- * On any lex or parse error, returns [] - there is no reliable way to read
- * dep blocks from malformed DBML (mirrors findDiagramViewBlocks).
- */
-export function findDepBlocks (source: string): DepBlock[] {
-  const blocks: DepBlock[] = [];
-
-  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return blocks;
-  const tokens = lexerResult.getValue();
-
-  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
-  if (ast.getErrors().length > 0) return blocks;
-
-  const program = ast.getValue().ast;
-
-  for (const element of program.declarations) {
-    if (!(element instanceof ElementDeclarationNode) || !element.isKind(ElementKind.Dep)) continue;
-
-    const edges: DepSyncEdge[] = [];
-    let color: ColorSetting | undefined;
-    let attributeListInsertAt: number | undefined;
-    let attributeListIsEmpty: boolean | undefined;
-    let bodyOpenAt: number | undefined;
-    let shortFormEnd: number | undefined;
-
-    // Header `[color: ...]`
-    if (element.attributeList) {
-      color = colorFromAttributeList(element.attributeList);
-      if (!color && element.attributeList.listCloseBracket) {
-        attributeListInsertAt = element.attributeList.listCloseBracket.start;
-        attributeListIsEmpty = element.attributeList.elementList.length === 0;
-      }
-    }
-
-    const body = element.body;
-    if (body instanceof FunctionApplicationNode) {
-      // short form: Dep: a -> b [setting]
-      if (body.callee instanceof InfixExpressionNode) {
-        const edge = edgeFromInfix(body.callee);
-        if (edge) edges.push(edge);
-      }
-      const settingList = body.args.find((a) => a instanceof ListExpressionNode) as ListExpressionNode | undefined;
-      if (settingList) {
-        // Merge the color into the existing `[...]` (e.g. `[note: '…']`) rather than appending a
-        // second setting block, which would be a syntax error.
-        if (!color) color = colorFromAttributeList(settingList);
-        if (!color && settingList.listCloseBracket) {
-          attributeListInsertAt = settingList.listCloseBracket.start;
-          attributeListIsEmpty = settingList.elementList.length === 0;
-        }
-      } else {
-        shortFormEnd = element.end;
-      }
-    } else if (body) {
-      bodyOpenAt = body.start;
-      for (const field of body.body) {
-        if (field instanceof FunctionApplicationNode && field.callee instanceof InfixExpressionNode) {
-          const edge = edgeFromInfix(field.callee);
-          if (edge) edges.push(edge);
-          const settingList = field.args.find((a) => a instanceof ListExpressionNode) as ListExpressionNode | undefined;
-          if (!color && settingList) color = colorFromAttributeList(settingList);
-        } else if (field instanceof ElementDeclarationNode && field.type?.value?.toLowerCase() === 'color') {
-          const subBody = field.body;
-          if (subBody instanceof FunctionApplicationNode && subBody.callee) {
-            color = {
-              kind: 'subDeclaration', start: field.start, end: field.end, stripStart: field.start, stripEnd: field.end,
-            };
-          }
-        }
-      }
-    }
-
-    blocks.push({
-      startIndex: element.start,
-      endIndex: element.end,
-      attributeListInsertAt,
-      attributeListIsEmpty,
-      bodyOpenAt,
-      shortFormEnd,
-      edges,
-      color,
-    });
-  }
-
-  return blocks;
-}
-
-export interface InlineDep {
-  edge: DepSyncEdge;
-  stripStart: number;
-  stripEnd: number;
-}
-
-// Inline deps (`Table a { x [dep: -> b.y] }`) have no `Dep` block. To color one we strip the inline
-// setting and create a real block in the same pass, so the edge isn't duplicated.
-export function findInlineDeps (source: string): InlineDep[] {
-  const result: InlineDep[] = [];
-
-  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return result;
-  const tokens = lexerResult.getValue();
-  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
-  if (ast.getErrors().length > 0) return result;
-  const program = ast.getValue().ast;
-
-  for (const element of program.declarations) {
-    if (!(element instanceof ElementDeclarationNode) || !element.isKind(ElementKind.Table)) continue;
-    const tableFragments = element.name ? destructureComplexVariable(element.name) ?? [] : [];
-    if (tableFragments.length === 0) continue;
-    const tableName = tableFragments[tableFragments.length - 1];
-    const schemaName = tableFragments.length > 1 ? tableFragments[tableFragments.length - 2] : null;
-
-    const body = element.body;
-    if (!body || body instanceof FunctionApplicationNode) continue;
-    for (const field of body.body) {
-      if (!(field instanceof FunctionApplicationNode) || !field.callee) continue;
-      const colFragments = destructureComplexVariable(field.callee) ?? [];
-      const columnName = colFragments[colFragments.length - 1];
-      if (!columnName) continue;
-      const list = field.args.find((a) => a instanceof ListExpressionNode) as ListExpressionNode | undefined;
-      if (!list) continue;
-
-      const elements = list.elementList;
-      for (let i = 0; i < elements.length; i += 1) {
-        const attr = elements[i];
-        if (attrName(attr) !== 'dep') continue;
-        const value = attr.value;
-        if (!(value instanceof PrefixExpressionNode) || !value.expression) continue;
-        const dir = value.op?.value;
-        if (dir !== '->' && dir !== '<-') continue;
-        const targetFragments = destructureComplexVariable(value.expression);
-        if (!targetFragments) continue;
-        const host: DepEndpointRef = { schemaName,
-          tableName,
-          fieldNames: [
-            columnName,
-          ] };
-        const target = fragmentsToEndpoint(targetFragments, targetFragments.length > 1);
-        if (!target) continue;
-        const edge: DepSyncEdge = dir === '->'
-          ? { upstream: host, downstream: target }
-          : { upstream: target, downstream: host };
-
-        // Strip range: sole setting → the whole `[...]`; otherwise the attr plus one adjacent comma.
-        let stripStart = attr.start;
-        let stripEnd = attr.end;
-        if (elements.length === 1) {
-          stripStart = list.start;
-          stripEnd = list.end;
-        } else if (i < elements.length - 1) {
-          stripEnd = elements[i + 1].start;
-        } else {
-          stripStart = elements[i - 1].end;
-        }
-        result.push({ edge, stripStart, stripEnd });
-      }
-    }
-  }
-
-  return result;
-}
-
 function formatEndpoint (endpoint: DepEndpointRef): string {
   const schema = normalizeSchema(endpoint.schemaName);
   const parts: string[] = [];
@@ -378,67 +295,42 @@ function formatEndpoint (endpoint: DepEndpointRef): string {
   return parts.join('.');
 }
 
-/**
- * Emit a `Dep` block for one edge with a `[color]` setting:
- *
- *   Dep [color: <hex>] {
- *     <upstream> -> <downstream>
- *   }
- */
-export function generateDepBlock (edge: DepSyncEdge, color: string): string {
-  const up = formatEndpoint(edge.upstream);
-  const down = formatEndpoint(edge.downstream);
-  return `Dep [color: ${color}] {\n  ${up} -> ${down}\n}`;
-}
-
 function findBlockForEdge (blocks: DepBlock[], edge: DepSyncEdge): DepBlock | undefined {
   return blocks.find((b) => blockHasEdge(b, edge));
 }
 
-function computeUpdateEdit (operation: DepSyncOperation, block: DepBlock): TextEdit[] {
-  const color = operation.color ?? '';
+function computeUpdateEdit (operation: DepSyncOperation, block: DepBlock, source: string): TextEdit[] {
+  const edits: TextEdit[] = [];
 
-  if (block.color) {
-    // Overwrite the existing color setting in place (just the `color: <hex>`).
-    return [
-      { start: block.color.start, end: block.color.end, newText: `color: ${color}` },
-    ];
+  if (operation.color === null) {
+    const edit = removeSettingEdit(block.declaration, SettingName.Color, source);
+    if (edit) edits.push(edit);
+  } else if (operation.color !== undefined) {
+    const edit = updateSettingEdit(block.declaration, SettingName.Color, `${SettingName.Color}: ${operation.color}`, source)
+      ?? addSettingEdit(block.declaration, `${SettingName.Color}: ${operation.color}`);
+    if (edit) edits.push(edit);
   }
 
-  if (block.attributeListInsertAt !== undefined) {
-    // Insert into the existing header `[...]` list, before its closing `]`.
-    const sep = block.attributeListIsEmpty ? '' : ', ';
-    return [
-      { start: block.attributeListInsertAt, end: block.attributeListInsertAt, newText: `${sep}color: ${color}` },
-    ];
+  if (operation.note === null) {
+    const edit = removeNoteEdit(block.declaration);
+    if (edit) edits.push(edit);
+  } else if (operation.note !== undefined) {
+    const edit = updateNoteEdit(block.declaration, operation.note) ?? addNoteEdit(block.declaration, operation.note);
+    if (edit) edits.push(edit);
   }
 
-  if (block.bodyOpenAt !== undefined) {
-    // Block form, no attribute list: insert a header `[color: ...]` before the body `{`.
-    return [
-      { start: block.bodyOpenAt, end: block.bodyOpenAt, newText: `[color: ${color}] ` },
-    ];
-  }
-
-  if (block.shortFormEnd !== undefined) {
-    // Short form (`Dep: a -> b`), no setting list: append ` [color: ...]`.
-    return [
-      { start: block.shortFormEnd, end: block.shortFormEnd, newText: ` [color: ${color}]` },
-    ];
-  }
-
-  return [];
+  return edits;
 }
 
 function computeCreateEdit (dbml: string, operation: DepSyncOperation, blocks: DepBlock[], inlineDeps: InlineDep[]): TextEdit[] {
   // An already-matching block is updated, never duplicated.
   const existing = findBlockForEdge(blocks, operation.edge);
-  if (existing) return computeUpdateEdit(operation, existing);
+  if (existing) return computeUpdateEdit(operation, existing, dbml);
 
   const newBlock = generateDepBlock(operation.edge, operation.color ?? '');
   const createEdit: TextEdit = { start: dbml.length, end: dbml.length, newText: '\n\n' + newBlock + '\n' };
 
-  // If the edge is authored inline, strip the inline setting too — else the new block duplicates it.
+  // If the edge is authored inline, strip the inline setting too - else the new block duplicates it.
   const inline = inlineDeps.find((d) => edgesEqual(d.edge, operation.edge));
   if (inline) {
     return [
@@ -452,12 +344,36 @@ function computeCreateEdit (dbml: string, operation: DepSyncOperation, blocks: D
   ];
 }
 
-function computeRemoveEdit (block: DepBlock): TextEdit[] {
-  // No color setting to strip - nothing to do.
-  if (!block.color) return [];
-  return [
-    { start: block.color.stripStart, end: block.color.stripEnd, newText: '' },
-  ];
+function computeRemoveEdit (operation: DepSyncOperation, block: DepBlock, source: string): TextEdit[] {
+  // When neither color nor note is specified, default to removing color (backward compat)
+  const nothingSpecified = operation.color === undefined && operation.note === undefined;
+  return computeUpdateEdit({
+    ...operation,
+    color: nothingSpecified ? null : operation.color,
+  }, block, source);
+}
+
+/** Extract dep edges from inline `[dep: -> target]` settings on a column declaration. */
+function extractInlineDepEdges (field: FunctionApplicationNode, host: DepEndpointRef): DepSyncEdge[] {
+  const list = field.args.find((a) => a instanceof ListExpressionNode) as ListExpressionNode | undefined;
+  if (!list) return [];
+
+  const edges: DepSyncEdge[] = [];
+  for (const attr of list.elementList) {
+    if (attrName(attr) !== SettingName.Dep) continue;
+    const value = attr.value;
+    if (!(value instanceof PrefixExpressionNode) || !value.expression) continue;
+    const dir = value.op?.value;
+    if (dir !== DEP_DOWNSTREAM && dir !== DEP_UPSTREAM) continue;
+    const targetFragments = destructureComplexVariable(value.expression);
+    if (!targetFragments) continue;
+    const target = fragmentsToEndpoint(targetFragments, targetFragments.length > 1);
+    if (!target) continue;
+    edges.push(dir === DEP_DOWNSTREAM
+      ? { upstream: host, downstream: target }
+      : { upstream: target, downstream: host });
+  }
+  return edges;
 }
 
 function applyOperation (dbml: string, operation: DepSyncOperation, blocks: DepBlock[], inlineDeps: InlineDep[]): TextEdit[] {
@@ -466,44 +382,13 @@ function applyOperation (dbml: string, operation: DepSyncOperation, blocks: DepB
       return computeCreateEdit(dbml, operation, blocks, inlineDeps);
     case 'update': {
       const block = findBlockForEdge(blocks, operation.edge);
-      return block ? computeUpdateEdit(operation, block) : [];
+      return block ? computeUpdateEdit(operation, block, dbml) : [];
     }
     case 'remove': {
       const block = findBlockForEdge(blocks, operation.edge);
-      return block ? computeRemoveEdit(block) : [];
+      return block ? computeRemoveEdit(operation, block, dbml) : [];
     }
     default:
       return [];
   }
-}
-
-/**
- * Synchronizes `Dep` blocks in the DBML source at `filepath`.
- *
- * @param filepath   The file whose source should be rewritten.
- * @param operations Array of create/update operations to apply.
- * @param blocks     Optional pre-parsed blocks from findDepBlocks.
- * @returns The new DBML source and the text edits applied.
- */
-export function syncDep (
-  this: Compiler,
-  filepath: Filepath,
-  operations: DepSyncOperation[],
-  blocks?: DepBlock[],
-): {
-  newDbml: string;
-  edits: TextEdit[];
-} {
-  const dbml = this.getSource(filepath) ?? '';
-  const originalBlocks = blocks ?? findDepBlocks(dbml);
-  const inlineDeps = findInlineDeps(dbml);
-  const allEdits: TextEdit[] = [];
-
-  for (const op of operations) {
-    allEdits.push(...applyOperation(dbml, op, originalBlocks, inlineDeps));
-  }
-
-  allEdits.sort((a, b) => b.start - a.start);
-  const newDbml = applyTextEdits(dbml, allEdits, true);
-  return { newDbml, edits: allEdits };
 }
