@@ -1,4 +1,6 @@
-import { flatMap, isEmpty } from 'lodash-es';
+import {
+  compact, flatMap, isEmpty, keyBy,
+} from 'lodash-es';
 import type Compiler from '@/compiler/index';
 import type { CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
@@ -77,21 +79,29 @@ function validateFkSourceToTarget (
 ): CompileWarning[] {
   if (!sourceTable.record || isEmpty(sourceTable.record.values)) return [];
 
+  const sourceColumns = sourceTable.tableSymbol.mergedColumns(compiler);
+  const sourceColumnSymbolMap = keyBy(sourceColumns, (c) => c.name ?? '');
+  const sourceFieldSymbols = compact(sourceEndpoint.fieldNames.map((name) => sourceColumnSymbolMap[name]));
+
+  const targetColumns = targetTable.tableSymbol.mergedColumns(compiler);
+  const targetColumnSymbolMap = keyBy(targetColumns, (c) => c.name ?? '');
+  const targetFieldSymbols = compact(targetEndpoint.fieldNames.map((name) => targetColumnSymbolMap[name]));
+
   const sourceRows = toKeyedRows(sourceTable.record);
   const targetRows = targetTable.record ? toKeyedRows(targetTable.record) : [];
 
   // Build set of valid target values for FK reference check
   const validFkValues = new Set(
-    targetRows.map((row) => extractKeyValueWithDefault(row, targetEndpoint.fieldNames)),
+    targetRows.map((row) => extractKeyValueWithDefault(compiler, row, targetFieldSymbols)),
   );
 
   // Filter rows with NULL values (optional relationships)
   const rowsWithValues = sourceRows
-    .filter((row) => !hasNullWithoutDefaultInKey(row, sourceEndpoint.fieldNames));
+    .filter((row) => !hasNullWithoutDefaultInKey(compiler, row, sourceFieldSymbols));
 
   // Find rows with FK values that don't exist in target
   const invalidRows = rowsWithValues.filter((row) => {
-    const fkValue = extractKeyValueWithDefault(row, sourceEndpoint.fieldNames);
+    const fkValue = extractKeyValueWithDefault(compiler, row, sourceFieldSymbols);
     return !validFkValues.has(fkValue);
   });
 
@@ -110,7 +120,7 @@ function validateFkSourceToTarget (
       targetName.name,
       targetEndpoint.fieldNames,
     );
-    const valueStr = formatValues(row, sourceEndpoint.fieldNames);
+    const valueStr = formatValues(compiler, row, sourceFieldSymbols);
     const message = `FK violation: ${sourceColumnRef} = ${valueStr} does not exist in ${targetColumnRef}`;
 
     return sourceEndpoint.fieldNames.map((col) =>
