@@ -12,8 +12,7 @@ import {
   makeCardinalityOptional, makeCardinalityRequired, makeCardinalityMany,
   CARDINALITY_ONE,
 } from '@/core/types/relation';
-import { addSettingEdit } from '@/compiler/queries/transform/addSetting';
-import { removeSettingEdit } from '@/compiler/queries/transform/updateSetting';
+import { addSettingEdit, removeSettingEdit } from '@/core/utils/setting';
 import type { RefMetadata, PartialRefMetadata } from '@/core/types/symbol/metadata';
 
 // Validate one side of a ref operator against column constraints.
