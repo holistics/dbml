@@ -15,4 +15,8 @@ export {
   type DepBlock,
 } from './syncDep';
 export { applyTextEdits, type TextEdit } from './applyTextEdits';
+export {
+  updateNoteEdit, removeNoteEdit, addNoteEdit,
+  updateNote, removeNote, addNote,
+} from './note';
 export { type TableNameInput } from './utils';

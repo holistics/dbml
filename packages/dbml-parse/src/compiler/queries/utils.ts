@@ -349,3 +349,14 @@ export function allVisibleMembers (compiler: Compiler): Report<NodeSymbol[]> {
 
   return new Report(members, errors, warnings);
 }
+
+/**
+ * Wraps a note value in the appropriate DBML quote style.
+ * Uses triple quotes for multiline content, single quotes otherwise.
+ */
+export function quoteNoteValue (value: string): string {
+  if (value.includes('\n')) {
+    return `'''\n${value}\n'''`;
+  }
+  return `'${escapeString(value)}'`;
+}

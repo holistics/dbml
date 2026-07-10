@@ -124,7 +124,9 @@ function fragmentsToEndpoint (fragments: string[], hasFields: boolean): DepEndpo
     return { schemaName, tableName, fieldNames: [] };
   }
   // column endpoint: [table, field] or [schema, table, field]
-  const fieldNames = [fragments[fragments.length - 1]];
+  const fieldNames = [
+    fragments[fragments.length - 1],
+  ];
   const tableName = fragments[fragments.length - 2];
   const schemaName = fragments.length > 2 ? fragments[fragments.length - 3] : null;
   return { schemaName, tableName, fieldNames };
@@ -337,7 +339,11 @@ export function findInlineDeps (source: string): InlineDep[] {
         if (dir !== '->' && dir !== '<-') continue;
         const targetFragments = destructureComplexVariable(value.expression);
         if (!targetFragments) continue;
-        const host: DepEndpointRef = { schemaName, tableName, fieldNames: [columnName] };
+        const host: DepEndpointRef = { schemaName,
+          tableName,
+          fieldNames: [
+            columnName,
+          ] };
         const target = fragmentsToEndpoint(targetFragments, targetFragments.length > 1);
         if (!target) continue;
         const edge: DepSyncEdge = dir === '->'
@@ -394,23 +400,31 @@ function computeUpdateEdit (operation: DepSyncOperation, block: DepBlock): TextE
 
   if (block.color) {
     // Overwrite the existing color setting in place (just the `color: <hex>`).
-    return [{ start: block.color.start, end: block.color.end, newText: `color: ${color}` }];
+    return [
+      { start: block.color.start, end: block.color.end, newText: `color: ${color}` },
+    ];
   }
 
   if (block.attributeListInsertAt !== undefined) {
     // Insert into the existing header `[...]` list, before its closing `]`.
     const sep = block.attributeListIsEmpty ? '' : ', ';
-    return [{ start: block.attributeListInsertAt, end: block.attributeListInsertAt, newText: `${sep}color: ${color}` }];
+    return [
+      { start: block.attributeListInsertAt, end: block.attributeListInsertAt, newText: `${sep}color: ${color}` },
+    ];
   }
 
   if (block.bodyOpenAt !== undefined) {
     // Block form, no attribute list: insert a header `[color: ...]` before the body `{`.
-    return [{ start: block.bodyOpenAt, end: block.bodyOpenAt, newText: `[color: ${color}] ` }];
+    return [
+      { start: block.bodyOpenAt, end: block.bodyOpenAt, newText: `[color: ${color}] ` },
+    ];
   }
 
   if (block.shortFormEnd !== undefined) {
     // Short form (`Dep: a -> b`), no setting list: append ` [color: ...]`.
-    return [{ start: block.shortFormEnd, end: block.shortFormEnd, newText: ` [color: ${color}]` }];
+    return [
+      { start: block.shortFormEnd, end: block.shortFormEnd, newText: ` [color: ${color}]` },
+    ];
   }
 
   return [];
@@ -427,16 +441,23 @@ function computeCreateEdit (dbml: string, operation: DepSyncOperation, blocks: D
   // If the edge is authored inline, strip the inline setting too — else the new block duplicates it.
   const inline = inlineDeps.find((d) => edgesEqual(d.edge, operation.edge));
   if (inline) {
-    return [{ start: inline.stripStart, end: inline.stripEnd, newText: '' }, createEdit];
+    return [
+      { start: inline.stripStart, end: inline.stripEnd, newText: '' },
+      createEdit,
+    ];
   }
 
-  return [createEdit];
+  return [
+    createEdit,
+  ];
 }
 
 function computeRemoveEdit (block: DepBlock): TextEdit[] {
   // No color setting to strip - nothing to do.
   if (!block.color) return [];
-  return [{ start: block.color.stripStart, end: block.color.stripEnd, newText: '' }];
+  return [
+    { start: block.color.stripStart, end: block.color.stripEnd, newText: '' },
+  ];
 }
 
 function applyOperation (dbml: string, operation: DepSyncOperation, blocks: DepBlock[], inlineDeps: InlineDep[]): TextEdit[] {
