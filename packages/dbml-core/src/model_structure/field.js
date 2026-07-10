@@ -12,8 +12,6 @@ class Field extends Element {
     increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null, metadata = {},
   } = {}) {
     super(token);
-    /** @type {import('../../types/model_structure/element').Metadata} */
-    this.metadata = metadata;
     if (!name) {
       this.error('Field must have a name');
     }
@@ -51,6 +49,9 @@ class Field extends Element {
     this.injectedToken = injectedToken;
     /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.table.dbState;
+    /** @type {import('@dbml/parse').CustomMetadata} */
+    this.metadata = metadata;
+
     this.generateId();
     this.bindType();
 

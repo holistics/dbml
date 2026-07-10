@@ -14,7 +14,9 @@ import {
   ProgramNode,
   SyntaxNode,
 } from '@/core/types/nodes';
-import { Column, Table, TableGroup, TokenPosition } from '@/core/types/schemaJson';
+import {
+  Column, Table, TableGroup, TokenPosition,
+} from '@/core/types/schemaJson';
 import { interpret, parse } from '../../../utils';
 
 function db (source: string) {
@@ -265,30 +267,30 @@ const TOKEN = { start: { offset: 0, line: 1, column: 1 }, end: { offset: 0, line
 
 describe('[unit] element-owned field validate specs', () => {
   it('Note accepts a quoted string and rejects a non-string', () => {
-    expect(TABLE_METADATA_FIELDS[SettingName.Note].validate(noteFieldNode("'hi'"))).toBe(true);
-    expect(TABLE_METADATA_FIELDS[SettingName.Note].validate(noteFieldNode('42'))).toBe(false);
+    expect(TABLE_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(noteFieldNode("'hi'"))).toBe(true);
+    expect(TABLE_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(noteFieldNode('42'))).toBe(false);
   });
 
   it("HeaderColor accepts a hex color but NOT 'none' (hex-only, matching inline)", () => {
-    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].validate(colorFieldNode('#fff'))).toBe(true);
-    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].validate(colorFieldNode('none'))).toBe(false);
-    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].validate(colorFieldNode("'red'"))).toBe(false);
+    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].isValidBuiltinFieldValue(colorFieldNode('#fff'))).toBe(true);
+    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].isValidBuiltinFieldValue(colorFieldNode('none'))).toBe(false);
+    expect(TABLE_METADATA_FIELDS[SettingName.HeaderColor].isValidBuiltinFieldValue(colorFieldNode("'red'"))).toBe(false);
   });
 
   it("TableGroup color is hex-only; Note color allows 'none'", () => {
-    expect(TABLEGROUP_METADATA_FIELDS[SettingName.Color].validate(colorFieldNode('#fff'))).toBe(true);
-    expect(TABLEGROUP_METADATA_FIELDS[SettingName.Color].validate(colorFieldNode('none'))).toBe(false);
-    expect(NOTE_METADATA_FIELDS[SettingName.Color].validate(colorFieldNode('#fff'))).toBe(true);
-    expect(NOTE_METADATA_FIELDS[SettingName.Color].validate(colorFieldNode('none'))).toBe(true);
+    expect(TABLEGROUP_METADATA_FIELDS[SettingName.Color].isValidBuiltinFieldValue(colorFieldNode('#fff'))).toBe(true);
+    expect(TABLEGROUP_METADATA_FIELDS[SettingName.Color].isValidBuiltinFieldValue(colorFieldNode('none'))).toBe(false);
+    expect(NOTE_METADATA_FIELDS[SettingName.Color].isValidBuiltinFieldValue(colorFieldNode('#fff'))).toBe(true);
+    expect(NOTE_METADATA_FIELDS[SettingName.Color].isValidBuiltinFieldValue(colorFieldNode('none'))).toBe(true);
   });
 
   it('Column note accepts a quoted string and rejects a non-string', () => {
-    expect(COLUMN_METADATA_FIELDS[SettingName.Note].validate(noteFieldNode("'hi'"))).toBe(true);
-    expect(COLUMN_METADATA_FIELDS[SettingName.Note].validate(noteFieldNode('42'))).toBe(false);
+    expect(COLUMN_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(noteFieldNode("'hi'"))).toBe(true);
+    expect(COLUMN_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(noteFieldNode('42'))).toBe(false);
   });
 
   it('treats an absent value node as invalid', () => {
-    expect(TABLE_METADATA_FIELDS[SettingName.Note].validate(undefined)).toBe(false);
+    expect(TABLE_METADATA_FIELDS[SettingName.Note].isValidBuiltinFieldValue(undefined)).toBe(false);
   });
 
   it('carries the complete, ready-to-emit diagnostic message', () => {
@@ -303,26 +305,26 @@ describe('[unit] element-owned field validate specs', () => {
 describe('[unit] element-owned field assign functions', () => {
   it('Note writes { value, token } onto .note', () => {
     const el = {} as Table;
-    TABLE_METADATA_FIELDS[SettingName.Note].assign(el, '42', TOKEN);
+    TABLE_METADATA_FIELDS[SettingName.Note].assignBuiltinField(el, '42', TOKEN);
     expect((el as { note?: unknown }).note).toEqual({ value: '42', token: TOKEN });
   });
 
   it('Color writes the raw value onto .color', () => {
     const el = {} as TableGroup;
-    TABLEGROUP_METADATA_FIELDS[SettingName.Color].assign(el, '#fff', TOKEN);
+    TABLEGROUP_METADATA_FIELDS[SettingName.Color].assignBuiltinField(el, '#fff', TOKEN);
     expect((el as { color?: unknown }).color).toBe('#fff');
   });
 
   it('HeaderColor writes the raw value onto .headerColor (not .color)', () => {
     const el = {} as Table;
-    TABLE_METADATA_FIELDS[SettingName.HeaderColor].assign(el, '#fff', TOKEN);
+    TABLE_METADATA_FIELDS[SettingName.HeaderColor].assignBuiltinField(el, '#fff', TOKEN);
     expect((el as { headerColor?: unknown }).headerColor).toBe('#fff');
     expect((el as { color?: unknown }).color).toBeUndefined();
   });
 
   it('Column note assign writes { value, token } onto .note', () => {
     const el = {} as Column;
-    COLUMN_METADATA_FIELDS[SettingName.Note].assign(el, 'col note', TOKEN);
+    COLUMN_METADATA_FIELDS[SettingName.Note].assignBuiltinField(el, 'col note', TOKEN);
     expect((el as { note?: unknown }).note).toEqual({ value: 'col note', token: TOKEN });
   });
 });

@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import { getMemberChain } from '@/core/parser/utils';
-import type { Filepath, RelationCardinality } from '@/core/types';
+import type { Filepath, ProgramSymbol, RelationCardinality } from '@/core/types';
 import { UNHANDLED } from '@/core/types/module';
 import {
   InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
@@ -147,7 +147,7 @@ export function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSy
   return membersList.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.isPublicSchema());
 }
 
-export function getGlobalSymbol (compiler: Compiler, filepath: Filepath): NodeSymbol | undefined {
+export function getProgramSymbol (compiler: Compiler, filepath: Filepath): ProgramSymbol | undefined {
   const programNode = compiler.parseFile(filepath).getValue().ast;
-  return compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
+  return compiler.nodeSymbol(programNode).getFiltered(UNHANDLED) as ProgramSymbol;
 }

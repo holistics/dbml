@@ -2,7 +2,6 @@ import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
-  ArrayNode,
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
@@ -11,7 +10,7 @@ import {
   WildcardNode,
 } from '@/core/types/nodes';
 import { isValidMetadataValue, isValidName } from '@/core/utils/validate';
-import { ALLOWED_METADATA_TARGET_KINDS, SettingName } from '@/core/types';
+import { SettingName } from '@/core/types';
 import { MetadataTargetKind } from '@/core/types/symbol';
 import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/fieldRegistry';
 
@@ -31,7 +30,7 @@ export default class MetadataValidator {
       return [
         new CompileError(
           CompileErrorCode.INVALID_METADATA_TARGET_KIND,
-          `A Metadata target kind must be one of: ${ALLOWED_METADATA_TARGET_KINDS.join(', ')}`,
+          `A Metadata target kind must be one of: ${Object.values(MetadataTargetKind).join(', ')}`,
           this.declarationNode.targetKind ?? this.declarationNode,
         ),
       ];
@@ -50,15 +49,6 @@ export default class MetadataValidator {
         ),
       ];
     }
-    if (nameNode instanceof ArrayNode) {
-      return [
-        new CompileError(
-          CompileErrorCode.INVALID_NAME,
-          'Invalid array as Metadata target\'s name.',
-          nameNode,
-        ),
-      ];
-    }
     if (nameNode instanceof WildcardNode) {
       return [
         new CompileError(
@@ -72,7 +62,7 @@ export default class MetadataValidator {
       return [
         new CompileError(
           CompileErrorCode.INVALID_NAME,
-          'A Metadata target\'s name must be a schema-qualified name',
+          'A Metadata target\'s name must be of the form <schema>.<table>, <table>.<column>, <schema>.<table>.<column> or a single identifier',
           nameNode,
         ),
       ];
@@ -104,7 +94,7 @@ export default class MetadataValidator {
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
     // A Metadata body may only contain 'key: value' fields (parsed as ElementDeclarationNode).
-    // => A expression such as `id int` parses as a FunctionApplicationNode and is never valid here.
+    // => An expression such as `id int` parses as a FunctionApplicationNode and is never valid here.
     return fields.map((field) => new CompileError(
       CompileErrorCode.INVALID_METADATA_FIELD,
       'A Metadata field must use the \'key: value\' syntax',
@@ -119,46 +109,7 @@ export default class MetadataValidator {
     const errors = subs.flatMap((sub) => {
       if (!sub.type) return [];
 
-      const key = sub.type.value.toLowerCase();
-      if (!keyValuesMap[key]) keyValuesMap[key] = [];
-      keyValuesMap[key].push(sub);
-
-      // A key that names a builtin setting for this target kind is validated by
-      // the target element's own spec (it will be written onto the typed field).
-      // Color-/note-named keys on a target that does NOT support them are absent
-      // from the map and fall through to generic scalar validation, staying as
-      // custom metadata. The write pass routes through the same per-kind maps, so
-      // validation and writing agree by construction.
-      // `key` is a free-form lowercased string; a non-builtin key simply misses
-      // the map (undefined) and falls through to generic validation below.
-      const field = targetKind ? METADATA_FIELDS_BY_KIND[targetKind]?.[key as SettingName] : undefined;
-      if (field) {
-        if (sub.body instanceof BlockExpressionNode) {
-          return [
-            new CompileError(
-              CompileErrorCode.UNEXPECTED_COMPLEX_BODY,
-              'A Metadata field can only have an inline value',
-              sub.body,
-            ),
-          ];
-        }
-
-        if (!field.validate(sub.body?.callee)) {
-          return [
-            new CompileError(
-              CompileErrorCode.INVALID_METADATA_FIELD,
-              field.message,
-              sub,
-            ),
-          ];
-        }
-
-        return [];
-      }
-
-      // Generic metadata field: a single inline scalar value
-      // (string/number/boolean/identifier/color). Validation rejects a complex
-      // (block) body and positively verifies the value is an admissible scalar.
+      // Metadata value only accept a string/color. Validation rejects a complex (block) body.
       if (sub.body instanceof BlockExpressionNode) {
         return [
           new CompileError(
@@ -169,12 +120,28 @@ export default class MetadataValidator {
         ];
       }
 
-      // Only validate the value when a real callee is present. When a key has
-      // no value the parser emits INVALID_OPERAND via error recovery and
-      // synthesises a FunctionApplicationNode whose callee is an EmptyNode —
-      // we must not pile on with a second INVALID_METADATA_FIELD in that case.
-      const valueNode = sub.body instanceof FunctionApplicationNode ? sub.body.callee : undefined;
-      if (!isValidMetadataValue(valueNode)) {
+      const key = sub.type.value.toLowerCase();
+      if (!keyValuesMap[key]) keyValuesMap[key] = [];
+      keyValuesMap[key].push(sub);
+
+      // If a key matches a builtin setting for the target element, validate with the element's specs
+      const builtinSpecs = targetKind ? METADATA_FIELDS_BY_KIND[targetKind]?.[key as SettingName] : undefined;
+      if (builtinSpecs) {
+        if (!builtinSpecs.isValidBuiltinFieldValue(sub.body?.callee)) {
+          return [
+            new CompileError(
+              CompileErrorCode.INVALID_METADATA_FIELD,
+              builtinSpecs.message,
+              sub,
+            ),
+          ];
+        }
+
+        return [];
+      }
+
+      // Only validate the value when a real callee is present. Missing callee is handled as `parse` phase
+      if (!isValidMetadataValue(sub.body?.callee)) {
         return [
           new CompileError(
             CompileErrorCode.INVALID_METADATA_FIELD,

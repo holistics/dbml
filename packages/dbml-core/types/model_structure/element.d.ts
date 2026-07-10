@@ -21,8 +21,6 @@ export interface RawNote {
     token: Token;
 }
 
-export type Metadata = CustomMetadata;
-
 declare class Element {
     token: Token;
     id: number;

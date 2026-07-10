@@ -1,8 +1,9 @@
 import { NormalizedModel } from './database';
 import DbState from './dbState';
-import Element, { RawNote, Token, Color, Metadata } from './element';
+import Element, { RawNote, Token, Color } from './element';
 import Schema from './schema';
 import Table from './table';
+import type { CustomMetadata } from '@dbml/parse';
 
 export interface RawTableGroup {
     name: string;
@@ -11,6 +12,7 @@ export interface RawTableGroup {
     token: Token;
     note: RawNote;
     color: Color;
+    metadata?: CustomMetadata;
 }
 
 declare class TableGroup extends Element {
@@ -22,7 +24,9 @@ declare class TableGroup extends Element {
     note: string;
     noteToken: Token;
     color: Color;
-    constructor({ name, token, tables, schema, note, color }: RawTableGroup);
+    metadata: CustomMetadata;
+
+    constructor({ name, token, tables, schema, note, color, metadata }: RawTableGroup);
     generateId(): void;
     processTables(rawTables: any): void;
     pushTable(table: any): void;
@@ -52,7 +56,7 @@ declare class TableGroup extends Element {
         name: string;
         note: string;
         color: Color;
-        metadata: Metadata;
+        metadata: CustomMetadata;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -63,7 +67,7 @@ export interface NormalizedTableGroup {
     color: Color;
     tableIds: number[];
     schemaId: number;
-    metadata: Metadata;
+    metadata: CustomMetadata;
 }
 
 export interface NormalizedTableGroupIdMap {

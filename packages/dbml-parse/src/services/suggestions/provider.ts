@@ -25,7 +25,6 @@ import {
   SchemaSymbol,
   SymbolKind,
   MetadataTargetKind,
-  ALLOWED_METADATA_TARGET_KINDS,
 } from '@/core/types/symbol';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
@@ -944,7 +943,7 @@ function suggestInRefField (compiler: Compiler, filepath: Filepath, offset: numb
 
 // Map a metadata target-kind keyword to the symbol kinds whose names should be
 // suggested for the target identifier.
-const METADATA_TARGET_SYMBOL_KINDS: Record<string, SymbolKind[]> = {
+const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
   [MetadataTargetKind.Table]: [
     SymbolKind.Schema,
     SymbolKind.Table,
@@ -955,17 +954,15 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<string, SymbolKind[]> = {
     SymbolKind.Column,
   ],
   [MetadataTargetKind.TableGroup]: [
-    SymbolKind.Schema,
     SymbolKind.TableGroup,
   ],
   [MetadataTargetKind.Note]: [
-    SymbolKind.Schema,
     SymbolKind.StickyNote,
   ],
 };
 
 // Canonical display labels for metadata target kinds.
-const METADATA_TARGET_KIND_LABELS: Record<string, string> = {
+const METADATA_TARGET_KIND_LABELS: Record<MetadataTargetKind, string> = {
   [MetadataTargetKind.Table]: 'Table',
   [MetadataTargetKind.Column]: 'Column',
   [MetadataTargetKind.TableGroup]: 'TableGroup',
@@ -974,7 +971,7 @@ const METADATA_TARGET_KIND_LABELS: Record<string, string> = {
 
 function suggestMetadataTargetKinds (): CompletionList {
   return {
-    suggestions: ALLOWED_METADATA_TARGET_KINDS.map((name) => {
+    suggestions: Object.values(MetadataTargetKind).map((name) => {
       const label = METADATA_TARGET_KIND_LABELS[name] ?? name;
       return {
         label,
@@ -995,7 +992,7 @@ function suggestInMetadataHeader (
 ): CompletionList {
   // Before/at the targetKind position -> suggest the allowed target kinds.
   // (No targetKind yet, an empty placeholder, or cursor still within the targetKind.)
-  const kind = container.targetKind?.value?.toLowerCase();
+  const kind = container.getTargetKind();
   if (!kind || (offset <= container.targetKind!.end && offset >= container.targetKind!.start)) {
     return suggestMetadataTargetKinds();
   }

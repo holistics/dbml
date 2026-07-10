@@ -417,7 +417,6 @@ export default class Parser {
   private useSpecifier (): UseSpecifierNode {
     const args: {
       importKind?: SyntaxToken;
-      subKind?: SyntaxToken;
       name?: NormalExpressionNode;
       asKeyword?: SyntaxToken;
       alias?: NormalExpressionNode;

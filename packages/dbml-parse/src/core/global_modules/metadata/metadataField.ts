@@ -6,18 +6,20 @@ import { SettingName } from '@/core/types';
 
 export type MetadataTarget = Table | TableGroup | Note | Column;
 
-// A single builtin metadata field, bundling validation (used by both the inline
-// setting-list path and the metadata-block path) and the dumb-writer assign
-// (used only in the interpret pass to promote block-form values onto typed
-// fields). Both fields are required so that validate/assign key parity is
-// structural — impossible to violate.
+/**
+  * Specs for builtin metadata (table's note, tablegroup's color, .etc) for different element types. Does 2 things:
+  * - `validate`: Validating if the metadata value is syntactically correct
+  * - `assign`: Write the metadata value to the element builtin props (e.g. write `table.note` instead of `table.metadata`)
+  */
 export interface MetadataField<T extends MetadataTarget> {
-  validate (node?: SyntaxNode): boolean;
+  /** Check if the metadata value is syntactically correct */
+  isValidBuiltinFieldValue (node?: SyntaxNode): boolean;
   message: string;
-  assign (element: T, value: string, token: TokenPosition): void;
+
+  /** Write the metadata value to the element builtin props (e.g. write to `table.note`) */
+  assignBuiltinField (element: T, value: string, token: TokenPosition): void;
 }
 
 // A per-kind registry: exactly the promotable settings for that kind, each
 // carrying its own validate + assign. K is tightened per kind.
-export type MetadataFieldRegistry<T extends MetadataTarget, K extends SettingName = SettingName> =
-  Record<K, MetadataField<T>>;
+export type MetadataFieldRegistry<T extends MetadataTarget, K extends SettingName = SettingName> = Record<K, MetadataField<T>>;

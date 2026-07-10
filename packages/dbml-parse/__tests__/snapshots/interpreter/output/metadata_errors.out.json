@@ -14,7 +14,7 @@
     },
     {
       "code": "INVALID_METADATA_TARGET_KIND",
-      "diagnostic": "A Metadata target kind must be one of: table, column, tablegroup, note",
+      "diagnostic": "A Metadata target kind must be one of: Table, Column, TableGroup, Note",
       "filepath": "/main.dbml",
       "level": "error",
       "token": {
@@ -28,7 +28,7 @@
     },
     {
       "code": "INVALID_METADATA_TARGET_KIND",
-      "diagnostic": "A Metadata target kind must be one of: table, column, tablegroup, note",
+      "diagnostic": "A Metadata target kind must be one of: Table, Column, TableGroup, Note",
       "filepath": "/main.dbml",
       "level": "error",
       "token": {

@@ -106,7 +106,7 @@ export default class TableGroupValidator {
             )));
           }
           attrs.forEach((attr) => {
-            if (!spec.validate(attr.value)) {
+            if (!spec.isValidBuiltinFieldValue(attr.value)) {
               errors.push(new CompileError(
                 CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
                 spec.message,
@@ -202,7 +202,7 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
           )));
         }
         attrs.forEach((attr) => {
-          if (!field.validate(attr.value)) {
+          if (!field.isValidBuiltinFieldValue(attr.value)) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
               field.message,

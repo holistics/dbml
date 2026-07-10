@@ -27,17 +27,18 @@ Metadata Table public.users {
 }
 
 Metadata Column public.users.id {
-  pii: true
+  pii: 'true'
   masking: 'partial'
 }
 
 Metadata TableGroup g1 {
   team: 'data'
+  color: #aaa
 }
 `;
 
 function parse (dbml: string): Database {
-  return (new Parser()).parse(dbml, 'dbmlv2') as unknown as Database;
+  return (new Parser()).parse(dbml, 'dbmlv2');
 }
 
 describe('@dbml/core - metadata element', () => {
@@ -50,9 +51,9 @@ describe('@dbml/core - metadata element', () => {
   test('attaches merged table metadata (last-wins on key conflict)', () => {
     const schema = database.schemas.find((s) => s.name === 'public');
     const users = schema!.tables.find((t) => t.name === 'users');
+    expect(users?.note).toBe('this will override');
     expect(users!.metadata).toEqual({
       owner: 'scott',
-      note: 'this will override', // second block overrides first
       color: '#aaa',
     });
   });
@@ -61,7 +62,7 @@ describe('@dbml/core - metadata element', () => {
     const schema = database.schemas.find((s) => s.name === 'public');
     const users = schema!.tables.find((t) => t.name === 'users');
     const idField = users!.fields.find((f) => f.name === 'id');
-    expect(idField!.metadata).toEqual({ pii: true, masking: 'partial' });
+    expect(idField!.metadata).toEqual({ pii: 'true', masking: 'partial' });
   });
 
   test('attaches metadata to a TableGroup', () => {
@@ -74,9 +75,9 @@ describe('@dbml/core - metadata element', () => {
     const model = database.normalize();
 
     const usersId = Object.values(model.tables).find((t: any) => t.name === 'users')!.id;
+    expect(model.tables[usersId]?.note).toBe('this will override');
     expect(model.tables[usersId].metadata).toEqual({
       owner: 'scott',
-      note: 'this will override',
       color: '#aaa',
     });
   });
@@ -85,9 +86,9 @@ describe('@dbml/core - metadata element', () => {
     const out = database.export() as any;
     const publicSchema = out.schemas.find((s: any) => s.name === 'public');
     const users = publicSchema.tables.find((t: any) => t.name === 'users');
+    expect(users.note).toBe('this will override');
     expect(users.metadata).toEqual({
       owner: 'scott',
-      note: 'this will override',
       color: '#aaa',
     });
   });

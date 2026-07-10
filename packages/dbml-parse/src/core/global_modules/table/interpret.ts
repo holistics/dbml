@@ -383,16 +383,16 @@ export const RECOGNIZED_COLUMN_SETTINGS: readonly SettingName[] = [
 // promotable setting. validate/assign key parity is structural (same object).
 export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Note | SettingName.HeaderColor> = {
   [SettingName.Note]: {
-    validate: isExpressionAQuotedString,
+    isValidBuiltinFieldValue: isExpressionAQuotedString,
     message: "'note' must be a string literal",
-    assign (element, value, token) {
+    assignBuiltinField (element, value, token) {
       element.note = { value, token };
     },
   },
   [SettingName.HeaderColor]: {
-    validate: isValidHexColor,
+    isValidBuiltinFieldValue: isValidHexColor,
     message: "'headercolor' must be a color literal",
-    assign (element, value) {
+    assignBuiltinField (element, value) {
       element.headerColor = value as Color;
     },
   },
@@ -404,9 +404,9 @@ export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Not
 // Inline `[pk]` behaviour is unchanged (handled by interpretColumn via columnSymbol).
 export const COLUMN_METADATA_FIELDS: MetadataFieldRegistry<Column, SettingName.Note> = {
   [SettingName.Note]: {
-    validate: isExpressionAQuotedString,
+    isValidBuiltinFieldValue: isExpressionAQuotedString,
     message: "'note' must be a quoted string",
-    assign (element, value, token) {
+    assignBuiltinField (element, value, token) {
       element.note = { value, token };
     },
   },

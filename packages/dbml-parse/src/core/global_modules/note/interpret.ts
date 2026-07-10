@@ -31,9 +31,9 @@ import { extractCustomInlineMetadata } from '../../utils/interpret';
 // Defined before the class so the class method can reference it.
 export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color> = {
   [SettingName.Color]: {
-    validate: isValidColorOrNone,
+    isValidBuiltinFieldValue: isValidColorOrNone,
     message: "'color' must be a color literal or 'none'",
-    assign (element, value) {
+    assignBuiltinField (element, value) {
       element.color = value as Color;
     },
   },

@@ -8,14 +8,14 @@ class StickyNote extends Element {
     name, content, color, token, database = {}, metadata = {},
   } = {}) {
     super(token);
-    /** @type {import('../../types/model_structure/element').Metadata} */
-    this.metadata = metadata;
     /** @type {string} */
     this.name = name;
     /** @type {string} */
     this.content = content;
-    /** @type {string | undefined} */
+    /** @type {import('../types/model_structure/element').Color | undefined} */
     this.color = color;
+    /** @type {import('@dbml/parse').CustomMetadata} */
+    this.metadata = metadata;
     /** @type {import('../../types/model_structure/database').default} */
     this.database = database;
     /** @type {import('../../types/model_structure/dbState').default} */
@@ -28,6 +28,9 @@ class StickyNote extends Element {
     this.id = this.dbState.generateId('noteId');
   }
 
+  /**
+    * @returns {Omit<import('../../types/model_structure/stickyNote').NormalizedNote, 'id'>}
+    */
   export () {
     return {
       name: this.name,
@@ -38,7 +41,7 @@ class StickyNote extends Element {
   }
 
   /**
-   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
+   * @param {import('../../types/model_structure/database').NormalizedModel} model
    */
   normalize (model) {
     model.notes[this.id] = {

@@ -5,9 +5,7 @@ import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import {
-  aggregateSettingList, isExpressionAQuotedString, validateCustomInlineMetadata,
-} from '@/core/utils/validate';
+import { aggregateSettingList, isExpressionAQuotedString, validateCustomInlineMetadata } from '@/core/utils/validate';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
 
 export default class NoteValidator {
@@ -95,7 +93,7 @@ export default class NoteValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_NOTE_SETTING, '\'color\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!field.validate(attr.value)) {
+            if (!field.isValidBuiltinFieldValue(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, field.message, attr.value || attr.name!));
             }
           });

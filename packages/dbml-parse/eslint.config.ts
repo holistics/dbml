@@ -22,7 +22,6 @@ export default defineConfig(
         'vite.config.ts',
         'vite.profile.config.ts',
         'eslint.config.ts',
-        '__tests__/*',
       ],
     },
     {

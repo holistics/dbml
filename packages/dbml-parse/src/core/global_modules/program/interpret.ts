@@ -5,7 +5,7 @@ import { UNHANDLED } from '@/core/types/module';
 import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, Database, DiagramView, Enum,
+  Alias, CustomMetadata, Database, DiagramView, Enum,
   MetadataElement, Note, Project, Ref,
   RefEndpoint, SchemaElement, Table,
   TableGroup, TablePartial, TableRecord, TokenPosition,
@@ -37,6 +37,7 @@ import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '../utils';
 import type { MetadataTarget } from '../metadata/metadataField';
 import { METADATA_FIELDS_BY_KIND } from '../metadata/fieldRegistry';
+import { groupBy, values } from 'lodash-es';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -81,6 +82,7 @@ export default class ProgramInterpreter {
     this.interpretAllSymbols();
     this.interpretAllMetadata();
     this.interpretAllAliases();
+    this.interpretAllCustomMetadata();
     this.warnings.push(...this.validateRecords());
     return new Report(this.db, this.errors, this.warnings);
   }
@@ -186,17 +188,6 @@ export default class ProgramInterpreter {
       });
     }
 
-    // Accumulate the merged metadata values per resolved target. Keyed by the
-    // target symbol's interned id, so `Metadata Table users` and
-    // `Metadata Table public.users` merge into the same entry. Values merge
-    // per-key, last-write-wins (Object.assign) in iteration order.
-    const mergedMetadataByTarget = new Map<string, {
-      targetSymbol: NodeSymbol;
-      kind: MetadataTargetKind;
-      name: string[];
-      lowerKeyMap: Record<string, { originalKey: string; value: string; token: TokenPosition }>;
-    }>();
-
     for (const meta of metadatas) {
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) continue;
@@ -257,82 +248,67 @@ export default class ProgramInterpreter {
         case MetadataKind.Project:
           this.db.project = value as Project;
           break;
-        case MetadataKind.MetadataElement: {
-          if (meta instanceof MetadataElementMetadata) {
-            // Unresolved targets already raise BINDING_ERROR at bind time; there
-            // is no element to attach to, so skip them here.
-            const targetSymbol = meta.target(this.compiler);
-            const metaEl = value as MetadataElement;
-            if (targetSymbol) {
-              const targetId = targetSymbol.intern();
-              const existing = mergedMetadataByTarget.get(targetId);
-              const valueToAssign = Object.fromEntries(Object.entries(metaEl.valueWithTokens).map(([originalKey, valueAndToken]) => [originalKey.toLowerCase(), { originalKey, ...valueAndToken }]));
-              if (existing) {
-                existing.lowerKeyMap = { ...existing.lowerKeyMap, ...valueToAssign };
-              } else {
-                mergedMetadataByTarget.set(targetId, {
-                  targetSymbol,
-                  lowerKeyMap: valueToAssign,
-                  ...metaEl.target,
-                });
-              }
-            }
-          }
-          break;
-        }
+
+        // Handled separately in `interpretAllCustomMetadata`
+        case MetadataKind.MetadataElement: break;
         default: break;
       }
     }
+  }
 
-    // Attach each target's merged metadata onto its emitted element object.
-    for (const { targetSymbol, kind, name, lowerKeyMap } of mergedMetadataByTarget.values()) {
+  private interpretAllCustomMetadata () {
+    const metadatas = this.compiler.symbolMetadata(this.programSymbol).filter((m) => m instanceof MetadataElementMetadata);
+    const groupbyTargetMetadatas = groupBy(metadatas, (m) => m.target(this.compiler)?.intern());
+
+    for (const metas of Object.values(groupbyTargetMetadatas)) {
+      const metadataElements = metas.map((m) => this.compiler.interpretMetadata(m, this.filepath).getFiltered(UNHANDLED)).filter((v) => !!v) as MetadataElement[];
+
+      if (!metas.length || !metadataElements.length) continue;
+
+      const targetSymbol = metas[0].target(this.compiler);
+
+      if (!targetSymbol) return;
+
+      let targetElement: MetadataTarget | undefined;
       if (targetSymbol.kind === SymbolKind.Column) {
-        const tableNode = targetSymbol.declaration?.parentOfKind(ElementDeclarationNode);
-        const tableSymbol = tableNode
-          ? this.compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol
-          : undefined;
-        const table = tableSymbol ? this.emittedBySymbol.get(tableSymbol.intern()) as Table | undefined : undefined;
+        const tableNode = targetSymbol.originalSymbol.declaration?.parentOfKind(ElementDeclarationNode);
+        if (!tableNode) return;
+
+        const tableSymbol = this.compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol;
+        if (!tableSymbol) return;
+
+        const table = this.emittedBySymbol.get(tableSymbol.intern()) as Table | undefined;
+        if (!table) return;
+
         // The rightmost name fragment is the column name (e.g. `id` in `public.users.id`).
-        const columnName = name.at(-1);
-        const column = table?.fields.find((f) => f.name === columnName);
-        if (column) {
-          const fieldsRegistry = METADATA_FIELDS_BY_KIND[MetadataTargetKind.Column];
-          if (!fieldsRegistry) return;
+        const columnName = metadataElements[0].target.name.at(-1);
 
-          const mappedAssign = Object.fromEntries(Object.entries(fieldsRegistry).map(([builtinKey, field]) => [builtinKey.toLowerCase(), { builtinKey, assign: field.assign }]));
+        targetElement = table.fields.find((f) => f.name === columnName);
+      } else targetElement = this.emittedBySymbol.get(targetSymbol.originalSymbol.intern());
 
-          const inlineMetadata = column.metadata ? Object.fromEntries(Object.entries(column.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }])) : {};
-          column.metadata = {};
+      if (!targetElement) return;
 
-          Object.entries(lowerKeyMap).forEach(([lowerCaseKey, metadata]) => {
-            const { originalKey, value, token } = metadata;
-            if (mappedAssign[lowerCaseKey]) mappedAssign[lowerCaseKey].assign(column, value, token);
-            else column.metadata = { ...column.metadata, [originalKey]: value };
-            delete inlineMetadata[lowerCaseKey];
-          });
+      const targetElementKind = metadataElements[0].target.kind;
+      const fieldsRegistry = METADATA_FIELDS_BY_KIND[targetElementKind];
 
-          column.metadata = { ...column.metadata, ...Object.fromEntries(Object.entries(inlineMetadata).map(([_, metadata]) => [metadata.originalKey, metadata.value])) };
-        }
-        return;
-      }
+      const lowerKeyMap = metadataElements.reduce((res, metaEl) => {
+        Object.entries(metaEl.valueWithTokens).forEach(([originalKey, valueAndToken]) => { res[originalKey.toLowerCase()] = { originalKey, ...valueAndToken }; });
+        return res;
+      }, {} as Record<string, { originalKey: string; value: string; token: TokenPosition }>);
 
-      const element = this.emittedBySymbol.get(targetSymbol.originalSymbol.intern());
-      const fieldsRegistry = METADATA_FIELDS_BY_KIND[kind];
-
-      if (!element || !fieldsRegistry) return;
-
-      const mappedAssign = Object.fromEntries(Object.entries(fieldsRegistry).map(([builtinKey, field]) => [builtinKey.toLowerCase(), { builtinKey, assign: field.assign }]));
-
-      const inlineMetadata = element.metadata ? Object.fromEntries(Object.entries(element.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }])) : {};
-      element.metadata = {};
+      // Start value is inline metadata (interpreted at element interpreter), then metadata in custom block override keys with same lowercase value
+      const mergedMetadata = targetElement.metadata
+        ? Object.fromEntries(Object.entries(targetElement.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }]))
+        : {};
 
       Object.entries(lowerKeyMap).forEach(([lowerCaseKey, metadata]) => {
         const { originalKey, value, token } = metadata;
-        if (mappedAssign[lowerCaseKey]) mappedAssign[lowerCaseKey].assign(element, value, token);
-        else element.metadata![originalKey] = value;
-        delete inlineMetadata[lowerCaseKey];
+
+        if (fieldsRegistry[lowerCaseKey]) fieldsRegistry[lowerCaseKey].assignBuiltinField(targetElement, value, token);
+        else mergedMetadata[lowerCaseKey] = { originalKey, value };
       });
-      element.metadata = { ...element.metadata, ...Object.fromEntries(Object.entries(inlineMetadata).map(([_, metadata]) => [metadata.originalKey, metadata.value])) };
+
+      targetElement.metadata = Object.fromEntries(Object.values(mergedMetadata).map((v) => [v.originalKey, v.value]));
     }
   }
 

@@ -10,7 +10,7 @@ class TableGroup extends Element {
     name, token, tables = [], schema = {}, note, color, noteToken = null, metadata = {},
   }) {
     super(token);
-    /** @type {import('../../types/model_structure/element').Metadata} */
+    /** @type {import('@dbml/parse').CustomMetadata} */
     this.metadata = metadata;
     /** @type {string} */
     this.name = name;

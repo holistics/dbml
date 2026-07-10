@@ -41,16 +41,16 @@ import { extractCustomInlineMetadata } from '../../utils/interpret';
 // Defined before the class so the class method can reference it.
 export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, SettingName.Note | SettingName.Color> = {
   [SettingName.Note]: {
-    validate: isExpressionAQuotedString,
+    isValidBuiltinFieldValue: isExpressionAQuotedString,
     message: "'note' must be a string literal",
-    assign (element, value, token) {
+    assignBuiltinField (element, value, token) {
       element.note = { value, token };
     },
   },
   [SettingName.Color]: {
-    validate: isValidHexColor,
+    isValidBuiltinFieldValue: isValidHexColor,
     message: "'color' must be a color literal",
-    assign (element, value) {
+    assignBuiltinField (element, value) {
       element.color = value as Color;
     },
   },
@@ -187,4 +187,3 @@ export class TableGroupInterpreter {
     return [];
   }
 }
-

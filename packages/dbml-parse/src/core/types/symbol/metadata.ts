@@ -25,6 +25,8 @@ import {
   destructureComplexVariableTuple,
   destructureCallExpression,
 } from '@/core/utils/expression';
+import { getProgramSymbol } from '@/core/global_modules/utils';
+import { getRightmostVariable } from '@/core/utils/validate';
 
 export enum MetadataKind {
   Ref = 'ref',
@@ -60,16 +62,17 @@ export abstract class NodeMetadata implements Internable<InternedNodeMetadata> {
 
   abstract owners (compiler: Compiler): NodeSymbol[];
 
-  // Programs that can both (a) reach this metadata's declaration file and
-  // (b) see ALL the given target symbols in their nested schema.
-  reachableOwners (compiler: Compiler, targets: NodeSymbol[]): NodeSymbol[] {
+  /** Get programs (source files) that can both
+    * - reach this metadata's declaration file and
+    * - see all the given target symbols in their nested schema.
+    */
+  resolveOwnerPrograms (compiler: Compiler, targets: NodeSymbol[]): ProgramSymbol[] {
     const declarationFilepath = this.declaration.filepath;
     return compiler.reachableFiles()
-      .flatMap((f) => compiler.nodeSymbol(compiler.parseFile(f).getValue().ast).getFiltered(UNHANDLED) || [])
+      .flatMap((f) => getProgramSymbol(compiler, f) || [])
       .filter((s) => {
         const reachableFromProgram = compiler.reachableFiles(s.filepath);
-        return reachableFromProgram.some((f) => f.equals(declarationFilepath))
-          && targets.every((t) => (s as ProgramSymbol).inNestedSchema(compiler, t));
+        return reachableFromProgram.some((f) => f.equals(declarationFilepath)) && targets.every((t) => s.inNestedSchema(compiler, t));
       });
   }
 }
@@ -228,10 +231,7 @@ export class RefMetadata extends NodeMetadata {
 
     if (!leftTableSymbol || !rightTableSymbol) return [];
 
-    return this.reachableOwners(compiler, [
-      leftTableSymbol,
-      rightTableSymbol,
-    ]);
+    return this.resolveOwnerPrograms(compiler, [leftTableSymbol, rightTableSymbol]);
   }
 }
 
@@ -309,10 +309,7 @@ export class PartialRefMetadata extends NodeMetadata {
 
     if (!leftTableSymbol || !rightTableSymbol) return [];
 
-    return this.reachableOwners(compiler, [
-      leftTableSymbol,
-      rightTableSymbol,
-    ]);
+    return this.resolveOwnerPrograms(compiler, [leftTableSymbol, rightTableSymbol]);
   }
 }
 
@@ -390,9 +387,7 @@ export class RecordsMetadata extends NodeMetadata {
     const tableSymbol = this.table(compiler);
     if (!tableSymbol) return [];
 
-    return this.reachableOwners(compiler, [
-      tableSymbol,
-    ]);
+    return this.resolveOwnerPrograms(compiler, [tableSymbol]);
   }
 }
 
@@ -412,11 +407,8 @@ export class MetadataElementMetadata extends NodeMetadata {
   target (compiler: Compiler): NodeSymbol | undefined {
     const nameNode = this.declaration.targetName;
     if (!nameNode) return undefined;
-    // The rightmost fragment of the qualified header name (e.g. `users` in
-    // `public.users`) is what metadataModule.nodeReferee resolves to the target.
-    const targetNode = nameNode instanceof InfixExpressionNode && nameNode.rightExpression
-      ? nameNode.rightExpression
-      : nameNode;
+    // The rightmost fragment of the qualified header name (e.g. `users` in `public.users`) is what metadataModule.nodeReferee resolves to the target.
+    const targetNode = getRightmostVariable(nameNode) ?? nameNode;
     return compiler.nodeReferee(targetNode).getFiltered(UNHANDLED)?.originalSymbol;
   }
 
@@ -435,9 +427,7 @@ export class MetadataElementMetadata extends NodeMetadata {
       target = tableSymbol;
     }
 
-    return this.reachableOwners(compiler, [
-      target,
-    ]);
+    return this.resolveOwnerPrograms(compiler, [target]);
   }
 }
 

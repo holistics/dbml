@@ -7,7 +7,7 @@ import { ImportKind } from '@/core/types/symbol';
 import { Position } from '@/core/types/position';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isReuseKeyword } from '@/core/utils/tokens';
-import { ALLOWED_METADATA_TARGET_KINDS, MetadataTargetKind, SymbolKind } from './symbol';
+import { MetadataTargetKind, SymbolKind } from './symbol';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;
@@ -439,8 +439,7 @@ export class MetadataDeclarationNode extends SyntaxNode {
   // Resolve the target-kind token to a known MetadataTargetKind, or undefined.
   getTargetKind (): MetadataTargetKind | undefined {
     const value = this.targetKind?.value?.toLowerCase();
-    if (value === undefined) return undefined;
-    return ALLOWED_METADATA_TARGET_KINDS.find((k) => k === value);
+    return Object.values(MetadataTargetKind).find((k) => k.toLowerCase() === value);
   }
 }
 

@@ -3,7 +3,7 @@ import type Compiler from '@/compiler/index';
 import { MetadataDeclarationNode } from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { getDefaultSchemaSymbol, getGlobalSymbol } from '../utils';
+import { getDefaultSchemaSymbol, getProgramSymbol } from '../utils';
 
 type NameWithSymbolKind = {
   name: string;
@@ -21,31 +21,40 @@ function lookupSymbol (compiler: Compiler, startSymbol: NodeSymbol, namePartAndS
   return symbol;
 }
 
-const METADATA_TARGET_KIND_PARENT_AND_SYMBOL_KIND_MAP: Record<MetadataTargetKind, { parentKind: MetadataTargetKind; symbolKind: SymbolKind }> = {
-  [MetadataTargetKind.Column]: { parentKind: MetadataTargetKind.Table, symbolKind: SymbolKind.Column },
-  [MetadataTargetKind.Table]: { parentKind: MetadataTargetKind.Schema, symbolKind: SymbolKind.Table },
-  [MetadataTargetKind.Schema]: { parentKind: MetadataTargetKind.Schema, symbolKind: SymbolKind.Schema },
-  [MetadataTargetKind.Note]: { parentKind: MetadataTargetKind.Schema, symbolKind: SymbolKind.StickyNote },
-  [MetadataTargetKind.TableGroup]: { parentKind: MetadataTargetKind.Schema, symbolKind: SymbolKind.TableGroup },
-};
-
-function mapNamePartToSymbolKind (nameParts: string[], targetKind: MetadataTargetKind): NameWithSymbolKind[] {
+/** @internal Exported for testing only. */
+export function mapNamePartToSymbolKind (nameParts: string[], targetKind: MetadataTargetKind): NameWithSymbolKind[] {
   if (nameParts.length === 0) return [];
 
-  if (nameParts.length === 1 && targetKind === MetadataTargetKind.Schema && nameParts[0] === DEFAULT_SCHEMA_NAME) return [];
+  let kindParts: SymbolKind[];
 
-  const { parentKind, symbolKind } = METADATA_TARGET_KIND_PARENT_AND_SYMBOL_KIND_MAP[targetKind];
+  switch (targetKind) {
+    case MetadataTargetKind.Table:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.Table];
+      break;
+    case MetadataTargetKind.Column:
+      if (nameParts.length === 1) kindParts = [SymbolKind.Column];
+      else kindParts = [...Array(nameParts.length - 2).fill(SymbolKind.Schema), SymbolKind.Table, SymbolKind.Column];
+      break;
+    case MetadataTargetKind.TableGroup:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.TableGroup];
+      break;
+    case MetadataTargetKind.Note:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.StickyNote];
+      break;
+    // Exhaustiveness checking
+    default: {
+      const _: never = targetKind;
+      break;
+    }
+  }
 
-  return [
-    ...mapNamePartToSymbolKind(nameParts.slice(0, -1), parentKind),
-    { name: nameParts.at(-1)!, symbolKind },
-  ];
+  return nameParts.map((namePart, idx) => ({ name: namePart, symbolKind: kindParts[idx] }));
 }
 
 // Resolve the target element a Metadata declaration annotates, from its
 // `<target-kind> <qualified-name>` header. Returns undefined if it does not exist.
 export function resolveMetadataTarget (compiler: Compiler, metadataNode: MetadataDeclarationNode): NodeSymbol | undefined {
-  const globalSymbol = getGlobalSymbol(compiler, metadataNode.filepath);
+  const globalSymbol = getProgramSymbol(compiler, metadataNode.filepath);
   if (!globalSymbol) return undefined;
 
   const targetKind = metadataNode.getTargetKind();
