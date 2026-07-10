@@ -137,7 +137,7 @@ export class DepInterpreter {
         if (!(body instanceof FunctionApplicationNode)) {
           const subs = body.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode);
           for (const sub of subs) {
-            const key = sub.type?.value;
+            const key = sub.type?.value?.toLowerCase();
             if (!key) continue;
             const subBody = sub.body;
             if (!(subBody instanceof FunctionApplicationNode)) continue;
