@@ -5,9 +5,13 @@ import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
+import { SettingName } from '@/core/types/keywords';
 import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
-import { Settings, aggregateSettingList, isSimpleName } from '@/core/utils/validate';
+import {
+  Settings, aggregateSettingList, isSimpleName, isValidColor, isExpressionAQuotedString,
+  isExpressionASignedNumberExpression,
+} from '@/core/utils/validate';
 
 export default class DepValidator {
   private declarationNode: ElementDeclarationNode;
@@ -23,8 +27,26 @@ export default class DepValidator {
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
       ...this.validateAlias(this.declarationNode.alias),
+      ...this.validateSettings(),
       ...this.validateBody(this.declarationNode.body),
     ];
+  }
+
+  private validateSettings (): CompileError[] {
+    const errors: CompileError[] = [];
+    // Header attribute list
+    if (this.declarationNode.attributeList) {
+      errors.push(...validateDepSettings(this.declarationNode.attributeList).getErrors());
+    }
+    // Short-form body settings list
+    const body = this.declarationNode.body;
+    if (body instanceof FunctionApplicationNode) {
+      const settingsList = body.args.find((a) => a instanceof ListExpressionNode) as ListExpressionNode | undefined;
+      if (settingsList) {
+        errors.push(...validateDepSettings(settingsList).getErrors());
+      }
+    }
+    return errors;
   }
 
   private validateContext (): CompileError[] {
@@ -129,5 +151,33 @@ export default class DepValidator {
 
 export function validateDepSettings (settings: ListExpressionNode): Report<Settings> {
   const aggReport = aggregateSettingList(settings);
-  return new Report(aggReport.getValue(), aggReport.getErrors());
+  const errors: CompileError[] = [
+    ...aggReport.getErrors(),
+  ];
+  const settingMap = aggReport.getValue();
+
+  for (const [
+    name,
+    attrs,
+  ] of Object.entries(settingMap)) {
+    for (const attr of attrs) {
+      if (name === SettingName.Color) {
+        if (!isValidColor(attr.value)) {
+          errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', attr));
+        }
+      } else if (name === SettingName.Note) {
+        if (!isExpressionAQuotedString(attr.value)) {
+          errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', attr));
+        }
+      } else if (attr.value
+        && !isExpressionAQuotedString(attr.value)
+        && !isValidColor(attr.value)
+        && !isExpressionASignedNumberExpression(attr.value)
+        && !isSimpleName(attr.value)) {
+        errors.push(new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for setting '${name}'. Expected a string, number, color, or identifier`, attr));
+      }
+    }
+  }
+
+  return new Report(settingMap, errors);
 }

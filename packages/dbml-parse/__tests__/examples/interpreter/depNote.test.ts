@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { interpret } from '@tests/utils';
+import { interpret, analyze } from '@tests/utils';
 
 const PRELUDE = `
 Table a { id int }
@@ -98,5 +98,54 @@ Dep {
   }
 }`);
     expect(note).toBe('block form');
+  });
+});
+
+describe('dep settings validation', () => {
+  it('valid: color in setting list', () => {
+    const errors = analyze(`${PRELUDE}Dep: a -> b [color: #aabbcc]`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: note in setting list', () => {
+    const errors = analyze(`${PRELUDE}Dep: a -> b [note: 'hello']`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: custom string setting', () => {
+    const errors = analyze(`${PRELUDE}Dep: a -> b [owner: 'data-team']`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: custom identifier setting', () => {
+    const errors = analyze(`${PRELUDE}Dep [materialized: view] { a -> b }`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: custom numeric setting', () => {
+    const errors = analyze(`${PRELUDE}Dep [priority: 1] { a -> b }`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: custom color setting', () => {
+    const errors = analyze(`${PRELUDE}Dep: a -> b [highlight: #ff0000]`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('valid: multiple settings', () => {
+    const errors = analyze(`${PRELUDE}Dep: a -> b [color: #fff, note: 'x', owner: 'team']`).getErrors();
+    expect(errors).toHaveLength(0);
+  });
+
+  it('invalid: color with non-color value', () => {
+    const errors = analyze(`${PRELUDE}Dep: a -> b [color: notacolor]`).getErrors();
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.some((e) => e.message.includes('color'))).toBe(true);
+  });
+
+  it('invalid: note with non-string value', () => {
+    const errors = analyze(`${PRELUDE}Dep: a -> b [note: 123]`).getErrors();
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.some((e) => e.message.includes('note'))).toBe(true);
   });
 });
