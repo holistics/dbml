@@ -35,7 +35,7 @@ export function updateSettingEdit (
   newValue: string,
   source: string,
 ): TextEdit | undefined {
-  const found = findSetting(declaration, settingName, source);
+  const found = findSetting(source, declaration, settingName);
   if (!found) return undefined;
 
   return { start: found.settingNode.start, end: found.settingNode.end, newText: newValue };
@@ -50,7 +50,7 @@ export function removeSettingEdit (
   settingName: string,
   source: string,
 ): TextEdit | undefined {
-  const found = findSetting(declaration, settingName, source);
+  const found = findSetting(source, declaration, settingName);
   if (!found) return undefined;
 
   const { settingsList, settingIndex } = found;
@@ -75,7 +75,7 @@ export function removeSettingEdit (
 }
 
 // Find the setting node for a declaration node (field/element)
-function findSetting (declaration: SyntaxNode, settingName: string, source: string): {
+function findSetting (source: string, declaration: SyntaxNode, settingName: string): {
   settingsList: ListExpressionNode;
   settingNode: AttributeNode;
   settingIndex: number;
