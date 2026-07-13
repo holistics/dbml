@@ -7,6 +7,7 @@ import {
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   AttributeNode,
@@ -70,6 +71,7 @@ export class DepInterpreter {
     const downstreamTbls = this.metadata.downstreamTables(this.compiler);
 
     const edges: DepEdge[] = [];
+    const errors: CompileError[] = [];
     const count = Math.max(upstreamTbls.length, downstreamTbls.length);
     for (let i = 0; i < count; i++) {
       const upTbl = upstreamTbls[i];
@@ -79,6 +81,13 @@ export class DepInterpreter {
 
       const upTblName = upTbl?.interpretedName(this.compiler, this.filepath);
       const downTblName = downTbl?.interpretedName(this.compiler, this.filepath);
+
+      const upSchema = upTblName?.schema ?? null;
+      const downSchema = downTblName?.schema ?? null;
+      if (upTblName?.name && downTblName?.name && upTblName.name === downTblName.name && upSchema === downSchema) {
+        errors.push(new CompileError(CompileErrorCode.DEP_SELF_LOOP, `Self-loop Dep edge not allowed: "${upSchema ?? DEFAULT_SCHEMA_NAME}"."${upTblName.name}" cannot depend on itself`, this.declarationNode));
+        continue;
+      }
 
       edges.push({
         upstream: {
@@ -97,7 +106,7 @@ export class DepInterpreter {
       });
     }
     this.dep.edges = edges;
-    return [];
+    return errors;
   }
 
   /**

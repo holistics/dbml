@@ -101,6 +101,36 @@ Dep {
   });
 });
 
+describe('dep self-loop validation', () => {
+  it('should error on self-loop dep (short form)', () => {
+    const result = interpret(`
+      Table a { id int }
+      Dep: a -> a
+    `);
+    const errors = result.getErrors();
+    expect(errors.some((e) => e.diagnostic.includes('Self-loop'))).toBe(true);
+  });
+
+  it('should error on self-loop dep (block form)', () => {
+    const result = interpret(`
+      Table a { id int }
+      Dep { a -> a }
+    `);
+    const errors = result.getErrors();
+    expect(errors.some((e) => e.diagnostic.includes('Self-loop'))).toBe(true);
+  });
+
+  it('should not error on different tables', () => {
+    const result = interpret(`
+      Table a { id int }
+      Table b { id int }
+      Dep: a -> b
+    `);
+    const errors = result.getErrors();
+    expect(errors.filter((e) => e.diagnostic.includes('Self-loop'))).toHaveLength(0);
+  });
+});
+
 describe('dep settings validation', () => {
   it('valid: color in setting list', () => {
     const errors = analyze(`${PRELUDE}Dep: a -> b [color: #aabbcc]`).getErrors();
