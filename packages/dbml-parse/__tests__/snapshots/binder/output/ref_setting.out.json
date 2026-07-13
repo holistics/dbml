@@ -26,30 +26,6 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'Users.referrer' is nullable but operator '-' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
-          "snippet": "referrer i...[ref: -id]"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'Users.referrer' is nullable but operator '-' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@referrer@[L4:C4, L4:C31]",
-          "snippet": "referrer i...[ref: -id]"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'Users.referrer' should be unique or primary key for operator '-'",
       "filepath": "/main.dbml",
       "level": "info",

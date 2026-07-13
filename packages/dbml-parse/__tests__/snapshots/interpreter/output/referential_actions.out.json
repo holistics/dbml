@@ -926,18 +926,6 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'name.name' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@name@[L5:C2, L5:C21]",
-          "snippet": "\"name\" varchar(255)"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'orders.user_id' is unique but operator '<' allows many",
       "filepath": "/main.dbml",
       "level": "info",
@@ -962,7 +950,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_items.product_id' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Columns (order_items.product_id, order_items.product_name) are all nullable but operator '<' requires at least one to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
@@ -974,25 +962,13 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_items.product_name' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Columns (order_items.product_id, order_items.product_name) are all nullable but operator '<' requires at least one to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {
         "context": {
           "id": "node@<function-application>@product_name@[L18:C2, L18:C29]",
           "snippet": "\"product_n...rchar(255)"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'products.id' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@id@[L23:C2, L23:C10]",
-          "snippet": "\"id\" int"
         }
       }
     },
@@ -1022,43 +998,7 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'name.name' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L52:C4, L52:C29]",
-          "snippet": "\"products\"...\", \"name\")"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'products.id' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L52:C4, L52:C29]",
-          "snippet": "\"products\"...\", \"name\")"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_items.product_id' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L52:C32, L52:C76]",
-          "snippet": "\"order_ite...uct_name\")"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'order_items.product_name' is nullable but operator '<' requires it to be NOT NULL",
+      "diagnostic": "Columns (order_items.product_id, order_items.product_name) are all nullable but operator '<' requires at least one to be NOT NULL",
       "filepath": "/main.dbml",
       "level": "info",
       "node": {

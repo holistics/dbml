@@ -2,18 +2,6 @@
   "infos": [
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'b.id' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@id@[L1:C2, L1:C8]",
-          "snippet": "id int"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'b.id' should be unique or primary key for operator '<'",
       "filepath": "/main.dbml",
       "level": "info",
@@ -50,18 +38,6 @@
     },
     {
       "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'c.id' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<function-application>@id@[L6:C2, L6:C8]",
-          "snippet": "id int"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
       "diagnostic": "Column 'c.id' should be unique or primary key for operator '<'",
       "filepath": "/main.dbml",
       "level": "info",
@@ -69,18 +45,6 @@
         "context": {
           "id": "node@<function-application>@id@[L6:C2, L6:C8]",
           "snippet": "id int"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'b.id' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L11:C15, L11:C19]",
-          "snippet": "b.id"
         }
       }
     },
@@ -104,18 +68,6 @@
       "node": {
         "context": {
           "id": "node@<infix-expression>@@[L11:C22, L11:C26]",
-          "snippet": "c.id"
-        }
-      }
-    },
-    {
-      "code": "INVALID_REF_RELATIONSHIP",
-      "diagnostic": "Column 'c.id' is nullable but operator '<' requires it to be NOT NULL",
-      "filepath": "/main.dbml",
-      "level": "info",
-      "node": {
-        "context": {
-          "id": "node@<infix-expression>@@[L15:C2, L15:C6]",
           "snippet": "c.id"
         }
       }

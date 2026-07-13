@@ -139,8 +139,9 @@ describe('[example] code actions - ref constraint quick fixes', () => {
         Ref: posts.(user_id, tenant_id) > users.(id, tenant_id)
       `;
       const fixes = getQuickFixes(source);
-      expect(fixes.some((f) => f.title.includes('NOT NULL'))).toBe(true);
-      expect(fixes.some((f) => f.title.includes('user_id'))).toBe(true);
+      // Only one column is nullable, so no nullability fix is suggested.
+      // A composite FK is only nullable when ALL columns are nullable.
+      expect(fixes.some((f) => f.title.includes('NOT NULL'))).toBe(false);
     });
 
     test('composite > with all not-null columns and composite unique index produces no fixes', () => {

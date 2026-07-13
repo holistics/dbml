@@ -15,57 +15,73 @@ import {
 import { addSettingEdit, removeSettingEdit } from '@/core/utils/setting';
 import type { RefMetadata, PartialRefMetadata } from '@/core/types/symbol/metadata';
 
-// Validate one side of a ref operator against column constraints.
-// A cardinality constrains:
-//   min >= 1 -> otherColumns must be NOT NULL
-//   max = 1  -> ownColumns must be unique/pk
-// A column not nullability constrains the other side's cardinality to be min >= 1
-// A column unique constraint its side's cardinality to be max = 1
+// Check consistency between a ref's cardinality and column constraints for one side.
+//   - cardinality -> columns: does the operator match the column constraints?
+//   - columns -> cardinality: do the column constraints suggest a different operator?
 //
-// For each mismatch, two infos are emitted:
-//   1. On the ref endpoint node
-//   2. On the column declaration
+// NOTE: Nullability checks only apply when the other side is the "source" (FK) side:
+//   - many-to-one / one-to-many: the many side is the source -> < requires the many side to be non-nullable, but doesn't require the one side (a PK can still not be mapped to a source)
+//   - one-to-one: the right side is the source (SQL exporter convention)
 export function validateCardinality (
   compiler: Compiler,
   meta: RefMetadata | PartialRefMetadata,
-  side: 'left' | 'right',
-  options?: { allowOtherColFix?: boolean; allowOwnColFix?: boolean },
+  side: 'left' | 'right', // Whether we're validating the left side or the right side
+  options?: {
+    allowOtherColFix?: boolean; // Whether the side we're owning is fixable
+    allowOwnColFix?: boolean; // Whether the side we're not owning is fixable
+  },
 ): CompileInfo[] {
   const { allowOtherColFix = true, allowOwnColFix = true } = options ?? {};
-  const opToken = meta.opToken();
-  const cardinalities = meta.cardinalities(compiler);
-  if (!cardinalities) return [];
-  const thisRel = side === 'left' ? cardinalities[0] : cardinalities[1];
-  const otherRel = side === 'left' ? cardinalities[1] : cardinalities[0];
-  const card = parseCardinality(thisRel);
 
-  const otherColumns = side === 'left'
-    ? meta.rightColumns(compiler)
-    : meta.leftColumns(compiler);
+  const op = meta.op(compiler); // <, <?, etc.
+  const opToken = meta.opToken();
+  const cardinalities = meta.cardinalities(compiler); // a pair of 0..1, 1, *, etc.
+  if (!op || !opToken || !cardinalities) return [];
+
+  const rawOwnCard = side === 'left' ? cardinalities[0] : cardinalities[1];
+  const ownCard = parseCardinality(rawOwnCard); // Our side of cardinality, example: < + `left` side = `1`
+
+  const rawOtherCard = side === 'left' ? cardinalities[1] : cardinalities[0];
+  const otherCard = parseCardinality(rawOtherCard); // Other side of cardinality, example: < + `right` side = `*`
+
   const ownColumns = side === 'left'
     ? meta.leftColumns(compiler)
     : meta.rightColumns(compiler);
-  const otherNode = side === 'left'
-    ? meta.rightToken()
-    : meta.leftToken();
+  const otherColumns = side === 'left'
+    ? meta.rightColumns(compiler)
+    : meta.leftColumns(compiler);
+
   const ownNode = side === 'left'
     ? meta.leftToken()
     : meta.rightToken();
+  const otherNode = side === 'left'
+    ? meta.rightToken()
+    : meta.leftToken();
 
-  const op = meta.op(compiler) ?? '?';
   const infos: CompileInfo[] = [];
 
-  if (card.min >= 1) {
-    for (const col of otherColumns) {
-      if (col.nullable(compiler)) {
-        const qname = col.qualifiedName(compiler);
-        const msg = `Column '${qname}' is nullable but operator '${op}' requires it to be NOT NULL`;
-        const fixes = [
-          opToken && suggestChangeOp(opToken, makeCardinalityOptional(thisRel), otherRel, side, `Make '${qname}' optional in the ref`),
-          allowOtherColFix && suggestMakeNotNull(col, compiler),
-        ].filter((f): f is QuickFix => !!f);
+  // Determine if the other side is the source (FK) side.
+  // Nullability checks on otherColumns only make sense for the source side.
+  const otherIsSource = otherCard.max === '*' || (ownCard.max === 1 && otherCard.max === 1 && side === 'left');
 
-        infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
+  /* Nullability vs cardinality min */
+
+  // card.min >= 1: other (source) columns must not all be nullable.
+  // A composite FK is only nullable when ALL columns are nullable.
+  if (ownCard.min >= 1 && otherIsSource) {
+    const allOtherNullable = otherColumns.length > 0 && otherColumns.every((col) => col.nullable(compiler));
+    if (allOtherNullable) {
+      const qnames = otherColumns.map((c) => c.qualifiedName(compiler)).join(', ');
+      const msg = otherColumns.length === 1
+        ? `Column '${qnames}' is nullable but operator '${op}' requires it to be NOT NULL`
+        : `Columns (${qnames}) are all nullable but operator '${op}' requires at least one to be NOT NULL`;
+      const fixes = [
+        opToken && suggestChangeOp(opToken, makeCardinalityOptional(rawOwnCard), rawOtherCard, side, `Make '${qnames}' optional in the ref`),
+        ...(allowOtherColFix ? otherColumns.map((col) => suggestMakeNotNull(col, compiler)).filter((f): f is QuickFix => !!f) : []),
+      ].filter((f): f is QuickFix => !!f);
+
+      infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, otherNode, { quickFixes: fixes }));
+      for (const col of otherColumns) {
         if (col.declaration) {
           infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, col.declaration, { quickFixes: fixes }));
         }
@@ -73,8 +89,8 @@ export function validateCardinality (
     }
   }
 
-  // Reverse: column NOT NULL constrains other side's cardinality min >= 1
-  if (card.min === 0) {
+  // card.min === 0: if other (source) columns are all NOT NULL, this side should be required.
+  if (ownCard.min === 0 && otherIsSource) {
     const allOtherNotNull = otherColumns.length > 0 && otherColumns.every((col) => col.nullable(compiler) === false);
     if (allOtherNotNull) {
       const qnames = otherColumns.map((c) => c.qualifiedName(compiler)).join(', ');
@@ -82,7 +98,7 @@ export function validateCardinality (
         ? `Column '${qnames}' is NOT NULL but operator '${op}' allows it to be optional`
         : `Columns (${qnames}) are NOT NULL but operator '${op}' allows them to be optional`;
       const fixes = [
-        opToken && suggestChangeOp(opToken, makeCardinalityRequired(thisRel), otherRel, side, `Make '${qnames}' required in the ref`),
+        opToken && suggestChangeOp(opToken, makeCardinalityRequired(rawOwnCard), rawOtherCard, side, `Make '${qnames}' required in the ref`),
         ...(allowOtherColFix ? otherColumns.map((col) => suggestMakeNullable(col, compiler)).filter((f): f is QuickFix => !!f) : []),
       ].filter((f): f is QuickFix => !!f);
 
@@ -95,14 +111,16 @@ export function validateCardinality (
     }
   }
 
-  // Reverse: column unique/pk constrains own side's cardinality max = 1
-  if (card.max === '*' && isColumnsUnique(compiler, ownColumns)) {
+  /* Uniqueness vs cardinality max */
+
+  // card.max === *: if ownColumns are unique/pk, max should be 1.
+  if (ownCard.max === '*' && isColumnsUnique(compiler, ownColumns)) {
     const qnames = ownColumns.map((c) => c.qualifiedName(compiler)).join(', ');
     const msg = ownColumns.length === 1
       ? `Column '${qnames}' is unique but operator '${op}' allows many`
       : `Columns (${qnames}) have a unique index but operator '${op}' allows many`;
     const fixes = [
-      opToken && suggestChangeOp(opToken, CARDINALITY_ONE, otherRel, side, `Make '${qnames}' one in the ref`),
+      opToken && suggestChangeOp(opToken, CARDINALITY_ONE, rawOtherCard, side, `Make '${qnames}' one in the ref`),
     ].filter((f): f is QuickFix => !!f);
 
     infos.push(new CompileInfo(CompileErrorCode.INVALID_REF_RELATIONSHIP, msg, ownNode, { quickFixes: fixes }));
@@ -113,13 +131,14 @@ export function validateCardinality (
     }
   }
 
-  if (card.max === 1 && !isColumnsUnique(compiler, ownColumns)) {
+  // card.max === 1: ownColumns should be unique/pk.
+  if (ownCard.max === 1 && !isColumnsUnique(compiler, ownColumns)) {
     const qnames = ownColumns.map((c) => c.qualifiedName(compiler)).join(', ');
     const msg = ownColumns.length === 1
       ? `Column '${qnames}' should be unique or primary key for operator '${op}'`
       : `Columns (${qnames}) should have a composite unique index for operator '${op}'`;
     const fixes = [
-      opToken && suggestChangeOp(opToken, makeCardinalityMany(thisRel), otherRel, side, `Make '${qnames}' many in the ref`),
+      opToken && suggestChangeOp(opToken, makeCardinalityMany(rawOwnCard), rawOtherCard, side, `Make '${qnames}' many in the ref`),
       allowOwnColFix && ownColumns.length === 1 && suggestMakeUnique(ownColumns[0], compiler),
     ].filter((f): f is QuickFix => !!f);
 
