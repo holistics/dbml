@@ -29,9 +29,9 @@ import {
   isValidDefaultValue,
   isValidName,
   isValidPartialInjection,
-  validateCustomInlineMetadata,
 } from '@/core/utils/validate';
 import { TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class TableValidator {
   private declarationNode: ElementDeclarationNode;

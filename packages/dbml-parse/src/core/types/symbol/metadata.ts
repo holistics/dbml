@@ -5,7 +5,6 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   InfixExpressionNode,
-  MetadataDeclarationNode,
   PrefixExpressionNode,
   type SyntaxNode,
 } from '../nodes';
@@ -391,13 +390,15 @@ export class RecordsMetadata extends NodeMetadata {
   }
 }
 
-// Metadata element block: `Metadata <target-kind> <qualified-name> { ... }`
+// Metadata element block: `Metadata <target-kind> <qualified-name> { ... }`.
+// The declaration is an ElementDeclarationNode with `type.value === 'metadata'`, its
+// target-kind in `targetKind` and its qualified target name in `name`.
 export class MetadataElementMetadata extends NodeMetadata {
-  declare declaration: MetadataDeclarationNode;
+  declare declaration: ElementDeclarationNode;
 
   readonly kind = MetadataKind.MetadataElement;
 
-  constructor (declaration: MetadataDeclarationNode) {
+  constructor (declaration: ElementDeclarationNode) {
     super(declaration);
   }
 
@@ -405,7 +406,7 @@ export class MetadataElementMetadata extends NodeMetadata {
   // Resolved via the header-name referee, which metadataModule.nodeReferee
   // maps to the target through resolveMetadataTarget.
   target (compiler: Compiler): NodeSymbol | undefined {
-    const nameNode = this.declaration.targetName;
+    const nameNode = this.declaration.name;
     if (!nameNode) return undefined;
     // The rightmost fragment of the qualified header name (e.g. `users` in `public.users`) is what metadataModule.nodeReferee resolves to the target.
     const targetNode = getRightmostVariable(nameNode) ?? nameNode;

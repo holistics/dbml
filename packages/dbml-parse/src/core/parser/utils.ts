@@ -16,7 +16,6 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
-  MetadataDeclarationNode,
   NormalExpressionNode,
   PostfixExpressionNode,
   PrefixExpressionNode,
@@ -130,17 +129,12 @@ function markInvalidToken (token: SyntaxToken) {
 function markInvalidNode (node: SyntaxNode) {
   if (node instanceof ElementDeclarationNode) {
     markInvalid(node.type);
+    markInvalid(node.targetKind);
     markInvalid(node.name);
     markInvalid(node.as);
     markInvalid(node.alias);
     markInvalid(node.bodyColon);
     markInvalid(node.attributeList);
-    markInvalid(node.body);
-  } else if (node instanceof MetadataDeclarationNode) {
-    markInvalid(node.metadataKeyword);
-    markInvalid(node.targetKind);
-    markInvalid(node.targetName);
-    markInvalid(node.bodyColon);
     markInvalid(node.body);
   } else if (node instanceof IdentifierStreamNode) {
     node.identifiers.forEach(markInvalid);
@@ -234,20 +228,11 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   if (node instanceof ElementDeclarationNode) {
     return filterUndefined(
       node.type,
+      node.targetKind,
       node.name,
       node.as,
       node.alias,
       node.attributeList,
-      node.bodyColon,
-      node.body,
-    );
-  }
-
-  if (node instanceof MetadataDeclarationNode) {
-    return filterUndefined(
-      node.metadataKeyword,
-      node.targetKind,
-      node.targetName,
       node.bodyColon,
       node.body,
     );

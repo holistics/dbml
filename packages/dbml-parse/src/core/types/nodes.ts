@@ -7,7 +7,7 @@ import { ImportKind } from '@/core/types/symbol';
 import { Position } from '@/core/types/position';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import { isReuseKeyword } from '@/core/utils/tokens';
-import { MetadataTargetKind, SymbolKind } from './symbol';
+import { SymbolKind } from './symbol';
 
 export type SyntaxNodeId = number;
 export type InternedSyntaxNode = string;
@@ -155,7 +155,6 @@ export class SyntaxNode implements Internable<InternedSyntaxNode> {
 export enum SyntaxNodeKind {
   PROGRAM = '<program>',
   ELEMENT_DECLARATION = '<element-declaration>',
-  METADATA_DECLARATION = '<metadata-declaration>',
   USE_DECLARATION = '<use-declaration>',
   USE_SPECIFIER = '<use-specifier>',
   USE_SPECIFIER_LIST = '<use-specifier-list>',
@@ -189,7 +188,7 @@ export enum SyntaxNodeKind {
 // Form: (<element-declaration> | <use-declaration>)*
 // The root node of a DBML program containing top-level statements in source order.
 export class ProgramNode extends SyntaxNode {
-  body: (UseDeclarationNode | ElementDeclarationNode | MetadataDeclarationNode)[];
+  body: (UseDeclarationNode | ElementDeclarationNode)[];
 
   eof?: SyntaxToken;
 
@@ -201,7 +200,7 @@ export class ProgramNode extends SyntaxNode {
       eof,
       source,
     }: {
-      body?: (UseDeclarationNode | ElementDeclarationNode | MetadataDeclarationNode)[];
+      body?: (UseDeclarationNode | ElementDeclarationNode)[];
       eof?: SyntaxToken;
       source: string;
     },
@@ -218,15 +217,21 @@ export class ProgramNode extends SyntaxNode {
   }
 
   get declarations (): ElementDeclarationNode[] {
-    return this.body.filter((s): s is ElementDeclarationNode => s.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
+    // Custom-metadata blocks are also ELEMENT_DECLARATION nodes; exclude them here so
+    // element consumers never receive a metadata block.
+    return this.body.filter((s): s is ElementDeclarationNode =>
+      s.kind === SyntaxNodeKind.ELEMENT_DECLARATION
+      && (s as ElementDeclarationNode).type?.value.toLowerCase() !== 'metadata');
   }
 
   get uses (): UseDeclarationNode[] {
     return this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
   }
 
-  get metadata (): MetadataDeclarationNode[] {
-    return this.body.filter((s): s is MetadataDeclarationNode => s.kind === SyntaxNodeKind.METADATA_DECLARATION);
+  get metadata (): ElementDeclarationNode[] {
+    return this.body.filter((s): s is ElementDeclarationNode =>
+      s.kind === SyntaxNodeKind.ELEMENT_DECLARATION
+      && (s as ElementDeclarationNode).type?.value.toLowerCase() === 'metadata');
   }
 }
 
@@ -380,75 +385,22 @@ export class UseSpecifierListNode extends SyntaxNode {
   }
 }
 
-// Form: metadata <target-kind> <target-name> { <field>* }
-// A top-level declaration that annotates an existing element with metadata.
-// It does NOT declare a new element: it only targets one (a `targetKind` plus a
-// qualified `targetName` together identify the target). Hence no alias/settings.
-// e.g. Metadata Table public.users { owner: 'scott' }
-// e.g. Metadata Column public.users.id { pii: true }
-export class MetadataDeclarationNode extends SyntaxNode {
-  metadataKeyword?: SyntaxToken;
-
-  // The target-kind identifier (the `table` in `Metadata Table public.users`).
-  targetKind?: SyntaxToken;
-
-  // The qualified name of the targeted element (e.g. `public.users`).
-  targetName?: NormalExpressionNode;
-
-  // Kept so a `:`-style simple body still triggers UNEXPECTED_SIMPLE_BODY.
-  bodyColon?: SyntaxToken;
-
-  body?: FunctionApplicationNode | BlockExpressionNode;
-
-  constructor (
-    {
-      metadataKeyword,
-      targetKind,
-      targetName,
-      bodyColon,
-      body,
-    }: {
-      metadataKeyword?: SyntaxToken;
-      targetKind?: SyntaxToken;
-      targetName?: NormalExpressionNode;
-      bodyColon?: SyntaxToken;
-      body?: BlockExpressionNode | FunctionApplicationNode;
-    },
-    id: SyntaxNodeId,
-    filepath: Filepath,
-  ) {
-    super(
-      id,
-      SyntaxNodeKind.METADATA_DECLARATION,
-      filepath,
-      [
-        metadataKeyword,
-        targetKind,
-        targetName,
-        bodyColon,
-        body,
-      ],
-    );
-    this.metadataKeyword = metadataKeyword;
-    this.targetKind = targetKind;
-    this.targetName = targetName;
-    this.bodyColon = bodyColon;
-    this.body = body;
-  }
-
-  // Resolve the target-kind token to a known MetadataTargetKind, or undefined.
-  getTargetKind (): MetadataTargetKind | undefined {
-    const value = this.targetKind?.value?.toLowerCase();
-    return Object.values(MetadataTargetKind).find((k) => k.toLowerCase() === value);
-  }
-}
-
-// Form: <type> [<name>] [as <alias>] [<attribute-list>] (: <body> | { <body> })
+// Form: <type> [<target-kind>] [<name>] [as <alias>] [<attribute-list>] (: <body> | { <body> })
 // A declaration of a DBML element like Table, Ref, Enum, etc.
 // e.g. Table users { ... }
 // e.g. Ref: users.id > posts.user_id
+//
+// A custom-metadata block is also an ElementDeclarationNode: its `type` token is the
+// `metadata` keyword and it additionally carries a `targetKind` (the `Table` in
+// `metadata Table public.users`) with the qualified target name in `name`. Because
+// `metadata` is not an ElementKind, such a node never matches the element-kind modules.
+// Use getMetadataTargetKind() (core/utils/validate) to work with it.
+// e.g. metadata Table public.users { owner: 'scott' }
 export class ElementDeclarationNode extends SyntaxNode {
   type?: SyntaxToken;
+
+  // Only set for a custom-metadata block: the target-kind token (e.g. `Table`).
+  targetKind?: SyntaxToken;
 
   name?: NormalExpressionNode;
 
@@ -465,6 +417,7 @@ export class ElementDeclarationNode extends SyntaxNode {
   constructor (
     {
       type,
+      targetKind,
       name,
       as,
       alias,
@@ -473,6 +426,7 @@ export class ElementDeclarationNode extends SyntaxNode {
       body,
     }: {
       type?: SyntaxToken;
+      targetKind?: SyntaxToken;
       name?: NormalExpressionNode;
       as?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -489,6 +443,7 @@ export class ElementDeclarationNode extends SyntaxNode {
       filepath,
       [
         type,
+        targetKind,
         name,
         as,
         alias,
@@ -505,6 +460,7 @@ export class ElementDeclarationNode extends SyntaxNode {
     }
 
     this.type = type;
+    this.targetKind = targetKind;
     this.name = name;
     this.as = as;
     this.alias = alias;

@@ -25,8 +25,8 @@ import {
   isValidColumnType,
   isValidDefaultValue,
   isValidHexColor,
-  validateCustomInlineMetadata,
 } from '@/core/utils/validate';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class TablePartialValidator {
   private compiler: Compiler;

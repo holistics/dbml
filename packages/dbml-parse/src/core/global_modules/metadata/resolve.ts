@@ -1,8 +1,9 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '@/compiler/index';
-import { MetadataDeclarationNode } from '@/core/types/nodes';
+import { ElementDeclarationNode } from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
 import { destructureComplexVariable } from '@/core/utils/expression';
+import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import { getDefaultSchemaSymbol, getProgramSymbol } from '../utils';
 
 type NameWithSymbolKind = {
@@ -53,12 +54,12 @@ export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Metada
 
 // Resolve the target element a Metadata declaration annotates, from its
 // `<target-kind> <qualified-name>` header. Returns undefined if it does not exist.
-export function resolveMetadataTarget (compiler: Compiler, metadataNode: MetadataDeclarationNode): NodeSymbol | undefined {
+export function resolveMetadataTarget (compiler: Compiler, metadataNode: ElementDeclarationNode): NodeSymbol | undefined {
   const globalSymbol = getProgramSymbol(compiler, metadataNode.filepath);
   if (!globalSymbol) return undefined;
 
-  const targetKind = metadataNode.getTargetKind();
-  const nameParts = destructureComplexVariable(metadataNode.targetName);
+  const targetKind = getMetadataTargetKind(metadataNode);
+  const nameParts = destructureComplexVariable(metadataNode.name);
   if (!nameParts?.length || !targetKind) return undefined;
 
   const namePartAndSymbolKind = mapNamePartToSymbolKind(nameParts, targetKind);

@@ -1,4 +1,4 @@
-import type { CustomMetadata, Filepath } from '@dbml/parse';
+import type { Filepath } from '@dbml/parse';
 
 export type Color = `#${string}` | 'none';
 

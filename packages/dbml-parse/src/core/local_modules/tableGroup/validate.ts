@@ -7,10 +7,9 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import {
-  Settings, aggregateSettingList, isSimpleName, validateCustomInlineMetadata,
-} from '@/core/utils/validate';
+import { Settings, aggregateSettingList, isSimpleName } from '@/core/utils/validate';
 import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class TableGroupValidator {
   private declarationNode: ElementDeclarationNode;
@@ -86,46 +85,7 @@ export default class TableGroupValidator {
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    const aggReport = aggregateSettingList(settingList);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-
-    for (const [
-      name,
-      attrs,
-    ] of Object.entries(settingMap)) {
-      switch (name) {
-        case SettingName.Color:
-        case SettingName.Note: {
-          const spec = TABLEGROUP_METADATA_FIELDS[name as SettingName.Color | SettingName.Note]!;
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_TABLE_SETTING,
-              `'${name}' can only appear once`,
-              attr,
-            )));
-          }
-          attrs.forEach((attr) => {
-            if (!spec.isValidBuiltinFieldValue(attr.value)) {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-                spec.message,
-                attr.value || attr.name!,
-              ));
-            }
-          });
-          break;
-        }
-        default:
-          // Any non-builtin key is free-form inline custom metadata.
-          errors.push(...validateCustomInlineMetadata(name, attrs, {
-            duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
-            invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-          }));
-          break;
-      }
-    }
-    return errors;
+    return validateSettingList(settingList).getErrors();
   }
 
   validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -186,14 +146,11 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
   const settingMap = aggReport.getValue();
   const clean: Settings = {};
 
-  for (const [
-    name,
-    attrs,
-  ] of Object.entries(settingMap)) {
+  for (const [name, attrs] of Object.entries(settingMap)) {
     switch (name) {
       case SettingName.Color:
       case SettingName.Note: {
-        const field = TABLEGROUP_METADATA_FIELDS[name as SettingName.Color | SettingName.Note]!;
+        const specs = TABLEGROUP_METADATA_FIELDS[name as SettingName.Color | SettingName.Note]!;
         if (attrs.length > 1) {
           errors.push(...attrs.map((attr) => new CompileError(
             CompileErrorCode.DUPLICATE_TABLE_SETTING,
@@ -202,10 +159,10 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
           )));
         }
         attrs.forEach((attr) => {
-          if (!field.isValidBuiltinFieldValue(attr.value)) {
+          if (!specs.isValidBuiltinFieldValue(attr.value)) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-              field.message,
+              specs.message,
               attr.value || attr.name!,
             ));
           }
@@ -214,8 +171,7 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
         break;
       }
       default:
-        // Any non-builtin key is free-form inline custom metadata. Keep it in
-        // the returned map so the interpreter can harvest it onto `metadata`.
+        // Any non-builtin key is free-form inline custom metadata..
         errors.push(
           ...validateCustomInlineMetadata(name, attrs, {
             duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,

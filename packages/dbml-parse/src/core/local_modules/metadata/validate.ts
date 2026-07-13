@@ -5,7 +5,6 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  MetadataDeclarationNode,
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
@@ -13,20 +12,21 @@ import { isValidMetadataValue, isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
 import { MetadataTargetKind } from '@/core/types/symbol';
 import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/fieldRegistry';
+import { getMetadataTargetKind } from './utils';
 
 export default class MetadataValidator {
-  constructor (private compiler: Compiler, private declarationNode: MetadataDeclarationNode) {}
+  constructor (private compiler: Compiler, private declarationNode: ElementDeclarationNode) {}
 
   validate (): CompileError[] {
     return [
       ...this.validateTargetKind(),
-      ...this.validateTargetName(this.declarationNode.targetName),
+      ...this.validateTargetName(this.declarationNode.name),
       ...this.validateBody(this.declarationNode.body),
     ];
   }
 
   private validateTargetKind (): CompileError[] {
-    if (!this.declarationNode.getTargetKind()) {
+    if (!getMetadataTargetKind(this.declarationNode)) {
       return [
         new CompileError(
           CompileErrorCode.INVALID_METADATA_TARGET_KIND,
@@ -104,7 +104,7 @@ export default class MetadataValidator {
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     const keyValuesMap: Record<string, ElementDeclarationNode[]> = {};
-    const targetKind = this.declarationNode.getTargetKind();
+    const targetKind = getMetadataTargetKind(this.declarationNode);
 
     const errors = subs.flatMap((sub) => {
       if (!sub.type) return [];

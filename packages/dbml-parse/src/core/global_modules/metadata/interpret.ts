@@ -6,16 +6,16 @@ import {
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
-  MetadataDeclarationNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { MetadataElement } from '@/core/types/schemaJson';
 import { getTokenPosition, normalizeNote } from '@/core/utils/interpret';
 import { destructureComplexVariable } from '@/core/utils/expression';
+import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import { extractMetadataValue } from '../../utils/interpret';
 
 export default class MetadataInterpreter {
-  private declarationNode: MetadataDeclarationNode;
+  private declarationNode: ElementDeclarationNode;
   private compiler: Compiler;
   private filepath: Filepath;
   private metadata: Partial<MetadataElement>;
@@ -43,13 +43,13 @@ export default class MetadataInterpreter {
   }
 
   private interpretTarget (): CompileError[] {
-    const kind = this.declarationNode.getTargetKind();
+    const kind = getMetadataTargetKind(this.declarationNode);
 
     if (!kind) return [];
 
     // The header name encodes the target identity directly:
     //   column: [column, table, schema?]   other: [name, schema?]
-    const name = destructureComplexVariable(this.declarationNode.targetName) ?? [];
+    const name = destructureComplexVariable(this.declarationNode.name) ?? [];
 
     this.metadata.target = { kind, name };
     return [];

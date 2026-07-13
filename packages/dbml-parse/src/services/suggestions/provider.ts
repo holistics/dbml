@@ -10,7 +10,6 @@ import {
   CallExpressionNode,
   CommaExpressionNode,
   ElementDeclarationNode,
-  MetadataDeclarationNode,
   FunctionApplicationNode,
   IdentifierStreamNode,
   InfixExpressionNode,
@@ -33,7 +32,7 @@ import {
   extractVariableFromExpression,
   isTupleEmpty,
 } from '@/core/utils/expression';
-import { isExpressionAVariableNode } from '@/core/utils/validate';
+import { isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
 import { isOffsetWithinElementHeader, isOffsetWithinSpan } from '@/core/utils/span';
 import { collectCrossFileSuggestions } from '@/services/suggestions/crossFile';
 import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
@@ -55,6 +54,7 @@ import {
   type TextModel,
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 
 export interface DBMLCompletionItemProviderOptions {
   triggerCharacters?: string[];
@@ -187,18 +187,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInSubField(this.compiler, filepath, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
         if (isOffsetWithinElementHeader(offset, container)) {
+          if (isElementNode(container, ElementKind.Metadata)) return suggestInMetadataHeader(this.compiler, filepath, offset, container);
           return suggestInElementHeader(this.compiler, filepath, offset, container);
-        }
-
-        if (
-          (container.bodyColon && offset >= container.bodyColon.end)
-          || (container.body && isOffsetWithinSpan(offset, container.body))
-        ) {
-          return suggestInSubField(this.compiler, filepath, offset, undefined);
-        }
-      } else if (container instanceof MetadataDeclarationNode) {
-        if (isOffsetWithinElementHeader(offset, container)) {
-          return suggestInMetadataHeader(this.compiler, filepath, offset, container);
         }
 
         if (
@@ -292,7 +282,7 @@ function suggestNamesInScope (
   compiler: Compiler,
   filepath: Filepath,
   offset: number,
-  parent: ElementDeclarationNode | MetadataDeclarationNode | ProgramNode | undefined,
+  parent: ElementDeclarationNode | ProgramNode | undefined,
   acceptedKinds: SymbolKind[],
 ): CompletionList {
   if (parent === undefined) {
@@ -321,7 +311,7 @@ function suggestNamesInScope (
       memberSuggestions.sort((a, b) => kindPriority(a.kind) - kindPriority(b.kind));
       res.suggestions.push(...memberSuggestions);
     }
-    curElement = (curElement instanceof ElementDeclarationNode || curElement instanceof MetadataDeclarationNode)
+    curElement = curElement instanceof ElementDeclarationNode
       ? curElement.parent
       : undefined;
   }
@@ -701,7 +691,7 @@ function resolveNameStack (
       const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
       candidates.push(...members || []);
     }
-    curElement = (curElement instanceof ElementDeclarationNode || curElement instanceof MetadataDeclarationNode)
+    curElement = curElement instanceof ElementDeclarationNode
       ? curElement.parent
       : undefined;
   }
@@ -988,11 +978,11 @@ function suggestInMetadataHeader (
   compiler: Compiler,
   filepath: Filepath,
   offset: number,
-  container: MetadataDeclarationNode,
+  container: ElementDeclarationNode,
 ): CompletionList {
   // Before/at the targetKind position -> suggest the allowed target kinds.
   // (No targetKind yet, an empty placeholder, or cursor still within the targetKind.)
-  const kind = container.getTargetKind();
+  const kind = getMetadataTargetKind(container);
   if (!kind || (offset <= container.targetKind!.end && offset >= container.targetKind!.start)) {
     return suggestMetadataTargetKinds();
   }

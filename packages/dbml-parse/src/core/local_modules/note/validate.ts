@@ -5,8 +5,9 @@ import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { aggregateSettingList, isExpressionAQuotedString, validateCustomInlineMetadata } from '@/core/utils/validate';
+import { aggregateSettingList, isExpressionAQuotedString } from '@/core/utils/validate';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class NoteValidator {
   private compiler: Compiler;

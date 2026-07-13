@@ -7,7 +7,6 @@ import {
   SyntaxNode,
   SyntaxNodeKind,
   ElementDeclarationNode,
-  MetadataDeclarationNode,
   AttributeNode,
   IdentifierStreamNode,
   PrefixExpressionNode,
@@ -149,22 +148,13 @@ export function print (source: string, ast: SyntaxNode): string {
       case SyntaxNodeKind.ELEMENT_DECLARATION: {
         const elem = node as ElementDeclarationNode;
         if (elem.type) collectTokens(elem.type);
+        if (elem.targetKind) collectTokens(elem.targetKind);
         if (elem.name) collectTokens(elem.name);
         if (elem.as) collectTokens(elem.as);
         if (elem.alias) collectTokens(elem.alias);
         if (elem.attributeList) collectTokens(elem.attributeList);
         if (elem.bodyColon) collectTokens(elem.bodyColon);
         if (elem.body) collectTokens(elem.body);
-        break;
-      }
-
-      case SyntaxNodeKind.METADATA_DECLARATION: {
-        const meta = node as MetadataDeclarationNode;
-        if (meta.metadataKeyword) collectTokens(meta.metadataKeyword);
-        if (meta.targetKind) collectTokens(meta.targetKind);
-        if (meta.targetName) collectTokens(meta.targetName);
-        if (meta.bodyColon) collectTokens(meta.bodyColon);
-        if (meta.body) collectTokens(meta.body);
         break;
       }
 
