@@ -74,8 +74,7 @@ export function removeSettingEdit (
   return { start: prevSetting.end, end: settingNode.end, newText: '' };
 }
 
-// --- Private helpers ---
-
+// Find the setting node for a declaration node (field/element)
 function findSetting (declaration: SyntaxNode, settingName: string, source: string): {
   settingsList: ListExpressionNode;
   settingNode: AttributeNode;
