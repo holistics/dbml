@@ -59,7 +59,7 @@ function checkForNameCollision (
   newTable: string,
 ): boolean {
   if (oldSchema === newSchema && oldTable === newTable) return false;
-  return lookupElementSymbol(compiler, filepath, newSchema, newTable) !== null;
+  return lookupElementSymbol(compiler, filepath, newSchema, newTable) !== undefined;
 }
 
 /**
