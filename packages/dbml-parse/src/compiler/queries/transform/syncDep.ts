@@ -33,14 +33,15 @@ import {
 import { destructureComplexVariable, extractStringFromIdentifierStream } from '@/core/utils/expression';
 import type Compiler from '../../index';
 import { addDoubleQuoteIfNeeded } from '../utils';
+import { endpointsEqual } from './utils';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
 import { updateNoteEdit, removeNoteEdit, addNoteEdit } from '@/core/utils/note';
-import { addSettingEdit, updateSettingEdit, removeSettingEdit } from '@/core/utils/setting';
+import { updateSettingEdit, removeSettingEdit } from '@/core/utils/setting';
 
 export interface DepEndpointRef {
-  schemaName?: string | null;
-  tableName: string;
-  fieldNames?: string[];
+  schema?: string;
+  table: string;
+  fields?: string[];
 }
 
 export interface DepSyncEdge {
@@ -50,7 +51,7 @@ export interface DepSyncEdge {
 
 export interface DepSyncOperation {
   operation: 'create' | 'update' | 'remove';
-  /** The edge that identifies the target block (table-level: empty fieldNames). */
+  /** The edge that identifies the target block (table-level: empty fields). */
   edge: DepSyncEdge;
   /** Set to a value to create/update, null to remove, undefined to leave unchanged. */
   color?: string | null;
@@ -127,6 +128,7 @@ export function findInlineDeps (source: string): InlineDep[] {
   const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
   if (lexerResult.getErrors().length > 0) return result;
   const tokens = lexerResult.getValue();
+
   const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
   if (ast.getErrors().length > 0) return result;
   const program = ast.getValue().ast;
@@ -137,7 +139,7 @@ export function findInlineDeps (source: string): InlineDep[] {
     if (tableFragments.length === 0) continue;
 
     const tableName = tableFragments[tableFragments.length - 1];
-    const schemaName = tableFragments.length > 1 ? tableFragments[tableFragments.length - 2] : null;
+    const schemaName = tableFragments.length > 1 ? tableFragments[tableFragments.length - 2] : undefined;
 
     const body = element.body;
     if (!body || body instanceof FunctionApplicationNode) continue;
@@ -147,9 +149,9 @@ export function findInlineDeps (source: string): InlineDep[] {
       if (!columnName) continue;
 
       const host: DepEndpointRef = {
-        schemaName,
-        tableName,
-        fieldNames: [
+        schema: schemaName,
+        table: tableName,
+        fields: [
           columnName,
         ],
       };
@@ -225,26 +227,17 @@ function fragmentsToEndpoint (fragments: string[], hasFields: boolean): DepEndpo
   if (fragments.length === 0) return undefined;
   if (!hasFields) {
     // [table] or [schema, table]
-    const tableName = fragments[fragments.length - 1];
-    const schemaName = fragments.length > 1 ? fragments[fragments.length - 2] : null;
-    return { schemaName, tableName, fieldNames: [] };
+    const table = fragments[fragments.length - 1];
+    const schema = fragments.length > 1 ? fragments[fragments.length - 2] : undefined;
+    return { schema, table, fields: [] };
   }
   // column endpoint: [table, field] or [schema, table, field]
-  const fieldNames = [
+  const fields = [
     fragments[fragments.length - 1],
   ];
-  const tableName = fragments[fragments.length - 2];
-  const schemaName = fragments.length > 2 ? fragments[fragments.length - 3] : null;
-  return { schemaName, tableName, fieldNames };
-}
-
-function endpointsEqual (a: DepEndpointRef, b: DepEndpointRef): boolean {
-  if (normalizeSchema(a.schemaName) !== normalizeSchema(b.schemaName)) return false;
-  if (a.tableName !== b.tableName) return false;
-  const fa = a.fieldNames ?? [];
-  const fb = b.fieldNames ?? [];
-  if (fa.length !== fb.length) return false;
-  return fa.every((f, i) => f === fb[i]);
+  const table = fragments[fragments.length - 2];
+  const schema = fragments.length > 2 ? fragments[fragments.length - 3] : undefined;
+  return { schema, table, fields };
 }
 
 function edgesEqual (a: DepSyncEdge, b: DepSyncEdge): boolean {
@@ -286,11 +279,11 @@ function attrName (attr: AttributeNode): string | undefined {
 }
 
 function formatEndpoint (endpoint: DepEndpointRef): string {
-  const schema = normalizeSchema(endpoint.schemaName);
+  const schema = normalizeSchema(endpoint.schema);
   const parts: string[] = [];
   if (schema !== DEFAULT_SCHEMA_NAME) parts.push(addDoubleQuoteIfNeeded(schema));
-  parts.push(addDoubleQuoteIfNeeded(endpoint.tableName));
-  for (const field of endpoint.fieldNames ?? []) parts.push(addDoubleQuoteIfNeeded(field));
+  parts.push(addDoubleQuoteIfNeeded(endpoint.table));
+  for (const field of endpoint.fields ?? []) parts.push(addDoubleQuoteIfNeeded(field));
   return parts.join('.');
 }
 

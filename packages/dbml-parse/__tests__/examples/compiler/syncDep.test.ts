@@ -20,8 +20,8 @@ Table b { id int }
 `;
 
 const tableEdge = (up: string, down: string): DepSyncOperation['edge'] => ({
-  upstream: { tableName: up, fieldNames: [] },
-  downstream: { tableName: down, fieldNames: [] },
+  upstream: { table: up, fields: [] },
+  downstream: { table: down, fields: [] },
 });
 
 describe('syncDep - create', () => {
@@ -118,8 +118,8 @@ Dep {
       {
         operation: 'update',
         edge: {
-          upstream: { tableName: 'a', fieldNames: ['id'] },
-          downstream: { tableName: 'b', fieldNames: ['id'] },
+          upstream: { table: 'a', fields: ['id'] },
+          downstream: { table: 'b', fields: ['id'] },
         },
         color: '#abcabc',
       },

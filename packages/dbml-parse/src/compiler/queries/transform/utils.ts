@@ -4,7 +4,20 @@ import { UNHANDLED } from '@/core/types/module';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { splitQualifiedIdentifier } from '../utils';
+import type { EndpointRef } from './types';
 export type { ElementIdentifier } from './types';
+
+// Compares two endpoint refs for equality (schema-aware, field-aware)
+export function endpointsEqual (a: EndpointRef, b: EndpointRef): boolean {
+  const sa = (a.schema && a.schema.length > 0) ? a.schema : DEFAULT_SCHEMA_NAME;
+  const sb = (b.schema && b.schema.length > 0) ? b.schema : DEFAULT_SCHEMA_NAME;
+  if (sa !== sb) return false;
+  if (a.table !== b.table) return false;
+  const fa = a.fields ?? [];
+  const fb = b.fields ?? [];
+  if (fa.length !== fb.length) return false;
+  return fa.every((f, i) => f === fb[i]);
+}
 
 export function normalizeTableName (input: string | { schema?: string; table: string }): {
   schema: string;
@@ -58,19 +71,19 @@ export function lookupElementSymbol (
   schema: string,
   name: string,
   kind: SymbolKind = SymbolKind.Table,
-): NodeSymbol | null {
+): NodeSymbol | undefined {
   const ast = compiler.parseFile(filepath).getValue().ast;
   const astSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
-  if (!astSymbol) return null;
+  if (!astSymbol) return undefined;
 
   if (schema === DEFAULT_SCHEMA_NAME) {
-    return compiler.lookupMembers(astSymbol, kind, name) ?? null;
+    return compiler.lookupMembers(astSymbol, kind, name) ?? undefined;
   }
 
   const schemaSymbol = compiler.lookupMembers(astSymbol, SymbolKind.Schema, schema);
-  if (!schemaSymbol) return null;
+  if (!schemaSymbol) return undefined;
 
-  return compiler.lookupMembers(schemaSymbol, kind, name) ?? null;
+  return compiler.lookupMembers(schemaSymbol, kind, name) ?? undefined;
 }
 
 /**

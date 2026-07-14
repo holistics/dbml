@@ -1,21 +1,64 @@
-/**
- * General-purpose setting edit utilities for any element declaration.
- * Produces TextEdits for adding, updating, and removing settings in [...] blocks.
- */
-
 import {
   FunctionApplicationNode, ListExpressionNode, AttributeNode, ElementDeclarationNode,
-  IdentifierStreamNode,
 } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { TextEdit } from '@/compiler/queries/transform/applyTextEdits';
-import { extractStringFromIdentifierStream } from '@/core/utils/expression';
+import { extractSettingName } from './expression';
+import { hasSimpleBody } from './validate';
 
-/**
- * Produces a TextEdit that adds a setting to a field/element declaration.
- * If the declaration already has a settings block [...], inserts before the closing ].
- * Otherwise, appends a new [setting] block.
- */
+// The form a setting appears in
+export type SettingLocation =
+  // [key: value] inside a [...] attribute list
+  | {
+    kind: 'attribute';
+    settingsList: ListExpressionNode;
+    settingNode: AttributeNode;
+    settingIndex: number;
+  }
+  // key: value as a body sub-declaration (short form)
+  | {
+    kind: 'body';
+    declaration: ElementDeclarationNode;
+  }
+  // not found
+  | undefined;
+
+// Locates a setting on a declaration node and returns its form
+export function findSetting (declaration: SyntaxNode, settingName: string): SettingLocation {
+  // check [...] attribute list
+  const settingsList = findSettingsList(declaration);
+  if (settingsList) {
+    const elements = settingsList.elementList ?? [];
+
+    const settingIndex = elements.findIndex((element) => {
+      if (!(element instanceof AttributeNode)) return false;
+      return extractSettingName(element)?.toLowerCase() === settingName.toLowerCase();
+    });
+
+    if (settingIndex !== -1) {
+      return {
+        kind: 'attribute',
+        settingsList,
+        settingNode: elements[settingIndex] as AttributeNode,
+        settingIndex,
+      };
+    }
+  }
+
+  if (declaration instanceof ElementDeclarationNode) {
+  // check body sub-declaration (e.g. `color: #hex` or `note { 'text' }`)
+    const sub = findBodySetting(declaration, settingName);
+    if (sub) {
+      return { kind: 'body', declaration: sub };
+    }
+  }
+
+  return undefined;
+}
+
+// Adds a setting to a declaration that doesn't have it yet.
+// If the declaration has a [...] list, appends to it.
+// Otherwise inserts a new [...] block.
 export function addSettingEdit (declaration: SyntaxNode, setting: string): TextEdit | undefined {
   const settingsList = findSettingsList(declaration);
   if (settingsList) {
@@ -23,7 +66,7 @@ export function addSettingEdit (declaration: SyntaxNode, setting: string): TextE
     return { start: insertOffset, end: insertOffset, newText: `, ${setting}` };
   }
 
-  // For block-form elements, insert `[setting]` before the body `{`
+  // for block-form elements, insert [setting] before the body {
   if (declaration instanceof ElementDeclarationNode) {
     const body = declaration.body;
     if (body && !(body instanceof FunctionApplicationNode)) {
@@ -34,13 +77,11 @@ export function addSettingEdit (declaration: SyntaxNode, setting: string): TextE
   return { start: declaration.end, end: declaration.end, newText: ` [${setting}]` };
 }
 
-/**
- * Produces a TextEdit that updates a setting's value in a declaration.
- * value: string - update or create with "name: value"
- * value: undefined - name-only setting (e.g. [pk])
- * value: null - remove the setting
- * If the setting does not exist, adds it.
- */
+// Updates, creates, or removes a setting on a declaration.
+// - value: string -> update or create with "name: value"
+// - value: undefined -> name-only setting (e.g. [pk])
+// - value: null -> remove the setting
+// If the setting does not exist, adds it.
 export function updateSettingEdit (
   declaration: SyntaxNode,
   settingName: string,
@@ -56,70 +97,59 @@ export function updateSettingEdit (
     ? `${settingName}: ${value}`
     : settingName;
 
-  const found = findSetting(declaration, settingName);
-  if (found) {
-    return { start: found.settingNode.start, end: found.settingNode.end, newText: settingText };
+  const located = findSetting(declaration, settingName);
+  if (located) {
+    const node = located.kind === 'attribute' ? located.settingNode : located.declaration;
+    return { start: node.start, end: node.end, newText: settingText };
   }
 
-  // Fall back to body sub-declaration (e.g. `color: #hex` as a body statement)
-  const sub = findBodySubDeclaration(declaration, settingName);
-  if (sub) {
-    return { start: sub.start, end: sub.end, newText: settingText };
-  }
-
-  // Setting not present - add it
+  // setting not present - add it
   return addSettingEdit(declaration, settingText);
 }
 
-/**
- * Produces a TextEdit that removes a setting from a declaration.
- * If it's the only setting, removes the entire settings block [...].
- */
+// Removes a setting from a declaration.
+// If it's the only setting in a [...] list, removes the entire list.
 export function removeSettingEdit (
   declaration: SyntaxNode,
   settingName: string,
   source: string,
 ): TextEdit | undefined {
-  const found = findSetting(declaration, settingName);
-  if (found) {
-    const { settingsList, settingIndex } = found;
-    const elements = settingsList.elementList ?? [];
+  const located = findSetting(declaration, settingName);
+  if (!located) return undefined;
 
-    // Only setting - remove the entire settings block including surrounding whitespace.
-    if (elements.length === 1) {
-      let removeStart = settingsList.start;
-      while (removeStart > 0 && source[removeStart - 1] === ' ') removeStart--;
-      return { start: removeStart, end: settingsList.end, newText: '' };
-    }
-
-    // Multiple settings - remove the setting and its separator.
-    const settingNode = elements[settingIndex];
-    if (settingIndex === 0) {
-      const nextSetting = elements[settingIndex + 1];
-      return { start: settingNode.start, end: nextSetting.start, newText: '' };
-    }
-
-    const prevSetting = elements[settingIndex - 1];
-    return { start: prevSetting.end, end: settingNode.end, newText: '' };
+  if (located.kind === 'body') {
+    return { start: located.declaration.start, end: located.declaration.end, newText: '' };
   }
 
-  // Fall back to body sub-declaration
-  const sub = findBodySubDeclaration(declaration, settingName);
-  if (sub) {
-    return { start: sub.start, end: sub.end, newText: '' };
+  // attribute form - handle separator cleanup
+  const { settingsList, settingIndex } = located;
+  const elements = settingsList.elementList ?? [];
+
+  // only setting - remove the entire [...] block including surrounding whitespace
+  if (elements.length === 1) {
+    let removeStart = settingsList.start;
+    while (removeStart > 0 && source[removeStart - 1] === ' ') removeStart--;
+    return { start: removeStart, end: settingsList.end, newText: '' };
   }
 
-  return undefined;
+  // multiple settings - remove the setting and its separator
+  const settingNode = elements[settingIndex];
+  if (settingIndex === 0) {
+    const nextSetting = elements[settingIndex + 1];
+    return { start: settingNode.start, end: nextSetting.start, newText: '' };
+  }
+
+  const prevSetting = elements[settingIndex - 1];
+  return { start: prevSetting.end, end: settingNode.end, newText: '' };
 }
 
-// Private helpers
-
+// Finds the [...] attribute list on a declaration or its inline body
 function findSettingsList (declaration: SyntaxNode): ListExpressionNode | undefined {
   if (declaration instanceof FunctionApplicationNode) {
     return declaration.args.find((a): a is ListExpressionNode => a instanceof ListExpressionNode);
   }
   if (declaration instanceof ElementDeclarationNode) {
-    // Check header attribute list first, then body's inline settings
+    // check header attribute list first, then body's inline settings
     if (declaration.attributeList) return declaration.attributeList;
     const body = declaration.body;
     if (body instanceof FunctionApplicationNode) {
@@ -129,42 +159,16 @@ function findSettingsList (declaration: SyntaxNode): ListExpressionNode | undefi
   return undefined;
 }
 
-function attrName (attr: AttributeNode): string | undefined {
-  if (attr.name instanceof IdentifierStreamNode) {
-    return extractStringFromIdentifierStream(attr.name)?.toLowerCase();
-  }
-  return undefined;
-}
-
-function findSetting (declaration: SyntaxNode, settingName: string): {
-  settingsList: ListExpressionNode;
-  settingNode: AttributeNode;
-  settingIndex: number;
-} | undefined {
-  const settingsList = findSettingsList(declaration);
-  if (!settingsList) return undefined;
-
-  const lowerName = settingName.toLowerCase();
-  const elements = settingsList.elementList ?? [];
-  const settingIndex = elements.findIndex((el) => {
-    if (!(el instanceof AttributeNode)) return false;
-    return attrName(el) === lowerName;
-  });
-  if (settingIndex === -1) return undefined;
-
-  return { settingsList, settingNode: elements[settingIndex] as AttributeNode, settingIndex };
-}
-
-/** Find a body sub-declaration by name (e.g. `color: #hex` as a body statement). */
-function findBodySubDeclaration (declaration: SyntaxNode, settingName: string): ElementDeclarationNode | undefined {
-  if (!(declaration instanceof ElementDeclarationNode)) return undefined;
+// Find a body sub-declaration by name (e.g. `color: #hex` or `note { 'text' }`)
+export function findBodySetting (declaration: ElementDeclarationNode, settingName: string): ElementDeclarationNode | undefined {
   const body = declaration.body;
-  if (!body || body instanceof FunctionApplicationNode) return undefined;
+
+  if (!body || hasSimpleBody(declaration) || body instanceof FunctionApplicationNode) return undefined;
 
   for (const child of body.body) {
     if (!(child instanceof ElementDeclarationNode)) continue;
     if (child.type?.value?.toLowerCase() !== settingName.toLowerCase()) continue;
-    if (child.body instanceof FunctionApplicationNode && child.body.callee) return child;
+    return child;
   }
   return undefined;
 }
