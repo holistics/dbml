@@ -6,9 +6,8 @@ import { ElementDeclarationNode, SyntaxNode, UseSpecifierNode } from '@/core/typ
 import { AliasSymbol, NodeSymbol, UseSymbol } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
-import {
-  type TableNameInput, lookupTableSymbol, normalizeTableName, stripQuotes,
-} from './utils';
+import type { TableIdentifier } from './types';
+import { lookupElementSymbol, normalizeTableName, stripQuotes } from './utils';
 
 interface FormattedTableName {
   schema: string;
@@ -60,7 +59,7 @@ function checkForNameCollision (
   newTable: string,
 ): boolean {
   if (oldSchema === newSchema && oldTable === newTable) return false;
-  return lookupTableSymbol(compiler, filepath, newSchema, newTable) !== null;
+  return lookupElementSymbol(compiler, filepath, newSchema, newTable) !== null;
 }
 
 /**
@@ -180,8 +179,8 @@ function findReplacements (
 export function renameTable (
   this: Compiler,
   filepath: Filepath,
-  oldName: TableNameInput,
-  newName: TableNameInput,
+  oldName: string | TableIdentifier,
+  newName: string | TableIdentifier,
 ): Map<string, string> {
   const normalizedOld = normalizeTableName(oldName);
   const normalizedNew = normalizeTableName(newName);
@@ -190,7 +189,7 @@ export function renameTable (
   const newSchema = normalizedNew.schema;
   const newTable = normalizedNew.table;
 
-  const tableSymbol = lookupTableSymbol(this, filepath, oldSchema, oldTable);
+  const tableSymbol = lookupElementSymbol(this, filepath, oldSchema, oldTable);
   if (!tableSymbol) return new Map();
 
   // Inline table aliases (e.g. `Table users as U`) resolve to an AliasSymbol.

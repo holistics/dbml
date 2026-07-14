@@ -35,26 +35,40 @@ export function addSettingEdit (declaration: SyntaxNode, setting: string): TextE
 }
 
 /**
- * Produces a TextEdit that updates an existing setting's value in a declaration.
+ * Produces a TextEdit that updates a setting's value in a declaration.
+ * value: string - update or create with "name: value"
+ * value: undefined - name-only setting (e.g. [pk])
+ * value: null - remove the setting
+ * If the setting does not exist, adds it.
  */
 export function updateSettingEdit (
   declaration: SyntaxNode,
   settingName: string,
-  newValue: string,
+  value: string | null | undefined,
   source: string,
 ): TextEdit | undefined {
+  if (value === null) {
+    return removeSettingEdit(declaration, settingName, source);
+  }
+
+  // "name: value" or just "name" for name-only
+  const settingText = value !== undefined
+    ? `${settingName}: ${value}`
+    : settingName;
+
   const found = findSetting(declaration, settingName);
   if (found) {
-    return { start: found.settingNode.start, end: found.settingNode.end, newText: newValue };
+    return { start: found.settingNode.start, end: found.settingNode.end, newText: settingText };
   }
 
   // Fall back to body sub-declaration (e.g. `color: #hex` as a body statement)
   const sub = findBodySubDeclaration(declaration, settingName);
   if (sub) {
-    return { start: sub.start, end: sub.end, newText: newValue };
+    return { start: sub.start, end: sub.end, newText: settingText };
   }
 
-  return undefined;
+  // Setting not present - add it
+  return addSettingEdit(declaration, settingText);
 }
 
 /**

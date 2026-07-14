@@ -1,12 +1,12 @@
 import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
 import type {
   DiagramViewSyncOperation, DiagramViewBlock, TextEdit,
-  DepSyncOperation, DepBlock,
+  DepSyncOperation, DepBlock, ElementIdentifier, TableIdentifier,
 } from '@dbml/parse';
 
-type TableName = string | { schema?: string; table: string };
+export { findDiagramViewBlocks, findDepBlocks } from '@dbml/parse';
 
-export function renameTable (oldName: TableName, newName: TableName, dbmlCode: string): string {
+export function renameTable (oldName: string | TableIdentifier, newName: string | TableIdentifier, dbmlCode: string): string {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
   const compiler = new Compiler(layout);
@@ -25,13 +25,6 @@ export function syncDiagramView (
   return compiler.syncDiagramView(DEFAULT_ENTRY, operations, blocks);
 }
 
-export function findDiagramViewBlocks (dbmlCode: string): DiagramViewBlock[] {
-  const layout = new MemoryProjectLayout();
-  layout.setSource(DEFAULT_ENTRY, dbmlCode);
-  const compiler = new Compiler(layout);
-  return compiler.findDiagramViewBlocks(DEFAULT_ENTRY);
-}
-
 export function syncDep (
   dbmlCode: string,
   operations: DepSyncOperation[],
@@ -43,9 +36,14 @@ export function syncDep (
   return compiler.syncDep(DEFAULT_ENTRY, operations, blocks);
 }
 
-export function findDepBlocks (dbmlCode: string): DepBlock[] {
+export function updateElementSetting (
+  dbmlCode: string,
+  target: ElementIdentifier,
+  settingName: string,
+  value: string | null | undefined,
+): string {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
   const compiler = new Compiler(layout);
-  return compiler.findDepBlocks(DEFAULT_ENTRY);
+  return compiler.updateElementSetting(DEFAULT_ENTRY, target, settingName, value);
 }

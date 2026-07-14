@@ -44,11 +44,7 @@ import {
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
-  type DiagramViewBlock,
-  type DepBlock,
-  findDiagramViewBlocks,
-  findDepBlocks,
-  renameTable, syncDiagramView, syncDep,
+  renameTable, syncDiagramView, syncDep, updateElementSetting,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
@@ -57,14 +53,10 @@ import { DEFAULT_ENTRY } from '@/constants';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type {
-  DiagramViewBlock, DepBlock, TableNameInput, TextEdit,
-} from './queries/transform';
+export type { TextEdit } from './queries/transform';
 // Re-export utilities
 export {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
-  findDiagramViewBlocks,
-  findDepBlocks,
 };
 
 // Sentinel placed in the cache while a query is being computed.
@@ -392,15 +384,9 @@ export default class Compiler {
 
   // transform queries
   renameTable = renameTable.bind(this);
+  updateElementSetting = updateElementSetting.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
-  findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.getSource(filepath) ?? '');
-  }
-
   syncDep = syncDep.bind(this);
-  findDepBlocks (filepath: Filepath): DepBlock[] {
-    return findDepBlocks(this.getSource(filepath) ?? '');
-  }
 
   // @deprecated - legacy APIs for services compatibility
   readonly token = {

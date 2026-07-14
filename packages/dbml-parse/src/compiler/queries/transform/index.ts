@@ -1,4 +1,5 @@
 export { renameTable } from './renameTable';
+export { updateElementSetting } from './updateElementSetting';
 export {
   syncDiagramView,
   findDiagramViewBlocks,
@@ -15,4 +16,15 @@ export {
   type DepBlock,
 } from './syncDep';
 export { applyTextEdits, type TextEdit } from './applyTextEdits';
-export { type TableNameInput } from './utils';
+export type {
+  ElementIdentifier,
+  SchemaIdentifier,
+  TableIdentifier,
+  ColumnIdentifier,
+  EnumIdentifier,
+  EndpointRef,
+  RefIdentifier,
+  DepIdentifier,
+  NoteIdentifier,
+  TableGroupIdentifier,
+} from './types';

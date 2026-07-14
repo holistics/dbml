@@ -5,6 +5,7 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  updateElementSetting,
   syncDiagramView,
   findDiagramViewBlocks,
   syncDep,
@@ -16,6 +17,7 @@ export {
   importer,
   exporter,
   renameTable,
+  updateElementSetting,
   syncDiagramView,
   findDiagramViewBlocks,
   syncDep,
@@ -48,6 +50,8 @@ export {
   dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,
   Filepath,
+  SymbolKind,
+  MetadataKind,
 } from '@dbml/parse';
 
 // Re-export types
@@ -62,4 +66,14 @@ export type {
   DepEndpointRef,
   DepBlock,
   TextEdit,
+  ElementIdentifier,
+  SchemaIdentifier,
+  TableIdentifier,
+  ColumnIdentifier,
+  EnumIdentifier,
+  EndpointRef,
+  RefIdentifier,
+  DepIdentifier,
+  NoteIdentifier,
+  TableGroupIdentifier,
 } from '@dbml/parse';

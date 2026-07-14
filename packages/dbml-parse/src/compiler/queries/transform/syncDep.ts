@@ -29,7 +29,6 @@ import {
   ListExpressionNode,
   PrefixExpressionNode,
   SyntaxNodeIdGenerator,
-  SyntaxNodeKind,
 } from '@/core/types/nodes';
 import { destructureComplexVariable, extractStringFromIdentifierStream } from '@/core/utils/expression';
 import type Compiler from '../../index';
@@ -302,12 +301,8 @@ function findBlockForEdge (blocks: DepBlock[], edge: DepSyncEdge): DepBlock | un
 function computeUpdateEdit (operation: DepSyncOperation, block: DepBlock, source: string): TextEdit[] {
   const edits: TextEdit[] = [];
 
-  if (operation.color === null) {
-    const edit = removeSettingEdit(block.declaration, SettingName.Color, source);
-    if (edit) edits.push(edit);
-  } else if (operation.color !== undefined) {
-    const edit = updateSettingEdit(block.declaration, SettingName.Color, `${SettingName.Color}: ${operation.color}`, source)
-      ?? addSettingEdit(block.declaration, `${SettingName.Color}: ${operation.color}`);
+  if (operation.color !== undefined) {
+    const edit = updateSettingEdit(block.declaration, SettingName.Color, operation.color, source);
     if (edit) edits.push(edit);
   }
 

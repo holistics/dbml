@@ -1,14 +1,19 @@
 import type {
   DiagramViewSyncOperation, DiagramViewBlock, TextEdit,
-  DepSyncOperation, DepBlock,
+  DepSyncOperation, DepBlock, ElementIdentifier, TableIdentifier,
 } from '@dbml/parse';
 
-export type TableNameInput = string | { schema?: string; table: string };
-
 export function renameTable(
-  oldName: TableNameInput,
-  newName: TableNameInput,
+  oldName: string | TableIdentifier,
+  newName: string | TableIdentifier,
   dbmlCode: string
+): string;
+
+export function updateElementSetting(
+  dbmlCode: string,
+  target: ElementIdentifier,
+  settingName: string,
+  value: string | null | undefined,
 ): string;
 
 export function syncDiagramView(

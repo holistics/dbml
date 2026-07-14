@@ -4,15 +4,9 @@ import { UNHANDLED } from '@/core/types/module';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { splitQualifiedIdentifier } from '../utils';
+export type { ElementIdentifier } from './types';
 
-export type TableNameInput = string | { schema?: string;
-  table: string; };
-
-/**
- * Normalizes a table name input to { schema, table } format.
- * Properly handles quoted identifiers with dots inside.
- */
-export function normalizeTableName (input: TableNameInput): {
+export function normalizeTableName (input: string | { schema?: string; table: string }): {
   schema: string;
   table: string;
 } {
@@ -56,41 +50,27 @@ export function normalizeTableName (input: TableNameInput): {
 }
 
 /**
- * Looks up a table symbol by matching its full qualified name.
+ * Looks up an element symbol by its qualified name and kind.
  */
-export function lookupTableSymbol (
+export function lookupElementSymbol (
   compiler: Compiler,
   filepath: Filepath,
   schema: string,
-  table: string,
+  name: string,
+  kind: SymbolKind = SymbolKind.Table,
 ): NodeSymbol | null {
   const ast = compiler.parseFile(filepath).getValue().ast;
   const astSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!astSymbol) return null;
 
   if (schema === DEFAULT_SCHEMA_NAME) {
-    const symbol = compiler.lookupMembers(
-      astSymbol,
-      SymbolKind.Table,
-      table,
-    );
-    return symbol ?? null;
+    return compiler.lookupMembers(astSymbol, kind, name) ?? null;
   }
 
-  const schemaSymbol = compiler.lookupMembers(
-    astSymbol,
-    SymbolKind.Schema,
-    schema,
-  );
+  const schemaSymbol = compiler.lookupMembers(astSymbol, SymbolKind.Schema, schema);
   if (!schemaSymbol) return null;
 
-  const tableSymbol = compiler.lookupMembers(
-    schemaSymbol,
-    SymbolKind.Table,
-    table,
-  );
-
-  return tableSymbol ?? null;
+  return compiler.lookupMembers(schemaSymbol, kind, name) ?? null;
 }
 
 /**
