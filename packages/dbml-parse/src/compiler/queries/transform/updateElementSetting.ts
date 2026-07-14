@@ -125,14 +125,14 @@ function updateRefSetting (source: string, target: RefIdentifier, settingName: s
 // Converts AST variable fragments [schema?, table, ...fields] to EndpointRef
 function fragmentsToEndpoint (fragments: string[]): EndpointRef | undefined {
   if (fragments.length === 0) return undefined;
-  if (fragments.length === 1) return { table: fragments[0] };
+  if (fragments.length === 1) return { tableName: fragments[0] };
   if (fragments.length === 2) return {
-    table: fragments[0],
-    fields: [
+    tableName: fragments[0],
+    fieldNames: [
       fragments[1],
     ],
   };
-  return { schema: fragments[0], table: fragments[1], fields: fragments.slice(2) };
+  return { schemaName: fragments[0], tableName: fragments[1], fieldNames: fragments.slice(2) };
 }
 
 // Checks if an infix expression matches both ref endpoints (in either order)

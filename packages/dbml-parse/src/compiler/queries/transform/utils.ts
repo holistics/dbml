@@ -9,12 +9,12 @@ export type { ElementIdentifier } from './types';
 
 // Compares two endpoint refs for equality (schema-aware, field-aware)
 export function endpointsEqual (a: EndpointRef, b: EndpointRef): boolean {
-  const sa = (a.schema && a.schema.length > 0) ? a.schema : DEFAULT_SCHEMA_NAME;
-  const sb = (b.schema && b.schema.length > 0) ? b.schema : DEFAULT_SCHEMA_NAME;
+  const sa = (a.schemaName && a.schemaName.length > 0) ? a.schemaName : DEFAULT_SCHEMA_NAME;
+  const sb = (b.schemaName && b.schemaName.length > 0) ? b.schemaName : DEFAULT_SCHEMA_NAME;
   if (sa !== sb) return false;
-  if (a.table !== b.table) return false;
-  const fa = a.fields ?? [];
-  const fb = b.fields ?? [];
+  if (a.tableName !== b.tableName) return false;
+  const fa = a.fieldNames ?? [];
+  const fb = b.fieldNames ?? [];
   if (fa.length !== fb.length) return false;
   return fa.every((f, i) => f === fb[i]);
 }

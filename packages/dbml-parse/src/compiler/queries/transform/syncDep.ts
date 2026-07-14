@@ -39,9 +39,9 @@ import { updateNoteEdit, removeNoteEdit, addNoteEdit } from '@/core/utils/note';
 import { updateSettingEdit, removeSettingEdit } from '@/core/utils/setting';
 
 export interface DepEndpointRef {
-  schema?: string;
-  table: string;
-  fields?: string[];
+  schemaName?: string | null;
+  tableName: string;
+  fieldNames?: string[];
 }
 
 export interface DepSyncEdge {
@@ -149,9 +149,9 @@ export function findInlineDeps (source: string): InlineDep[] {
       if (!columnName) continue;
 
       const host: DepEndpointRef = {
-        schema: schemaName,
-        table: tableName,
-        fields: [
+        schemaName,
+        tableName,
+        fieldNames: [
           columnName,
         ],
       };
@@ -227,17 +227,17 @@ function fragmentsToEndpoint (fragments: string[], hasFields: boolean): DepEndpo
   if (fragments.length === 0) return undefined;
   if (!hasFields) {
     // [table] or [schema, table]
-    const table = fragments[fragments.length - 1];
-    const schema = fragments.length > 1 ? fragments[fragments.length - 2] : undefined;
-    return { schema, table, fields: [] };
+    const tableName = fragments[fragments.length - 1];
+    const schemaName = fragments.length > 1 ? fragments[fragments.length - 2] : null;
+    return { schemaName, tableName, fieldNames: [] };
   }
   // column endpoint: [table, field] or [schema, table, field]
-  const fields = [
+  const fieldNames = [
     fragments[fragments.length - 1],
   ];
-  const table = fragments[fragments.length - 2];
-  const schema = fragments.length > 2 ? fragments[fragments.length - 3] : undefined;
-  return { schema, table, fields };
+  const tableName = fragments[fragments.length - 2];
+  const schemaName = fragments.length > 2 ? fragments[fragments.length - 3] : null;
+  return { schemaName, tableName, fieldNames };
 }
 
 function edgesEqual (a: DepSyncEdge, b: DepSyncEdge): boolean {
@@ -279,11 +279,11 @@ function attrName (attr: AttributeNode): string | undefined {
 }
 
 function formatEndpoint (endpoint: DepEndpointRef): string {
-  const schema = normalizeSchema(endpoint.schema);
+  const schema = normalizeSchema(endpoint.schemaName);
   const parts: string[] = [];
   if (schema !== DEFAULT_SCHEMA_NAME) parts.push(addDoubleQuoteIfNeeded(schema));
-  parts.push(addDoubleQuoteIfNeeded(endpoint.table));
-  for (const field of endpoint.fields ?? []) parts.push(addDoubleQuoteIfNeeded(field));
+  parts.push(addDoubleQuoteIfNeeded(endpoint.tableName));
+  for (const field of endpoint.fieldNames ?? []) parts.push(addDoubleQuoteIfNeeded(field));
   return parts.join('.');
 }
 

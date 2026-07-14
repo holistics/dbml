@@ -41,9 +41,9 @@ export interface EnumIdentifier {
 // A table endpoint, optionally narrowed to specific fields.
 // Shared by RefIdentifier and DepIdentifier.
 export interface EndpointRef {
-  schema?: string;
-  table: string;
-  fields?: string[];
+  schemaName?: string | null;
+  tableName: string;
+  fieldNames?: string[];
 }
 
 export interface RefIdentifier {

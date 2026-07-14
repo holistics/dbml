@@ -133,8 +133,8 @@ Table b {
 describe('updateElementSetting - dep', () => {
   const dep = (up: string, down: string): ElementIdentifier => ({
     kind: MetadataKind.Dep,
-    upstream: { table: up },
-    downstream: { table: down },
+    upstream: { tableName: up },
+    downstream: { tableName: down },
   });
 
   it('adds color to a dep block header', () => {
@@ -214,8 +214,8 @@ describe('updateElementSetting - ref', () => {
   const ref = (left: string[], right: string[]): ElementIdentifier => ({
     kind: MetadataKind.Ref,
     endpoints: [
-      { table: left[0], fields: left.slice(1) },
-      { table: right[0], fields: right.slice(1) },
+      { tableName: left[0], fieldNames: left.slice(1) },
+      { tableName: right[0], fieldNames: right.slice(1) },
     ],
   });
 

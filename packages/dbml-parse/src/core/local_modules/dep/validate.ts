@@ -151,12 +151,16 @@ export default class DepValidator {
       switch (key) {
         case SettingName.Color:
           if (!isValidColor(subBody.callee)) {
-            return [new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', sub)];
+            return [
+              new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', sub),
+            ];
           }
           return [];
         case SettingName.Note:
           if (!isExpressionAQuotedString(subBody.callee)) {
-            return [new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', sub)];
+            return [
+              new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', sub),
+            ];
           }
           return [];
         default:
@@ -164,7 +168,9 @@ export default class DepValidator {
             && !isValidColor(subBody.callee)
             && !isExpressionASignedNumberExpression(subBody.callee)
             && !isSimpleName(subBody.callee)) {
-            return [new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for '${key}'. Expected a string, number, color, or identifier`, sub)];
+            return [
+              new CompileError(CompileErrorCode.INVALID_SETTINGS, `Invalid value for '${key}'. Expected a string, number, color, or identifier`, sub),
+            ];
           }
           return [];
       }
@@ -174,10 +180,15 @@ export default class DepValidator {
 
 export function validateDepSettings (settings: ListExpressionNode): Report<Settings> {
   const aggReport = aggregateSettingList(settings);
-  const errors: CompileError[] = [...aggReport.getErrors()];
+  const errors: CompileError[] = [
+    ...aggReport.getErrors(),
+  ];
   const settingMap = aggReport.getValue();
 
-  for (const [name, attrs] of Object.entries(settingMap)) {
+  for (const [
+    name,
+    attrs,
+  ] of Object.entries(settingMap)) {
     for (const attr of attrs) {
       switch (name) {
         case SettingName.Color:
