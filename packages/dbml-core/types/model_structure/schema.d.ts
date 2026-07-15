@@ -185,6 +185,7 @@ export interface NormalizedSchema {
     tableIds: number[];
     noteIds: number[];
     refIds: number[];
+    depIds: number[];
     tableGroupIds: number[];
     enumIds: number[];
     databaseId: number;

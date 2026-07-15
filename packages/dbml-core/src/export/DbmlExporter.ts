@@ -476,7 +476,7 @@ class DbmlExporter {
     database.schemaIds.forEach((schemaId) => {
       const {
         enumIds, tableIds, tableGroupIds, refIds, depIds,
-      } = model.schemas[schemaId] as any;
+      } = model.schemas[schemaId];
 
       if (!isEmpty(enumIds)) elementStrs.push(DbmlExporter.exportEnums(enumIds, model));
       if (!isEmpty(tableIds)) elementStrs.push(DbmlExporter.exportTables(tableIds, model));
