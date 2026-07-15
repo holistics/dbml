@@ -236,9 +236,8 @@
 
         <!-- Deps -->
         <DbSection
-          v-if="database.deps?.length"
           label="Deps"
-          :count="database.deps.length"
+          :count="database.deps.length ?? 0"
           :icon="PhArrowRight"
           icon-color="text-orange-500"
         >
