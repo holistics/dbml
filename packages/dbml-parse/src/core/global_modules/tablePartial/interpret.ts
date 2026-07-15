@@ -1,4 +1,4 @@
-import { head, last, partition } from 'lodash-es';
+import { head, partition } from 'lodash-es';
 import Compiler from '@/compiler/index';
 import { CompileError } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -184,7 +184,7 @@ export class TablePartialInterpreter {
 
     column.pk = columnSymbol?.pk(this.compiler) || undefined;
     column.unique = columnSymbol?.unique(this.compiler) || undefined;
-    column.increment = columnSymbol?.increment(this.compiler) || undefined;
+    column.increment = columnSymbol?.isIncrementSet(this.compiler) || undefined;
     const nullable = columnSymbol?.nullable(this.compiler);
     column.not_null = nullable === undefined ? undefined : !nullable;
     column.dbdefault = columnSymbol?.default(this.compiler);
