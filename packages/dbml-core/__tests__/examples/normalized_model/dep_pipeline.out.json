@@ -127,7 +127,7 @@
       "id": 1,
       "name": null,
       "note": "Cast + rename: raw id → canonical user_id",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         1
       ],
@@ -137,7 +137,7 @@
       "id": 2,
       "name": null,
       "note": "Lowercase + validate email",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         2
       ],
@@ -147,7 +147,7 @@
       "id": 3,
       "name": null,
       "note": "Trim + normalize name",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         3
       ],
@@ -157,7 +157,7 @@
       "id": 4,
       "name": null,
       "note": "Parse timestamp (UTC)",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         4
       ],
@@ -167,7 +167,7 @@
       "id": 5,
       "name": null,
       "note": "Rename: id → order_id",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         5
       ],
@@ -177,7 +177,7 @@
       "id": 6,
       "name": null,
       "note": "Join key to users dimension",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         6
       ],
@@ -187,7 +187,7 @@
       "id": 7,
       "name": null,
       "note": "Parse + standardize order timestamp",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         7
       ],
@@ -197,7 +197,7 @@
       "id": 8,
       "name": null,
       "note": "Map raw status codes → business statuses",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         8
       ],
@@ -207,7 +207,7 @@
       "id": 9,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         9
       ],
@@ -217,7 +217,7 @@
       "id": 10,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         10
       ],
@@ -227,7 +227,7 @@
       "id": 11,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         11
       ],
@@ -237,7 +237,7 @@
       "id": 12,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         12
       ],
@@ -247,7 +247,7 @@
       "id": 13,
       "name": null,
       "note": "Rename: price → unit_price",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         13
       ],
@@ -257,7 +257,7 @@
       "id": 14,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         14
       ],
@@ -267,7 +267,7 @@
       "id": 15,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         15
       ],
@@ -277,7 +277,7 @@
       "id": 16,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         16
       ],
@@ -287,7 +287,7 @@
       "id": 17,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         17
       ],
@@ -297,7 +297,7 @@
       "id": 18,
       "name": null,
       "note": "Aggregation: MIN(ordered_at) by user",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         18
       ],
@@ -307,7 +307,7 @@
       "id": 19,
       "name": null,
       "note": "Aggregation: COUNT(order_id) by user",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         19
       ],
@@ -317,7 +317,7 @@
       "id": 20,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         20
       ],
@@ -327,7 +327,7 @@
       "id": 21,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         21
       ],
@@ -337,7 +337,7 @@
       "id": 22,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         22
       ],
@@ -347,7 +347,7 @@
       "id": 23,
       "name": null,
       "note": null,
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         23
       ],
@@ -357,7 +357,7 @@
       "id": 24,
       "name": null,
       "note": "Aggregation: SUM(quantity) by order_id",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         24
       ],
@@ -367,7 +367,7 @@
       "id": 25,
       "name": null,
       "note": "Aggregation: SUM(line_total) by order_id",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         25
       ],
@@ -377,7 +377,7 @@
       "id": 26,
       "name": null,
       "note": "Raw data → Staging data",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         26
       ],
@@ -387,7 +387,7 @@
       "id": 27,
       "name": null,
       "note": "Raw data → Staging data",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         27
       ],
@@ -397,7 +397,7 @@
       "id": 28,
       "name": null,
       "note": "Raw data → Staging data",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         28
       ],
@@ -407,7 +407,7 @@
       "id": 29,
       "name": null,
       "note": "Staging data → Domain data",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         29
       ],
@@ -417,7 +417,7 @@
       "id": 30,
       "name": null,
       "note": "Staging data → Domain data",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         30
       ],
@@ -427,7 +427,7 @@
       "id": 31,
       "name": null,
       "note": "Staging data → Domain data",
-      "custom": null,
+      "metadata": null,
       "edgeIds": [
         31
       ],

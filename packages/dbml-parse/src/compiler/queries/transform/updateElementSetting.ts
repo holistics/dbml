@@ -96,7 +96,7 @@ function updateDepSettingEdit (compiler: Compiler, filepath: Filepath, target: D
       ? `Dep [${setting}] {\n  ${up} -> ${down}\n}`
       : `Dep {\n  ${up} -> ${down}\n}`;
     return [
-      { start: inline.stripStart, end: inline.stripEnd, newText: '' },
+      { start: inline.fullStart, end: inline.fullEnd, newText: '' },
       { start: source.length, end: source.length, newText: '\n\n' + depBlock + '\n' },
     ];
   }

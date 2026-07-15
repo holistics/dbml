@@ -130,14 +130,14 @@ Dep {
   });
 });
 
-describe('syncDep - remove existing block color', () => {
+describe('syncDep - remove color via update', () => {
   it('removes a sole header [color] together with its [...] list', () => {
     const dbml = `${PRELUDE}
 Dep [color: #000000] {
   a -> b
 }`;
     const { newDbml } = syncDep(dbml, [
-      { operation: 'remove', edge: tableEdge('a', 'b') },
+      { operation: 'update', edge: tableEdge('a', 'b'), color: null },
     ]);
     expect(newDbml).not.toContain('color');
     expect(newDbml).not.toContain('[');
@@ -151,7 +151,7 @@ Dep [note: "x", color: #000000] {
   a -> b
 }`;
     const { newDbml } = syncDep(dbml, [
-      { operation: 'remove', edge: tableEdge('a', 'b') },
+      { operation: 'update', edge: tableEdge('a', 'b'), color: null },
     ]);
     expect(newDbml).not.toContain('color');
     expect(newDbml).toContain('note: "x"');
@@ -166,7 +166,7 @@ Dep {
   color: #000000
 }`;
     const { newDbml } = syncDep(dbml, [
-      { operation: 'remove', edge: tableEdge('a', 'b') },
+      { operation: 'update', edge: tableEdge('a', 'b'), color: null },
     ]);
     expect(newDbml).not.toContain('#000000');
     const db = interpret(newDbml).getValue()!;
@@ -177,7 +177,7 @@ Dep {
     const dbml = `${PRELUDE}
 Dep: a -> b [color: #000000]`;
     const { newDbml } = syncDep(dbml, [
-      { operation: 'remove', edge: tableEdge('a', 'b') },
+      { operation: 'update', edge: tableEdge('a', 'b'), color: null },
     ]);
     expect(newDbml).not.toContain('color');
     const db = interpret(newDbml).getValue()!;
@@ -186,7 +186,7 @@ Dep: a -> b [color: #000000]`;
 
   it('is a no-op for an edge with no block', () => {
     const { newDbml, edits } = syncDep(PRELUDE, [
-      { operation: 'remove', edge: tableEdge('a', 'b') },
+      { operation: 'update', edge: tableEdge('a', 'b'), color: null },
     ]);
     expect(edits).toHaveLength(0);
     expect(newDbml).toBe(PRELUDE);
@@ -198,7 +198,7 @@ Dep {
   a -> b
 }`;
     const { edits } = syncDep(dbml, [
-      { operation: 'remove', edge: tableEdge('a', 'b') },
+      { operation: 'update', edge: tableEdge('a', 'b'), color: null },
     ]);
     expect(edits).toHaveLength(0);
   });

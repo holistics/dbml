@@ -28,7 +28,7 @@ describe('@dbml/core - Dep model', () => {
     test('no note, no custom', () => {
       const dep = database.schemas[0].deps[0];
       expect(dep.note).toBeNull();
-      expect(dep.custom).toBeNull();
+      expect(dep.metadata).toBeNull();
     });
   });
 
@@ -45,7 +45,7 @@ describe('@dbml/core - Dep model', () => {
     test('note + custom carried correctly', () => {
       const dep = database.schemas[0].deps[1];
       expect(dep.note).toBe('Aggregate staging into facts');
-      expect(dep.custom).toEqual({ materialized: 'table', owner: 'data-team' });
+      expect(dep.metadata).toEqual({ materialized: 'table', owner: 'data-team' });
     });
   });
 
@@ -123,12 +123,12 @@ describe('@dbml/core - Dep model', () => {
       expect(edge.downstream.fieldNames).toEqual(['id']);
     });
 
-    test('normalize preserves note + custom on the dep record', () => {
+    test('normalize preserves note + metadata on the dep record', () => {
       const model = database.normalize();
-      const depWithCustom = Object.values(model.deps).find((d: any) => d.custom) as any;
-      expect(depWithCustom).toBeDefined();
-      expect(depWithCustom.note).toBe('Aggregate staging into facts');
-      expect(depWithCustom.custom).toEqual({ materialized: 'table', owner: 'data-team' });
+      const depWithMetadata = Object.values(model.deps).find((d: any) => d.metadata) as any;
+      expect(depWithMetadata).toBeDefined();
+      expect(depWithMetadata.note).toBe('Aggregate staging into facts');
+      expect(depWithMetadata.metadata).toEqual({ materialized: 'table', owner: 'data-team' });
     });
 
     test('depEdge.depId points back to its parent dep', () => {
