@@ -88,6 +88,10 @@ export function isRelationshipOp (op?: string): boolean {
   return op === '-' || op === '<>' || op === '>' || op === '<';
 }
 
+export function isDependencyOp (op?: string): boolean {
+  return op === '<-' || op === '->';
+}
+
 export function isValidColor (value?: SyntaxNode): boolean {
   if (
     !(value instanceof PrimaryExpressionNode)
@@ -176,6 +180,20 @@ export function isUnaryRelationship (value?: SyntaxNode): value is PrefixExpress
   }
 
   if (!isRelationshipOp(value.op?.value)) {
+    return false;
+  }
+
+  const variables = destructureComplexVariable(value.expression);
+
+  return variables !== undefined && variables.length > 0;
+}
+
+export function isUnaryDependency (value?: SyntaxNode): value is PrefixExpressionNode {
+  if (!(value instanceof PrefixExpressionNode)) {
+    return false;
+  }
+
+  if (!isDependencyOp(value.op?.value)) {
     return false;
   }
 

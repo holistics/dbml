@@ -2,7 +2,6 @@ import { forIn, last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
-import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import {
   ArrayNode,
   AttributeNode,
@@ -32,6 +31,7 @@ import {
   isValidDefaultValue,
   isValidName,
   isValidPartialInjection,
+  isUnaryDependency,
 } from '@/core/utils/validate';
 
 export default class TableValidator {
@@ -365,9 +365,7 @@ export default class TableValidator {
           break;
         case SettingName.Dep:
           attrs.forEach((attr) => {
-            const isValidDep = attr.value instanceof PrefixExpressionNode
-              && (attr.value.op?.value === DEP_DOWNSTREAM || attr.value.op?.value === DEP_UPSTREAM);
-            if (!isValidDep) {
+            if (!isUnaryDependency(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'dep\' must be `-> target.col` or `<- source.col`', attr.value || attr.name!));
             }
           });
@@ -589,7 +587,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         break;
       case SettingName.Dep:
         attrs.forEach((attr) => {
-          if (!isUnaryRelationship(attr.value)) {
+          if (!isUnaryDependency(attr.value)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'dep\' must be a valid unary relationship', attr.value || attr.name!));
           }
         });
