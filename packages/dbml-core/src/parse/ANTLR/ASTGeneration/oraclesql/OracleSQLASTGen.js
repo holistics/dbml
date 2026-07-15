@@ -1,6 +1,8 @@
 import { flatten, last } from 'lodash-es';
+import { ParseTreeListener, ParseTreeWalker } from 'antlr4';
 import { CompilerError } from '../../../error';
 import OracleSqlParserVisitor from '../../parsers/oraclesql/OracleSqlParserVisitor';
+import OracleSqlParser from '../../parsers/oraclesql/OracleSqlParser';
 import {
   Endpoint,
   Field,
@@ -14,33 +16,7 @@ import {
   DATA_TYPE,
 } from '../constants';
 import { getOriginalText } from '../helpers';
-
-function extractSourceTablesFromOracleCtx (ctx) {
-  if (!ctx) return [];
-  const seen = new Map();
-  const stack = [ctx];
-  while (stack.length > 0) {
-    const node = stack.pop();
-    if (!node) continue;
-    const className = node.constructor && node.constructor.name;
-    if (className === 'Tableview_nameContext' || className === 'DML_table_expression_clauseContext') {
-      const text = (node.getText && node.getText()) || '';
-      const cleaned = text.replace(/"/g, '').split(/\s+/)[0];
-      const parts = cleaned.split('.');
-      const tableName = parts[parts.length - 1];
-      const schemaName = parts.length > 1 ? parts[parts.length - 2] : undefined;
-      const key = `${schemaName || ''}.${tableName}`;
-      if (tableName && !seen.has(key)) {
-        seen.set(key, { name: tableName, schemaName });
-      }
-    }
-    const childCount = typeof node.getChildCount === 'function' ? node.getChildCount() : 0;
-    for (let i = 0; i < childCount; i++) {
-      stack.push(node.getChild(i));
-    }
-  }
-  return Array.from(seen.values());
-}
+import { normalizeQualifiedName } from '@dbml/parse';
 
 // We cannot use TABLE_CONSTRAINT_KIND and COLUMN_CONSTRAINT_KIND from '../constants' as their values are indistinguishable from each other
 // For example: TABLE_CONSTRAINT_KIND.UNIQUE === COLUMN_CONSTRAINT_KIND.UNIQUE
@@ -68,9 +44,9 @@ const COLUMN_CONSTRAINT_KIND = {
 };
 
 const findTable = (tables, schemaName, tableName) => {
-  const realSchemaName = schemaName || null;
+  const realSchemaName = schemaName ?? null;
   const table = tables.find((table) => {
-    const targetSchemaName = table.schemaName || null;
+    const targetSchemaName = table.schemaName ?? null;
     return targetSchemaName === realSchemaName && table.name === tableName;
   });
   return table;
@@ -170,7 +146,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
       headerColor: null,
       custom: { query: ddl, kind: 'view' },
     });
-    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
+    collectViewDeps(this, ctx.select_only_statement(), tableName, schemaName);
   }
 
   visitCreate_materialized_view (ctx) {
@@ -190,23 +166,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
       headerColor: null,
       custom: { query: ddl, kind: 'materialized_view', materialized: true },
     });
-    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
-  }
-
-  _emitDepsFromViewSelect (ctx, viewName, viewSchemaName) {
-    const sources = extractSourceTablesFromOracleCtx(ctx);
-    sources.forEach((src) => {
-      if (src.name === viewName && (src.schemaName || '') === (viewSchemaName || '')) return;
-      if (!findTable(this.data.tables, src.schemaName, src.name)) return;
-      this.data.deps.push({
-        edges: [{
-          upstream: { schemaName: src.schemaName, tableName: src.name, fieldNames: [] },
-          downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
-        }],
-        note: null,
-        custom: {},
-      });
-    });
+    collectViewDeps(this, ctx.select_only_statement(), tableName, schemaName);
   }
 
   //  sql_script
@@ -1143,4 +1103,40 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   visitRegular_id (ctx) {
     return unquoteString(getOriginalText(ctx), '"');
   }
+}
+
+// Walk a SELECT subtree to find source tables and emit dep edges
+function collectViewDeps (visitor, selectCtx, viewName, viewSchemaName) {
+  if (!selectCtx) return;
+
+  const seenTables = new Set();
+  const viewKey = normalizeQualifiedName(viewSchemaName ?? '', viewName);
+
+  // Collect all deps of this view
+  const collector = new ParseTreeListener();
+  collector.enterEveryRule = (node) => {
+    // Only handle table/view name references
+    if (!(node instanceof OracleSqlParser.Tableview_nameContext)) return;
+
+    const names = node.accept(visitor);
+    const srcTable = Array.isArray(names) ? last(names) : names;
+    const srcSchema = Array.isArray(names) && names.length > 1 ? names[names.length - 2] : undefined;
+
+    // Skip self-references and duplicates
+    const key = normalizeQualifiedName(srcSchema ?? '', srcTable);
+    if (key === viewKey) return;
+    if (seenTables.has(key)) return;
+    if (!findTable(visitor.data.tables, srcSchema, srcTable)) return;
+
+    seenTables.add(key);
+    visitor.data.deps.push({
+      edges: [{
+        upstream: { schemaName: srcSchema, tableName: srcTable, fieldNames: [] },
+        downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
+      }],
+      note: null,
+      custom: {},
+    });
+  };
+  ParseTreeWalker.DEFAULT.walk(collector, selectCtx);
 }

@@ -1,5 +1,7 @@
 import { flatten, flattenDepth, last } from 'lodash-es';
+import { ParseTreeListener, ParseTreeWalker } from 'antlr4';
 import PostgreSQLParserVisitor from '../../parsers/postgresql/PostgreSQLParserVisitor';
+import PostgreSQLParser from '../../parsers/postgresql/PostgreSQLParser';
 import {
   Enum, Field, Index, Table, TableRecord,
 } from '../AST';
@@ -7,34 +9,8 @@ import {
   COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND,
 } from '../constants';
 import { getOriginalText } from '../helpers';
-
-function extractSourceTablesFromCtx (ctx) {
-  if (!ctx) return [];
-  const seen = new Map();
-  const stack = [ctx];
-  while (stack.length > 0) {
-    const node = stack.pop();
-    if (!node) continue;
-    const ruleIdx = node.ruleIndex;
-    if (ruleIdx !== undefined && node.constructor && node.constructor.name === 'Relation_exprContext') {
-      const qn = node.qualified_name && node.qualified_name();
-      if (qn) {
-        const tokens = qn.getText().split('.').map((t) => t.replace(/^"(.*)"$/, '$1'));
-        const tableName = tokens[tokens.length - 1];
-        const schemaName = tokens.length > 1 ? tokens[tokens.length - 2] : undefined;
-        const key = `${schemaName || 'public'}.${tableName}`;
-        if (tableName && !seen.has(key)) {
-          seen.set(key, { name: tableName, schemaName });
-        }
-      }
-    }
-    const childCount = typeof node.getChildCount === 'function' ? node.getChildCount() : 0;
-    for (let i = 0; i < childCount; i++) {
-      stack.push(node.getChild(i));
-    }
-  }
-  return Array.from(seen.values());
-}
+import { DEFAULT_SCHEMA_NAME } from '../../../../model_structure/config';
+import { normalizeQualifiedName } from '@dbml/parse';
 
 const COMMAND_KIND = {
   REF: 'ref',
@@ -45,9 +21,9 @@ const COMMENT_OBJECT_TYPE = {
 };
 
 const findTable = (tables, schemaName, tableName) => {
-  const realSchemaName = schemaName || 'public';
+  const realSchemaName = schemaName ?? DEFAULT_SCHEMA_NAME;
   const table = tables.find((table) => {
-    const targetSchemaName = table.schemaName || 'public';
+    const targetSchemaName = table.schemaName ?? DEFAULT_SCHEMA_NAME;
     return targetSchemaName === realSchemaName && table.name === tableName;
   });
   return table;
@@ -91,7 +67,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       headerColor: null,
       custom: { query: ddl, kind: 'view' },
     });
-    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
+    collectViewDeps(this, ctx.selectstmt(), tableName, schemaName);
   }
 
   visitCreatematviewstmt (ctx) {
@@ -111,23 +87,7 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       headerColor: null,
       custom: { query: ddl, kind: 'materialized_view', materialized: true },
     });
-    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
-  }
-
-  _emitDepsFromViewSelect (ctx, viewName, viewSchemaName) {
-    const sources = extractSourceTablesFromCtx(ctx);
-    sources.forEach((src) => {
-      if (src.name === viewName && (src.schemaName || 'public') === (viewSchemaName || 'public')) return;
-      if (!findTable(this.data.tables, src.schemaName, src.name)) return;
-      this.data.deps.push({
-        edges: [{
-          upstream: { schemaName: src.schemaName, tableName: src.name, fieldNames: [] },
-          downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
-        }],
-        note: null,
-        custom: {},
-      });
-    });
+    collectViewDeps(this, ctx.selectstmt(), tableName, schemaName);
   }
 
   // stmtblock EOF
@@ -1323,4 +1283,40 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
       ...rawType,
     };
   }
+}
+
+// Walk a SELECT subtree to find source tables and emit dep edges
+function collectViewDeps (visitor, selectCtx, viewName, viewSchemaName) {
+  if (!selectCtx) return;
+
+  const seenTables = new Set();
+  const viewKey = normalizeQualifiedName(viewSchemaName ?? DEFAULT_SCHEMA_NAME, viewName);
+
+  // Collect all deps of this view
+  const collector = new ParseTreeListener();
+  collector.enterEveryRule = (node) => {
+    // Only handle relation expressions (table references)
+    if (!(node instanceof PostgreSQLParser.Relation_exprContext)) return;
+
+    const names = node.accept(visitor);
+    const srcTable = last(names);
+    const srcSchema = names.length > 1 ? names[names.length - 2] : undefined;
+
+    // Skip self-references and duplicates
+    const key = normalizeQualifiedName(srcSchema ?? DEFAULT_SCHEMA_NAME, srcTable);
+    if (key === viewKey) return;
+    if (seenTables.has(key)) return;
+    if (!findTable(visitor.data.tables, srcSchema, srcTable)) return;
+
+    seenTables.add(key);
+    visitor.data.deps.push({
+      edges: [{
+        upstream: { schemaName: srcSchema, tableName: srcTable, fieldNames: [] },
+        downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
+      }],
+      note: null,
+      custom: {},
+    });
+  };
+  ParseTreeWalker.DEFAULT.walk(collector, selectCtx);
 }

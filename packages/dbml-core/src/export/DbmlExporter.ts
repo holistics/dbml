@@ -1,5 +1,5 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, escapeString, formatRecordValue } from '@dbml/parse';
+import { addDoubleQuoteIfNeeded, escapeString, formatRecordValue, normalizeQualifiedName } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -444,7 +444,7 @@ class DbmlExporter {
 
       // Build table reference
       const tableRef = schemaName
-        ? `${addDoubleQuoteIfNeeded(schemaName)}.${addDoubleQuoteIfNeeded(tableName)}`
+        ? normalizeQualifiedName(schemaName, tableName)
         : addDoubleQuoteIfNeeded(tableName);
 
       // Collect all unique columns in order

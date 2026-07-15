@@ -47,7 +47,7 @@ import {
   renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
 import {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
 } from './queries/utils';
 import { DEFAULT_ENTRY } from '@/constants';
 
@@ -56,7 +56,7 @@ export { ScopeKind } from './types';
 export type { TextEdit } from './queries/transform';
 // Re-export utilities
 export {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
 };
 
 // Sentinel placed in the cache while a query is being computed.

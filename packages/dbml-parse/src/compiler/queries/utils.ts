@@ -57,6 +57,11 @@ export function addDoubleQuoteIfNeeded (identifier: string): string {
   return `"${escapeString(identifier)}"`;
 }
 
+// Build a quoted qualified name string from name parts.
+export function normalizeQualifiedName (...parts: string[]): string {
+  return parts.map(addDoubleQuoteIfNeeded).join('.');
+}
+
 /**
  * Unescapes a string by processing escape sequences.
  * Handles escaped quotes (\"), common escape sequences, unicode (\uHHHH), and arbitrary escapes.

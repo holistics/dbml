@@ -53,6 +53,7 @@ export {
   formatRecordValue,
   isValidIdentifier,
   addDoubleQuoteIfNeeded,
+  normalizeQualifiedName,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data

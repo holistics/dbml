@@ -1,43 +1,19 @@
 import {
   first, flatten, flattenDepth, last, nth,
 } from 'lodash-es';
+import { ParseTreeListener, ParseTreeWalker } from 'antlr4';
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
+import TSqlParser from '../../parsers/mssql/TSqlParser';
 import {
   Field, Index, Table, TableRecord,
 } from '../AST';
 import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
 import { getOriginalText } from '../helpers';
+import { normalizeQualifiedName } from '@dbml/parse';
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
 
 const DEFAULT_SCHEMA = 'dbo';
-
-function extractSourceTablesFromMssqlCtx (ctx) {
-  if (!ctx) return [];
-  const seen = new Map();
-  const stack = [ctx];
-  while (stack.length > 0) {
-    const node = stack.pop();
-    if (!node) continue;
-    const className = node.constructor && node.constructor.name;
-    if (className === 'Full_table_nameContext') {
-      const text = (node.getText && node.getText()) || '';
-      const cleaned = text.replace(/\[|\]|"|`/g, '').split(/\s+/)[0];
-      const parts = cleaned.split('.');
-      const tableName = parts[parts.length - 1];
-      const schemaName = parts.length > 1 ? parts[parts.length - 2] : undefined;
-      const key = `${schemaName || DEFAULT_SCHEMA}.${tableName}`;
-      if (tableName && !seen.has(key)) {
-        seen.set(key, { name: tableName, schemaName });
-      }
-    }
-    const childCount = typeof node.getChildCount === 'function' ? node.getChildCount() : 0;
-    for (let i = 0; i < childCount; i++) {
-      stack.push(node.getChild(i));
-    }
-  }
-  return Array.from(seen.values());
-}
 
 const getSchemaAndTableName = (names) => {
   const tableName = last(names);
@@ -158,29 +134,45 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       headerColor: null,
       custom: { query: ddl, kind: 'view' },
     });
-    this._emitDepsFromViewSelect(ctx, tableName, schemaName);
-  }
+    // Walk the SELECT body to find source tables and emit dep edges
+    const selectCtx = ctx.select_statement_standalone();
+    if (!selectCtx) return;
 
-  _emitDepsFromViewSelect (ctx, viewName, viewSchemaName) {
-    const sources = extractSourceTablesFromMssqlCtx(ctx);
-    sources.forEach((src) => {
-      if (src.name === viewName && (src.schemaName || DEFAULT_SCHEMA) === (viewSchemaName || DEFAULT_SCHEMA)) return;
-      if (!this.findTable(src.schemaName, src.name)) return;
+    const seenTables = new Set();
+    const viewKey = normalizeQualifiedName(schemaName ?? DEFAULT_SCHEMA, tableName);
+
+    // Collect all deps of this view
+    const collector = new ParseTreeListener();
+    collector.enterEveryRule = (node) => {
+      // Only handle full table name
+      if (!(node instanceof TSqlParser.Full_table_nameContext)) return;
+
+      const names = node.accept(this);
+      const { tableName: srcTable, schemaName: srcSchema } = getSchemaAndTableName(names);
+
+      // Skip self-references and duplicates
+      const key = normalizeQualifiedName(srcSchema ?? DEFAULT_SCHEMA, srcTable);
+      if (key === viewKey) return;
+      if (seenTables.has(key)) return;
+      if (!this.findTable(srcSchema, srcTable)) return;
+
+      seenTables.add(key);
       this.data.deps.push({
         edges: [{
-          upstream: { schemaName: src.schemaName, tableName: src.name, fieldNames: [] },
-          downstream: { schemaName: viewSchemaName, tableName: viewName, fieldNames: [] },
+          upstream: { schemaName: srcSchema, tableName: srcTable, fieldNames: [] },
+          downstream: { schemaName, tableName, fieldNames: [] },
         }],
         note: null,
         custom: {},
       });
-    });
+    };
+    ParseTreeWalker.DEFAULT.walk(collector, selectCtx);
   }
 
   findTable (schemaName, tableName) {
-    const realSchemaName = schemaName || DEFAULT_SCHEMA;
+    const realSchemaName = schemaName ?? DEFAULT_SCHEMA;
     const table = this.data.tables.find((t) => {
-      const targetSchemaName = t.schemaName || DEFAULT_SCHEMA;
+      const targetSchemaName = t.schemaName ?? DEFAULT_SCHEMA;
       return targetSchemaName === realSchemaName && t.name === tableName;
     });
     return table;
