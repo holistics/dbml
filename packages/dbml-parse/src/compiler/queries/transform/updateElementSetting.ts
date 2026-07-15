@@ -1,29 +1,17 @@
-import { DEFAULT_SCHEMA_NAME, DEFAULT_ENTRY } from '@/constants';
+import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { applyTextEdits, type TextEdit } from './applyTextEdits';
 import { updateSettingEdit } from '@/core/utils/setting';
-import type {
-  ElementIdentifier, DepIdentifier, RefIdentifier,
-  EndpointRef,
-} from './types';
-import { endpointsEqual, lookupElementSymbol } from './utils';
-import { findDepBlocks } from './syncDep';
-import { ElementKind } from '@/core/types/keywords';
+import type { ElementIdentifier, DepIdentifier, RefIdentifier } from './types';
 import {
-  ElementDeclarationNode, FunctionApplicationNode, InfixExpressionNode, type SyntaxNode,
-} from '@/core/types/nodes';
-import { destructureComplexVariable } from '@/core/utils/expression';
-import Lexer from '@/core/lexer/lexer';
-import Parser from '@/core/parser/parser';
-import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
+  endpointsEqual, endpointMatches, lookupElementSymbol,
+  formatEndpoint, formatSetting, findRefDefinition,
+} from './utils';
+import { depBlocksFromProgram, inlineDepsFromProgram } from './syncDep';
+import { FunctionApplicationNode, type SyntaxNode } from '@/core/types/nodes';
 
-// Returns the text edits needed to update, create, or remove a setting
-// on the element identified by `target`, without applying them.
-//  - value: string -> create or update the setting with this value
-//  - value: undefined -> name-only setting (e.g. `[pk]`)
-//  - value: null -> remove the setting
 export function updateElementSettingEdit (
   this: Compiler,
   filepath: Filepath,
@@ -31,22 +19,18 @@ export function updateElementSettingEdit (
   settingName: string,
   value: string | null | undefined,
 ): TextEdit[] {
-  const source = this.getSource(filepath) ?? '';
-
-  // dep - find by endpoints
   if (target.kind === 'dep') {
-    return updateDepSettingEdit(source, target, settingName, value);
+    return updateDepSettingEdit(this, filepath, target, settingName, value);
   }
 
-  // ref - find by endpoints
   if (target.kind === 'ref') {
-    return updateRefSettingEdit(source, target, settingName, value);
+    return updateRefSettingEdit(this, filepath, target, settingName, value);
   }
 
-  // named elements - find declaration by symbol lookup
   const declaration = findNamedElementDeclaration(this, filepath, target);
   if (!declaration) return [];
 
+  const source = this.getSource(filepath) ?? '';
   const edit = updateSettingEdit(declaration, settingName, value, source);
   return edit
     ? [
@@ -55,7 +39,6 @@ export function updateElementSettingEdit (
     : [];
 }
 
-// Applies updateElementSettingEdit and returns the new source.
 export function updateElementSetting (
   this: Compiler,
   filepath: Filepath,
@@ -69,7 +52,6 @@ export function updateElementSetting (
   return applyTextEdits(source, edits);
 }
 
-// Finds the declaration node for a named element
 function findNamedElementDeclaration (compiler: Compiler, filepath: Filepath, target: ElementIdentifier): SyntaxNode | undefined {
   const schema = ('schema' in target ? target.schema : undefined) ?? DEFAULT_SCHEMA_NAME;
 
@@ -91,23 +73,42 @@ function findNamedElementDeclaration (compiler: Compiler, filepath: Filepath, ta
   }
 }
 
-// For deps: short form can have settings on the header or the edge node.
-// Block form has settings on the header [...] or as body lines.
-function updateDepSettingEdit (source: string, target: DepIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
-  const block = findDepBlocks(source).find((block) => block.edges.some((e) => endpointsEqual(e.upstream, target.upstream) && endpointsEqual(e.downstream, target.downstream)));
-  if (!block) return [];
+function updateDepSettingEdit (compiler: Compiler, filepath: Filepath, target: DepIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
+  const source = compiler.getSource(filepath) ?? '';
+  const program = compiler.parseFile(filepath).getValue().ast;
+  const block = depBlocksFromProgram(program).find((b) =>
+    b.edges.some((e) => endpointsEqual(e.upstream, target.upstream) && endpointsEqual(e.downstream, target.downstream)),
+  );
+
+  if (!block) {
+    if (value === null) return [];
+
+    const inline = inlineDepsFromProgram(source, program).find((d) =>
+      endpointMatches(d.edge.upstream, target.upstream) && endpointMatches(d.edge.downstream, target.downstream),
+    );
+    if (!inline) return [];
+
+    const up = formatEndpoint(target.upstream);
+    const down = formatEndpoint(target.downstream);
+    const setting = formatSetting(settingName, value);
+
+    const depBlock = setting
+      ? `Dep [${setting}] {\n  ${up} -> ${down}\n}`
+      : `Dep {\n  ${up} -> ${down}\n}`;
+    return [
+      { start: inline.stripStart, end: inline.stripEnd, newText: '' },
+      { start: source.length, end: source.length, newText: '\n\n' + depBlock + '\n' },
+    ];
+  }
 
   const { declaration } = block;
   const { body } = declaration;
 
-  // short form (Dep: a -> b [color: #hex]) - check both header and edge node
   if (body instanceof FunctionApplicationNode) {
-    // check header first
     const headerEdit = updateSettingEdit(declaration, settingName, value, source);
     if (headerEdit) return [
       headerEdit,
     ];
-    // then edge node
     const edgeEdit = updateSettingEdit(body, settingName, value, source);
     if (edgeEdit) return [
       edgeEdit,
@@ -115,7 +116,6 @@ function updateDepSettingEdit (source: string, target: DepIdentifier, settingNam
     return [];
   }
 
-  // block form - header [...] or body line
   const edit = updateSettingEdit(declaration, settingName, value, source);
   return edit
     ? [
@@ -124,82 +124,30 @@ function updateDepSettingEdit (source: string, target: DepIdentifier, settingNam
     : [];
 }
 
-// For refs: short form has settings on header or edge node,
-// block form has settings on the matching edge node inside the body
-function updateRefSettingEdit (source: string, target: RefIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
-  const edgeNode = findRefEdgeNode(source, target);
-  if (!edgeNode) return [];
+function updateRefSettingEdit (compiler: Compiler, filepath: Filepath, target: RefIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
+  const source = compiler.getSource(filepath) ?? '';
+  const result = findRefDefinition(compiler, filepath, target);
 
-  const edit = updateSettingEdit(edgeNode, settingName, value, source);
+  if (!result) return [];
+
+  if (result.kind === 'inline') {
+    if (value === null) return [];
+    const left = formatEndpoint(target.endpoints[0]);
+    const right = formatEndpoint(target.endpoints[1]);
+    const setting = formatSetting(settingName, value);
+    const refLine = setting
+      ? `Ref: ${left} ${result.op} ${right} [${setting}]`
+      : `Ref: ${left} ${result.op} ${right}`;
+    return [
+      { start: result.fullStart, end: result.fullEnd, newText: '' },
+      { start: source.length, end: source.length, newText: '\n\n' + refLine + '\n' },
+    ];
+  }
+
+  const edit = updateSettingEdit(result.node, settingName, value, source);
   return edit
     ? [
         edit,
       ]
     : [];
-}
-
-// Converts AST variable fragments [schema?, table, ...fields] to EndpointRef
-function fragmentsToEndpoint (fragments: string[]): EndpointRef | undefined {
-  if (fragments.length === 0) return undefined;
-  if (fragments.length === 1) return { tableName: fragments[0] };
-  if (fragments.length === 2) return {
-    tableName: fragments[0],
-    fieldNames: [
-      fragments[1],
-    ],
-  };
-  return { schemaName: fragments[0], tableName: fragments[1], fieldNames: fragments.slice(2) };
-}
-
-// Checks if an infix expression matches both ref endpoints (in either order)
-function refInfixMatches (infix: InfixExpressionNode, target: RefIdentifier): boolean {
-  const leftFragments = infix.leftExpression ? destructureComplexVariable(infix.leftExpression) : null;
-  const rightFragments = infix.rightExpression ? destructureComplexVariable(infix.rightExpression) : null;
-  if (!leftFragments || !rightFragments) return false;
-
-  const left = fragmentsToEndpoint(leftFragments);
-  const right = fragmentsToEndpoint(rightFragments);
-  if (!left || !right) return false;
-
-  const [
-    ep0,
-    ep1,
-  ] = target.endpoints;
-  return (endpointsEqual(left, ep0) && endpointsEqual(right, ep1))
-    || (endpointsEqual(left, ep1) && endpointsEqual(right, ep0));
-}
-
-// Finds the ref edge node matching the given endpoints.
-// Returns the FunctionApplicationNode that holds the edge (and its settings).
-function findRefEdgeNode (source: string, target: RefIdentifier): FunctionApplicationNode | undefined {
-  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return undefined;
-  const tokens = lexerResult.getValue();
-
-  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
-  if (ast.getErrors().length > 0) return undefined;
-  const program = ast.getValue().ast;
-
-  for (const element of program.declarations) {
-    if (!(element instanceof ElementDeclarationNode) || !element.isKind(ElementKind.Ref)) continue;
-
-    const body = element.body;
-
-    // short form: Ref: a.id > b.id [color: #hex]
-    if (body instanceof FunctionApplicationNode && body.callee instanceof InfixExpressionNode) {
-      if (refInfixMatches(body.callee, target)) return body;
-      continue;
-    }
-
-    // block form: Ref { a.id > b.id [color: #hex] }
-    if (body && !(body instanceof FunctionApplicationNode)) {
-      for (const field of body.body) {
-        if (field instanceof FunctionApplicationNode && field.callee instanceof InfixExpressionNode) {
-          if (refInfixMatches(field.callee, target)) return field;
-        }
-      }
-    }
-  }
-
-  return undefined;
 }

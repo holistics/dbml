@@ -14,7 +14,7 @@
  * produces a duplicate `Dep`. `remove` on an edge with no block is a no-op.
  */
 
-import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
+import { DEFAULT_ENTRY } from '@/constants';
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import type { Filepath } from '@/core/types/filepath';
@@ -28,12 +28,12 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   PrefixExpressionNode,
+  ProgramNode,
   SyntaxNodeIdGenerator,
 } from '@/core/types/nodes';
 import { destructureComplexVariable, extractStringFromIdentifierStream } from '@/core/utils/expression';
 import type Compiler from '../../index';
-import { addDoubleQuoteIfNeeded } from '../utils';
-import { endpointsEqual } from './utils';
+import { endpointsEqual, formatEndpoint } from './utils';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
 import { updateNoteEdit, removeNoteEdit, addNoteEdit } from '@/core/utils/note';
 import { updateSettingEdit, removeSettingEdit } from '@/core/utils/setting';
@@ -78,16 +78,17 @@ export interface InlineDep {
  * dep blocks from malformed DBML (mirrors findDiagramViewBlocks).
  */
 export function findDepBlocks (source: string): DepBlock[] {
+  const program = parseSource(source);
+  return program ? depBlocksFromProgram(program) : [];
+}
+
+export function findInlineDeps (source: string): InlineDep[] {
+  const program = parseSource(source);
+  return program ? inlineDepsFromProgram(source, program) : [];
+}
+
+export function depBlocksFromProgram (program: ProgramNode): DepBlock[] {
   const blocks: DepBlock[] = [];
-
-  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return blocks;
-  const tokens = lexerResult.getValue();
-
-  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
-  if (ast.getErrors().length > 0) return blocks;
-
-  const program = ast.getValue().ast;
 
   for (const element of program.declarations) {
     if (!(element instanceof ElementDeclarationNode) || !element.isKind(ElementKind.Dep)) continue;
@@ -120,18 +121,8 @@ export function findDepBlocks (source: string): DepBlock[] {
   return blocks;
 }
 
-// Inline deps (`Table a { x [dep: -> b.y] }`) have no `Dep` block. To color one we strip the inline
-// setting and create a real block in the same pass, so the edge isn't duplicated.
-export function findInlineDeps (source: string): InlineDep[] {
+export function inlineDepsFromProgram (source: string, program: ProgramNode): InlineDep[] {
   const result: InlineDep[] = [];
-
-  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
-  if (lexerResult.getErrors().length > 0) return result;
-  const tokens = lexerResult.getValue();
-
-  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
-  if (ast.getErrors().length > 0) return result;
-  const program = ast.getValue().ast;
 
   for (const element of program.declarations) {
     if (!(element instanceof ElementDeclarationNode) || !element.isKind(ElementKind.Table)) continue;
@@ -155,7 +146,6 @@ export function findInlineDeps (source: string): InlineDep[] {
           columnName,
         ],
       };
-      // Compute the strip range once per field - all dep edges on this field share the same setting removal
       const edit = removeSettingEdit(field, SettingName.Dep, source);
       if (!edit) continue;
       for (const dep of extractInlineDepEdges(field, host)) {
@@ -165,6 +155,16 @@ export function findInlineDeps (source: string): InlineDep[] {
   }
 
   return result;
+}
+
+function parseSource (source: string): ProgramNode | undefined {
+  const lexerResult = new Lexer(source, DEFAULT_ENTRY).lex();
+  if (lexerResult.getErrors().length > 0) return undefined;
+  const tokens = lexerResult.getValue();
+
+  const ast = new Parser(source, tokens, new SyntaxNodeIdGenerator(), DEFAULT_ENTRY).parse();
+  if (ast.getErrors().length > 0) return undefined;
+  return ast.getValue().ast;
 }
 
 /**
@@ -198,8 +198,9 @@ export function syncDep (
   edits: TextEdit[];
 } {
   const dbml = this.getSource(filepath) ?? '';
-  const originalBlocks = blocks ?? findDepBlocks(dbml);
-  const inlineDeps = findInlineDeps(dbml);
+  const program = this.parseFile(filepath).getValue().ast;
+  const originalBlocks = blocks ?? depBlocksFromProgram(program);
+  const inlineDeps = inlineDepsFromProgram(dbml, program);
   const allEdits: TextEdit[] = [];
 
   for (const op of operations) {
@@ -209,10 +210,6 @@ export function syncDep (
   allEdits.sort((a, b) => b.start - a.start);
   const newDbml = applyTextEdits(dbml, allEdits, true);
   return { newDbml, edits: allEdits };
-}
-
-function normalizeSchema (schema?: string | null): string {
-  return schema && schema.length > 0 ? schema : DEFAULT_SCHEMA_NAME;
 }
 
 /**
@@ -276,15 +273,6 @@ function attrName (attr: AttributeNode): string | undefined {
     return extractStringFromIdentifierStream(attr.name)?.toLowerCase();
   }
   return undefined;
-}
-
-function formatEndpoint (endpoint: DepEndpointRef): string {
-  const schema = normalizeSchema(endpoint.schemaName);
-  const parts: string[] = [];
-  if (schema !== DEFAULT_SCHEMA_NAME) parts.push(addDoubleQuoteIfNeeded(schema));
-  parts.push(addDoubleQuoteIfNeeded(endpoint.tableName));
-  for (const field of endpoint.fieldNames ?? []) parts.push(addDoubleQuoteIfNeeded(field));
-  return parts.join('.');
 }
 
 function findBlockForEdge (blocks: DepBlock[], edge: DepSyncEdge): DepBlock | undefined {

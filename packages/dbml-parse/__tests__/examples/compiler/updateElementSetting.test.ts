@@ -253,4 +253,71 @@ describe('updateElementSetting - ref', () => {
     const result = update(dbml, ref(['a', 'id'], ['b', 'nonexistent']), 'color', '#FF0000');
     expect(result).toBe(dbml);
   });
+
+  it('extracts inline ref to standalone when adding a setting', () => {
+    const dbml = `Table a {
+  id int [ref: > b.id]
+}
+Table b {
+  id int
+}`;
+    const result = update(dbml, ref(['a', 'id'], ['b', 'id']), 'color', '#FF0000');
+    expect(result).not.toContain('[ref: > b.id]');
+    expect(result).toContain('Ref: a.id > b.id [color: #FF0000]');
+  });
+
+  it('extracts inline ref with name-only setting', () => {
+    const dbml = `Table a {
+  id int [ref: > b.id]
+}
+Table b {
+  id int
+}`;
+    const result = update(dbml, ref(['a', 'id'], ['b', 'id']), 'pk', undefined);
+    expect(result).not.toContain('[ref: > b.id]');
+    expect(result).toContain('Ref: a.id > b.id [pk]');
+  });
+
+  it('does nothing when removing a setting from an inline ref', () => {
+    const dbml = `Table a {
+  id int [ref: > b.id]
+}
+Table b {
+  id int
+}`;
+    const result = update(dbml, ref(['a', 'id'], ['b', 'id']), 'color', null);
+    expect(result).toBe(dbml);
+  });
+});
+
+describe('updateElementSetting - inline dep', () => {
+  const dep = (up: string, down: string): ElementIdentifier => ({
+    kind: MetadataKind.Dep,
+    upstream: { tableName: up },
+    downstream: { tableName: down },
+  });
+
+  it('extracts inline dep to standalone when adding a setting', () => {
+    const dbml = `Table a {
+  id int [dep: -> b]
+}
+Table b {
+  id int
+}`;
+    const result = update(dbml, dep('a', 'b'), 'color', '#FF0000');
+    expect(result).not.toContain('[dep: -> b]');
+    expect(result).toContain('color: #FF0000');
+    expect(result).toContain('a -> b');
+  });
+
+  it('does nothing when removing a setting from an inline dep', () => {
+    const dbml = `Table a {
+  id int [dep: -> b]
+}
+Table b {
+  id int
+}`;
+    const result = update(dbml, dep('a', 'b'), 'color', null);
+    expect(result).toBe(dbml);
+  });
 });
