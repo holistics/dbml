@@ -193,14 +193,12 @@ export const tableModule: GlobalModule = {
   },
 
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
-    if (isInsideSettingValue(node, SettingName.Dep)) {
-      const enclosingDecl = node.parent;
-      if (enclosingDecl instanceof ElementDeclarationNode && enclosingDecl.isKind(ElementKind.Table)) {
-        const programNode = compiler.parseFile(node.filepath).getValue().ast;
-        const globalSymbol = compiler.nodeSymbol(programNode).getValue();
-        if (globalSymbol === UNHANDLED) return Report.create(undefined);
-        return nodeRefereeOfInlineDep(compiler, globalSymbol, node);
-      }
+    // Case 0.0: Table dep settings
+    if (isInsideSettingValue(node, SettingName.Dep) && node.parent instanceof ElementDeclarationNode && node.parent.isKind(ElementKind.Table)) {
+      const programNode = compiler.parseFile(node.filepath).getValue().ast;
+      const globalSymbol = compiler.nodeSymbol(programNode).getValue();
+      if (globalSymbol === UNHANDLED) return Report.create(undefined);
+      return nodeRefereeOfInlineDep(compiler, globalSymbol, node);
     }
 
     if (!isInsideElementBody(node, ElementKind.Table)) {
@@ -214,28 +212,29 @@ export const tableModule: GlobalModule = {
       return Report.create(undefined);
     }
 
-    // Case 0: Partial injection (~partial_name)
+    // Case 1.0: Partial injection (~partial_name)
     if (isExpressionAVariableNode(node)
       && node.parentNode instanceof PrefixExpressionNode
       && node.parentNode.op?.value === '~') {
       return nodeRefereeOfPartialInjection(compiler, globalSymbol, node);
     }
 
-    // Case 1: Column's enum type
+    // Case 1.1: Column's enum type
     if (isWithinNthArgOfField(node, 1)) {
       return nodeRefereeOfEnumType(compiler, globalSymbol, node);
     }
 
-    // Case 2: Column's inline ref
+    // Case 1.2: Column's inline ref
     if (isInsideSettingValue(node, SettingName.Ref)) {
       return nodeRefereeOfInlineRef(compiler, globalSymbol, node);
     }
 
+    // Case 1.3: Column's dep
     if (isInsideSettingValue(node, SettingName.Dep)) {
       return nodeRefereeOfInlineDep(compiler, globalSymbol, node);
     }
 
-    // Case 3: Column's default value being an enum value
+    // Case 1.4: Column's default value being an enum value
     // Skip column name position (callee of the field's FunctionApplicationNode)
     if (isWithinNthArgOfField(node, 0)) {
       return Report.create(PASS_THROUGH);
