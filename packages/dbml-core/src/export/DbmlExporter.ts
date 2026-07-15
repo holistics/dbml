@@ -1,5 +1,5 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
+import { addDoubleQuoteIfNeeded, escapeString, formatRecordValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -350,7 +350,7 @@ class DbmlExporter {
   }
 
   static formatDepCustomValue (value: unknown): string {
-    if (typeof value === 'string') return `'${value.replaceAll('\\', '\\\\').replaceAll('\'', '\\\'')}'`;
+    if (typeof value === 'string') return `'${escapeString(value)}'`;
     if (value === null || value === undefined) return 'null';
     return String(value);
   }
