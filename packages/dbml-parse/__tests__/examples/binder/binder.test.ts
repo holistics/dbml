@@ -689,6 +689,20 @@ describe('[example] binder', () => {
       expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
     });
 
+    test('should error when inline ref target matches table name but resolves differently', () => {
+      // Table a.b.R means schema=a, schema=b, table=R
+      // But ref a.b.R resolves as schema=a, table=b, column=R
+      // So it should error because b is a schema, not a table
+      const source = `
+        Table a.b.R {
+          id int [ref: < a.b.R]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors.some((e) => e.diagnostic.includes('R'))).toBe(true);
+    });
+
     test('should allow forward reference to table', () => {
       const source = `
         Ref: posts.user_id > users.id
