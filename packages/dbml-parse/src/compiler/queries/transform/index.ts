@@ -1,5 +1,5 @@
 export { renameTable } from './renameTable';
-export { updateElementSetting } from './updateElementSetting';
+export { updateElementSetting, updateElementSettingEdit } from './updateElementSetting';
 export {
   syncDiagramView,
   findDiagramViewBlocks,

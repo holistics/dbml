@@ -5,6 +5,7 @@ import exporter from './export';
 import {
   renameTable,
   updateElementSetting,
+  updateElementSettingEdit,
   syncDiagramView,
   findDiagramViewBlocks,
   syncDep,
@@ -13,6 +14,7 @@ import {
 export {
   renameTable,
   updateElementSetting,
+  updateElementSettingEdit,
   syncDiagramView,
   findDiagramViewBlocks,
   syncDep,

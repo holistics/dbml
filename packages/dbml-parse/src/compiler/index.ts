@@ -44,7 +44,7 @@ import {
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
-  renameTable, syncDiagramView, syncDep, updateElementSetting,
+  renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
@@ -385,6 +385,7 @@ export default class Compiler {
   // transform queries
   renameTable = renameTable.bind(this);
   updateElementSetting = updateElementSetting.bind(this);
+  updateElementSettingEdit = updateElementSettingEdit.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
   syncDep = syncDep.bind(this);
 

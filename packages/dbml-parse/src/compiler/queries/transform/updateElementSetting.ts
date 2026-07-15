@@ -2,7 +2,7 @@ import { DEFAULT_SCHEMA_NAME, DEFAULT_ENTRY } from '@/constants';
 import { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
-import { applyTextEdits } from './applyTextEdits';
+import { applyTextEdits, type TextEdit } from './applyTextEdits';
 import { updateSettingEdit } from '@/core/utils/setting';
 import type {
   ElementIdentifier, DepIdentifier, RefIdentifier,
@@ -19,11 +19,43 @@ import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
 
-// Updates, creates, or removes a setting on the element identified by `target`.
+// Returns the text edits needed to update, create, or remove a setting
+// on the element identified by `target`, without applying them.
 //  - value: string -> create or update the setting with this value
 //  - value: undefined -> name-only setting (e.g. `[pk]`)
 //  - value: null -> remove the setting
-// Returns the new source, or the original if nothing changed.
+export function updateElementSettingEdit (
+  this: Compiler,
+  filepath: Filepath,
+  target: ElementIdentifier,
+  settingName: string,
+  value: string | null | undefined,
+): TextEdit[] {
+  const source = this.getSource(filepath) ?? '';
+
+  // dep - find by endpoints
+  if (target.kind === 'dep') {
+    return updateDepSettingEdit(source, target, settingName, value);
+  }
+
+  // ref - find by endpoints
+  if (target.kind === 'ref') {
+    return updateRefSettingEdit(source, target, settingName, value);
+  }
+
+  // named elements - find declaration by symbol lookup
+  const declaration = findNamedElementDeclaration(this, filepath, target);
+  if (!declaration) return [];
+
+  const edit = updateSettingEdit(declaration, settingName, value, source);
+  return edit
+    ? [
+        edit,
+      ]
+    : [];
+}
+
+// Applies updateElementSettingEdit and returns the new source.
 export function updateElementSetting (
   this: Compiler,
   filepath: Filepath,
@@ -32,27 +64,9 @@ export function updateElementSetting (
   value: string | null | undefined,
 ): string {
   const source = this.getSource(filepath) ?? '';
-
-  // dep - find by endpoints
-  if (target.kind === 'dep') {
-    return updateDepSetting(source, target, settingName, value);
-  }
-
-  // ref - find by endpoints
-  if (target.kind === 'ref') {
-    return updateRefSetting(source, target, settingName, value);
-  }
-
-  // named elements - find declaration by symbol lookup
-  const declaration = findNamedElementDeclaration(this, filepath, target);
-  if (!declaration) return source;
-
-  const edit = updateSettingEdit(declaration, settingName, value, source);
-  if (!edit) return source;
-
-  return applyTextEdits(source, [
-    edit,
-  ]);
+  const edits = this.updateElementSettingEdit(filepath, target, settingName, value);
+  if (edits.length === 0) return source;
+  return applyTextEdits(source, edits);
 }
 
 // Finds the declaration node for a named element
@@ -79,9 +93,9 @@ function findNamedElementDeclaration (compiler: Compiler, filepath: Filepath, ta
 
 // For deps: short form can have settings on the header or the edge node.
 // Block form has settings on the header [...] or as body lines.
-function updateDepSetting (source: string, target: DepIdentifier, settingName: string, value: string | null | undefined): string {
+function updateDepSettingEdit (source: string, target: DepIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
   const block = findDepBlocks(source).find((block) => block.edges.some((e) => endpointsEqual(e.upstream, target.upstream) && endpointsEqual(e.downstream, target.downstream)));
-  if (!block) return source;
+  if (!block) return [];
 
   const { declaration } = block;
   const { body } = declaration;
@@ -90,36 +104,38 @@ function updateDepSetting (source: string, target: DepIdentifier, settingName: s
   if (body instanceof FunctionApplicationNode) {
     // check header first
     const headerEdit = updateSettingEdit(declaration, settingName, value, source);
-    if (headerEdit) return applyTextEdits(source, [
+    if (headerEdit) return [
       headerEdit,
-    ]);
+    ];
     // then edge node
     const edgeEdit = updateSettingEdit(body, settingName, value, source);
-    if (edgeEdit) return applyTextEdits(source, [
+    if (edgeEdit) return [
       edgeEdit,
-    ]);
-    return source;
+    ];
+    return [];
   }
 
   // block form - header [...] or body line
   const edit = updateSettingEdit(declaration, settingName, value, source);
-  if (!edit) return source;
-  return applyTextEdits(source, [
-    edit,
-  ]);
+  return edit
+    ? [
+        edit,
+      ]
+    : [];
 }
 
 // For refs: short form has settings on header or edge node,
 // block form has settings on the matching edge node inside the body
-function updateRefSetting (source: string, target: RefIdentifier, settingName: string, value: string | null | undefined): string {
+function updateRefSettingEdit (source: string, target: RefIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
   const edgeNode = findRefEdgeNode(source, target);
-  if (!edgeNode) return source;
+  if (!edgeNode) return [];
 
   const edit = updateSettingEdit(edgeNode, settingName, value, source);
-  if (!edit) return source;
-  return applyTextEdits(source, [
-    edit,
-  ]);
+  return edit
+    ? [
+        edit,
+      ]
+    : [];
 }
 
 // Converts AST variable fragments [schema?, table, ...fields] to EndpointRef

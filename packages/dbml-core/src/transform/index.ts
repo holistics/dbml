@@ -36,6 +36,18 @@ export function syncDep (
   return compiler.syncDep(DEFAULT_ENTRY, operations, blocks);
 }
 
+export function updateElementSettingEdit (
+  dbmlCode: string,
+  target: ElementIdentifier,
+  settingName: string,
+  value: string | null | undefined,
+): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.updateElementSettingEdit(DEFAULT_ENTRY, target, settingName, value);
+}
+
 export function updateElementSetting (
   dbmlCode: string,
   target: ElementIdentifier,

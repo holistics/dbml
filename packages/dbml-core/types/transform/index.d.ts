@@ -9,6 +9,13 @@ export function renameTable(
   dbmlCode: string
 ): string;
 
+export function updateElementSettingEdit(
+  dbmlCode: string,
+  target: ElementIdentifier,
+  settingName: string,
+  value: string | null | undefined,
+): TextEdit[];
+
 export function updateElementSetting(
   dbmlCode: string,
   target: ElementIdentifier,
