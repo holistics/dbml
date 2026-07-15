@@ -357,8 +357,8 @@ class DbmlExporter {
 
   static exportDeps (depIds: number[], model: NormalizedModel): string {
     const strArr = depIds.map((depId) => {
-      const dep = (model as any).deps[depId];
-      const edges = dep.edgeIds.map((eid: number) => (model as any).depEdges[eid]);
+      const dep = model.deps[depId];
+      const edges = dep.edgeIds.map((eid) => model.depEdges[eid]);
 
       const hasNote = !!dep.note;
       const customEntries = dep.metadata ? Object.entries(dep.metadata) : [];
@@ -369,7 +369,7 @@ class DbmlExporter {
       }
 
       let str = 'Dep {\n';
-      edges.forEach((edge: any) => {
+      edges.forEach((edge) => {
         str += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;
       });
 
