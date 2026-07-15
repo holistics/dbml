@@ -15,7 +15,7 @@ Table another_schema.booking {
 }
 
 
-// short-form
+// short-form — simple deps can share downstream tables
 // no error
 Dep: users -> orders
 Dep: orders.user_id <- users.id
@@ -23,13 +23,12 @@ Dep: my_schema.events -> users
 Dep: my_schema.events.id -> users.id
 Dep: my_schema.events.id <- another_schema.booking.id
 
-// full-form
-// no error — distinct edges from the short-form above (same edge twice is a duplicate)
+// full-form — all edges must target the same downstream table
+// no error
 Dep {
   orders -> users
-  users -> my_schema.events
+  my_schema.events -> users
   orders.user_id -> users.id
-  users.id -> my_schema.events.id
 
   note: 'ok'
   materialized: view

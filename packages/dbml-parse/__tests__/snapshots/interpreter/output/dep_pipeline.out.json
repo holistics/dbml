@@ -73,28 +73,28 @@
               "token": {
                 "end": {
                   "column": 2,
-                  "line": 30,
-                  "offset": 425
+                  "line": 31,
+                  "offset": 512
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
                   "line": 24,
-                  "offset": 301
+                  "offset": 346
                 }
               }
             },
             "token": {
               "end": {
                 "column": 2,
-                "line": 30,
-                "offset": 425
+                "line": 31,
+                "offset": 512
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 1,
                 "line": 24,
-                "offset": 301
+                "offset": 346
               }
             },
             "upstream": {
@@ -102,14 +102,67 @@
               "token": {
                 "end": {
                   "column": 2,
-                  "line": 30,
-                  "offset": 425
+                  "line": 31,
+                  "offset": 512
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
                   "line": 24,
-                  "offset": 301
+                  "offset": 346
+                }
+              }
+            }
+          },
+          {
+            "downstream": {
+              "fieldNames": [
+                "revenue"
+              ],
+              "tableName": "fct_orders",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 31,
+                  "offset": 512
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 24,
+                  "offset": 346
+                }
+              }
+            },
+            "token": {
+              "end": {
+                "column": 2,
+                "line": 31,
+                "offset": 512
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 1,
+                "line": 24,
+                "offset": 346
+              }
+            },
+            "upstream": {
+              "fieldNames": [
+                "amount"
+              ],
+              "tableName": "stg_orders",
+              "token": {
+                "end": {
+                  "column": 2,
+                  "line": 31,
+                  "offset": 512
+                },
+                "filepath": "/main.dbml",
+                "start": {
+                  "column": 1,
+                  "line": 24,
+                  "offset": 346
                 }
               }
             }
@@ -123,14 +176,14 @@
           "token": {
             "end": {
               "column": 46,
-              "line": 27,
-              "offset": 380
+              "line": 28,
+              "offset": 467
             },
             "filepath": "/main.dbml",
             "start": {
               "column": 3,
-              "line": 27,
-              "offset": 337
+              "line": 28,
+              "offset": 424
             }
           },
           "value": "Aggregate staging orders into facts"
@@ -138,14 +191,14 @@
         "token": {
           "end": {
             "column": 2,
-            "line": 30,
-            "offset": 425
+            "line": 31,
+            "offset": 512
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
             "line": 24,
-            "offset": 301
+            "offset": 346
           }
         }
       },
@@ -157,28 +210,28 @@
               "token": {
                 "end": {
                   "column": 30,
-                  "line": 33,
-                  "offset": 528
+                  "line": 34,
+                  "offset": 615
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 33,
-                  "offset": 499
+                  "line": 34,
+                  "offset": 586
                 }
               }
             },
             "token": {
               "end": {
                 "column": 30,
-                "line": 33,
-                "offset": 528
+                "line": 34,
+                "offset": 615
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 1,
-                "line": 33,
-                "offset": 499
+                "line": 34,
+                "offset": 586
               }
             },
             "upstream": {
@@ -186,14 +239,14 @@
               "token": {
                 "end": {
                   "column": 30,
-                  "line": 33,
-                  "offset": 528
+                  "line": 34,
+                  "offset": 615
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 33,
-                  "offset": 499
+                  "line": 34,
+                  "offset": 586
                 }
               }
             }
@@ -202,84 +255,14 @@
         "token": {
           "end": {
             "column": 30,
-            "line": 33,
-            "offset": 528
+            "line": 34,
+            "offset": 615
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
-            "line": 33,
-            "offset": 499
-          }
-        }
-      },
-      {
-        "edges": [
-          {
-            "downstream": {
-              "fieldNames": [
-                "revenue"
-              ],
-              "tableName": "fct_orders",
-              "token": {
-                "end": {
-                  "column": 2,
-                  "line": 38,
-                  "offset": 595
-                },
-                "filepath": "/main.dbml",
-                "start": {
-                  "column": 1,
-                  "line": 36,
-                  "offset": 546
-                }
-              }
-            },
-            "token": {
-              "end": {
-                "column": 2,
-                "line": 38,
-                "offset": 595
-              },
-              "filepath": "/main.dbml",
-              "start": {
-                "column": 1,
-                "line": 36,
-                "offset": 546
-              }
-            },
-            "upstream": {
-              "fieldNames": [
-                "amount"
-              ],
-              "tableName": "stg_orders",
-              "token": {
-                "end": {
-                  "column": 2,
-                  "line": 38,
-                  "offset": 595
-                },
-                "filepath": "/main.dbml",
-                "start": {
-                  "column": 1,
-                  "line": 36,
-                  "offset": 546
-                }
-              }
-            }
-          }
-        ],
-        "token": {
-          "end": {
-            "column": 2,
-            "line": 38,
-            "offset": 595
-          },
-          "filepath": "/main.dbml",
-          "start": {
-            "column": 1,
-            "line": 36,
-            "offset": 546
+            "line": 34,
+            "offset": 586
           }
         }
       },
@@ -291,28 +274,28 @@
               "token": {
                 "end": {
                   "column": 38,
-                  "line": 41,
-                  "offset": 660
+                  "line": 37,
+                  "offset": 680
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 20,
-                  "line": 41,
-                  "offset": 642
+                  "line": 37,
+                  "offset": 662
                 }
               }
             },
             "token": {
               "end": {
                 "column": 38,
-                "line": 41,
-                "offset": 660
+                "line": 37,
+                "offset": 680
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 20,
-                "line": 41,
-                "offset": 642
+                "line": 37,
+                "offset": 662
               }
             },
             "upstream": {
@@ -320,14 +303,14 @@
               "token": {
                 "end": {
                   "column": 38,
-                  "line": 41,
-                  "offset": 660
+                  "line": 37,
+                  "offset": 680
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 20,
-                  "line": 41,
-                  "offset": 642
+                  "line": 37,
+                  "offset": 662
                 }
               }
             }
@@ -336,14 +319,14 @@
         "token": {
           "end": {
             "column": 38,
-            "line": 41,
-            "offset": 660
+            "line": 37,
+            "offset": 680
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 20,
-            "line": 41,
-            "offset": 642
+            "line": 37,
+            "offset": 662
           }
         }
       }
@@ -621,14 +604,14 @@
             "token": {
               "end": {
                 "column": 14,
-                "line": 42,
-                "offset": 677
+                "line": 38,
+                "offset": 697
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 42,
-                "offset": 666
+                "line": 38,
+                "offset": 686
               }
             },
             "type": {
@@ -642,14 +625,14 @@
             "token": {
               "end": {
                 "column": 16,
-                "line": 43,
-                "offset": 693
+                "line": 39,
+                "offset": 713
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 3,
-                "line": 43,
-                "offset": 680
+                "line": 39,
+                "offset": 700
               }
             },
             "type": {
@@ -662,14 +645,14 @@
         "token": {
           "end": {
             "column": 2,
-            "line": 44,
-            "offset": 695
+            "line": 40,
+            "offset": 715
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
-            "line": 41,
-            "offset": 623
+            "line": 37,
+            "offset": 643
           }
         }
       }
@@ -677,8 +660,8 @@
     "token": {
       "end": {
         "column": 1,
-        "line": 45,
-        "offset": 696
+        "line": 41,
+        "offset": 716
       },
       "filepath": "/main.dbml",
       "start": {

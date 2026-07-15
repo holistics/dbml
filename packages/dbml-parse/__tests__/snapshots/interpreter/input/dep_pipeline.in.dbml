@@ -20,9 +20,10 @@ Table fct_orders {
 // Short form
 Dep: raw_orders -> stg_orders
 
-// Long form with custom attrs
+// Long form with custom attrs — all edges target the same downstream table
 Dep {
   stg_orders -> fct_orders
+  stg_orders.amount -> fct_orders.revenue
 
   note: 'Aggregate staging orders into facts'
   materialized: table
@@ -31,11 +32,6 @@ Dep {
 
 // Reverse-direction sugar (<-): equivalent to raw_orders -> fct_orders
 Dep: fct_orders <- raw_orders
-
-// Column-level
-Dep {
-  stg_orders.amount -> fct_orders.revenue
-}
 
 // Inline on table header
 Table mart_orders [dep: <- fct_orders] {
