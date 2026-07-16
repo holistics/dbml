@@ -20,7 +20,7 @@ import {
 import type { Dep, DepEdge } from '@/core/types/schemaJson';
 import { DepMetadata, type Filepath } from '@/core/types';
 import type Compiler from '@/compiler';
-import { extractColor, getTokenPosition } from '@/core/utils/interpret';
+import { extractColor, getTokenPosition, normalizeNote } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
 
 export class DepInterpreter {
@@ -153,7 +153,7 @@ export class DepInterpreter {
               if (inner instanceof FunctionApplicationNode && inner.callee) {
                 const rawValue = this.extractAttrValue(inner.callee);
                 if (rawValue !== undefined) {
-                  this.dep.note = { value: String(rawValue), token: getTokenPosition(sub) };
+                  this.dep.note = { value: normalizeNote(String(rawValue)), token: getTokenPosition(sub) };
                 }
               }
               continue;
@@ -167,7 +167,7 @@ export class DepInterpreter {
             const rawValue = this.extractAttrValue(subBody.callee);
             if (rawValue === undefined) continue;
             if (sub.isKind(ElementKind.Note)) {
-              this.dep.note = { value: String(rawValue), token: getTokenPosition(sub) };
+              this.dep.note = { value: normalizeNote(String(rawValue)), token: getTokenPosition(sub) };
             } else {
               metadata[key] = rawValue;
             }
@@ -201,7 +201,7 @@ export class DepInterpreter {
       if (rawValue === undefined) continue;
 
       if (name === SettingName.Note) {
-        this.dep.note = { value: String(rawValue), token: getTokenPosition(attr) };
+        this.dep.note = { value: normalizeNote(String(rawValue)), token: getTokenPosition(attr) };
       } else {
         metadata[name] = rawValue;
       }
