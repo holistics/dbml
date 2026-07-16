@@ -128,6 +128,40 @@ Dep {
     const db = interpret(newDbml).getValue()!;
     expect(db.deps[0].color).toBe('#abcabc');
   });
+
+  it('matches a table-level edge to a column-level block (implicit table dep)', () => {
+    const dbml = `${PRELUDE}
+Dep {
+  a.id -> b.id
+}`;
+    const { newDbml } = syncDep(dbml, [
+      { operation: 'update', edge: tableEdge('a', 'b'), color: '#1abc9c' },
+    ]);
+    expect(newDbml).toContain('[color: #1abc9c]');
+    // Should update in place, not create a duplicate
+    expect(newDbml.match(/Dep/g)?.length).toBe(1);
+    const db = interpret(newDbml).getValue()!;
+    expect(db.deps).toHaveLength(1);
+    expect(db.deps[0].color).toBe('#1abc9c');
+  });
+});
+
+describe('syncDep - create with table-level edge matching column-level block', () => {
+  it('treats an existing column-level block as an update when creating with a table-level edge', () => {
+    const dbml = `${PRELUDE}
+Dep {
+  a.id -> b.id
+}`;
+    const { newDbml } = syncDep(dbml, [
+      { operation: 'create', edge: tableEdge('a', 'b'), color: '#ff5733' },
+    ]);
+    // Should update existing block, not create a new one
+    expect(newDbml.match(/Dep/g)?.length).toBe(1);
+    expect(newDbml).toContain('[color: #ff5733]');
+    const db = interpret(newDbml).getValue()!;
+    expect(db.deps).toHaveLength(1);
+    expect(db.deps[0].color).toBe('#ff5733');
+  });
 });
 
 describe('syncDep - remove color via update', () => {

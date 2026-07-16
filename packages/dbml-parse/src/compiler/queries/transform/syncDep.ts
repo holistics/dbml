@@ -31,7 +31,7 @@ import {
 } from '@/core/types/nodes';
 import { destructureComplexVariable, extractSettingName } from '@/core/utils/expression';
 import type Compiler from '../../index';
-import { endpointsEqual, formatEndpoint } from './utils';
+import { endpointMatches, formatEndpoint } from './utils';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
 import { updateNoteEdit, removeNoteEdit, addNoteEdit } from '@/core/utils/note';
 import { updateSettingEdit, removeSettingEdit } from '@/core/utils/setting';
@@ -270,12 +270,12 @@ function extractInlineDepEdges (field: FunctionApplicationNode, host: DepEndpoin
   return edges;
 }
 
-function edgesEqual (a: DepSyncEdge, b: DepSyncEdge): boolean {
-  return endpointsEqual(a.upstream, b.upstream) && endpointsEqual(a.downstream, b.downstream);
+function edgesMatch (candidate: DepSyncEdge, target: DepSyncEdge): boolean {
+  return endpointMatches(candidate.upstream, target.upstream) && endpointMatches(candidate.downstream, target.downstream);
 }
 
 function blockHasEdge (block: DepBlock, edge: DepSyncEdge): boolean {
-  return block.edges.some((e) => edgesEqual(e, edge));
+  return block.edges.some((e) => edgesMatch(e, edge));
 }
 
 function findBlockForEdge (blocks: DepBlock[], edge: DepSyncEdge): DepBlock | undefined {
@@ -329,7 +329,7 @@ function computeCreateEdit (dbml: string, operation: DepSyncOperation, blocks: D
   const createEdit: TextEdit = { start: dbml.length, end: dbml.length, newText: '\n\n' + newBlock + '\n' };
 
   // If the edge is authored inline, strip the inline setting to avoid duplication.
-  const inline = inlineDeps.find((d) => edgesEqual(d.edge, operation.edge));
+  const inline = inlineDeps.find((d) => edgesMatch(d.edge, operation.edge));
   if (inline) {
     return [
       { start: inline.fullStart, end: inline.fullEnd, newText: '' },
