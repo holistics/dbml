@@ -217,21 +217,11 @@ export class ProgramNode extends SyntaxNode {
   }
 
   get declarations (): ElementDeclarationNode[] {
-    // Custom-metadata blocks are also ELEMENT_DECLARATION nodes; exclude them here so
-    // element consumers never receive a metadata block.
-    return this.body.filter((s): s is ElementDeclarationNode =>
-      s.kind === SyntaxNodeKind.ELEMENT_DECLARATION
-      && (s as ElementDeclarationNode).type?.value.toLowerCase() !== 'metadata');
+    return this.body.filter((s): s is ElementDeclarationNode => s.kind === SyntaxNodeKind.ELEMENT_DECLARATION);
   }
 
   get uses (): UseDeclarationNode[] {
     return this.body.filter((s): s is UseDeclarationNode => s.kind === SyntaxNodeKind.USE_DECLARATION);
-  }
-
-  get metadata (): ElementDeclarationNode[] {
-    return this.body.filter((s): s is ElementDeclarationNode =>
-      s.kind === SyntaxNodeKind.ELEMENT_DECLARATION
-      && (s as ElementDeclarationNode).type?.value.toLowerCase() === 'metadata');
   }
 }
 
