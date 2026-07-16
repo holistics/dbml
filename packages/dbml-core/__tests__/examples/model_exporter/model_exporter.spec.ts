@@ -169,6 +169,41 @@ describe('@dbml/core - DbmlExporter flags', () => {
   });
 });
 
+describe('@dbml/core - ModelExporter table groups', () => {
+  test('does not schema-qualify TableGroup names', () => {
+    const database = (new Parser()).parse(
+      'create schema "s"; create table "s"."t" ("id" int not null, primary key ("id"));',
+      'postgres',
+    );
+    const model = database.normalize();
+    const schema = Object.values(model.schemas).find((item) => item.name === 's');
+
+    if (!schema) {
+      throw new Error('Expected schema "s" to exist');
+    }
+
+    const groupId = Math.max(0, ...Object.keys(model.tableGroups).map(Number)) + 1;
+    model.tableGroups[groupId] = {
+      id: groupId,
+      name: 'g',
+      schemaId: schema.id,
+      tableIds: [...schema.tableIds],
+      note: null,
+      color: '#cccccc',
+    };
+    schema.tableGroupIds.push(groupId);
+    schema.tableIds.forEach((tableId) => {
+      model.tables[tableId].groupId = groupId;
+    });
+
+    const res = ModelExporter.export(model, 'dbml', { isNormalized: true, includeRecords: false });
+
+    expect(res).toContain('TableGroup "g" [color: #cccccc] {');
+    expect(res).not.toContain('TableGroup "s"."g"');
+    expect(() => (new Parser()).parse(res, 'dbmlv2')).not.toThrow();
+  });
+});
+
 describe('@dbml/core - ModelExporter backwards compatibility', () => {
   test('accepts boolean true as isNormalized (old signature)', () => {
     const database = (new Parser()).parse(DBML_WITH_RECORDS, 'dbmlv2');
