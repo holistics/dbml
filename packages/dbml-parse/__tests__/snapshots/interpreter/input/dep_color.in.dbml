@@ -1,6 +1,7 @@
 Table users { id int }
 Table orders { id int }
 Table events { id int }
+Table reports { id int }
 
 // header attribute form
 Dep dep_header [color: #aabbcc] {
@@ -14,7 +15,7 @@ Dep dep_body {
 }
 
 // short / inline-setting form
-Dep: users -> events [color: #abcdef]
+Dep: users -> reports [color: #abcdef]
 
-// uncolored — no color slot
+// uncolored, no color slot
 Dep: events -> users

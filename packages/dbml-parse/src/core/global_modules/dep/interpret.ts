@@ -67,39 +67,49 @@ export class DepInterpreter {
   private interpretEdges (): CompileError[] {
     const upstreamColsList = this.metadata.upstreamColumns(this.compiler);
     const downstreamColsList = this.metadata.downstreamColumns(this.compiler);
-    const upstreamTbls = this.metadata.upstreamTables(this.compiler);
-    const downstreamTbls = this.metadata.downstreamTables(this.compiler);
+    const upstreamTables = this.metadata.upstreamTables(this.compiler);
+    const downstreamTables = this.metadata.downstreamTables(this.compiler);
 
     const edges: DepEdge[] = [];
     const errors: CompileError[] = [];
-    const count = Math.max(upstreamTbls.length, downstreamTbls.length);
+    const count = Math.max(upstreamTables.length, downstreamTables.length);
     for (let i = 0; i < count; i++) {
-      const upTbl = upstreamTbls[i];
-      const downTbl = downstreamTbls[i];
-      const upCols = upstreamColsList[i] ?? [];
-      const downCols = downstreamColsList[i] ?? [];
+      const upTable = upstreamTables[i];
+      const downTable = downstreamTables[i];
+      const upColumns = upstreamColsList[i] ?? [];
+      const downColumns = downstreamColsList[i] ?? [];
 
-      const upTblName = upTbl?.interpretedName(this.compiler, this.filepath);
-      const downTblName = downTbl?.interpretedName(this.compiler, this.filepath);
+      const upTableName = upTable?.interpretedName(this.compiler, this.filepath);
+      const downTableName = downTable?.interpretedName(this.compiler, this.filepath);
 
-      const upSchema = upTblName?.schema ?? null;
-      const downSchema = downTblName?.schema ?? null;
-      if (upTblName?.name && downTblName?.name && upTblName.name === downTblName.name && upSchema === downSchema) {
-        errors.push(new CompileError(CompileErrorCode.DEP_SELF_LOOP, `Self-loop Dep edge not allowed: "${upSchema ?? DEFAULT_SCHEMA_NAME}"."${upTblName.name}" cannot depend on itself`, this.declarationNode));
+      const upSchema = upTableName?.schema ?? null;
+      const downSchema = downTableName?.schema ?? null;
+
+      if (
+        upTableName?.name
+        && downTableName?.name
+        && upTableName.name === downTableName.name
+        && upSchema === downSchema
+      ) {
+        errors.push(new CompileError(
+          CompileErrorCode.DEP_SELF_LOOP,
+          `Self-loop Dep edge not allowed: "${upSchema ?? DEFAULT_SCHEMA_NAME}"."${upTableName.name}" cannot depend on itself`,
+          this.declarationNode,
+        ));
         continue;
       }
 
       edges.push({
         upstream: {
-          schemaName: upTblName?.schema ?? null,
-          tableName: upTblName?.name ?? '',
-          fieldNames: upCols.map((c) => c.name ?? ''),
+          schemaName: upTableName?.schema ?? null,
+          tableName: upTableName?.name ?? '',
+          fieldNames: upColumns.map((c) => c.name ?? ''),
           token: this.dep.token!,
         },
         downstream: {
-          schemaName: downTblName?.schema ?? null,
-          tableName: downTblName?.name ?? '',
-          fieldNames: downCols.map((c) => c.name ?? ''),
+          schemaName: downTableName?.schema ?? null,
+          tableName: downTableName?.name ?? '',
+          fieldNames: downColumns.map((c) => c.name ?? ''),
           token: this.dep.token!,
         },
         token: this.dep.token!,
@@ -109,22 +119,6 @@ export class DepInterpreter {
     return errors;
   }
 
-  /**
-   * Read settings into `dep.note` and `dep.metadata`.
-   *
-   * Settings come from THREE sources, in this order:
-   *   1. The top-level attribute list on the Dep header
-   *      (e.g. `Dep my_block [color: 'blue'] { ... }`).
-   *   2. Per-field setting lists inside the body
-   *      (e.g. `Dep { a -> b [note: 'x'] }`).
-   *   3. Sub-element declarations inside the body
-   *      (e.g. `Dep { a -> b; note: 'x'; materialized: 'view' }`).
-   *
-   * All three sources write into the same `metadata` object (with `note`
-   * routed to the typed slot instead). Precedence is last-write-wins by
-   * virtue of plain object assignment — settings later in the source
-   * file overwrite earlier ones with the same key.
-   */
   private interpretSettings (): CompileError[] {
     const metadata: Record<string, string | number | boolean | null> = {};
 
@@ -132,6 +126,7 @@ export class DepInterpreter {
       if (this.declarationNode.attributeList) {
         this.consumeSettings(this.declarationNode.attributeList, metadata);
       }
+
       const body = this.declarationNode.body;
       if (body) {
         const fields = body instanceof FunctionApplicationNode
@@ -140,11 +135,12 @@ export class DepInterpreter {
             ]
           : body.body.filter((e): e is FunctionApplicationNode => e instanceof FunctionApplicationNode);
         for (const field of fields) {
-          const settingsList = field.args.find((arg) => arg instanceof ListExpressionNode) as ListExpressionNode | undefined;
+          const settingsList = field.args.find((arg): arg is ListExpressionNode => arg instanceof ListExpressionNode);
           if (settingsList) {
             this.consumeSettings(settingsList, metadata);
           }
         }
+
         if (!(body instanceof FunctionApplicationNode)) {
           const subs = body.body.filter((e): e is ElementDeclarationNode => e instanceof ElementDeclarationNode);
           for (const sub of subs) {

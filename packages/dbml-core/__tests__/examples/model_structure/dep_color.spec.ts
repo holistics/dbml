@@ -5,6 +5,7 @@ const dbml = `
 Table users { id int }
 Table orders { id int }
 Table events { id int }
+Table reports { id int }
 
 // header attribute form
 Dep dep_header [color: #aabbcc] {
@@ -18,7 +19,7 @@ Dep dep_body {
 }
 
 // short / inline-setting form
-Dep: users -> events [color: #abcdef]
+Dep: users -> reports [color: #abcdef]
 
 // uncolored
 Dep: events -> users
@@ -41,7 +42,7 @@ describe('@dbml/core - Dep color (first-class setting)', () => {
   });
 
   test('[color] on a short-form Dep parses into dep.color', () => {
-    expect(byEdge('users', 'events').color).toBe('#abcdef');
+    expect(byEdge('users', 'reports').color).toBe('#abcdef');
   });
 
   test('an uncolored Dep has no color', () => {

@@ -4,164 +4,197 @@ title: Data Dependency
 
 # Data Dependency
 
-`Dep` describes **data lineage** — a directional flow of data from an upstream element to a downstream one (for example, a raw table feeding a staging table, or a source column feeding a derived column). It is distinct from `Ref`: a `Ref` models a foreign-key relationship between columns, while a `Dep` models "where this data comes from / where it goes". Deps are used solely to annotate and support the visualization; they have no SQL equivalent.
+`Dep` lets you describe **data lineage** in your database. While `Ref` models foreign-key relationships between columns, `Dep` models where data comes from and where it goes. This is useful for documenting data pipelines, ETL flows, and transformation logic.
+
+There are two common ways to use `Dep`:
+
+- **Quick annotations**: sprinkle short-form or inline deps throughout your schema to mark data flow between tables and columns as you define them.
+- **Transform blocks**: group all the inputs of a transformation into a single `Dep` block, annotated with notes and custom properties, to document a complete pipeline step.
+
+Deps have no SQL equivalent and are used solely for annotation and visualization.
 
 - [Direction](#direction)
-- [Short Form](#short-form)
-- [Block Form](#block-form)
-- [Block Header Settings](#block-header-settings)
-- [Inline Form](#inline-form)
-- [Endpoints](#endpoints)
-- [Settings](#settings)
-- [Uniqueness](#uniqueness)
+- [Annotating Data Flow](#annotating-data-flow)
+- [Documenting a Transform](#documenting-a-transform)
+- [Full Example](#full-example)
 
 ## Direction
 
-A dep always points from the **upstream** (source) element to the **downstream** (target) element. You can write the direction in either order:
-
-- `->` points from upstream to downstream: `upstream -> downstream`
-- `<-` points from downstream to upstream: `downstream <- upstream`
-
-Both operators describe the same directed edge — pick whichever reads more naturally. These two lines are equivalent:
+A dep edge always points from **upstream** (source) to **downstream** (target). You can write it in either direction:
 
 ```text
-Dep: users -> orders
-Dep: orders <- users
+// upstream -> downstream
+Dep: raw_orders -> stg_orders
+
+// downstream <- upstream (same edge, different reading order)
+Dep: stg_orders <- raw_orders
 ```
 
-## Short Form
+Pick whichever reads more naturally in context.
 
-The short form declares a single edge on one line:
+## Annotating Data Flow
+
+The simplest way to document data flow is to add deps where you define your tables and columns.
+
+**Short form** declares a single edge on one line:
 
 ```text
-Dep: users -> orders
-Dep: orders.user_id <- users.id
+Dep: raw_orders -> stg_orders
+Dep: raw_orders.amount -> stg_orders.revenue
 ```
 
-A `Dep` may optionally be given a name. The name is only a label — it has no effect on the lineage:
+**Inline form** attaches a dep directly to a table or column, without a separate `Dep` declaration:
 
 ```text
-Dep pipeline_step: users -> orders
-```
-
-## Block Form
-
-The block form groups multiple edges, and lets you attach settings, inside curly braces:
-
-```text
-Dep {
-  raw_orders -> stg_orders
-  stg_orders -> fct_orders
-  stg_orders.amount -> fct_orders.revenue
-
-  note: 'Aggregate staging orders into facts'
-  color: #79AD51
-}
-```
-
-Each line inside the block is one edge. Settings such as `note` and `color` are written as their own lines in the block body.
-
-## Block Header Settings
-
-Settings can also be placed in a `[...]` list on the block header, before the opening brace:
-
-```text
-Dep [color: #79AD51] {
-  raw_orders -> stg_orders
-}
-```
-
-A named block takes its name before the header list:
-
-```text
-Dep etl_flow [color: #79AD51] {
-  raw_orders -> stg_orders
-}
-```
-
-## Inline Form
-
-You can attach a dep directly to a table or a column using the `dep` setting, without writing a separate `Dep` declaration.
-
-On a **table header**, the endpoint is the table itself:
-
-```text
+// on a table header: the table itself is the endpoint
 Table mart_orders [dep: <- fct_orders] {
   id int
   total decimal
 }
-```
 
-On a **column**, the endpoint is that column:
-
-```text
+// on a column: the column is the endpoint
 Table fct_orders {
   id int
-  revenue decimal [dep: -> reports.revenue]
+  revenue decimal [dep: <- stg_orders.amount]
 }
 ```
 
-The inline `dep` value is a direction operator (`->` or `<-`) followed by the other endpoint. The host table or column supplies the near side of the edge automatically.
-
-## Endpoints
-
-An endpoint can be a whole table or a single column, and may be qualified with a schema:
-
-- Table-level: `table`, or `schema.table`
-- Column-level: `table.column`, or `schema.table.column`
-
-Both sides of an edge should refer to the same level — connect a table to a table, or a column to a column:
+You can freely use multiple short-form and inline deps targeting the same table:
 
 ```text
+Dep: raw_orders -> stg_orders
+Dep: raw_payments -> stg_orders
+```
+
+### Endpoints
+
+Each endpoint can be a table or a column, optionally qualified with a schema:
+
+```text
+// table-level
 Dep: my_schema.events -> users
+
+// column-level
 Dep: my_schema.events.id -> users.id
-Dep: my_schema.events.id <- another_schema.booking.id
 ```
 
-When no schema is given, the endpoint resolves in the default `public` schema.
+Both sides of an edge must refer to the same level (table-to-table or column-to-column). When no schema is given, the endpoint resolves in the default `public` schema.
 
-## Settings
+Each directed edge must be unique. Declaring the same edge twice is an error. The reversed pair (`a -> b` and `b -> a`) and different levels (`a -> b` and `a.id -> b.id`) are considered distinct and can coexist.
 
-Settings are written either in the block header `[...]` list, on a per-edge `[...]` list, or as `key: value` lines inside the block body.
+## Documenting a Transform
 
-- `note: 'string'`: add a note describing the dependency. See [Note Definition](./enrichment-visualization.md#note-definition). The note can use a [multi-line string](./language-basics.md#multi-line-string).
-- `color: <color_code>`: change the color of the lineage line. See [Colors](./enrichment-visualization.md#colors) for accepted color formats.
+When a table is produced by a specific transformation step (e.g. a dbt model, a SQL view, or an ETL job), you can group all its input edges into a single `Dep` block and attach properties describing the transform:
 
 ```text
-// header list
-Dep [color: #79AD51] {
-  raw_orders -> stg_orders
-}
-
-// body lines
 Dep {
   raw_orders -> stg_orders
-  note: 'Nightly load'
-  color: #79AD51
-}
+  raw_payments -> stg_orders
+  raw_orders.amount -> stg_orders.revenue
 
-// per-edge list
+  note: 'Clean and join raw order + payment data'
+  materialized: table
+  owner: 'data-team'
+}
+```
+
+A block can optionally have a name (used as a label only) and header settings:
+
+```text
+Dep order_staging [color: #79AD51] {
+  raw_orders -> stg_orders
+  raw_payments -> stg_orders
+}
+```
+
+### Settings
+
+You can add settings in the block header `[...]`, or as `key: value` lines inside the block body:
+
+- `note`: a description of the dependency. Supports [multi-line strings](./language-basics.md#multi-line-string).
+- `color`: the color of the lineage line. See [Colors](./enrichment-visualization.md#colors).
+- Custom keys (e.g. `materialized`, `owner`) are preserved and available in the output.
+
+### Block rules
+
+Because a block represents a single transform step, two rules apply:
+
+1. All edges must target the **same downstream table**.
+2. Only **one block** can target a given downstream table.
+
+```text
+// ok: all edges flow into stg_orders
 Dep {
-  raw_orders -> stg_orders [color: #79AD51]
+  raw_orders -> stg_orders
+  raw_payments -> stg_orders
+}
+
+// error: edges target different downstream tables
+Dep {
+  raw_orders -> stg_orders
+  raw_users -> stg_users
 }
 ```
 
-## Uniqueness
-
-Each directed edge must be unique. Declaring the same edge twice — whether in short form, block form, or inline form — reports the error *"Dep with same endpoints already exists"*:
+Short-form and inline deps also cannot target a table that already has a block:
 
 ```text
-// error: the same edge is declared twice
-Dep: a -> b
-Dep: a -> b
+// error: short-form conflicts with existing block
+Dep { raw_orders -> stg_orders }
+Dep: raw_payments -> stg_orders
+
+// ok: put all edges inside the block
+Dep {
+  raw_orders -> stg_orders
+  raw_payments -> stg_orders
+}
 ```
 
-Uniqueness is checked per direction, so the **reversed** pair is a different edge and is allowed:
+## Full Example
+
+A small data pipeline with raw, staging, and fact layers:
 
 ```text
-// no error: a -> b and b -> a are distinct edges
-Dep: a -> b
-Dep: b -> a
-```
+Table raw_orders {
+  id int [pk]
+  user_id int
+  amount decimal
+}
 
-Table-level and column-level edges are also distinct, so `a -> b` and `a.id -> b.id` can both exist.
+Table raw_payments {
+  id int [pk]
+  order_id int
+  amount decimal
+}
+
+Table stg_orders {
+  id int [pk]
+  user_id int
+  revenue decimal
+}
+
+Table fct_daily_revenue {
+  date date [pk]
+  total_revenue decimal
+}
+
+// Quick annotations: mark raw-to-staging flow
+Dep: raw_orders.user_id -> stg_orders.user_id
+
+// Transform block: document the staging step
+Dep order_staging [color: #79AD51] {
+  raw_orders -> stg_orders
+  raw_payments -> stg_orders
+  raw_orders.amount -> stg_orders.revenue
+
+  note: 'Join orders with payments, compute revenue'
+  materialized: table
+  owner: 'data-team'
+}
+
+// Inline: mark fact table dependency right where it's defined
+Table fct_daily_revenue [dep: <- stg_orders] {
+  date date [pk]
+  total_revenue decimal [dep: <- stg_orders.revenue]
+}
+```

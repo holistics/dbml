@@ -10,28 +10,28 @@
               "token": {
                 "end": {
                   "column": 2,
-                  "line": 8,
-                  "offset": 150
+                  "line": 9,
+                  "offset": 175
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 6,
-                  "offset": 97
+                  "line": 7,
+                  "offset": 122
                 }
               }
             },
             "token": {
               "end": {
                 "column": 2,
-                "line": 8,
-                "offset": 150
+                "line": 9,
+                "offset": 175
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 1,
-                "line": 6,
-                "offset": 97
+                "line": 7,
+                "offset": 122
               }
             },
             "upstream": {
@@ -39,14 +39,14 @@
               "token": {
                 "end": {
                   "column": 2,
-                  "line": 8,
-                  "offset": 150
+                  "line": 9,
+                  "offset": 175
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 6,
-                  "offset": 97
+                  "line": 7,
+                  "offset": 122
                 }
               }
             }
@@ -56,14 +56,14 @@
         "token": {
           "end": {
             "column": 2,
-            "line": 8,
-            "offset": 150
+            "line": 9,
+            "offset": 175
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
-            "line": 6,
-            "offset": 97
+            "line": 7,
+            "offset": 122
           }
         }
       },
@@ -76,28 +76,28 @@
               "token": {
                 "end": {
                   "column": 2,
-                  "line": 14,
-                  "offset": 233
+                  "line": 15,
+                  "offset": 258
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 11,
-                  "offset": 181
+                  "line": 12,
+                  "offset": 206
                 }
               }
             },
             "token": {
               "end": {
                 "column": 2,
-                "line": 14,
-                "offset": 233
+                "line": 15,
+                "offset": 258
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 1,
-                "line": 11,
-                "offset": 181
+                "line": 12,
+                "offset": 206
               }
             },
             "upstream": {
@@ -105,14 +105,14 @@
               "token": {
                 "end": {
                   "column": 2,
-                  "line": 14,
-                  "offset": 233
+                  "line": 15,
+                  "offset": 258
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 11,
-                  "offset": 181
+                  "line": 12,
+                  "offset": 206
                 }
               }
             }
@@ -122,14 +122,14 @@
         "token": {
           "end": {
             "column": 2,
-            "line": 14,
-            "offset": 233
+            "line": 15,
+            "offset": 258
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
-            "line": 11,
-            "offset": 181
+            "line": 12,
+            "offset": 206
           }
         }
       },
@@ -138,47 +138,47 @@
         "edges": [
           {
             "downstream": {
-              "tableName": "events",
+              "tableName": "reports",
               "token": {
                 "end": {
-                  "column": 38,
-                  "line": 17,
-                  "offset": 303
+                  "column": 39,
+                  "line": 18,
+                  "offset": 329
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 17,
-                  "offset": 266
+                  "line": 18,
+                  "offset": 291
                 }
               }
             },
             "token": {
               "end": {
-                "column": 38,
-                "line": 17,
-                "offset": 303
+                "column": 39,
+                "line": 18,
+                "offset": 329
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 1,
-                "line": 17,
-                "offset": 266
+                "line": 18,
+                "offset": 291
               }
             },
             "upstream": {
               "tableName": "users",
               "token": {
                 "end": {
-                  "column": 38,
-                  "line": 17,
-                  "offset": 303
+                  "column": 39,
+                  "line": 18,
+                  "offset": 329
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 17,
-                  "offset": 266
+                  "line": 18,
+                  "offset": 291
                 }
               }
             }
@@ -186,15 +186,15 @@
         ],
         "token": {
           "end": {
-            "column": 38,
-            "line": 17,
-            "offset": 303
+            "column": 39,
+            "line": 18,
+            "offset": 329
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
-            "line": 17,
-            "offset": 266
+            "line": 18,
+            "offset": 291
           }
         }
       },
@@ -206,28 +206,28 @@
               "token": {
                 "end": {
                   "column": 21,
-                  "line": 20,
-                  "offset": 354
+                  "line": 21,
+                  "offset": 379
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 20,
-                  "offset": 334
+                  "line": 21,
+                  "offset": 359
                 }
               }
             },
             "token": {
               "end": {
                 "column": 21,
-                "line": 20,
-                "offset": 354
+                "line": 21,
+                "offset": 379
               },
               "filepath": "/main.dbml",
               "start": {
                 "column": 1,
-                "line": 20,
-                "offset": 334
+                "line": 21,
+                "offset": 359
               }
             },
             "upstream": {
@@ -235,14 +235,14 @@
               "token": {
                 "end": {
                   "column": 21,
-                  "line": 20,
-                  "offset": 354
+                  "line": 21,
+                  "offset": 379
                 },
                 "filepath": "/main.dbml",
                 "start": {
                   "column": 1,
-                  "line": 20,
-                  "offset": 334
+                  "line": 21,
+                  "offset": 359
                 }
               }
             }
@@ -251,14 +251,14 @@
         "token": {
           "end": {
             "column": 21,
-            "line": 20,
-            "offset": 354
+            "line": 21,
+            "offset": 379
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
-            "line": 20,
-            "offset": 334
+            "line": 21,
+            "offset": 359
           }
         }
       }
@@ -380,13 +380,52 @@
             "offset": 47
           }
         }
+      },
+      {
+        "fields": [
+          {
+            "name": "id",
+            "pk": false,
+            "token": {
+              "end": {
+                "column": 23,
+                "line": 4,
+                "offset": 93
+              },
+              "filepath": "/main.dbml",
+              "start": {
+                "column": 17,
+                "line": 4,
+                "offset": 87
+              }
+            },
+            "type": {
+              "type_name": "int"
+            },
+            "unique": false
+          }
+        ],
+        "name": "reports",
+        "token": {
+          "end": {
+            "column": 25,
+            "line": 4,
+            "offset": 95
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 4,
+            "offset": 71
+          }
+        }
       }
     ],
     "token": {
       "end": {
         "column": 1,
-        "line": 21,
-        "offset": 355
+        "line": 22,
+        "offset": 380
       },
       "filepath": "/main.dbml",
       "start": {
