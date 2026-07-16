@@ -41,7 +41,7 @@ class Field extends Element {
     this.checks = [];
     /** @type {import('../../types/model_structure/endpoint').default[]} */
     this.endpoints = [];
-    /** @type {import('../../types/model_structure/dep_edge').default[]} */
+    /** @type {import('./depEdge').default[]} */
     this.depEdges = [];
     /** @type {import('../../types/model_structure/table').default} */
     this.table = table;
@@ -96,7 +96,7 @@ class Field extends Element {
   }
 
   /**
-   * @param {import('../../types/model_structure/dep_edge').default} depEdge
+   * @param {import('./depEdge').default} depEdge
    */
   pushDepEdge (depEdge) {
     this.depEdges.push(depEdge);

@@ -36,7 +36,6 @@ declare class Dep extends Element {
     schema: Schema;
     dbState: DbState;
     id: number;
-    database: Database;
     constructor({ name, note, metadata, edges, token, schema }: RawDep);
     generateId(): void;
     processEdges(rawEdges: RawDepEdgeInput[]): void;

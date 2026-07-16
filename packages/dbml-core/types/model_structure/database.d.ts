@@ -86,7 +86,7 @@ declare class Database extends Element {
     checkSchema(schema: Schema): void;
     processSchemaElements(elements: Schema[] | Table[] | Enum[] | TableGroup[] | Ref[], elementType: any): void;
     findOrCreateSchema(schemaName: string): Schema;
-    findTable(rawTable: any): Table;
+    findTable(schemaName: string | null, tableName: string): Table;
     processTablePartials(rawTablePartials: any[]): TablePartial[];
     findTablePartial(partialName: string): TablePartial;
     export(): {

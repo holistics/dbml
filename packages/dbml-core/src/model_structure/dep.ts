@@ -1,31 +1,36 @@
 import { get } from 'lodash-es';
 import { DEFAULT_SCHEMA_NAME } from './config';
-import DepEdge from './dep_edge';
+import DepEdge from './depEdge';
 import Element from './element';
+import type { RawDep, RawDepEdgeInput } from '../../types/model_structure/dep';
+import type { RawDepEdge } from '../../types/model_structure/dep_edge';
+import type { Token, Color } from '../../types/model_structure/element';
+import type { NormalizedModel } from '../../types/model_structure/database';
+import type Schema from '../../types/model_structure/schema';
+import type DbState from '../../types/model_structure/dbState';
 
 class Dep extends Element {
-  /**
-   * @param {import('../../types/model_structure/dep').RawDep} param0
-   */
+  name: string | null;
+  color: Color | undefined;
+  note: string | null;
+  noteToken: Token | null;
+  metadata: Record<string, string | number | boolean | null> | null;
+  edges: DepEdge[];
+  schema: Schema;
+  dbState: DbState;
+  id!: number;
+
   constructor ({
-    name, color, note, metadata, edges, token, schema = {},
-  } = {}) {
+    name, color, note, metadata, edges, token, schema = {} as Schema,
+  }: RawDep) {
     super(token);
-    /** @type {string|null} */
     this.name = name ?? null;
-    /** @type {string|undefined} */
     this.color = color;
-    /** @type {string|null} */
-    this.note = note ? get(note, 'value', note) : null;
-    /** @type {import('../../types/model_structure/element').Token} */
+    this.note = note ? get(note, 'value', note) as string : null;
     this.noteToken = note ? get(note, 'token', null) : null;
-    /** @type {Record<string, string|number|boolean|null>|null} */
     this.metadata = metadata ?? null;
-    /** @type {import('./dep_edge').default[]} */
     this.edges = [];
-    /** @type {import('./schema').default} */
     this.schema = schema;
-    /** @type {import('./dbState').default} */
     this.dbState = this.schema.dbState;
     this.generateId();
 
@@ -33,14 +38,10 @@ class Dep extends Element {
   }
 
   generateId () {
-    /** @type {number} */
     this.id = this.dbState.generateId('depId');
   }
 
-  /**
-   * @param {import('../../types/model_structure/dep_edge').RawDepEdge[]} rawEdges
-   */
-  processEdges (rawEdges) {
+  processEdges (rawEdges: RawDepEdgeInput[]) {
     rawEdges.forEach((rawEdge) => {
       const upSchema = rawEdge.upstream?.schemaName || DEFAULT_SCHEMA_NAME;
       const downSchema = rawEdge.downstream?.schemaName || DEFAULT_SCHEMA_NAME;
@@ -49,7 +50,7 @@ class Dep extends Element {
       if (upSchema === downSchema && upTable === downTable) {
         this.error(`Self-loop Dep edge not allowed: "${upSchema}"."${upTable}" cannot depend on itself`);
       }
-      this.edges.push(new DepEdge({ ...rawEdge, dep: this }));
+      this.edges.push(new DepEdge({ ...rawEdge, dep: this } as RawDepEdge));
     });
   }
 
@@ -87,10 +88,7 @@ class Dep extends Element {
     };
   }
 
-  /**
-   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
-   */
-  normalize (model) {
+  normalize (model: NormalizedModel) {
     model.deps[this.id] = {
       id: this.id,
       ...this.shallowExport(),

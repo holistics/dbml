@@ -1,43 +1,47 @@
 import { DEFAULT_SCHEMA_NAME } from './config';
 import Element from './element';
 import { shouldPrintSchema, shouldPrintSchemaName } from './utils';
+import type { DepEndpointData, RawDepEdge } from '../../types/model_structure/dep_edge';
+import type { NormalizedModel } from '../../types/model_structure/database';
+import type Dep from '../../types/model_structure/dep';
+import type DbState from '../../types/model_structure/dbState';
+import type Table from '../../types/model_structure/table';
+import type Field from '../../types/model_structure/field';
+import type Database from '../../types/model_structure/database';
 
 class DepEdge extends Element {
-  /**
-   * @param {import('../../types/model_structure/dep_edge').RawDepEdge} param0
-   */
-  constructor ({
-    upstream, downstream, token, dep,
-  }) {
+  upstream: DepEndpointData;
+  downstream: DepEndpointData;
+  dep: Dep;
+  dbState: DbState;
+  id!: number;
+  upstreamTable: Table | null;
+  upstreamFields: Field[];
+  downstreamTable: Table | null;
+  downstreamFields: Field[];
+
+  constructor ({ upstream, downstream, token, dep }: RawDepEdge) {
     super(token);
-    /** @type {{ schemaName: string|null, tableName: string, fieldNames: string[] }} */
     this.upstream = {
       schemaName: upstream.schemaName ?? null,
       tableName: upstream.tableName,
       fieldNames: upstream.fieldNames ?? [],
     };
-    /** @type {{ schemaName: string|null, tableName: string, fieldNames: string[] }} */
     this.downstream = {
       schemaName: downstream.schemaName ?? null,
       tableName: downstream.tableName,
       fieldNames: downstream.fieldNames ?? [],
     };
-    /** @type {import('./dep').default} */
     this.dep = dep;
-    /** @type {import('./dbState').default} */
     this.dbState = this.dep.dbState;
     this.generateId();
 
     const database = this.dep.schema.database;
     const up = this.resolveEndpoint(this.upstream, database);
     const down = this.resolveEndpoint(this.downstream, database);
-    /** @type {import('./table').default | null} */
     this.upstreamTable = up.table;
-    /** @type {import('./field').default[]} */
     this.upstreamFields = up.fields;
-    /** @type {import('./table').default | null} */
     this.downstreamTable = down.table;
-    /** @type {import('./field').default[]} */
     this.downstreamFields = down.fields;
 
     this.upstreamFields.forEach((field) => field.pushDepEdge(this));
@@ -46,16 +50,12 @@ class DepEdge extends Element {
 
   /**
    * Resolve an upstream or downstream endpoint against the database.
-   * Throws via this.error() if the referenced table or field can't be found —
-   * mirrors Endpoint's strict resolution so typos in Dep produce a real
-   * compile error rather than a silently-dropped edge.
-   * For bare-table endpoints (fieldNames empty), returns the table only.
-   *
-   * @param {{ schemaName?: string|null, tableName: string, fieldNames?: string[] }} endpointData
-   * @param {import('./database').default} database
-   * @returns {{ table: import('./table').default, fields: import('./field').default[] }}
+   * Throws via this.error() if the referenced table or field can't be found.
    */
-  resolveEndpoint (endpointData, database) {
+  resolveEndpoint (
+    endpointData: { schemaName?: string | null; tableName: string; fieldNames?: string[] },
+    database: Database,
+  ): { table: Table; fields: Field[] } {
     const schemaName = endpointData.schemaName || DEFAULT_SCHEMA_NAME;
     const table = database.findTable(schemaName, endpointData.tableName);
     if (!table) {
@@ -78,7 +78,6 @@ class DepEdge extends Element {
   }
 
   generateId () {
-    /** @type {number} */
     this.id = this.dbState.generateId('depEdgeId');
   }
 
@@ -103,10 +102,7 @@ class DepEdge extends Element {
     };
   }
 
-  /**
-   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
-   */
-  normalize (model) {
+  normalize (model: NormalizedModel) {
     if (!model.depEdges) model.depEdges = {};
     model.depEdges[this.id] = {
       id: this.id,
