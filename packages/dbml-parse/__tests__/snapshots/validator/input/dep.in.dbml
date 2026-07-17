@@ -56,6 +56,10 @@ Dep {
 Table good_header_bare [dep: <- users] { id int }
 Table good_header_schema [dep: <- my_schema.events] { id int }
 
+// inline on table header with invalid dep value (INVALID_TABLE_SETTING_VALUE)
+Table bad_header_op [dep: > users] { id int }
+Table bad_header_literal [dep: 'not_a_dep'] { id int }
+
 // inline on column
 // no error
 Table good_col_bare { id int [dep: -> users.id] }

@@ -132,6 +132,11 @@ export default class TableValidator {
           });
           break;
         case SettingName.Dep:
+          attrs.forEach((attr) => {
+            if (!isUnaryDependency(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'dep\' must be `-> target` or `<- source`', attr.value || attr.name!));
+            }
+          });
           break;
         default:
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.UNKNOWN_TABLE_SETTING, `Unknown '${name}' setting`, attr)));
@@ -419,6 +424,13 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
         attrs.forEach((attr) => {
           if (!isExpressionAQuotedString(attr.value)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'note\' must be a string literal', attr.value || attr.name!));
+          }
+        });
+        break;
+      case SettingName.Dep:
+        attrs.forEach((attr) => {
+          if (!isUnaryDependency(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'dep\' must be `-> target` or `<- source`', attr.value || attr.name!));
           }
         });
         break;
