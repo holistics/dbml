@@ -2,26 +2,23 @@ import Compiler from '@/compiler/index';
 import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ElementDeclarationNode, ProgramNode } from '@/core/types/nodes';
+import { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, CustomMetadata, Database, DiagramView, Enum,
-  MetadataElement, Note, Project, Ref,
+  Alias, Database, DiagramView, Enum,
+  Note, Project, Ref,
   RefEndpoint, SchemaElement, Table,
-  TableGroup, TablePartial, TableRecord, TokenPosition,
+  TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
 import {
   AliasSymbol,
-  MetadataTargetKind,
   type NodeSymbol,
   ProgramSymbol,
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import {
-  MetadataElementMetadata, MetadataKind, PartialRefMetadata, RecordsMetadata,
-} from '@/core/types/symbol/metadata';
+import { MetadataKind, PartialRefMetadata, RecordsMetadata } from '@/core/types/symbol/metadata';
 import { TableSymbol } from '@/core/types/symbol';
 import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
@@ -35,9 +32,6 @@ import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../reco
 import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '../utils';
-import type { MetadataTarget } from '../metadata/metadataField';
-import { METADATA_FIELDS_BY_KIND } from '../metadata/fieldRegistry';
-import { groupBy, values } from 'lodash-es';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -47,9 +41,6 @@ export default class ProgramInterpreter {
   private errors: CompileError[] = [];
   private warnings: CompileWarning[] = [];
   private db: Database;
-  // Maps a metadata-host symbol's interned id to its emitted element object, so
-  // the metadata pass can attach merged values onto the right object.
-  private emittedBySymbol = new Map<string, MetadataTarget>();
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {
     this.compiler = compiler;
@@ -82,7 +73,6 @@ export default class ProgramInterpreter {
     this.interpretAllSymbols();
     this.interpretAllMetadata();
     this.interpretAllAliases();
-    this.interpretAllCustomMetadata();
     this.warnings.push(...this.validateRecords());
     return new Report(this.db, this.errors, this.warnings);
   }
@@ -256,62 +246,6 @@ export default class ProgramInterpreter {
     }
   }
 
-  private interpretAllCustomMetadata () {
-    const metadatas = this.compiler.symbolMetadata(this.programSymbol).filter((m) => m instanceof MetadataElementMetadata);
-    const groupbyTargetMetadatas = groupBy(metadatas, (m) => m.target(this.compiler)?.intern());
-
-    for (const metas of Object.values(groupbyTargetMetadatas)) {
-      const metadataElements = metas.map((m) => this.compiler.interpretMetadata(m, this.filepath).getFiltered(UNHANDLED)).filter((v) => !!v) as MetadataElement[];
-
-      if (!metas.length || !metadataElements.length) continue;
-
-      const targetSymbol = metas[0].target(this.compiler);
-
-      if (!targetSymbol) return;
-
-      let targetElement: MetadataTarget | undefined;
-      if (targetSymbol.kind === SymbolKind.Column) {
-        const tableNode = targetSymbol.originalSymbol.declaration?.parentOfKind(ElementDeclarationNode);
-        if (!tableNode) return;
-
-        const tableSymbol = this.compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol;
-        if (!tableSymbol) return;
-
-        const table = this.emittedBySymbol.get(tableSymbol.intern()) as Table | undefined;
-        if (!table) return;
-
-        // The rightmost name fragment is the column name (e.g. `id` in `public.users.id`).
-        const columnName = metadataElements[0].target.name.at(-1);
-
-        targetElement = table.fields.find((f) => f.name === columnName);
-      } else targetElement = this.emittedBySymbol.get(targetSymbol.originalSymbol.intern());
-
-      if (!targetElement) return;
-
-      const targetElementKind = metadataElements[0].target.kind;
-      const fieldsRegistry = METADATA_FIELDS_BY_KIND[targetElementKind];
-
-      const lowerKeyMap = metadataElements.reduce((res, metaEl) => {
-        Object.entries(metaEl.valueWithTokens).forEach(([originalKey, valueAndToken]) => { res[originalKey.toLowerCase()] = { originalKey, ...valueAndToken }; });
-        return res;
-      }, {} as Record<string, { originalKey: string; value: string; token: TokenPosition }>);
-
-      // Start value is inline metadata (interpreted at element interpreter), then metadata in custom block override keys with same lowercase value
-      const mergedMetadata = targetElement.metadata
-        ? Object.fromEntries(Object.entries(targetElement.metadata).map(([originalKey, value]) => [originalKey.toLowerCase(), { originalKey, value }]))
-        : {};
-
-      Object.entries(lowerKeyMap).forEach(([lowerCaseKey, metadata]) => {
-        const { originalKey, value, token } = metadata;
-
-        if (fieldsRegistry[lowerCaseKey]) fieldsRegistry[lowerCaseKey].assignBuiltinField(targetElement, value, token);
-        else mergedMetadata[lowerCaseKey] = { originalKey, value };
-      });
-
-      targetElement.metadata = Object.fromEntries(Object.values(mergedMetadata).map((v) => [v.originalKey, v.value]));
-    }
-  }
-
   private interpretAllAliases () {
     const members = this.compiler.symbolMembers(this.programSymbol).getFiltered(UNHANDLED) ?? [];
     for (const member of members) {
@@ -461,21 +395,18 @@ export default class ProgramInterpreter {
     switch (symbol.kind) {
       case SymbolKind.Table:
         this.db.tables.push(value as Table);
-        this.emittedBySymbol.set(symbol.originalSymbol.intern(), value as Table);
         break;
       case SymbolKind.Enum:
         this.db.enums.push(value as Enum);
         break;
       case SymbolKind.TableGroup:
         this.db.tableGroups.push(value as TableGroup);
-        this.emittedBySymbol.set(symbol.originalSymbol.intern(), value as TableGroup);
         break;
       case SymbolKind.TablePartial:
         this.db.tablePartials.push(value as TablePartial);
         break;
       case SymbolKind.StickyNote:
         this.db.notes.push(value as Note);
-        this.emittedBySymbol.set(symbol.originalSymbol.intern(), value as Note);
         break;
       case SymbolKind.DiagramView:
         this.db.diagramViews.push(value as DiagramView);

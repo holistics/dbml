@@ -32,6 +32,7 @@ import {
   processColumnType,
 } from '@/core/utils/interpret';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata } from '../metadata/attach';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -112,7 +113,27 @@ export class TableInterpreter {
       });
     }
 
+    this.attachTableAndColumnMetadata();
+
     return Report.create(this.table as Table, errors);
+  }
+
+  // Attach custom-metadata blocks to this table and each of its columns. Runs after the
+  // body is interpreted, so this.table.fields is populated. Keyed on the column symbol
+  // (columns are metadata targets in their own right); the emitted Column lives in
+  // this.table.fields, matched by name.
+  private attachTableAndColumnMetadata () {
+    if (!this.symbol) return;
+
+    attachCustomMetadata(this.compiler, this.table, this.symbol, TABLE_METADATA_FIELDS, this.filepath);
+
+    const members = this.compiler.symbolMembers(this.symbol).getFiltered(UNHANDLED) ?? [];
+    for (const member of members) {
+      if (!member.isKind(SymbolKind.Column)) continue;
+      const column = this.table.fields!.find((f) => f.name === member.name);
+      if (!column) continue;
+      attachCustomMetadata(this.compiler, column, member, COLUMN_METADATA_FIELDS, this.filepath);
+    }
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
