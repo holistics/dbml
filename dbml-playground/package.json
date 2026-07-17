@@ -1,6 +1,6 @@
 {
   "name": "@dbml/playground",
-  "version": "8.3.1-custom-metadata.2",
+  "version": "8.3.1-custom-metadata.3",
   "description": "Interactive playground for debugging and visualizing the DBML parser pipeline",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -25,8 +25,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@dbml/core": "^8.3.1-custom-metadata.2",
-    "@dbml/parse": "^8.3.1-custom-metadata.2",
+    "@dbml/core": "^8.3.1-custom-metadata.3",
+    "@dbml/parse": "^8.3.1-custom-metadata.3",
     "@phosphor-icons/vue": "^2.2.0",
     "floating-vue": "^5.2.2",
     "lodash-es": "^4.17.21",
