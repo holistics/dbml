@@ -36,6 +36,7 @@ import {
   normalizeNote,
 } from '@/core/utils/interpret';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata } from '../metadata/attach';
 
 // Per-kind registry for TableGroup: validate + assign bundled per promotable setting.
 // Defined before the class so the class method can reference it.
@@ -85,6 +86,8 @@ export class TableGroupInterpreter {
       ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     );
+
+    attachCustomMetadata(this.compiler, this.tableGroup, this.symbol, TABLEGROUP_METADATA_FIELDS, this.filepath);
 
     return Report.create(this.tableGroup as TableGroup, errors);
   }

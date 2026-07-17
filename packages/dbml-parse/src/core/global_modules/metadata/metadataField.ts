@@ -17,7 +17,7 @@ export interface MetadataField<T extends MetadataTarget> {
   message: string;
 
   /** Write the metadata value to the element builtin props (e.g. write to `table.note`) */
-  assignBuiltinField (element: T, value: string, token: TokenPosition): void;
+  assignBuiltinField (element: Partial<T>, value: string, token: TokenPosition): void;
 }
 
 // A per-kind registry: exactly the promotable settings for that kind, each

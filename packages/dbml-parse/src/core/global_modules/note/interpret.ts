@@ -25,6 +25,7 @@ import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/metad
 import { isValidColorOrNone } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata } from '../metadata/attach';
 
 // Per-kind registry for Note (sticky): validate + assign bundled per promotable setting.
 // Note color allows 'none' (isValidColorOrNone), unlike TableGroup which is hex-only.
@@ -66,6 +67,8 @@ export class StickyNoteInterpreter {
       ...this.interpretSettingList(this.declarationNode.attributeList),
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     ];
+
+    attachCustomMetadata(this.compiler, this.note, this.symbol, NOTE_METADATA_FIELDS, this.filepath);
 
     return Report.create(this.note as Note, errors);
   }

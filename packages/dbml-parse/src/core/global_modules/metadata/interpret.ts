@@ -8,51 +8,29 @@ import {
   FunctionApplicationNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type { MetadataElement } from '@/core/types/schemaJson';
+import type { MetadataValues } from '@/core/types/schemaJson';
 import { getTokenPosition, normalizeNote } from '@/core/utils/interpret';
-import { destructureComplexVariable } from '@/core/utils/expression';
-import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import { extractMetadataValue } from '../../utils/interpret';
 
 export default class MetadataInterpreter {
   private declarationNode: ElementDeclarationNode;
   private compiler: Compiler;
   private filepath: Filepath;
-  private metadata: Partial<MetadataElement>;
+  private values: MetadataValues;
 
   constructor (compiler: Compiler, metadata: MetadataElementMetadata, filepath: Filepath) {
     this.compiler = compiler;
     this.declarationNode = metadata.declaration;
     this.filepath = filepath;
-    this.metadata = {
-      target: undefined,
-      valueWithTokens: {},
-      token: undefined,
-    };
+    this.values = {};
   }
 
-  interpret (): Report<MetadataElement> {
-    this.metadata.token = getTokenPosition(this.declarationNode);
-
-    const errors = [
-      ...this.interpretTarget(),
-      ...this.interpretValues(this.declarationNode.body),
-    ];
-
-    return new Report(this.metadata as MetadataElement, errors);
-  }
-
-  private interpretTarget (): CompileError[] {
-    const kind = getMetadataTargetKind(this.declarationNode);
-
-    if (!kind) return [];
-
-    // The header name encodes the target identity directly:
-    //   column: [column, table, schema?]   other: [name, schema?]
-    const name = destructureComplexVariable(this.declarationNode.name) ?? [];
-
-    this.metadata.target = { kind, name };
-    return [];
+  // Interpret a single metadata block body into its key/value pairs. The target this
+  // block annotates is resolved separately (via the target-keyed resolution index), so
+  // it is not part of the returned value.
+  interpret (): Report<MetadataValues> {
+    const errors = this.interpretValues(this.declarationNode.body);
+    return new Report(this.values, errors);
   }
 
   private interpretValues (body?: BlockExpressionNode | FunctionApplicationNode): CompileError[] {
@@ -70,7 +48,7 @@ export default class MetadataInterpreter {
       const value = extractMetadataValue(valueNode);
       if (!value) continue;
 
-      this.metadata.valueWithTokens![key] = {
+      this.values[key] = {
         value: key === 'note' ? normalizeNote(value) : value,
         token: getTokenPosition(stmt),
       };
