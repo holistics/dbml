@@ -38,7 +38,7 @@
     },
     {
       "code": "BINDING_ERROR",
-      "diagnostic": "Table or schema 'unknown_table' does not exist",
+      "diagnostic": "Table 'unknown_table' does not exist in Schema 'my_schema'",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

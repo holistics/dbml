@@ -89,6 +89,7 @@ function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol,
   if (!isExpressionAVariableNode(node)) return new Report(undefined);
   const name = extractVarNameFromPrimaryVariable(node) ?? '';
 
+  // Standalone variable (no access parent): resolve as Table
   if (!isAccessExpression(node.parentNode)) {
     const defaultSchema = getDefaultSchemaSymbol(compiler, globalSymbol);
     if (defaultSchema) {
@@ -104,16 +105,14 @@ function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol,
 
   const parent = node.parentNode as InfixExpressionNode;
 
+  // Rightmost: try resolve as Table or Column based on what the left resolved as
   if (parent.rightExpression === node) {
     const left = nodeRefereeOfLeftExpression(compiler, node);
     if (left?.isKind(SymbolKind.Schema)) {
-      const symbol = compiler.lookupMembers(left, [
-        SymbolKind.Table,
-        SymbolKind.Schema,
-      ], name);
+      const symbol = compiler.lookupMembers(left, SymbolKind.Table, name);
       if (symbol) return Report.create(symbol);
       return new Report(undefined, [
-        new CompileError(CompileErrorCode.BINDING_ERROR, `Table or schema '${name}' does not exist`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `Table '${name}' does not exist in Schema '${left.name}'`, node),
       ]);
     }
     if (left?.isKind(SymbolKind.Table)) {
@@ -129,7 +128,9 @@ function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol,
     return new Report(undefined);
   }
 
+  // Leftmost: resolve as Table or Schema
   if (parent.leftExpression === node) {
+    // Deeply nested leftmost (a in a.b.c): must be Schema
     if (isAccessExpression(parent.parentNode) && (parent.parentNode as InfixExpressionNode).leftExpression === parent) {
       const symbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
       if (symbol) return Report.create(symbol);
@@ -137,6 +138,7 @@ function nodeRefereeOfDepEndpoint (compiler: Compiler, globalSymbol: NodeSymbol,
         new CompileError(CompileErrorCode.BINDING_ERROR, `Schema '${name}' does not exist`, node),
       ]);
     }
+    // Non-nested leftmost (a in a.b): try Schema first, then Table
     const schemaSymbol = compiler.lookupMembers(globalSymbol, SymbolKind.Schema, name);
     if (schemaSymbol) return Report.create(schemaSymbol);
 
