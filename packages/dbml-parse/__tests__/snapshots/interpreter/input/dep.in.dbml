@@ -15,7 +15,7 @@ Table another_schema.booking {
 }
 
 
-// short-form — simple deps can share downstream tables
+// short-form - simple deps can share downstream tables
 // no error
 Dep: users -> orders
 Dep: orders.user_id <- users.id
@@ -23,7 +23,7 @@ Dep: my_schema.events -> users
 Dep: my_schema.events.id -> users.id
 Dep: my_schema.events.id <- another_schema.booking.id
 
-// full-form — all edges must target the same downstream table
+// full-form - all edges must target the same downstream table
 // no error
 Dep {
   orders -> users

@@ -20,15 +20,17 @@ Table fct_orders {
 // Short form
 Dep: raw_orders -> stg_orders
 
-// Long form with custom attrs — all edges target the same downstream table
+// Long form with custom attrs - table-level edges
 Dep {
   stg_orders -> fct_orders
-  stg_orders.amount -> fct_orders.revenue
 
   note: 'Aggregate staging orders into facts'
   materialized: table
   owner: 'data-team'
 }
+
+// Column-level edge
+Dep: stg_orders.amount -> fct_orders.revenue
 
 // Reverse-direction sugar (<-): equivalent to raw_orders.amount -> stg_orders.amount
 Dep: stg_orders.amount <- raw_orders.amount

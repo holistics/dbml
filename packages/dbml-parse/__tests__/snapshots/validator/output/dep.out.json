@@ -1402,7 +1402,7 @@
                 "id": "token@<identifier>@Table@[L26:C0, L26:C5]",
                 "snippet": "Table"
               },
-              "leadingTrivia": "\n Dep nested inside a Table — INVALID_DEP_CONTEXT\n",
+              "leadingTrivia": "\n Dep nested inside a Table - INVALID_DEP_CONTEXT\n",
               "trailingTrivia": " ",
               "value": "Table"
             }

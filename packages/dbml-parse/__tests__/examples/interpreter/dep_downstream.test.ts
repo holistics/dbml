@@ -15,9 +15,18 @@ describe('dep downstream table constraints', () => {
 Dep {
   a -> b
   c -> b
-  a.id -> b.id
 }`);
+      expect(result.getErrors()).toHaveLength(0);
       expect(result.getValue()?.deps).toHaveLength(1);
+    });
+
+    it('errors when block mixes table-level and column-level edges', () => {
+      const errors = interpret(`${PRELUDE}
+Dep {
+  a -> b
+  a.id -> b.id
+}`).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DEP_MIXED_LEVEL)).toBe(true);
     });
 
     it('errors when edges target different downstream tables', () => {

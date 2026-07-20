@@ -23,7 +23,7 @@ Dep {
   users < orders
 }
 
-// Dep nested inside a Table — INVALID_DEP_CONTEXT
+// Dep nested inside a Table - INVALID_DEP_CONTEXT
 Table nested {
   id int
   Dep: users -> orders
