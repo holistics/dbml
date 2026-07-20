@@ -597,7 +597,6 @@ Block settings:
 - Custom keys (e.g. `materialized`, `owner`) are preserved in the output.
 
 :::note
-- All edges in a block must target the **same downstream table**, and only one block can target a given table.
-- Short-form and inline deps cannot target a table that already has a block.
+- All edges in a block must target the **same downstream table**.
 - Each directed edge must be unique. Reversed pairs and different levels are considered distinct.
 :::

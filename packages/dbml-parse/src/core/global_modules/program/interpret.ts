@@ -151,7 +151,6 @@ export default class ProgramInterpreter {
     const metadatas = this.compiler.symbolMetadata(this.programSymbol) ?? [];
     const seenRefEndpoints = new Set<string>();
     const seenDepEndpoints = new Set<string>();
-    const seenDownstream = new Map<string, boolean>();
 
     // Pre-scan: count records blocks per table to detect duplicates
     const recordsTableCount = new Map<string, {
@@ -240,7 +239,7 @@ export default class ProgramInterpreter {
             this.errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Dep with same endpoints already exists', errorNode));
             break;
           }
-          const depErrors = validateDepBlocks(dep, meta, seenDownstream);
+          const depErrors = validateDepBlocks(dep, meta);
           if (depErrors.length > 0) {
             this.errors.push(...depErrors);
             break;

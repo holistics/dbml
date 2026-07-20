@@ -30,42 +30,7 @@ Dep {
     });
   });
 
-  describe('complex dep block: exclusive downstream ownership', () => {
-    it('errors when two complex blocks target the same downstream', () => {
-      const errors = interpret(`${PRELUDE}
-Dep { a -> b }
-Dep { c -> b }
-`).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DEP_DUPLICATE_DOWNSTREAM_TABLE)).toBe(true);
-    });
-
-    it('errors when simple dep comes after complex block with same downstream', () => {
-      const errors = interpret(`${PRELUDE}
-Dep { a -> b }
-Dep: c -> b
-`).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DEP_DUPLICATE_DOWNSTREAM_TABLE)).toBe(true);
-    });
-
-    it('errors when complex block comes after simple dep with same downstream', () => {
-      const errors = interpret(`${PRELUDE}
-Dep: a -> b
-Dep { c -> b }
-`).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DEP_DUPLICATE_DOWNSTREAM_TABLE)).toBe(true);
-    });
-
-    it('errors when inline dep conflicts with complex block', () => {
-      const errors = interpret(`
-Table a { id int }
-Table b { id int [dep: -> a.id] }
-Dep { b -> a }
-`).getErrors();
-      expect(errors.some((e) => e.code === CompileErrorCode.DEP_DUPLICATE_DOWNSTREAM_TABLE)).toBe(true);
-    });
-  });
-
-  describe('simple/inline deps: no restriction among themselves', () => {
+  describe('no cross-block restriction on downstream tables', () => {
     it('allows multiple simple deps targeting the same downstream', () => {
       const result = interpret(`${PRELUDE}
 Dep: a -> b
@@ -75,11 +40,29 @@ Dep: c -> b
       expect(result.getValue()?.deps).toHaveLength(2);
     });
 
-    it('allows inline dep and simple dep targeting the same downstream', () => {
+    it('allows two complex blocks targeting the same downstream', () => {
+      const result = interpret(`${PRELUDE}
+Dep { a -> b }
+Dep { c -> b }
+`);
+      expect(result.getErrors()).toHaveLength(0);
+      expect(result.getValue()?.deps).toHaveLength(2);
+    });
+
+    it('allows simple dep alongside complex block with same downstream', () => {
+      const result = interpret(`${PRELUDE}
+Dep { a -> b }
+Dep: c -> b
+`);
+      expect(result.getErrors()).toHaveLength(0);
+      expect(result.getValue()?.deps).toHaveLength(2);
+    });
+
+    it('allows inline dep alongside complex block with same downstream', () => {
       const result = interpret(`
 Table a { id int }
 Table b { id int [dep: -> a.id] }
-Dep: b -> a
+Dep { b -> a }
 `);
       expect(result.getErrors()).toHaveLength(0);
       expect(result.getValue()?.deps).toHaveLength(2);
