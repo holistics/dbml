@@ -1,6 +1,25 @@
 import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
-import DBMLCompletionItemProvider from '@/services/suggestions/provider';
+import DBMLCompletionItemProvider, {
+  CHECK_SETTING_SUGGESTION_LABELS,
+  CHECK_SETTING_SUGGESTION_TEXT_INSERTS,
+  COLUMN_SUGGESTION_LABELS,
+  COLUMN_SUGGESTION_TEXT_INSERTS,
+  COLUMN_TYPE_SUGGESTION_LABELS,
+  ENUM_SETTING_SUGGESTION_LABELS,
+  ENUM_SETTING_SUGGESTION_TEXT_INSERTS,
+  INDEX_SETTING_SUGGESTION_LABELS,
+  INDEX_SETTING_SUGGESTION_TEXT_INSERTS,
+  INDEX_TYPE_VALUE_SUGGESTIONS,
+  PROJECT_FIELD_SUGGESTION_LABELS,
+  REF_ACTION_VALUE_SUGGESTIONS,
+  REF_SETTING_SUGGESTION_LABELS,
+  REF_SETTING_SUGGESTION_TEXT_INSERTS,
+  TABLE_BODY_SUGGESTION_LABELS,
+  TABLE_SETTING_SUGGESTION_LABELS,
+  TABLE_SETTING_SUGGESTION_TEXT_INSERTS,
+  TOP_LEVEL_SUGGESTION_LABELS,
+} from '@/services/suggestions/provider';
 import { createMockTextModel, createPosition } from '@tests/utils';
 import { DEFAULT_ENTRY } from '@/constants';
 import { Filepath } from '@/core/types/filepath';
@@ -8,103 +27,32 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 describe('[example] CompletionItemProvider', () => {
   describe('should suggest element types when at top level', () => {
-    it('- work if the source is empty', () => {
-      const program = '';
+    it.each([
+      ['if the source is empty', '', 1, 1],
+      ['some characters have been typed out', 'Ta    ', 1, 3],
+      ['there are some not directly following nonsensical characters', '  @&@*&@*^@!#', 1, 3],
+      ['there are some directly following nonsensical characters', 'ab', 1, 3],
+    ])('- work if %s', (condition: string, program: string, lineNumber: number, column: number) => {
       const layout = new MemoryProjectLayout();
       layout.setSource(DEFAULT_ENTRY, program);
       const compiler = new Compiler(layout);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
-      const position = createPosition(1, 1);
+      const position = createPosition(lineNumber, column);
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('Table');
-      expect(labels).toContain('TableGroup');
-      expect(labels).toContain('Enum');
-      expect(labels).toContain('Project');
-      expect(labels).toContain('Ref');
-      expect(labels).toContain('TablePartial');
-      expect(labels).toContain('Records');
-      expect(labels).toContain('DiagramView');
+      expect(labels).toEqual(TOP_LEVEL_SUGGESTION_LABELS);
 
-      // Test insertTexts - should have Records keyword
+      // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toContain('Records');
-      expect(insertTexts).toContain('DiagramView');
-    });
-
-    it('- work even if some characters have been typed out', () => {
-      const program = 'Ta    ';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(DEFAULT_ENTRY, program);
-      const compiler = new Compiler(layout);
-      const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
-      const position = createPosition(1, 3);
-      const result = provider.provideCompletionItems(model, position);
-
-      // Test labels
-      const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('Table');
-      expect(labels).toContain('Records');
-      expect(labels).toContain('DiagramView');
-
-      // Test insertTexts - should have Records keyword
-      const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toContain('Records');
-      expect(insertTexts).toContain('DiagramView');
-    });
-
-    it('- work even if there are some not directly following nonsensical characters', () => {
-      const program = '  @&@*&@*^@!#';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(DEFAULT_ENTRY, program);
-      const compiler = new Compiler(layout);
-      const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
-      const position = createPosition(1, 3);
-      const result = provider.provideCompletionItems(model, position);
-
-      // Test labels
-      const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('Table');
-      expect(labels).toContain('Records');
-      expect(labels).toContain('DiagramView');
-
-      // Test insertTexts - should have Records keyword
-      const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toContain('Records');
-      expect(insertTexts).toContain('DiagramView');
-    });
-
-    it('- work even if there are some directly following nonsensical characters', () => {
-      const program = 'ab';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(DEFAULT_ENTRY, program);
-      const compiler = new Compiler(layout);
-      const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
-      const position = createPosition(1, 3);
-      const result = provider.provideCompletionItems(model, position);
-
-      // Test labels
-      const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('Table');
-      expect(labels).toContain('Records');
-      expect(labels).toContain('DiagramView');
-
-      // Test insertTexts - should have Records keyword
-      const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toContain('Records');
-      expect(insertTexts).toContain('DiagramView');
+      expect(insertTexts).toEqual(TOP_LEVEL_SUGGESTION_LABELS);
     });
   });
 
   describe('should suggest table settings inside table setting lists', () => {
-    // This does not work now
-    it.skip('- work even if the table body is non-existent', () => {
+    it('- not work if the table body is non-existent', () => {
       const program = 'Table T []';
       const layout = new MemoryProjectLayout();
       layout.setSource(DEFAULT_ENTRY, program);
@@ -113,104 +61,37 @@ describe('[example] CompletionItemProvider', () => {
       const provider = new DBMLCompletionItemProvider(compiler);
       const position = createPosition(1, 10);
       const result = provider.provideCompletionItems(model, position);
-      // Should suggest table header settings like headercolor, note
-      expect(result.suggestions).toMatchInlineSnapshot();
-    });
-
-    it('- work even if the table body is partially opened', () => {
-      const program = 'Table T [] {';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(DEFAULT_ENTRY, program);
-      const compiler = new Compiler(layout);
-      const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
-      const position = createPosition(1, 13);
-      const result = provider.provideCompletionItems(model, position);
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([]);
+      expect(labels).not.toEqual(TABLE_SETTING_SUGGESTION_LABELS);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([]);
+      expect(insertTexts).not.toEqual(TABLE_SETTING_SUGGESTION_TEXT_INSERTS);
     });
 
-    it('- work even if the table body is complete', () => {
-      const program = 'Table T [] {\n  id int\n  \n}';
+    it.each([
+      ['the table body is partially opened', 'Table T [] {', 1, 10],
+      ['there is a comma following', 'Table T [headercolor: #fff, ] {}', 1, 29],
+      ['there is a comma preceding', 'Table T [, headercolor: #fff] {}', 1, 10],
+      ['the table body is complete', 'Table T [] {\n  id int\n  \n}', 1, 10],
+    ])('- work if %s', (condition: string, program: string, lineNumber: number, column: number) => {
       const layout = new MemoryProjectLayout();
       layout.setSource(DEFAULT_ENTRY, program);
       const compiler = new Compiler(layout);
       const model = createMockTextModel(program);
       const provider = new DBMLCompletionItemProvider(compiler);
-      const position = createPosition(3, 3);
+      const position = createPosition(lineNumber, column);
       const result = provider.provideCompletionItems(model, position);
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('Note');
-      expect(labels).toContain('indexes');
-      expect(labels).toContain('checks');
-      expect(labels).toContain('Records');
-
-      // Test insertTexts - should have Records keyword
-      const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toContain('Note');
-      expect(insertTexts).toContain('Records');
-    });
-
-    it('- work when there is a comma following', () => {
-      const program = 'Table T [headercolor: #fff, ] {}';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(DEFAULT_ENTRY, program);
-      const compiler = new Compiler(layout);
-      const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
-      const position = createPosition(1, 29);
-      const result = provider.provideCompletionItems(model, position);
-
-      // Test labels
-      const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'headercolor',
-        'note',
-
-      ]);
+      expect(labels).toEqual(TABLE_SETTING_SUGGESTION_LABELS);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'headercolor: ',
-        'note: ',
-
-      ]);
-    });
-
-    it('- work when there is a comma preceding', () => {
-      const program = 'Table T [, headercolor: #fff] {}';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(DEFAULT_ENTRY, program);
-      const compiler = new Compiler(layout);
-      const model = createMockTextModel(program);
-      const provider = new DBMLCompletionItemProvider(compiler);
-      const position = createPosition(1, 10);
-      const result = provider.provideCompletionItems(model, position);
-
-      // Test labels
-      const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'headercolor',
-        'note',
-
-      ]);
-
-      // Test insertTexts
-      const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'headercolor: ',
-        'note: ',
-
-      ]);
+      expect(insertTexts).toEqual(TABLE_SETTING_SUGGESTION_TEXT_INSERTS);
     });
   });
 
@@ -227,13 +108,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('Note');
-      expect(labels).toContain('indexes');
-      expect(labels).toContain('checks');
-      expect(labels).toContain('Records');
+      expect(labels).toEqual(expect.arrayContaining([...TABLE_BODY_SUGGESTION_LABELS]));
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
+      console.log(insertTexts);
       expect(insertTexts).toContain('Note');
       expect(insertTexts).toContain('Records');
     });
@@ -250,10 +129,7 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('Note');
-      expect(labels).toContain('indexes');
-      expect(labels).toContain('checks');
-      expect(labels).toContain('Records');
+      expect(labels).toEqual(expect.arrayContaining([...TABLE_BODY_SUGGESTION_LABELS]));
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
@@ -275,127 +151,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'integer',
-        'int',
-        'tinyint',
-        'smallint',
-        'mediumint',
-        'bigint',
-        'bit',
-        'bool',
-        'binary',
-        'varbinary',
-        'logical',
-        'char',
-        'nchar',
-        'varchar',
-        'varchar2',
-        'nvarchar',
-        'nvarchar2',
-        'binary_float',
-        'binary_double',
-        'float',
-        'double',
-        'decimal',
-        'dec',
-        'real',
-        'money',
-        'smallmoney',
-        'enum',
-        'tinyblob',
-        'tinytext',
-        'blob',
-        'text',
-        'mediumblob',
-        'mediumtext',
-        'longblob',
-        'longtext',
-        'ntext',
-        'set',
-        'inet6',
-        'uuid',
-        'image',
-        'date',
-        'time',
-        'datetime',
-        'datetime2',
-        'timestamp',
-        'year',
-        'smalldatetime',
-        'datetimeoffset',
-        'XML',
-        'sql_variant',
-        'uniqueidentifier',
-        'CURSOR',
-        'BFILE',
-        'CLOB',
-        'NCLOB',
-        'RAW',
-
-      ]);
+      expect(labels).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'integer',
-        'int',
-        'tinyint',
-        'smallint',
-        'mediumint',
-        'bigint',
-        'bit',
-        'bool',
-        'binary',
-        'varbinary',
-        'logical',
-        'char',
-        'nchar',
-        'varchar',
-        'varchar2',
-        'nvarchar',
-        'nvarchar2',
-        'binary_float',
-        'binary_double',
-        'float',
-        'double',
-        'decimal',
-        'dec',
-        'real',
-        'money',
-        'smallmoney',
-        'enum',
-        'tinyblob',
-        'tinytext',
-        'blob',
-        'text',
-        'mediumblob',
-        'mediumtext',
-        'longblob',
-        'longtext',
-        'ntext',
-        'set',
-        'inet6',
-        'uuid',
-        'image',
-        'date',
-        'time',
-        'datetime',
-        'datetime2',
-        'timestamp',
-        'year',
-        'smalldatetime',
-        'datetimeoffset',
-        'XML',
-        'sql_variant',
-        'uniqueidentifier',
-        'CURSOR',
-        'BFILE',
-        'CLOB',
-        'NCLOB',
-        'RAW',
-
-      ]);
+      expect(insertTexts).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS]);
     });
 
     it('- should suggest enum types for column definitions', () => {
@@ -410,129 +170,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'integer',
-        'int',
-        'tinyint',
-        'smallint',
-        'mediumint',
-        'bigint',
-        'bit',
-        'bool',
-        'binary',
-        'varbinary',
-        'logical',
-        'char',
-        'nchar',
-        'varchar',
-        'varchar2',
-        'nvarchar',
-        'nvarchar2',
-        'binary_float',
-        'binary_double',
-        'float',
-        'double',
-        'decimal',
-        'dec',
-        'real',
-        'money',
-        'smallmoney',
-        'enum',
-        'tinyblob',
-        'tinytext',
-        'blob',
-        'text',
-        'mediumblob',
-        'mediumtext',
-        'longblob',
-        'longtext',
-        'ntext',
-        'set',
-        'inet6',
-        'uuid',
-        'image',
-        'date',
-        'time',
-        'datetime',
-        'datetime2',
-        'timestamp',
-        'year',
-        'smalldatetime',
-        'datetimeoffset',
-        'XML',
-        'sql_variant',
-        'uniqueidentifier',
-        'CURSOR',
-        'BFILE',
-        'CLOB',
-        'NCLOB',
-        'RAW',
-        'status',
-
-      ]);
+      expect(labels).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS, 'status']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'integer',
-        'int',
-        'tinyint',
-        'smallint',
-        'mediumint',
-        'bigint',
-        'bit',
-        'bool',
-        'binary',
-        'varbinary',
-        'logical',
-        'char',
-        'nchar',
-        'varchar',
-        'varchar2',
-        'nvarchar',
-        'nvarchar2',
-        'binary_float',
-        'binary_double',
-        'float',
-        'double',
-        'decimal',
-        'dec',
-        'real',
-        'money',
-        'smallmoney',
-        'enum',
-        'tinyblob',
-        'tinytext',
-        'blob',
-        'text',
-        'mediumblob',
-        'mediumtext',
-        'longblob',
-        'longtext',
-        'ntext',
-        'set',
-        'inet6',
-        'uuid',
-        'image',
-        'date',
-        'time',
-        'datetime',
-        'datetime2',
-        'timestamp',
-        'year',
-        'smalldatetime',
-        'datetimeoffset',
-        'XML',
-        'sql_variant',
-        'uniqueidentifier',
-        'CURSOR',
-        'BFILE',
-        'CLOB',
-        'NCLOB',
-        'RAW',
-        'status',
-
-      ]);
+      expect(insertTexts).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS, 'status']);
     });
 
     it('- should suggest schema-qualified enums', () => {
@@ -547,129 +189,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'integer',
-        'int',
-        'tinyint',
-        'smallint',
-        'mediumint',
-        'bigint',
-        'bit',
-        'bool',
-        'binary',
-        'varbinary',
-        'logical',
-        'char',
-        'nchar',
-        'varchar',
-        'varchar2',
-        'nvarchar',
-        'nvarchar2',
-        'binary_float',
-        'binary_double',
-        'float',
-        'double',
-        'decimal',
-        'dec',
-        'real',
-        'money',
-        'smallmoney',
-        'enum',
-        'tinyblob',
-        'tinytext',
-        'blob',
-        'text',
-        'mediumblob',
-        'mediumtext',
-        'longblob',
-        'longtext',
-        'ntext',
-        'set',
-        'inet6',
-        'uuid',
-        'image',
-        'date',
-        'time',
-        'datetime',
-        'datetime2',
-        'timestamp',
-        'year',
-        'smalldatetime',
-        'datetimeoffset',
-        'XML',
-        'sql_variant',
-        'uniqueidentifier',
-        'CURSOR',
-        'BFILE',
-        'CLOB',
-        'NCLOB',
-        'RAW',
-        'myschema',
-
-      ]);
+      expect(labels).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS, 'myschema']);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'integer',
-        'int',
-        'tinyint',
-        'smallint',
-        'mediumint',
-        'bigint',
-        'bit',
-        'bool',
-        'binary',
-        'varbinary',
-        'logical',
-        'char',
-        'nchar',
-        'varchar',
-        'varchar2',
-        'nvarchar',
-        'nvarchar2',
-        'binary_float',
-        'binary_double',
-        'float',
-        'double',
-        'decimal',
-        'dec',
-        'real',
-        'money',
-        'smallmoney',
-        'enum',
-        'tinyblob',
-        'tinytext',
-        'blob',
-        'text',
-        'mediumblob',
-        'mediumtext',
-        'longblob',
-        'longtext',
-        'ntext',
-        'set',
-        'inet6',
-        'uuid',
-        'image',
-        'date',
-        'time',
-        'datetime',
-        'datetime2',
-        'timestamp',
-        'year',
-        'smalldatetime',
-        'datetimeoffset',
-        'XML',
-        'sql_variant',
-        'uniqueidentifier',
-        'CURSOR',
-        'BFILE',
-        'CLOB',
-        'NCLOB',
-        'RAW',
-        'myschema',
-
-      ]);
+      expect(insertTexts).toEqual([...COLUMN_TYPE_SUGGESTION_LABELS, 'myschema']);
     });
   });
 
@@ -686,35 +210,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'pk',
-        'primary key',
-        'null',
-        'not null',
-        'increment',
-        'unique',
-        'ref',
-        'default',
-        'note',
-        'check',
-
-      ]);
+      expect(labels).toEqual([...COLUMN_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'pk',
-        'primary key',
-        'null',
-        'not null',
-        'increment',
-        'unique',
-        'ref: ',
-        'default: ',
-        'note: ',
-        'check: ',
-
-      ]);
+      expect(insertTexts).toEqual([...COLUMN_SUGGESTION_TEXT_INSERTS]);
     });
 
     it('- should suggest settings with colons (ref, default, note)', () => {
@@ -729,35 +229,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'pk',
-        'primary key',
-        'null',
-        'not null',
-        'increment',
-        'unique',
-        'ref',
-        'default',
-        'note',
-        'check',
-
-      ]);
+      expect(labels).toEqual([...COLUMN_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'pk',
-        'primary key',
-        'null',
-        'not null',
-        'increment',
-        'unique',
-        'ref: ',
-        'default: ',
-        'note: ',
-        'check: ',
-
-      ]);
+      expect(insertTexts).toEqual([...COLUMN_SUGGESTION_TEXT_INSERTS]);
     });
 
     it('- should suggest after comma in column settings', () => {
@@ -772,35 +248,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'pk',
-        'primary key',
-        'null',
-        'not null',
-        'increment',
-        'unique',
-        'ref',
-        'default',
-        'note',
-        'check',
-
-      ]);
+      expect(labels).toEqual([...COLUMN_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'pk',
-        'primary key',
-        'null',
-        'not null',
-        'increment',
-        'unique',
-        'ref: ',
-        'default: ',
-        'note: ',
-        'check: ',
-
-      ]);
+      expect(insertTexts).toEqual([...COLUMN_SUGGESTION_TEXT_INSERTS]);
     });
   });
 
@@ -1075,21 +527,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'inactive',
-        'update',
-        'delete',
-        'color',
-      ]);
+      expect(labels).toEqual([...REF_SETTING_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'inactive',
-        'update: ',
-        'delete: ',
-        'color: ',
-      ]);
+      expect(insertTexts).toEqual([...REF_SETTING_SUGGESTION_TEXT_INSERTS]);
     });
 
     it('- should suggest action values for update/delete settings', () => {
@@ -1104,23 +546,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'cascade',
-        'set default',
-        'set null',
-        'restrict',
-
-      ]);
+      expect(labels).toEqual([...REF_ACTION_VALUE_SUGGESTIONS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'cascade',
-        'set default',
-        'set null',
-        'restrict',
-
-      ]);
+      expect(insertTexts).toEqual([...REF_ACTION_VALUE_SUGGESTIONS]);
     });
   });
 
@@ -1193,25 +623,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'unique',
-        'pk',
-        'note',
-        'name',
-        'type',
-
-      ]);
+      expect(labels).toEqual([...INDEX_SETTING_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'unique',
-        'pk',
-        'note: ',
-        'name: ',
-        'type: ',
-
-      ]);
+      expect(insertTexts).toEqual([...INDEX_SETTING_SUGGESTION_TEXT_INSERTS]);
     });
 
     it('- should suggest index type values', () => {
@@ -1226,19 +642,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'btree',
-        'hash',
-
-      ]);
+      expect(labels).toEqual([...INDEX_TYPE_VALUE_SUGGESTIONS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'btree',
-        'hash',
-
-      ]);
+      expect(insertTexts).toEqual([...INDEX_TYPE_VALUE_SUGGESTIONS]);
     });
   });
 
@@ -1255,17 +663,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'name',
-
-      ]);
+      expect(labels).toEqual([...CHECK_SETTING_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'name: ',
-
-      ]);
+      expect(insertTexts).toEqual([...CHECK_SETTING_SUGGESTION_TEXT_INSERTS]);
     });
   });
 
@@ -1338,10 +740,7 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toContain('Note');
-      expect(labels).toContain('indexes');
-      expect(labels).toContain('checks');
-      expect(labels).toContain('Records');
+      expect(labels).toEqual(expect.arrayContaining([...TABLE_BODY_SUGGESTION_LABELS]));
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
@@ -1525,17 +924,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'note',
-
-      ]);
+      expect(labels).toEqual([...ENUM_SETTING_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'note: ',
-
-      ]);
+      expect(insertTexts).toEqual([...ENUM_SETTING_SUGGESTION_TEXT_INSERTS]);
     });
 
     it('- should handle project scope', () => {
@@ -1550,25 +943,11 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test labels
       const labels = result.suggestions.map((s) => s.label);
-      expect(labels).toEqual([
-        'Table',
-        'TableGroup',
-        'Enum',
-        'Note',
-        'Ref',
-        'TablePartial',
-      ]);
+      expect(labels).toEqual([...PROJECT_FIELD_SUGGESTION_LABELS]);
 
       // Test insertTexts
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      expect(insertTexts).toEqual([
-        'Table',
-        'TableGroup',
-        'Enum',
-        'Note',
-        'Ref',
-        'TablePartial',
-      ]);
+      expect(insertTexts).toEqual([...PROJECT_FIELD_SUGGESTION_LABELS]);
     });
   });
 

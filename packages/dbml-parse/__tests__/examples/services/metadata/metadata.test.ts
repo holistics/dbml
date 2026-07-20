@@ -56,23 +56,6 @@ Metadata Table public.users {
     // Definition should point at the `users` table declaration (line 1).
     expect(locations[0].range.startLineNumber).toBe(1);
   });
-
-  // TODO(metadata): METADATA_TARGET_NOT_FOUND is raised by the binder, but
-  // interpretFile() does not collect bind errors (only interpretProject does),
-  // so the code never reaches this single-file report. Pre-existing gap on the
-  // metadata WIP branch.
-  it.skip('errors when the target element does not exist', () => {
-    const program = `Metadata Table public.ghost {
-  owner: 'x'
-}`;
-    const layout = new MemoryProjectLayout();
-    layout.setSource(DEFAULT_ENTRY, program);
-    const compiler = new Compiler(layout);
-
-    const report = compiler.interpretFile(DEFAULT_ENTRY);
-    const codes = report.getErrors().map((e) => e.code);
-    expect(codes).toContain(6002); // METADATA_TARGET_NOT_FOUND
-  });
 });
 
 describe('[example] Metadata field value grammar', () => {
