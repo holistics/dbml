@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { interpret, analyze } from '@tests/utils';
+import { CompileErrorCode } from '@/core/types/errors';
 
 const PRELUDE = `
 Table a { id int }
@@ -101,33 +102,43 @@ Dep {
   });
 });
 
-describe('dep self-loop validation', () => {
-  it('should error on self-loop dep (short form)', () => {
+describe('dep self-ref', () => {
+  it('allows table-level self-ref', () => {
     const result = interpret(`
       Table a { id int }
       Dep: a -> a
     `);
-    const errors = result.getErrors();
-    expect(errors.some((e) => e.diagnostic.includes('Self-loop'))).toBe(true);
+    expect(result.getErrors()).toHaveLength(0);
+    expect(result.getValue()?.deps).toHaveLength(1);
   });
 
-  it('should error on self-loop dep (block form)', () => {
+  it('allows table-level self-ref (block form)', () => {
     const result = interpret(`
       Table a { id int }
       Dep { a -> a }
     `);
-    const errors = result.getErrors();
-    expect(errors.some((e) => e.diagnostic.includes('Self-loop'))).toBe(true);
+    expect(result.getErrors()).toHaveLength(0);
+    expect(result.getValue()?.deps).toHaveLength(1);
   });
 
-  it('should not error on different tables', () => {
+  it('errors on column-level self-ref', () => {
     const result = interpret(`
       Table a { id int }
-      Table b { id int }
-      Dep: a -> b
+      Dep: a.id -> a.id
     `);
-    const errors = result.getErrors();
-    expect(errors.filter((e) => e.diagnostic.includes('Self-loop'))).toHaveLength(0);
+    expect(result.getErrors().some((e) => e.code === CompileErrorCode.DEP_SELF_LOOP)).toBe(true);
+  });
+
+  it('allows column-level dep between different columns of same table', () => {
+    const result = interpret(`
+      Table a {
+        id int
+        name varchar
+      }
+      Dep: a.id -> a.name
+    `);
+    expect(result.getErrors()).toHaveLength(0);
+    expect(result.getValue()?.deps).toHaveLength(1);
   });
 });
 

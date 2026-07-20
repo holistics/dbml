@@ -12,7 +12,7 @@ import type { SyntaxNode } from '@/core/types/nodes';
 import { SyntaxToken } from '@/core/types/tokens';
 import { ElementKind } from '@/core/types/keywords';
 import { UNHANDLED } from '@/core/types/module';
-import { SymbolKind } from '@/core/types/symbol';
+import { SymbolKind, type NodeSymbol } from '@/core/types/symbol';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import { scanNonListNodeForBinding } from '../utils';
 
@@ -89,7 +89,31 @@ export default class DepBinder {
       ];
     }
 
+    // Column-level self-ref is not allowed
+    if (leftLevel === 'column' && rightLevel === 'column') {
+      const leftSymbol = this.endpointSymbol(callee.leftExpression);
+      const rightSymbol = this.endpointSymbol(callee.rightExpression);
+      if (leftSymbol && rightSymbol && leftSymbol === rightSymbol) {
+        return [
+          new CompileError(
+            CompileErrorCode.DEP_SELF_LOOP,
+            'A column cannot depend on itself',
+            callee,
+          ),
+        ];
+      }
+    }
+
     return [];
+  }
+
+  private endpointSymbol (expr: SyntaxNode | undefined): NodeSymbol | undefined {
+    if (!expr) return undefined;
+    const fragments = destructureComplexVariableTuple(expr);
+    if (!fragments) return undefined;
+    const lastVar = fragments.variables.at(-1);
+    if (!lastVar) return undefined;
+    return this.compiler.nodeReferee(lastVar).getFiltered(UNHANDLED);
   }
 
   private endpointLevel (expr: SyntaxNode | undefined): 'table' | 'column' | undefined {

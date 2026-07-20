@@ -85,20 +85,6 @@ export class DepInterpreter {
       const upSchema = upTableName?.schema ?? null;
       const downSchema = downTableName?.schema ?? null;
 
-      if (
-        upTableName?.name
-        && downTableName?.name
-        && upTableName.name === downTableName.name
-        && upSchema === downSchema
-      ) {
-        errors.push(new CompileError(
-          CompileErrorCode.DEP_SELF_LOOP,
-          `Self-loop Dep edge not allowed: "${upSchema ?? DEFAULT_SCHEMA_NAME}"."${upTableName.name}" cannot depend on itself`,
-          this.declarationNode,
-        ));
-        continue;
-      }
-
       edges.push({
         upstream: {
           schemaName: upTableName?.schema ?? null,
