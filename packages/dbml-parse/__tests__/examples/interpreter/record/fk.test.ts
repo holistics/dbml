@@ -872,3 +872,46 @@ describe('[example - record] FK in table partials', () => {
     expect(warnings[2].diagnostic).toBe('FK violation: nodes.id = 3 does not exist in nodes.parent_id');
   });
 });
+
+describe('[example - record] FK skip validation for one side', () => {
+  test('should not warn when the one side has no matching rows (optional many-to-one)', () => {
+    const source = `
+      Table users {
+        id integer [primary key]
+        username varchar
+        role varchar
+        created_at timestamp
+      }
+
+      Table posts {
+        id integer [primary key]
+        title varchar
+        body text [note: 'Content of the post']
+        user_id integer [not null]
+        status varchar
+        created_at timestamp
+      }
+
+      Ref user_posts: posts.user_id ?> users.id
+
+      Records users(id, username, role) {
+        0, 'Alice', 'admin'
+        1, 'Bob', 'moderator'
+        2, 'Candice', 'moderator'
+        3, 'David', 'member'
+      }
+
+      Records posts(id, title, user_id) {
+        0, 'Welcome to the forum!', 0
+        1, 'Guidelines', 1
+        2, 'Hello all!', 3
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    // users.id=2 (Candice) has no posts, but the one side (users) is skipped
+    // All post user_ids exist in users, so no warnings
+    expect(warnings.length).toBe(0);
+  });
+});

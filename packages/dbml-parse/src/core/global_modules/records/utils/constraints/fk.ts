@@ -91,11 +91,19 @@ function validateForeignKey (
   const endpoint1 = table1.tableSymbol.mergedColumns(compiler).filter((c) => typeof c.name === 'string' && rawEndpoint1.fieldNames.includes(c.name));
   const endpoint2 = table2.tableSymbol.mergedColumns(compiler).filter((c) => typeof c.name === 'string' && rawEndpoint2.fieldNames.includes(c.name));
 
+  const { min: min1, max: max1 } = parseCardinality(rawEndpoint1.relation);
+  const { min: min2, max: max2 } = parseCardinality(rawEndpoint2.relation);
+  const isOneToOne = max1 !== '*' && max2 !== '*';
+
+  // Skip validation for the one side, or the left side of a 1-1
+  const skipTable1 = (max1 === 1 || isOneToOne) && min2 === 0;
+  const skipTable2 = max2 === 1 && min1 === 0;
+
   return [
     // card2 constrains table1's rows
-    ...validateEndpoint(compiler, table1, endpoint1, table2, endpoint2, rawEndpoint2.relation, filepath),
+    ...(skipTable1 ? [] : validateEndpoint(compiler, table1, endpoint1, table2, endpoint2, rawEndpoint2.relation, filepath)),
     // card1 constrains table2's rows
-    ...validateEndpoint(compiler, table2, endpoint2, table1, endpoint1, rawEndpoint1.relation, filepath),
+    ...(skipTable2 ? [] : validateEndpoint(compiler, table2, endpoint2, table1, endpoint1, rawEndpoint1.relation, filepath)),
   ];
 }
 
