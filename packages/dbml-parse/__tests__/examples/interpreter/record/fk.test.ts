@@ -914,4 +914,37 @@ describe('[example - record] FK skip validation for one side', () => {
     // All post user_ids exist in users, so no warnings
     expect(warnings.length).toBe(0);
   });
+
+  test('should treat columns in pk index as not nullable', () => {
+    const source = `
+      Table merchants {
+        id int
+        country_code varchar
+
+        indexes {
+          (id, country_code) [pk]
+        }
+      }
+      Table orders {
+        id int [pk]
+        merchant_id int
+        country varchar
+      }
+      Ref: orders.(merchant_id, country) > merchants.(id, country_code)
+
+      records merchants(id, country_code) {
+        1, "US"
+        null, "UK"
+      }
+      records orders(id, merchant_id, country) {
+        1, 1, "US"
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    // merchants.(id, country_code) is a composite PK index
+    // null in merchants.id should trigger FK violation (must not be null)
+    expect(warnings.some((w) => w.diagnostic.includes('must not be null'))).toBe(true);
+  });
 });

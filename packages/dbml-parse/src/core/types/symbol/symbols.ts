@@ -7,7 +7,7 @@ import type Compiler from '@/compiler';
 import type { CanonicalName } from '@/compiler/queries/canonicalName';
 import { MetadataKind } from '@/core/types/symbol/metadata';
 import type { TableChecksMetadata, NodeMetadata, IndexesMetadata } from '@/core/types/symbol/metadata';
-import type { TokenPosition } from '@/core/types/schemaJson';
+import type { TokenPosition, Index } from '@/core/types/schemaJson';
 import { SettingName } from '@/core/types/keywords';
 import { extractQuotedStringToken } from '@/core/utils/expression';
 import { isValidPartialInjection } from '@/core/utils/validate';
@@ -532,9 +532,29 @@ export class ColumnSymbol extends NodeSymbol {
     if (!this.declaration) return true;
     if (this.pk(compiler)) return false;
     if (this.increment(compiler)) return false;
+    if (this.isInPkIndex(compiler)) return false;
     const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
     if (s?.[SettingName.NotNull]?.length) return false;
     return true;
+  }
+
+  private isInPkIndex (compiler: Compiler): boolean {
+    if (!this.declaration || !this.name) return false;
+    const tableNode = this.declaration.parentOfKind(ElementDeclarationNode);
+    if (!tableNode) return false;
+    const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
+    if (!(tableSymbol instanceof TableSymbol)) return false;
+
+    for (const meta of tableSymbol.mergedIndexes(compiler)) {
+      const result = compiler.interpretMetadata(meta, this.filepath);
+      const indexes = result.getValue();
+      if (!indexes || !Array.isArray(indexes)) continue;
+      for (const idx of indexes as Index[]) {
+        if (!idx.pk) continue;
+        if (idx.columns.some((c) => c.value === this.name)) return true;
+      }
+    }
+    return false;
   }
 
   // Returns whether [not null] or [null] is explicitly set
