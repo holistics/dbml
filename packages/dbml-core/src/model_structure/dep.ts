@@ -47,8 +47,10 @@ class Dep extends Element {
       const downSchema = rawEdge.downstream?.schemaName || DEFAULT_SCHEMA_NAME;
       const upTable = rawEdge.upstream?.tableName;
       const downTable = rawEdge.downstream?.tableName;
-      if (upSchema === downSchema && upTable === downTable) {
-        this.error(`Self-loop Dep edge not allowed: "${upSchema}"."${upTable}" cannot depend on itself`);
+      const upColumn = rawEdge.upstream?.fieldNames?.join(",");
+      const downColumn = rawEdge.downstream?.fieldNames?.join(",");
+      if (upSchema === downSchema && upTable === downTable && upColumn === downColumn) {
+        this.error(`Self-loop Dep edge not allowed: "${upSchema}"."${upTable}" columns cannot depend on itself`);
       }
       this.edges.push(new DepEdge({ ...rawEdge, dep: this } as RawDepEdge));
     });
