@@ -119,19 +119,13 @@ Custom metadata lets you attach arbitrary, free-form key-value annotations to DB
 
 Custom metadata is currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), and [Sticky Notes](#sticky-notes) (as well as columns inside a [TablePartial](../docs.md#tablepartial)).
 
-Any key that is **not** one of the below is treated as custom metadata:
-
-- `note` on Tables, Columns, and TableGroups
-- `headerColor` on Tables
-- `color` on TableGroups and Sticky Notes
-
-A key that is built-in for one kind is still free-form metadata on another. For example, `color` is a built-in on a TableGroup, but on a `Table` it has no special meaning and is stored as custom metadata.
-
 There are two ways to declare custom metadata: **inline** in the element's settings list, or in a separate **Metadata block**.
+
+Currently, a metadata value can be a **string literal** (e.g. `owner: "data-team"`) or a **color literal** (e.g. `brand_color: #3498DB`).
 
 ### Inline Metadata
 
-Add custom keys directly to an element's `[...]` settings list, alongside any built-in settings. Values must be strings.
+Add custom key-value pairs directly to an element's `[...]` settings list.
 
 ```text
 Table users [owner: "data-team", sla_hours: "24", pii: "true"] {
@@ -149,16 +143,8 @@ Note reminder [author: "docs"] {
 }
 ```
 
-Built-in and custom settings can be freely mixed. Here `headercolor` and `note` stay typed, while `owner` is stored as metadata:
-
-```text
-Table users [headercolor: #3498DB, note: "Primary user table", owner: "data-team"] {
-  id int [pk]
-}
-```
-
 :::note
-Inline custom metadata values must have a value and be a string. A valueless key (`[owner]`), a non-string value (`[owner: true]`), or a duplicate key (`[owner: "a", owner: "b"]`) will raise an error.
+A key with no value (`[owner]`) or a duplicate key (`[owner: "a", owner: "b"]`) will raise an error.
 :::
 
 ### Metadata Block
@@ -177,45 +163,66 @@ TableGroup g1 {
   users
 }
 
-Metadata Table public.users {
+Metadata Table users {
   owner: 'scott'
   note: 'scott is the owner'
 }
 
-Metadata Column public.users.id {
+Metadata Column users.id {
   pii: 'true'
   masking: 'partial'
 }
-
-Metadata TableGroup g1 {
-  team: 'data'
-}
-
-Metadata Note overview {
-  author: 'docs'
-}
 ```
-
-Just like inline metadata, keys that match a built-in setting (such as `note` or `color`) are applied to the element's typed field rather than stored as free-form metadata:
-
-```text
-Metadata Table public.users {
-  note: 'Applied as the table note'
-  color: #aaa
-}
-```
-
-:::note
-If the `schema_name` prefix is omitted, it defaults to the `public` schema — `Metadata Table users` targets `public.users`.
-:::
 
 ### Precedence
 
-An element can receive metadata from both its inline settings list and one or more `Metadata` blocks. These are merged per key:
+An element can receive metadata from its inline settings and from one or more `Metadata` blocks. When a same key is set in more than one place, the source with the higher priority overwrites the lower one:
 
-- Inline metadata forms the base.
-- A `Metadata` block overrides the inline value for any key it also defines, while inline-only keys are preserved.
-- If multiple `Metadata` blocks target the same element, the last one (in source order) wins for any conflicting key.
+- Metadata blocks overwrite inline metadata
+- Metadata blocks in the current file overwrite metadata blocks in imported files
+
+In the example below, `owner` resolves to `'alice'` in `main.dbml`
+
+```
+// main.dbml
+use * from 'metadata_a'
+
+// Overwrites metadata blocks from 'metadata_a.dbml'
+use * from 'metadata_b'
+```
+
+```
+// metadata_a.dbml
+reuse * from 'schema'
+
+// Overwrites metadata block from 'schema.dbml'
+Metadata Table users {
+  owner: 'scott'
+}
+```
+
+```
+// metadata_b.dbml
+reuse * from 'schema'
+
+// Overwrites metadata block from 'schema.dbml'
+Metadata Table users {
+  owner: 'alice'
+}
+```
+
+```
+// schema.dbml
+
+Table users [owner: 'jane'] {
+  id int [pk]
+}
+
+// Overwrites inline metadata
+Metadata Table users {
+  owner: 'david'
+}
+```
 
 ## Sticky Notes
 
@@ -240,7 +247,7 @@ Note multiple_lines_note {
 }
 ```
 
-Sticky notes accept a settings list too. Besides the built-in `color` setting, any other key is treated as free-form **custom metadata**, e.g. `Note reminder [author: "docs"] { 'text' }`. See [Inline Metadata](#inline-metadata).
+We also support free-form custom metadata, e.g. `Note reminder [author: "docs"] { 'text' }`. See [Inline Metadata](#inline-metadata).
 
 ## TableGroup
 
@@ -282,7 +289,7 @@ The list of table group settings you can use:
 - `note: 'string to add notes'`: add a note to this table group.
 - `color: <color_code>`: change the table group color. See [Colors](#colors) for accepted color formats.
 
-Any other key in the settings list is treated as free-form **custom metadata**, e.g. `TableGroup e_commerce [team: "growth"]`. See [Inline Metadata](#inline-metadata).
+We also support free-form custom metadata, e.g. `TableGroup e_commerce [team: "growth"]`. See [Inline Metadata](#inline-metadata).
 
 ## DiagramView
 
