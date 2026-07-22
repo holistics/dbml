@@ -2,7 +2,6 @@ import { CompileError, CompileErrorCode, MetadataTargetKind } from '@/core/types
 import type { AttributeNode, ElementDeclarationNode } from '@/core/types/nodes';
 import { isValidMetadataValue } from '@/core/utils/validate';
 
-// Resolve a metadata block's target-kind token to a known MetadataTargetKind, or undefined.
 export function getMetadataTargetKind (node: ElementDeclarationNode): MetadataTargetKind | undefined {
   const value = node.targetKind?.value?.toLowerCase();
   return Object.values(MetadataTargetKind).find((k) => k.toLowerCase() === value);

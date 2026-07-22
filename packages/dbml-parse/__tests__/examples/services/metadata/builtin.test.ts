@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CompileErrorCode } from '@/index';
 import { SettingName } from '@/core/types';
-import {
-  TABLE_METADATA_FIELDS,
-  COLUMN_METADATA_FIELDS,
-} from '@/core/global_modules/table/interpret';
+import { TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
 import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
 import {

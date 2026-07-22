@@ -239,9 +239,10 @@ export default class ProgramInterpreter {
           this.db.project = value as Project;
           break;
 
-        // Handled separately in `interpretAllCustomMetadata`
-        case MetadataKind.MetadataElement: break;
-        default: break;
+        // Handled inside each element
+        case MetadataKind.MetadataElement:
+        default:
+          break;
       }
     }
   }

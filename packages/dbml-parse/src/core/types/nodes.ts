@@ -379,17 +379,11 @@ export class UseSpecifierListNode extends SyntaxNode {
 // A declaration of a DBML element like Table, Ref, Enum, etc.
 // e.g. Table users { ... }
 // e.g. Ref: users.id > posts.user_id
-//
-// A custom-metadata block is also an ElementDeclarationNode: its `type` token is the
-// `metadata` keyword and it additionally carries a `targetKind` (the `Table` in
-// `metadata Table public.users`) with the qualified target name in `name`. Because
-// `metadata` is not an ElementKind, such a node never matches the element-kind modules.
-// Use getMetadataTargetKind() (core/utils/validate) to work with it.
-// e.g. metadata Table public.users { owner: 'scott' }
+// e.g. Metadata Table public.users { owner: 'scott' }
 export class ElementDeclarationNode extends SyntaxNode {
   type?: SyntaxToken;
 
-  // Only set for a custom-metadata block: the target-kind token (e.g. `Table`).
+  // Only set for a metadata block: the target-kind token (e.g. `Table`).
   targetKind?: SyntaxToken;
 
   name?: NormalExpressionNode;

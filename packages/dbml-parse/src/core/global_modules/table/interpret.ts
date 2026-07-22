@@ -13,7 +13,6 @@ import {
   Check, Color, Column, Index, InlineRef, Ref,
   Table, TablePartialInjection,
 } from '@/core/types/schemaJson';
-import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/metadataField';
 import type { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
 import { RefMetadata } from '@/core/types/symbol/metadata';
@@ -27,12 +26,11 @@ import {
   aggregateSettingList, isExpressionAQuotedString, isValidHexColor, isValidPartialInjection,
 } from '@/core/utils/validate';
 import {
-  extractColor, extractElementName,
-  getTokenPosition, normalizeNote,
-  processColumnType,
+  extractColor, extractElementName, getTokenPosition, normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
 import { attachCustomMetadata } from '../metadata/attach';
+import { MetadataFieldRegistry } from '../metadata/metadataField';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -118,10 +116,7 @@ export class TableInterpreter {
     return Report.create(this.table as Table, errors);
   }
 
-  // Attach custom-metadata blocks to this table and each of its columns. Runs after the
-  // body is interpreted, so this.table.fields is populated. Keyed on the column symbol
-  // (columns are metadata targets in their own right); the emitted Column lives in
-  // this.table.fields, matched by name.
+  // WARN: Must run last when interpret
   private attachTableAndColumnMetadata () {
     if (!this.symbol) return;
 
@@ -381,12 +376,11 @@ export class TableInterpreter {
   }
 }
 
-// The full set of grammar-recognized column setting names — the case labels of
-// validateFieldSetting's switch in local_modules/table/validate.ts. Exported here
-// (in global_modules alongside the registries) so that local_modules can import
-// upward without creating a circular dependency. Used by extractCustomInlineMetadata
-// in both table/interpret.ts and tablePartial/interpret.ts to exclude recognized
-// column settings from the free-form metadata bag.
+/**
+  * Settings that are excluded from custom metadata for inline metadata for Column
+  * Different from what we extract from metadata block for Column because some settings value types are not supported yet, mostly boolean keys without values ([pk, not null])
+  * TODO: Catch these settings when we support more data types for custom metadata
+  */
 export const RECOGNIZED_COLUMN_SETTINGS: readonly SettingName[] = [
   SettingName.Note,
   SettingName.Ref,
@@ -400,8 +394,6 @@ export const RECOGNIZED_COLUMN_SETTINGS: readonly SettingName[] = [
   SettingName.Check,
 ];
 
-// Per-kind registry for Table: validate + assign bundled in one object per
-// promotable setting. validate/assign key parity is structural (same object).
 export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Note | SettingName.HeaderColor> = {
   [SettingName.Note]: {
     isValidBuiltinFieldValue: isExpressionAQuotedString,
@@ -419,10 +411,6 @@ export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Not
   },
 };
 
-// Per-kind registry for Column (block form). Only `note` is block-promotable.
-// pk/unique/increment are intentionally dropped: `Metadata Column x { pk: 'true' }`
-// now writes `pk` to the free-form metadata bag instead of the typed field.
-// Inline `[pk]` behaviour is unchanged (handled by interpretColumn via columnSymbol).
 export const COLUMN_METADATA_FIELDS: MetadataFieldRegistry<Column, SettingName.Note> = {
   [SettingName.Note]: {
     isValidBuiltinFieldValue: isExpressionAQuotedString,

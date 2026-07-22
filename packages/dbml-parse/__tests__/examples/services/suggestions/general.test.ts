@@ -112,7 +112,6 @@ describe('[example] CompletionItemProvider', () => {
 
       // Test insertTexts - should have Records keyword
       const insertTexts = result.suggestions.map((s) => s.insertText);
-      console.log(insertTexts);
       expect(insertTexts).toContain('Note');
       expect(insertTexts).toContain('Records');
     });

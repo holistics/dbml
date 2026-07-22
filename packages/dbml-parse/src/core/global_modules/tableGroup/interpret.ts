@@ -38,8 +38,6 @@ import {
 import { extractCustomInlineMetadata } from '../../utils/interpret';
 import { attachCustomMetadata } from '../metadata/attach';
 
-// Per-kind registry for TableGroup: validate + assign bundled per promotable setting.
-// Defined before the class so the class method can reference it.
 export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, SettingName.Note | SettingName.Color> = {
   [SettingName.Note]: {
     isValidBuiltinFieldValue: isExpressionAQuotedString,

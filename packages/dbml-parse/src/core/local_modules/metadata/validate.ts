@@ -11,8 +11,18 @@ import {
 import { isValidMetadataValue, isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
 import { MetadataTargetKind } from '@/core/types/symbol';
-import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/fieldRegistry';
+import { COLUMN_METADATA_FIELDS, TABLE_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
+import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
+import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
+import { MetadataFieldRegistry } from '@/core/global_modules/metadata/metadataField';
 import { getMetadataTargetKind } from './utils';
+
+const METADATA_FIELDS_BY_KIND: Record<MetadataTargetKind, MetadataFieldRegistry<any, any>> = {
+  [MetadataTargetKind.Table]: TABLE_METADATA_FIELDS,
+  [MetadataTargetKind.Column]: COLUMN_METADATA_FIELDS,
+  [MetadataTargetKind.TableGroup]: TABLEGROUP_METADATA_FIELDS,
+  [MetadataTargetKind.Note]: NOTE_METADATA_FIELDS,
+};
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: ElementDeclarationNode) {}
@@ -125,7 +135,7 @@ export default class MetadataValidator {
       keyValuesMap[key].push(sub);
 
       // If a key matches a builtin setting for the target element, validate with the element's specs
-      const builtinSpecs = targetKind ? METADATA_FIELDS_BY_KIND[targetKind]?.[key as SettingName] : undefined;
+      const builtinSpecs = targetKind ? METADATA_FIELDS_BY_KIND[targetKind][key as SettingName] : undefined;
       if (builtinSpecs) {
         if (!builtinSpecs.isValidBuiltinFieldValue(sub.body?.callee)) {
           return [

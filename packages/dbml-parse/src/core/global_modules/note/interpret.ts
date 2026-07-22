@@ -27,9 +27,6 @@ import Report from '@/core/types/report';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
 import { attachCustomMetadata } from '../metadata/attach';
 
-// Per-kind registry for Note (sticky): validate + assign bundled per promotable setting.
-// Note color allows 'none' (isValidColorOrNone), unlike TableGroup which is hex-only.
-// Defined before the class so the class method can reference it.
 export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color> = {
   [SettingName.Color]: {
     isValidBuiltinFieldValue: isValidColorOrNone,
