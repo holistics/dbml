@@ -15,7 +15,7 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
 - [Custom Metadata](#custom-metadata)
   - [Inline Metadata](#inline-metadata)
   - [Metadata Block](#metadata-block)
-  - [Precedence](#precedence)
+  - [Metadata Precedence](#metadata-precedence)
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
   - [TableGroup Notes](#tablegroup-notes-1)
@@ -174,54 +174,39 @@ Metadata Column users.id {
 }
 ```
 
-### Precedence
+### Metadata Precedence
 
-An element can receive metadata from its inline settings and from one or more `Metadata` blocks. When a same key is set in more than one place, the source with the higher priority overwrites the lower one:
+An element can get metadata from its **inline settings** and from one or more **Metadata blocks**. When the same key is set in more than one place, the higher-priority source wins.
 
-- Metadata blocks overwrite inline metadata
-- Metadata blocks in the current file overwrite metadata blocks in imported files
+Priority, lowest to highest:
 
-In the example below, `owner` resolves to `'alice'` in `main.dbml`
+1. Inline settings
+2. Metadata blocks in imported files
+3. Metadata blocks in the current file
 
-```
-// main.dbml
-use * from 'metadata_a'
+When two imported files set the same key, the one imported **later** wins.
 
-// Overwrites metadata blocks from 'metadata_a.dbml'
-use * from 'metadata_b'
-```
+**Example**
 
-```
-// metadata_a.dbml
-reuse * from 'schema'
+Two files set `owner` on the same table, and `main.dbml` imports both:
 
-// Overwrites metadata block from 'schema.dbml'
-Metadata Table users {
-  owner: 'scott'
-}
-```
-
-```
-// metadata_b.dbml
-reuse * from 'schema'
-
-// Overwrites metadata block from 'schema.dbml'
-Metadata Table users {
-  owner: 'alice'
-}
-```
-
-```
+```dbml
 // schema.dbml
-
-Table users [owner: 'jane'] {
+Table users [owner: 'jane'] {   // inline setting
   id int [pk]
 }
-
-// Overwrites inline metadata
-Metadata Table users {
+Metadata Table users {          // beats inline -> 'david'
   owner: 'david'
 }
+
+// team.dbml
+use * from 'schema'
+Metadata Table users {          // beats imported block -> 'alice'
+  owner: 'alice'
+}
+
+// main.dbml
+use * from 'team'
 ```
 
 ## Sticky Notes
