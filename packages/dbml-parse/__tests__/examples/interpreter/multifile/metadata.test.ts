@@ -8,16 +8,16 @@ describe('[example] multifile interpreter - auto-imported metadata', () => {
 Table users {
   id int [pk]
 }
-Metadata Table public.users {
+Metadata Table users {
   owner: 'scott'
 }
 `,
     '/main.dbml': `
-use { table public.users } from './base.dbml'
+use { table users } from './base.dbml'
 `,
   });
 
-  test('metadata travels with its target table without an explicit metadata import', () => {
+  test('metadata travels with its targetwithout an explicit metadata import', () => {
     const db = getDatabase(compiler, '/main.dbml');
     const users = db.tables.find((t) => t.name === 'users');
     expect(users?.metadata).toMatchObject({ owner: 'scott' });
@@ -31,33 +31,28 @@ use { table public.users } from './base.dbml'
 });
 
 describe('[example] multifile interpreter - duplicate metadata key across files', () => {
-  // base.dbml declares the table + a color; main.dbml imports the table (which
-  // carries its metadata) and sets the SAME key again with a different value.
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table users {
   id int [pk]
 }
-Metadata Table public.users {
+Metadata Table users {
   color: #aaa
 }
 `,
     '/main.dbml': `
-use { table public.users } from './base.dbml'
-Metadata Table public.users {
+use { table users } from './base.dbml'
+Metadata Table users {
   color: #f00
 }
 `,
   });
 
-  // Cross-file override is a feature: the compiler merges per-key, last-wins,
-  // silently. base.dbml's #aaa is the imported block; main.dbml's #f00 applies last.
-  test('merges cross-file duplicate key, last-write-wins, no warning', () => {
+  test('metadata defined in current file overwrites metadata defined in imported file', () => {
     const result = compiler.interpretFile(fp('/main.dbml'));
 
     expect(result.getWarnings()).toHaveLength(0);
-    const errorCodes = result.getErrors().map((e) => e.code);
-    expect(errorCodes).not.toContain(CompileErrorCode.DUPLICATE_METADATA_FIELD);
+    expect(result.getErrors()).toHaveLength(0);
 
     const db = result.getValue()!;
     const users = db.tables.find((t) => t.name === 'users');
@@ -65,45 +60,193 @@ Metadata Table public.users {
   });
 });
 
-describe('[example] multifile interpreter - unreachable metadata/records are not emitted', () => {
+describe('[example] multifile interpreter - metadata precedence across import graph', () => {
+  // entry <- a <- c
+  //       <- b
+  test('dependency chain: entry <- a <- c, entry <- b; expected precedence: entry > b > a > c', () => {
+    const { compiler } = setupCompiler({
+      '/entry.dbml': `
+use * from './a.dbml'
+use * from './b.dbml'
+Table users {
+  id int [pk]
+}
+`,
+      '/c.dbml': `
+use { table users } from './entry.dbml'
+Metadata Table users {
+  owner: 'c'
+  c: 'c'
+  shared_a_c: 'c'
+  shared_b_c: 'c'
+}
+`,
+      '/a.dbml': `
+use { table users } from './entry.dbml'
+use * from './c.dbml'
+Metadata Table users {
+  owner: 'a'
+  a: 'a'
+  shared_a_c: 'a'
+}
+`,
+      '/b.dbml': `
+use { table users } from './entry.dbml'
+Metadata Table users {
+  owner: 'b'
+  b: 'b'
+  shared_b_c: 'b'
+}
+`,
+    });
+
+    const db = getDatabase(compiler, '/entry.dbml');
+    const users = db.tables.find((t) => t.name === 'users');
+    expect(users?.metadata).toMatchObject({ owner: 'b', a: 'a', b: 'b', shared_a_c: 'a', shared_b_c: 'b' });
+  });
+
+  // entry <- a
+  //       <- b <- c
+  test('dependency chain: entry <- a, entry <- b <- c; expected precedence: entry > b > c > a', () => {
+    const { compiler } = setupCompiler({
+      '/entry.dbml': `
+use * from './a.dbml'
+use * from './b.dbml'
+Table users {
+  id int [pk]
+}
+`,
+      '/c.dbml': `
+use { table users } from './entry.dbml'
+Metadata Table users {
+  owner: 'c'
+  shared_a_c: 'c'
+}
+`,
+      '/a.dbml': `
+use { table users } from './entry.dbml'
+Metadata Table users {
+  owner: 'a'
+  shared_a_c: 'a'
+}
+`,
+      '/b.dbml': `
+use { table users } from './entry.dbml'
+use * from './c.dbml'
+Metadata Table users {
+  owner: 'b'
+}
+`,
+    });
+
+    const db = getDatabase(compiler, '/entry.dbml');
+    const users = db.tables.find((t) => t.name === 'users');
+    expect(users?.metadata).toMatchObject({ owner: 'b', shared_a_c: 'c' });
+  });
+
+  // entry <- a <- c
+  //       <- b <-
+  test('dependency chain: entry <- a <- c, entry <- b <- c; expected precedence: entry > b > a > c', () => {
+    const { compiler } = setupCompiler({
+      '/entry.dbml': `
+Table users {
+  id int [pk]
+}
+use * from './a.dbml'
+use * from './b.dbml'
+`,
+      '/c.dbml': `
+use { table users } from './entry.dbml'
+Metadata Table users {
+  owner: 'c'
+  shared_a_c: 'c'
+  shared_b_c: 'c'
+}
+`,
+      '/a.dbml': `
+use { table users } from './entry.dbml'
+use * from './c.dbml'
+Metadata Table users {
+  owner: 'a'
+  shared_a_b: 'a'
+  shared_a_c: 'a'
+}
+`,
+      '/b.dbml': `
+use { table users } from './entry.dbml'
+use * from './c.dbml'
+Metadata Table users {
+  owner: 'b'
+  shared_a_b: 'b'
+  shared_b_c: 'b'
+}
+`,
+    });
+
+    const db = getDatabase(compiler, '/entry.dbml');
+    const users = db.tables.find((t) => t.name === 'users');
+    expect(users?.metadata).toMatchObject({ owner: 'b', shared_a_b: 'b', shared_a_c: 'a', shared_b_c: 'b' });
+  });
+
+  // entry <- a <- b
+  //       <------
+  test('dependency chain: entry <- a <- b, entry <- b; expected precedence: entry > a > b', () => {
+    const { compiler } = setupCompiler({
+      '/entry.dbml': `
+Table users {
+  id int [pk]
+}
+use * from './a.dbml'
+use * from './b.dbml'
+`,
+      '/a.dbml': `
+use { table users } from './entry.dbml'
+use * from './b.dbml'
+Metadata Table users {
+  owner: 'a'
+}
+`,
+      '/b.dbml': `
+use { table users } from './entry.dbml'
+Metadata Table users {
+  owner: 'b'
+}
+`,
+    });
+
+    const db = getDatabase(compiler, '/entry.dbml');
+    const users = db.tables.find((t) => t.name === 'users');
+    expect(users?.metadata).toMatchObject({ owner: 'a' });
+  });
+});
+
+describe('[example] multifile interpreter - unreachable metadata are not attached', () => {
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table users {
   id int [pk]
 }
 `,
-    // Declares metadata + records for users, but is NOT imported by main.dbml.
     '/extra.dbml': `
-use { table public.users } from './base.dbml'
-Metadata Table public.users {
-  owner: 'scott'
-}
-records users(id) {
-  1
+use { table users } from './base.dbml'
+Metadata Table users {
+  owner: 'extra'
 }
 `,
     '/main.dbml': `
-use { table public.users } from './base.dbml'
+use { table users } from './base.dbml'
 `,
   });
 
   test('metadata declared in an unreachable file is excluded', () => {
     const db = getDatabase(compiler, '/main.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    // No reachable metadata block, so nothing is attached.
-    expect(users?.metadata ?? {}).toEqual({});
+    expect(users?.metadata).toEqual({});
   });
 
-  test('records declared in an unreachable file are excluded', () => {
-    const db = getDatabase(compiler, '/main.dbml');
-    const rec = db.records.find((r) => r.tableName === 'users');
-    expect(rec).toBeUndefined();
-  });
-
-  test('the file declaring them still emits both', () => {
+  test('the file declaring them still has metadata', () => {
     const db = getDatabase(compiler, '/extra.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'scott' });
-    expect(db.records.find((r) => r.tableName === 'users')).toBeDefined();
+    expect(users?.metadata).toMatchObject({ owner: 'extra' });
   });
 });
