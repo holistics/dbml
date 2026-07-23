@@ -14,7 +14,7 @@ import { MetadataTargetKind } from '@/core/types/symbol';
 import { COLUMN_METADATA_FIELDS, TABLE_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
 import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
-import { MetadataFieldRegistry } from '@/core/global_modules/metadata/metadataField';
+import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/utils';
 import { getMetadataTargetKind } from './utils';
 
 const METADATA_FIELDS_BY_KIND: Record<MetadataTargetKind, MetadataFieldRegistry<any, any>> = {

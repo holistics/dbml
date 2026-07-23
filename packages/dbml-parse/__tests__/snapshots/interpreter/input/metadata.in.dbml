@@ -32,7 +32,7 @@ Metadata Table public.users {
 }
 
 Metadata Column public.users.id {
-  pii: true
+  pii: 'true'
   masking: 'partial'
 }
 

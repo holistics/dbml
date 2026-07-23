@@ -8,7 +8,7 @@ Metadata Table public.missing {
 }
 
 // invalid target kind
-Metadata Banana public.users {
+Metadata Invalid public.users {
   owner: 'x'
 }
 

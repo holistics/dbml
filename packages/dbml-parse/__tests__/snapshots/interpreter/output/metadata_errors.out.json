@@ -19,8 +19,8 @@
       "level": "error",
       "token": {
         "context": {
-          "id": "token@<identifier>@Banana@[L10:C9, L10:C15]",
-          "snippet": "Banana",
+          "id": "token@<identifier>@Invalid@[L10:C9, L10:C16]",
+          "snippet": "Invalid",
           "isInvalid": false,
           "filepath": "/main.dbml"
         }

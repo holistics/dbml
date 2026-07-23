@@ -13,7 +13,7 @@ import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 
 import MetadataBinder from './bind';
 import MetadataInterpreter from './interpret';
-import { resolveMetadataTarget } from './resolve';
+import { resolveMetadataTarget } from './utils';
 import type { GlobalModule } from '../types';
 
 export const metadataModule: GlobalModule = {

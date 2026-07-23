@@ -21,11 +21,10 @@ import {
   type NoteSymbol,
 } from '@/core/types';
 import type { Color } from '@/core/types/schemaJson';
-import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/metadataField';
 import { isValidColorOrNone } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata } from '../metadata/attach';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
 
 export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color> = {
   [SettingName.Color]: {

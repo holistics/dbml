@@ -26,7 +26,6 @@ import {
   type TableGroupSymbol,
 } from '@/core/types';
 import type { Color } from '@/core/types/schemaJson';
-import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/metadataField';
 import { isExpressionAQuotedString, isValidHexColor } from '@/core/utils/validate';
 import Report from '@/core/types/report';
 import {
@@ -36,7 +35,7 @@ import {
   normalizeNote,
 } from '@/core/utils/interpret';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata } from '../metadata/attach';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
 
 export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, SettingName.Note | SettingName.Color> = {
   [SettingName.Note]: {

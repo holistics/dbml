@@ -29,8 +29,7 @@ import {
   extractColor, extractElementName, getTokenPosition, normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata } from '../metadata/attach';
-import { MetadataFieldRegistry } from '../metadata/metadataField';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;

@@ -24,13 +24,13 @@ Enum post_status {
   archived
 }
 
-Metadata Table public.users {
+Metadata Table users {
   owner: 'data-team'
-  pii: true
+  pii: 'true'
 }
 
-Metadata Column public.users.email {
-  masking: partial
+Metadata Column users.email {
+  masking: 'partial'
 }`;
 
 export interface SampleCategory {

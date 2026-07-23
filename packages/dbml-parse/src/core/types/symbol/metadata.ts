@@ -391,8 +391,6 @@ export class RecordsMetadata extends NodeMetadata {
 }
 
 // Metadata element block: `Metadata <target-kind> <qualified-name> { ... }`.
-// The declaration is an ElementDeclarationNode with `type.value === 'metadata'`, its
-// target-kind in `targetKind` and its qualified target name in `name`.
 export class MetadataElementMetadata extends NodeMetadata {
   declare declaration: ElementDeclarationNode;
 
@@ -403,12 +401,10 @@ export class MetadataElementMetadata extends NodeMetadata {
   }
 
   // The element this metadata annotates (Table/Column/Schema/.etc).
-  // Resolved via the header-name referee, which metadataModule.nodeReferee
-  // maps to the target through resolveMetadataTarget.
+  // Resolved via the header-name referee, which metadataModule.nodeReferee maps to the target through resolveMetadataTarget.
   target (compiler: Compiler): NodeSymbol | undefined {
     const nameNode = this.declaration.name;
     if (!nameNode) return undefined;
-    // The rightmost fragment of the qualified header name (e.g. `users` in `public.users`) is what metadataModule.nodeReferee resolves to the target.
     const targetNode = getRightmostVariable(nameNode) ?? nameNode;
     return compiler.nodeReferee(targetNode).getFiltered(UNHANDLED)?.originalSymbol;
   }
@@ -417,8 +413,8 @@ export class MetadataElementMetadata extends NodeMetadata {
     let target = this.target(compiler);
     if (!target) return [];
 
-    // A Column lives inside a Table, not as a direct schema member, so
-    // inNestedSchema would not find it. Normalise to the containing table.
+    // A Column lives inside a Table, not as a direct schema member, so inNestedSchema would not find it.
+    // => Normalise to the containing table.
     if (target.kind === SymbolKind.Column) {
       const tableNode = target.declaration?.parentOfKind(ElementDeclarationNode);
       const tableSymbol = tableNode

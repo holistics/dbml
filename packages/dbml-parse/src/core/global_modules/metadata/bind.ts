@@ -5,7 +5,7 @@ import {
 } from '@/core/types/nodes';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
-import { resolveMetadataTarget } from './resolve';
+import { resolveMetadataTarget } from './utils';
 
 export default class MetadataBinder {
   constructor (private compiler: Compiler, private declarationNode: ElementDeclarationNode) {}

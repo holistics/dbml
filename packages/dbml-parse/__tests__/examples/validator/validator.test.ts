@@ -1,15 +1,7 @@
-import {
-  describe, expect,
-} from 'vitest';
-import {
-  CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  analyze,
-} from '@tests/utils';
+import { describe, expect } from 'vitest';
+import { CompileErrorCode } from '@/core/types/errors';
+import { SyntaxToken } from '@/core/types/tokens';
+import { analyze } from '@tests/utils';
 
 describe('[example] validator', () => {
   describe('table validation', () => {
@@ -87,7 +79,6 @@ describe('[example] validator', () => {
     });
 
     test('accepts unknown table settings as custom metadata', () => {
-      // A non-builtin key is now free-form inline custom metadata, not an error.
       const source = 'Table users [unknown_setting: "value"] { id int }';
       const errors = analyze(source).getErrors();
 

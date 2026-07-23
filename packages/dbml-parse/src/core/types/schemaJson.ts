@@ -274,13 +274,10 @@ export interface TableRecord {
   token: TokenPosition;
 }
 
-// Intermediate, per-block interpreted form of a Metadata declaration: the key/value
-// pairs from one `Metadata` block body, with each value's source token. NOT part of
-// the emitted Database. The interpreter looks the block up by its target symbol,
-// merges every block targeting the same element, and attaches the merged values onto
-// that element's `metadata` field (Table/Column/TableGroup/Note). Only lives inside
-// the metadata pass. The target identity is carried by the target symbol (the index
-// key), not by this shape.
+// Intermediate, per-block interpreted form of a Metadata declaration: the key/value pairs from one `Metadata` block body, with each value's source token.
+// NOT part of the emitted Database.
+// The interpreter looks the block up by its target symbol, merges every block targeting the same element, and attaches the merged values onto that element's `metadata` field (Table/Column/TableGroup/Note).
+// Only lives inside the metadata pass.
 export type MetadataValues = Record<string, { value: string; token: TokenPosition }>;
 
 export type Project =
