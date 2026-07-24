@@ -694,6 +694,7 @@ describe('[example] CompletionItemProvider', () => {
         'increment',
         'unique',
         'ref',
+        'dep',
         'default',
         'note',
         'check',
@@ -710,6 +711,7 @@ describe('[example] CompletionItemProvider', () => {
         'increment',
         'unique',
         'ref: ',
+        'dep: ',
         'default: ',
         'note: ',
         'check: ',
@@ -737,6 +739,7 @@ describe('[example] CompletionItemProvider', () => {
         'increment',
         'unique',
         'ref',
+        'dep',
         'default',
         'note',
         'check',
@@ -753,6 +756,7 @@ describe('[example] CompletionItemProvider', () => {
         'increment',
         'unique',
         'ref: ',
+        'dep: ',
         'default: ',
         'note: ',
         'check: ',
@@ -780,6 +784,7 @@ describe('[example] CompletionItemProvider', () => {
         'increment',
         'unique',
         'ref',
+        'dep',
         'default',
         'note',
         'check',
@@ -796,6 +801,7 @@ describe('[example] CompletionItemProvider', () => {
         'increment',
         'unique',
         'ref: ',
+        'dep: ',
         'default: ',
         'note: ',
         'check: ',
@@ -1556,6 +1562,7 @@ describe('[example] CompletionItemProvider', () => {
         'Enum',
         'Note',
         'Ref',
+        'Dep',
         'TablePartial',
       ]);
 
@@ -1567,6 +1574,7 @@ describe('[example] CompletionItemProvider', () => {
         'Enum',
         'Note',
         'Ref',
+        'Dep',
         'TablePartial',
       ]);
     });

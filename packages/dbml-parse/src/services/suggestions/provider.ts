@@ -3,6 +3,7 @@ import { DEFAULT_SCHEMA_NAME, NONE_COLOR } from '@/constants';
 import { isComment } from '@/core/lexer/utils';
 import { Filepath } from '@/core/types/filepath';
 import { ElementKind, SettingName } from '@/core/types/keywords';
+import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '@/core/types/schemaJson';
 import { UNHANDLED } from '@/core/types/module';
 import {
   AttributeNode,
@@ -136,6 +137,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           case '<':
           case '<>':
           case '-':
+          case DEP_DOWNSTREAM:
+          case DEP_UPSTREAM:
             return suggestOnRelOp(
               this.compiler,
               filepath,
@@ -156,6 +159,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
           case '<':
           case '<>':
           case '-':
+          case DEP_DOWNSTREAM:
+          case DEP_UPSTREAM:
             return suggestOnRelOp(
               this.compiler,
               filepath,
@@ -221,6 +226,7 @@ function suggestOnRelOp (
 
   if ([
     ScopeKind.REF,
+    ScopeKind.DEP,
     ScopeKind.TABLE,
     ScopeKind.TABLEPARTIAL,
   ].includes(scopeKind)) {
@@ -367,6 +373,7 @@ function suggestInTuple (compiler: Compiler, filepath: Filepath, offset: number,
     case ScopeKind.INDEXES:
       return suggestColumnNameInIndexes(compiler, filepath, offset);
     case ScopeKind.REF:
+    case ScopeKind.DEP:
       {
         while (containers.length > 0) {
           const container = containers.pop()!;
@@ -511,6 +518,7 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
           })),
           ...[
             SettingName.Ref,
+            SettingName.Dep,
             SettingName.Default,
             SettingName.Note,
             SettingName.Check,
@@ -585,6 +593,19 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
             range: undefined as any,
           })),
         ],
+      };
+    case ScopeKind.DEP:
+      return {
+        suggestions: [
+          SettingName.Note,
+          SettingName.Color,
+        ].map((name) => ({
+          label: name,
+          insertText: `${name}: `,
+          kind: CompletionItemKind.Property,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          range: undefined as any,
+        })),
       };
     case ScopeKind.CHECKS:
       return {
@@ -753,7 +774,8 @@ function suggestInSubField (
       return suggestInIndex(compiler, filepath, offset);
     case ScopeKind.ENUM:
       return suggestInEnumField(compiler, filepath, offset, container);
-    case ScopeKind.REF: {
+    case ScopeKind.REF:
+    case ScopeKind.DEP: {
       const suggestions = suggestInRefField(compiler, filepath, offset);
 
       return (
@@ -791,6 +813,7 @@ function suggestTopLevelElementType (): CompletionList {
       'Enum',
       'Project',
       'Ref',
+      'Dep',
       'TablePartial',
       'Records',
       'DiagramView',
@@ -884,6 +907,7 @@ function suggestInProjectField (
     'Enum',
     'Note',
     'Ref',
+    'Dep',
     'TablePartial',
   ];
   if (!container?.callee) {

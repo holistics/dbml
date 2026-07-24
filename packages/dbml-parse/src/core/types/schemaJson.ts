@@ -65,6 +65,7 @@ export interface Database {
   tables: Table[];
   notes: Note[];
   refs: Ref[];
+  deps: Dep[];
   enums: Enum[];
   tableGroups: TableGroup[];
   aliases: Alias[];
@@ -122,6 +123,7 @@ export interface Column {
   type: ColumnType;
   token: TokenPosition;
   inline_refs: InlineRef[];
+  inline_deps: InlineDep[];
   checks: Check[];
   pk?: boolean;
   dbdefault?: {
@@ -190,6 +192,44 @@ export interface RefEndpoint {
 }
 
 export type RelationCardinality = '1' | '*';
+
+export interface Dep {
+  schemaName: string | null;
+  name: string | null;
+  edges: DepEdge[];
+  color?: Color;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  metadata?: Record<string, string | number | boolean | null>;
+  token: TokenPosition;
+}
+
+export interface DepEdge {
+  upstream: DepEndpoint;
+  downstream: DepEndpoint;
+  token: TokenPosition;
+}
+
+export interface DepEndpoint {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  token: TokenPosition;
+}
+
+export const DEP_DOWNSTREAM = '->' as const;
+export const DEP_UPSTREAM = '<-' as const;
+export type DepDirection = typeof DEP_DOWNSTREAM | typeof DEP_UPSTREAM;
+
+export interface InlineDep {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  direction: DepDirection;
+  token: TokenPosition;
+}
 
 export interface Enum {
   name: string;
@@ -295,8 +335,12 @@ export type SchemaElement =
   | Index
   | Check
   | InlineRef
+  | InlineDep
   | Ref
   | RefEndpoint
+  | Dep
+  | DepEdge
+  | DepEndpoint
   | Enum
   | EnumField
   | TableGroup

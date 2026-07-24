@@ -10,8 +10,9 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  Check, Column, Index, InlineRef, Ref,
+  Check, Column, DEP_DOWNSTREAM, DEP_UPSTREAM, Dep, Index, InlineDep, InlineRef, Ref,
   Table, TablePartialInjection,
+  type DepDirection,
 } from '@/core/types/schemaJson';
 import type { Filepath } from '@/core/types/filepath';
 import { SymbolKind } from '@/core/types/symbol';
@@ -309,6 +310,39 @@ export class TableInterpreter {
         token: ep.token,
       };
       return inlineRef;
+    });
+
+    const deps = settingMap[SettingName.Dep] || [];
+    column.inline_deps = deps.flatMap((depAttr) => {
+      const meta = this.compiler.nodeMetadata(depAttr).getFiltered(UNHANDLED);
+      if (!meta) return [];
+
+      const owners = meta.owners(this.compiler);
+      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+
+      const result = this.compiler.interpretMetadata(meta, this.filepath);
+      if (result.hasValue(UNHANDLED)) return [];
+      errors.push(...result.getErrors());
+
+      const value = result.getValue() as Dep | undefined;
+      if (!value?.edges?.[0]) return [];
+
+      const prefix = (depAttr as any).value;
+      if (!(prefix instanceof PrefixExpressionNode)) return [];
+      const direction = prefix.op?.value as DepDirection | undefined;
+      if (direction !== DEP_DOWNSTREAM && direction !== DEP_UPSTREAM) return [];
+
+      const edge = value.edges[0];
+      const other = direction === DEP_DOWNSTREAM ? edge.downstream : edge.upstream;
+
+      const inlineDep: InlineDep = {
+        schemaName: other.schemaName,
+        tableName: other.tableName,
+        fieldNames: other.fieldNames,
+        direction,
+        token: other.token,
+      };
+      return inlineDep;
     });
 
     const checkNodes = settingMap[SettingName.Check] || [];

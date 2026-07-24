@@ -57,6 +57,11 @@ export function addDoubleQuoteIfNeeded (identifier: string): string {
   return `"${escapeString(identifier)}"`;
 }
 
+// Build a quoted qualified name string from name parts.
+export function normalizeQualifiedName (...parts: string[]): string {
+  return parts.map(addDoubleQuoteIfNeeded).join('.');
+}
+
 /**
  * Unescapes a string by processing escape sequences.
  * Handles escaped quotes (\"), common escape sequences, unicode (\uHHHH), and arbitrary escapes.
@@ -348,4 +353,15 @@ export function allVisibleMembers (compiler: Compiler): Report<NodeSymbol[]> {
   }
 
   return new Report(members, errors, warnings);
+}
+
+/**
+ * Wraps a note value in the appropriate DBML quote style.
+ * Uses triple quotes for multiline content, single quotes otherwise.
+ */
+export function quoteNoteValue (value: string): string {
+  if (value.includes('\n')) {
+    return `'''\n${value}\n'''`;
+  }
+  return `'${escapeString(value)}'`;
 }

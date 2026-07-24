@@ -4,13 +4,21 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  updateElementSetting,
+  updateElementSettingEdit,
   syncDiagramView,
   findDiagramViewBlocks,
+  syncDep,
+  findDepBlocks,
 } from './transform';
 export {
   renameTable,
+  updateElementSetting,
+  updateElementSettingEdit,
   syncDiagramView,
   findDiagramViewBlocks,
+  syncDep,
+  findDepBlocks,
   importer,
   exporter,
   ModelExporter,
@@ -42,6 +50,8 @@ export {
   formatRecordValue,
   DEFAULT_ENTRY,
   Filepath,
+  SymbolKind,
+  MetadataKind,
 } from '@dbml/parse';
 
 // Re-export types
@@ -51,5 +61,19 @@ export type {
   FilterConfig,
   DiagramViewSyncOperation,
   DiagramViewBlock,
+  DepSyncOperation,
+  DepSyncEdge,
+  DepEndpointRef,
+  DepBlock,
   TextEdit,
+  ElementIdentifier,
+  SchemaIdentifier,
+  TableIdentifier,
+  ColumnIdentifier,
+  EnumIdentifier,
+  EndpointRef,
+  RefIdentifier,
+  DepIdentifier,
+  NoteIdentifier,
+  TableGroupIdentifier,
 } from '@dbml/parse';

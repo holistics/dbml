@@ -8,6 +8,7 @@ import {
   PrefixExpressionNode,
   type SyntaxNode,
 } from '../nodes';
+import { DEP_DOWNSTREAM, DEP_UPSTREAM } from '../schemaJson';
 import type {
   ColumnSymbol,
   NodeSymbol,
@@ -15,6 +16,7 @@ import type {
   TablePartialSymbol,
   TableSymbol,
 } from '../symbol';
+import { SymbolKind } from '../symbol';
 import type { Internable } from '../internable';
 import { UNHANDLED } from '../module';
 import { ElementKind, SettingName } from '../keywords';
@@ -26,6 +28,7 @@ import {
 
 export enum MetadataKind {
   Ref = 'ref',
+  Dep = 'dep',
   PartialRef = 'partial ref',
   TableChecks = 'table checks',
   Indexes = 'indexes',
@@ -221,6 +224,158 @@ export class RefMetadata extends NodeMetadata {
         return reachableFromProgram.some((f) => f.equals(declarationFilepath))
           && (s as ProgramSymbol).inNestedSchema(compiler, leftTableSymbol)
           && (s as ProgramSymbol).inNestedSchema(compiler, rightTableSymbol);
+      });
+  }
+}
+
+export class DepMetadata extends NodeMetadata {
+  declare declaration: ElementDeclarationNode | AttributeNode;
+
+  readonly kind = MetadataKind.Dep;
+
+  constructor (declaration: ElementDeclarationNode | AttributeNode) {
+    super(declaration);
+  }
+
+  container (compiler: Compiler): TableSymbol | undefined {
+    const parent = this.declaration.parentOfKind(ElementDeclarationNode);
+    if (parent?.isKind(ElementKind.Table)) {
+      return compiler.nodeSymbol(parent).getFiltered(UNHANDLED) as TableSymbol | undefined;
+    }
+    return undefined;
+  }
+
+  edgeExpressions (): InfixExpressionNode[] {
+    if (!(this.declaration instanceof ElementDeclarationNode)) return [];
+    return getBody(this.declaration)
+      .filter((f): f is FunctionApplicationNode => f instanceof FunctionApplicationNode)
+      .map((f) => f.callee)
+      .filter((e): e is InfixExpressionNode => e instanceof InfixExpressionNode);
+  }
+
+  upstreamColumns (compiler: Compiler): ColumnSymbol[][] {
+    if (this.declaration instanceof ElementDeclarationNode) {
+      return this.edgeExpressions().map((infix) => {
+        const upstream = infix.op?.value === DEP_UPSTREAM ? infix.rightExpression : infix.leftExpression;
+        return extractColumnsFromEndpoint(compiler, upstream);
+      });
+    }
+    if (this.declaration instanceof AttributeNode) {
+      const prefix = this.declaration.value;
+      if (!(prefix instanceof PrefixExpressionNode)) return [];
+      const op = prefix.op?.value;
+      const hostCol = this.hostColumn(compiler);
+      const otherCols = extractColumnsFromEndpoint(compiler, prefix.expression);
+      if (op === DEP_DOWNSTREAM) return [
+        hostCol
+          ? [
+              hostCol,
+            ]
+          : [],
+      ];
+      if (op === DEP_UPSTREAM) return [
+        otherCols,
+      ];
+    }
+    return [];
+  }
+
+  downstreamColumns (compiler: Compiler): ColumnSymbol[][] {
+    if (this.declaration instanceof ElementDeclarationNode) {
+      return this.edgeExpressions().map((infix) => {
+        const downstream = infix.op?.value === DEP_UPSTREAM ? infix.leftExpression : infix.rightExpression;
+        return extractColumnsFromEndpoint(compiler, downstream);
+      });
+    }
+    if (this.declaration instanceof AttributeNode) {
+      const prefix = this.declaration.value;
+      if (!(prefix instanceof PrefixExpressionNode)) return [];
+      const op = prefix.op?.value;
+      const hostCol = this.hostColumn(compiler);
+      const otherCols = extractColumnsFromEndpoint(compiler, prefix.expression);
+      if (op === DEP_DOWNSTREAM) return [
+        otherCols,
+      ];
+      if (op === DEP_UPSTREAM) return [
+        hostCol
+          ? [
+              hostCol,
+            ]
+          : [],
+      ];
+    }
+    return [];
+  }
+
+  upstreamTables (compiler: Compiler): (TableSymbol | undefined)[] {
+    if (this.declaration instanceof ElementDeclarationNode) {
+      return this.edgeExpressions().map((infix) => {
+        const upstream = infix.op?.value === DEP_UPSTREAM ? infix.rightExpression : infix.leftExpression;
+        return extractTableFromDepEndpoint(compiler, upstream);
+      });
+    }
+    if (this.declaration instanceof AttributeNode) {
+      const prefix = this.declaration.value;
+      if (!(prefix instanceof PrefixExpressionNode)) return [];
+      const op = prefix.op?.value;
+      const otherTbl = extractTableFromDepEndpoint(compiler, prefix.expression);
+      if (op === DEP_DOWNSTREAM) return [
+        this.container(compiler),
+      ];
+      if (op === DEP_UPSTREAM) return [
+        otherTbl,
+      ];
+    }
+    return [];
+  }
+
+  downstreamTables (compiler: Compiler): (TableSymbol | undefined)[] {
+    if (this.declaration instanceof ElementDeclarationNode) {
+      return this.edgeExpressions().map((infix) => {
+        const downstream = infix.op?.value === DEP_UPSTREAM ? infix.leftExpression : infix.rightExpression;
+        return extractTableFromDepEndpoint(compiler, downstream);
+      });
+    }
+    if (this.declaration instanceof AttributeNode) {
+      const prefix = this.declaration.value;
+      if (!(prefix instanceof PrefixExpressionNode)) return [];
+      const op = prefix.op?.value;
+      const otherTbl = extractTableFromDepEndpoint(compiler, prefix.expression);
+      if (op === DEP_DOWNSTREAM) return [
+        otherTbl,
+      ];
+      if (op === DEP_UPSTREAM) return [
+        this.container(compiler),
+      ];
+    }
+    return [];
+  }
+
+  private hostColumn (compiler: Compiler): ColumnSymbol | undefined {
+    if (!(this.declaration instanceof AttributeNode)) return undefined;
+    const colNode = this.declaration.parentOfKind(FunctionApplicationNode);
+    if (!colNode) return undefined;
+    return compiler.nodeSymbol(colNode).getFiltered(UNHANDLED) as ColumnSymbol | undefined;
+  }
+
+  override owners (compiler: Compiler): NodeSymbol[] {
+    const upstreamTbls = this.upstreamTables(compiler);
+    const downstreamTbls = this.downstreamTables(compiler);
+
+    const tableSymbols = [
+      ...upstreamTbls,
+      ...downstreamTbls,
+    ].filter((t): t is TableSymbol => !!t);
+    if (tableSymbols.length === 0) return [];
+
+    const declarationFilepath = this.declaration.filepath;
+    const reachableFiles = compiler.reachableFiles();
+    return reachableFiles
+      .flatMap((f) => compiler.nodeSymbol(compiler.parseFile(f).getValue().ast).getFiltered(UNHANDLED) || [])
+      .filter((s) => {
+        const reachableFromProgram = compiler.reachableFiles(s.filepath);
+        return reachableFromProgram.some((f) => f.equals(declarationFilepath))
+          && tableSymbols.every((t) => (s as ProgramSymbol).inNestedSchema(compiler, t));
       });
   }
 }
@@ -421,10 +576,10 @@ function extractColumnsFromEndpoint (compiler: Compiler, expr: SyntaxNode | unde
         ]
       : [];
   return colNodes.flatMap((n) => {
-    const sym = compiler.nodeReferee(n).getFiltered(UNHANDLED) as ColumnSymbol | undefined;
-    return sym
+    const sym = compiler.nodeReferee(n).getFiltered(UNHANDLED);
+    return sym?.isKind(SymbolKind.Column)
       ? [
-          sym,
+          sym as ColumnSymbol,
         ]
       : [];
   });
@@ -440,4 +595,27 @@ function extractTableFromEndpoint (compiler: Compiler, expr: SyntaxNode | undefi
     : fragments.variables.at(-2);
   if (!tableNode) return undefined;
   return compiler.nodeReferee(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
+}
+
+function extractTableFromDepEndpoint (compiler: Compiler, expr: SyntaxNode | undefined): TableSymbol | undefined {
+  if (!expr) return undefined;
+  const fragments = destructureComplexVariableTuple(expr);
+  if (!fragments) return undefined;
+
+  if (fragments.tupleElements.length > 0) {
+    const tableNode = fragments.variables.at(-1);
+    if (!tableNode) return undefined;
+    return compiler.nodeReferee(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
+  }
+
+  const last = fragments.variables.at(-1);
+  if (last) {
+    const lastSym = compiler.nodeReferee(last).getFiltered(UNHANDLED);
+    if (lastSym?.isKind(SymbolKind.Table)) return lastSym as TableSymbol;
+  }
+  const secondLast = fragments.variables.at(-2);
+  if (secondLast) {
+    return compiler.nodeReferee(secondLast).getFiltered(UNHANDLED) as TableSymbol | undefined;
+  }
+  return undefined;
 }

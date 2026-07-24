@@ -1,5 +1,5 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
+import { addDoubleQuoteIfNeeded, escapeString, formatRecordValue, normalizeQualifiedName } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -339,6 +339,55 @@ class DbmlExporter {
     return settings.length ? ` [${settings.join(', ')}]` : '';
   }
 
+  static formatDepEndpoint (ep: { schemaName: string | null; tableName: string; fieldNames: string[] }): string {
+    const schemaPart = ep.schemaName ? `"${ep.schemaName}".` : '';
+    const tablePart = `"${ep.tableName}"`;
+    if (!ep.fieldNames || ep.fieldNames.length === 0) return `${schemaPart}${tablePart}`;
+    const fieldsPart = ep.fieldNames.length === 1
+      ? `"${ep.fieldNames[0]}"`
+      : `(${ep.fieldNames.map((f) => `"${f}"`).join(', ')})`;
+    return `${schemaPart}${tablePart}.${fieldsPart}`;
+  }
+
+  static formatDepCustomValue (value: unknown): string {
+    if (typeof value === 'string') return `'${escapeString(value)}'`;
+    if (value === null || value === undefined) return 'null';
+    return String(value);
+  }
+
+  static exportDeps (depIds: number[], model: NormalizedModel): string {
+    const strArr = depIds.map((depId) => {
+      const dep = model.deps[depId];
+      const edges = dep.edgeIds.map((eid) => model.depEdges[eid]);
+
+      const hasNote = !!dep.note;
+      const customEntries = dep.metadata ? Object.entries(dep.metadata) : [];
+      const hasAttrs = hasNote || customEntries.length > 0;
+
+      if (edges.length === 1 && !hasAttrs) {
+        return `Dep: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
+      }
+
+      let str = 'Dep {\n';
+      edges.forEach((edge) => {
+        str += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;
+      });
+
+      if (hasAttrs) {
+        str += '\n';
+        if (hasNote) str += `  note: ${DbmlExporter.escapeNote(dep.note)}\n`;
+        customEntries.forEach(([key, value]) => {
+          str += `  ${key}: ${DbmlExporter.formatDepCustomValue(value)}\n`;
+        });
+      }
+
+      str += '}\n';
+      return str;
+    });
+
+    return strArr.length ? strArr.join('\n') : '';
+  }
+
   static exportTableGroups (tableGroupIds: number[], model: NormalizedModel): string {
     const tableGroupStrs = tableGroupIds.map((groupId) => {
       const group = model.tableGroups[groupId];
@@ -395,7 +444,7 @@ class DbmlExporter {
 
       // Build table reference
       const tableRef = schemaName
-        ? `${addDoubleQuoteIfNeeded(schemaName)}.${addDoubleQuoteIfNeeded(tableName)}`
+        ? normalizeQualifiedName(schemaName, tableName)
         : addDoubleQuoteIfNeeded(tableName);
 
       // Collect all unique columns in order
@@ -426,13 +475,14 @@ class DbmlExporter {
 
     database.schemaIds.forEach((schemaId) => {
       const {
-        enumIds, tableIds, tableGroupIds, refIds,
+        enumIds, tableIds, tableGroupIds, refIds, depIds,
       } = model.schemas[schemaId];
 
       if (!isEmpty(enumIds)) elementStrs.push(DbmlExporter.exportEnums(enumIds, model));
       if (!isEmpty(tableIds)) elementStrs.push(DbmlExporter.exportTables(tableIds, model));
       if (!isEmpty(tableGroupIds)) elementStrs.push(DbmlExporter.exportTableGroups(tableGroupIds, model));
       if (!isEmpty(refIds)) elementStrs.push(DbmlExporter.exportRefs(refIds, model));
+      if (!isEmpty(depIds)) elementStrs.push(DbmlExporter.exportDeps(depIds, model));
     });
 
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));

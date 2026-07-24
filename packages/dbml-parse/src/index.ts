@@ -17,6 +17,8 @@ export {
   SymbolKind,
 } from '@/core/types/symbol';
 
+export { MetadataKind } from '@/core/types/symbol/metadata';
+
 export * from '@/core/global_modules/records/utils';
 
 export * from '@/core/types/nodes';
@@ -51,6 +53,7 @@ export {
   formatRecordValue,
   isValidIdentifier,
   addDoubleQuoteIfNeeded,
+  normalizeQualifiedName,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data
@@ -91,6 +94,27 @@ export {
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
   TextEdit,
+} from '@/compiler/queries/transform';
+
+export { findDiagramViewBlocks, findDepBlocks } from '@/compiler/queries/transform';
+
+// Dep transform types
+export type {
+  DepSyncOperation, DepSyncEdge, DepEndpointRef, DepBlock,
+} from '@/compiler/queries/transform';
+
+// Element identifier types
+export type {
+  ElementIdentifier,
+  SchemaIdentifier,
+  TableIdentifier,
+  ColumnIdentifier,
+  EnumIdentifier,
+  EndpointRef,
+  RefIdentifier,
+  DepIdentifier,
+  NoteIdentifier,
+  TableGroupIdentifier,
 } from '@/compiler/queries/transform';
 
 export {

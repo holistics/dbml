@@ -7,6 +7,7 @@ import {
   isValidIndexName,
 } from '@/core/utils/validate';
 import {
+  AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
@@ -222,4 +223,14 @@ export function extractVarNameFromPrimaryVariable (
   const value = node?.expression.variable?.value;
 
   return value === undefined ? undefined : value;
+}
+
+// Extracts setting name from an attribute node
+export function extractSettingName (attr: AttributeNode): string | undefined {
+  if (attr.name instanceof IdentifierStreamNode) {
+    return extractStringFromIdentifierStream(attr.name)?.toLowerCase();
+  } else if (attr.name instanceof PrimaryExpressionNode) {
+    return extractVariableFromExpression(attr.name);
+  }
+  return undefined;
 }

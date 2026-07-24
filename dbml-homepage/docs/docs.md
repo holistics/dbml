@@ -25,6 +25,7 @@ This part covers all constructs that define database structure and map directly 
 - [TablePartial](#tablepartial)
 - [Data Sample](#data-sample)
   - [Data Types](#data-types)
+- [Data Lineage](#data-lineage)
 
 ## Project Definition
 
@@ -534,3 +535,68 @@ records users(id, name, age, status, created_at) {
   3, 'Charlie', , Status.pending, '2024-01-15'
 }
 ```
+
+## Data Lineage
+
+`Dep` lets you describe **data dependency** among tables and their columns. It allows you to model: Which tables (or columns) this table (or column) is computed from? Think of it like a SQL view where the view is computed from one or more source tables (or other views).
+
+A **dependency** syntax consists of 3 parts:
+- The **upstream** endpoint: The source table (or column) that data come from
+- The **downstream** endpoint: The destination table (or column) where the source data are processed and computed to derive a new value
+- An arrow (`<-` or `->`) pointing from the **upstream** endpoint to the **downstream** endpoint
+
+A **dependency** can be categorized into one of the two types:
+- Table-level dependency: Both the upstream endpoint and the downstream endpoint are tables.
+- Column-level dependency: Both the upstream endpoint and the downstream endpoint are columns.
+
+Note that both sides of an edge must be at the same level (table-to-table or column-to-column).
+
+```text
+/* Short form — separate from the table or column*/
+
+// `raw_orders` is the upstream table endpoint
+// `stg_orders` is the downstream table endpoint
+// `->` and `<-` always point from the upstream to the downstream
+Dep: raw_orders -> stg_orders
+Dep: stg_orders <- raw_orders
+
+// Column-level dependency
+Dep: raw_orders.amount -> stg_orders.revenue   // column-level
+
+/* Short form — on a table header or column */
+Table fct_orders [dep: <- stg_orders] {
+  id int
+  revenue decimal [dep: <- stg_orders.amount]
+}
+```
+
+### Dependency Block
+
+When a table is produced by a specific transformation step (e.g. a dbt model, a SQL view, or an ETL job), you can express this transformation using a dependency block:
+
+```
+/* Block form — group edges for a transformation step */
+Dep order_staging [color: #79AD51] {
+  raw_orders -> stg_orders
+  raw_payments -> stg_orders
+  raw_orders.amount -> stg_orders.revenue
+
+  note: 'Join orders with payments, compute revenue'
+  materialized: table
+  query: '''
+     Transformation query
+  '''
+  owner: 'data-team'
+}
+```
+
+Block settings:
+
+- `note`: description of the transformation. Supports [multi-line strings](./syntax/language-basics.md#multi-line-string).
+- `color`: lineage line color. See [Colors](./syntax/enrichment-visualization.md#colors).
+- Custom keys (e.g. `materialized`, `owner`) are preserved in the output.
+
+:::note
+- All edges in a block must target the **same downstream table**.
+- Each directed edge must be unique. Reversed pairs and different levels are considered distinct.
+:::

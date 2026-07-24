@@ -31,6 +31,7 @@ import {
   isValidDefaultValue,
   isValidName,
   isValidPartialInjection,
+  isUnaryDependency,
 } from '@/core/utils/validate';
 
 export default class TableValidator {
@@ -127,6 +128,13 @@ export default class TableValidator {
           attrs.forEach((attr) => {
             if (!isExpressionAQuotedString(attr.value)) {
               errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'note\' must be a string literal', attr.value || attr.name!));
+            }
+          });
+          break;
+        case SettingName.Dep:
+          attrs.forEach((attr) => {
+            if (!isUnaryDependency(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'dep\' must be `-> target` or `<- source`', attr.value || attr.name!));
             }
           });
           break;
@@ -360,6 +368,13 @@ export default class TableValidator {
             }
           });
           break;
+        case SettingName.Dep:
+          attrs.forEach((attr) => {
+            if (!isUnaryDependency(attr.value)) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'dep\' must be `-> target.col` or `<- source.col`', attr.value || attr.name!));
+            }
+          });
+          break;
 
         default:
           attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_COLUMN_SETTING, `Unknown column setting '${name}'`, attr)));
@@ -409,6 +424,13 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
         attrs.forEach((attr) => {
           if (!isExpressionAQuotedString(attr.value)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'note\' must be a string literal', attr.value || attr.name!));
+          }
+        });
+        break;
+      case SettingName.Dep:
+        attrs.forEach((attr) => {
+          if (!isUnaryDependency(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, '\'dep\' must be `-> target` or `<- source`', attr.value || attr.name!));
           }
         });
         break;
@@ -572,6 +594,13 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         attrs.forEach((attr) => {
           if (!(attr.value instanceof FunctionExpressionNode)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'check\' must be a function expression', attr.value || attr.name!));
+          }
+        });
+        break;
+      case SettingName.Dep:
+        attrs.forEach((attr) => {
+          if (!isUnaryDependency(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, '\'dep\' must be a valid unary relationship', attr.value || attr.name!));
           }
         });
         break;

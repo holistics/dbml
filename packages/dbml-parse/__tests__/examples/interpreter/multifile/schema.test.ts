@@ -721,7 +721,7 @@ describe('[example] mixed selective and wildcard reuses through schema merge', (
   // c.dbml defines Table T_wild.
   // d.dbml defines Table T_sel.
   // b.dbml has `reuse * from './c'` (wildcard) and `reuse { table T_sel } from './d'` (selective).
-  // a.dbml imports schema public from b — should pull both.
+  // a.dbml imports schema public from b - should pull both.
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table T_wild {
@@ -795,7 +795,7 @@ use { schema public } from './b'
 
 describe('[example] nested schema import places members under correct schema', () => {
   // base.dbml defines Table x.y.t1.
-  // main.dbml imports schema x.y from base — t1 should be under schema x.y, not x.
+  // main.dbml imports schema x.y from base - t1 should be under schema x.y, not x.
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.y.t1 {
@@ -854,7 +854,7 @@ Ref: x.y.orders.user_id > x.y.users.id
 describe('[example] nested schema with wildcard reuse through schema merge', () => {
   // c.dbml defines Table x.y.deep.
   // b.dbml wildcard-reuses c, defines Table x.y.local.
-  // a.dbml imports schema x.y from b — should pull both.
+  // a.dbml imports schema x.y from b - should pull both.
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table x.y.deep {
@@ -894,7 +894,7 @@ Ref: x.y.local.id > x.y.deep.id
 describe('[example] reuse * from file with reuse { schema x as y } merges to aliased schema', () => {
   // base.dbml has Table x.t1 and Table x.t2.
   // mid.dbml reuses schema x aliased as y.
-  // consumer.dbml does reuse * from mid — should see t1 and t2 under schema y.
+  // consumer.dbml does reuse * from mid - should see t1 and t2 under schema y.
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.t1 {
@@ -937,7 +937,7 @@ Ref: y.t2.t1_id > y.t1.id
 });
 
 describe('[example] reuse * from file with use { schema x as y } does NOT merge (use is local-only)', () => {
-  // mid.dbml uses `use` (not reuse), so the alias is local — not transitively visible.
+  // mid.dbml uses `use` (not reuse), so the alias is local - not transitively visible.
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.t1 {

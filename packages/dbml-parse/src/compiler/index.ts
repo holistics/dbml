@@ -44,22 +44,19 @@ import {
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
-  type DiagramViewBlock,
-  findDiagramViewBlocks,
-  renameTable, syncDiagramView,
+  renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
 import {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
 } from './queries/utils';
 import { DEFAULT_ENTRY } from '@/constants';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type { DiagramViewBlock, TableNameInput, TextEdit } from './queries/transform';
+export type { TextEdit } from './queries/transform';
 // Re-export utilities
 export {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
-  findDiagramViewBlocks,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
 };
 
 // Sentinel placed in the cache while a query is being computed.
@@ -387,10 +384,10 @@ export default class Compiler {
 
   // transform queries
   renameTable = renameTable.bind(this);
+  updateElementSetting = updateElementSetting.bind(this);
+  updateElementSettingEdit = updateElementSettingEdit.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
-  findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.getSource(filepath) ?? '');
-  }
+  syncDep = syncDep.bind(this);
 
   // @deprecated - legacy APIs for services compatibility
   readonly token = {

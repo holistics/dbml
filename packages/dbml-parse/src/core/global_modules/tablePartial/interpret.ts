@@ -221,6 +221,9 @@ export class TablePartialInterpreter {
       return inlineRef;
     });
 
+    // Table partial columns do not support inline deps
+    column.inline_deps = [];
+
     const checkNodes = settingMap[SettingName.Check] || [];
     column.checks = checkNodes.map((checkNode) => {
       const token = getTokenPosition(checkNode);

@@ -1,9 +1,12 @@
 import { Compiler, DEFAULT_ENTRY, MemoryProjectLayout } from '@dbml/parse';
-import type { DiagramViewSyncOperation, DiagramViewBlock, TextEdit } from '@dbml/parse';
+import type {
+  DiagramViewSyncOperation, DiagramViewBlock, TextEdit,
+  DepSyncOperation, DepBlock, ElementIdentifier, TableIdentifier,
+} from '@dbml/parse';
 
-type TableName = string | { schema?: string; table: string };
+export { findDiagramViewBlocks, findDepBlocks } from '@dbml/parse';
 
-export function renameTable (oldName: TableName, newName: TableName, dbmlCode: string): string {
+export function renameTable (oldName: string | TableIdentifier, newName: string | TableIdentifier, dbmlCode: string): string {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
   const compiler = new Compiler(layout);
@@ -22,9 +25,37 @@ export function syncDiagramView (
   return compiler.syncDiagramView(DEFAULT_ENTRY, operations, blocks);
 }
 
-export function findDiagramViewBlocks (dbmlCode: string): DiagramViewBlock[] {
+export function syncDep (
+  dbmlCode: string,
+  operations: DepSyncOperation[],
+  blocks?: DepBlock[],
+): { newDbml: string; edits: TextEdit[] } {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
   const compiler = new Compiler(layout);
-  return compiler.findDiagramViewBlocks(DEFAULT_ENTRY);
+  return compiler.syncDep(DEFAULT_ENTRY, operations, blocks);
+}
+
+export function updateElementSettingEdit (
+  dbmlCode: string,
+  target: ElementIdentifier,
+  settingName: string,
+  value: string | null | undefined,
+): TextEdit[] {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.updateElementSettingEdit(DEFAULT_ENTRY, target, settingName, value);
+}
+
+export function updateElementSetting (
+  dbmlCode: string,
+  target: ElementIdentifier,
+  settingName: string,
+  value: string | null | undefined,
+): string {
+  const layout = new MemoryProjectLayout();
+  layout.setSource(DEFAULT_ENTRY, dbmlCode);
+  const compiler = new Compiler(layout);
+  return compiler.updateElementSetting(DEFAULT_ENTRY, target, settingName, value);
 }

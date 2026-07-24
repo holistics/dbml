@@ -389,10 +389,14 @@ export default class Lexer {
         if ([
           '>',
           '=',
-        ].includes(this.peek()!)) this.advance(); // <, >, <=
+          '-',
+        ].includes(this.peek()!)) this.advance(); // <, <>, <=, <-
         break;
       case '>':
         if (this.peek() === '=') this.advance(); // >, >=
+        break;
+      case '-':
+        if (this.peek() === '>') this.advance(); // -, ->
         break;
       case '=':
         if (this.peek() === '=') this.advance(); // =, ==

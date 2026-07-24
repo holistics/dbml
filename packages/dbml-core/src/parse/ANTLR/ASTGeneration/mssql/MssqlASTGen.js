@@ -1,12 +1,15 @@
 import {
   first, flatten, flattenDepth, last, nth,
 } from 'lodash-es';
+import { ParseTreeListener, ParseTreeWalker } from 'antlr4';
 import TSqlParserVisitor from '../../parsers/mssql/TSqlParserVisitor';
+import TSqlParser from '../../parsers/mssql/TSqlParser';
 import {
   Field, Index, Table, TableRecord,
 } from '../AST';
 import { COLUMN_CONSTRAINT_KIND, DATA_TYPE, TABLE_CONSTRAINT_KIND } from '../constants';
 import { getOriginalText } from '../helpers';
+import { normalizeQualifiedName } from '@dbml/parse';
 
 const ADD_DESCRIPTION_FUNCTION_NAME = 'sp_addextendedproperty';
 
@@ -104,6 +107,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
       schemas: [],
       tables: [],
       refs: [],
+      deps: [],
       enums: [],
       tableGroups: [],
       aliases: [],
@@ -112,10 +116,63 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     };
   }
 
+  visitCreate_view (ctx) {
+    const simpleName = ctx.simple_name();
+    if (!simpleName) return;
+    const text = simpleName.getText();
+    const ids = text.split('.').map((p) => p.replace(/\[|\]|"|`/g, ''));
+    const tableName = ids[ids.length - 1];
+    const schemaName = ids.length > 1 ? ids[ids.length - 2] : undefined;
+    const ddl = getOriginalText(ctx);
+    this.data.tables.push({
+      name: tableName,
+      schemaName,
+      fields: [],
+      indexes: [],
+      checks: [],
+      note: null,
+      headerColor: null,
+      custom: { query: ddl, kind: 'view' },
+    });
+    // Walk the SELECT body to find source tables and emit dep edges
+    const selectCtx = ctx.select_statement_standalone();
+    if (!selectCtx) return;
+
+    const seenTables = new Set();
+    const viewKey = normalizeQualifiedName(schemaName ?? DEFAULT_SCHEMA, tableName);
+
+    // Collect all deps of this view
+    const collector = new ParseTreeListener();
+    collector.enterEveryRule = (node) => {
+      // Only handle full table name
+      if (!(node instanceof TSqlParser.Full_table_nameContext)) return;
+
+      const names = node.accept(this);
+      const { tableName: srcTable, schemaName: srcSchema } = getSchemaAndTableName(names);
+
+      // Skip self-references and duplicates
+      const key = normalizeQualifiedName(srcSchema ?? DEFAULT_SCHEMA, srcTable);
+      if (key === viewKey) return;
+      if (seenTables.has(key)) return;
+      if (!this.findTable(srcSchema, srcTable)) return;
+
+      seenTables.add(key);
+      this.data.deps.push({
+        edges: [{
+          upstream: { schemaName: srcSchema, tableName: srcTable, fieldNames: [] },
+          downstream: { schemaName, tableName, fieldNames: [] },
+        }],
+        note: null,
+        custom: {},
+      });
+    };
+    ParseTreeWalker.DEFAULT.walk(collector, selectCtx);
+  }
+
   findTable (schemaName, tableName) {
-    const realSchemaName = schemaName || DEFAULT_SCHEMA;
+    const realSchemaName = schemaName ?? DEFAULT_SCHEMA;
     const table = this.data.tables.find((t) => {
-      const targetSchemaName = t.schemaName || DEFAULT_SCHEMA;
+      const targetSchemaName = t.schemaName ?? DEFAULT_SCHEMA;
       return targetSchemaName === realSchemaName && t.name === tableName;
     });
     return table;

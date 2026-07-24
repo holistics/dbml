@@ -1,0 +1,42 @@
+Table raw_orders {
+  id int [pk]
+  user_id int
+  amount decimal
+  created_at timestamp
+}
+
+Table stg_orders {
+  id int [pk]
+  user_id int
+  amount decimal
+}
+
+Table fct_orders {
+  id int [pk]
+  user_id int
+  revenue decimal
+}
+
+// Short form
+Dep: raw_orders -> stg_orders
+
+// Long form with custom attrs - table-level edges
+Dep {
+  stg_orders -> fct_orders
+
+  note: 'Aggregate staging orders into facts'
+  materialized: table
+  owner: 'data-team'
+}
+
+// Column-level edge
+Dep: stg_orders.amount -> fct_orders.revenue
+
+// Reverse-direction sugar (<-): equivalent to raw_orders.amount -> stg_orders.amount
+Dep: stg_orders.amount <- raw_orders.amount
+
+// Inline on table header
+Table mart_orders [dep: <- fct_orders] {
+  id int [pk]
+  total decimal
+}

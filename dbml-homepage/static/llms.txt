@@ -7,7 +7,7 @@ For the dbdiagram.io web app (diagrams, collaboration, API), see [dbdiagram docs
 ## Language and reference
 
 - [Home](https://dbml.dbdiagram.io/home): Overview, ecosystem, and links to tools.
-- [Core database markup](https://dbml.dbdiagram.io/docs): Tables, columns, relationships, indexes, enums, and other core syntax.
+- [Core database markup](https://dbml.dbdiagram.io/docs): Tables, columns, relationships (including optional and inactive refs), indexes, enums, records (sample data), data dependencies (Dep), and other core syntax.
 - [Enrichment and visualization](https://dbml.dbdiagram.io/syntax/enrichment-visualization): Notes, labels, colors, and display-oriented syntax like table groups, diagram views.
 - [Language basics](https://dbml.dbdiagram.io/syntax/language-basics): Core language constructs (strings, comments, and syntax conventions).
 

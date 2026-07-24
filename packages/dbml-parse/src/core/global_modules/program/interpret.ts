@@ -6,7 +6,7 @@ import { UNHANDLED } from '@/core/types/module';
 import { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, Database, DiagramView, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
+  Alias, Database, Dep, DiagramView, Enum, Note, Project, Ref, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
 import {
@@ -16,20 +16,12 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import { MetadataKind, PartialRefMetadata, RecordsMetadata } from '@/core/types/symbol/metadata';
+import { MetadataKind, RecordsMetadata, DepMetadata } from '@/core/types/symbol/metadata';
 import { TableSymbol } from '@/core/types/symbol';
-import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
-import {
-  InjectedColumnSymbol,
-  TablePartialSymbol,
-  UseSymbol,
-} from '@/core/types/symbol/symbols';
-import { pushExternal } from './utils';
+import { UseSymbol } from '@/core/types/symbol/symbols';
+import { pushExternal, validateRecords, validateDepBlocks } from './utils';
 import type { ElementRef } from '@/core/types/schemaJson';
-import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../records/utils/constraints';
-import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
-import { getMultiplicities } from '../utils';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -50,6 +42,7 @@ export default class ProgramInterpreter {
       tables: [],
       notes: [],
       refs: [],
+      deps: [],
       enums: [],
       tableGroups: [],
       aliases: [],
@@ -71,7 +64,7 @@ export default class ProgramInterpreter {
     this.interpretAllSymbols();
     this.interpretAllMetadata();
     this.interpretAllAliases();
-    this.warnings.push(...this.validateRecords());
+    this.warnings.push(...validateRecords(this.compiler, this.programSymbol, this.db.refs, this.filepath));
     return new Report(this.db, this.errors, this.warnings);
   }
 
@@ -157,6 +150,7 @@ export default class ProgramInterpreter {
   private interpretAllMetadata () {
     const metadatas = this.compiler.symbolMetadata(this.programSymbol) ?? [];
     const seenRefEndpoints = new Set<string>();
+    const seenDepEndpoints = new Set<string>();
 
     // Pre-scan: count records blocks per table to detect duplicates
     const recordsTableCount = new Map<string, {
@@ -216,6 +210,43 @@ export default class ProgramInterpreter {
           this.db.refs.push(ref);
           break;
         }
+        case MetadataKind.Dep: {
+          const dep = value as Dep;
+          // Per-edge `a -> b` nodes, index-aligned with dep.edges, for a precise error location.
+          const edgeNodes = meta instanceof DepMetadata ? meta.edgeExpressions() : [];
+          // Directed src-target uniqueness: a -> b and b -> a are distinct, so no reverse key.
+          let duplicateEdgeIndex = -1;
+          (dep.edges ?? []).some((edge, i) => {
+            const { upstream: up, downstream: down } = edge;
+            const key = [
+              up.schemaName,
+              up.tableName,
+              up.fieldNames.join(','),
+              down.schemaName,
+              down.tableName,
+              down.fieldNames.join(','),
+            ].join('|');
+            if (seenDepEndpoints.has(key)) {
+              duplicateEdgeIndex = i;
+              return true;
+            }
+            seenDepEndpoints.add(key);
+            return false;
+          });
+          if (duplicateEdgeIndex >= 0) {
+            // Point at the duplicate `a -> b` line; fall back to the whole declaration (inline form).
+            const errorNode = edgeNodes[duplicateEdgeIndex] ?? meta.declaration;
+            this.errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Dep with same endpoints already exists', errorNode));
+            break;
+          }
+          const depErrors = validateDepBlocks(dep, meta);
+          if (depErrors.length > 0) {
+            this.errors.push(...depErrors);
+            break;
+          }
+          this.db.deps.push(dep);
+          break;
+        }
         case MetadataKind.Records: {
           if (meta instanceof RecordsMetadata) {
             const tableSymbol = meta.table(this.compiler);
@@ -259,130 +290,6 @@ export default class ProgramInterpreter {
       };
       this.db.aliases.push(alias);
     }
-  }
-
-  private validateRecords (): CompileWarning[] {
-    const warnings: CompileWarning[] = [];
-    const fkTableMap = new Map<InternedNodeSymbol, TableInfo>();
-
-    // Seed fkTableMap with ALL table symbols (record = undefined)
-    const schemas = this.compiler.symbolMembers(this.programSymbol).getFiltered(UNHANDLED) ?? [];
-    for (const schema of schemas) {
-      if (!(schema instanceof SchemaSymbol)) continue;
-      const members = this.compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
-      for (const member of members) {
-        if (!member.isKind(SymbolKind.Table)) continue;
-        const original = member.originalSymbol;
-        if (!(original instanceof TableSymbol)) continue;
-        const key = original.intern();
-        if (!fkTableMap.has(key)) {
-          fkTableMap.set(key, {
-            tableSymbol: original,
-            record: undefined,
-            recordBlock: original.declaration,
-          });
-        }
-      }
-    }
-
-    // Fill in records and run PK/unique validation
-    const metadatas = this.compiler.symbolMetadata(this.programSymbol);
-    for (const meta of metadatas) {
-      if (!(meta instanceof RecordsMetadata)) continue;
-      const tableSymbol = meta.table(this.compiler);
-      if (!(tableSymbol instanceof TableSymbol)) continue;
-
-      const result = this.compiler.interpretMetadata(meta, this.filepath);
-      if (result.hasValue(UNHANDLED)) continue;
-      const record = result.getValue() as TableRecord | undefined;
-      if (!record) continue;
-
-      warnings.push(...validatePrimaryKey(this.compiler, tableSymbol, meta.declaration, record));
-      warnings.push(...validateUnique(this.compiler, tableSymbol, record));
-
-      const key = tableSymbol.originalSymbol.intern();
-      const entry = fkTableMap.get(key);
-      if (entry) entry.record = record;
-      else fkTableMap.set(key, {
-        tableSymbol,
-        record,
-        recordBlock: meta.declaration,
-      });
-    }
-
-    const partialRefs = this.collectPartialRefs(fkTableMap);
-    warnings.push(...validateForeignKeys(this.compiler, [
-      ...this.db.refs,
-      ...partialRefs,
-    ], fkTableMap, this.filepath));
-    return warnings;
-  }
-
-  private collectPartialRefs (fkTableMap: Map<InternedNodeSymbol, TableInfo>): Ref[] {
-    const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
-      .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
-
-    const refs: Ref[] = [];
-    for (const {
-      tableSymbol,
-    } of fkTableMap.values()) {
-      for (const partialSymbol of tableSymbol.resolvedPartials(this.compiler)) {
-        for (const meta of partialMetas) {
-          const container = meta.leftTablePartial(this.compiler);
-          if (container?.originalSymbol !== partialSymbol.originalSymbol) continue;
-
-          const leftColumns = meta.leftColumns(this.compiler);
-          const rightTableOrPartial = meta.rightTable(this.compiler);
-          const rightColumns = meta.rightColumns(this.compiler);
-          const op = meta.op(this.compiler);
-          if (!rightTableOrPartial || !op || leftColumns.length === 0 || rightColumns.length === 0) continue;
-
-          // Skip if the column from the partial was not actually injected into this table
-          // (e.g., overridden by a column defined earlier in the table)
-          const mergedCols = tableSymbol.mergedColumns(this.compiler);
-          const anyInjected = leftColumns.some((leftColumn) =>
-            mergedCols.some((mergedColumns) => mergedColumns instanceof InjectedColumnSymbol && mergedColumns.declaration === leftColumn.declaration),
-          );
-          if (!anyInjected) continue;
-
-          const multiplicities = getMultiplicities(op);
-          if (!multiplicities) continue;
-
-          // When rightTable is the partial itself (inline self-reference with bare column and no table prefix),
-          // resolve it to the concrete table being expanded.
-          const rightTable = rightTableOrPartial instanceof TablePartialSymbol
-            && rightTableOrPartial.originalSymbol === partialSymbol.originalSymbol
-            ? tableSymbol
-            : rightTableOrPartial;
-
-          const leftName = tableSymbol.interpretedName(this.compiler, this.filepath);
-          const rightName = rightTable.interpretedName(this.compiler, this.filepath);
-
-          const ep1: RefEndpoint = {
-            schemaName: leftName.schema,
-            tableName: leftName.name,
-            fieldNames: leftColumns.map((c) => c.name ?? ''),
-            relation: multiplicities[0],
-            token: getTokenPosition(meta.leftToken()),
-          };
-          const ep2: RefEndpoint = {
-            schemaName: rightName.schema,
-            tableName: rightName.name,
-            fieldNames: rightColumns.map((c) => c.name ?? ''),
-            relation: multiplicities[1],
-            token: getTokenPosition(meta.rightToken()),
-          };
-          refs.push({
-            token: getTokenPosition(meta.declaration),
-            endpoints: [
-              ep1,
-              ep2,
-            ],
-          } as Ref);
-        }
-      }
-    }
-    return refs;
   }
 
   private pushElement (symbol: NodeSymbol, value: SchemaElement | SchemaElement[]) {
