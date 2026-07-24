@@ -117,7 +117,7 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 
 Custom metadata lets you attach arbitrary, free-form key-value annotations to DBML elements - things like a data-classification tag, an SLA, or any other attribute.
 
-Custom metadata is currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), and [Sticky Notes](#sticky-notes) (as well as columns inside a [TablePartial](../docs.md#tablepartial)).
+Custom metadata is currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), and [Sticky Notes](#sticky-notes) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
 
 There are two ways to declare custom metadata: **inline** in the element's settings list, or in a separate **Metadata block**.
 
@@ -182,7 +182,9 @@ Priority, lowest to highest:
 
 1. Inline settings
 2. Metadata blocks in imported files
+    - Files imported later have higher priority
 3. Metadata blocks in the current file
+    - Blocks defined later have higher priority
 
 When two imported files set the same key, the one imported **later** wins.
 
@@ -190,7 +192,7 @@ When two imported files set the same key, the one imported **later** wins.
 
 Two files set `owner` on the same table, and `main.dbml` imports both:
 
-```dbml
+```text
 // schema.dbml
 Table users [owner: 'jane'] {   // inline setting
   id int [pk]
