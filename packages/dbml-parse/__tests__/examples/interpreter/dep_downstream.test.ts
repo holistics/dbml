@@ -39,6 +39,67 @@ Dep {
     });
   });
 
+  describe('mixed-level edges', () => {
+    it('allows a table-level upstream with a column-level downstream', () => {
+      const result = interpret(`${PRELUDE}
+Dep: a -> b.id
+`);
+      expect(result.getErrors()).toHaveLength(0);
+      const edge = result.getValue()?.deps?.[0]?.edges?.[0];
+      expect(edge?.upstream.fieldNames).toEqual([]);
+      expect(edge?.downstream.fieldNames).toEqual(['id']);
+    });
+
+    it('allows a column-level upstream with a table-level downstream', () => {
+      const result = interpret(`${PRELUDE}
+Dep: a.id -> b
+`);
+      expect(result.getErrors()).toHaveLength(0);
+      const edge = result.getValue()?.deps?.[0]?.edges?.[0];
+      expect(edge?.upstream.fieldNames).toEqual(['id']);
+      expect(edge?.downstream.fieldNames).toEqual([]);
+    });
+
+    it('allows a column feeding its own table', () => {
+      const result = interpret(`${PRELUDE}
+Dep: a.id -> a
+`);
+      expect(result.getErrors()).toHaveLength(0);
+    });
+
+    it('allows a table depending on itself', () => {
+      const result = interpret(`${PRELUDE}
+Dep: a -> a
+`);
+      expect(result.getErrors()).toHaveLength(0);
+    });
+
+    it('still errors when a column depends on itself', () => {
+      const errors = interpret(`${PRELUDE}
+Dep: a.id -> a.id
+`).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DEP_SELF_LOOP)).toBe(true);
+    });
+
+    it('allows mixed and column edges in one block (both column-level)', () => {
+      const result = interpret(`${PRELUDE}
+Dep {
+  a -> b.id
+  a.id -> b.id
+}`);
+      expect(result.getErrors()).toHaveLength(0);
+    });
+
+    it('errors when a block mixes a table-level edge with a mixed edge', () => {
+      const errors = interpret(`${PRELUDE}
+Dep {
+  a -> b
+  a -> b.id
+}`).getErrors();
+      expect(errors.some((e) => e.code === CompileErrorCode.DEP_MIXED_LEVEL)).toBe(true);
+    });
+  });
+
   describe('no cross-block restriction on downstream tables', () => {
     it('allows multiple simple deps targeting the same downstream', () => {
       const result = interpret(`${PRELUDE}

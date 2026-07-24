@@ -67,41 +67,28 @@ export default class DepBinder {
         return nodes.flatMap((b) => this.compiler.nodeReferee(b).getErrors());
       });
 
-      const levelErrors = this.checkEdgeLevelConsistency(field.callee);
+      const selfLoopErrors = this.checkColumnSelfLoop(field.callee);
 
-      return bindErrors.concat(levelErrors);
+      return bindErrors.concat(selfLoopErrors);
     });
   }
 
-  private checkEdgeLevelConsistency (callee: SyntaxNode): CompileError[] {
+  // Column-level self-ref is not allowed
+  private checkColumnSelfLoop (callee: SyntaxNode): CompileError[] {
     if (!(callee instanceof InfixExpressionNode)) return [];
 
-    const leftLevel = this.endpointLevel(callee.leftExpression);
-    const rightLevel = this.endpointLevel(callee.rightExpression);
+    if (this.endpointLevel(callee.leftExpression) !== 'column' || this.endpointLevel(callee.rightExpression) !== 'column') return [];
 
-    if (leftLevel && rightLevel && leftLevel !== rightLevel) {
+    const leftSymbol = this.endpointSymbol(callee.leftExpression);
+    const rightSymbol = this.endpointSymbol(callee.rightExpression);
+    if (leftSymbol && rightSymbol && leftSymbol === rightSymbol) {
       return [
         new CompileError(
-          CompileErrorCode.DEP_MIXED_LEVEL,
-          'Both sides of a Dep edge must be at the same level (both table-level or both column-level)',
+          CompileErrorCode.DEP_SELF_LOOP,
+          'A column cannot depend on itself',
           callee,
         ),
       ];
-    }
-
-    // Column-level self-ref is not allowed
-    if (leftLevel === 'column' && rightLevel === 'column') {
-      const leftSymbol = this.endpointSymbol(callee.leftExpression);
-      const rightSymbol = this.endpointSymbol(callee.rightExpression);
-      if (leftSymbol && rightSymbol && leftSymbol === rightSymbol) {
-        return [
-          new CompileError(
-            CompileErrorCode.DEP_SELF_LOOP,
-            'A column cannot depend on itself',
-            callee,
-          ),
-        ];
-      }
     }
 
     return [];
