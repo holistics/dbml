@@ -1,5 +1,6 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
 import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
+import type { CustomMetadata } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -405,18 +406,60 @@ class DbmlExporter {
       // Merge all rows
       const allRows = groupRecords.flatMap((record) => {
         const allColumnIndexes = allColumns.map((col) => record.columns.indexOf(col));
-        return record.values.map((row: RecordValue[]) => allColumnIndexes.map((colIdx) => colIdx === -1 ? { value: null, type: 'expression' } : row[colIdx]));
+        return record.values.map((row: RecordValue[]) => allColumnIndexes.map((colIdx) => colIdx === -1
+          ? { value: null, type: 'expression' }
+          : row[colIdx]));
       });
 
       // Build data rows
-      const rowStrs = allRows.map((row) =>
-        `  ${row.map(formatRecordValue).join(', ')}`,
+      const rowStrs = allRows.map((row) => `  ${row.map(formatRecordValue).join(', ')}`,
       );
 
       return `Records ${tableRef}(${columnList}) {\n${rowStrs.join('\n')}\n}\n`;
     });
 
     return recordStrs.join('\n');
+  }
+
+  static exportMetadata (model: NormalizedModel): string {
+    const blocks: string[] = [];
+    const database = model.database['1'];
+
+    const buildMetadataBlock = (header: string, metadata: CustomMetadata) => {
+      const bodyLines = Object.entries(metadata)
+        .map(([key, value]) => `  ${key}: ${DbmlExporter.escapeNote(value)}`)
+        .join('\n');
+      return `Metadata ${header} {\n${bodyLines}\n}\n`;
+    };
+
+    database.schemaIds.forEach((schemaId) => {
+      const { tableIds, tableGroupIds } = model.schemas[schemaId];
+
+      tableIds.forEach((tableId) => {
+        const table = model.tables[tableId];
+        const schema = model.schemas[table.schemaId];
+        const schemaPrefix = shouldPrintSchema(schema, model) ? `"${schema.name}".` : '';
+
+        if (!isEmpty(table.metadata)) blocks.push(buildMetadataBlock(`Table ${schemaPrefix}"${table.name}"`, table.metadata));
+
+        table.fieldIds
+          .map((fieldId) => model.fields[fieldId])
+          .filter((field) => !isEmpty(field.metadata))
+          .forEach((field) => blocks.push(buildMetadataBlock(`Column ${schemaPrefix}"${table.name}"."${field.name}"`, field.metadata)));
+      });
+
+      tableGroupIds
+        .map((tableGroupId) => model.tableGroups[tableGroupId])
+        .filter((tableGroup) => !isEmpty(tableGroup.metadata))
+        .forEach((tableGroup) => blocks.push(buildMetadataBlock(`TableGroup "${tableGroup.name}"`, tableGroup.metadata)));
+    });
+
+    Object
+      .values(model.notes)
+      .filter((note) => !isEmpty(note.metadata))
+      .forEach((note) => blocks.push(buildMetadataBlock(`Note ${note.name}`, note.metadata)));
+
+    return blocks.join('\n');
   }
 
   static export (model: NormalizedModel, options: DbmlExporterOptions): string {
@@ -437,6 +480,9 @@ class DbmlExporter {
 
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
     if (includeRecords && !isEmpty(model.records)) elementStrs.push(DbmlExporter.exportRecords(model));
+
+    const metadataStr = DbmlExporter.exportMetadata(model);
+    if (metadataStr) elementStrs.push(metadataStr);
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');
