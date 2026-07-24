@@ -7,6 +7,7 @@ import DbState from './dbState';
 import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
 import { NormalizedModel, TableRecord } from './database';
+import type { CustomMetadata } from '@dbml/parse';
 
 export interface RawTable {
     name: string;
@@ -19,6 +20,7 @@ export interface RawTable {
     token: Token;
     headerColor: Color;
     partials: TablePartial[];
+    metadata?: CustomMetadata;
 }
 
 declare class Table extends Element {
@@ -36,8 +38,9 @@ declare class Table extends Element {
     group: TableGroup;
     partials: TablePartial[];
     records: TableRecord[];
+    metadata: CustomMetadata;
 
-    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor }: RawTable);
+    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor, metadata }: RawTable);
     generateId(): void;
     processFields(rawFields: any): void;
     pushField(field: any): void;
@@ -117,6 +120,7 @@ declare class Table extends Element {
         headerColor: Color;
         partials: TablePartial[];
         recordIds: number[];
+        metadata: CustomMetadata;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -134,6 +138,7 @@ export interface NormalizedTable {
     schemaId: number;
     groupId: number | null;
     partials: TablePartial[];
+    metadata: CustomMetadata;
 }
 
 export interface NormalizedTableIdMap {

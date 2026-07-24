@@ -40,6 +40,7 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatRecordValue,
+  dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,
   Filepath,
 } from '@dbml/parse';
@@ -52,4 +53,5 @@ export type {
   DiagramViewSyncOperation,
   DiagramViewBlock,
   TextEdit,
+  CustomMetadata,
 } from '@dbml/parse';

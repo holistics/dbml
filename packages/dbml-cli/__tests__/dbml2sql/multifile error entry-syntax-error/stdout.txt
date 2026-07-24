@@ -1,5 +1,5 @@
   ERROR: 
     ./in-files/main.dbml(5,15): Expect an identifier
-    ./in-files/main.dbml(4,11): Unknown column setting 'pk user_id int'
+    ./in-files/main.dbml(5,21): Custom setting 'pk user_id int' must be a string or a color literal
 
   A complete log can be found in:

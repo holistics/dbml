@@ -148,6 +148,7 @@ export function print (source: string, ast: SyntaxNode): string {
       case SyntaxNodeKind.ELEMENT_DECLARATION: {
         const elem = node as ElementDeclarationNode;
         if (elem.type) collectTokens(elem.type);
+        if (elem.targetKind) collectTokens(elem.targetKind);
         if (elem.name) collectTokens(elem.name);
         if (elem.as) collectTokens(elem.as);
         if (elem.alias) collectTokens(elem.alias);

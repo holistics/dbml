@@ -2,15 +2,58 @@ import { get } from 'lodash-es';
 import Check from './check';
 import { DEFAULT_SCHEMA_NAME } from './config';
 import Element from './element';
+import type { Token } from '../../types/model_structure/element';
+import type { NormalizedModel } from '../../types/model_structure/database';
+import type TableType from '../../types/model_structure/table';
+import type EndpointType from '../../types/model_structure/endpoint';
+import type EnumType from '../../types/model_structure/enum';
+import type TablePartialType from '../../types/model_structure/tablePartial';
+import type DbStateType from '../../types/model_structure/dbState';
+import type { CustomMetadata } from '@dbml/parse';
+
+interface RawField {
+  name: string;
+  type: any;
+  unique: boolean;
+  pk: boolean;
+  token: Token;
+  not_null: boolean;
+  note: any;
+  dbdefault: any;
+  increment: boolean;
+  checks?: any[];
+  table?: any;
+  noteToken?: Token | null;
+  injectedPartial?: TablePartialType | null;
+  injectedToken?: Token | null;
+  metadata?: CustomMetadata;
+}
 
 class Field extends Element {
-  /**
-   * @param {import('../../types/model_structure/field').RawField} param0
-   */
+  declare id: number;
+  declare error: (message: string) => never;
+  name: string;
+  type: any;
+  unique: boolean;
+  pk: boolean;
+  not_null: boolean;
+  note: string | null;
+  noteToken: Token | null;
+  dbdefault: any;
+  increment: boolean;
+  checks: Check[];
+  endpoints: EndpointType[];
+  table: TableType;
+  injectedPartial: TablePartialType | null;
+  injectedToken: Token | null;
+  dbState: DbStateType;
+  metadata: CustomMetadata;
+  _enum!: EnumType;
+
   constructor ({
     name, type, unique, pk, token, not_null: notNull, note, dbdefault,
-    increment, checks = [], table = {}, noteToken = null, injectedPartial = null, injectedToken = null,
-  } = {}) {
+    increment, checks = [], table = {} as any, noteToken = null, injectedPartial = null, injectedToken = null, metadata = {},
+  }: RawField) {
     super(token);
     if (!name) {
       this.error('Field must have a name');
@@ -18,37 +61,24 @@ class Field extends Element {
     if (!type) {
       this.error('Field must have a type');
     }
-    /** @type {string} */
     this.name = name;
     // type : { type_name, value, schemaName }
-    /** @type {any} */
     this.type = type;
-    /** @type {boolean} */
     this.unique = unique;
-    /** @type {boolean} */
     this.pk = pk;
-    /** @type {boolean} */
     this.not_null = notNull;
-    /** @type {string} */
     this.note = note ? get(note, 'value', note) : null;
-    /** @type {import('../../types/model_structure/element').Token} */
     this.noteToken = note ? get(note, 'token', noteToken) : null;
-    /** @type {any} */
     this.dbdefault = dbdefault;
-    /** @type {boolean} */
     this.increment = increment;
-    /** @type {import('../../types/model_structure/check').default[]} */
     this.checks = [];
-    /** @type {import('../../types/model_structure/endpoint').default[]} */
     this.endpoints = [];
-    /** @type {import('../../types/model_structure/table').default} */
     this.table = table;
-    /** @type {import('../../types/model_structure/tablePartial').default} */
     this.injectedPartial = injectedPartial;
-    /** @type {import('../../types/model_structure/element').Token} */
     this.injectedToken = injectedToken;
-    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.table.dbState;
+    this.metadata = metadata;
+
     this.generateId();
     this.bindType();
 
@@ -56,7 +86,6 @@ class Field extends Element {
   }
 
   generateId () {
-    /** @type {number} */
     this.id = this.dbState.generateId('fieldId');
   }
 
@@ -64,32 +93,23 @@ class Field extends Element {
     const typeName = this.type.type_name;
     const typeSchemaName = this.type.schemaName || DEFAULT_SCHEMA_NAME;
     if (this.type.schemaName) {
-      const _enum = this.table.schema.database.findEnum(typeSchemaName, typeName);
+      const _enum = (this.table as any).schema.database.findEnum(typeSchemaName, typeName);
       if (!_enum) {
-        // SQL allow definition of non-enum type to be used as column type, which we don't have equivalent dbml counterpart.
-        // So instead of throwing errors on those type, we can view the type as plain text for the purpose of importing to dbml.
         this.type.type_name = `${typeSchemaName}.${typeName}`;
-        // We set this field to avoid doubling schema name when exporting this type to SQL
-        // e.g. to avoid `schema.schema.type`
         this.type.originalTypeName = typeName;
         return;
       }
-      /** @type {import('../../types/model_structure/enum').default} */
       this._enum = _enum;
       _enum.pushField(this);
     } else {
-      const _enum = this.table.schema.database.findEnum(typeSchemaName, typeName);
+      const _enum = (this.table as any).schema.database.findEnum(typeSchemaName, typeName);
       if (!_enum) return;
-      /** @type {import('../../types/model_structure/enum').default} */
       this._enum = _enum;
       _enum.pushField(this);
     }
   }
 
-  /**
-   * @param {import('../../types/model_structure/endpoint').default} endpoint
-   */
-  pushEndpoint (endpoint) {
+  pushEndpoint (endpoint: EndpointType) {
     this.endpoints.push(endpoint);
   }
 
@@ -124,13 +144,11 @@ class Field extends Element {
       increment: this.increment,
       injectedPartialId: this.injectedPartial?.id ?? null,
       checkIds: this.checks.map((check) => check.id),
+      metadata: this.metadata,
     };
   }
 
-  /**
-   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
-   */
-  normalize (model) {
+  normalize (model: NormalizedModel) {
     model.fields[this.id] = {
       id: this.id,
       ...this.shallowExport(),
@@ -141,10 +159,7 @@ class Field extends Element {
     this.checks.forEach((check) => check.normalize(model));
   }
 
-  /**
-   * @param {any[]} checks
-   */
-  processChecks (checks) {
+  processChecks (checks: any[]) {
     checks.forEach((check) => {
       this.checks.push(new Check({ ...check, table: this.table, column: this }));
     });

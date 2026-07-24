@@ -22,7 +22,6 @@ export default defineConfig(
         'vite.config.ts',
         'vite.profile.config.ts',
         'eslint.config.ts',
-        '__tests__/*',
       ],
     },
     {
@@ -65,8 +64,8 @@ export default defineConfig(
           TSInterfaceBody: { multiline: true, minProperties: 1 },
         }],
         '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
-        '@stylistic/array-bracket-newline': ['error', { multiline: true, minItems: 1 }],
-        '@stylistic/array-element-newline': ['error', { multiline: true, minItems: 1 }],
+        '@stylistic/array-bracket-newline': ['error', 'consistent'],
+        '@stylistic/array-element-newline': ['error', 'consistent'],
         '@stylistic/function-call-argument-newline': ['error', 'consistent'],
       },
     },

@@ -42,7 +42,7 @@ import {
 import Report from '@/core/types/report';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/types/tokens';
 import {
-  isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword,
+  isAsKeyword, isFromKeyword, isMetadataKeyword, isReuseKeyword, isUseKeyword,
 } from '../utils/tokens';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
@@ -419,9 +419,7 @@ export default class Parser {
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
     }
 
-    if (
-      this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)
-    ) {
+    if (this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)) {
       try {
         args.name = this.normalExpression();
       } catch (e) {
@@ -474,11 +472,11 @@ export default class Parser {
     }
   };
 
-  /* Parsing and synchronizing top-level ElementDeclarationNode */
-
+  /* Parsing and synchronizing top-level ElementDeclarationNode. */
   private elementDeclaration (): ElementDeclarationNode {
     const args: {
       type?: SyntaxToken;
+      targetKind?: SyntaxToken;
       name?: NormalExpressionNode;
       as?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -496,6 +494,19 @@ export default class Parser {
         throw e;
       }
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
+    }
+
+    // A `metadata` block carries a second identifier (the target kind) before the name.
+    if (isMetadataKeyword(args.type)) {
+      try {
+        this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
+        args.targetKind = this.previous();
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
+        }
+        throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
+      }
     }
 
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {

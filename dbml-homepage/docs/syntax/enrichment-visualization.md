@@ -12,6 +12,10 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [Column Notes](#column-notes)
   - [Index Notes](#index-notes)
   - [TableGroup Notes](#tablegroup-notes)
+- [Custom Metadata](#custom-metadata)
+  - [Inline Metadata](#inline-metadata)
+  - [Metadata Block](#metadata-block)
+  - [Metadata Precedence](#metadata-precedence)
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
   - [TableGroup Notes](#tablegroup-notes-1)
@@ -109,6 +113,104 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 }
 ```
 
+## Custom Metadata
+
+Custom metadata lets you attach arbitrary, free-form key-value annotations to DBML elements - things like a data-classification tag, an SLA, or any other attribute.
+
+Custom metadata is currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), and [Sticky Notes](#sticky-notes) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
+
+There are two ways to declare custom metadata: **inline** in the element's settings list, or in a separate **Metadata block**.
+
+Currently, a metadata value can be a **string literal** (e.g. `owner: "data-team"`) or a **color literal** (e.g. `brand_color: #3498DB`).
+
+### Inline Metadata
+
+Add custom key-value pairs directly to an element's `[...]` settings list.
+
+```text
+Table users [owner: "data-team", sla_hours: "24", pii: "true"] {
+  id int [pk, masking: "partial"]
+  email varchar [classification: "confidential"]
+}
+
+TableGroup e_commerce [team: "growth"] {
+  merchants
+  countries
+}
+
+Note reminder [author: "docs"] {
+  'Remember to review this schema'
+}
+```
+
+:::note
+A key with no value (`[owner]`) or a duplicate key (`[owner: "a", owner: "b"]`) will raise an error.
+:::
+
+### Metadata Block
+
+You can also declare metadata separately from the element definition using a `Metadata` block. This is useful for keeping annotations in a dedicated section, or for adding metadata to elements defined elsewhere (including across files).
+
+The block targets an element by kind and name:
+
+```text
+Table users {
+  id int [pk]
+  name varchar
+}
+
+TableGroup g1 {
+  users
+}
+
+Metadata Table users {
+  owner: 'scott'
+  note: 'scott is the owner'
+}
+
+Metadata Column users.id {
+  pii: 'true'
+  masking: 'partial'
+}
+```
+
+### Metadata Precedence
+
+An element can get metadata from its **inline settings** and from one or more **Metadata blocks**. When the same key is set in more than one place, the higher-priority source wins.
+
+Priority, lowest to highest:
+
+1. Inline settings
+2. Metadata blocks in imported files
+    - Files imported later have higher priority
+3. Metadata blocks in the current file
+    - Blocks defined later have higher priority
+
+When two imported files set the same key, the one imported **later** wins.
+
+**Example**
+
+Two files set `owner` on the same table, and `main.dbml` imports both:
+
+```text
+// schema.dbml
+Table users [owner: 'jane'] {   // inline setting
+  id int [pk]
+}
+Metadata Table users {          // beats inline -> 'david'
+  owner: 'david'
+}
+
+// team.dbml
+use * from 'schema'
+Metadata Table users {          // beats imported block -> 'alice'
+  owner: 'alice'
+}
+
+// main.dbml
+use * from 'team'
+```
+
 ## Sticky Notes
 
 You can add sticky notes to the diagram canvas to serve as a quick reminder or to elaborate on a complex idea.
@@ -131,6 +233,8 @@ Note multiple_lines_note {
 '''
 }
 ```
+
+We also support free-form custom metadata, e.g. `Note reminder [author: "docs"] { 'text' }`. See [Inline Metadata](#inline-metadata).
 
 ## TableGroup
 
@@ -171,6 +275,8 @@ Each table group can take optional settings, defined within square brackets: `[s
 The list of table group settings you can use:
 - `note: 'string to add notes'`: add a note to this table group.
 - `color: <color_code>`: change the table group color. See [Colors](#colors) for accepted color formats.
+
+We also support free-form custom metadata, e.g. `TableGroup e_commerce [team: "growth"]`. See [Inline Metadata](#inline-metadata).
 
 ## DiagramView
 

@@ -23,6 +23,7 @@ import {
   type NodeSymbol,
   SchemaSymbol,
   SymbolKind,
+  MetadataTargetKind,
 } from '@/core/types/symbol';
 import { SyntaxToken, SyntaxTokenKind } from '@/core/types/tokens';
 import {
@@ -31,7 +32,7 @@ import {
   extractVariableFromExpression,
   isTupleEmpty,
 } from '@/core/utils/expression';
-import { isExpressionAVariableNode } from '@/core/utils/validate';
+import { isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
 import { isOffsetWithinElementHeader, isOffsetWithinSpan } from '@/core/utils/span';
 import { collectCrossFileSuggestions } from '@/services/suggestions/crossFile';
 import { suggestRecordRowSnippet } from '@/services/suggestions/recordRowSnippet';
@@ -53,6 +54,205 @@ import {
   type TextModel,
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
+
+// Display labels for element/keyword suggestions
+const SUGGESTION_LABEL = {
+  Table: 'Table',
+  TableGroup: 'TableGroup',
+  Enum: 'Enum',
+  Project: 'Project',
+  Ref: 'Ref',
+  TablePartial: 'TablePartial',
+  Records: 'Records',
+  DiagramView: 'DiagramView',
+  Note: 'Note',
+  Metadata: 'Metadata',
+  Indexes: 'indexes', // lowercase by design — matches DBML `indexes` block keyword
+  Checks: 'checks', // lowercase by design — matches DBML `checks` block keyword
+  Tables: 'Tables',
+  TableGroups: 'TableGroups',
+  Notes: 'Notes',
+  Schemas: 'Schemas',
+  Column: 'Column',
+} as const;
+
+// Column data types suggested when completing a column definition.
+// Labels and insert texts are identical.
+export const COLUMN_TYPE_SUGGESTION_LABELS = [
+  'integer',
+  'int',
+  'tinyint',
+  'smallint',
+  'mediumint',
+  'bigint',
+  'bit',
+  'bool',
+  'binary',
+  'varbinary',
+  'logical',
+  'char',
+  'nchar',
+  'varchar',
+  'varchar2',
+  'nvarchar',
+  'nvarchar2',
+  'binary_float',
+  'binary_double',
+  'float',
+  'double',
+  'decimal',
+  'dec',
+  'real',
+  'money',
+  'smallmoney',
+  'enum',
+  'tinyblob',
+  'tinytext',
+  'blob',
+  'text',
+  'mediumblob',
+  'mediumtext',
+  'longblob',
+  'longtext',
+  'ntext',
+  'set',
+  'inet6',
+  'uuid',
+  'image',
+  'date',
+  'time',
+  'datetime',
+  'datetime2',
+  'timestamp',
+  'year',
+  'smalldatetime',
+  'datetimeoffset',
+  'XML',
+  'sql_variant',
+  'uniqueidentifier',
+  'CURSOR',
+  'BFILE',
+  'CLOB',
+  'NCLOB',
+  'RAW',
+] as const;
+
+// Settings suggested in a Table/TablePartial header setting list (`Table T [ ... ]`).
+export const TABLE_SETTING_SUGGESTION_LABELS = [
+  SettingName.HeaderColor,
+  SettingName.Note,
+] as const;
+export const TABLE_SETTING_SUGGESTION_TEXT_INSERTS = TABLE_SETTING_SUGGESTION_LABELS
+  .map((name) => `${name}: `);
+
+// Settings suggested in a column setting list (`id int [ ... ]`). Bare settings
+// insert as-is; colon settings insert with a trailing `: `.
+const COLUMN_BARE_SETTINGS = [
+  SettingName.PK,
+  SettingName.PrimaryKey,
+  SettingName.Null,
+  SettingName.NotNull,
+  SettingName.Increment,
+  SettingName.Unique,
+] as const;
+const COLUMN_COLON_SETTINGS = [
+  SettingName.Ref,
+  SettingName.Default,
+  SettingName.Note,
+  SettingName.Check,
+] as const;
+export const COLUMN_SUGGESTION_LABELS = [
+  ...COLUMN_BARE_SETTINGS,
+  ...COLUMN_COLON_SETTINGS,
+];
+export const COLUMN_SUGGESTION_TEXT_INSERTS = [
+  ...COLUMN_BARE_SETTINGS,
+  ...COLUMN_COLON_SETTINGS.map((name) => `${name}: `),
+];
+
+// Settings suggested in an index setting list (`id [ ... ]` inside `indexes`).
+const INDEX_BARE_SETTINGS = [
+  SettingName.Unique,
+  SettingName.PK,
+] as const;
+const INDEX_COLON_SETTINGS = [
+  SettingName.Note,
+  SettingName.Name,
+  SettingName.Type,
+] as const;
+export const INDEX_SETTING_SUGGESTION_LABELS = [
+  ...INDEX_BARE_SETTINGS,
+  ...INDEX_COLON_SETTINGS,
+];
+export const INDEX_SETTING_SUGGESTION_TEXT_INSERTS = [
+  ...INDEX_BARE_SETTINGS,
+  ...INDEX_COLON_SETTINGS.map((name) => `${name}: `),
+];
+
+// Settings suggested in a Ref setting list (`Ref: ... [ ... ]`).
+const REF_BARE_SETTINGS = [
+  SettingName.Inactive,
+] as const;
+const REF_COLON_SETTINGS = [
+  SettingName.Update,
+  SettingName.Delete,
+  SettingName.Color,
+] as const;
+export const REF_SETTING_SUGGESTION_LABELS = [
+  ...REF_BARE_SETTINGS,
+  ...REF_COLON_SETTINGS,
+];
+export const REF_SETTING_SUGGESTION_TEXT_INSERTS = [
+  ...REF_BARE_SETTINGS,
+  ...REF_COLON_SETTINGS.map((name) => `${name}: `),
+];
+
+// Settings suggested in an enum-field setting list (`active [ ... ]`).
+export const ENUM_SETTING_SUGGESTION_LABELS = [
+  SettingName.Note,
+] as const;
+export const ENUM_SETTING_SUGGESTION_TEXT_INSERTS = ENUM_SETTING_SUGGESTION_LABELS
+  .map((name) => `${name}: `);
+
+// Settings suggested in a check setting list (`age > 0 [ ... ]`).
+export const CHECK_SETTING_SUGGESTION_LABELS = [
+  SettingName.Name,
+] as const;
+export const CHECK_SETTING_SUGGESTION_TEXT_INSERTS = CHECK_SETTING_SUGGESTION_LABELS
+  .map((name) => `${name}: `);
+
+// Values suggested for a Ref `update`/`delete` setting. Labels === insert texts.
+export const REF_ACTION_VALUE_SUGGESTIONS = [
+  'cascade',
+  'set default',
+  'set null',
+  'restrict',
+] as const;
+
+// Values suggested for an index `type` setting. Labels === insert texts.
+export const INDEX_TYPE_VALUE_SUGGESTIONS = [
+  'btree',
+  'hash',
+] as const;
+
+// Sub-element keywords suggested inside a Table/TablePartial body.
+export const TABLE_BODY_SUGGESTION_LABELS = [
+  SUGGESTION_LABEL.Note,
+  SUGGESTION_LABEL.Indexes,
+  SUGGESTION_LABEL.Checks,
+  SUGGESTION_LABEL.Records,
+];
+
+// Element keywords suggested inside a Project body.
+export const PROJECT_FIELD_SUGGESTION_LABELS = [
+  SUGGESTION_LABEL.Table,
+  SUGGESTION_LABEL.TableGroup,
+  SUGGESTION_LABEL.Enum,
+  SUGGESTION_LABEL.Note,
+  SUGGESTION_LABEL.Ref,
+  SUGGESTION_LABEL.TablePartial,
+];
 
 export interface DBMLCompletionItemProviderOptions {
   triggerCharacters?: string[];
@@ -185,6 +385,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
         return suggestInSubField(this.compiler, filepath, offset, container);
       } else if (container instanceof ElementDeclarationNode) {
         if (isOffsetWithinElementHeader(offset, container)) {
+          if (isElementNode(container, ElementKind.Metadata)) return suggestInMetadataHeader(this.compiler, filepath, offset, container);
           return suggestInElementHeader(this.compiler, filepath, offset, container);
         }
 
@@ -308,7 +509,9 @@ function suggestNamesInScope (
       memberSuggestions.sort((a, b) => kindPriority(a.kind) - kindPriority(b.kind));
       res.suggestions.push(...memberSuggestions);
     }
-    curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
+    curElement = curElement instanceof ElementDeclarationNode
+      ? curElement.parent
+      : undefined;
   }
 
   // Global-scope lookups should also surface symbols that live in other
@@ -449,15 +652,12 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
 
   const scopeKind = compiler.container.scopeKind(filepath, offset);
   if (element.body && !isOffsetWithinSpan(offset, (element as ElementDeclarationNode).body!)) {
-    let attributes: string[];
+    let attributes: readonly string[];
 
     switch (scopeKind) {
       case ScopeKind.TABLE:
       case ScopeKind.TABLEPARTIAL:
-        attributes = [
-          SettingName.HeaderColor,
-          SettingName.Note,
-        ];
+        attributes = TABLE_SETTING_SUGGESTION_LABELS;
         break;
 
       case ScopeKind.TABLEGROUP:
@@ -494,115 +694,58 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
     case ScopeKind.TABLE:
     case ScopeKind.TABLEPARTIAL:
       return {
-        suggestions: [
-          ...[
-            SettingName.PK,
-            SettingName.PrimaryKey,
-            SettingName.Null,
-            SettingName.NotNull,
-            SettingName.Increment,
-            SettingName.Unique,
-          ].map((name) => ({
-            label: name,
-            insertText: name,
-            kind: CompletionItemKind.Property,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            range: undefined as any,
-          })),
-          ...[
-            SettingName.Ref,
-            SettingName.Default,
-            SettingName.Note,
-            SettingName.Check,
-          ].map((name) => ({
-            label: name,
-            insertText: `${name}: `,
-            kind: CompletionItemKind.Property,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            range: undefined as any,
-          })),
-        ],
+        suggestions: buildSettingSuggestions(
+          COLUMN_SUGGESTION_LABELS,
+          COLUMN_SUGGESTION_TEXT_INSERTS,
+        ),
       };
     case ScopeKind.ENUM:
       return {
-        suggestions: [
-          ...[
-            SettingName.Note,
-          ].map((name) => ({
-            label: name,
-            insertText: `${name}: `,
-            kind: CompletionItemKind.Property,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            range: undefined as any,
-          })),
-        ],
+        suggestions: buildSettingSuggestions(
+          ENUM_SETTING_SUGGESTION_LABELS,
+          ENUM_SETTING_SUGGESTION_TEXT_INSERTS,
+        ),
       };
     case ScopeKind.INDEXES:
       return {
-        suggestions: [
-          ...[
-            SettingName.Unique,
-            SettingName.PK,
-          ].map((name) => ({
-            label: name,
-            insertText: name,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            kind: CompletionItemKind.Property,
-            range: undefined as any,
-          })),
-          ...[
-            SettingName.Note,
-            SettingName.Name,
-            SettingName.Type,
-          ].map((name) => ({
-            label: name,
-            insertText: `${name}: `,
-            kind: CompletionItemKind.Property,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            range: undefined as any,
-          })),
-        ],
+        suggestions: buildSettingSuggestions(
+          INDEX_SETTING_SUGGESTION_LABELS,
+          INDEX_SETTING_SUGGESTION_TEXT_INSERTS,
+        ),
       };
     case ScopeKind.REF:
       return {
-        suggestions: [
-          {
-            label: SettingName.Inactive,
-            insertText: SettingName.Inactive,
-            kind: CompletionItemKind.Property,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            range: undefined as any,
-          },
-          ...[
-            SettingName.Update,
-            SettingName.Delete,
-            SettingName.Color,
-          ].map((name) => ({
-            label: name,
-            insertText: `${name}: `,
-            kind: CompletionItemKind.Property,
-            insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-            range: undefined as any,
-          })),
-        ],
+        suggestions: buildSettingSuggestions(
+          REF_SETTING_SUGGESTION_LABELS,
+          REF_SETTING_SUGGESTION_TEXT_INSERTS,
+        ),
       };
     case ScopeKind.CHECKS:
       return {
-        suggestions: [
-          SettingName.Name,
-        ].map((name) => ({
-          label: name,
-          insertText: `${name}: `,
-          kind: CompletionItemKind.Property,
-          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-          range: undefined as any,
-        })),
+        suggestions: buildSettingSuggestions(
+          CHECK_SETTING_SUGGESTION_LABELS,
+          CHECK_SETTING_SUGGESTION_TEXT_INSERTS,
+        ),
       };
     default:
       break;
   }
 
   return noSuggestions();
+}
+
+// Build setting-name completion items from parallel label/insert-text arrays.
+function buildSettingSuggestions (
+  labels: readonly string[],
+  insertTexts: readonly string[],
+) {
+  return labels.map((name, i) => ({
+    label: name,
+    insertText: insertTexts[i],
+    kind: CompletionItemKind.Property,
+    insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+    range: undefined as any,
+  }));
 }
 
 function suggestAttributeValue (
@@ -615,12 +758,7 @@ function suggestAttributeValue (
     case 'update':
     case 'delete':
       return {
-        suggestions: [
-          'cascade',
-          'set default',
-          'set null',
-          'restrict',
-        ].map((name) => ({
+        suggestions: REF_ACTION_VALUE_SUGGESTIONS.map((name) => ({
           label: name,
           insertText: name,
           kind: CompletionItemKind.Value,
@@ -630,10 +768,7 @@ function suggestAttributeValue (
       };
     case 'type':
       return {
-        suggestions: [
-          'btree',
-          'hash',
-        ].map((name) => ({
+        suggestions: INDEX_TYPE_VALUE_SUGGESTIONS.map((name) => ({
           label: name,
           insertText: `${name}`,
           kind: CompletionItemKind.Value,
@@ -686,7 +821,9 @@ function resolveNameStack (
       const members = compiler.symbolMembers(symbol).getFiltered(UNHANDLED);
       candidates.push(...members || []);
     }
-    curElement = curElement instanceof ElementDeclarationNode ? curElement.parent : undefined;
+    curElement = curElement instanceof ElementDeclarationNode
+      ? curElement.parent
+      : undefined;
   }
 
   // Walk through the name stack
@@ -783,19 +920,23 @@ function suggestInSubField (
   }
 }
 
+export const TOP_LEVEL_SUGGESTION_LABELS = [
+  SUGGESTION_LABEL.Table,
+  SUGGESTION_LABEL.TableGroup,
+  SUGGESTION_LABEL.Enum,
+  SUGGESTION_LABEL.Project,
+  SUGGESTION_LABEL.Ref,
+  SUGGESTION_LABEL.TablePartial,
+  SUGGESTION_LABEL.Records,
+  SUGGESTION_LABEL.DiagramView,
+  SUGGESTION_LABEL.Note,
+  SUGGESTION_LABEL.Metadata,
+
+];
+
 function suggestTopLevelElementType (): CompletionList {
   return {
-    suggestions: [
-      'Table',
-      'TableGroup',
-      'Enum',
-      'Project',
-      'Ref',
-      'TablePartial',
-      'Records',
-      'DiagramView',
-      'Note',
-    ].map((name) => ({
+    suggestions: TOP_LEVEL_SUGGESTION_LABELS.map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -833,12 +974,7 @@ function suggestInColumn (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = [
-    'Note',
-    'indexes',
-    'checks',
-    'Records',
-  ];
+  const elements = TABLE_BODY_SUGGESTION_LABELS;
 
   if (!container?.callee) {
     return {
@@ -878,14 +1014,7 @@ function suggestInProjectField (
   offset: number,
   container?: FunctionApplicationNode,
 ): CompletionList {
-  const elements = [
-    'Table',
-    'TableGroup',
-    'Enum',
-    'Note',
-    'Ref',
-    'TablePartial',
-  ];
+  const elements = PROJECT_FIELD_SUGGESTION_LABELS;
   if (!container?.callee) {
     return {
       suggestions: elements.map((name) => ({
@@ -921,6 +1050,69 @@ function suggestInRefField (compiler: Compiler, filepath: Filepath, offset: numb
     SymbolKind.Table,
     SymbolKind.Column,
   ]);
+}
+
+// Map a metadata target-kind keyword to the symbol kinds whose names should be
+// suggested for the target identifier.
+const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
+  [MetadataTargetKind.Table]: [
+    SymbolKind.Schema,
+    SymbolKind.Table,
+  ],
+  [MetadataTargetKind.Column]: [
+    SymbolKind.Schema,
+    SymbolKind.Table,
+    SymbolKind.Column,
+  ],
+  [MetadataTargetKind.TableGroup]: [
+    SymbolKind.TableGroup,
+  ],
+  [MetadataTargetKind.Note]: [
+    SymbolKind.StickyNote,
+  ],
+};
+
+// Canonical display labels for metadata target kinds.
+const METADATA_TARGET_KIND_LABELS: Record<MetadataTargetKind, (typeof SUGGESTION_LABEL)[keyof typeof SUGGESTION_LABEL]> = {
+  [MetadataTargetKind.Table]: SUGGESTION_LABEL.Table,
+  [MetadataTargetKind.Column]: SUGGESTION_LABEL.Column,
+  [MetadataTargetKind.TableGroup]: SUGGESTION_LABEL.TableGroup,
+  [MetadataTargetKind.Note]: SUGGESTION_LABEL.Note,
+};
+
+function suggestMetadataTargetKinds (): CompletionList {
+  return {
+    suggestions: Object.values(MetadataTargetKind).map((name) => {
+      const label = METADATA_TARGET_KIND_LABELS[name];
+      return {
+        label,
+        insertText: label,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.Keyword,
+        range: undefined as any,
+      };
+    }),
+  };
+}
+
+function suggestInMetadataHeader (
+  compiler: Compiler,
+  filepath: Filepath,
+  offset: number,
+  container: ElementDeclarationNode,
+): CompletionList {
+  // Before/at the targetKind position -> suggest the allowed target kinds.
+  // (No targetKind yet, an empty placeholder, or cursor still within the targetKind.)
+  const kind = getMetadataTargetKind(container);
+  if (!kind || (offset <= container.targetKind!.end && offset >= container.targetKind!.start)) {
+    return suggestMetadataTargetKinds();
+  }
+
+  // After the targetKind -> suggest names of the chosen target kind.
+  const symbolKinds = METADATA_TARGET_SYMBOL_KINDS[kind];
+  if (!symbolKinds) return noSuggestions();
+
+  return suggestNamesInScope(compiler, filepath, offset, container.parent, symbolKinds);
 }
 
 function suggestInElementHeader (
@@ -1034,7 +1226,7 @@ function suggestInTableGroupField (compiler: Compiler, filepath: Filepath): Comp
         }),
       }).suggestions,
       ...[
-        'Note',
+        SUGGESTION_LABEL.Note,
       ].map((name) => ({
         label: name,
         insertText: name,
@@ -1053,64 +1245,7 @@ function suggestInIndex (compiler: Compiler, filepath: Filepath, offset: number)
 function suggestColumnType (compiler: Compiler, filepath: Filepath, offset: number): CompletionList {
   return {
     suggestions: [
-      ...[
-        'integer',
-        'int',
-        'tinyint',
-        'smallint',
-        'mediumint',
-        'bigint',
-        'bit',
-        'bool',
-        'binary',
-        'varbinary',
-        'logical',
-        'char',
-        'nchar',
-        'varchar',
-        'varchar2',
-        'nvarchar',
-        'nvarchar2',
-        'binary_float',
-        'binary_double',
-        'float',
-        'double',
-        'decimal',
-        'dec',
-        'real',
-        'money',
-        'smallmoney',
-        'enum',
-        'tinyblob',
-        'tinytext',
-        'blob',
-        'text',
-        'mediumblob',
-        'mediumtext',
-        'longblob',
-        'longtext',
-        'ntext',
-        'set',
-        'inet6',
-        'uuid',
-        'image',
-        'date',
-        'time',
-        'datetime',
-        'datetime2',
-        'timestamp',
-        'year',
-        'smalldatetime',
-        'datetimeoffset',
-        'XML',
-        'sql_variant',
-        'uniqueidentifier',
-        'CURSOR',
-        'BFILE',
-        'CLOB',
-        'NCLOB',
-        'RAW',
-      ].map((name) => ({
+      ...COLUMN_TYPE_SUGGESTION_LABELS.map((name) => ({
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -1179,10 +1314,10 @@ function suggestInDiagramViewBody (): CompletionList {
   return {
     suggestions: [
       ...[
-        'Tables',
-        'TableGroups',
-        'Notes',
-        'Schemas',
+        SUGGESTION_LABEL.Tables,
+        SUGGESTION_LABEL.TableGroups,
+        SUGGESTION_LABEL.Notes,
+        SUGGESTION_LABEL.Schemas,
       ].map((name) => ({
         label: name,
         insertText: name,

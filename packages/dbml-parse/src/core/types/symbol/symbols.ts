@@ -50,6 +50,8 @@ export enum SymbolKind {
   DiagramViewNote = 'DiagramView note',
   DiagramViewSchema = 'DiagramView schema',
 
+  Metadata = 'Metadata',
+
   Program = 'Program',
 }
 
@@ -63,6 +65,14 @@ export const ImportKind = {
   Schema: SymbolKind.Schema,
 };
 export type ImportKind = (typeof ImportKind)[keyof typeof ImportKind];
+
+/** Allowed target element types for a Metadata element header */
+export enum MetadataTargetKind {
+  Table = SymbolKind.Table,
+  Column = SymbolKind.Column,
+  TableGroup = SymbolKind.TableGroup,
+  Note = SymbolKind.StickyNote,
+}
 
 declare const __nodeSymbolBrand: unique symbol;
 export type NodeSymbolId = number & { readonly [__nodeSymbolBrand]: true };

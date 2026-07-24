@@ -1,15 +1,7 @@
-import {
-  describe, expect,
-} from 'vitest';
-import {
-  CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  SyntaxToken,
-} from '@/core/types/tokens';
-import {
-  analyze,
-} from '@tests/utils';
+import { describe, expect } from 'vitest';
+import { CompileErrorCode } from '@/core/types/errors';
+import { SyntaxToken } from '@/core/types/tokens';
+import { analyze } from '@tests/utils';
 
 describe('[example] validator', () => {
   describe('table validation', () => {
@@ -86,13 +78,27 @@ describe('[example] validator', () => {
       expect(errors[0].start).not.toBe(errors[1].start);
     });
 
-    test('should reject unknown table settings', () => {
-      const source = 'Table users [unknown_setting: value] { id int }';
+    test('accepts unknown table settings as custom metadata', () => {
+      const source = 'Table users [unknown_setting: "value"] { id int }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('rejects a non-string and non-color custom metadata value on a table', () => {
+      const source = 'Table users [pii: true] { id int }';
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.UNKNOWN_TABLE_SETTING);
-      expect(errors[0].diagnostic).toBe("Unknown 'unknown_setting' setting");
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_TABLE_SETTING_VALUE);
+    });
+
+    test('rejects a duplicate custom metadata key on a table', () => {
+      const source = 'Table users [owner: "a", owner: "b"] { id int }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors.every((e) => e.code === CompileErrorCode.DUPLICATE_TABLE_SETTING)).toBe(true);
+      expect(errors.length).toBeGreaterThan(0);
     });
   });
 
@@ -183,13 +189,28 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
-    test('should reject unknown column settings with precise error', () => {
+    test('should reject a valueless custom column setting', () => {
+      // A non-builtin key is now custom metadata, but it requires a value.
       const source = 'Table users { id int [unknown_setting] }';
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.UNKNOWN_COLUMN_SETTING);
-      expect(errors[0].diagnostic).toBe("Unknown column setting 'unknown_setting'");
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE);
+    });
+
+    test('should accept a custom column setting with a string value', () => {
+      const source = 'Table users { id int [owner: "scott"] }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should reject a custom column setting with a non-string value', () => {
+      const source = 'Table users { id int [pii: true] }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE);
     });
 
     test('should accept column with null setting', () => {
@@ -716,16 +737,16 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
-    test('should reject unknown setting on sticky note', () => {
+    test('accepts unknown setting on sticky note as custom metadata', () => {
+      // A non-builtin key on a sticky note is now free-form custom metadata.
       const source = `
-        Note my_note [unknown: value] {
+        Note my_note [unknown: "value"] {
           'A note'
         }
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.UNKNOWN_NOTE_SETTING);
+      expect(errors).toHaveLength(0);
     });
 
     test('should reject invalid color value on sticky note', () => {
@@ -1061,13 +1082,13 @@ Table users { name varchar }`;
       expect(errors.filter((e) => e.code === CompileErrorCode.DUPLICATE_NAME)).toHaveLength(1);
     });
 
-    test('should report unknown setting AND binding error in same table', () => {
+    test('should report invalid custom setting AND binding error in same table', () => {
       const source = `
         Table users { id int [unknown_setting, ref: > nonexistent.id] }
       `;
       const errors = analyze(source).getErrors();
 
-      expect(errors.some((e) => e.code === CompileErrorCode.UNKNOWN_COLUMN_SETTING)).toBe(true);
+      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_COLUMN_SETTING_VALUE)).toBe(true);
       expect(errors.some((e) => e.code === CompileErrorCode.BINDING_ERROR)).toBe(true);
     });
 
@@ -1182,10 +1203,10 @@ Table users { name varchar }`;
       expect(dupEnumErrors).toHaveLength(2);
       expect(dupEnumErrors[0].diagnostic).toBe('Duplicate enum field \'active\'');
 
-      // Test unknown setting
-      const unknownErrors = analyze('Table users [unknown: value] { id int }').getErrors();
-      expect(unknownErrors).toHaveLength(1);
-      expect(unknownErrors[0].diagnostic).toBe("Unknown 'unknown' setting");
+      // Test invalid custom metadata value (non-scalar)
+      const invalidMetaErrors = analyze('Table users [owner: (a, b)] { id int }').getErrors();
+      expect(invalidMetaErrors).toHaveLength(1);
+      expect(invalidMetaErrors[0].diagnostic.length).toBeGreaterThan(0);
     });
 
     test('should have error ranges that are not excessively wide', () => {

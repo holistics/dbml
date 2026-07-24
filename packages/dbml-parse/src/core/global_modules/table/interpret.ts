@@ -1,4 +1,4 @@
-import { last, partition } from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -10,7 +10,7 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  Check, Column, Index, InlineRef, Ref,
+  Check, Color, Column, Index, InlineRef, Ref,
   Table, TablePartialInjection,
 } from '@/core/types/schemaJson';
 import type { Filepath } from '@/core/types/filepath';
@@ -22,12 +22,14 @@ import {
   extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
 import {
-  extractColor, extractElementName,
-  getTokenPosition, normalizeNote,
-  processColumnType,
+  aggregateSettingList, isExpressionAQuotedString, isValidHexColor, isValidPartialInjection,
+} from '@/core/utils/validate';
+import {
+  extractColor, extractElementName, getTokenPosition, normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -108,7 +110,24 @@ export class TableInterpreter {
       });
     }
 
+    this.attachTableAndColumnMetadata();
+
     return Report.create(this.table as Table, errors);
+  }
+
+  // WARN: Must run last when interpret
+  private attachTableAndColumnMetadata () {
+    if (!this.symbol) return;
+
+    attachCustomMetadata(this.compiler, this.table, this.symbol, TABLE_METADATA_FIELDS, this.filepath);
+
+    const members = this.compiler.symbolMembers(this.symbol).getFiltered(UNHANDLED) ?? [];
+    for (const member of members) {
+      if (!member.isKind(SymbolKind.Column)) continue;
+      const column = this.table.fields!.find((f) => f.name === member.name);
+      if (!column) continue;
+      attachCustomMetadata(this.compiler, column, member, COLUMN_METADATA_FIELDS, this.filepath);
+    }
   }
 
   private interpretName (nameNode: SyntaxNode): CompileError[] {
@@ -148,7 +167,7 @@ export class TableInterpreter {
     const settingMap = aggregateSettingList(settings).getValue();
 
     this.table.headerColor = settingMap[SettingName.HeaderColor]?.length
-      ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value as any)
+      ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value)
       : undefined;
 
     const [
@@ -158,6 +177,8 @@ export class TableInterpreter {
       value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
       token: getTokenPosition(noteNode),
     };
+
+    this.table.metadata = extractCustomInlineMetadata(settingMap, Object.keys(TABLE_METADATA_FIELDS) as SettingName[]);
 
     return [];
   }
@@ -279,6 +300,8 @@ export class TableInterpreter {
 
     const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
 
+    column.metadata = extractCustomInlineMetadata(settingMap, RECOGNIZED_COLUMN_SETTINGS);
+
     const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
 
@@ -351,3 +374,48 @@ export class TableInterpreter {
     return result.getErrors();
   }
 }
+
+/**
+  * Settings that are excluded from custom metadata for inline metadata for Column
+  * Different from what we extract from metadata block for Column because some settings value types are not supported yet, mostly boolean keys without values ([pk, not null])
+  * TODO: Catch these settings when we support more data types for custom metadata
+  */
+export const RECOGNIZED_COLUMN_SETTINGS: readonly SettingName[] = [
+  SettingName.Note,
+  SettingName.Ref,
+  SettingName.PrimaryKey,
+  SettingName.PK,
+  SettingName.NotNull,
+  SettingName.Null,
+  SettingName.Unique,
+  SettingName.Increment,
+  SettingName.Default,
+  SettingName.Check,
+];
+
+export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Note | SettingName.HeaderColor> = {
+  [SettingName.Note]: {
+    isValidBuiltinFieldValue: isExpressionAQuotedString,
+    message: "'note' must be a string literal",
+    assignBuiltinField (element, value, token) {
+      element.note = { value, token };
+    },
+  },
+  [SettingName.HeaderColor]: {
+    isValidBuiltinFieldValue: isValidHexColor,
+    message: "'headercolor' must be a color literal",
+    assignBuiltinField (element, value) {
+      element.headerColor = value as Color;
+    },
+  },
+};
+
+export const COLUMN_METADATA_FIELDS: MetadataFieldRegistry<Column, SettingName.Note> = {
+  [SettingName.Note]: {
+    isValidBuiltinFieldValue: isExpressionAQuotedString,
+    message: "'note' must be a quoted string",
+    assignBuiltinField (element, value, token) {
+      element.note = { value, token };
+    },
+  },
+};

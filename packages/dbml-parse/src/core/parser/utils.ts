@@ -129,6 +129,7 @@ function markInvalidToken (token: SyntaxToken) {
 function markInvalidNode (node: SyntaxNode) {
   if (node instanceof ElementDeclarationNode) {
     markInvalid(node.type);
+    markInvalid(node.targetKind);
     markInvalid(node.name);
     markInvalid(node.as);
     markInvalid(node.alias);
@@ -227,6 +228,7 @@ export function getMemberChain (node: SyntaxNode): Readonly<(SyntaxNode | Syntax
   if (node instanceof ElementDeclarationNode) {
     return filterUndefined(
       node.type,
+      node.targetKind,
       node.name,
       node.as,
       node.alias,

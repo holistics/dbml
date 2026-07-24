@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/core",
-  "version": "8.4.0-alpha.1",
+  "version": "8.4.0-custom-metadata.0",
   "description": "> TODO: description",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -46,7 +46,7 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@dbml/parse": "^8.4.0-alpha.1",
+    "@dbml/parse": "^8.4.0-custom-metadata.0",
     "antlr4": "^4.13.1",
     "lodash": "^4.18.1",
     "lodash-es": "^4.18.1",
@@ -57,7 +57,7 @@
   "devDependencies": {
     "bluebird": "^3.5.5"
   },
-  "gitHead": "5cb80e1aa38fb9a4dbe3079e39c9ef93cd4dc556",
+  "gitHead": "22950b397bac439d76aca6934b128cdf0b460521",
   "engines": {
     "node": ">=16"
   }

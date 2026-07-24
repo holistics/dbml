@@ -8,7 +8,7 @@ For the dbdiagram.io web app (diagrams, collaboration, API), see [dbdiagram docs
 
 - [Home](https://dbml.dbdiagram.io/home): Overview, ecosystem, and links to tools.
 - [Core database markup](https://dbml.dbdiagram.io/docs): Tables, columns, relationships, indexes, enums, and other core syntax.
-- [Enrichment and visualization](https://dbml.dbdiagram.io/syntax/enrichment-visualization): Notes, labels, colors, and display-oriented syntax like table groups, diagram views.
+- [Enrichment and visualization](https://dbml.dbdiagram.io/syntax/enrichment-visualization): Notes, custom metadata (inline settings and `Metadata` blocks), labels, colors, and display-oriented syntax like table groups, diagram views.
 - [Language basics](https://dbml.dbdiagram.io/syntax/language-basics): Core language constructs (strings, comments, and syntax conventions).
 
 ## Tooling

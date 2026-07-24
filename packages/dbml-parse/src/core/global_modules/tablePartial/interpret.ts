@@ -19,12 +19,14 @@ import type { Filepath } from '@/core/types/filepath';
 import type { ColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
 import { extractQuotedStringToken, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
+import { RECOGNIZED_COLUMN_SETTINGS } from '@/core/global_modules/table/interpret';
 import {
   extractColor, extractElementName, getTokenPosition,
   normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
 import { UNHANDLED } from '@/core/types/module';
 import { PartialRefMetadata } from '@/core/types/symbol/metadata';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -113,7 +115,7 @@ export class TablePartialInterpreter {
 
     const firstHeaderColor = head(settingMap[SettingName.HeaderColor]);
     this.tablePartial.headerColor = firstHeaderColor
-      ? extractColor(firstHeaderColor.value as any)
+      ? extractColor(firstHeaderColor.value)
       : undefined;
 
     const [
@@ -191,6 +193,8 @@ export class TablePartialInterpreter {
     column.note = columnSymbol?.note(this.compiler);
 
     const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
+
+    column.metadata = extractCustomInlineMetadata(settingMap, RECOGNIZED_COLUMN_SETTINGS);
 
     const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);

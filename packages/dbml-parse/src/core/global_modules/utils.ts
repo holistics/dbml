@@ -1,12 +1,12 @@
 import type Compiler from '@/compiler';
 import { getMemberChain } from '@/core/parser/utils';
-import type { RelationCardinality } from '@/core/types';
+import type { Filepath, ProgramSymbol, RelationCardinality } from '@/core/types';
 import { UNHANDLED } from '@/core/types/module';
 import {
   InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type { NodeSymbol } from '@/core/types/symbol';
+import { SchemaSymbol, type NodeSymbol } from '@/core/types/symbol';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import { isAccessExpression, isExpressionAVariableNode } from '../utils/validate';
 
@@ -138,4 +138,16 @@ export function getMultiplicities (
     default:
       return undefined;
   }
+}
+
+export function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): NodeSymbol | undefined {
+  const membersList = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
+  if (!membersList) return undefined;
+
+  return membersList.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.isPublicSchema());
+}
+
+export function getProgramSymbol (compiler: Compiler, filepath: Filepath): ProgramSymbol | undefined {
+  const programNode = compiler.parseFile(filepath).getValue().ast;
+  return compiler.nodeSymbol(programNode).getFiltered(UNHANDLED) as ProgramSymbol;
 }

@@ -1,5 +1,5 @@
 import { getMemberChain } from '@/core/parser/utils';
-import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import { MetadataElementMetadata, NodeMetadata } from '@/core/types/symbol/metadata';
 import { UNHANDLED } from '@/core/types/module';
 import {
   SyntaxNode,
@@ -54,6 +54,20 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
   };
 
   const pushMetadata = (m: NodeMetadata) => {
+    if (m instanceof MetadataElementMetadata) {
+      const target = m.target(this);
+      if (!target) return;
+
+      const key = target.intern();
+      let arr = metadata.get(key);
+      if (!arr) {
+        arr = [];
+        metadata.set(key, arr);
+      }
+      arr.push(m);
+      return;
+    }
+
     for (const symbol of m.owners(this)) {
       const key = symbol.intern();
       let arr = metadata.get(key);
@@ -90,9 +104,8 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
       }
       // Collect metadata from all modules
       const metadata = this.nodeMetadata(node).getFiltered(UNHANDLED);
-      if (metadata) {
-        pushMetadata(metadata);
-      }
+      if (metadata) pushMetadata(metadata);
+
       for (const child of getMemberChain(node)) {
         if (child instanceof SyntaxNode) walk(child);
       }
