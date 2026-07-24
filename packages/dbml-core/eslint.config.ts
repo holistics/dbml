@@ -25,7 +25,7 @@ export default defineConfig(
       ],
     },
     {
-      files: ['**/*.js'],
+      files: ['**/*.js', '**/*.ts'],
       languageOptions: {
         globals: {
           ...globals.node,
@@ -51,7 +51,7 @@ export default defineConfig(
       },
     },
     {
-      files: ['**/__tests__/**/*.js', '**/*.test.js', '**/*.spec.js', '**/__tests__/**/*.ts', '**/*.test.ts', '**/*.spec.ts'],
+      files: ['**/__tests__/**/*.js', '**/*.test.js', '**/*.spec.js', '**/__tests__/**/*.ts', '**/*.test.ts', '**/*.spec.ts', '**/*.ts'],
       plugins: {
         '@typescript-eslint': tseslint,
       },
@@ -80,12 +80,11 @@ export default defineConfig(
       },
       rules: {
         '@stylistic/object-curly-newline': ['error', {
-          ObjectExpression: { multiline: true, minProperties: 1 },
-          ObjectPattern: { multiline: true, minProperties: 1 },
-          ImportDeclaration: { multiline: true, minProperties: 1 },
-          ExportDeclaration: { multiline: true, minProperties: 1 },
+          ImportDeclaration: { multiline: true, minProperties: 4 },
+          ExportDeclaration: { multiline: true, minProperties: 4 },
+          TSInterfaceBody: { multiline: true, minProperties: 1 },
         }],
-        '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: false }],
+        '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
         'no-unused-vars': [
           'warn',
           {
