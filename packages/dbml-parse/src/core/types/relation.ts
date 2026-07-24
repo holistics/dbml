@@ -141,6 +141,15 @@ export function isEndpointManySide (relation: RelationCardinality): boolean {
   return parseCardinality(relation).max === '*';
 }
 
+export function isEndpointOptional (relation: RelationCardinality): boolean {
+  return parseCardinality(relation).min === 0;
+}
+
+export function isEndpointRequired (relation: RelationCardinality): boolean {
+  const minCard = parseCardinality(relation).min;
+  return minCard >= 1;
+}
+
 export function makeRelationshipRequired (op: RelationshipOp): BaseRelationshipOp {
   return op.replace(/\?/g, '') as BaseRelationshipOp;
 }

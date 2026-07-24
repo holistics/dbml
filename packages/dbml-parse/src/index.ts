@@ -97,6 +97,8 @@ export {
   makeRelationshipRequired,
   isEndpointOneSide,
   isEndpointManySide,
+  isEndpointOptional,
+  isEndpointRequired,
   CARDINALITY_ONE,
   CARDINALITY_MAYBE,
   CARDINALITY_SOME,

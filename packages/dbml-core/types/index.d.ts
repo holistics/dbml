@@ -50,6 +50,8 @@ export {
   getRelationshipOp,
   isEndpointOneSide,
   isEndpointManySide,
+  isEndpointOptional,
+  isEndpointRequired,
   makeRelationshipRequired,
 } from '@dbml/parse';
 
