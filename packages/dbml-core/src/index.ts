@@ -51,6 +51,9 @@ export {
   CARDINALITY_MANY,
   getMultiplicities,
   getRelationshipOp,
+  isEndpointOneSide,
+  isEndpointManySide,
+  makeRelationshipRequired,
 } from '@dbml/parse';
 
 export { inferMultiplicitiesFromColumns } from './transform/relations';

@@ -133,6 +133,18 @@ export function getMultiplicities (
   }
 }
 
+export function isEndpointOneSide (relation: RelationCardinality): boolean {
+  return parseCardinality(relation).max === 1;
+}
+
+export function isEndpointManySide (relation: RelationCardinality): boolean {
+  return parseCardinality(relation).max === '*';
+}
+
+export function makeRelationshipRequired (op: RelationshipOp): BaseRelationshipOp {
+  return op.replace(/\?/g, '') as BaseRelationshipOp;
+}
+
 // Reverse of getMultiplicities: cardinality pair -> operator.
 export function getRelationshipOp (
   left: RelationCardinality,
