@@ -82,8 +82,14 @@ export type Color = languages.IColor;
 // Go to definition
 export type DefinitionProvider = languages.DefinitionProvider;
 export type Definition = languages.Definition;
-export type CodeActionList = languages.CodeActionList;
 export type SignatureHelpResult = languages.SignatureHelpResult;
+
+// Code actions
+export type CodeActionProvider = languages.CodeActionProvider;
+export type CodeActionList = languages.CodeActionList;
+export type CodeAction = languages.CodeAction;
+export type CodeActionContext = languages.CodeActionContext;
+export type WorkspaceEdit = languages.WorkspaceEdit;
 
 // Show references
 export type ReferenceProvider = languages.ReferenceProvider;

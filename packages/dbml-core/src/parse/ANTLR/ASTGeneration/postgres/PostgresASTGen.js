@@ -7,6 +7,7 @@ import {
   COLUMN_CONSTRAINT_KIND, CONSTRAINT_TYPE, DATA_TYPE, TABLE_CONSTRAINT_KIND,
 } from '../constants';
 import { getOriginalText } from '../helpers';
+import { CARDINALITY_MANY, CARDINALITY_MAYBE } from '@dbml/parse';
 
 const COMMAND_KIND = {
   REF: 'ref',
@@ -223,12 +224,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
             tableName: null,
             schemaName: null,
             fieldNames: firstFieldNames,
-            relation: '*',
+            relation: CARDINALITY_MANY,
           }, {
             tableName: refTableName,
             schemaName: refSchemaName,
             fieldNames: secondFieldNames,
-            relation: '1',
+            relation: CARDINALITY_MAYBE,
           }],
           onDelete: actions.onDelete,
           onUpdate: actions.onUpdate,
@@ -404,12 +405,12 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
             tableName: null,
             schemaName: null,
             fieldNames: null,
-            relation: '*',
+            relation: CARDINALITY_MANY,
           }, {
             tableName: refTableName,
             schemaName: refSchemaName,
             fieldNames: secondFieldNames,
-            relation: '1',
+            relation: CARDINALITY_MAYBE,
           }],
           onDelete: actions.onDelete,
           onUpdate: actions.onUpdate,

@@ -1,4 +1,5 @@
 import { capitalize, get } from 'lodash-es';
+import { parseCardinality, makeCardinalityRequired } from '@dbml/parse';
 import {
   DEFAULT_SCHEMA_NAME, ENUM, NOTE, REF, TABLE, TABLE_GROUP,
 } from './config';
@@ -68,6 +69,8 @@ class Database extends Element {
       if (schema.refs.some((r) => r.equals(ref))) return;
       schema.pushRef(ref);
     });
+
+    this.adjustCardinalities();
   }
 
   generateId () {
@@ -241,6 +244,43 @@ class Database extends Element {
 
   findTablePartial (name) {
     return this.tablePartials.find((tp) => tp.name === name);
+  }
+
+  // SQL importers just import everything as optional
+  // So we need to adjust the cardinality of those if they are in actuality required
+  // We only handle one-to-many/many-to-one/one-to-one here
+  adjustCardinalities () {
+    this.schemas.forEach((schema) => {
+      schema.refs.forEach((ref) => {
+        const manyEndpoint = ref.endpoints.find((e) => parseCardinality(e.relation).max === '*');
+        const oneEndpoint = ref.endpoints.find((e) => parseCardinality(e.relation).max === 1);
+
+        // Many-to-many, no need to adjust
+        if (!oneEndpoint) return;
+
+        let sourceFkEndpoint;
+        let targetFkEndpoint;
+
+        // one-to-many/many-to-one
+        if (manyEndpoint) {
+          sourceFkEndpoint = manyEndpoint;
+          targetFkEndpoint = oneEndpoint;
+        } else {
+          // one-to-one: right endpoint is the FK source, left is the REFERENCES target
+          // (matches SQL exporter convention)
+          sourceFkEndpoint = ref.endpoints[1];
+          targetFkEndpoint = ref.endpoints[0];
+        }
+
+        if (!sourceFkEndpoint || !targetFkEndpoint) return; // not simple many-to-one or one-to-many
+
+        const isSourceNotNull = sourceFkEndpoint.fields.every((f) => f.not_null || f.pk || f.increment);
+
+        if (isSourceNotNull) {
+          targetFkEndpoint.relation = makeCardinalityRequired(targetFkEndpoint.relation);
+        }
+      });
+    });
   }
 
   export () {

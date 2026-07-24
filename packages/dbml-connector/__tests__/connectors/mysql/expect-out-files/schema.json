@@ -1094,7 +1094,7 @@
             "id1_1",
             "id1_2"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "composite_key_2",
@@ -1102,7 +1102,7 @@
             "id2_1",
             "id2_2"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": null,
@@ -1116,14 +1116,14 @@
           "fieldNames": [
             "order_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "orders",
           "fieldNames": [
             "order_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "CASCADE",
@@ -1137,14 +1137,14 @@
           "fieldNames": [
             "product_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "products",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": null,
@@ -1158,14 +1158,14 @@
           "fieldNames": [
             "user_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "users",
           "fieldNames": [
             "user_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "SET NULL",

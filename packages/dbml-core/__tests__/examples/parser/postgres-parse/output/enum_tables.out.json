@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "jobs",
@@ -7,19 +8,22 @@
           "name": "id",
           "type": {
             "type_name": "integer",
-            "args": null
+            "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "status",
           "type": {
             "type_name": "job_status",
-            "args": null
-          }
+            "schemaName": null
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "orders",
@@ -28,33 +32,38 @@
           "name": "id",
           "type": {
             "type_name": "int",
-            "args": null
+            "schemaName": null
           },
-          "pk": true
+          "pk": true,
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
-            "args": null
-          }
+            "schemaName": null
+          },
+          "checks": []
         },
         {
           "name": "priority",
           "type": {
             "type_name": "priority enum",
-            "args": null
-          }
+            "schemaName": null
+          },
+          "checks": []
         },
         {
           "name": "status",
           "type": {
             "type_name": "order_status",
-            "args": null
-          }
+            "schemaName": null
+          },
+          "checks": []
         }
       ],
-      "indexes": []
+      "indexes": [],
+      "checks": []
     }
   ],
   "refs": [],
@@ -107,5 +116,9 @@
         }
       ]
     }
-  ]
+  ],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }

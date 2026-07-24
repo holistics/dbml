@@ -8,6 +8,7 @@ import {
   PrefixExpressionNode,
   type SyntaxNode,
 } from '../nodes';
+import type { SyntaxToken } from '../tokens';
 import type {
   ColumnSymbol,
   NodeSymbol,
@@ -16,6 +17,8 @@ import type {
   TableSymbol,
 } from '../symbol';
 import type { Internable } from '../internable';
+import type { RelationshipOp, RelationCardinality } from '../relation';
+import { getMultiplicities, parseCardinality } from '../relation';
 import { UNHANDLED } from '../module';
 import { ElementKind, SettingName } from '../keywords';
 import {
@@ -145,20 +148,39 @@ export class RefMetadata extends NodeMetadata {
     return undefined;
   }
 
-  op (_compiler: Compiler): '>' | '<' | '-' | '<>' | undefined {
+  op (_compiler: Compiler): RelationshipOp | undefined {
+    return this.opToken()?.value as RelationshipOp | undefined;
+  }
+
+  opToken (): SyntaxToken | undefined {
     if (this.declaration instanceof ElementDeclarationNode) {
       const field = getBody(this.declaration)[0];
       if (!(field instanceof FunctionApplicationNode)) return undefined;
       const infix = field.callee;
       if (!(infix instanceof InfixExpressionNode)) return undefined;
-      return infix.op?.value as '>' | '<' | '-' | '<>' | undefined;
+      return infix.op;
     }
     if (this.declaration instanceof AttributeNode) {
       const prefix = this.declaration.value;
       if (!(prefix instanceof PrefixExpressionNode)) return undefined;
-      return prefix.op?.value as '>' | '<' | '-' | '<>' | undefined;
+      return prefix.op;
     }
     return undefined;
+  }
+
+  cardinalities (compiler: Compiler): [RelationCardinality, RelationCardinality] | undefined {
+    const op = this.op(compiler);
+    return op ? getMultiplicities(op) : undefined;
+  }
+
+  leftCardinality (compiler: Compiler): { min: number; max: number | '*' } | undefined {
+    const c = this.cardinalities(compiler);
+    return c ? parseCardinality(c[0]) : undefined;
+  }
+
+  rightCardinality (compiler: Compiler): { min: number; max: number | '*' } | undefined {
+    const c = this.cardinalities(compiler);
+    return c ? parseCardinality(c[1]) : undefined;
   }
 
   active (compiler: Compiler): boolean {
@@ -271,11 +293,30 @@ export class PartialRefMetadata extends NodeMetadata {
     return extractTableFromEndpoint(compiler, prefix.expression) ?? this.container(compiler);
   }
 
-  op (_compiler: Compiler): '>' | '<' | '-' | '<>' | undefined {
+  op (_compiler: Compiler): RelationshipOp | undefined {
+    return this.opToken()?.value as RelationshipOp | undefined;
+  }
+
+  opToken (): SyntaxToken | undefined {
     if (!(this.declaration instanceof AttributeNode)) return undefined;
     const prefix = this.declaration.value;
     if (!(prefix instanceof PrefixExpressionNode)) return undefined;
-    return prefix.op?.value as '>' | '<' | '-' | '<>' | undefined;
+    return prefix.op;
+  }
+
+  cardinalities (compiler: Compiler): [RelationCardinality, RelationCardinality] | undefined {
+    const op = this.op(compiler);
+    return op ? getMultiplicities(op) : undefined;
+  }
+
+  leftCardinality (compiler: Compiler): { min: number; max: number | '*' } | undefined {
+    const c = this.cardinalities(compiler);
+    return c ? parseCardinality(c[0]) : undefined;
+  }
+
+  rightCardinality (compiler: Compiler): { min: number; max: number | '*' } | undefined {
+    const c = this.cardinalities(compiler);
+    return c ? parseCardinality(c[1]) : undefined;
   }
 
   leftToken (): SyntaxNode {

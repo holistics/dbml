@@ -20,4 +20,4 @@ Table "silver  users" {
   }
 }
 
-Ref " foreign key bd ":"silver  users"."date of birth" < " aba "."date of birth"
+Ref " foreign key bd ":"silver  users"."date of birth" ?<? " aba "."date of birth"

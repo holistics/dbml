@@ -1,4 +1,5 @@
 import {
+  parseCardinality,
   isBinaryType,
   isBooleanType,
   isDateTimeType,
@@ -248,7 +249,7 @@ class SqlServerExporter {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
-      const refOneIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex((endpointId) => parseCardinality(model.endpoints[endpointId].relation).max === 1);
       const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
       const refEndpointId = ref.endpointIds[refEndpointIndex];

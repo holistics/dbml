@@ -17,6 +17,7 @@ export async function setupDbmlServices (compiler: Compiler): Promise<void> {
   monaco.languages.registerDefinitionProvider(languageId, services.definitionProvider as any);
   monaco.languages.registerReferenceProvider(languageId, services.referenceProvider as any);
   monaco.languages.registerCompletionItemProvider(languageId, services.autocompletionProvider as any);
+  monaco.languages.registerCodeActionProvider(languageId, services.codeActionProvider as any);
 }
 
 export function updateDiagnosticMarkers (model: monaco.editor.ITextModel): void {

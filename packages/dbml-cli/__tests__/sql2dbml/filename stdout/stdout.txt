@@ -61,15 +61,15 @@ Table "countries" {
   "continent_name" varchar
 }
 
-Ref:"orders"."id" < "order_items"."order_id"
+Ref:"orders"."id" ?<? "order_items"."order_id"
 
-Ref:"products"."id" < "order_items"."product_id"
+Ref:"products"."id" ?<? "order_items"."product_id"
 
-Ref:"countries"."code" < "users"."country_code"
+Ref:"countries"."code" ?<? "users"."country_code"
 
-Ref:"countries"."code" < "merchants"."country_code"
+Ref:"countries"."code" ?<? "merchants"."country_code"
 
-Ref:"merchants"."id" < "products"."merchant_id"
+Ref:"merchants"."id" <? "products"."merchant_id"
 
-Ref:"users"."id" < "merchants"."admin_id"
+Ref:"users"."id" ?<? "merchants"."admin_id"
 

@@ -18,7 +18,7 @@ import { type Internable, type Primitive, intern } from '@/core/types/internable
 import { SyntaxNode, SyntaxNodeIdGenerator } from '@/core/types/nodes';
 import { NodeSymbolIdGenerator, SymbolFactory } from '@/core/types/symbol';
 import {
-  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
+  DBMLCodeActionProvider, DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
 } from '@/services/index';
 import { type DbmlProjectLayout } from './projectLayout';
 import {
@@ -432,6 +432,7 @@ export default class Compiler {
         triggerCharacters,
       }),
       diagnosticsProvider: new DBMLDiagnosticsProvider(this),
+      codeActionProvider: new DBMLCodeActionProvider(this),
     };
   }
 }

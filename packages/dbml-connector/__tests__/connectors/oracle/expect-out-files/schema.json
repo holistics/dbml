@@ -2921,7 +2921,7 @@
           "fieldNames": [
             "PARENT_ID"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "SELF_REF_FK",
@@ -2929,7 +2929,7 @@
           "fieldNames": [
             "ID"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "SET NULL",
@@ -2944,7 +2944,7 @@
           "fieldNames": [
             "PARENT_ID"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "FK_PARENT",
@@ -2952,7 +2952,7 @@
           "fieldNames": [
             "ID"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "CASCADE",
@@ -2968,7 +2968,7 @@
             "PARENT_DEPT_ID",
             "PARENT_EMP_ID"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "COMPOSITE_SELF_REF",
@@ -2977,7 +2977,7 @@
             "DEPT_ID",
             "EMP_ID"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "SET NULL",
@@ -2992,7 +2992,7 @@
           "fieldNames": [
             "PARENT_ID"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "ALTER_FK_PARENT",
@@ -3000,7 +3000,7 @@
           "fieldNames": [
             "ID"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "CASCADE",
@@ -3015,7 +3015,7 @@
           "fieldNames": [
             "PARENT_ID"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "ALTER_SELF_REF",
@@ -3023,7 +3023,7 @@
           "fieldNames": [
             "ID"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "SET NULL",
@@ -3039,7 +3039,7 @@
             "REF_DEPT_ID",
             "REF_EMP_ID"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "ALTER_COMPOSITE_FK_PARENT",
@@ -3048,7 +3048,7 @@
             "DEPT_ID",
             "EMP_ID"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": null,
@@ -3063,7 +3063,7 @@
           "fieldNames": [
             "PARENT_ID"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "REF_SIMPLE_PARENT",
@@ -3071,7 +3071,7 @@
           "fieldNames": [
             "ID"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": null,
@@ -3087,7 +3087,7 @@
             "FK1",
             "FK2"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "REF_COMPOSITE_PARENT",
@@ -3096,7 +3096,7 @@
             "KEY1",
             "KEY2"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": null,
@@ -3112,7 +3112,7 @@
             "PARENT_DEPT_ID",
             "PARENT_EMP_ID"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "ALTER_COMP_SELF_REF",
@@ -3121,7 +3121,7 @@
             "DEPT_ID",
             "EMP_ID"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": null,

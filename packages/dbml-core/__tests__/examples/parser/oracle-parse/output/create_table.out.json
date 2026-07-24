@@ -990,14 +990,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     }

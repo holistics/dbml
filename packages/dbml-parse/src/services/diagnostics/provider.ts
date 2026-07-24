@@ -1,13 +1,13 @@
 import type Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
-import type { CompileError, CompileWarning } from '@/core/types/errors';
+import type { CompileError, CompileWarning, CompileInfo } from '@/core/types/errors';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type { SyntaxToken } from '@/core/types/tokens';
 import { MarkerData, MarkerSeverity } from '@/services/types';
 
 // This is the same format that dbdiagram-frontend uses
 export interface Diagnostic {
-  type: 'error' | 'warning';
+  type: 'error' | 'warning' | 'info';
   text: string;
   startRow: number;
   startColumn: number;
@@ -31,6 +31,7 @@ export default class DBMLDiagnosticsProvider {
     return [
       ...this.provideErrors(filepath),
       ...this.provideWarnings(filepath),
+      ...this.provideInfos(filepath),
     ];
   }
 
@@ -59,13 +60,25 @@ export default class DBMLDiagnosticsProvider {
   }
 
   /**
+   * Get only infos from the current compilation
+   */
+  provideInfos (filepath?: Filepath): Diagnostic[] {
+    if (!filepath) {
+      const infos = this.compiler.interpretProject().getInfos();
+      return infos.map((hint) => this.createDiagnostic(hint, 'info'));
+    }
+    const infos = this.compiler.interpretFile(filepath).getInfos();
+    return infos.map((hint) => this.createDiagnostic(hint, 'info'));
+  }
+
+  /**
    * Convert Monaco markers format (for editor integration)
    */
   provideMarkers (filepath: Filepath): MarkerData[] {
     const diagnostics = this.provideDiagnostics(filepath).filter((diag) => diag.filepath.equals(filepath)); // only provide markers for this file
     return diagnostics.map((diag) => {
       const severity = this.getSeverityValue(diag.type);
-      return {
+      const marker: MarkerData = {
         severity,
         message: diag.text,
         startLineNumber: diag.startRow,
@@ -74,12 +87,13 @@ export default class DBMLDiagnosticsProvider {
         endColumn: diag.endColumn,
         code: diag.code ? String(diag.code) : undefined,
       };
+      return marker;
     });
   }
 
   private createDiagnostic (
-    errorOrWarning: CompileError | CompileWarning,
-    severity: 'error' | 'warning',
+    errorOrWarning: CompileError | CompileWarning | CompileInfo,
+    severity: 'error' | 'warning' | 'info',
   ): Diagnostic {
     const nodeOrToken = errorOrWarning.nodeOrToken;
 
@@ -101,8 +115,9 @@ export default class DBMLDiagnosticsProvider {
     };
   }
 
-  private getSeverityValue (severity: 'error' | 'warning'): MarkerSeverity {
-    // Monaco marker severity values
-    return severity === 'error' ? MarkerSeverity.Error : MarkerSeverity.Warning;
+  private getSeverityValue (severity: 'error' | 'warning' | 'info'): MarkerSeverity {
+    if (severity === 'error') return MarkerSeverity.Error;
+    if (severity === 'warning') return MarkerSeverity.Warning;
+    return MarkerSeverity.Info;
   }
 }

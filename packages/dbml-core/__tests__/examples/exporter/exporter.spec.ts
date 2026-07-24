@@ -91,6 +91,129 @@ describe('@dbml/core - ref inactive setting', () => {
   });
 });
 
+describe('@dbml/core - optional ref operators', () => {
+  describe('dbml exporter', () => {
+    test('should export ref with operator -?', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer [unique] }
+Ref: posts.user_id -? users.id
+      `.trim();
+      const res = exporter.export(input, 'dbml');
+      expect(res.trim()).toBe(
+`Table "users" {
+  "id" integer [pk]
+}
+
+Table "posts" {
+  "user_id" integer [unique]
+}
+
+Ref:"posts"."user_id" -? "users"."id"`);
+    });
+
+    test('should export ref with operator >? (flipped to < due to non-nullability inference)', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer [not null] }
+Ref: posts.user_id >? users.id
+      `.trim();
+      const res = exporter.export(input, 'dbml');
+      expect(res.trim()).toBe(
+`Table "users" {
+  "id" integer [pk]
+}
+
+Table "posts" {
+  "user_id" integer [not null]
+}
+
+Ref:"users"."id" < "posts"."user_id"`);
+    });
+
+    test('should export ref with operator ?<?', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer }
+Ref: posts.user_id ?<? users.id
+      `.trim();
+      const res = exporter.export(input, 'dbml');
+      expect(res.trim()).toBe(
+`Table "users" {
+  "id" integer [pk]
+}
+
+Table "posts" {
+  "user_id" integer
+}
+
+Ref:"posts"."user_id" <? "users"."id"`);
+    });
+  });
+
+  describe('sql exporters', () => {
+    test('mysql exporter should produce FK constraint for optional ref', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer [not null] }
+Ref: posts.user_id >? users.id
+      `.trim();
+      const res = exporter.export(input, 'mysql');
+      expect(res.trim()).toBe(
+`CREATE TABLE \`users\` (
+  \`id\` integer PRIMARY KEY
+);
+
+CREATE TABLE \`posts\` (
+  \`user_id\` integer NOT NULL
+);
+
+ALTER TABLE \`posts\` ADD FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`);`);
+    });
+
+    test('postgres exporter should produce FK constraint for optional ref', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer [not null] }
+Ref: posts.user_id >? users.id
+      `.trim();
+      const res = exporter.export(input, 'postgres');
+      expect(res.trim()).toBe(
+`CREATE TABLE "users" (
+  "id" integer PRIMARY KEY
+);
+
+CREATE TABLE "posts" (
+  "user_id" integer NOT NULL
+);
+
+ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;`);
+    });
+
+    test('mssql exporter should produce FK constraint for optional ref', () => {
+      const input = `
+Table users { id integer [pk] }
+Table posts { user_id integer [not null] }
+Ref: posts.user_id >? users.id
+      `.trim();
+      const res = exporter.export(input, 'mssql');
+      expect(res.trim()).toBe(
+`CREATE TABLE [users] (
+  [id] integer PRIMARY KEY
+)
+GO
+
+CREATE TABLE [posts] (
+  [user_id] integer NOT NULL
+)
+GO
+
+ALTER TABLE [posts] ADD FOREIGN KEY ([user_id]) REFERENCES [users] ([id])
+GO`);
+    });
+  });
+});
+
 describe('@dbml/core - exporter flags', () => {
   describe('includeRecords', () => {
     test('includes records by default', () => {

@@ -255,5 +255,103 @@
         "offset": 0
       }
     }
-  }
+  },
+  "infos": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'A.id' is nullable but operator '>' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@id@[L1:C4, L1:C14]",
+          "snippet": "id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'A.code' is nullable but operator '>' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@code@[L2:C4, L2:C15]",
+          "snippet": "code number"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'B.id' should be unique or primary key for operator '>'",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@id@[L6:C4, L6:C14]",
+          "snippet": "id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'B.code' should be unique or primary key for operator '>'",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@code@[L7:C4, L7:C15]",
+          "snippet": "code number"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'A.id' is nullable but operator '>' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L10:C5, L10:C9]",
+          "snippet": "A.id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'B.id' should be unique or primary key for operator '>'",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L10:C12, L10:C16]",
+          "snippet": "B.id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'A.code' is nullable but operator '>' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L11:C5, L11:C11]",
+          "snippet": "A.code"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'B.code' should be unique or primary key for operator '>'",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L11:C14, L11:C20]",
+          "snippet": "B.code"
+        }
+      }
+    }
+  ]
 }

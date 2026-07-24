@@ -1,4 +1,4 @@
-import { last, partition } from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -270,10 +270,9 @@ export class TableInterpreter {
     errors.push(...typeReport.getErrors());
 
     column.pk = columnSymbol?.pk(this.compiler) || false;
-    column.unique = columnSymbol?.unique(this.compiler) || false;
+    column.unique = columnSymbol?.isUniqueSet(this.compiler) || false;
     column.increment = columnSymbol?.isIncrementSet(this.compiler) || undefined;
-    const nullable = columnSymbol?.nullable(this.compiler);
-    column.not_null = nullable === undefined ? undefined : !nullable;
+    column.not_null = columnSymbol?.isNotNullSet(this.compiler);
     column.dbdefault = columnSymbol?.default(this.compiler);
     column.note = columnSymbol?.note(this.compiler);
 

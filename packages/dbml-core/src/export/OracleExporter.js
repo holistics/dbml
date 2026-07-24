@@ -1,4 +1,5 @@
 import {
+  parseCardinality,
   isBinaryType,
   isBooleanType,
   isDateTimeType,
@@ -323,7 +324,7 @@ class OracleExporter {
       const ref = model.refs[refId];
 
       // find the one relation in one-to-xxx or xxx-to-one relationship
-      const refOneIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex((endpointId) => parseCardinality(model.endpoints[endpointId].relation).max === 1);
 
       const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
 

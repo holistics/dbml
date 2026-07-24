@@ -487,5 +487,55 @@
         "offset": 0
       }
     }
-  }
+  },
+  "infos": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'merchant.user_id' is nullable but operator '<' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@user_id@[L18:C2, L18:C15]",
+          "snippet": "\"user_id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'merchant.product_id' is nullable but operator '<' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@product_id@[L19:C2, L19:C18]",
+          "snippet": "\"product_id\" int"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'merchant.user_id' is nullable but operator '<' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L23:C18, L23:C38]",
+          "snippet": "\"merchant\".\"user_id\""
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'merchant.product_id' is nullable but operator '<' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L25:C21, L25:C44]",
+          "snippet": "\"merchant\"...roduct_id\""
+        }
+      }
+    }
+  ]
 }

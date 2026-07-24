@@ -1,6 +1,7 @@
 import { NONE_COLOR } from '@/constants';
-import type { Filepath } from './filepath';
-import type { Position } from './position';
+import type { Filepath } from '../filepath';
+import type { Position } from '../position';
+import type { RelationshipOp, RelationCardinality } from '../relation';
 
 export type Color = `#${string}` | typeof NONE_COLOR;
 
@@ -164,7 +165,7 @@ export interface InlineRef {
   schemaName: string | null;
   tableName: string;
   fieldNames: string[];
-  relation: '>' | '<' | '-' | '<>';
+  relation: RelationshipOp;
   token: TokenPosition;
 }
 
@@ -188,8 +189,6 @@ export interface RefEndpoint {
   relation: RelationCardinality;
   token: TokenPosition;
 }
-
-export type RelationCardinality = '1' | '*';
 
 export interface Enum {
   name: string;

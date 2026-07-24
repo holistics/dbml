@@ -1,6 +1,6 @@
 import Compiler from '@/compiler/index';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { CompileWarning } from '@/core/types/errors';
+import type { CompileWarning, CompileInfo } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import { ProgramNode } from '@/core/types/nodes';
@@ -29,7 +29,8 @@ import type { ElementRef } from '@/core/types/schemaJson';
 import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../records/utils/constraints';
 import type { TableInfo } from '../records/utils/constraints/fk';
 import { getTokenPosition } from '@/core/utils/interpret';
-import { getMultiplicities } from '../utils';
+import { getMultiplicities } from '@/core/types/relation';
+import { validatePartialRef } from '../ref/constraint_fixes';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -38,6 +39,7 @@ export default class ProgramInterpreter {
   private filepath: Filepath;
   private errors: CompileError[] = [];
   private warnings: CompileWarning[] = [];
+  private infos: CompileInfo[] = [];
   private db: Database;
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {
@@ -71,8 +73,9 @@ export default class ProgramInterpreter {
     this.interpretAllSymbols();
     this.interpretAllMetadata();
     this.interpretAllAliases();
+    this.validatePartialRefs();
     this.warnings.push(...this.validateRecords());
-    return new Report(this.db, this.errors, this.warnings);
+    return new Report(this.db, this.errors, this.warnings, this.infos);
   }
 
   private interpretAllSymbols () {
@@ -85,6 +88,7 @@ export default class ProgramInterpreter {
       if (result.hasValue(UNHANDLED)) continue;
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value) this.pushElement(symbol, value);
     }
@@ -123,6 +127,7 @@ export default class ProgramInterpreter {
     if (!result.hasValue(UNHANDLED)) {
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value) this.pushElement(use, value);
     }
@@ -181,6 +186,7 @@ export default class ProgramInterpreter {
       if (result.hasValue(UNHANDLED)) continue;
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value === undefined) continue;
       switch (meta.kind) {
@@ -316,6 +322,14 @@ export default class ProgramInterpreter {
       ...partialRefs,
     ], fkTableMap, this.filepath));
     return warnings;
+  }
+
+  private validatePartialRefs () {
+    const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
+      .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
+    for (const meta of partialMetas) {
+      this.infos.push(...validatePartialRef(this.compiler, meta));
+    }
   }
 
   private collectPartialRefs (fkTableMap: Map<InternedNodeSymbol, TableInfo>): Ref[] {

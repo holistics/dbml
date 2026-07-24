@@ -14,6 +14,7 @@ import {
   DATA_TYPE,
 } from '../constants';
 import { getOriginalText } from '../helpers';
+import { CARDINALITY_MANY, CARDINALITY_MAYBE } from '@dbml/parse';
 
 // We cannot use TABLE_CONSTRAINT_KIND and COLUMN_CONSTRAINT_KIND from '../constants' as their values are indistinguishable from each other
 // For example: TABLE_CONSTRAINT_KIND.UNIQUE === COLUMN_CONSTRAINT_KIND.UNIQUE
@@ -489,13 +490,13 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
           tableName: null,
           schemaName: null,
           fieldNames: [],
-          relation: '*',
+          relation: CARDINALITY_MANY,
         }),
         new Endpoint({
           tableName: refTableName,
           schemaName: refSchemaName,
           fieldNames: secondFieldNames,
-          relation: '1',
+          relation: CARDINALITY_MAYBE,
         }),
       ],
     });

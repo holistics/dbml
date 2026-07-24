@@ -7,7 +7,7 @@ import type Compiler from '@/compiler';
 import type { CanonicalName } from '@/compiler/queries/canonicalName';
 import { MetadataKind } from '@/core/types/symbol/metadata';
 import type { TableChecksMetadata, NodeMetadata, IndexesMetadata } from '@/core/types/symbol/metadata';
-import type { TokenPosition } from '@/core/types/schemaJson';
+import type { TokenPosition, Index } from '@/core/types/schemaJson';
 import { SettingName } from '@/core/types/keywords';
 import { extractQuotedStringToken } from '@/core/utils/expression';
 import { isValidPartialInjection } from '@/core/utils/validate';
@@ -23,7 +23,7 @@ import {
   UseDeclarationNode,
   type UseSpecifierNode,
   type WildcardNode,
-  type ElementDeclarationNode,
+  ElementDeclarationNode,
 } from '@/core/types/nodes';
 
 export enum SymbolKind {
@@ -492,6 +492,18 @@ export class ColumnSymbol extends NodeSymbol {
     return this;
   }
 
+  qualifiedName (compiler: Compiler): string {
+    const tableNode = this.declaration?.parentOfKind(ElementDeclarationNode);
+    if (tableNode) {
+      const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED) as TableSymbol | undefined;
+      if (tableSymbol) {
+        const { schema, name } = tableSymbol.interpretedName(compiler, this.filepath);
+        return schema ? `${schema}.${name}.${this.name}` : `${name}.${this.name}`;
+      }
+    }
+    return this.name ?? '';
+  }
+
   pk (compiler: Compiler): boolean {
     if (!this.declaration) return false;
     const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
@@ -499,19 +511,59 @@ export class ColumnSymbol extends NodeSymbol {
     return !!(s?.[SettingName.PK]?.length || s?.[SettingName.PrimaryKey]?.length);
   }
 
-  unique (compiler: Compiler): boolean {
+  isUniqueSet (compiler: Compiler): boolean {
     if (!this.declaration) return false;
     const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
 
     return !!s?.[SettingName.Unique]?.length;
   }
 
-  nullable (compiler: Compiler): boolean | undefined {
+  unique (compiler: Compiler): boolean {
+    if (!this.declaration) return false;
+    return this.isUniqueSet(compiler) || this.pk(compiler) || this.increment(compiler);
+  }
+
+  // Returns whether the column is nullable, considering all constraints:
+  // pk, increment -> not nullable
+  // [not null] -> not nullable
+  // [null] -> nullable
+  // unspecified -> nullable (SQL default)
+  nullable (compiler: Compiler): boolean {
+    if (!this.declaration) return true;
+    if (this.pk(compiler)) return false;
+    if (this.increment(compiler)) return false;
+    if (this.isInPkIndex(compiler)) return false;
+    const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
+    if (s?.[SettingName.NotNull]?.length) return false;
+    return true;
+  }
+
+  private isInPkIndex (compiler: Compiler): boolean {
+    if (!this.declaration || !this.name) return false;
+    const tableNode = this.declaration.parentOfKind(ElementDeclarationNode);
+    if (!tableNode) return false;
+    const tableSymbol = compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED);
+    if (!(tableSymbol instanceof TableSymbol)) return false;
+
+    for (const meta of tableSymbol.mergedIndexes(compiler)) {
+      const result = compiler.interpretMetadata(meta, this.filepath);
+      const indexes = result.getValue();
+      if (!indexes || !Array.isArray(indexes)) continue;
+      for (const idx of indexes as Index[]) {
+        if (!idx.pk) continue;
+        if (idx.columns.some((c) => c.value === this.name)) return true;
+      }
+    }
+    return false;
+  }
+
+  // Returns whether [not null] or [null] is explicitly set
+  // true if [not null], false if [null], undefined if unspecified
+  isNotNullSet (compiler: Compiler): boolean | undefined {
     if (!this.declaration) return undefined;
     const s = compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);
-
-    if (s?.[SettingName.NotNull]?.length) return false;
-    if (s?.[SettingName.Null]?.length) return true;
+    if (s?.[SettingName.NotNull]?.length) return true;
+    if (s?.[SettingName.Null]?.length) return false;
     return undefined;
   }
 

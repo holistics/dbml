@@ -4,16 +4,20 @@ import {
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
+import type { SyntaxToken } from '@/core/types/tokens';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
+  InfixExpressionNode,
   IdentifierStreamNode,
-  type ListExpressionNode,
+  ListExpressionNode,
   AttributeNode,
+  PrefixExpressionNode,
 } from '@/core/types/nodes';
 import type { Ref } from '@/core/types/schemaJson';
 import {
+  ColumnSymbol,
   RefMetadata,
   type Filepath,
 } from '@/core/types';
@@ -23,7 +27,8 @@ import {
   getTokenPosition,
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
-import { getMultiplicities } from '../utils';
+import { validateCardinality } from './constraint_fixes';
+import { getMultiplicities } from '@/core/types/relation';
 import { zip } from 'lodash-es';
 
 export class RefInterpreter {
@@ -47,7 +52,8 @@ export class RefInterpreter {
       ...this.interpretName(),
       ...this.interpretBody(),
     ];
-    return Report.create(this.ref as Ref, errors);
+    const { infos } = this.validateRefConstraints();
+    return Report.create(this.ref as Ref, errors, undefined, infos);
   }
 
   private interpretName (): CompileError[] {
@@ -152,5 +158,15 @@ export class RefInterpreter {
     }
 
     return [];
+  }
+
+  private validateRefConstraints (): { infos: CompileInfo[] } {
+    if (!this.metadata.cardinalities(this.compiler)) return { infos: [] };
+    return {
+      infos: [
+        ...validateCardinality(this.compiler, this.metadata, 'right'),
+        ...validateCardinality(this.compiler, this.metadata, 'left'),
+      ],
+    };
   }
 }

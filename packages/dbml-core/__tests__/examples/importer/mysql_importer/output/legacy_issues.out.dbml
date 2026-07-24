@@ -61,6 +61,6 @@ Table "example" {
   "id" varchar(255)
 }
 
-Ref "user_role_links_fk_1":"users"."id" < "user_role_links"."user_id"
+Ref "user_role_links_fk_1":"users"."id" <? "user_role_links"."user_id"
 
-Ref "user_role_links_fk_2":"user_roles"."id" < "user_role_links"."role_id"
+Ref "user_role_links_fk_2":"user_roles"."id" <? "user_role_links"."role_id"
