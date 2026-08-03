@@ -1,6 +1,4 @@
-import {
-  describe, expect, it,
-} from 'vitest';
+import { describe, expect, it } from 'vitest';
 import * as fc from 'fast-check';
 import {
   dbmlSchemaArbitrary,
@@ -14,9 +12,7 @@ import {
   tableWithZeroSettingsArbitrary,
   charSubstitutionArbitrary,
 } from '../utils/arbitraries';
-import {
-  interpret, analyze,
-} from '../utils';
+import { interpret, analyze } from '../utils';
 
 const FUZZ_CONFIG = {
   numRuns: 50,

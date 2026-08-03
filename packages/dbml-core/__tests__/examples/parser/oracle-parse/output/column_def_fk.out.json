@@ -863,14 +863,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -882,14 +882,14 @@
           "fieldNames": [
             "manager_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "employees",
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -901,14 +901,14 @@
           "fieldNames": [
             "customer_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -920,14 +920,14 @@
           "fieldNames": [
             "tracking_number"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "shipments",
           "fieldNames": [
             "tracking_number"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -939,14 +939,14 @@
           "fieldNames": [
             "customer_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -958,14 +958,14 @@
           "fieldNames": [
             "parent_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "complex_test",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -977,14 +977,14 @@
           "fieldNames": [
             "parent_code"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "complex_test",
           "fieldNames": [
             "code"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -996,14 +996,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1015,14 +1015,14 @@
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "suppliers",
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1034,14 +1034,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1053,14 +1053,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1072,14 +1072,14 @@
           "fieldNames": [
             "item_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "inventory",
           "fieldNames": [
             "item_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1091,14 +1091,14 @@
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "suppliers",
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1110,14 +1110,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1129,14 +1129,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1148,14 +1148,14 @@
           "fieldNames": [
             "item_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "inventory",
           "fieldNames": [
             "item_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1167,14 +1167,14 @@
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "suppliers",
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1186,14 +1186,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1205,14 +1205,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1224,14 +1224,14 @@
           "fieldNames": [
             "item_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "inventory",
           "fieldNames": [
             "item_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1243,14 +1243,14 @@
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "suppliers",
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1262,14 +1262,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1281,14 +1281,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1300,14 +1300,14 @@
           "fieldNames": [
             "item_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "inventory",
           "fieldNames": [
             "item_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1319,14 +1319,14 @@
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "suppliers",
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1338,14 +1338,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1357,14 +1357,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1376,14 +1376,14 @@
           "fieldNames": [
             "item_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "inventory",
           "fieldNames": [
             "item_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1395,14 +1395,14 @@
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "suppliers",
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1414,14 +1414,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1433,14 +1433,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1452,14 +1452,14 @@
           "fieldNames": [
             "col_number"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "test_datatypes",
           "fieldNames": [
             "col_number"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1471,14 +1471,14 @@
           "fieldNames": [
             "col_varchar2"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "test_datatypes",
           "fieldNames": [
             "col_varchar2"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1490,14 +1490,14 @@
           "fieldNames": [
             "manager_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "employees_self",
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1509,14 +1509,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1528,14 +1528,14 @@
           "fieldNames": [
             "item_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "inventory",
           "fieldNames": [
             "item_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1547,14 +1547,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1566,14 +1566,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1585,14 +1585,14 @@
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "suppliers",
           "fieldNames": [
             "supp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1604,14 +1604,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -1623,14 +1623,14 @@
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "customers",
           "fieldNames": [
             "cust_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     }

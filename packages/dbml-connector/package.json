@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/connector",
-  "version": "8.3.1",
+  "version": "9.1.1",
   "description": "This package was created to fetch the schema JSON from many kind of databases.",
   "author": "huy.phung.sw@gmail.com",
   "license": "MIT",
@@ -23,7 +23,8 @@
     "test:watch": "vitest watch",
     "test": "vitest run",
     "coverage": "vitest --coverage",
-    "lint": "eslint .",
+    "lint": "eslint $(git diff --relative --name-only --diff-filter=ACMRTUXB master -- . | grep -E '\\.ts$')",
+    "lint:all": "eslint .",
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {

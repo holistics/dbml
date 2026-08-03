@@ -1,4 +1,5 @@
 import { capitalize, get } from 'lodash-es';
+import { parseCardinality, makeCardinalityRequired } from '@dbml/parse';
 import {
   DEFAULT_SCHEMA_NAME, ENUM, NOTE, REF, TABLE, TABLE_GROUP,
 } from './config';
@@ -11,11 +12,28 @@ import StickyNote from './stickyNote';
 import Table from './table';
 import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
+import type {
+  RawDatabase, TableRecord, RawTableRecord, NormalizedModel,
+} from '../../types/model_structure/database';
+import type { Token } from '../../types/model_structure/element';
+import type { DiagramView } from '@dbml/parse';
 
 class Database extends Element {
-  /**
-    * @param {import('../../types/model_structure/database').RawDatabase} param0
-    */
+  dbState: DbState;
+  hasDefaultSchema: boolean;
+  schemas: Schema[];
+  notes: StickyNote[];
+  note: string | null;
+  noteToken: Token | null;
+  databaseType: string;
+  name: string;
+  records: TableRecord[];
+  tablePartials: TablePartial[];
+  diagramViews: DiagramView[];
+  aliases: any[];
+  injectedRawRefs: any[];
+  id!: number;
+
   constructor ({
     schemas = [],
     tables = [],
@@ -23,21 +41,20 @@ class Database extends Element {
     enums = [],
     refs = [],
     tableGroups = [],
-    project = {},
+    project = {} as any,
     aliases = [],
     records = [],
     tablePartials = [],
     diagramViews = [],
-  }) {
+  }: Partial<RawDatabase> & { aliases?: any[] } = {} as any) {
     super();
     this.dbState = new DbState();
     this.generateId();
     this.hasDefaultSchema = false;
-    /** @type {import('../../types/model_structure/schema').default[]} */
     this.schemas = [];
     this.notes = [];
-    this.note = project.note ? get(project, 'note.value', project.note) : null;
-    this.noteToken = project.note ? get(project, 'note.token', project.noteToken) : null;
+    this.note = project.note ? get(project, 'note.value', typeof project.note === 'string' ? project.note : null) : null;
+    this.noteToken = project.note ? get(project, 'note.token', (project as any).noteToken) : null;
     this.databaseType = project.database_type;
     this.name = project.name;
     this.token = project.token;
@@ -65,22 +82,22 @@ class Database extends Element {
     this.injectedRawRefs.forEach((rawRef) => {
       const schema = this.findOrCreateSchema(DEFAULT_SCHEMA_NAME);
       const ref = new Ref({ ...rawRef, schema });
-      if (schema.refs.some((r) => r.equals(ref))) return;
+      if (schema.refs.some((r) => r.equals(ref as any))) return;
       schema.pushRef(ref);
     });
   }
 
-  generateId () {
+  private generateId (): void {
     this.id = this.dbState.generateId('dbId');
   }
 
-  processNotes (rawNotes) {
+  private processNotes (rawNotes: any[]): void {
     rawNotes.forEach((note) => {
       this.pushNote(new StickyNote({ ...note, database: this }));
     });
   }
 
-  processRecords (rawRecords) {
+  private processRecords (rawRecords: RawTableRecord[]): void {
     rawRecords.forEach(({
       schemaName, tableName, columns, values, token,
     }) => {
@@ -95,42 +112,42 @@ class Database extends Element {
     });
   }
 
-  processTablePartials (rawTablePartials) {
+  private processTablePartials (rawTablePartials: any[]): void {
     rawTablePartials.forEach((rawTablePartial) => {
       this.tablePartials.push(new TablePartial({ ...rawTablePartial, dbState: this.dbState }));
     });
   }
 
-  pushNote (note) {
+  private pushNote (note: StickyNote): void {
     this.checkNote(note);
     this.notes.push(note);
   }
 
-  checkNote (note) {
+  private checkNote (note: StickyNote): void {
     if (this.notes.some((n) => n.name === note.name)) {
       note.error(`Notes ${note.name} existed`);
     }
   }
 
-  processSchemas (rawSchemas) {
+  private processSchemas (rawSchemas: any[]): void {
     rawSchemas.forEach((schema) => {
       this.pushSchema(new Schema({ ...schema, database: this }));
     });
   }
 
-  pushSchema (schema) {
+  private pushSchema (schema: Schema): void {
     this.checkSchema(schema);
     this.schemas.push(schema);
   }
 
-  checkSchema (schema) {
+  private checkSchema (schema: Schema): void {
     if (this.schemas.some((s) => s.name === schema.name)) {
       schema.error(`Schemas ${schema.name} existed`);
     }
   }
 
-  processSchemaElements (elements, elementType) {
-    let schema;
+  private processSchemaElements (elements: any[], elementType: string): void {
+    let schema: Schema;
 
     elements.forEach((element) => {
       if (element.schemaName) {
@@ -165,9 +182,9 @@ class Database extends Element {
     });
   }
 
-  linkRecordsToTables () {
+  private linkRecordsToTables (): void {
     // Build a map of [schemaName][tableName] -> table for O(1) lookup
-    const tableMap = {};
+    const tableMap: Record<string, Record<string, Table>> = {};
     this.schemas.forEach((schema) => {
       tableMap[schema.name] = {};
       schema.tables.forEach((table) => {
@@ -187,7 +204,7 @@ class Database extends Element {
     });
   }
 
-  findOrCreateSchema (schemaName) {
+  findOrCreateSchema (schemaName: string): Schema {
     let schema = this.schemas.find((s) => s.name === schemaName || s.alias === schemaName);
     // create new schema if schema not found
     if (!schema) {
@@ -195,8 +212,8 @@ class Database extends Element {
         name: schemaName,
         note: {
           value: schemaName === DEFAULT_SCHEMA_NAME ? `Default ${capitalize(DEFAULT_SCHEMA_NAME)} Schema` : null,
-        },
-        database: this,
+        } as any,
+        database: this as any,
       });
 
       this.pushSchema(schema);
@@ -205,7 +222,7 @@ class Database extends Element {
     return schema;
   }
 
-  findTableAlias (alias) {
+  findTableAlias (alias: string): Table | null {
     const sym = this.aliases.find((a) => a.name === alias);
     if (!sym || sym.kind !== 'table') return null;
 
@@ -215,11 +232,11 @@ class Database extends Element {
 
     const { tableName } = sym.value;
     const table = schema.tables.find((t) => t.name === tableName);
-    return table;
+    return table || null;
   }
 
-  findTable (schemaName, tableName) {
-    let table = null;
+  findTable (schemaName: string | null, tableName: string): Table | undefined {
+    let table: Table | null | undefined = null;
     if (!schemaName) {
       table = this.findTableAlias(tableName);
       if (table) return table;
@@ -232,15 +249,52 @@ class Database extends Element {
     return schema.findTable(tableName);
   }
 
-  findEnum (schemaName, name) {
+  findEnum (schemaName: string, name: string): Enum | undefined {
     const schema = this.schemas.find((s) => s.name === schemaName || s.alias === schemaName);
-    if (!schema) return null;
+    if (!schema) return undefined;
     const _enum = schema.enums.find((e) => e.name === name);
     return _enum;
   }
 
-  findTablePartial (name) {
+  findTablePartial (name: string): TablePartial | undefined {
     return this.tablePartials.find((tp) => tp.name === name);
+  }
+
+  // SQL importers just import everything as optional
+  // So we need to adjust the cardinality of those if they are in actuality required
+  // We only handle one-to-many/many-to-one/one-to-one here
+  adjustCardinalitiesFromColumns (): void {
+    this.schemas.forEach((schema) => {
+      schema.refs.forEach((ref) => {
+        const manyEndpoint = ref.endpoints.find((e: any) => parseCardinality(e.relation).max === '*');
+        const oneEndpoint = ref.endpoints.find((e: any) => parseCardinality(e.relation).max === 1);
+
+        // Many-to-many, no need to adjust
+        if (!oneEndpoint) return;
+
+        let sourceFkEndpoint: any;
+        let targetFkEndpoint: any;
+
+        // one-to-many/many-to-one
+        if (manyEndpoint) {
+          sourceFkEndpoint = manyEndpoint;
+          targetFkEndpoint = oneEndpoint;
+        } else {
+          // one-to-one: right endpoint is the FK source, left is the REFERENCES target
+          // (matches SQL exporter convention)
+          sourceFkEndpoint = ref.endpoints[1];
+          targetFkEndpoint = ref.endpoints[0];
+        }
+
+        if (!sourceFkEndpoint || !targetFkEndpoint) return; // not simple many-to-one or one-to-many
+
+        const isSourceNotNull = sourceFkEndpoint.fields.every((f: any) => f.not_null || f.pk || f.increment);
+
+        if (isSourceNotNull) {
+          targetFkEndpoint.relation = makeCardinalityRequired(targetFkEndpoint.relation);
+        }
+      });
+    });
   }
 
   export () {
@@ -249,7 +303,7 @@ class Database extends Element {
     };
   }
 
-  shallowExport () {
+  private shallowExport () {
     return {
       hasDefaultSchema: this.hasDefaultSchema,
       note: this.note,
@@ -258,7 +312,7 @@ class Database extends Element {
     };
   }
 
-  exportChild () {
+  private exportChild () {
     return {
       schemas: this.schemas.map((s) => s.export()),
       notes: this.notes.map((n) => n.export()),
@@ -266,15 +320,15 @@ class Database extends Element {
     };
   }
 
-  exportChildIds () {
+  private exportChildIds () {
     return {
       schemaIds: this.schemas.map((s) => s.id),
       noteIds: this.notes.map((n) => n.id),
     };
   }
 
-  normalize () {
-    const normalizedModel = {
+  normalize (): NormalizedModel {
+    const normalizedModel: NormalizedModel = {
       database: {
         [this.id]: {
           id: this.id,
@@ -296,11 +350,11 @@ class Database extends Element {
       fields: {},
       records: {},
       tablePartials: {},
-    };
+    } as any;
 
     this.schemas.forEach((schema) => schema.normalize(normalizedModel));
     this.notes.forEach((note) => note.normalize(normalizedModel));
-    this.records.forEach((record) => { normalizedModel.records[record.id] = { ...record }; });
+    this.records.forEach((record) => { (normalizedModel.records as any)[record.id] = { ...record }; });
     this.tablePartials.forEach((tablePartial) => tablePartial.normalize(normalizedModel));
     return normalizedModel;
   }

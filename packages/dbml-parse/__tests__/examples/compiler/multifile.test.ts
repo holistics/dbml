@@ -127,7 +127,7 @@ Table users {
     // sentinel must have been cleared on failure
     expect(() => {
       layout.setSource(fileA, 'Table users { id int }');
-  
+
       compiler.bindProject();
     }).not.toThrow();
   });

@@ -5,6 +5,7 @@ import TableGroup from './tableGroup';
 import Ref from './ref';
 import Database, { NormalizedModel } from './database';
 import DbState from './dbState';
+
 export interface RawSchema {
     name: string;
     alias?: string;
@@ -14,6 +15,7 @@ export interface RawSchema {
     enums?: Enum[];
     tableGroups?: TableGroup[];
     token?: Token;
+    noteToken?: Token | null;
     database: Database;
 }
 declare class Schema extends Element {

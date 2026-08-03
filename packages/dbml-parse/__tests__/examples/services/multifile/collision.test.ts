@@ -375,13 +375,13 @@ Table items {
       // File 1: types.dbml
       layout.setSource(
         new Filepath('/project/types.dbml'),
-        `Enum status { active, inactive }`,
+        'Enum status { active, inactive }',
       );
 
       // File 2: enums.dbml
       layout.setSource(
         new Filepath('/project/enums.dbml'),
-        `Enum priority { high, medium, low }`,
+        'Enum priority { high, medium, low }',
       );
 
       // File 3: models1.dbml - imports from types
@@ -532,12 +532,12 @@ Ref: Cart.item_id > Item.id`;
 
       layout.setSource(
         new Filepath('/project/auth.dbml'),
-        `Table User { id int }`,
+        'Table User { id int }',
       );
 
       layout.setSource(
         new Filepath('/project/products.dbml'),
-        `Table Product { id int }`,
+        'Table Product { id int }',
       );
 
       const source = `use { User } from './auth'

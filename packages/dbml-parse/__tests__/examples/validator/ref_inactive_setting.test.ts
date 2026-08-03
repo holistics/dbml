@@ -1,12 +1,6 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  CompileErrorCode,
-} from '@/core/types/errors';
-import {
-  analyze,
-} from '@tests/utils';
+import { describe, expect, test } from 'vitest';
+import { CompileErrorCode } from '@/core/types/errors';
+import { analyze } from '@tests/utils';
 
 describe('[example] ref inactive setting', () => {
   test('should accept ref with inactive setting', () => {

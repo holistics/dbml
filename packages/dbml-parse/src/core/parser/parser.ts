@@ -42,7 +42,7 @@ import {
 import Report from '@/core/types/report';
 import { SyntaxToken, SyntaxTokenKind, isOpToken } from '@/core/types/tokens';
 import {
-  isAsKeyword, isFromKeyword, isReuseKeyword, isUseKeyword,
+  isAsKeyword, isFromKeyword, isMetadataKeyword, isReuseKeyword, isUseKeyword,
 } from '../utils/tokens';
 
 // A class of errors that represent a parsing failure and contain the node that was partially parsed
@@ -419,9 +419,7 @@ export default class Parser {
       throw new PartialParsingError(e.token, buildNode(), e.handlerContext); // Let use specifier list handle this
     }
 
-    if (
-      this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)
-    ) {
+    if (this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)) {
       try {
         args.name = this.normalExpression();
       } catch (e) {
@@ -474,11 +472,11 @@ export default class Parser {
     }
   };
 
-  /* Parsing and synchronizing top-level ElementDeclarationNode */
-
+  /* Parsing and synchronizing top-level ElementDeclarationNode. */
   private elementDeclaration (): ElementDeclarationNode {
     const args: {
       type?: SyntaxToken;
+      targetKind?: SyntaxToken;
       name?: NormalExpressionNode;
       as?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -496,6 +494,19 @@ export default class Parser {
         throw e;
       }
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
+    }
+
+    // A `metadata` block carries a second identifier (the target kind) before the name.
+    if (isMetadataKeyword(args.type)) {
+      try {
+        this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
+        args.targetKind = this.previous();
+      } catch (e) {
+        if (!(e instanceof PartialParsingError)) {
+          throw e;
+        }
+        throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
+      }
     }
 
     if (!this.check(SyntaxTokenKind.COLON, SyntaxTokenKind.LBRACE, SyntaxTokenKind.LBRACKET)) {
@@ -834,7 +845,7 @@ export default class Parser {
       if (token.kind === SyntaxTokenKind.LPAREN) {
         const {
           left,
-        } = postfixBindingPower(token);
+        } = postfixBp(token);
         if ((left as number) < mbp) {
           break;
         }
@@ -888,7 +899,7 @@ export default class Parser {
         break;
       } else {
         const op = token;
-        const opPostfixPower = postfixBindingPower(op);
+        const opPostfixPower = postfixBp(op);
 
         if (opPostfixPower.left !== null) {
           if (opPostfixPower.left <= mbp) {
@@ -900,7 +911,7 @@ export default class Parser {
             op,
           });
         } else {
-          const opInfixPower = infixBindingPower(op);
+          const opInfixPower = infixBp(op);
           if (opInfixPower.left === null || opInfixPower.left <= mbp) {
             break;
           }
@@ -940,7 +951,7 @@ export default class Parser {
       } = {};
 
       args.op = this.peek();
-      const opPrefixPower = prefixBindingPower(args.op);
+      const opPrefixPower = prefixBp(args.op);
 
       if (opPrefixPower.right === null) {
         this.logError(
@@ -1505,139 +1516,103 @@ export default class Parser {
   }
 }
 
-const infixBindingPowerMap: {
-  [index: string]: { left: number;
-    right: number; } | undefined;
-} = {
-  '+': {
-    left: 9,
-    right: 10,
-  },
-  '-': {
-    left: 9,
-    right: 10,
-  },
-  '/': {
-    left: 11,
-    right: 12,
-  },
-  '%': {
-    left: 11,
-    right: 12,
-  },
-  '<': {
-    left: 7,
-    right: 8,
-  },
-  '<=': {
-    left: 7,
-    right: 8,
-  },
-  '>': {
-    left: 7,
-    right: 8,
-  },
-  '>=': {
-    left: 7,
-    right: 8,
-  },
-  '<>': {
-    left: 7,
-    right: 8,
-  },
-  '=': {
-    left: 2,
-    right: 3,
-  },
-  '==': {
-    left: 4,
-    right: 5,
-  },
-  '!=': {
-    left: 4,
-    right: 5,
-  },
-  '.': {
-    left: 16,
-    right: 17,
-  },
-};
-
-function infixBindingPower (
-  token: SyntaxToken,
-): { left: null;
-  right: null; } | { left: number;
-    right: number; } {
-  const power = infixBindingPowerMap[token.value];
-
-  return power || {
-    left: null,
-    right: null,
-  };
+// Pratt binding powers: higher binds tighter; right = left + 1 => left-associative.
+const enum Prec {
+  Assign = 2, // =
+  Equality = 4, // == !=
+  Comparison = 7, // < <= > >= <> and all optional-ref variants
+  Additive = 9, // + - and the `-` optional-ref variants
+  Multiplicity = 11, // / %
+  Postfix = 14, // (
+  Prefix = 15, // unary + - ! ~ and prefix ref ops
+  Member = 16, // .
 }
 
-const prefixBindingPowerMap: {
-  [index: string]: { left: null;
-    right: number; } | undefined;
-} = {
-  '+': {
-    left: null,
-    right: 15,
-  },
-  '-': {
-    left: null,
-    right: 15,
-  },
-  '<': {
-    left: null,
-    right: 15,
-  },
-  '>': {
-    left: null,
-    right: 15,
-  },
-  '<>': {
-    left: null,
-    right: 15,
-  },
-  '!': {
-    left: null,
-    right: 15,
-  },
-  '~': {
-    left: null,
-    right: 15,
-  },
+const infixLeftBp = (left: Prec) => ({ left, right: left + 1 });
+const prefixBpOf = (right: Prec) => ({ left: null, right });
+const postfixBpOf = (left: Prec) => ({ left, right: null });
+const NONE = { left: null, right: null };
+
+const infixBpMap: Record<string, { left: number; right: number }> = {
+  '.': infixLeftBp(Prec.Member),
+  '/': infixLeftBp(Prec.Multiplicity),
+  '%': infixLeftBp(Prec.Multiplicity),
+  '+': infixLeftBp(Prec.Additive),
+  '=': infixLeftBp(Prec.Assign),
+  '==': infixLeftBp(Prec.Equality),
+  '!=': infixLeftBp(Prec.Equality),
+
+  // one-to-one `-` and its optional-ref variants bind like `-` (additive)
+  '-': infixLeftBp(Prec.Additive),
+  '-?': infixLeftBp(Prec.Additive),
+  '?-': infixLeftBp(Prec.Additive),
+  '?-?': infixLeftBp(Prec.Additive),
+
+  // every other relationship op binds like a comparison
+  ...Object.fromEntries(
+    [
+      '<',
+      '<=',
+      '>',
+      '>=',
+      '<>',
+      '?>',
+      '>?',
+      '?<',
+      '<?',
+      '?>?',
+      '?<?',
+      '?<>',
+      '<>?',
+      '?<>?',
+    ]
+      .map((op) => [
+        op,
+        infixLeftBp(Prec.Comparison),
+      ]),
+  ),
 };
 
-function prefixBindingPower (token: SyntaxToken): { left: null;
-  right: null | number; } {
-  const power = prefixBindingPowerMap[token.value];
-
-  return power || {
-    left: null,
-    right: null,
-  };
+function infixBp (token: SyntaxToken): { left: null; right: null } | { left: number; right: number } {
+  return infixBpMap[token.value] ?? NONE;
 }
 
-const postfixBindingPowerMap: {
-  [index: string]: {
-    left: number;
-    right: null;
-  } | undefined;
-} = {
-  '(': {
-    left: 14,
-    right: null,
-  },
+const prefixBpMap: Record<string, { left: null; right: number }> = Object.fromEntries(
+  [
+    '+',
+    '-',
+    '<',
+    '>',
+    '<>',
+    '-?',
+    '?-',
+    '?-?',
+    '?>',
+    '>?',
+    '?<',
+    '<?',
+    '?>?',
+    '?<?',
+    '?<>',
+    '<>?',
+    '?<>?',
+    '!',
+    '~',
+  ]
+    .map((op) => [
+      op,
+      prefixBpOf(Prec.Prefix),
+    ]),
+);
+
+function prefixBp (token: SyntaxToken): { left: null; right: null | number } {
+  return prefixBpMap[token.value] ?? NONE;
+}
+
+const postfixBpMap: Record<string, { left: number; right: null }> = {
+  '(': postfixBpOf(Prec.Postfix),
 };
 
-function postfixBindingPower (token: SyntaxToken): { left: null | number;
-  right: null; } {
-  const power = postfixBindingPowerMap[token.value];
-
-  return power || {
-    left: null,
-    right: null,
-  };
+function postfixBp (token: SyntaxToken): { left: null | number; right: null } {
+  return postfixBpMap[token.value] ?? NONE;
 }

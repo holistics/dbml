@@ -1,9 +1,5 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  interpret, analyze,
-} from '@tests/utils';
+import { describe, expect, test } from 'vitest';
+import { interpret, analyze } from '@tests/utils';
 
 describe('[example] interpreter', () => {
   describe('table interpretation', () => {

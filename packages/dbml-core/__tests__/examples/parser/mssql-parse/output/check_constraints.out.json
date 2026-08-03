@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [
     {
       "name": "products",
@@ -6,14 +7,16 @@
         {
           "name": "id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "price",
           "type": {
-            "type_name": "decimal(10,4)"
+            "type_name": "decimal(10,4)",
+            "schemaName": null
           },
           "checks": [
             {
@@ -24,7 +27,8 @@
         {
           "name": "quantity",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "checks": [
             {
@@ -35,7 +39,8 @@
         {
           "name": "discount",
           "type": {
-            "type_name": "decimal(5,2)"
+            "type_name": "decimal(5,2)",
+            "schemaName": null
           },
           "checks": [
             {
@@ -46,7 +51,8 @@
         {
           "name": "status",
           "type": {
-            "type_name": "varchar(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null
           },
           "checks": [
             {
@@ -54,7 +60,9 @@
             }
           ]
         }
-      ]
+      ],
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "orders",
@@ -62,29 +70,34 @@
         {
           "name": "order_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "order_date",
           "type": {
-            "type_name": "datetime"
+            "type_name": "datetime",
+            "schemaName": null
           }
         },
         {
           "name": "delivery_date",
           "type": {
-            "type_name": "datetime"
+            "type_name": "datetime",
+            "schemaName": null
           }
         },
         {
           "name": "total",
           "type": {
-            "type_name": "decimal(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null
           }
         }
       ],
+      "indexes": [],
       "checks": [
         {
           "expression": "[delivery_date] > [order_date]"
@@ -100,29 +113,34 @@
         {
           "name": "emp_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "age",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           }
         },
         {
           "name": "salary",
           "type": {
-            "type_name": "decimal(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null
           }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null
           }
         }
       ],
+      "indexes": [],
       "checks": [
         {
           "expression": "[age] >= 18 AND [age] <= 65",
@@ -140,14 +158,16 @@
         {
           "name": "item_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "stock",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "checks": [
             {
@@ -158,7 +178,9 @@
             }
           ]
         }
-      ]
+      ],
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "users",
@@ -166,20 +188,23 @@
         {
           "name": "user_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "username",
           "type": {
-            "type_name": "varchar(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null
           }
         },
         {
           "name": "role",
           "type": {
-            "type_name": "varchar(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null
           },
           "checks": [
             {
@@ -187,7 +212,9 @@
             }
           ]
         }
-      ]
+      ],
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "accounts",
@@ -195,17 +222,20 @@
         {
           "name": "account_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "balance",
           "type": {
-            "type_name": "decimal(15,2)"
+            "type_name": "decimal(15,2)",
+            "schemaName": null
           }
         }
       ],
+      "indexes": [],
       "checks": [
         {
           "expression": "[balance] >= 0",
@@ -222,29 +252,34 @@
         {
           "name": "txn_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "amount",
           "type": {
-            "type_name": "decimal(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null
           }
         },
         {
           "name": "fee",
           "type": {
-            "type_name": "decimal(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null
           }
         },
         {
           "name": "type",
           "type": {
-            "type_name": "varchar(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null
           }
         }
       ],
+      "indexes": [],
       "checks": [
         {
           "expression": "[amount] + [fee] > 0"
@@ -260,17 +295,20 @@
         {
           "name": "setting_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "[value]",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           }
         }
       ],
+      "indexes": [],
       "checks": [
         {
           "expression": "[value] = 0 OR [value] = 1 OR [value] = -1"
@@ -283,14 +321,16 @@
         {
           "name": "contact_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "email",
           "type": {
-            "type_name": "varchar(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null
           },
           "checks": [
             {
@@ -301,7 +341,8 @@
         {
           "name": "phone",
           "type": {
-            "type_name": "varchar(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null
           },
           "checks": [
             {
@@ -309,7 +350,9 @@
             }
           ]
         }
-      ]
+      ],
+      "indexes": [],
+      "checks": []
     },
     {
       "name": "ranges",
@@ -317,23 +360,27 @@
         {
           "name": "range_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "min_val",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           }
         },
         {
           "name": "max_val",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           }
         }
       ],
+      "indexes": [],
       "checks": [
         {
           "expression": "([min_val] >= 0) AND ([max_val] <= 100) AND ([min_val] < [max_val])"
@@ -346,23 +393,27 @@
         {
           "name": "shipment_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "priority",
           "type": {
-            "type_name": "varchar(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null
           }
         },
         {
           "name": "carrier",
           "type": {
-            "type_name": "varchar(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null
           }
         }
       ],
+      "indexes": [],
       "checks": [
         {
           "expression": "[priority] IN ('low', 'medium', 'high', 'urgent')"
@@ -375,28 +426,38 @@
         {
           "name": "workflow_id",
           "type": {
-            "type_name": "int"
+            "type_name": "int",
+            "schemaName": null
           },
           "pk": true
         },
         {
           "name": "status",
           "type": {
-            "type_name": "varchar(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null
           }
         },
         {
           "name": "category",
           "type": {
-            "type_name": "varchar(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null
           }
         }
       ],
+      "indexes": [],
       "checks": [
         {
           "expression": "[status] IN ('draft', 'pending') AND [status] IN ('active', 'inactive')"
         }
       ]
     }
-  ]
+  ],
+  "refs": [],
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }

@@ -1,12 +1,12 @@
 import type Compiler from '@/compiler';
 import { getMemberChain } from '@/core/parser/utils';
-import type { RelationCardinality } from '@/core/types';
+import type { Filepath, ProgramSymbol } from '@/core/types';
 import { UNHANDLED } from '@/core/types/module';
 import {
   InfixExpressionNode, PostfixExpressionNode, PrefixExpressionNode, PrimaryExpressionNode, SyntaxNode, TupleExpressionNode, VariableNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
-import type { NodeSymbol } from '@/core/types/symbol';
+import { SchemaSymbol, type NodeSymbol } from '@/core/types/symbol';
 import { destructureComplexVariableTuple } from '@/core/utils/expression';
 import { isAccessExpression, isExpressionAVariableNode } from '../utils/validate';
 
@@ -41,6 +41,11 @@ export function getNodeMemberSymbols (compiler: Compiler, node: SyntaxNode): Rep
           ...report.getWarnings(),
           ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getWarnings()),
           ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getWarnings()),
+        ],
+        [
+          ...report.getInfos(),
+          ...(symbol.hasValue(UNHANDLED) ? [] : symbol.getInfos()),
+          ...(nestedSymbols.hasValue(UNHANDLED) ? [] : nestedSymbols.getInfos()),
         ],
       );
     },
@@ -111,31 +116,14 @@ export function nodeRefereeOfLeftExpression (compiler: Compiler, node: SyntaxNod
   return compiler.nodeReferee(leftExpr).getFiltered(UNHANDLED) ?? undefined;
 }
 
-export function getMultiplicities (
-  op: string,
-): [RelationCardinality, RelationCardinality] | undefined {
-  switch (op) {
-    case '<':
-      return [
-        '1',
-        '*',
-      ];
-    case '<>':
-      return [
-        '*',
-        '*',
-      ];
-    case '>':
-      return [
-        '*',
-        '1',
-      ];
-    case '-':
-      return [
-        '1',
-        '1',
-      ];
-    default:
-      return undefined;
-  }
+export function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): NodeSymbol | undefined {
+  const membersList = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
+  if (!membersList) return undefined;
+
+  return membersList.find((m: NodeSymbol) => m instanceof SchemaSymbol && m.isPublicSchema());
+}
+
+export function getProgramSymbol (compiler: Compiler, filepath: Filepath): ProgramSymbol | undefined {
+  const programNode = compiler.parseFile(filepath).getValue().ast;
+  return compiler.nodeSymbol(programNode).getFiltered(UNHANDLED) as ProgramSymbol;
 }

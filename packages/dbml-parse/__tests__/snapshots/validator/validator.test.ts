@@ -1,19 +1,9 @@
-import {
-  DEFAULT_ENTRY,
-} from '@/constants';
-import {
-  readFileSync,
-} from 'node:fs';
+import { DEFAULT_ENTRY } from '@/constants';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import {
-  describe, expect, it,
-} from 'vitest';
-import type {
-  ProgramNode,
-} from '@/core/types/nodes';
-import {
-  scanTestNames, toSnapshot,
-} from '@tests/utils';
+import { describe, expect, it } from 'vitest';
+import type { ProgramNode } from '@/core/types/nodes';
+import { scanTestNames, toSnapshot } from '@tests/utils';
 import Compiler from '@/compiler';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 

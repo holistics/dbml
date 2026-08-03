@@ -1,12 +1,6 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  interpret,
-} from '@tests/utils';
-import {
-  CompileErrorCode,
-} from '@/index';
+import { describe, expect, test } from 'vitest';
+import { interpret } from '@tests/utils';
+import { CompileErrorCode } from '@/index';
 
 describe('[example - record] composite unique constraints', () => {
   test('should accept valid unique composite values', () => {
@@ -459,5 +453,25 @@ describe('[example - record] simple unique constraints', () => {
     expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
     expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
+  });
+
+  test('should not crash when unique column with default is omitted and records have duplicates', () => {
+    const source = `
+      Table items {
+        code int [unique, default: 0]
+        name varchar
+      }
+      records items(name) {
+        "Alice"
+        "Bob"
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+
+    // code defaults to 0 for both rows, so both have UNIQUE code = 0 - duplicates
+    expect(warnings.length).toBeGreaterThanOrEqual(1);
+    expect(warnings[0].diagnostic).toContain('Duplicate UNIQUE');
+    expect(warnings[0].diagnostic).toContain('= 0');
   });
 });

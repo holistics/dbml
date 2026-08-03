@@ -35,6 +35,8 @@ export function containerScopeKind (this: Compiler, filepath: Filepath, offset: 
       return ScopeKind.RECORDS;
     case 'diagramview':
       return ScopeKind.DIAGRAMVIEW;
+    case 'metadata':
+      return ScopeKind.METADATA;
     default:
       return ScopeKind.CUSTOM;
   }

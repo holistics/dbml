@@ -1,17 +1,9 @@
-import {
-  describe, expect, it,
-} from 'vitest';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import {
-  createMockTextModel, createPosition,
-} from '@tests/utils';
-import {
-  Filepath,
-} from '@/core/types/filepath';
-import {
-  CompletionItemKind,
-} from '@/services/types';
+import { createMockTextModel, createPosition } from '@tests/utils';
+import { Filepath } from '@/core/types/filepath';
+import { CompletionItemKind } from '@/services/types';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 
 function setupMultiFile (files: Record<string, string>) {
@@ -70,7 +62,6 @@ describe('[example] CompletionItemProvider - use declaration', () => {
       expect(labels).toContain('note');
       expect(labels).toContain('schema');
     });
-
   });
 
   describe('element name suggestions', () => {

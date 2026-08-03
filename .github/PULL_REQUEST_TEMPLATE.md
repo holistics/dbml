@@ -17,6 +17,7 @@
 Please check directly on the box once each of these are done
 
 - [ ] Documentation (if necessary)
+- [ ] Updated `dbml-homepage/static/llms.txt` (if docs/features changed)
 - [ ] Lint Checks Passed
 - [ ] Unit Tests Passed
 - [ ] Coverage Tests Passed

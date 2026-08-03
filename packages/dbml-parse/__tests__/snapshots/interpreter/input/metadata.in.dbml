@@ -1,0 +1,53 @@
+Table users {
+  id int [pk]
+  name varchar
+}
+
+Table public.posts {
+  id int [pk]
+  user_id int
+}
+
+Table sales.orders {
+  id int [pk]
+}
+
+Note overview {
+  'a top-level note'
+}
+
+TableGroup g1 {
+  users
+  posts
+}
+
+Metadata Table public.users {
+  owner: 'scott'
+  note: 'scott is the owner'
+}
+
+Metadata Table public.users {
+  note: 'this will override'
+  color: #aaa
+}
+
+Metadata Column public.users.id {
+  pii: 'true'
+  masking: 'partial'
+}
+
+Metadata TableGroup g1 {
+  team: 'data'
+}
+
+Metadata Note overview {
+  author: 'docs'
+}
+
+Metadata Table public.posts {
+  note: '''
+      # Heading 1
+          code block
+      # Heading 2
+  '''
+}

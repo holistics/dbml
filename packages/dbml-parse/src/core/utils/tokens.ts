@@ -20,6 +20,11 @@ export function isUseKeyword (
   return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'use';
 }
 
+// Check if a token is the `metadata` keyword (case-insensitive)
+export function isMetadataKeyword (token?: SyntaxToken): token is SyntaxToken & { kind: SyntaxTokenKind.IDENTIFIER } {
+  return token?.kind === SyntaxTokenKind.IDENTIFIER && token.value.toLowerCase() === 'metadata';
+}
+
 // Check if a token is the `from` keyword (case-insensitive)
 export function isFromKeyword (
   token?: SyntaxToken,

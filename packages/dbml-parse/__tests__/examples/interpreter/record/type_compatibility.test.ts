@@ -1,15 +1,7 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  interpret,
-} from '@tests/utils';
-import {
-  CompileErrorCode,
-} from '@/index';
-import {
-  DateTime,
-} from 'luxon';
+import { describe, expect, test } from 'vitest';
+import { interpret } from '@tests/utils';
+import { CompileErrorCode } from '@/index';
+import { DateTime } from 'luxon';
 
 describe('[example - record] type compatibility validation', () => {
   describe('boolean type validation', () => {

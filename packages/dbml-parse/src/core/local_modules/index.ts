@@ -10,6 +10,7 @@ import { diagramViewModule } from './diagramView';
 import { enumModule } from './enum';
 import { indexesModule } from './indexes';
 import { noteModule } from './note';
+import { metadataModule } from './metadata';
 import { programModule } from './program';
 import { projectModule } from './project';
 import { recordsModule } from './records';
@@ -32,6 +33,7 @@ export const modules: LocalModule[] = [
   tableGroupModule,
   tablePartialModule,
   noteModule,
+  metadataModule,
   diagramViewModule,
   programModule,
   useModule,

@@ -1,4 +1,54 @@
 {
+  "infos": [
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'Users.id' is nullable but operator '>' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@id@[L1:C4, L1:C14]",
+          "snippet": "id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'Users.referrer_id' should be unique or primary key for operator '>'",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<function-application>@referrer_id@[L2:C4, L2:C23]",
+          "snippet": "referrer_id integer"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'Users.id' is nullable but operator '>' requires it to be NOT NULL",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L6:C4, L6:C12]",
+          "snippet": "Users.id"
+        }
+      }
+    },
+    {
+      "code": "INVALID_REF_RELATIONSHIP",
+      "diagnostic": "Column 'Users.referrer_id' should be unique or primary key for operator '>'",
+      "filepath": "/main.dbml",
+      "level": "info",
+      "node": {
+        "context": {
+          "id": "node@<infix-expression>@@[L6:C15, L6:C32]",
+          "snippet": "Users.referrer_id"
+        }
+      }
+    }
+  ],
   "nodeReferees": [
     {
       "context": {

@@ -1,15 +1,9 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  SyntaxTokenKind, isTriviaToken,
-} from '@/core/types/tokens';
+import { describe, expect, test } from 'vitest';
+import { SyntaxTokenKind, isTriviaToken } from '@/core/types/tokens';
 import { CompileErrorCode } from '@/core/types/errors';
 import { SyntaxNodeKind, ElementDeclarationNode } from '@/core/types/nodes';
 import { WildcardNode } from '@/core/types/nodes';
-import {
-  lex, parse, analyze,
-} from '@tests/utils';
+import { lex, parse, analyze } from '@tests/utils';
 import { isWildcardExpression } from '@/core/utils/validate';
 
 // Helper to get non-trivia, non-EOF tokens

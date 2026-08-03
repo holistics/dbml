@@ -52,7 +52,6 @@ Table jobs {
   });
 });
 
-
 describe('[example] multifile interpreter - enum alias', () => {
   // types.dbml:  Enum job_status { pending running done }
   // main.dbml:   use { enum job_status as Status } from './types.dbml'
@@ -102,7 +101,6 @@ Table jobs {
   });
 });
 
-
 describe('[example] multifile interpreter - tablegroup pulls tables that reference enums', () => {
   // base.dbml defines an enum, tables using it, and a tablegroup.
   // consumer imports the tablegroup. The enum should also appear in schema
@@ -145,7 +143,6 @@ use { tablegroup user_group } from './base.dbml'
     expect(db.enums.find((e) => e.name === 'status')).toBeUndefined();
   });
 });
-
 
 describe('[stress] enum imported alongside table that uses it', () => {
   const { compiler } = setupCompiler({

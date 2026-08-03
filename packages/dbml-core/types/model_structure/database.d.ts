@@ -18,6 +18,7 @@ export interface Project {
     note: RawNote;
     database_type: string;
     name: string;
+    token: TokenPosition;
 }
 
 export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;

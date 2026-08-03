@@ -14,6 +14,7 @@ export enum ElementKind {
   DiagramViewNotes = 'notes',
   DiagramViewTableGroups = 'tablegroups',
   DiagramViewSchemas = 'schemas',
+  Metadata = 'metadata',
 }
 
 export enum SettingName {

@@ -1,9 +1,5 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  interpret,
-} from '@tests/utils';
+import { describe, expect, test } from 'vitest';
+import { interpret } from '@tests/utils';
 
 describe('[example] ref inactive setting', () => {
   test('should set inactive to true when inactive setting present', () => {

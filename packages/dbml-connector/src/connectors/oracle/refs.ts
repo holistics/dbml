@@ -51,14 +51,14 @@ export async function generateRawRefs (client: Connection): Promise<Ref[]> {
       tableName: child_table,
       schemaName: '',
       fieldNames: child_columns.split(LIST_SEPARATOR),
-      relation: '*',
+      relation: '0..*',
     };
 
     const ep2: RefEndpoint = {
       tableName: parent_table,
       schemaName: '',
       fieldNames: parent_columns.split(LIST_SEPARATOR),
-      relation: '1',
+      relation: '0..1',
     };
 
     refs.push({

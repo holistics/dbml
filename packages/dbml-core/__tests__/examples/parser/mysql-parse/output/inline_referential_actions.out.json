@@ -240,14 +240,14 @@
           "fieldNames": [
             "country_code"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "countries",
           "fieldNames": [
             "code"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -260,14 +260,14 @@
           "fieldNames": [
             "user_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "users",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -280,14 +280,14 @@
           "fieldNames": [
             "order_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "orders",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -299,14 +299,14 @@
           "fieldNames": [
             "product_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "products",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     }

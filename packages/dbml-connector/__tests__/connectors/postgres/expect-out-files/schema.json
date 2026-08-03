@@ -1344,7 +1344,7 @@
             "authorid",
             "nationalityid"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "authors",
@@ -1353,7 +1353,7 @@
             "authorid",
             "nationalityid"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "CASCADE",
@@ -1368,7 +1368,7 @@
           "fieldNames": [
             "order_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "orders",
@@ -1376,7 +1376,7 @@
           "fieldNames": [
             "order_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "CASCADE",
@@ -1391,7 +1391,7 @@
           "fieldNames": [
             "product_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "products",
@@ -1399,7 +1399,7 @@
           "fieldNames": [
             "product_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "CASCADE",
@@ -1414,7 +1414,7 @@
           "fieldNames": [
             "user_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "users",
@@ -1422,7 +1422,7 @@
           "fieldNames": [
             "user_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
       "onDelete": "CASCADE",

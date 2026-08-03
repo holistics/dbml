@@ -191,10 +191,10 @@ Table "users" {
   }
 }
 
-Ref "fk_test_composite":"composite_key_2".("id2_1", "id2_2") < "composite_key_1".("id1_1", "id1_2")
+Ref "fk_test_composite":"composite_key_2".("id2_1", "id2_2") <? "composite_key_1".("id1_1", "id1_2")
 
-Ref "fk_detail_items_orders":"orders"."order_id" < "order_items"."order_id" [delete: cascade]
+Ref "fk_detail_items_orders":"orders"."order_id" <? "order_items"."order_id" [delete: cascade]
 
-Ref "fk_detail_items_products":"products"."id" < "order_items"."product_id"
+Ref "fk_detail_items_products":"products"."id" <? "order_items"."product_id"
 
-Ref "fk_order_user":"users"."user_id" < "orders"."user_id" [delete: set null]
+Ref "fk_order_user":"users"."user_id" ?<? "orders"."user_id" [delete: set null]

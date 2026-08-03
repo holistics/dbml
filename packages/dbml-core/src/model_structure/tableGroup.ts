@@ -1,45 +1,60 @@
 import { get } from 'lodash-es';
 import Element from './element';
 import { shouldPrintSchema } from './utils';
+import type { Token, Color } from '../../types/model_structure/element';
+import type { NormalizedModel } from '../../types/model_structure/database';
+import type SchemaType from '../../types/model_structure/schema';
+import type TableType from '../../types/model_structure/table';
+import type DbStateType from '../../types/model_structure/dbState';
+import type { CustomMetadata } from '@dbml/parse';
+
+interface RawTableGroup {
+  name: string;
+  token: Token;
+  tables?: any[];
+  schema?: any;
+  note?: any;
+  color?: Color;
+  noteToken?: Token | null;
+  metadata?: CustomMetadata;
+}
 
 class TableGroup extends Element {
-  /**
-   * @param {import('../../types/model_structure/tableGroup').RawTableGroup} param0
-   */
+  declare id: number;
+  declare error: (_message: string) => never;
+  name: string;
+  tables: TableType[];
+  schema: SchemaType;
+  dbState: DbStateType;
+  note: string | null;
+  noteToken: Token | null;
+  color: Color;
+  metadata: CustomMetadata;
+
   constructor ({
-    name, token, tables = [], schema = {}, note, color, noteToken = null,
-  }) {
+    name, token, tables = [], schema = {} as any, note, color, noteToken = null, metadata = {},
+  }: RawTableGroup) {
     super(token);
-    /** @type {string} */
+    this.metadata = metadata;
     this.name = name;
-    /** @type {import('../../types/model_structure/table').default[]} */
     this.tables = [];
-    /** @type {import('../../types/model_structure/schema').default} */
     this.schema = schema;
-    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.schema.dbState;
-    /** @type {string} */
     this.note = note ? get(note, 'value', note) : null;
-    /** @type {import('../../types/model_structure/element').Token} */
     this.noteToken = note ? get(note, 'token', noteToken) : null;
-    /** @type {string} */
-    this.color = color;
+    this.color = color!;
     this.generateId();
 
     this.processTables(tables);
   }
 
   generateId () {
-    /** @type {number} */
     this.id = this.dbState.generateId('tableGroupId');
   }
 
-  /**
-   * @param {any[]} rawTables
-   */
-  processTables (rawTables) {
+  processTables (rawTables: any[]) {
     rawTables.forEach((rawTable) => {
-      const table = this.schema.database.findTable(rawTable.schemaName, rawTable.name);
+      const table = (this.schema as any).database.findTable(rawTable.schemaName, rawTable.name);
       if (!table) {
         this.error(`Table ${rawTable.schemaName ? `"${rawTable.schemaName}".` : ''}${rawTable.name} don't exist`);
       }
@@ -47,19 +62,13 @@ class TableGroup extends Element {
     });
   }
 
-  /**
-   * @param {import('../../types/model_structure/table').default} table
-   */
-  pushTable (table) {
+  pushTable (table: TableType) {
     this.checkTable(table);
     this.tables.push(table);
-    table.group = this;
+    (table as any).group = this;
   }
 
-  /**
-   * @param {import('../../types/model_structure/table').default} table
-   */
-  checkTable (table) {
+  checkTable (table: TableType) {
     if (this.tables.some((t) => t.id === table.id)) {
       this.error(`Table ${shouldPrintSchema(table.schema) ? `"${table.schema.name}".` : ''}.${table.name} is already in the group`);
     }
@@ -103,13 +112,11 @@ class TableGroup extends Element {
       name: this.name,
       note: this.note,
       color: this.color,
+      metadata: this.metadata,
     };
   }
 
-  /**
-   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
-   */
-  normalize (model) {
+  normalize (model: NormalizedModel) {
     model.tableGroups[this.id] = {
       id: this.id,
       ...this.shallowExport(),

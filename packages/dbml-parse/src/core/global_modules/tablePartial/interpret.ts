@@ -1,4 +1,4 @@
-import { head, last, partition } from 'lodash-es';
+import { head, partition } from 'lodash-es';
 import Compiler from '@/compiler/index';
 import { CompileError } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -19,12 +19,14 @@ import type { Filepath } from '@/core/types/filepath';
 import type { ColumnSymbol, TablePartialSymbol } from '@/core/types/symbol/symbols';
 import { extractQuotedStringToken, extractVarNameFromPrimaryVariable } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
+import { RECOGNIZED_COLUMN_SETTINGS } from '@/core/global_modules/table/interpret';
 import {
   extractColor, extractElementName, getTokenPosition,
   normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
 import { UNHANDLED } from '@/core/types/module';
 import { PartialRefMetadata } from '@/core/types/symbol/metadata';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
 
 export class TablePartialInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -113,7 +115,7 @@ export class TablePartialInterpreter {
 
     const firstHeaderColor = head(settingMap[SettingName.HeaderColor]);
     this.tablePartial.headerColor = firstHeaderColor
-      ? extractColor(firstHeaderColor.value as any)
+      ? extractColor(firstHeaderColor.value)
       : undefined;
 
     const [
@@ -183,14 +185,15 @@ export class TablePartialInterpreter {
     errors.push(...typeReport.getErrors());
 
     column.pk = columnSymbol?.pk(this.compiler) || undefined;
-    column.unique = columnSymbol?.unique(this.compiler) || undefined;
-    column.increment = columnSymbol?.increment(this.compiler) || undefined;
-    const nullable = columnSymbol?.nullable(this.compiler);
-    column.not_null = nullable === undefined ? undefined : !nullable;
+    column.unique = columnSymbol?.isUniqueSet(this.compiler) || undefined;
+    column.increment = columnSymbol?.isIncrementSet(this.compiler) || undefined;
+    column.not_null = columnSymbol?.isNotNullSet(this.compiler);
     column.dbdefault = columnSymbol?.default(this.compiler);
     column.note = columnSymbol?.note(this.compiler);
 
     const settingMap = this.compiler.nodeSettings(field).getFiltered(UNHANDLED) ?? {};
+
+    column.metadata = extractCustomInlineMetadata(settingMap, RECOGNIZED_COLUMN_SETTINGS);
 
     const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
     const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);

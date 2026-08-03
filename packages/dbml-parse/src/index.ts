@@ -67,7 +67,6 @@ export {
   type Ref,
   type RefEndpointPair,
   type RefEndpoint,
-  type RelationCardinality,
   type Enum,
   type EnumField,
   type TableGroup,
@@ -85,7 +84,27 @@ export {
   type ElementRef,
   type FilterConfig,
   type DiagramView,
+  type CustomMetadata,
 } from '@/core/types/schemaJson';
+
+export {
+  type RelationCardinality,
+  type RelationshipOp,
+  getRelationshipOp,
+  getMultiplicities,
+  parseCardinality,
+  makeCardinalityRequired,
+  makeCardinalityOptional,
+  makeRelationshipRequired,
+  isEndpointOneSide,
+  isEndpointManySide,
+  isEndpointOptional,
+  isEndpointRequired,
+  CARDINALITY_ONE,
+  CARDINALITY_MAYBE,
+  CARDINALITY_SOME,
+  CARDINALITY_MANY,
+} from '@/core/types/relation';
 
 // DiagramView types
 export type {

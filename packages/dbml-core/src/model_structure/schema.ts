@@ -5,34 +5,38 @@ import Ref from './ref';
 import Table from './table';
 import TableGroup from './tableGroup';
 import { shouldPrintSchema } from './utils';
+import type { RawSchema } from '../../types/model_structure/schema';
+import type { Token } from '../../types/model_structure/element';
+import type Database from '../../types/model_structure/database';
+import type DbState from '../../types/model_structure/dbState';
+import type { NormalizedModel } from '../../types/model_structure/database';
 
 class Schema extends Element {
-  /**
-   * @param {import('../../types/model_structure/schema').RawSchema} param0
-   */
+  tables: Table[];
+  enums: Enum[];
+  tableGroups: TableGroup[];
+  refs: Ref[];
+  name: string;
+  note: string | null;
+  noteToken: Token | null;
+  alias: string;
+  database: Database;
+  dbState: DbState;
+  id!: number;
+
   constructor ({
-    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {}, noteToken = null,
-  } = {}) {
+    name, alias, note, tables = [], refs = [], enums = [], tableGroups = [], token, database = {} as Database, noteToken = null,
+  }: Partial<RawSchema> = {}) {
     super(token);
-    /** @type {import('../../types/model_structure/table').default[]} */
     this.tables = [];
-    /** @type {import('../../types/model_structure/enum').default[]} */
     this.enums = [];
-    /** @type {import('../../types/model_structure/tableGroup').default[]} */
     this.tableGroups = [];
-    /** @type {import('../../types/model_structure/ref').default[]} */
     this.refs = [];
-    /** @type {string} */
-    this.name = name;
-    /** @type {string} */
-    this.note = note ? get(note, 'value', note) : null;
-    /** @type {import('../../types/model_structure/element').Token} */
+    this.name = name!;
+    this.note = note ? get(note, 'value', typeof note === 'string' ? note : null) : null;
     this.noteToken = note ? get(note, 'token', noteToken) : null;
-    /** @type {string} */
-    this.alias = alias;
-    /** @type {import('../../types/model_structure/database').default} */
+    this.alias = alias!;
     this.database = database;
-    /** @type {import('../../types/model_structure/dbState').default} */
     this.dbState = this.database.dbState;
     this.generateId();
 
@@ -42,66 +46,43 @@ class Schema extends Element {
     this.processTableGroups(tableGroups);
   }
 
-  generateId () {
-    /** @type {number} */
+  private generateId (): void {
     this.id = this.dbState.generateId('schemaId');
   }
 
-  /**
-   * @param {any[]} rawTables
-   */
-  processTables (rawTables) {
+  private processTables (rawTables: any[]): void {
     rawTables.forEach((table) => {
       this.pushTable(new Table({ ...table, schema: this }));
     });
   }
 
-  /**
-   * @param {import('../../types/model_structure/table').default} table
-   */
-  pushTable (table) {
+  pushTable (table: Table): void {
     this.checkTable(table);
     this.tables.push(table);
   }
 
-  /**
-   * @param {import('../../types/model_structure/table').default} table
-   */
-  checkTable (table) {
+  private checkTable (table: Table): void {
     if (this.tables.some((t) => t.name === table.name)) {
       table.error(`Table ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${table.name}" existed`);
     }
   }
 
-  /**
-   * @param {string} tableName
-   * @returns {import('../../types/model_structure/table').default}
-   */
-  findTable (tableName) {
+  findTable (tableName: string): Table | undefined {
     return this.tables.find((t) => t.name === tableName);
   }
 
-  /**
-   * @param {any[]} rawEnums
-   */
-  processEnums (rawEnums) {
+  private processEnums (rawEnums: any[]): void {
     rawEnums.forEach((_enum) => {
       this.pushEnum(new Enum({ ..._enum, schema: this }));
     });
   }
 
-  /**
-   * @param {import('../../types/model_structure/enum').default} _enum
-   */
-  pushEnum (_enum) {
+  pushEnum (_enum: Enum): void {
     this.checkEnum(_enum);
     this.enums.push(_enum);
   }
 
-  /**
-   * @param {import('../../types/model_structure/enum').default} _enum
-   */
-  checkEnum (_enum) {
+  private checkEnum (_enum: Enum): void {
     if (this.enums.some((e) => e.name === _enum.name)) {
       _enum.error(`Enum ${shouldPrintSchema(this)
         ? `"${this.name}".`
@@ -109,73 +90,51 @@ class Schema extends Element {
     }
   }
 
-  /**
-   * @param {any[]} rawRefs
-   */
-  processRefs (rawRefs) {
+  private processRefs (rawRefs: any[]): void {
     rawRefs.forEach((ref) => {
       this.pushRef(new Ref({ ...ref, schema: this }));
     });
   }
 
-  /**
-   * @param {import('../../types/model_structure/ref').default} ref
-   */
-  pushRef (ref) {
+  pushRef (ref: Ref): void {
     this.checkRef(ref);
     this.refs.push(ref);
   }
 
-  /**
-   * @param {import('../../types/model_structure/ref').default} ref
-   */
-  checkRef (ref) {
-    if (this.refs.some((r) => r.equals(ref))) {
+  private checkRef (ref: Ref): void {
+    if (this.refs.some((r) => r.equals(ref as any))) {
       const endpoint1 = ref.endpoints[0];
-      const fieldList1 = endpoint1.fieldNames.map(JSON.stringify).join(', ');
+      const fieldList1 = endpoint1.fieldNames.map((s) => JSON.stringify(s)).join(', ');
       const endpoint2 = ref.endpoints[1];
-      const fieldList2 = endpoint2.fieldNames.map(JSON.stringify).join(', ');
+      const fieldList2 = endpoint2.fieldNames.map((s) => JSON.stringify(s)).join(', ');
       const ref1 = `"${endpoint1.schemaName ? `${endpoint1.schemaName}"."` : ''}${endpoint1.tableName}"(${fieldList1})`;
       const ref2 = `"${endpoint2.schemaName ? `${endpoint2.schemaName}"."` : ''}${endpoint2.tableName}"(${fieldList2})`;
       ref.error(`Reference with the same endpoints already exists: ${ref1} references ${ref2}`);
     }
   }
 
-  /**
-   * @param {any[]} rawTableGroups
-   */
-  processTableGroups (rawTableGroups) {
+  private processTableGroups (rawTableGroups: any[]): void {
     rawTableGroups.forEach((tableGroup) => {
       this.pushTableGroup(new TableGroup({ ...tableGroup, schema: this }));
     });
   }
 
-  /**
-   * @param {import('../../types/model_structure/tableGroup').default} tableGroup
-   */
-  pushTableGroup (tableGroup) {
+  pushTableGroup (tableGroup: TableGroup): void {
     this.checkTableGroup(tableGroup);
     this.tableGroups.push(tableGroup);
   }
 
-  /**
-   * @param {import('../../types/model_structure/tableGroup').default} tableGroup
-   */
-  checkTableGroup (tableGroup) {
+  private checkTableGroup (tableGroup: TableGroup): void {
     if (this.tableGroups.some((tg) => tg.name === tableGroup.name)) {
       tableGroup.error(`Table Group ${shouldPrintSchema(this) ? `"${this.name}".` : ''}"${tableGroup.name}" existed`);
     }
   }
 
-  /**
-   * @param {any} schema
-   * @returns {boolean}
-   */
-  checkSameId (schema) {
+  checkSameId (schema: Schema): boolean {
     return this.name === schema.name
       || this.alias === schema.name
       || this.name === schema.alias
-      || (this.alias && this.alias === schema.alias);
+      || (!!this.alias && this.alias === schema.alias);
   }
 
   export () {
@@ -185,7 +144,7 @@ class Schema extends Element {
     };
   }
 
-  exportChild () {
+  private exportChild () {
     return {
       tables: this.tables.map((t) => t.export()),
       enums: this.enums.map((e) => e.export()),
@@ -194,7 +153,7 @@ class Schema extends Element {
     };
   }
 
-  exportChildIds () {
+  private exportChildIds () {
     return {
       tableIds: this.tables.map((t) => t.id),
       enumIds: this.enums.map((e) => e.id),
@@ -203,13 +162,13 @@ class Schema extends Element {
     };
   }
 
-  exportParentIds () {
+  private exportParentIds () {
     return {
       databaseId: this.database.id,
     };
   }
 
-  shallowExport () {
+  private shallowExport () {
     return {
       name: this.name,
       note: this.note,
@@ -217,16 +176,13 @@ class Schema extends Element {
     };
   }
 
-  /**
-   * @param {import('../../types/model_structure/database').NormalizedDatabase} model
-   */
-  normalize (model) {
+  normalize (model: NormalizedModel): void {
     model.schemas[this.id] = {
       id: this.id,
       ...this.shallowExport(),
       ...this.exportChildIds(),
       ...this.exportParentIds(),
-    };
+    } as any;
 
     this.tables.forEach((table) => table.normalize(model));
     this.enums.forEach((_enum) => _enum.normalize(model));

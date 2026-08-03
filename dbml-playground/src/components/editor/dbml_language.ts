@@ -81,7 +81,9 @@ const DBML_THEME: monaco.editor.IStandaloneThemeData = {
       foreground: '0000ff',
     },
   ],
-  colors: {},
+  colors: {
+    'editorInfo.foreground': '#64A0DC80',
+  },
 };
 
 /**

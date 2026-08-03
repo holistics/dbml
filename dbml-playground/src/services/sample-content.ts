@@ -22,6 +22,15 @@ Enum post_status {
   draft
   published
   archived
+}
+
+Metadata Table users {
+  owner: 'data-team'
+  pii: 'true'
+}
+
+Metadata Column users.email {
+  masking: 'partial'
 }`;
 
 export interface SampleCategory {

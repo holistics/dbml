@@ -16,7 +16,7 @@ import {
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { NodeSymbol, SchemaSymbol, SymbolKind } from '@/core/types/symbol';
+import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
   extractStringFromIdentifierStream, getBody,
@@ -25,7 +25,7 @@ import {
 import { isAccessExpression, isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types';
 import type { GlobalModule } from '../types';
-import { nodeRefereeOfLeftExpression } from '../utils';
+import { getDefaultSchemaSymbol, nodeRefereeOfLeftExpression } from '../utils';
 import RefBinder from './bind';
 import { RefInterpreter } from './interpret';
 
@@ -105,15 +105,6 @@ export const refModule: GlobalModule = {
     return Report.create(PASS_THROUGH);
   },
 };
-
-function getDefaultSchemaSymbol (compiler: Compiler, globalSymbol: NodeSymbol): NodeSymbol | undefined {
-  const membersList = compiler.symbolMembers(globalSymbol).getFiltered(UNHANDLED);
-  if (!membersList) return undefined;
-
-  return membersList.find((m: NodeSymbol) =>
-    m instanceof SchemaSymbol && m.isPublicSchema(),
-  );
-}
 
 // Ref endpoint: table.column or schema.table.column
 // Always report errors, never ignore not found

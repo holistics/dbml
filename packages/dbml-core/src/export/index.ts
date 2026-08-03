@@ -6,8 +6,8 @@ import { JsonExporterOptions } from './JsonExporter';
 export type ExportFormat = 'dbml' | 'mysql' | 'postgres' | 'json' | 'mssql' | 'oracle';
 
 export type ExportOptions =
-  Partial<DbmlExporterOptions> &
-  Partial<JsonExporterOptions>;
+  Partial<DbmlExporterOptions>
+  & Partial<JsonExporterOptions>;
 
 /**
  * @deprecated Passing a boolean as the third argument is deprecated. Use `ExportOptions` instead.
@@ -29,7 +29,7 @@ function _export (
   format: ExportFormat,
   options: ExportOptions | boolean = {
     isNormalized: true,
-    includeRecords: true
+    includeRecords: true,
   },
 ): string {
   const resolvedFlags = normalizeExportOptions(options);

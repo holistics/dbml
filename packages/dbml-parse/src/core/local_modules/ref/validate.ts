@@ -9,7 +9,7 @@ import Report from '@/core/types/report';
 import { SyntaxTokenKind } from '@/core/types/tokens';
 import { destructureComplexVariableTuple, extractStringFromIdentifierStream } from '@/core/utils/expression';
 import {
-  Settings, aggregateSettingList, isSimpleName, isValidColor, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
+  Settings, aggregateSettingList, isSimpleName, isValidHexColor, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
 } from '@/core/utils/validate';
 
 export default class RefValidator {
@@ -235,7 +235,7 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
         }
         attrs.forEach((attr) => {
-          if (!isValidColor(attr.value)) {
+          if (!isValidHexColor(attr.value)) {
             errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
           }
         });

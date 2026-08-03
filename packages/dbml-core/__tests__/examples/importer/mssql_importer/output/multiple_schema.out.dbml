@@ -12,7 +12,7 @@ Table "products" {
   "name" nvarchar(255) [note: 'Product name']
 }
 
-Ref:"schemaA"."locations"."id" < "schemaA"."products"."lid"
+Ref:"schemaA"."locations"."id" ?<? "schemaA"."products"."lid"
 
 Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid2"
 

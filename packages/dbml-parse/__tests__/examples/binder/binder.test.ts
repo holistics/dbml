@@ -1,5 +1,7 @@
 import { describe, expect } from 'vitest';
-import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode, ProgramNode } from '@/core/types/nodes';
+import {
+  SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode, ProgramNode,
+} from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/core/types/module';
 import { CompileErrorCode } from '@/core/types/errors';
@@ -31,7 +33,7 @@ describe('[example] binder', () => {
       expect(findMember(compiler, tableSymbol!, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
 
       // Verify column symbol properties
-      const columnSymbol = findMember(compiler, tableSymbol!, SymbolKind.Column, 'id')
+      const columnSymbol = findMember(compiler, tableSymbol!, SymbolKind.Column, 'id');
       const tableBody = tableNode.body as BlockExpressionNode;
       const columnNode = tableBody.body[0];
       expect(columnSymbol!.declaration).toBe(columnNode);

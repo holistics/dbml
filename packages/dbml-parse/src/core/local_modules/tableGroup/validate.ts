@@ -1,15 +1,15 @@
 import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ElementKind } from '@/core/types/keywords';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
   BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import {
-  Settings, aggregateSettingList, isSimpleName, isValidColor, isExpressionAQuotedString,
-} from '@/core/utils/validate';
+import { Settings, aggregateSettingList, isSimpleName } from '@/core/utils/validate';
+import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class TableGroupValidator {
   private declarationNode: ElementDeclarationNode;
@@ -85,61 +85,7 @@ export default class TableGroupValidator {
   }
 
   private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    const aggReport = aggregateSettingList(settingList);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-
-    for (const [
-      name,
-      attrs,
-    ] of Object.entries(settingMap)) {
-      switch (name) {
-        case 'color':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_TABLE_SETTING,
-              '\'color\' can only appear once',
-              attr,
-            )));
-          }
-          attrs.forEach((attr) => {
-            if (!isValidColor(attr.value)) {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-                '\'color\' must be a color literal',
-                attr.value || attr.name!,
-              ));
-            }
-          });
-          break;
-        case 'note':
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(
-              CompileErrorCode.DUPLICATE_TABLE_SETTING,
-              '\'note\' can only appear once',
-              attr,
-            )));
-          }
-          attrs
-            .filter((attr) => !isExpressionAQuotedString(attr.value))
-            .forEach((attr) => {
-              errors.push(new CompileError(
-                CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-                '\'note\' must be a string literal',
-                attr.value || attr.name!,
-              ));
-            });
-          break;
-        default:
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.UNKNOWN_TABLE_SETTING,
-            `Unknown '${name}' setting`,
-            attr,
-          )));
-          break;
-      }
-    }
-    return errors;
+    return validateSettingList(settingList).getErrors();
   }
 
   validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
@@ -200,55 +146,38 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
   const settingMap = aggReport.getValue();
   const clean: Settings = {};
 
-  for (const [
-    name,
-    attrs,
-  ] of Object.entries(settingMap)) {
+  for (const [name, attrs] of Object.entries(settingMap)) {
     switch (name) {
-      case 'color':
+      case SettingName.Color:
+      case SettingName.Note: {
+        const specs = TABLEGROUP_METADATA_FIELDS[name as SettingName.Color | SettingName.Note]!;
         if (attrs.length > 1) {
           errors.push(...attrs.map((attr) => new CompileError(
             CompileErrorCode.DUPLICATE_TABLE_SETTING,
-            '\'color\' can only appear once',
+            `'${name}' can only appear once`,
             attr,
           )));
         }
         attrs.forEach((attr) => {
-          if (!isValidColor(attr.value)) {
+          if (!specs.isValidBuiltinFieldValue(attr.value)) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-              '\'color\' must be a color literal',
+              specs.message,
               attr.value || attr.name!,
             ));
           }
         });
         clean[name] = attrs;
         break;
-      case 'note':
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(
-            CompileErrorCode.DUPLICATE_TABLE_SETTING,
-            '\'note\' can only appear once',
-            attr,
-          )));
-        }
-        attrs
-          .filter((attr) => !isExpressionAQuotedString(attr.value))
-          .forEach((attr) => {
-            errors.push(new CompileError(
-              CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
-              '\'note\' must be a string literal',
-              attr.value || attr.name!,
-            ));
-          });
-        clean[name] = attrs;
-        break;
+      }
       default:
-        errors.push(...attrs.map((attr) => new CompileError(
-          CompileErrorCode.UNKNOWN_TABLE_SETTING,
-          `Unknown '${name}' setting`,
-          attr,
-        )));
+        // Any non-builtin key is free-form inline custom metadata..
+        errors.push(
+          ...validateCustomInlineMetadata(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
+            invalidValue: CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
+          }));
+        clean[name] = attrs;
         break;
     }
   }

@@ -1,6 +1,6 @@
 {
   "name": "@dbml/playground",
-  "version": "8.3.1",
+  "version": "9.1.1",
   "description": "Interactive playground for debugging and visualizing the DBML parser pipeline",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -20,20 +20,21 @@
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint $(git diff --relative --name-only --diff-filter=ACMRTUXB master -- . | grep -E '\\.(js|ts|vue)$')",
+    "lint:all": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@dbml/core": "^8.3.1",
-    "@dbml/parse": "^8.3.1",
+    "@dbml/core": "^9.1.1",
+    "@dbml/parse": "^9.1.1",
     "@phosphor-icons/vue": "^2.2.0",
     "floating-vue": "^5.2.2",
     "lodash-es": "^4.17.21",
     "monaco-editor": "^0.52.2",
     "monaco-vim": "^0.4.4",
     "pinia": "^2.3.1",
-    "vue": "^3.4.0"
+    "vue": "^3.5.31"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.5.0",
@@ -49,9 +50,9 @@
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.11",
     "typescript": "^5.7.3",
-    "vite": "^7.1.7",
+    "vite": "^8.0.16",
     "vue-eslint-parser": "^10.2.0",
-    "vue-tsc": "^3.0.1"
+    "vue-tsc": "^3.3.7"
   },
   "engines": {
     "node": ">=18"

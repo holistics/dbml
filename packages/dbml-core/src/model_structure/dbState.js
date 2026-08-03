@@ -33,7 +33,7 @@ export default class DbState {
   }
 
   /**
-   * @param {string} el
+   * @param {Exclude<keyof DbState, 'generateId'>} el
    * @returns {number}
    */
   generateId (el) {

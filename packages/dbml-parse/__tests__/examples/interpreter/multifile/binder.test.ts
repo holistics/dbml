@@ -48,7 +48,6 @@ TableGroup mixed {
   });
 });
 
-
 describe('[example] multifile binder - TableGroup with all-imported tables emits one error per entry', () => {
   // base.dbml:   Table a { id int } / Table b { id int }
   // main.dbml:   use { table a } + use { table b } from './base.dbml'

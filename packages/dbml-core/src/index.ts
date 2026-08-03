@@ -44,7 +44,21 @@ export {
   dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,
   Filepath,
+  // Relationship cardinality constants and utilities
+  CARDINALITY_ONE,
+  CARDINALITY_MAYBE,
+  CARDINALITY_SOME,
+  CARDINALITY_MANY,
+  getMultiplicities,
+  getRelationshipOp,
+  isEndpointOneSide,
+  isEndpointManySide,
+  isEndpointRequired,
+  isEndpointOptional,
+  makeRelationshipRequired,
 } from '@dbml/parse';
+
+export { inferMultiplicitiesFromColumns } from './transform/relations';
 
 // Re-export types
 export type {
@@ -54,4 +68,6 @@ export type {
   DiagramViewSyncOperation,
   DiagramViewBlock,
   TextEdit,
+  RelationCardinality,
+  RelationshipOp,
 } from '@dbml/parse';

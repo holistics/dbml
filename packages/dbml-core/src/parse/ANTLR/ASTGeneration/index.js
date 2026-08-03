@@ -105,6 +105,4 @@ function parse (input, format) {
   return database;
 }
 
-export {
-  parse,
-};
+export { parse };

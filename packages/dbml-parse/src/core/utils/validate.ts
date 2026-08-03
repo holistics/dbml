@@ -1,4 +1,5 @@
-import { NUMERIC_LITERAL_PREFIX } from '@/constants';
+import { NONE_COLOR, NUMERIC_LITERAL_PREFIX } from '@/constants';
+import { RELATIONSHIP_OPS } from '@/core/types/relation';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   ArrayNode,
@@ -28,7 +29,7 @@ import {
   ElementKind,
   SettingName,
 } from '../types/keywords';
-import { ImportKind } from '../types/symbol';
+import { ImportKind, MetadataTargetKind } from '../types/symbol';
 import { isHexChar } from './chars';
 import {
   destructureComplexVariable, destructureComplexVariableTuple, destructureMemberAccessExpression,
@@ -85,10 +86,10 @@ export function isValidPartialInjection (
 }
 
 export function isRelationshipOp (op?: string): boolean {
-  return op === '-' || op === '<>' || op === '>' || op === '<';
+  return op !== undefined && (RELATIONSHIP_OPS as ReadonlyMap<string, unknown>).has(op);
 }
 
-export function isValidColor (value?: SyntaxNode): boolean {
+export function isValidHexColor (value?: SyntaxNode): value is PrimaryExpressionNode & { expression: LiteralNode & { literal: { kind: SyntaxTokenKind.COLOR_LITERAL } } } {
   if (
     !(value instanceof PrimaryExpressionNode)
     || !(value.expression instanceof LiteralNode)
@@ -115,6 +116,15 @@ export function isValidColor (value?: SyntaxNode): boolean {
   }
 
   return true;
+}
+
+// A color value is valid if it is a hex color literal OR the `none` keyword
+// (transparent). Mirrors how inline color settings accept `none`.
+export function isValidColorOrNone (value?: SyntaxNode): boolean {
+  if (isValidHexColor(value)) return true;
+
+  return isExpressionAnIdentifierNode(value)
+    && value.expression.variable.value.toLowerCase() === NONE_COLOR;
 }
 
 // Is the `value` a valid value for a column's `default` setting
@@ -233,6 +243,10 @@ export function isValidColumnType (type: SyntaxNode): boolean {
 
 export type Settings = Record<SettingName | string, AttributeNode[]>;
 
+export function isValidMetadataValue (value?: SyntaxNode): boolean {
+  return isExpressionAQuotedString(value) || isValidHexColor(value);
+}
+
 export function aggregateSettingList (settingList?: ListExpressionNode): Report<Settings> {
   const map: Settings = {};
   const errors: CompileError[] = [];
@@ -348,7 +362,7 @@ export function isDotDelimitedIdentifier (node?: SyntaxNode): node is DotDelimit
 }
 
 // Return whether `node` is an ElementDeclarationNode of kind `kind`
-export function isElementNode (node: SyntaxNode | undefined, kind: ElementKind): node is ElementDeclarationNode {
+export function isElementNode<T extends ElementKind> (node: SyntaxNode | undefined, kind: T): node is ElementDeclarationNode & { type: { value: T } } {
   return node instanceof ElementDeclarationNode && node.isKind(kind);
 }
 

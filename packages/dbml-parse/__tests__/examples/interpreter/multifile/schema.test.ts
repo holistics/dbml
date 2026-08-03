@@ -53,7 +53,6 @@ Table orders {
   });
 });
 
-
 describe('[example] multifile interpreter - alias-and-schema-strip', () => {
   // auth-tables.dbml: Table auth.users { id int [pk]; email varchar }
   // main.dbml:        use { table auth.users as u } from './auth-tables.dbml'
@@ -104,7 +103,6 @@ Table orders {
   });
 });
 
-
 describe('[example] multifile interpreter - schema merging: tables under same named schema', () => {
   // File A contributes auth.users; File B contributes auth.posts.
   // Consumer imports from both and both should appear under the auth schema.
@@ -147,7 +145,6 @@ use { table auth.posts } from './posts-db.dbml'
     expect(posts.schemaName).toBe('auth');
   });
 });
-
 
 describe('[example] multifile interpreter - transitive schema import (a -> b -> c)', () => {
   // c.dbml: defines Table x.c
@@ -334,7 +331,6 @@ Ref: R.id > R.r
   });
 });
 
-
 describe('[stress] schema-qualified table with ref auto-pull', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -366,7 +362,6 @@ use { table auth.orders } from './source.dbml'
   });
 });
 
-
 describe('[stress] aliased schema-qualified table in ref', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -394,7 +389,6 @@ use { table auth.orders as o } from './source.dbml'
     expect(ordersEp.tableName).toBe('o');
   });
 });
-
 
 describe('[stress] wildcard from two files with overlapping schemas', () => {
   const { compiler } = setupCompiler({
@@ -992,4 +986,3 @@ use { schema y } from './consumer'
     expect(db.tables.find((t) => t.name === 't1' && t.schemaName === 'y')).toBeDefined();
   });
 });
-

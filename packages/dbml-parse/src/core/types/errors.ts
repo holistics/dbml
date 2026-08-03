@@ -1,3 +1,4 @@
+import { TextEdit } from '@/compiler';
 import { Filepath } from './filepath';
 import { SyntaxNode } from '@/core/types/nodes';
 import { SyntaxToken } from '@/core/types/tokens';
@@ -137,6 +138,15 @@ export enum CompileErrorCode {
   UNEQUAL_FIELDS_BINARY_REF,
   CONFLICTING_SETTING,
   TABLE_REAPPEAR_IN_TABLEGROUP,
+
+  INVALID_METADATA_TARGET_KIND,
+  INVALID_METADATA_FIELD,
+  DUPLICATE_METADATA_FIELD,
+}
+
+export interface RelatedLocation {
+  nodeOrToken: SyntaxNode | SyntaxToken;
+  message: string;
 }
 
 export class CompileError extends Error {
@@ -144,7 +154,7 @@ export class CompileError extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
@@ -179,7 +189,7 @@ export class CompileWarning extends Error {
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
@@ -194,6 +204,47 @@ export class CompileWarning extends Error {
     this.end = nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
+  }
+
+  get filepath (): Filepath {
+    return this.nodeOrToken.filepath;
+  }
+}
+
+export interface QuickFix {
+  title: string;
+  filepath: Filepath;
+  edits: TextEdit[];
+}
+
+export class CompileInfo extends Error {
+  code: Readonly<CompileErrorCode>;
+
+  diagnostic: Readonly<string>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
+
+  start: Readonly<number>;
+
+  end: Readonly<number>;
+
+  quickFixes?: QuickFix[];
+
+  constructor (
+    code: number,
+    message: string,
+    nodeOrToken: SyntaxNode | SyntaxToken,
+    options?: { quickFixes?: QuickFix[] },
+  ) {
+    super(message);
+    this.code = code;
+    this.diagnostic = message;
+    this.nodeOrToken = nodeOrToken;
+    this.start = nodeOrToken.start;
+    this.end = nodeOrToken.end;
+    this.quickFixes = options?.quickFixes;
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, CompileInfo.prototype);
   }
 
   get filepath (): Filepath {

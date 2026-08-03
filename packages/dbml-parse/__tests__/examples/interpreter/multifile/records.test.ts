@@ -43,7 +43,6 @@ records u(id, name) {
   });
 });
 
-
 describe('[example] multifile interpreter - records referencing imported table columns', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -81,7 +80,6 @@ records users(id, name, active) {
   });
 });
 
-
 describe('[example] multifile interpreter - records on table with partial-injected columns', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -115,7 +113,6 @@ records users(id, name, created_at, updated_at) {
     expect(result.getErrors().some((e) => e.code === CompileErrorCode.UNSUPPORTED)).toBe(true);
   });
 });
-
 
 describe('[example] multifile interpreter - records on table with external partial-injected columns', () => {
   // Partial is in a separate file from the table. Table imports and injects it.
@@ -157,7 +154,6 @@ records orders(id, total, created_by, modified_by) {
   });
 });
 
-
 describe('[example] multifile interpreter - records defined in source file auto-pulled with imported table', () => {
   // source defines table + records. Consumer imports table.
   // Records should be auto-pulled as metadata on the table symbol.
@@ -192,7 +188,6 @@ use { table users } from './source.dbml'
   });
 });
 
-
 describe('[example] multifile interpreter - records auto-pulled with aliased table', () => {
   // source defines table + records. Consumer imports table with alias.
   // Records should appear under the alias name.
@@ -218,7 +213,6 @@ use { table users as u } from './source.dbml'
     expect(db.records.find((r) => r.tableName === 'users')).toBeUndefined();
   });
 });
-
 
 describe('[example] multifile interpreter - records NOT pulled when table not imported', () => {
   const { compiler } = setupCompiler({
@@ -247,7 +241,6 @@ use { table orders } from './source.dbml'
   });
 });
 
-
 describe('[example] multifile interpreter - nested records inside imported table definition', () => {
   // Records nested inside the table block (not standalone).
   const { compiler } = setupCompiler({
@@ -274,7 +267,6 @@ use { table users } from './source.dbml'
     expect(record!.values).toHaveLength(2);
   });
 });
-
 
 describe('[stress] multiple records blocks for same table across files', () => {
   const { compiler } = setupCompiler({

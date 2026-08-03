@@ -99,7 +99,6 @@
   "refs": {
     "1": {
       "id": 1,
-      "name": null,
       "endpointIds": [
         1,
         2
@@ -108,7 +107,6 @@
     },
     "2": {
       "id": 2,
-      "name": null,
       "endpointIds": [
         3,
         4
@@ -223,6 +221,7 @@
       "alias": "EU",
       "note": null,
       "partials": [],
+      "recordIds": [],
       "fieldIds": [
         1,
         2,
@@ -232,6 +231,7 @@
         6
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 3,
       "groupId": 1
     },
@@ -241,6 +241,7 @@
       "alias": null,
       "note": null,
       "partials": [],
+      "recordIds": [],
       "fieldIds": [
         7,
         8,
@@ -250,6 +251,7 @@
         12
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": 1
     },
@@ -259,11 +261,13 @@
       "alias": null,
       "note": null,
       "partials": [],
+      "recordIds": [],
       "fieldIds": [
         13,
         14
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": 1
     },
@@ -273,11 +277,13 @@
       "alias": "A",
       "note": null,
       "partials": [],
+      "recordIds": [],
       "fieldIds": [
         15,
         16
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 4,
       "groupId": 1
     },
@@ -287,11 +293,13 @@
       "alias": null,
       "note": null,
       "partials": [],
+      "recordIds": [],
       "fieldIds": [
         17,
         18
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 4,
       "groupId": null
     },
@@ -302,11 +310,13 @@
       "note": null,
       "headerColor": "#aaaaaa",
       "partials": [],
+      "recordIds": [],
       "fieldIds": [
         19,
         20
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": null
     },
@@ -316,11 +326,13 @@
       "alias": null,
       "note": null,
       "partials": [],
+      "recordIds": [],
       "fieldIds": [
         21,
         22
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": null
     },
@@ -330,12 +342,14 @@
       "alias": null,
       "note": null,
       "partials": [],
+      "recordIds": [],
       "fieldIds": [
         23,
         24,
         25
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": null
     },
@@ -357,18 +371,23 @@
               "offset": 1539,
               "line": 108,
               "column": 22
+            },
+            "filepath": {
+              "path": "/main.dbml"
             }
           },
           "name": "P_unary_expression",
           "id": 1
         }
       ],
+      "recordIds": [],
       "fieldIds": [
         26,
         27,
         28
       ],
       "indexIds": [],
+      "checkIds": [],
       "schemaId": 1,
       "groupId": null
     }
@@ -583,6 +602,7 @@
   },
   "indexes": {},
   "indexColumns": {},
+  "checks": {},
   "fields": {
     "1": {
       "id": 1,
@@ -595,6 +615,8 @@
       "unique": false,
       "pk": true,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [
         1,
         6,
@@ -614,6 +636,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 1,
       "enumId": null
@@ -629,6 +653,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 1,
       "enumId": 1
@@ -644,6 +670,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 1,
       "enumId": 1
@@ -659,6 +687,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 1,
       "enumId": 2
@@ -674,6 +704,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 1,
       "enumId": 3
@@ -689,6 +721,8 @@
       "unique": false,
       "pk": true,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [
         3,
         5
@@ -707,6 +741,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [
         7
       ],
@@ -724,6 +760,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 2,
       "enumId": 1
@@ -739,6 +777,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 2,
       "enumId": 1
@@ -754,6 +794,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 2,
       "enumId": 2
@@ -769,6 +811,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 2,
       "enumId": 3
@@ -784,6 +828,8 @@
       "unique": false,
       "pk": true,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -799,6 +845,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 3,
       "enumId": null
@@ -814,6 +862,8 @@
       "unique": false,
       "pk": true,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 4,
       "enumId": null
@@ -829,6 +879,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [
         2
       ],
@@ -846,6 +898,8 @@
       "unique": false,
       "pk": true,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 5,
       "enumId": null
@@ -861,6 +915,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [
         4
       ],
@@ -878,6 +934,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [
         9
       ],
@@ -895,6 +953,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [
         12
       ],
@@ -912,6 +972,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [
         10,
         11
@@ -930,6 +992,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 7,
       "enumId": null
@@ -949,6 +1013,8 @@
         "type": "number",
         "value": -2
       },
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 8,
       "enumId": null
@@ -968,6 +1034,8 @@
         "type": "number",
         "value": -2
       },
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 8,
       "enumId": null
@@ -987,6 +1055,8 @@
         "type": "number",
         "value": 7.2225
       },
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 8,
       "enumId": null
@@ -1002,6 +1072,8 @@
       "unique": false,
       "pk": false,
       "note": null,
+      "injectedPartialId": null,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 9,
       "enumId": null
@@ -1020,6 +1092,7 @@
         "value": -2
       },
       "injectedPartialId": 1,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 9,
       "enumId": null
@@ -1038,6 +1111,7 @@
         "value": -7.2225
       },
       "injectedPartialId": 1,
+      "checkIds": [],
       "endpointIds": [],
       "tableId": 9,
       "enumId": null
@@ -1052,11 +1126,6 @@
       "fields": [
         {
           "name": "id",
-          "type": {
-            "schemaName": null,
-            "type_name": "int(-1)",
-            "args": "-1"
-          },
           "token": {
             "start": {
               "offset": 1356,
@@ -1067,21 +1136,25 @@
               "offset": 1380,
               "line": 101,
               "column": 27
+            },
+            "filepath": {
+              "path": "/main.dbml"
             }
           },
-          "inline_refs": [],
+          "type": {
+            "schemaName": null,
+            "type_name": "int(-1)",
+            "args": "-1"
+          },
           "dbdefault": {
             "type": "number",
             "value": -2
-          }
+          },
+          "inline_refs": [],
+          "checks": []
         },
         {
           "name": "id2",
-          "type": {
-            "schemaName": null,
-            "type_name": "int(--1)",
-            "args": "--1"
-          },
           "token": {
             "start": {
               "offset": 1383,
@@ -1092,21 +1165,25 @@
               "offset": 1410,
               "line": 102,
               "column": 30
+            },
+            "filepath": {
+              "path": "/main.dbml"
             }
           },
-          "inline_refs": [],
+          "type": {
+            "schemaName": null,
+            "type_name": "int(--1)",
+            "args": "--1"
+          },
           "dbdefault": {
             "type": "number",
             "value": -2
-          }
+          },
+          "inline_refs": [],
+          "checks": []
         },
         {
           "name": "id3",
-          "type": {
-            "schemaName": null,
-            "type_name": "int(+-+---+0.1)",
-            "args": "+-+---+0.1"
-          },
           "token": {
             "start": {
               "offset": 1413,
@@ -1117,13 +1194,22 @@
               "offset": 1459,
               "line": 103,
               "column": 49
+            },
+            "filepath": {
+              "path": "/main.dbml"
             }
           },
-          "inline_refs": [],
+          "type": {
+            "schemaName": null,
+            "type_name": "int(+-+---+0.1)",
+            "args": "+-+---+0.1"
+          },
           "dbdefault": {
             "type": "number",
             "value": -7.2225
-          }
+          },
+          "inline_refs": [],
+          "checks": []
         }
       ],
       "indexes": []

@@ -1,3 +1,47 @@
+## v9.1.1 (2026-07-31)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#948](https://github.com/holistics/dbml/pull/948) Handle inline ref in partial table injections ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
+## v9.1.0 (2026-07-31)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#932](https://github.com/holistics/dbml/pull/932) [DBX-6933] Feat: Support custom metadata element ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 1
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
+## v9.0.0 (2026-07-30)
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#937](https://github.com/holistics/dbml/pull/937) Support optional ref ([@huydo862003](https://github.com/huydo862003))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#939](https://github.com/holistics/dbml/pull/939) Fix silent errors when an autoincrement/default PK composite component do not have a value ([@huydo862003](https://github.com/huydo862003))
+* `dbml-core`
+  * [#940](https://github.com/holistics/dbml/pull/940) Fix schema-qualified TableGroup export names ([@cyphercodes](https://github.com/cyphercodes))
+
+#### :robot: Dependencies Update
+* Other
+  * [#934](https://github.com/holistics/dbml/pull/934) chore(deps): bump http-proxy-middleware from 2.0.9 to 2.0.10, bump minimatch to 10.3.0, bump tar to 7.5.16, bump js-yaml to 3.16.0, form-data to 4.0.6, vite to 8.0.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#801](https://github.com/holistics/dbml/pull/801) chore(deps): bump diff from 4.0.2 to 4.0.4 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#942](https://github.com/holistics/dbml/pull/942) chore(deps): bump websocket-driver from 0.7.4 to 0.7.5 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#922](https://github.com/holistics/dbml/pull/922) chore(deps): bump launch-editor from 2.6.1 to 2.14.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#874](https://github.com/holistics/dbml/pull/874) chore(deps): bump follow-redirects from 1.15.6 to 1.16.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#924](https://github.com/holistics/dbml/pull/924) chore(deps): bump shell-quote from 1.8.1 to 1.8.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#896](https://github.com/holistics/dbml/pull/896) chore(deps): bump yaml from 1.10.2 to 1.10.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- Rayan Salhab ([@cyphercodes](https://github.com/cyphercodes))
+
 ## v8.3.1 (2026-06-30)
 
 #### :robot: Dependencies Update

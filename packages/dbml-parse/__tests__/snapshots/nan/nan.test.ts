@@ -1,13 +1,7 @@
-import {
-  readFileSync,
-} from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import {
-  describe, expect, it,
-} from 'vitest';
-import {
-  scanTestNames, toSnapshot,
-} from '@tests/utils';
+import { describe, expect, it } from 'vitest';
+import { scanTestNames, toSnapshot } from '@tests/utils';
 import { DEFAULT_ENTRY } from '@/constants';
 import Compiler from '@/compiler';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
