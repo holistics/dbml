@@ -314,9 +314,7 @@ class SqlServerExporter {
       }
       const indexName = index.name
         ? `[${index.name}]`
-        : `${shouldPrintSchema(schema, model)
-          ? `[${schema.name}].`
-          : ''}[${table.name}_index_${i}]`;
+        : `[${table.name}_index_${i}]`;
       line += ` INDEX ${indexName} ON ${shouldPrintSchema(schema, model)
         ? `[${schema.name}].`
         : ''}[${table.name}]`;
