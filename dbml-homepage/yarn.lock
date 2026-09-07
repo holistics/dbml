@@ -2714,6 +2714,21 @@
     react-helmet-async "*"
     react-loadable "npm:@docusaurus/react-loadable@6.0.0"
 
+"@docusaurus/plugin-client-redirects@3.6.3":
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/@docusaurus/plugin-client-redirects/-/plugin-client-redirects-3.6.3.tgz#a641fc8c6ab3a2afec183d57de7e12d8b5d6ec9f"
+  integrity sha512-fQDCxoJCO1jXNQGQmhgYoX3Yx+Z2xSbrLf3PBET6pHnsRk6gGW/VuCHcfQuZlJzbTxN0giQ5u3XcQQ/LzXftJA==
+  dependencies:
+    "@docusaurus/core" "3.6.3"
+    "@docusaurus/logger" "3.6.3"
+    "@docusaurus/utils" "3.6.3"
+    "@docusaurus/utils-common" "3.6.3"
+    "@docusaurus/utils-validation" "3.6.3"
+    eta "^2.2.0"
+    fs-extra "^11.1.1"
+    lodash "^4.17.21"
+    tslib "^2.6.0"
+
 "@docusaurus/plugin-content-blog@3.6.3":
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/@docusaurus/plugin-content-blog/-/plugin-content-blog-3.6.3.tgz#d6a597e4bfdeb3f1f6ce06d2ac86207296988cc9"
