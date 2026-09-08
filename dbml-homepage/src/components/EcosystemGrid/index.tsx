@@ -61,6 +61,7 @@ function Card({ item, showStars }: { item: EcosystemItem; showStars?: boolean })
         {item.language && <span className={styles.badge}>{item.language}</span>}
       </div>
       <p className={styles.cardDescription}>{item.description}</p>
+      {item.note && <p className={styles.cardNote}>{item.note}</p>}
       {footer.length > 0 && <div className={styles.cardFooter}>{footer}</div>}
     </Link>
   );
@@ -103,7 +104,7 @@ export function CommunityGrid({ items }: { items: EcosystemItem[] }) {
     return items.filter((item) => {
       if (active && !item.categories?.includes(active)) return false;
       if (!needle) return true;
-      return [item.name, item.description, item.language, item.author]
+      return [item.name, item.description, item.language, item.author, item.note]
         .filter(Boolean)
         .some((field) => field!.toLowerCase().includes(needle));
     });
