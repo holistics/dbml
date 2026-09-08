@@ -94,6 +94,7 @@ DBML comes with:
 3. A free SQL playground at [runsql.com](https://runsql.com?utm_source=dbml).
 4. A command-line tool to help to convert SQL to DBML files and vice versa.
 5. An [open-source JS library](/js-module/core) (NPM package) for you to programmatically convert between DBML and SQL DDL.
+6. A wide range of [community-built parsers, editor plugins and generators](/ecosystem).
 
 ### dbdiagram
 
@@ -145,26 +146,6 @@ DBML is created and maintained by [Holistics](https://holistics.io?utm_source=db
 
 ## Community Contributions
 
-* [Elixir DBML parser, Ecto schema and migrations generator](https://github.com/saleyn/dbml)
-* [Emacs Mode for DBML by ccod](https://github.com/ccod/dbd-mode)
-* [Vim Plugin for DBML by jidn](https://github.com/jidn/vim-dbml)
-* [VSCode Plugin for DBML by duynvu](https://marketplace.visualstudio.com/items?itemName=duynvu.dbml-language)
-* [Python parser for DBML by Vanderhoof](https://github.com/Vanderhoof/PyDBML)
-* [FloorPlan: Android's Room to DBML by julioz](https://github.com/julioz/FloorPlan)
-* [Go parser for DBML by duythinht](https://github.com/duythinht/dbml-go)
-* [DbmlForDjango: Converter between Django models.py and DBML](https://github.com/hamedsj/DbmlForDjango)
-* [parseServerSchema2dbml: Converter between ParseServer MongoDB \_SCHEMA collection and DBML by stepanic](https://github.com/stepanic/parse-server-SCHEMA-to-DBML)
-* [dbml-renderer: A DBML CLI renderer](https://github.com/softwaretechnik-berlin/dbml-renderer)
-* [dbml-parser: A DBML parser written on PHP8 by Butschster](https://github.com/butschster/dbml-parser)
-* [Kacher: Laravel's Database Schemas to DBML by Arsanandha Aphisitworachorch](https://github.com/aphisitworachorch/kacher)
-* [d365fo-entity-schema: Generate DBML from Dynamics 365 Finance and Operations](https://github.com/noakesey/d365fo-entity-schema)
-* [Treesitter for DBML](https://github.com/dynamotn/tree-sitter-dbml)
-* [DB2Code: Generate DBML from Maven](https://github.com/alberlau/DB2Code)
-* [dbml-java: A DBML parser written on Java 17 by Nils Wende](https://github.com/nilswende/dbml-java)
-* [SchemaToDbml: A gem that generates DBML from Rails schema.rb by Ricardo Ribeiro](https://github.com/ricardojcribeiro/schema_to_dbml)
-* [Snowflake DBML Generator by Ryan Rozich](https://github.com/ryanrozich/snowflake-dbml-generator)
-* [prisma-dbml-generator: Generate DBML schema from Prisma Schema by Marc Stammerjohann](https://github.com/notiz-dev/prisma-dbml-generator)
-* [C# parser for Dbml by Niels Bosma](https://github.com/Ivy-Interactive/Ivy.Dbml.Parser)
-* [Scafoldr: DBML-Powered Code Scaffolding Tool](https://scafoldr.com/code-generator)
-* [Jetbrains IDEs (Intellij/PyCharm/Datagrip etc.) Plugin for DBML by LiamClarkeNZ](https://plugins.jetbrains.com/plugin/30905-dbml)
-* [dbmlgraph: Generate LLM-ready markdown docs and search a DBML schema from the CLI by Verry Anto Paulus](https://github.com/verryp/dbmlgraph)
+The community has built DBML parsers, editor plugins and schema generators in C#, Elixir, Go,
+Java, JavaScript, Kotlin, PHP, Python, Ruby and more. Browse them all — alongside our own apps
+and packages — on the [Ecosystem page](/ecosystem).

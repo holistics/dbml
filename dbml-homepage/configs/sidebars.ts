@@ -48,7 +48,7 @@ const SidebarConfigs: SidebarsConfig = {
         },
       ],
     },
-    'database-support',
+    'ecosystem',
     'cli',
     {
       type: 'category',
