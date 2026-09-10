@@ -1,5 +1,11 @@
 {
   "version": "10.1.1",
   "npmClient": "yarn",
-  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "command": {
+    "publish": {
+      "distTag": "latest",
+      "preDistTag": "alpha"
+    }
+  }
 }
