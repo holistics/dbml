@@ -6,8 +6,8 @@ The following is a set of guidelines for contributing to DBML and its packages, 
 
 ## Not sure where to start ?
 
-- [PEG.js](https://pegjs.org/): DBML uses PEG.js library to parse different database languages and structure them as plain Javascript object.
-- Check out the `parse` folder in `@dbml/core` source code to learn more about how to structure and import different grammars from multiple PEG.js files.
+- The DBML parser lives in [`packages/dbml-parse`](./packages/dbml-parse). It is a hand-written lexer and recursive-descent parser (`src/core/lexer`, `src/core/parser`) followed by per-element validation in `src/core/local_modules` and binding and interpretation in `src/core/global_modules`. The formal grammar and the conformance tests that keep it honest live in [`spec/`](./spec).
+- Importing other database languages (PostgreSQL, MySQL, MSSQL, ...) is done in `@dbml/core` under `packages/dbml-core/src/parse`, using ANTLR grammars. The [PEG.js](https://pegjs.org/) grammars under `parse/deprecated` are no longer maintained and are kept for reference only.
 - When you're ready to jump to the source code, look for issues tagged with [help wanted](https://github.com/holistics/dbml/labels/help%20wanted) label to get list of current issues you can make a contribution to or create a new issue for suggesting enhancement.
 - Check out DBML [website](https://www.dbml-lang.org/home/) for more documentation on DBML syntax.
 
