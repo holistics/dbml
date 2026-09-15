@@ -41,6 +41,8 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.7.1",
+    "antlr-ng": "^1.0.10",
+    "antlr4": "^4.13.2",
     "monaco-editor-core": "^0.44.0",
     "peggy": "^5.1.0",
     "vite-plugin-no-bundle": "^4.0.0"

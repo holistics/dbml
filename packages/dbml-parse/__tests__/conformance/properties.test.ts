@@ -30,7 +30,7 @@ import {
   type SpecParser,
   compare,
   describeComparison,
-  loadSpecParser,
+  loadSpecParsers,
 } from './harness';
 
 const SCHEMA_RUNS = 500;
@@ -45,9 +45,9 @@ function expectAgreement (parser: SpecParser, source: string): void {
   }
 }
 
-describe('[conformance] properties', () => {
-  const parser = loadSpecParser();
+const parsers = await loadSpecParsers();
 
+describe.each(parsers)('[conformance] properties ($name)', (parser) => {
   it('agrees on whole schemas', {
     timeout: 300000,
   }, () => {

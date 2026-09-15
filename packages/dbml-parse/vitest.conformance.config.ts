@@ -16,6 +16,8 @@ export default defineConfig({
   test: {
     globals: true,
     include: ['__tests__/conformance/**/*.test.ts'],
+    // Compiles spec/antlr/*.g4 into __tests__/conformance/generated (not committed).
+    globalSetup: ['__tests__/conformance/antlr.setup.ts'],
     testTimeout: 120000,
   },
 });

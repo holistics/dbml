@@ -12,7 +12,7 @@ import {
   type Verdict,
   compare,
   describeComparison,
-  loadSpecParser,
+  loadSpecParsers,
 } from './harness';
 
 interface KnownDisagreement {
@@ -104,8 +104,9 @@ function listInputs (): { key: string; file: string }[] {
     .sort((a, b) => a.key.localeCompare(b.key));
 }
 
-describe('[conformance] syntax', () => {
-  const parser = loadSpecParser();
+const parsers = await loadSpecParsers();
+
+describe.each(parsers)('[conformance] syntax ($name)', (parser) => {
   const inputs = listInputs();
 
   it('covers every snapshot input', () => {
@@ -137,9 +138,7 @@ describe('[conformance] syntax', () => {
   });
 });
 
-describe('[conformance] recorded disagreements', () => {
-  const parser = loadSpecParser();
-
+describe.each(parsers)('[conformance] recorded disagreements ($name)', (parser) => {
   PINNED_DISAGREEMENTS.forEach((pinned) => {
     it(`${pinned.see}: ${JSON.stringify(pinned.source)}`, () => {
       const result = compare(parser, pinned.source);

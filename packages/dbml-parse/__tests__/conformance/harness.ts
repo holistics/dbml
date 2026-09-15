@@ -1,8 +1,9 @@
 // Shared machinery for the Layer 1 conformance tests.
 //
-// Both parsers run over the same source text:
-// - the reference parser (`@dbml/parse` lexer + parser from src/)
-// - a parser generated at test time from spec/dbml-syntax.peggy
+// The reference parser (`@dbml/parse` lexer + parser from src/) runs over the
+// same source text as each spec parser:
+// - `peggy`: generated at test time from spec/dbml-syntax.peggy
+// - `antlr`: generated at test time from spec/antlr/*.g4 (see antlr.ts)
 //
 // They are compared on two things:
 // 1. acceptance: the reference "accepts" when lexer and parser report no error;
@@ -31,7 +32,68 @@ export interface SpecNode {
 }
 
 export interface SpecParser {
+  // Short notation name used in test titles: 'peggy' or 'antlr'.
+  name: string;
   parse (input: string): SpecNode;
+}
+
+export function tok (kind: string, value: string): SpecToken {
+  return { token: kind, value };
+}
+
+type Child = SpecNode | SpecToken | Child[] | null | undefined;
+
+function flattenChildren (children: Child[]): (SpecNode | SpecToken)[] {
+  return children.flatMap((c) => {
+    if (c === null || c === undefined) return [];
+    if (Array.isArray(c)) return flattenChildren(c);
+    return [c];
+  });
+}
+
+export function node (kind: string, ...children: Child[]): SpecNode {
+  return {
+    kind,
+    children: flattenChildren(children),
+  };
+}
+
+function isIdentifierPrimary (n: SpecNode | SpecToken): n is SpecNode {
+  if ('token' in n || n.kind !== '<primary-expression>') return false;
+  const variable = n.children[0];
+  if ('token' in variable || variable.kind !== '<variable>') return false;
+  const token = variable.children[0];
+  return 'token' in token && token.token === '<identifier>';
+}
+
+function identifierToken (n: SpecNode): SpecToken {
+  return (n.children[0] as SpecNode).children[0] as SpecToken;
+}
+
+// parser/utils.ts: convertFuncAppToElem()
+// A function application of the form <identifier> [<name> [as <alias>]] [<list>] <block>
+// is reinterpreted as a nested element declaration. The peggy grammar carries
+// its own copy of this rewrite in its actions; the ANTLR converter uses this one.
+export function convertFuncAppToElem (callee: SpecNode, args: SpecNode[]): SpecNode | null {
+  let type = callee;
+  let rest = args;
+  if (type.kind === '<call-expression>') {
+    rest = [type.children[1] as SpecNode, ...rest];
+    type = type.children[0] as SpecNode;
+  }
+  if (!isIdentifierPrimary(type) || rest.length === 0) return null;
+  const typeToken = identifierToken(type);
+  rest = [...rest];
+  const body = rest.pop()!;
+  if (body.kind !== '<block-expression>') return null;
+  const attributeList = rest.length > 0 && rest[rest.length - 1].kind === '<list-expression>' ? rest.pop() : null;
+  if (rest.length === 3) {
+    if (!isIdentifierPrimary(rest[1]) || identifierToken(rest[1]).value.toLowerCase() !== 'as') return null;
+    return node('<element-declaration>', typeToken, rest[0], identifierToken(rest[1]), rest[2], attributeList, body);
+  }
+  if (rest.length === 1) return node('<element-declaration>', typeToken, rest[0], attributeList, body);
+  if (rest.length === 0) return node('<element-declaration>', typeToken, attributeList, body);
+  return null;
 }
 
 export type Verdict = 'accept' | 'reject';
@@ -52,12 +114,23 @@ export interface Comparison {
   agreeOnTree?: boolean;
 }
 
-export function loadSpecParser (): SpecParser {
+export function loadPeggyParser (): SpecParser {
   const grammar = readFileSync(GRAMMAR_PATH, 'utf-8');
-  return peggy.generate(grammar, {
+  const generated = peggy.generate(grammar, {
     output: 'parser',
     grammarSource: GRAMMAR_PATH,
-  }) as unknown as SpecParser;
+  }) as unknown as { parse (input: string): SpecNode };
+  return {
+    name: 'peggy',
+    parse: (input) => generated.parse(input),
+  };
+}
+
+// Both notations of the spec. Kept in a separate module so that the ANTLR
+// toolchain is only loaded when needed.
+export async function loadSpecParsers (): Promise<SpecParser[]> {
+  const { loadAntlrParser } = await import('./antlr');
+  return [loadPeggyParser(), await loadAntlrParser()];
 }
 
 function stripAngles (kind: string): string {
