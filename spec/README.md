@@ -4,7 +4,7 @@ This directory holds the formal specification of DBML. It is organised in the sa
 
 | Layer | What it specifies | Spec artefact | Reference implementation |
 | --- | --- | --- | --- |
-| 1. Generic syntax | Tokens and the element-agnostic syntax tree (`SyntaxNodeKind`) | [`dbml-syntax.peggy`](./dbml-syntax.peggy) | `src/core/lexer/lexer.ts`, `src/core/parser/parser.ts` |
+| 1. Generic syntax | Tokens and the element-agnostic syntax tree (`SyntaxNodeKind`) | [`dbml-syntax.peggy`](./dbml-syntax.peggy), with an ANTLR rendering in [`antlr/`](./antlr) | `src/core/lexer/lexer.ts`, `src/core/parser/parser.ts` |
 | 2. Element semantics | Per-element rules: name shape, body form, allowed settings and sub-elements | `elements/<element>.schema.json` (future PRs) | `src/core/local_modules/<element>/validate.ts` |
 | 3. Interpreted model | The `Database` JSON model produced by `@dbml/core` | `output/database.schema.json` (future PR) | `packages/dbml-core/src/model_structure/*.ts` |
 
@@ -78,10 +78,26 @@ The three trivia-sensitive rules:
 
 The grammar produces exactly the `SyntaxNodeKind` set from `src/core/types/nodes.ts`: program, element-declaration, use-declaration, use-specifier, use-specifier-list, attribute, identifier-stream, literal, variable, primary-expression, prefix-expression, infix-expression, postfix-expression, function-expression, function-application, block-expression, list-expression, tuple-expression, group-expression, call-expression, comma-expression, array, wildcard, and the empty node. Postfix-expression is reachable only through error recovery today and has no grammar rule.
 
+## Notations
+
+The Layer 1 grammar exists in two notations that are kept in agreement by running both through the same conformance tests. This is deliberate: which notation the spec should standardise on is an open question, and the corpus gives an objective way to compare them.
+
+| | peggy ([`dbml-syntax.peggy`](./dbml-syntax.peggy)) | ANTLR 4 ([`antlr/DbmlLexer.g4`](./antlr/DbmlLexer.g4), [`antlr/DbmlParser.g4`](./antlr/DbmlParser.g4)) |
+| --- | --- | --- |
+| Model | Scannerless PEG; ordered choice mirrors the reference's recursive descent | Separate lexer and parser; ALL(*) prediction with predicates where the reference commits on one token |
+| Trivia | Threaded explicitly through rules (`GapAny`, `GapInline`, `GapNewline`) | Hidden channel, inspected with `getHiddenTokensToLeft()`, close to the reference lexer's trivia model |
+| Embedded code | About 116 lines of JavaScript in the initializer plus one-line tree-building actions on most rules; 15 semantic predicates | 71-line members block (50 lines of JavaScript), 17 predicates, 6 actions; no tree-building code |
+| Tree shaping | In the grammar | In the test harness (`__tests__/conformance/antlr.ts`, about 170 lines), because ANTLR yields a rule-shaped parse tree |
+| Toolchain | `peggy` (dev dependency), compiled in memory at test time | `antlr-ng` (Node port of the ANTLR tool, no Java) generating JavaScript for the `antlr4` runtime that `@dbml/core` already uses; generated in vitest global setup, not committed |
+| Unicode | Code points via `[\p{L}]u` classes | Code points via `CharStream(source, true)` |
+| Corpus result | 121 of 122 snapshot inputs agree, all property tests pass | Identical |
+
+Both notations reproduce the same recorded disagreements (see [`DISAGREEMENTS.md`](./DISAGREEMENTS.md)); the pinned cases run against each.
+
 ## Running the conformance tests
 
 ```bash
 yarn workspace @dbml/parse test:conformance
 ```
 
-The peggy grammar is compiled in memory at test time; no generated parser is committed.
+Both grammars are compiled at test time. The peggy parser is built in memory; the ANTLR parser is generated into `packages/dbml-parse/__tests__/conformance/generated/`, which is ignored by git. No generated parser is committed.
