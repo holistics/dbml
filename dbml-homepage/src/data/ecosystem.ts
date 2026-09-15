@@ -290,4 +290,11 @@ export const communityProjects: EcosystemItem[] = [
     author: 'Scafoldr',
     categories: ['from-dbml'],
   },
+  {
+    name: 'DBDraw.io',
+    description: 'Create flexible ER diagrams seamlessly synchronized with DBML and Mermaid.',
+    href: 'https://dbdraw.io',
+    author: 'Pinei',
+    categories: ['editor'],
+  },
 ];
