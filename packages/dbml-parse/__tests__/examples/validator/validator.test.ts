@@ -1160,6 +1160,36 @@ Table users { name varchar }`;
       expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
     });
 
+    test('should reject color with block body inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          color {
+            #fff
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+    });
+
+    test('should allow simple color inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          color: #fff
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+    });
+
     test('should allow Note block form inside Dep', () => {
       const source = `
         Table t1 { c1 int }

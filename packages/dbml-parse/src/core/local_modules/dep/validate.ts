@@ -150,7 +150,7 @@ export default class DepValidator {
 
       switch (key) {
         case SettingName.Color:
-          if (!(subBody instanceof FunctionApplicationNode) || !subBody.callee || !isValidHexColor(subBody.callee)) {
+          if (sub.name || !(subBody instanceof FunctionApplicationNode) || !subBody.callee || !isValidHexColor(subBody.callee)) {
             return [
               new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', sub),
             ];
