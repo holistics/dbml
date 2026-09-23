@@ -12,10 +12,10 @@ This part covers features specific to diagram & wiki tools like [dbdiagram.io](h
   - [Column Notes](#column-notes)
   - [Index Notes](#index-notes)
   - [TableGroup Notes](#tablegroup-notes)
-- [Custom Metadata](#custom-metadata)
-  - [Inline Metadata](#inline-metadata)
+- [Custom Properties](#custom-properties)
+  - [Inline Custom Properties](#inline-custom-properties)
   - [Metadata Block](#metadata-block)
-  - [Metadata Precedence](#metadata-precedence)
+  - [Property Precedence](#property-precedence)
 - [Sticky Notes](#sticky-notes)
 - [TableGroup](#tablegroup)
   - [TableGroup Notes](#tablegroup-notes-1)
@@ -113,17 +113,17 @@ TableGroup e_commerce [note: 'Contains tables that are related to e-commerce sys
 }
 ```
 
-## Custom Metadata
+## Custom Properties
 
-Custom metadata lets you attach arbitrary, free-form key-value annotations to DBML elements - things like a data-classification tag, an SLA, or any other attribute.
+Custom Properties let you attach arbitrary, free-form key-value annotations to DBML elements - things like a data-classification tag, an SLA, or any other attribute.
 
-Custom metadata is currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), and [Sticky Notes](#sticky-notes) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
+Custom Properties are currently supported on [Table](../docs.md#table-definition), [Column](../docs.md#column-definition), [TableGroup](#tablegroup), and [Sticky Notes](#sticky-notes) (as well as columns inside a [TablePartial](../docs.md#tablepartial) using inline syntax).
 
-There are two ways to declare custom metadata: **inline** in the element's settings list, or in a separate **Metadata block**.
+There are two ways to declare custom properties: **inline** in the element's settings list, or in a separate **`Metadata` block**.
 
-Currently, a metadata value can be a **string literal** (e.g. `owner: "data-team"`) or a **color literal** (e.g. `brand_color: #3498DB`).
+Currently, a property value can be a **string literal** (e.g. `owner: "data-team"`) or a **color literal** (e.g. `brand_color: #3498DB`).
 
-### Inline Metadata
+### Inline Custom Properties
 
 Add custom key-value pairs directly to an element's `[...]` settings list.
 
@@ -149,7 +149,7 @@ A key with no value (`[owner]`) or a duplicate key (`[owner: "a", owner: "b"]`) 
 
 ### Metadata Block
 
-You can also declare metadata separately from the element definition using a `Metadata` block. This is useful for keeping annotations in a dedicated section, or for adding metadata to elements defined elsewhere (including across files).
+You can also declare custom properties separately from the element definition using a `Metadata` block. This is useful for keeping annotations in a dedicated section, or for adding properties to elements defined elsewhere (including across files).
 
 The block targets an element by kind and name:
 
@@ -174,16 +174,16 @@ Metadata Column users.id {
 }
 ```
 
-### Metadata Precedence
+### Property Precedence
 
-An element can get metadata from its **inline settings** and from one or more **Metadata blocks**. When the same key is set in more than one place, the higher-priority source wins.
+An element can get custom properties from its **inline settings** and from one or more **`Metadata` blocks**. When the same key is set in more than one place, the higher-priority source wins.
 
 Priority, lowest to highest:
 
 1. Inline settings
-2. Metadata blocks in imported files
+2. `Metadata` blocks in imported files
     - Files imported later have higher priority
-3. Metadata blocks in the current file
+3. `Metadata` blocks in the current file
     - Blocks defined later have higher priority
 
 When two imported files set the same key, the one imported **later** wins.
@@ -234,7 +234,7 @@ Note multiple_lines_note {
 }
 ```
 
-We also support free-form custom metadata, e.g. `Note reminder [author: "docs"] { 'text' }`. See [Inline Metadata](#inline-metadata).
+We also support free-form custom properties, e.g. `Note reminder [author: "docs"] { 'text' }`. See [Inline Custom Properties](#inline-custom-properties).
 
 ## TableGroup
 
@@ -276,7 +276,7 @@ The list of table group settings you can use:
 - `note: 'string to add notes'`: add a note to this table group.
 - `color: <color_code>`: change the table group color. See [Colors](#colors) for accepted color formats.
 
-We also support free-form custom metadata, e.g. `TableGroup e_commerce [team: "growth"]`. See [Inline Metadata](#inline-metadata).
+We also support free-form custom properties, e.g. `TableGroup e_commerce [team: "growth"]`. See [Inline Custom Properties](#inline-custom-properties).
 
 ## DiagramView
 
