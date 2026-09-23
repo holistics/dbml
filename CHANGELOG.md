@@ -1,5 +1,9 @@
 ## v10.2.0 (2026-09-23)
 
+### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#923](https://github.com/holistics/dbml/pull/958) Support example records ([@huydo862003](https://github.com/huydo862003))
+
 #### :bug: Bug Fix
 * `dbml-core`, `dbml-parse`
   * [#980](https://github.com/holistics/dbml/pull/980) fix: reject block syntax for unknown fields inside Dep ([@huydo862003](https://github.com/huydo862003))
