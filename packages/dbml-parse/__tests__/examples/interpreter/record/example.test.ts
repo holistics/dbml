@@ -1,9 +1,5 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  interpret,
-} from '@tests/utils';
+import { describe, expect, test } from 'vitest';
+import { interpret } from '@tests/utils';
 
 describe('[example - record] example setting', () => {
   test('should set example on top-level records with [example]', () => {
