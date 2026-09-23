@@ -1109,6 +1109,132 @@ Table users { name varchar }`;
     });
   });
 
+  describe('dep validation', () => {
+    test('should reject nested Dep inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Table t3 { c3 int }
+        Table t4 { c4 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          Dep dep2 {
+            t3.c3 <- t4.c4
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+    });
+
+    test('should reject unknown field with block body inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          SomeKey name {
+            foo bar
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+    });
+
+    test('should reject unknown field with block body (no name) inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          SomeKey {
+            foo bar
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+    });
+
+    test('should reject color with block body inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          color {
+            #fff
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.some((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toBe(true);
+    });
+
+    test('should allow simple color inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          color: #fff
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+    });
+
+    test('should allow Note block form inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          Note {
+            'some note'
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+    });
+
+    test('should allow Note colon form inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          Note: 'some note'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+    });
+
+    test('should allow simple key-value custom field inside Dep', () => {
+      const source = `
+        Table t1 { c1 int }
+        Table t2 { c2 int }
+        Dep dep1 {
+          t1.c1 <- t2.c2
+          custom_key: 'some value'
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.filter((e) => e.code === CompileErrorCode.INVALID_SETTINGS)).toHaveLength(0);
+    });
+  });
+
   describe('DiagramView validation', () => {
     test('should accept DiagramView with body-level wildcard {*}', () => {
       const source = 'DiagramView name { * }';

@@ -118,9 +118,7 @@ export type {
 export { findDiagramViewBlocks } from '@/compiler/queries/transform';
 
 // Dep transform types
-export type {
-  DepSyncOperation, DepSyncEdge, DepEndpointRef,
-} from '@/compiler/queries/transform';
+export type { DepSyncOperation, DepSyncEdge, DepEndpointRef } from '@/compiler/queries/transform';
 
 // Element identifier types
 export type {
