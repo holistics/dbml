@@ -1,5 +1,4 @@
-import { partition } from 'lodash-es';
-import { forIn } from 'lodash-es';
+import { partition, forIn } from 'lodash-es';
 import Compiler from '@/compiler';
 import { KEYWORDS_OF_DEFAULT_SETTING } from '@/constants';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
