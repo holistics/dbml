@@ -114,6 +114,27 @@ jobs:
         path: ./coverage-report.md
         include-hidden-files: true
 
+  # Spec conformance (see spec/README.md). Non-blocking until the corpus in
+  # spec/DISAGREEMENTS.md is empty; then drop continue-on-error.
+  spec-conformance:
+    runs-on: blacksmith-2vcpu-ubuntu-2204
+    timeout-minutes: 15
+    continue-on-error: true
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: "yarn"
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+    - name: Run spec conformance tests
+      run: yarn workspace @dbml/parse test:conformance
+
   comment-coverage:
     runs-on: blacksmith-2vcpu-ubuntu-2204
     timeout-minutes: 5

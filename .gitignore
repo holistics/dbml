@@ -34,3 +34,6 @@ coverage/
 __benchmarks__/output/
 
 .gitnexus
+
+# spec conformance: parsers generated from spec/antlr at test time
+packages/dbml-parse/__tests__/conformance/generated/
