@@ -1,15 +1,7 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  interpret,
-} from '@tests/utils';
-import {
-  CompileErrorCode,
-} from '@/index';
-import {
-  DateTime,
-} from 'luxon';
+import { describe, expect, test } from 'vitest';
+import { interpret } from '@tests/utils';
+import { CompileErrorCode } from '@/index';
+import { DateTime } from 'luxon';
 
 describe('[example - record] type compatibility validation', () => {
   describe('boolean type validation', () => {
@@ -118,15 +110,15 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(5);
-      expect(warnings[0].diagnostic).toBe("Invalid boolean value for column 'active'");
-      expect(warnings[1].diagnostic).toBe("Invalid boolean value for column 'active'");
-      expect(warnings[2].diagnostic).toBe("Invalid boolean value for column 'active'");
-      expect(warnings[3].diagnostic).toBe("Invalid boolean value for column 'active'");
-      expect(warnings[4].diagnostic).toBe("Invalid boolean value for column 'active'");
+      expect(infos.length).toBe(5);
+      expect(infos[0].diagnostic).toBe('Invalid boolean value for column `active`');
+      expect(infos[1].diagnostic).toBe('Invalid boolean value for column `active`');
+      expect(infos[2].diagnostic).toBe('Invalid boolean value for column `active`');
+      expect(infos[3].diagnostic).toBe('Invalid boolean value for column `active`');
+      expect(infos[4].diagnostic).toBe('Invalid boolean value for column `active`');
     });
   });
 
@@ -213,14 +205,14 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(4);
-      expect(warnings[0].diagnostic).toBe("Invalid numeric value for column 'id'");
-      expect(warnings[1].diagnostic).toBe("Invalid integer value 10.5 for column 'quantity': expected integer, got decimal");
-      expect(warnings[2].diagnostic).toBe("Invalid numeric value for column 'price'");
-      expect(warnings[3].diagnostic).toBe("Invalid numeric value for column 'price'");
+      expect(infos.length).toBe(4);
+      expect(infos[0].diagnostic).toBe('Invalid numeric value for column `id`');
+      expect(infos[1].diagnostic).toBe('Invalid integer value `10.5` for column `quantity`: expected integer, got decimal');
+      expect(infos[2].diagnostic).toBe('Invalid numeric value for column `price`');
+      expect(infos[3].diagnostic).toBe('Invalid numeric value for column `price`');
     });
 
     test('- should validate decimal precision and scale', () => {
@@ -238,18 +230,18 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBeGreaterThan(0);
+      expect(infos.length).toBeGreaterThan(0);
 
-      // Verify all warnings are about exceeding precision or scale
-      expect(warnings.every((w) => w.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
-      expect(warnings.every((w) => w.diagnostic.includes('exceeds'))).toBe(true);
+      // Verify all infos are about exceeding precision or scale
+      expect(infos.every((w) => w.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
+      expect(infos.every((w) => w.diagnostic.includes('exceeds'))).toBe(true);
 
       // Verify specific precision/scale violations exist
-      const precisionWarnings = warnings.filter((w) => w.diagnostic.includes('exceeds precision'));
-      const scaleWarnings = warnings.filter((w) => w.diagnostic.includes('exceeds scale'));
+      const precisionWarnings = infos.filter((w) => w.diagnostic.includes('exceeds precision'));
+      const scaleWarnings = infos.filter((w) => w.diagnostic.includes('exceeds scale'));
 
       expect(precisionWarnings.length).toBeGreaterThan(0);
       expect(scaleWarnings.length).toBeGreaterThan(0);
@@ -312,16 +304,16 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(5);
-      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(warnings[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 12 bytes");
-      expect(warnings[1].diagnostic).toBe("String value for column 'code' exceeds maximum length: expected at most 3 bytes (UTF-8), got 4 bytes");
-      expect(warnings[2].diagnostic).toBe("String value for column 'title' exceeds maximum length: expected at most 10 bytes (UTF-8), got 13 bytes");
-      expect(warnings[3].diagnostic).toBe("String value for column 'shortcode' exceeds maximum length: expected at most 4 bytes (UTF-8), got 7 bytes");
-      expect(warnings[4].diagnostic).toBe("String value for column 'description' exceeds maximum length: expected at most 8 bytes (UTF-8), got 11 bytes");
+      expect(infos.length).toBe(5);
+      expect(infos[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(infos[0].diagnostic).toBe('String value for column `name` exceeds maximum length: expected at most 5 bytes (UTF-8), got 12 bytes');
+      expect(infos[1].diagnostic).toBe('String value for column `code` exceeds maximum length: expected at most 3 bytes (UTF-8), got 4 bytes');
+      expect(infos[2].diagnostic).toBe('String value for column `title` exceeds maximum length: expected at most 10 bytes (UTF-8), got 13 bytes');
+      expect(infos[3].diagnostic).toBe('String value for column `shortcode` exceeds maximum length: expected at most 4 bytes (UTF-8), got 7 bytes');
+      expect(infos[4].diagnostic).toBe('String value for column `description` exceeds maximum length: expected at most 8 bytes (UTF-8), got 11 bytes');
     });
 
     test('- should accept strings within length and exact length', () => {
@@ -339,10 +331,10 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(0);
+      expect(infos.length).toBe(0);
     });
 
     test('- should validate UTF-8 byte length correctly', () => {
@@ -359,13 +351,13 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       // "😀😁😂😃😄" is 5 emojis × 4 bytes = 20 bytes (valid)
       // "😀😁😂" is 3 emojis × 4 bytes = 12 bytes (exceeds 10)
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(1);
-      expect(warnings[0].diagnostic).toContain('exceeds maximum length: expected at most 10 bytes');
+      expect(infos.length).toBe(1);
+      expect(infos[0].diagnostic).toContain('exceeds maximum length: expected at most 10 bytes');
     });
 
     test('- should allow unlimited length for text and varchar without parameters', () => {
@@ -381,10 +373,10 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(0);
+      expect(infos.length).toBe(0);
     });
   });
 
@@ -536,7 +528,7 @@ describe('[example - record] type compatibility validation', () => {
       });
     });
 
-    test('- should reject NULL for NOT NULL column without default and increment', () => {
+    test('- should reject NULL for NOT NULL column without a default value or auto-increment', () => {
       const source = `
         Table users {
           id int [pk]
@@ -549,12 +541,12 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(2);
-      expect(warnings[0].diagnostic).toBe("NULL not allowed for non-nullable column 'name' without default and increment");
-      expect(warnings[1].diagnostic).toBe("NULL not allowed for non-nullable column 'status' without default and increment");
+      expect(infos.length).toBe(2);
+      expect(infos[0].diagnostic).toBe('NULL not allowed for NOT NULL column `name` without a default value or auto-increment');
+      expect(infos[1].diagnostic).toBe('NULL not allowed for NOT NULL column `status` without a default value or auto-increment');
     });
 
     test('- should allow NULL for NOT NULL column with default or increment', () => {
@@ -631,12 +623,12 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(2);
-      expect(warnings[0].diagnostic).toContain("Invalid datetime value for column 'created_at'");
-      expect(warnings[1].diagnostic).toContain("Invalid datetime value for column 'created_at'");
+      expect(infos.length).toBe(2);
+      expect(infos[0].diagnostic).toContain('Invalid datetime value for column `created_at`');
+      expect(infos[1].diagnostic).toContain('Invalid datetime value for column `created_at`');
     });
   });
 
@@ -687,7 +679,7 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       // Enum access with invalid value produces a BINDING_ERROR
       expect(errors.length).toBeGreaterThan(0);
@@ -760,11 +752,11 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(1);
-      expect(warnings[0].diagnostic).toBe("Invalid enum value for column 'status'");
+      expect(infos.length).toBe(1);
+      expect(infos[0].diagnostic).toBe('Invalid enum value for column `status`');
     });
 
     test('- should validate enum from table partial', () => {
@@ -789,12 +781,12 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(1);
-      expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-      expect(warnings[0].diagnostic).toBe('Invalid enum value for column \'priority\'');
+      expect(infos.length).toBe(1);
+      expect(infos[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(infos[0].diagnostic).toBe('Invalid enum value for column `priority`');
     });
   });
 
@@ -819,16 +811,16 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(6);
-      expect(warnings[0].diagnostic).toBe("Invalid numeric value for column 'id'");
-      expect(warnings[1].diagnostic).toBe("Invalid integer value 10.5 for column 'quantity': expected integer, got decimal");
-      expect(warnings[2].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 12 bytes");
-      expect(warnings[3].diagnostic).toBe("Numeric value 12345.67 for column 'price' exceeds precision: expected at most 5 total digits, got 7");
-      expect(warnings[4].diagnostic).toBe("Invalid boolean value for column 'active'");
-      expect(warnings[5].diagnostic).toBe("Invalid enum value for column 'status'");
+      expect(infos.length).toBe(6);
+      expect(infos[0].diagnostic).toBe('Invalid numeric value for column `id`');
+      expect(infos[1].diagnostic).toBe('Invalid integer value `10.5` for column `quantity`: expected integer, got decimal');
+      expect(infos[2].diagnostic).toBe('String value for column `name` exceeds maximum length: expected at most 5 bytes (UTF-8), got 12 bytes');
+      expect(infos[3].diagnostic).toBe('Numeric value `12345.67` for column `price` exceeds precision: expected at most 5 total digits, got 7');
+      expect(infos[4].diagnostic).toBe('Invalid boolean value for column `active`');
+      expect(infos[5].diagnostic).toBe('Invalid enum value for column `status`');
     });
 
     test('- should validate across multiple records', () => {
@@ -848,13 +840,13 @@ describe('[example - record] type compatibility validation', () => {
       `;
       const result = interpret(source);
       const errors = result.getErrors();
-      const warnings = result.getWarnings();
+      const infos = result.getInfos();
 
       expect(errors.length).toBe(0);
-      expect(warnings.length).toBe(3);
-      expect(warnings[0].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 11 bytes");
-      expect(warnings[1].diagnostic).toBe("Invalid integer value 30.5 for column 'quantity': expected integer, got decimal");
-      expect(warnings[2].diagnostic).toBe("String value for column 'name' exceeds maximum length: expected at most 5 bytes (UTF-8), got 9 bytes");
+      expect(infos.length).toBe(3);
+      expect(infos[0].diagnostic).toBe('String value for column `name` exceeds maximum length: expected at most 5 bytes (UTF-8), got 11 bytes');
+      expect(infos[1].diagnostic).toBe('Invalid integer value `30.5` for column `quantity`: expected integer, got decimal');
+      expect(infos[2].diagnostic).toBe('String value for column `name` exceeds maximum length: expected at most 5 bytes (UTF-8), got 9 bytes');
     });
   });
 });

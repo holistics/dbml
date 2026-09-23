@@ -1,10 +1,12 @@
 import Schema, { NormalizedSchemaIdMap, RawSchema } from './schema';
 import Ref, { NormalizedRefIdMap } from './ref';
+import Dep, { NormalizedDepIdMap } from './dep';
+import { NormalizedDepEdgeIdMap } from './dep_edge';
 import Enum, { NormalizedEnumIdMap } from './enum';
 import TableGroup, { NormalizedTableGroupIdMap } from './tableGroup';
 import Table, { NormalizedTableIdMap } from './table';
 import StickyNote, { NormalizedNoteIdMap } from './stickyNote';
-import Element, { RawNote, Token } from './element';
+import Element, { RawNote, Token, Color } from './element';
 import DbState from './dbState';
 import { NormalizedEndpointIdMap } from './endpoint';
 import { NormalizedEnumValueIdMap } from './enumValue';
@@ -18,6 +20,7 @@ export interface Project {
     note: RawNote;
     database_type: string;
     name: string;
+    token: TokenPosition;
 }
 
 export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
@@ -57,6 +60,7 @@ export interface RawDatabase {
     notes: StickyNote[];
     enums: Enum[];
     refs: Ref[];
+    deps?: Dep[];
     tableGroups: TableGroup[];
     project: Project;
     records: RawTableRecord[];
@@ -84,7 +88,7 @@ declare class Database extends Element {
     checkSchema(schema: Schema): void;
     processSchemaElements(elements: Schema[] | Table[] | Enum[] | TableGroup[] | Ref[], elementType: any): void;
     findOrCreateSchema(schemaName: string): Schema;
-    findTable(rawTable: any): Table;
+    findTable(schemaName: string | null, tableName: string): Table;
     processTablePartials(rawTablePartials: any[]): TablePartial[];
     findTablePartial(partialName: string): TablePartial;
     export(): {
@@ -114,7 +118,7 @@ declare class Database extends Element {
                 name: string;
                 alias: string;
                 note: string;
-                headerColor: string;
+                headerColor: Color;
             }[];
             enums: {
                 values: {
@@ -150,7 +154,7 @@ declare class Database extends Element {
             id: number;
             name: string;
             content: string;
-            headerColor: string;
+            headerColor: Color;
         }[];
         records: {
             id: number;
@@ -165,7 +169,7 @@ declare class Database extends Element {
         tablePartials: {
             name: string;
             note: string;
-            headerColor: string;
+            headerColor: Color;
             fields: {
                 name: string;
                 type: any;
@@ -223,7 +227,7 @@ declare class Database extends Element {
                 name: string;
                 alias: string;
                 note: string;
-                headerColor: string;
+                headerColor: Color;
             }[];
             enums: {
                 values: {
@@ -259,12 +263,12 @@ declare class Database extends Element {
             id: number;
             name: string;
             content: string;
-            headerColor: string;
+            headerColor: Color;
         }[];
         tablePartials: {
             name: string;
             note: string;
-            headerColor: string;
+            headerColor: Color;
             fields: {
                 name: string;
                 type: any;
@@ -314,6 +318,8 @@ export interface NormalizedModel {
     schemas: NormalizedSchemaIdMap;
     endpoints: NormalizedEndpointIdMap;
     refs: NormalizedRefIdMap;
+    deps: NormalizedDepIdMap;
+    depEdges: NormalizedDepEdgeIdMap;
     fields: NormalizedFieldIdMap;
     tables: NormalizedTableIdMap;
     tableGroups: NormalizedTableGroupIdMap;

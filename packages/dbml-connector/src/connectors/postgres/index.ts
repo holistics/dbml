@@ -282,14 +282,14 @@ const generateRawRefs = async (client: Client, schemas: string[]): Promise<Ref[]
       tableName: table_name,
       schemaName: table_schema,
       fieldNames: column_names.split(','),
-      relation: '*',
+      relation: '0..*',
     };
 
     const ep2: RefEndpoint = {
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
       fieldNames: foreign_column_names.split(','),
-      relation: '1',
+      relation: '0..1',
     };
 
     refs.push({

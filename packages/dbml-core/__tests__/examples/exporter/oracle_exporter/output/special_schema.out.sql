@@ -6,7 +6,7 @@ CREATE TABLE "users" (
 
 CREATE TABLE "orders" (
   "id" integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  "status" nvarchar2(255) NOT NULL CHECK ("status" IN ('created', 'pending', 'processing', 'waiting_for_payment', 'success', 'cancel')),
+  "status" nvarchar2(255) CHECK ("status" IN ('created', 'pending', 'processing', 'waiting_for_payment', 'success', 'cancel')),
   "note" nclob DEFAULT '',
   "user_id" integer NOT NULL,
   "created_at" timestamp DEFAULT current_timestamp,

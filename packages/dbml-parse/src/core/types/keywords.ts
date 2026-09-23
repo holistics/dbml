@@ -2,6 +2,7 @@ export enum ElementKind {
   Table = 'table',
   Enum = 'enum',
   Ref = 'ref',
+  Dep = 'dep',
   Note = 'note',
   Project = 'project',
   Indexes = 'indexes',
@@ -14,6 +15,7 @@ export enum ElementKind {
   DiagramViewNotes = 'notes',
   DiagramViewTableGroups = 'tablegroups',
   DiagramViewSchemas = 'schemas',
+  Metadata = 'metadata',
 }
 
 export enum SettingName {
@@ -25,6 +27,7 @@ export enum SettingName {
   PrimaryKey = 'primary key',
   Unique = 'unique',
   Ref = 'ref',
+  Dep = 'dep',
   NotNull = 'not null',
   Null = 'null',
   Increment = 'increment',

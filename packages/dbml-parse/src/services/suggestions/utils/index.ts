@@ -12,6 +12,7 @@ export function pickCompletionItemKind (symbolKind: SymbolKind): CompletionItemK
       return CompletionItemKind.Module;
     case SymbolKind.Table:
     case SymbolKind.TablePartial:
+    case SymbolKind.Metadata:
       return CompletionItemKind.Class;
     case SymbolKind.Column:
     case SymbolKind.TableGroupField:

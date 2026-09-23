@@ -10,10 +10,10 @@ GO
 CREATE TABLE [users] (
   [id] int PRIMARY KEY,
   [name] nvarchar(255),
-  [pjs] nvarchar(255) NOT NULL CHECK ([pjs] IN ('created2', 'running2', 'done2', 'failure2')),
-  [pjs2] nvarchar(255) NOT NULL CHECK ([pjs2] IN ('created2', 'running2', 'done2', 'failure2')),
-  [pg] nvarchar(255) NOT NULL CHECK ([pg] IN ('male', 'female')),
-  [pg2] nvarchar(255) NOT NULL CHECK ([pg2] IN ('male2', 'female2'))
+  [pjs] nvarchar(255) CHECK ([pjs] IN ('created2', 'running2', 'done2', 'failure2')),
+  [pjs2] nvarchar(255) CHECK ([pjs2] IN ('created2', 'running2', 'done2', 'failure2')),
+  [pg] nvarchar(255) CHECK ([pg] IN ('male', 'female')),
+  [pg2] nvarchar(255) CHECK ([pg2] IN ('male2', 'female2'))
 )
 GO
 
@@ -26,10 +26,10 @@ GO
 CREATE TABLE [ecommerce].[users] (
   [id] int PRIMARY KEY,
   [name] nvarchar(255),
-  [ejs] nvarchar(255) NOT NULL CHECK ([ejs] IN ('created2', 'running2', 'done2', 'failure2')),
-  [ejs2] nvarchar(255) NOT NULL CHECK ([ejs2] IN ('created2', 'running2', 'done2', 'failure2')),
-  [eg] nvarchar(255) NOT NULL CHECK ([eg] IN ('male', 'female')),
-  [eg2] nvarchar(255) NOT NULL CHECK ([eg2] IN ('male2', 'female2'))
+  [ejs] nvarchar(255) CHECK ([ejs] IN ('created2', 'running2', 'done2', 'failure2')),
+  [ejs2] nvarchar(255) CHECK ([ejs2] IN ('created2', 'running2', 'done2', 'failure2')),
+  [eg] nvarchar(255) CHECK ([eg] IN ('male', 'female')),
+  [eg2] nvarchar(255) CHECK ([eg2] IN ('male2', 'female2'))
 )
 GO
 

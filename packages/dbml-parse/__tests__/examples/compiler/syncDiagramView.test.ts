@@ -1,17 +1,11 @@
-import {
-  describe, expect, it,
-} from 'vitest';
+import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler/index';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import Lexer from '@/core/lexer/lexer';
 import { DEFAULT_ENTRY, DEFAULT_SCHEMA_NAME } from '@/constants';
 import Parser from '@/core/parser/parser';
-import {
-  SyntaxNodeIdGenerator,
-} from '@/core/types/nodes';
-import type {
-  DiagramViewSyncOperation,
-} from '@/compiler/queries/transform/syncDiagramView';
+import { SyntaxNodeIdGenerator } from '@/core/types/nodes';
+import type { DiagramViewSyncOperation } from '@/compiler/queries/transform/syncDiagramView';
 import { interpret } from '@tests/utils';
 
 function syncDiagramView (dbml: string, operations: DiagramViewSyncOperation[]) {
@@ -413,7 +407,9 @@ describe('syncDiagramView - generation rules (filter-dbml-examples.md)', () => {
         name: 'V',
         visibleEntities: {
           tables: [{ name: 'users', schemaName: 'public' }, { name: 'orders', schemaName: 'public' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -927,7 +923,9 @@ describe('syncDiagramView - entity name quoting', () => {
         name: 'V',
         visibleEntities: {
           tables: [{ name: 'Order Details', schemaName: 'public' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -943,7 +941,9 @@ describe('syncDiagramView - entity name quoting', () => {
         name: 'V',
         visibleEntities: {
           tables: [{ name: 'user-table', schemaName: 'public' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -957,7 +957,9 @@ describe('syncDiagramView - entity name quoting', () => {
         name: 'V',
         visibleEntities: {
           tables: [{ name: '123table', schemaName: 'public' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -971,7 +973,9 @@ describe('syncDiagramView - entity name quoting', () => {
         name: 'V',
         visibleEntities: {
           tables: [{ name: 'say "hello"', schemaName: 'public' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -985,7 +989,9 @@ describe('syncDiagramView - entity name quoting', () => {
         name: 'V',
         visibleEntities: {
           tables: [{ name: 'users', schemaName: 'my schema' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -999,7 +1005,9 @@ describe('syncDiagramView - entity name quoting', () => {
         name: 'V',
         visibleEntities: {
           tables: [{ name: 'Order Details', schemaName: 'Sales Data' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -1013,7 +1021,9 @@ describe('syncDiagramView - entity name quoting', () => {
         name: 'V',
         visibleEntities: {
           tables: [{ name: 'users', schemaName: 'public' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -1031,7 +1041,8 @@ describe('syncDiagramView - entity name quoting', () => {
         visibleEntities: {
           tables: [],
           tableGroups: [{ name: 'Inventory Group' }, { name: 'Reporting' }],
-          schemas: [], stickyNotes: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -1048,7 +1059,8 @@ describe('syncDiagramView - entity name quoting', () => {
         visibleEntities: {
           tables: [],
           tableGroups: [{ name: 'my-group!' }],
-          schemas: [], stickyNotes: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);
@@ -1083,7 +1095,9 @@ describe('syncDiagramView - entity name quoting', () => {
         operation: 'create',
         name: 'V',
         visibleEntities: {
-          tables: [], tableGroups: [], schemas: [],
+          tables: [],
+          tableGroups: [],
+          schemas: [],
           stickyNotes: [{ name: 'Important Note' }, { name: 'reminder' }],
         },
       },
@@ -1099,7 +1113,9 @@ describe('syncDiagramView - entity name quoting', () => {
         operation: 'create',
         name: 'V',
         visibleEntities: {
-          tables: [], tableGroups: [], schemas: [],
+          tables: [],
+          tableGroups: [],
+          schemas: [],
           stickyNotes: [{ name: 'note "A"' }],
         },
       },
@@ -1110,14 +1126,16 @@ describe('syncDiagramView - entity name quoting', () => {
   // Round-trip: quoted names parse back correctly
 
   it('round-trip: quoted table name re-parses without errors', () => {
-    const existingDbml = `Table "Order Details" { id int }`;
+    const existingDbml = 'Table "Order Details" { id int }';
     const { newDbml } = syncDiagramView(existingDbml, [
       {
         operation: 'create',
         name: 'V',
         visibleEntities: {
           tables: [{ name: 'Order Details', schemaName: 'public' }],
-          tableGroups: [], schemas: [], stickyNotes: [],
+          tableGroups: [],
+          schemas: [],
+          stickyNotes: [],
         },
       },
     ]);

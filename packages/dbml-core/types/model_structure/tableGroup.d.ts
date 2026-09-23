@@ -1,8 +1,9 @@
 import { NormalizedModel } from './database';
 import DbState from './dbState';
-import Element, { RawNote, Token} from './element';
+import Element, { RawNote, Token, Color } from './element';
 import Schema from './schema';
 import Table from './table';
+import type { CustomMetadata } from '@dbml/parse';
 
 export interface RawTableGroup {
     name: string;
@@ -10,7 +11,8 @@ export interface RawTableGroup {
     schema: Schema;
     token: Token;
     note: RawNote;
-    color: string;
+    color: Color;
+    metadata?: CustomMetadata;
 }
 
 declare class TableGroup extends Element {
@@ -21,8 +23,10 @@ declare class TableGroup extends Element {
     id: number;
     note: string;
     noteToken: Token;
-    color: string;
-    constructor({ name, token, tables, schema, note, color }: RawTableGroup);
+    color: Color;
+    metadata: CustomMetadata;
+
+    constructor({ name, token, tables, schema, note, color, metadata }: RawTableGroup);
     generateId(): void;
     processTables(rawTables: any): void;
     pushTable(table: any): void;
@@ -34,7 +38,7 @@ declare class TableGroup extends Element {
         }[];
         name: string;
         note: string;
-        color: string;
+        color: Color;
     };
     exportChild(): {
         tables: {
@@ -51,7 +55,8 @@ declare class TableGroup extends Element {
     shallowExport(): {
         name: string;
         note: string;
-        color: string;
+        color: Color;
+        metadata: CustomMetadata;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -59,9 +64,10 @@ export interface NormalizedTableGroup {
     id: number;
     name: string;
     note: string | null;
-    color: string;
+    color: Color;
     tableIds: number[];
     schemaId: number;
+    metadata: CustomMetadata;
 }
 
 export interface NormalizedTableGroupIdMap {

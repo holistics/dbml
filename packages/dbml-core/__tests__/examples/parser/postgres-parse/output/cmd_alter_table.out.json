@@ -1,4 +1,5 @@
 {
+  "schemas": [],
   "tables": [],
   "refs": [
     {
@@ -8,18 +9,24 @@
           "fieldNames": [
             "address"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "addresses",
           "fieldNames": [
             "address"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ],
+      "onDelete": null,
+      "onUpdate": null,
       "name": "distfk"
     }
   ],
-  "enums": []
+  "enums": [],
+  "tableGroups": [],
+  "aliases": [],
+  "project": {},
+  "records": []
 }

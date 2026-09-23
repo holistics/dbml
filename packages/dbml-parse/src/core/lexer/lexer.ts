@@ -386,19 +386,47 @@ export default class Lexer {
   operator (c: string) {
     switch (c) {
       case '<':
-        if ([
-          '>',
-          '=',
-        ].includes(this.peek()!)) this.advance(); // <, >, <=
+        if (this.peek() === '=') {
+          this.advance(); // <=
+        } else if (this.peek() === '>') {
+          this.advance(); // <>
+          if (this.peek() === '?') this.advance(); // <>?
+        } else if (this.peek() === '?') {
+          this.advance(); // <?
+        } else if (this.peek() === '-') {
+          this.advance(); // <- (dep upstream)
+        }
         break;
       case '>':
-        if (this.peek() === '=') this.advance(); // >, >=
+        if (this.peek() === '=') this.advance(); // >=
+        else if (this.peek() === '?') this.advance(); // >?
+        break;
+      case '-':
+        if (this.peek() === '>') this.advance(); // -> (dep downstream)
+        else if (this.peek() === '?') this.advance(); // -?
+        break;
+      case '?':
+        if (this.peek() === '-') {
+          this.advance(); // ?-
+          if (this.peek() === '?') this.advance(); // ?-?
+        } else if (this.peek() === '<') {
+          this.advance(); // ?<
+          if (this.peek() === '>') {
+            this.advance(); // ?<>
+            if (this.peek() === '?') this.advance(); // ?<>?
+          } else if (this.peek() === '?') {
+            this.advance(); // ?<?
+          }
+        } else if (this.peek() === '>') {
+          this.advance(); // ?>
+          if (this.peek() === '?') this.advance(); // ?>?
+        }
         break;
       case '=':
-        if (this.peek() === '=') this.advance(); // =, ==
+        if (this.peek() === '=') this.advance(); // ==
         break;
       case '!':
-        if (this.peek() === '=') this.advance(); // !, !=
+        if (this.peek() === '=') this.advance(); // !=
         break;
       default:
         break;

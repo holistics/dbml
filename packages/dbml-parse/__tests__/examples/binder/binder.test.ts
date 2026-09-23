@@ -1,5 +1,7 @@
 import { describe, expect } from 'vitest';
-import { SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode, ProgramNode } from '@/core/types/nodes';
+import {
+  SyntaxNodeKind, ElementDeclarationNode, BlockExpressionNode, ProgramNode,
+} from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/core/types/module';
 import { CompileErrorCode } from '@/core/types/errors';
@@ -31,7 +33,7 @@ describe('[example] binder', () => {
       expect(findMember(compiler, tableSymbol!, SymbolKind.Column, 'id')).toSatisfy((s: any) => s?.isKind(SymbolKind.Column));
 
       // Verify column symbol properties
-      const columnSymbol = findMember(compiler, tableSymbol!, SymbolKind.Column, 'id')
+      const columnSymbol = findMember(compiler, tableSymbol!, SymbolKind.Column, 'id');
       const tableBody = tableNode.body as BlockExpressionNode;
       const columnNode = tableBody.body[0];
       expect(columnSymbol!.declaration).toBe(columnNode);
@@ -687,6 +689,20 @@ describe('[example] binder', () => {
 
       expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'users')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
       expect(findMember(compiler, schemaSymbol, SymbolKind.Table, 'posts')).toSatisfy((s: any) => s?.isKind(SymbolKind.Table));
+    });
+
+    test('should error when inline ref target matches table name but resolves differently', () => {
+      // Table a.b.R means schema=a, schema=b, table=R
+      // But ref a.b.R resolves as schema=a, table=b, column=R
+      // So it should error because b is a schema, not a table
+      const source = `
+        Table a.b.R {
+          id int [ref: < a.b.R]
+        }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors.some((e) => e.diagnostic.includes('R'))).toBe(true);
     });
 
     test('should allow forward reference to table', () => {

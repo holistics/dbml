@@ -6,10 +6,12 @@ import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { checksModule } from './checks';
 import { customModule } from './custom';
+import { depModule } from './dep';
 import { diagramViewModule } from './diagramView';
 import { enumModule } from './enum';
 import { indexesModule } from './indexes';
 import { noteModule } from './note';
+import { metadataModule } from './metadata';
 import { programModule } from './program';
 import { projectModule } from './project';
 import { recordsModule } from './records';
@@ -28,10 +30,12 @@ export const modules: LocalModule[] = [
   indexesModule,
   checksModule,
   refModule,
+  depModule,
   projectModule,
   tableGroupModule,
   tablePartialModule,
   noteModule,
+  metadataModule,
   diagramViewModule,
   programModule,
   useModule,

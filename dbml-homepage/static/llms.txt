@@ -7,13 +7,14 @@ For the dbdiagram.io web app (diagrams, collaboration, API), see [dbdiagram docs
 ## Language and reference
 
 - [Home](https://dbml.dbdiagram.io/home): Overview, ecosystem, and links to tools.
-- [Core database markup](https://dbml.dbdiagram.io/docs): Tables, columns, relationships, indexes, enums, and other core syntax.
-- [Enrichment and visualization](https://dbml.dbdiagram.io/syntax/enrichment-visualization): Notes, labels, colors, and display-oriented syntax like table groups, diagram views.
+- [Core database markup](https://dbml.dbdiagram.io/docs): Tables, columns, relationships (including optional refs and inactive refs), indexes, enums, records (sample data), data dependencies (Dep), and other core syntax.
+- [Enrichment and visualization](https://dbml.dbdiagram.io/syntax/enrichment-visualization): Notes, custom metadata (inline settings and `Metadata` blocks), labels, colors, and display-oriented syntax like table groups, diagram views.
 - [Language basics](https://dbml.dbdiagram.io/syntax/language-basics): Core language constructs (strings, comments, and syntax conventions).
+- [Module system](https://dbml.dbdiagram.io/syntax/module-system): Multi-file projects, use declarations, and import/export.
 
 ## Tooling
 
-- [Database support](https://dbml.dbdiagram.io/database-support): Dialects and compatibility notes.
+- [Ecosystem & integrations](https://dbml.dbdiagram.io/ecosystem): Official apps and packages, the database support matrix (import/export/connector per dialect), and community-built parsers, editor plugins and generators.
 - [CLI](https://dbml.dbdiagram.io/cli): Command-line tool for DBML ⇄ SQL conversion.
 
 ## JavaScript modules

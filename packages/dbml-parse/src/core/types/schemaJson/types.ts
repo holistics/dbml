@@ -1,0 +1,365 @@
+import { NONE_COLOR } from '@/constants';
+import type { Filepath } from '../filepath';
+import type { Position } from '../position';
+import type { RelationshipOp, RelationCardinality } from '../relation';
+
+export type CustomMetadata = Record<string, string>;
+
+export type Color = `#${string}` | typeof NONE_COLOR;
+
+export enum AliasKind {
+  Table = 'table',
+}
+
+export interface TokenPosition {
+  start: Position;
+  end: Position;
+  filepath: Filepath;
+}
+
+export interface ElementRef {
+  name: string; // canonical name in source file
+  schemaName: string | null; // canonical schema name in source file
+  filepath: Filepath; // The original source file
+  // Every local name under which the element is reachable in this file
+  visibleNames: {
+    schemaName: string | null;
+    name: string;
+  }[];
+}
+
+// Imported elements
+export interface DatabaseExternals {
+  tables: ElementRef[];
+  enums: ElementRef[];
+  tableGroups: ElementRef[];
+  tablePartials: ElementRef[];
+  notes: ElementRef[];
+}
+
+/**
+ * FilterConfig is a tri-state filter:
+ * - [] (empty array) = show all
+ * - [...] (array with items) = show only these specific items
+ * - null = hide all
+ */
+export interface FilterConfig {
+  tables: Array<{
+    name: string;
+    schemaName: string;
+  }> | null;
+  stickyNotes: Array<{ name: string }> | null;
+  tableGroups: Array<{ name: string }> | null;
+  schemas: Array<{ name: string }> | null;
+}
+
+export interface DiagramView {
+  name: string;
+  schemaName: string | null;
+  visibleEntities: FilterConfig;
+  token: TokenPosition;
+}
+
+// Per-file schema:
+// - Local elements
+// - Externals (import refs)
+export interface Database {
+  schemas: [];
+  tables: Table[];
+  notes: Note[];
+  refs: Ref[];
+  deps: Dep[];
+  enums: Enum[];
+  tableGroups: TableGroup[];
+  aliases: Alias[];
+  project?: Project;
+  tablePartials: TablePartial[];
+  records: TableRecord[];
+  externals: DatabaseExternals;
+  diagramViews: DiagramView[];
+  token?: TokenPosition;
+}
+
+// Multifile project
+export interface MasterDatabase {
+  files: Record<string, Database>;
+}
+
+export interface Table {
+  name: string;
+  schemaName: string | null;
+  alias: string | null;
+  fields: Column[];
+  checks: Check[];
+  partials: TablePartialInjection[];
+  token: TokenPosition;
+  indexes: Index[];
+  headerColor?: Color;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  metadata?: CustomMetadata;
+}
+
+export interface Note {
+  name: string;
+  content: string;
+  token: TokenPosition;
+  color?: Color;
+  metadata?: CustomMetadata;
+}
+
+export interface ColumnType {
+  schemaName: string | null;
+  type_name: string;
+  args: string | null;
+  // These are stripped before going into @dbml/core
+  numericParams?: {
+    precision: number;
+    scale: number;
+  };
+  lengthParam?: { length: number };
+  isEnum?: boolean;
+}
+
+export interface Column {
+  name: string;
+  type: ColumnType;
+  token: TokenPosition;
+  inline_refs: InlineRef[];
+  inline_deps: InlineDep[];
+  checks: Check[];
+  pk?: boolean;
+  dbdefault?: {
+    type: 'number' | 'string' | 'boolean' | 'expression';
+    value: number | string;
+  };
+  increment?: boolean;
+  unique?: boolean;
+  not_null?: boolean;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  metadata?: CustomMetadata;
+}
+
+export interface Index {
+  columns: {
+    value: string;
+    type: string;
+    token: TokenPosition;
+  }[];
+  token: TokenPosition;
+  unique?: boolean;
+  pk?: boolean;
+  name?: string;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  type?: string;
+}
+
+export interface Check {
+  token: TokenPosition;
+  expression: string;
+  name?: string;
+}
+
+export interface InlineRef {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  relation: RelationshipOp;
+  token: TokenPosition;
+}
+
+export interface Ref {
+  schemaName: string | null;
+  name: string | null;
+  endpoints: RefEndpointPair;
+  color?: Color;
+  onDelete?: string;
+  onUpdate?: string;
+  inactive?: boolean;
+  token: TokenPosition;
+}
+
+export type RefEndpointPair = [RefEndpoint, RefEndpoint];
+
+export interface RefEndpoint {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  relation: RelationCardinality;
+  token: TokenPosition;
+}
+
+export interface Dep {
+  schemaName: string | null;
+  name: string | null;
+  edges: DepEdge[];
+  color?: Color;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  metadata?: Record<string, string | number | boolean | null>;
+  token: TokenPosition;
+}
+
+export interface DepEdge {
+  upstream: DepEndpoint;
+  downstream: DepEndpoint;
+  token: TokenPosition;
+}
+
+export interface DepEndpoint {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  token: TokenPosition;
+}
+
+export const DEP_DOWNSTREAM = '->' as const;
+export const DEP_UPSTREAM = '<-' as const;
+export type DepDirection = typeof DEP_DOWNSTREAM | typeof DEP_UPSTREAM;
+
+export interface InlineDep {
+  schemaName: string | null;
+  tableName: string;
+  fieldNames: string[];
+  direction: DepDirection;
+  token: TokenPosition;
+}
+
+export interface Enum {
+  name: string;
+  schemaName: string | null;
+  token: TokenPosition;
+  values: EnumField[];
+}
+
+export interface EnumField {
+  name: string;
+  token: TokenPosition;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+}
+
+export interface TableGroup {
+  name: string | null;
+  schemaName: string | null;
+  tables: TableGroupField[];
+  token: TokenPosition;
+  color?: Color;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+  metadata?: CustomMetadata;
+}
+
+export interface TableGroupField {
+  name: string;
+  schemaName: string | null;
+}
+
+export interface Alias {
+  name: string;
+  kind: AliasKind;
+  value: {
+    tableName: string;
+    schemaName: string | null;
+  };
+}
+
+export interface TablePartial {
+  name: string;
+  fields: Column[];
+  token: TokenPosition;
+  indexes: Index[];
+  checks: Check[];
+  headerColor?: Color;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
+}
+
+export interface TablePartialInjection {
+  name: string;
+  order: number;
+  token: TokenPosition;
+}
+
+export type RecordValueType = 'string' | 'bool' | 'integer' | 'real' | 'date' | 'time' | 'datetime' | string;
+
+export interface RecordValue {
+  value: any;
+  type: RecordValueType;
+  token: TokenPosition;
+}
+
+export interface TableRecord {
+  schemaName: string | null;
+  tableName: string;
+  columns: string[];
+  values: RecordValue[][];
+  example?: boolean;
+  token: TokenPosition;
+}
+
+// Intermediate, per-block interpreted form of a Metadata declaration: the key/value pairs from one `Metadata` block body, with each value's source token.
+// NOT part of the emitted Database.
+// The interpreter looks the block up by its target symbol, merges every block targeting the same element, and attaches the merged values onto that element's `metadata` field (Table/Column/TableGroup/Note).
+// Only lives inside the metadata pass.
+export type MetadataValues = Record<string, { value: string; token: TokenPosition }>;
+
+export type Project =
+  | Record<string, never>
+  | {
+    name: string | null;
+    tables: Table[];
+    refs: Ref[];
+    enums: Enum[];
+    tableGroups: TableGroup[];
+    tablePartials: TablePartial[];
+    note?: {
+      value: string;
+      token: TokenPosition;
+    };
+    token: TokenPosition;
+    [index: string & Omit<any, 'name' | 'tables' | 'refs' | 'enums' | 'tableGroups' | 'note' | 'tablePartials' | 'records'>]: string;
+  };
+
+export type SchemaElement =
+  | Database
+  | Project
+  | Table
+  | Note
+  | Column
+  | ColumnType
+  | Index
+  | Check
+  | InlineRef
+  | InlineDep
+  | Ref
+  | RefEndpoint
+  | Dep
+  | DepEdge
+  | DepEndpoint
+  | Enum
+  | EnumField
+  | TableGroup
+  | TableGroupField
+  | Alias
+  | TablePartial
+  | TablePartialInjection
+  | TableRecord
+  | RecordValue
+  | MetadataValues;

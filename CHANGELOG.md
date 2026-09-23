@@ -1,3 +1,117 @@
+## v10.1.1 (2026-08-14)
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#958](https://github.com/holistics/dbml/pull/958) Resolve a dep block through the symbol table ([@NQPhuc](https://github.com/NQPhuc))
+
+#### Committers: 1
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v10.1.0 (2026-08-13)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#956](https://github.com/holistics/dbml/pull/956) Improve parsing diagnostics with explanations ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
+## v10.0.0 (2026-08-10)
+
+#### :bug: Bug Fix
+* `dbml-parse`
+  * [#952](https://github.com/holistics/dbml/pull/952) Fix many-to-many FK validation in records constraints ([@huydo862003](https://github.com/huydo862003))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#933](https://github.com/holistics/dbml/pull/933) Data dependency ([@NQPhuc](https://github.com/NQPhuc))
+
+#### :robot: Dependencies Update
+* [#931](https://github.com/holistics/dbml/pull/931) chore(deps): bump @babel/core from 7.24.5 to 7.29.7 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#944](https://github.com/holistics/dbml/pull/944) chore(deps): bump immutable from 4.3.8 to 4.3.9 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#943](https://github.com/holistics/dbml/pull/943) chore(deps): bump svgo from 3.2.0 to 3.3.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#945](https://github.com/holistics/dbml/pull/945) chore(deps): bump shell-quote from 1.8.4 to 1.10.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#926](https://github.com/holistics/dbml/pull/926) chore(deps): bump joi from 17.13.0 to 17.13.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- NQPhuc ([@NQPhuc](https://github.com/NQPhuc))
+
+## v9.1.1 (2026-07-31)
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#948](https://github.com/holistics/dbml/pull/948) Handle inline ref in partial table injections ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
+## v9.1.0 (2026-07-31)
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#932](https://github.com/holistics/dbml/pull/932) [DBX-6933] Feat: Support custom metadata element ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 1
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
+## v9.0.0 (2026-07-30)
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#937](https://github.com/holistics/dbml/pull/937) Support optional ref ([@huydo862003](https://github.com/huydo862003))
+
+#### :bug: Bug Fix
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#939](https://github.com/holistics/dbml/pull/939) Fix silent errors when an autoincrement/default PK composite component do not have a value ([@huydo862003](https://github.com/huydo862003))
+* `dbml-core`
+  * [#940](https://github.com/holistics/dbml/pull/940) Fix schema-qualified TableGroup export names ([@cyphercodes](https://github.com/cyphercodes))
+
+#### :robot: Dependencies Update
+* Other
+  * [#934](https://github.com/holistics/dbml/pull/934) chore(deps): bump http-proxy-middleware from 2.0.9 to 2.0.10, bump minimatch to 10.3.0, bump tar to 7.5.16, bump js-yaml to 3.16.0, form-data to 4.0.6, vite to 8.0.6 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#801](https://github.com/holistics/dbml/pull/801) chore(deps): bump diff from 4.0.2 to 4.0.4 ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#942](https://github.com/holistics/dbml/pull/942) chore(deps): bump websocket-driver from 0.7.4 to 0.7.5 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#922](https://github.com/holistics/dbml/pull/922) chore(deps): bump launch-editor from 2.6.1 to 2.14.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#874](https://github.com/holistics/dbml/pull/874) chore(deps): bump follow-redirects from 1.15.6 to 1.16.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#924](https://github.com/holistics/dbml/pull/924) chore(deps): bump shell-quote from 1.8.1 to 1.8.4 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+  * [#896](https://github.com/holistics/dbml/pull/896) chore(deps): bump yaml from 1.10.2 to 1.10.3 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- Rayan Salhab ([@cyphercodes](https://github.com/cyphercodes))
+
+## v8.3.1 (2026-06-30)
+
+#### :robot: Dependencies Update
+* `dbml-connector`
+  * [#935](https://github.com/holistics/dbml/pull/935) misc(connector): bump @google-cloud/bigquery to v8.3.1 ([@huyleminh01](https://github.com/huyleminh01))
+* Other
+  * [#928](https://github.com/holistics/dbml/pull/928) chore(deps): bump axios from 1.15.2 to 1.18.0 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* `dbml-parse`
+  * [#786](https://github.com/holistics/dbml/pull/786) chore(deps): bump mdast-util-to-hast from 13.1.0 to 13.2.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- Huy Le Minh ([@huyleminh01](https://github.com/huyleminh01))
+
+## v8.3.0 (2026-06-16)
+
+#### :running_woman: Performance
+* `dbml-parse`
+  * [#925](https://github.com/holistics/dbml/pull/925) Optimize the performance of the multifile parser by x6 ([@huydo862003](https://github.com/huydo862003))
+
+#### :rocket: New Feature
+* `dbml-core`, `dbml-parse`
+  * [#915](https://github.com/holistics/dbml/pull/915) Support sticky note color ([@huydo862003](https://github.com/huydo862003))
+
+#### :house_with_garden: Internal
+* `dbml-parse`
+  * [#925](https://github.com/holistics/dbml/pull/925) Add benchmark ci ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v8.2.5 (2026-06-03)
 
 #### :bug: Bug Fix

@@ -4,7 +4,7 @@
       ref="editorContainer"
       class="flex-1 min-h-0"
     />
-    <div class="status-bar bg-gray-50 border-t border-gray-200 px-3 py-1 text-xs text-gray-600 flex justify-between items-center">
+    <div class="status-bar bg-white border-t border-gray-200 px-3 py-1 text-xs text-gray-600 flex justify-between items-center">
       <div class="flex items-center space-x-4">
         <span>DBML</span>
         <span v-if="!readOnly">UTF-8</span>
@@ -105,7 +105,7 @@ function editorConfig (): monaco.editor.IStandaloneEditorConstructionOptions {
       enabled: false,
     },
     wordWrap: 'on',
-    scrollBeyondLastLine: false,
+    scrollBeyondLastLine: true,
     fontSize: 14,
     lineHeight: 20,
     tabSize: 2,
@@ -296,7 +296,7 @@ watch(() => filepath, () => {
   pendingRetrigger = false;
 });
 
-watch([() => parser.errors, () => parser.warnings], () => {
+watch([() => parser.errors, () => parser.warnings, () => parser.infos], () => {
   const _editor = editor.value;
   if (!_editor) return;
   const model = _editor.getModel();

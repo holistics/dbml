@@ -1,4 +1,4 @@
-import Element, { RawNote, Token } from './element';
+import Element, { RawNote, Token, Color } from './element';
 import Field from './field';
 import Index from './indexes';
 import Check from './check';
@@ -12,7 +12,7 @@ export interface RawTablePartial {
     indexes: Index[];
     checks?: any[];
     token: Token;
-    headerColor: string;
+    headerColor: Color;
     dbState: DbState;
 }
 
@@ -23,7 +23,7 @@ declare class TablePartial extends Element {
     fields: Field[];
     indexes: Index[];
     checks: Check[];
-    headerColor: string;
+    headerColor: Color;
     dbState: DbState;
     id: number;
 
@@ -32,7 +32,7 @@ declare class TablePartial extends Element {
     export(): {
         name: string;
         note: string;
-        headerColor: string;
+        headerColor: Color;
         fields: {
             name: string;
             type: any;
@@ -59,7 +59,7 @@ declare class TablePartial extends Element {
     shallowExport(): {
         name: string;
         note: string;
-        headerColor: string;
+        headerColor: Color;
         fields: {
             name: string;
             type: any;
@@ -90,7 +90,7 @@ export interface NormalizedTablePartial {
     id: number;
     name: string;
     note: string;
-    headerColor: string;
+    headerColor: Color;
     fieldIds: number[];
     indexIds: number[];
     checkIds: number[];

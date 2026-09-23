@@ -1,4 +1,5 @@
 import {
+  parseCardinality,
   isBinaryType,
   isBooleanType,
   isDateTimeType,
@@ -67,7 +68,7 @@ class SqlServerExporter {
 
       if (field.enumId) {
         const _enum = model.enums[field.enumId];
-        line = `[${field.name}] nvarchar(255) NOT NULL CHECK ([${field.name}] IN (`;
+        line = `[${field.name}] nvarchar(255) CHECK ([${field.name}] IN (`;
         const enumValues = _enum.valueIds.map((valueId) => {
           const value = model.enumValues[valueId];
           return `'${value.name}'`;
@@ -248,7 +249,7 @@ class SqlServerExporter {
     const strArr = refIds.map((refId) => {
       let line = '';
       const ref = model.refs[refId];
-      const refOneIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
+      const refOneIndex = ref.endpointIds.findIndex((endpointId) => parseCardinality(model.endpoints[endpointId].relation).max === 1);
       const refEndpointIndex = refOneIndex === -1 ? 0 : refOneIndex;
       const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
       const refEndpointId = ref.endpointIds[refEndpointIndex];
@@ -313,9 +314,7 @@ class SqlServerExporter {
       }
       const indexName = index.name
         ? `[${index.name}]`
-        : `${shouldPrintSchema(schema, model)
-          ? `[${schema.name}].`
-          : ''}[${table.name}_index_${i}]`;
+        : `[${table.name}_index_${i}]`;
       line += ` INDEX ${indexName} ON ${shouldPrintSchema(schema, model)
         ? `[${schema.name}].`
         : ''}[${table.name}]`;

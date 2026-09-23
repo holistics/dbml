@@ -1,4 +1,4 @@
-import { get, partition } from 'lodash-es';
+import { partition } from 'lodash-es';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
@@ -14,11 +14,27 @@ import {
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
-import type {
-  Filepath,
-  NoteSymbol,
+import { extractQuotedStringToken } from '@/core/utils/expression';
+import {
+  SettingName,
+  type Filepath,
+  type NoteSymbol,
 } from '@/core/types';
+import type { Color } from '@/core/types/schemaJson';
+import { isValidColorOrNone } from '@/core/utils/validate';
 import Report from '@/core/types/report';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
+
+export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color> = {
+  [SettingName.Color]: {
+    isValidBuiltinFieldValue: isValidColorOrNone,
+    message: "'color' must be a color literal or 'none'",
+    assignBuiltinField (element, value) {
+      element.color = value as Color;
+    },
+  },
+};
 
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -48,6 +64,8 @@ export class StickyNoteInterpreter {
       ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
     ];
 
+    attachCustomMetadata(this.compiler, this.note, this.symbol, NOTE_METADATA_FIELDS, this.filepath);
+
     return Report.create(this.note as Note, errors);
   }
 
@@ -64,7 +82,11 @@ export class StickyNoteInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.note.headerColor = settingMap.headercolor?.length ? extractColor(settingMap.headercolor?.at(0)?.value as any) : undefined;
+    if (settingMap.color?.length) {
+      this.note.color = extractColor(settingMap.color.at(0)?.value);
+    }
+
+    this.note.metadata = extractCustomInlineMetadata(settingMap, Object.keys(NOTE_METADATA_FIELDS) as SettingName[]);
 
     return [];
   }
@@ -87,7 +109,7 @@ export class StickyNoteInterpreter {
   }
 
   private interpretNote (note: FunctionApplicationNode): CompileError[] {
-    const noteContent = get(note, 'callee.expression.literal.value', '');
+    const noteContent = extractQuotedStringToken(note.callee) ?? '';
 
     this.note.content = normalizeNote(noteContent);
     return [];

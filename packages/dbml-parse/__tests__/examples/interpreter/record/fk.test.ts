@@ -1,12 +1,6 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  interpret,
-} from '@tests/utils';
-import {
-  CompileErrorCode,
-} from '@/index';
+import { describe, expect, test } from 'vitest';
+import { interpret } from '@tests/utils';
+import { CompileErrorCode } from '@/index';
 
 describe('[example - record] composite foreign key constraints', () => {
   test('should accept valid composite FK references', () => {
@@ -39,9 +33,9 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(2);
@@ -108,11 +102,15 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
-    expect(warnings[1].diagnostic).toBe('FK violation: (orders.merchant_id, orders.country) = (1, "UK") does not exist in (merchants.id, merchants.country_code)');
+    expect(infos.length).toBe(4);
+    // orders → merchants: (1, "UK") doesn't exist in merchants
+    expect(infos[0].diagnostic).toBe('FK violation: `(orders.merchant_id, orders.country)` = `(1, "UK")` does not exist in `(merchants.id, merchants.country_code)`');
+    expect(infos[1].diagnostic).toBe('FK violation: `(orders.merchant_id, orders.country)` = `(1, "UK")` does not exist in `(merchants.id, merchants.country_code)`');
+    // merchants → orders: (2, "UK") doesn't exist in orders
+    expect(infos[2].diagnostic).toBe('FK violation: `(merchants.id, merchants.country_code)` = `(2, "UK")` does not exist in `(orders.merchant_id, orders.country)`');
+    expect(infos[3].diagnostic).toBe('FK violation: `(merchants.id, merchants.country_code)` = `(2, "UK")` does not exist in `(orders.merchant_id, orders.country)`');
   });
 
   test('should allow NULL in composite FK columns', () => {
@@ -131,7 +129,7 @@ describe('[example - record] composite foreign key constraints', () => {
         country varchar
         status varchar
       }
-      Ref: orders.(merchant_id, country) > merchants.(id, country_code)
+      Ref: orders.(merchant_id, country) >? merchants.(id, country_code)
 
       records merchants(id, country_code) {
         1, "US"
@@ -143,9 +141,9 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue()!;
     const ordersRecord = db.records.find((r) => r.tableName === 'orders')!;
@@ -175,7 +173,7 @@ describe('[example - record] composite foreign key constraints', () => {
     }); // status
   });
 
-  test('should validate many-to-many composite FK both directions', () => {
+  test('should validate FK for <> composite refs (both min=1)', () => {
     const source = `
       Table products {
         id int
@@ -205,13 +203,13 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(4);
-    expect(warnings[0].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
-    expect(warnings[1].diagnostic).toBe('FK violation: (products.id, products.region) = (2, "US") does not exist in (categories.id, categories.region)');
-    expect(warnings[2].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
-    expect(warnings[3].diagnostic).toBe('FK violation: (categories.id, categories.region) = (3, "EU") does not exist in (products.id, products.region)');
+    expect(infos.length).toBe(4);
+    expect(infos[0].diagnostic).toBe('FK violation: `(products.id, products.region)` = `(2, "US")` does not exist in `(categories.id, categories.region)`');
+    expect(infos[1].diagnostic).toBe('FK violation: `(products.id, products.region)` = `(2, "US")` does not exist in `(categories.id, categories.region)`');
+    expect(infos[2].diagnostic).toBe('FK violation: `(categories.id, categories.region)` = `(3, "EU")` does not exist in `(products.id, products.region)`');
+    expect(infos[3].diagnostic).toBe('FK violation: `(categories.id, categories.region)` = `(3, "EU")` does not exist in `(products.id, products.region)`');
   });
 
   test('should validate composite FK with schema-qualified tables', () => {
@@ -242,11 +240,13 @@ describe('[example - record] composite foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: (posts.user_id, posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
-    expect(warnings[1].diagnostic).toBe('FK violation: (posts.user_id, posts.tenant_id) = (999, 100) does not exist in (auth.users.id, auth.users.tenant_id)');
+    expect(infos.length).toBe(4);
+    expect(infos[0].diagnostic).toBe('FK violation: `(posts.user_id, posts.tenant_id)` = `(999, 100)` does not exist in `(auth.users.id, auth.users.tenant_id)`');
+    expect(infos[1].diagnostic).toBe('FK violation: `(posts.user_id, posts.tenant_id)` = `(999, 100)` does not exist in `(auth.users.id, auth.users.tenant_id)`');
+    expect(infos[2].diagnostic).toBe('FK violation: `(auth.users.id, auth.users.tenant_id)` = `(2, 100)` does not exist in `(posts.user_id, posts.tenant_id)`');
+    expect(infos[3].diagnostic).toBe('FK violation: `(auth.users.id, auth.users.tenant_id)` = `(2, 100)` does not exist in `(posts.user_id, posts.tenant_id)`');
   });
 });
 
@@ -313,9 +313,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue();
     if (!db || !db.records) {
@@ -424,11 +424,11 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
-    expect(warnings[1].diagnostic).toBe('FK violation: cities.country_code = "FR" does not exist in countries.code');
+    expect(infos.length).toBe(2);
+    expect(infos[0].diagnostic).toBe('FK violation: `posts.user_id` = `999` does not exist in `users.id`');
+    expect(infos[1].diagnostic).toBe('FK violation: `cities.country_code` = `"FR"` does not exist in `countries.code`');
   });
 
   test('should allow NULL FK values (optional relationship)', () => {
@@ -442,7 +442,7 @@ describe('[example - record] simple foreign key constraints', () => {
         category_id int
         name varchar
       }
-      Ref: products.category_id > categories.id
+      Ref: products.category_id >? categories.id
 
       records categories(id, name) {
         1, "Electronics"
@@ -453,9 +453,9 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue()!;
     const productsRecord = db.records.find((r) => r.tableName === 'products')!;
@@ -495,7 +495,7 @@ describe('[example - record] simple foreign key constraints', () => {
       }
       Table user_profiles {
         id int [pk]
-        user_id int
+        user_id int [unique]
         bio text
       }
       Table departments {
@@ -527,17 +527,15 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    // One-to-one validates both directions:
-    // 1. user_profiles.user_id=3 doesn't exist in users.id
-    // 2. users.id=2 (Bob) doesn't have a matching user_profiles.user_id
+    // One-to-one: left side (user_profiles) is always skipped, only right side (users) validated:
+    // 1. users.id=2 (Bob) doesn't have a matching user_profiles.user_id
     // One-to-many violation:
-    // 3. employees.dept_id=999 doesn't exist in departments.id
-    expect(warnings.length).toBe(3);
-    expect(warnings[0].diagnostic).toBe('FK violation: user_profiles.user_id = 3 does not exist in users.id');
-    expect(warnings[1].diagnostic).toBe('FK violation: users.id = 2 does not exist in user_profiles.user_id');
-    expect(warnings[2].diagnostic).toBe('FK violation: employees.dept_id = 999 does not exist in departments.id');
+    // 2. employees.dept_id=999 doesn't exist in departments.id
+    expect(infos.length).toBe(2);
+    expect(infos[0].diagnostic).toBe('FK violation: `users.id` = `2` does not exist in `user_profiles.user_id`');
+    expect(infos[1].diagnostic).toBe('FK violation: `employees.dept_id` = `999` does not exist in `departments.id`');
   });
 
   test('should validate inline ref syntax and self-referencing FK', () => {
@@ -556,7 +554,7 @@ describe('[example - record] simple foreign key constraints', () => {
         manager_id int
         name varchar
       }
-      Ref: employees.manager_id > employees.id
+      Ref: employees.manager_id >? employees.id
 
       records users(id, name) {
         1, "Alice"
@@ -572,11 +570,14 @@ describe('[example - record] simple foreign key constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
-    expect(warnings[1].diagnostic).toBe('FK violation: employees.manager_id = 999 does not exist in employees.id');
+    expect(infos.length).toBe(4);
+    expect(infos[0].diagnostic).toBe('FK violation: `posts.user_id` = `999` does not exist in `users.id`');
+    expect(infos[1].diagnostic).toBe('FK violation: `employees.manager_id` = `999` does not exist in `employees.id`');
+    // Reverse: employees.id must exist in employees.manager_id
+    expect(infos[2].diagnostic).toBe('FK violation: `employees.id` = `2` does not exist in `employees.manager_id`');
+    expect(infos[3].diagnostic).toBe('FK violation: `employees.id` = `3` does not exist in `employees.manager_id`');
   });
 
   test('should detect FK violation when target table is empty', () => {
@@ -601,12 +602,12 @@ describe('[example - record] simple foreign key constraints', () => {
     `;
 
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
     // Should have FK violations since users table is empty but follows references it
-    expect(warnings.length).toBe(2); // Two FK violations: following_user_id and followed_user_id
-    expect(warnings.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
-    expect(warnings.every((e) => e.diagnostic.includes('does not exist in'))).toBe(true);
+    expect(infos.length).toBe(2); // Two FK violations: following_user_id and followed_user_id
+    expect(infos.every((e) => e.code === CompileErrorCode.INVALID_RECORDS_FIELD)).toBe(true);
+    expect(infos.every((e) => e.diagnostic.includes('does not exist in'))).toBe(true);
   });
 
   test('should report error for duplicate records blocks', () => {
@@ -663,9 +664,9 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
   });
 
   test('should detect FK violation from injected table partial', () => {
@@ -695,11 +696,11 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toBe('FK violation: posts.user_id = 999 does not exist in users.id');
+    expect(infos.length).toBe(1);
+    expect(infos[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(infos[0].diagnostic).toBe('FK violation: `posts.user_id` = `999` does not exist in `users.id`');
   });
 
   test('should validate FK when partial injected into multiple tables', () => {
@@ -741,17 +742,19 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toBe('FK violation: comments.created_by = 999 does not exist in users.id');
+    expect(infos.length).toBe(2);
+    expect(infos[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(infos[0].diagnostic).toBe('FK violation: `comments.created_by` = `999` does not exist in `users.id`');
+    // Reverse: users.id=2 not in comments.created_by
+    expect(infos[1].diagnostic).toBe('FK violation: `users.id` = `2` does not exist in `comments.created_by`');
   });
 
   test('should allow NULL FK values from injected table partial', () => {
     const source = `
       TablePartial optional_user {
-        user_id int [ref: > users.id]
+        user_id int [ref: >? users.id]
       }
 
       Table users {
@@ -775,9 +778,9 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
   });
 
   test('should validate FK with multiple partials injected', () => {
@@ -822,20 +825,20 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(2);
-    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(infos.length).toBe(2);
+    expect(infos[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(infos[1].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
     // Verify both errors are FK violations
-    const errorMessages = warnings.map((e) => e.diagnostic);
+    const errorMessages = infos.map((e) => e.diagnostic);
     expect(errorMessages.every((msg) => msg.startsWith('FK violation'))).toBe(true);
   });
 
   test('should validate self-referencing FK from injected table partial', () => {
     const source = `
       TablePartial hierarchical {
-        parent_id int [ref: > nodes.id]
+        parent_id int [ref: >? nodes.id]
       }
 
       Table nodes {
@@ -851,10 +854,261 @@ describe('[example - record] FK in table partials', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
-    expect(warnings.length).toBe(1);
-    expect(warnings[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
-    expect(warnings[0].diagnostic).toBe('FK violation: nodes.parent_id = 999 does not exist in nodes.id');
+    expect(infos.length).toBe(3);
+    expect(infos[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+    expect(infos[0].diagnostic).toBe('FK violation: `nodes.parent_id` = `999` does not exist in `nodes.id`');
+    // Reverse: nodes.id must exist in nodes.parent_id
+    expect(infos[1].diagnostic).toBe('FK violation: `nodes.id` = `2` does not exist in `nodes.parent_id`');
+    expect(infos[2].diagnostic).toBe('FK violation: `nodes.id` = `3` does not exist in `nodes.parent_id`');
+  });
+});
+
+describe('[example - record] FK skip validation for one side', () => {
+  test('should not warn when the one side has no matching rows (optional many-to-one)', () => {
+    const source = `
+      Table users {
+        id integer [primary key]
+        username varchar
+        role varchar
+        created_at timestamp
+      }
+
+      Table posts {
+        id integer [primary key]
+        title varchar
+        body text [note: 'Content of the post']
+        user_id integer [not null]
+        status varchar
+        created_at timestamp
+      }
+
+      Ref user_posts: posts.user_id ?> users.id
+
+      Records users(id, username, role) {
+        0, 'Alice', 'admin'
+        1, 'Bob', 'moderator'
+        2, 'Candice', 'moderator'
+        3, 'David', 'member'
+      }
+
+      Records posts(id, title, user_id) {
+        0, 'Welcome to the forum!', 0
+        1, 'Guidelines', 1
+        2, 'Hello all!', 3
+      }
+    `;
+    const result = interpret(source);
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
+
+    // users.id=2 (Candice) has no posts, but the one side (users) is skipped
+    // All post user_ids exist in users, so no infos
+    expect(infos.length).toBe(0);
+  });
+
+  test('should treat columns in pk index as not nullable', () => {
+    const source = `
+      Table merchants {
+        id int
+        country_code varchar
+
+        indexes {
+          (id, country_code) [pk]
+        }
+      }
+      Table orders {
+        id int [pk]
+        merchant_id int
+        country varchar
+      }
+      Ref: orders.(merchant_id, country) > merchants.(id, country_code)
+
+      records merchants(id, country_code) {
+        1, "US"
+        null, "UK"
+      }
+      records orders(id, merchant_id, country) {
+        1, 1, "US"
+      }
+    `;
+    const result = interpret(source);
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
+
+    // merchants.(id, country_code) is a composite PK index
+    // null in merchants.id should trigger FK violation (must not be NULL)
+    expect(infos.some((i) => i.diagnostic.includes('must not be NULL'))).toBe(true);
+  });
+
+  test('should treat injected column in pk index as not nullable', () => {
+    const source = `
+      TablePartial pk_col {
+        region varchar
+      }
+
+      Table products {
+        id int
+        ~pk_col
+
+        indexes {
+          (id, region) [pk]
+        }
+      }
+
+      Table orders {
+        id int [pk]
+        product_id int
+        region varchar
+      }
+
+      Ref: orders.(product_id, region) > products.(id, region)
+
+      records products(id, region) {
+        1, "US"
+        null, "EU"
+      }
+
+      records orders(id, product_id, region) {
+        1, 1, "US"
+      }
+    `;
+    const result = interpret(source);
+    const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
+
+    // products.region is injected from partial but is in a PK index on products
+    // null in products.id should trigger FK violation
+    expect(infos.some((i) => i.diagnostic.includes('must not be NULL'))).toBe(true);
+  });
+});
+
+describe('[example - record] many-to-many FK constraints', () => {
+  test('<> should validate FK existence in both directions', () => {
+    const source = `
+      Table students {
+        id int [pk]
+      }
+      Table courses {
+        id int [pk]
+      }
+      Ref: students.id <> courses.id
+
+      records students(id) {
+        1
+        2
+        3
+      }
+      records courses(id) {
+        10
+        20
+      }
+    `;
+    const result = interpret(source);
+    const infos = result.getInfos();
+    // students 1,2,3 don't exist in courses; courses 10,20 don't exist in students
+    expect(infos.some((i) => i.diagnostic.includes('does not exist in `courses.id`'))).toBe(true);
+    expect(infos.some((i) => i.diagnostic.includes('does not exist in `students.id`'))).toBe(true);
+  });
+
+  test('?<> should skip existence on left side (0..*) but validate on right side (1..*)', () => {
+    const source = `
+      Table tags {
+        id int [pk]
+      }
+      Table posts {
+        id int [pk]
+      }
+      Ref: tags.id ?<> posts.id
+
+      records tags(id) {
+        1
+      }
+      records posts(id) {
+        10
+        20
+      }
+    `;
+    const result = interpret(source);
+    const infos = result.getInfos();
+    // left is 0..*, right max = * -> skip existence for left (tags.id=1 not in posts is OK)
+    expect(infos.filter((i) => i.diagnostic.includes('does not exist in `posts.id`')).length).toBe(0);
+    // right is 1..*, validates existence -> posts 10,20 must exist in tags
+    expect(infos.some((i) => i.diagnostic.includes('does not exist in `tags.id`'))).toBe(true);
+  });
+
+  test('<>? should skip existence on right side (0..*) but validate on left side (1..*)', () => {
+    const source = `
+      Table tags {
+        id int [pk]
+      }
+      Table posts {
+        id int [pk]
+      }
+      Ref: tags.id <>? posts.id
+
+      records tags(id) {
+        1
+        2
+      }
+      records posts(id) {
+        10
+      }
+    `;
+    const result = interpret(source);
+    const infos = result.getInfos();
+    // right is 0..*, left max = * -> skip existence for right (posts.id=10 not in tags is OK)
+    expect(infos.filter((i) => i.diagnostic.includes('does not exist in `tags.id`')).length).toBe(0);
+    // left is 1..*, validates existence -> tags 1,2 must exist in posts
+    expect(infos.some((i) => i.diagnostic.includes('does not exist in `posts.id`'))).toBe(true);
+  });
+
+  test('?<>? should not validate FK existence, and should allow NULL on both sides', () => {
+    const source = `
+      Table tags {
+        id int [pk]
+      }
+      Table posts {
+        id int [pk]
+      }
+      Ref: tags.id ?<>? posts.id
+
+      records tags(id) {
+        null
+        1
+      }
+      records posts(id) {
+        null
+        10
+      }
+    `;
+    const result = interpret(source);
+    const warnings = result.getWarnings();
+    const fkWarnings = warnings.filter((w) => w.diagnostic.includes('FK violation'));
+    expect(fkWarnings.length).toBe(0);
+  });
+
+  test('<> should reject both NULL and non-existent values', () => {
+    const source = `
+      Table tags {
+        id int [pk]
+      }
+      Table posts {
+        id int [pk]
+      }
+      Ref: tags.id <> posts.id
+
+      records tags(id) {
+        null
+        1
+      }
+      records posts(id) {
+        10
+      }
+    `;
+    const result = interpret(source);
+    const infos = result.getInfos();
+    // <> has min=1 on both sides, so null should be rejected
+    expect(infos.some((i) => i.diagnostic.includes('must not be NULL'))).toBe(true);
+    // non-existent values should also be rejected
+    expect(infos.some((i) => i.diagnostic.includes('does not exist'))).toBe(true);
   });
 });

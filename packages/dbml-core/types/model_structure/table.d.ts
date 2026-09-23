@@ -1,4 +1,4 @@
-import Element, { RawNote, Token } from './element';
+import Element, { RawNote, Token, Color } from './element';
 import Field from './field';
 import Index from './indexes';
 import Check from './check';
@@ -7,6 +7,7 @@ import DbState from './dbState';
 import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
 import { NormalizedModel, TableRecord } from './database';
+import type { CustomMetadata } from '@dbml/parse';
 
 export interface RawTable {
     name: string;
@@ -17,8 +18,9 @@ export interface RawTable {
     checks?: any[];
     schema: Schema;
     token: Token;
-    headerColor: string;
+    headerColor: Color;
     partials: TablePartial[];
+    metadata?: CustomMetadata;
 }
 
 declare class Table extends Element {
@@ -30,14 +32,15 @@ declare class Table extends Element {
     indexes: Index[];
     checks: Check[];
     schema: Schema;
-    headerColor: string;
+    headerColor: Color;
     dbState: DbState;
     id: number;
     group: TableGroup;
     partials: TablePartial[];
     records: TableRecord[];
+    metadata: CustomMetadata;
 
-    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor }: RawTable);
+    constructor({ name, alias, note, fields, indexes, checks, schema, token, headerColor, metadata }: RawTable);
     generateId(): void;
     processFields(rawFields: any): void;
     pushField(field: any): void;
@@ -75,7 +78,7 @@ declare class Table extends Element {
         name: string;
         alias: string;
         note: string;
-        headerColor: string;
+        headerColor: Color;
         partials: TablePartial[];
     };
     exportChild(): {
@@ -114,9 +117,10 @@ declare class Table extends Element {
         name: string;
         alias: string;
         note: string;
-        headerColor: string;
+        headerColor: Color;
         partials: TablePartial[];
         recordIds: number[];
+        metadata: CustomMetadata;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -126,7 +130,7 @@ export interface NormalizedTable {
     name: string;
     alias: string | null;
     note: string | null;
-    headerColor: string;
+    headerColor: Color;
     fieldIds: number[];
     indexIds: number[];
     checkIds: number[];
@@ -134,6 +138,7 @@ export interface NormalizedTable {
     schemaId: number;
     groupId: number | null;
     partials: TablePartial[];
+    metadata: CustomMetadata;
 }
 
 export interface NormalizedTableIdMap {

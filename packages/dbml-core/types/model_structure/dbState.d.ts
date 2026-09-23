@@ -4,6 +4,8 @@ export default class DbState {
     enumId: number;
     tableGroupId: number;
     refId: number;
+    depId: number;
+    depEdgeId: number;
     tableId: number;
     noteId: number;
     enumValueId: number;
@@ -12,6 +14,7 @@ export default class DbState {
     indexId: number;
     fieldId: number;
     indexColumnId: number;
+    recordId: number;
     tablePartialId: number;
-    generateId(el: string): number;
+    generateId(el: Exclude<keyof DbState, 'generateId'>): number;
 }

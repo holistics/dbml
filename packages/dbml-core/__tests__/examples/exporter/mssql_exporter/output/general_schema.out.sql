@@ -1,7 +1,7 @@
 CREATE TABLE [orders] (
   [id] int PRIMARY KEY IDENTITY(1, 1),
   [user_id] int UNIQUE NOT NULL,
-  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('created', 'running', 'done', 'failure')),
+  [status] nvarchar(255) CHECK ([status] IN ('created', 'running', 'done', 'failure')),
   [created_at] varchar(255)
 )
 GO
@@ -18,7 +18,7 @@ CREATE TABLE [products] (
   [name] varchar(255),
   [merchant_id] int NOT NULL,
   [price] int,
-  [status] nvarchar(255) NOT NULL CHECK ([status] IN ('Out of Stock', 'In Stock')),
+  [status] nvarchar(255) CHECK ([status] IN ('Out of Stock', 'In Stock')),
   [created_at] datetime DEFAULT (now()),
   PRIMARY KEY ([id], [name])
 )

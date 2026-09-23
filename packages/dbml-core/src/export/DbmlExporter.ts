@@ -1,8 +1,12 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
-import { addDoubleQuoteIfNeeded, formatRecordValue } from '@dbml/parse';
+import {
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, getRelationshipOp, normalizeQualifiedName, parseCardinality,
+} from '@dbml/parse';
+import type { CustomMetadata } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
+import type { NormalizedNote } from '../../types/model_structure/stickyNote';
 import type { NormalizedTable } from '../../types/model_structure/table';
 import type { NormalizedTableGroup } from '../../types/model_structure/tableGroup';
 
@@ -272,19 +276,23 @@ class DbmlExporter {
   static exportRefs (refIds: number[], model: NormalizedModel): string {
     const strArr = refIds.map((refId) => {
       const ref = model.refs[refId];
-      const oneRelationEndpointIndex = ref.endpointIds.findIndex((endpointId) => model.endpoints[endpointId].relation === '1');
-      const isManyToMany = oneRelationEndpointIndex === -1;
-      const refEndpointIndex = isManyToMany ? 0 : oneRelationEndpointIndex;
-      const foreignEndpointId = ref.endpointIds[1 - refEndpointIndex];
-      const refEndpointId = ref.endpointIds[refEndpointIndex];
-      const foreignEndpoint = model.endpoints[foreignEndpointId];
-      const refEndpoint = model.endpoints[refEndpointId];
+      // Find the "one" side (max=1) to place on the left, ensuring canonical DBML form:
+      // left = REFERENCES target (PK/unique), right = FK source (many side).
+      const oneIndex = ref.endpointIds.findIndex((id) => parseCardinality(model.endpoints[id].relation).max === 1);
+      // For one-to-one (both max=1), keeps index 0 on left (SQL exporter convention).
+      // For many-to-many (no max=1), also keeps index 0 on left.
+      const leftIndex = oneIndex === -1 ? 0 : oneIndex;
+
+      const leftEndpoint = model.endpoints[ref.endpointIds[leftIndex]];
+      const rightEndpoint = model.endpoints[ref.endpointIds[1 - leftIndex]];
+      const op = getRelationshipOp(leftEndpoint.relation, rightEndpoint.relation);
+
+      const leftField = model.fields[leftEndpoint.fieldIds[0]];
+      const leftTable = model.tables[leftField.tableId];
+      const leftSchema = model.schemas[leftTable.schemaId];
+      const leftFieldName = DbmlExporter.buildFieldName(leftEndpoint.fieldIds, model);
 
       let line = 'Ref';
-      const refEndpointField = model.fields[refEndpoint.fieldIds[0]];
-      const refEndpointTable = model.tables[refEndpointField.tableId];
-      const refEndpointSchema = model.schemas[refEndpointTable.schemaId];
-      const refEndpointFieldName = DbmlExporter.buildFieldName(refEndpoint.fieldIds, model);
 
       if (ref.name) {
         line += ` ${shouldPrintSchema(model.schemas[ref.schemaId], model)
@@ -292,22 +300,19 @@ class DbmlExporter {
           : ''}"${ref.name}"`;
       }
       line += ':';
-      line += `${shouldPrintSchema(refEndpointSchema, model)
-        ? `"${refEndpointSchema.name}".`
-        : ''}"${refEndpointTable.name}".${refEndpointFieldName} `;
+      line += `${shouldPrintSchema(leftSchema, model)
+        ? `"${leftSchema.name}".`
+        : ''}"${leftTable.name}".${leftFieldName} `;
 
-      const foreignEndpointField = model.fields[foreignEndpoint.fieldIds[0]];
-      const foreignEndpointTable = model.tables[foreignEndpointField.tableId];
-      const foreignEndpointSchema = model.schemas[foreignEndpointTable.schemaId];
-      const foreignEndpointFieldName = DbmlExporter.buildFieldName(foreignEndpoint.fieldIds, model);
+      const rightField = model.fields[rightEndpoint.fieldIds[0]];
+      const rightTable = model.tables[rightField.tableId];
+      const rightSchema = model.schemas[rightTable.schemaId];
+      const rightFieldName = DbmlExporter.buildFieldName(rightEndpoint.fieldIds, model);
 
-      if (isManyToMany) line += '<> ';
-      else
-        if (foreignEndpoint.relation === '1') line += '- ';
-        else line += '< ';
-      line += `${shouldPrintSchema(foreignEndpointSchema, model)
-        ? `"${foreignEndpointSchema.name}".`
-        : ''}"${foreignEndpointTable.name}".${foreignEndpointFieldName}`;
+      line += `${op} `;
+      line += `${shouldPrintSchema(rightSchema, model)
+        ? `"${rightSchema.name}".`
+        : ''}"${rightTable.name}".${rightFieldName}`;
 
       const refActions: string[] = [];
       if (ref.onUpdate) {
@@ -338,15 +343,62 @@ class DbmlExporter {
     return settings.length ? ` [${settings.join(', ')}]` : '';
   }
 
+  static formatDepEndpoint (ep: { schemaName: string | null; tableName: string; fieldNames: string[] }): string {
+    const schemaPart = ep.schemaName ? `"${ep.schemaName}".` : '';
+    const tablePart = `"${ep.tableName}"`;
+    if (!ep.fieldNames || ep.fieldNames.length === 0) return `${schemaPart}${tablePart}`;
+    const fieldsPart = ep.fieldNames.length === 1
+      ? `"${ep.fieldNames[0]}"`
+      : `(${ep.fieldNames.map((f) => `"${f}"`).join(', ')})`;
+    return `${schemaPart}${tablePart}.${fieldsPart}`;
+  }
+
+  static formatDepCustomValue (value: unknown): string {
+    if (typeof value === 'string') return `'${escapeString(value)}'`;
+    if (value === null || value === undefined) return 'null';
+    return String(value);
+  }
+
+  static exportDeps (depIds: number[], model: NormalizedModel): string {
+    const strArr = depIds.map((depId) => {
+      const dep = model.deps[depId];
+      const edges = dep.edgeIds.map((eid) => model.depEdges[eid]);
+
+      const hasNote = !!dep.note;
+      const customEntries = dep.metadata ? Object.entries(dep.metadata) : [];
+      const hasAttrs = hasNote || customEntries.length > 0;
+
+      if (edges.length === 1 && !hasAttrs) {
+        return `Dep: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
+      }
+
+      let str = 'Dep {\n';
+      edges.forEach((edge) => {
+        str += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;
+      });
+
+      if (hasAttrs) {
+        str += '\n';
+        if (hasNote) str += `  note: ${DbmlExporter.escapeNote(dep.note)}\n`;
+        customEntries.forEach(([key, value]) => {
+          str += `  ${key}: ${DbmlExporter.formatDepCustomValue(value)}\n`;
+        });
+      }
+
+      str += '}\n';
+      return str;
+    });
+
+    return strArr.length ? strArr.join('\n') : '';
+  }
+
   static exportTableGroups (tableGroupIds: number[], model: NormalizedModel): string {
     const tableGroupStrs = tableGroupIds.map((groupId) => {
       const group = model.tableGroups[groupId];
-      const groupSchema = model.schemas[group.schemaId];
       const groupSettingStr = DbmlExporter.getTableGroupSettings(group);
 
       const groupNote = group.note ? `  Note: ${DbmlExporter.escapeNote(group.note)}\n` : '';
-      const groupSchemaName = shouldPrintSchema(groupSchema, model) ? `"${groupSchema.name}".` : '';
-      const groupName = `${groupSchemaName}"${group.name}"`;
+      const groupName = `"${group.name}"`;
 
       const tableNames = group.tableIds
         .reduce((result, tableId) => {
@@ -362,10 +414,19 @@ class DbmlExporter {
     return tableGroupStrs.length ? tableGroupStrs.join('\n') : '';
   }
 
+  static getStickyNoteSettings (note: NormalizedNote): string {
+    let settingStr = '';
+    if (note.color) {
+      settingStr += `color: ${note.color}`;
+    }
+    return settingStr ? ` [${settingStr}]` : '';
+  }
+
   static exportStickyNotes (model: NormalizedModel): string {
     return reduce(model.notes, (result, note) => {
       const escapedContent = `  ${DbmlExporter.escapeNote(note.content)}`;
-      const stickyNote = `Note ${note.name} {\n${escapedContent}\n}\n`;
+      const settingStr = DbmlExporter.getStickyNoteSettings(note);
+      const stickyNote = `Note ${note.name}${settingStr} {\n${escapedContent}\n}\n`;
 
       // Add a blank line between note elements
       return result ? `${result}\n${stickyNote}` : stickyNote;
@@ -387,7 +448,7 @@ class DbmlExporter {
 
       // Build table reference
       const tableRef = schemaName
-        ? `${addDoubleQuoteIfNeeded(schemaName)}.${addDoubleQuoteIfNeeded(tableName)}`
+        ? normalizeQualifiedName(schemaName, tableName)
         : addDoubleQuoteIfNeeded(tableName);
 
       // Collect all unique columns in order
@@ -397,12 +458,13 @@ class DbmlExporter {
       // Merge all rows
       const allRows = groupRecords.flatMap((record) => {
         const allColumnIndexes = allColumns.map((col) => record.columns.indexOf(col));
-        return record.values.map((row: RecordValue[]) => allColumnIndexes.map((colIdx) => colIdx === -1 ? { value: null, type: 'expression' } : row[colIdx]));
+        return record.values.map((row: RecordValue[]) => allColumnIndexes.map((colIdx) => colIdx === -1
+          ? { value: null, type: 'expression' }
+          : row[colIdx]));
       });
 
       // Build data rows
-      const rowStrs = allRows.map((row) =>
-        `  ${row.map(formatRecordValue).join(', ')}`,
+      const rowStrs = allRows.map((row) => `  ${row.map(formatRecordValue).join(', ')}`,
       );
 
       const exampleFlag = groupRecords.some((r) => r.example) ? ' [example]' : '';
@@ -412,6 +474,47 @@ class DbmlExporter {
     return recordStrs.join('\n');
   }
 
+  static exportMetadata (model: NormalizedModel): string {
+    const blocks: string[] = [];
+    const database = model.database['1'];
+
+    const buildMetadataBlock = (header: string, metadata: CustomMetadata) => {
+      const bodyLines = Object.entries(metadata)
+        .map(([key, value]) => `  ${key}: ${DbmlExporter.escapeNote(value)}`)
+        .join('\n');
+      return `Metadata ${header} {\n${bodyLines}\n}\n`;
+    };
+
+    database.schemaIds.forEach((schemaId) => {
+      const { tableIds, tableGroupIds } = model.schemas[schemaId];
+
+      tableIds.forEach((tableId) => {
+        const table = model.tables[tableId];
+        const schema = model.schemas[table.schemaId];
+        const schemaPrefix = shouldPrintSchema(schema, model) ? `"${schema.name}".` : '';
+
+        if (!isEmpty(table.metadata)) blocks.push(buildMetadataBlock(`Table ${schemaPrefix}"${table.name}"`, table.metadata));
+
+        table.fieldIds
+          .map((fieldId) => model.fields[fieldId])
+          .filter((field) => !isEmpty(field.metadata))
+          .forEach((field) => blocks.push(buildMetadataBlock(`Column ${schemaPrefix}"${table.name}"."${field.name}"`, field.metadata)));
+      });
+
+      tableGroupIds
+        .map((tableGroupId) => model.tableGroups[tableGroupId])
+        .filter((tableGroup) => !isEmpty(tableGroup.metadata))
+        .forEach((tableGroup) => blocks.push(buildMetadataBlock(`TableGroup "${tableGroup.name}"`, tableGroup.metadata)));
+    });
+
+    Object
+      .values(model.notes)
+      .filter((note) => !isEmpty(note.metadata))
+      .forEach((note) => blocks.push(buildMetadataBlock(`Note ${note.name}`, note.metadata)));
+
+    return blocks.join('\n');
+  }
+
   static export (model: NormalizedModel, options: DbmlExporterOptions): string {
     const elementStrs: string[] = [];
     const database = model.database['1'];
@@ -419,17 +522,21 @@ class DbmlExporter {
 
     database.schemaIds.forEach((schemaId) => {
       const {
-        enumIds, tableIds, tableGroupIds, refIds,
+        enumIds, tableIds, tableGroupIds, refIds, depIds,
       } = model.schemas[schemaId];
 
       if (!isEmpty(enumIds)) elementStrs.push(DbmlExporter.exportEnums(enumIds, model));
       if (!isEmpty(tableIds)) elementStrs.push(DbmlExporter.exportTables(tableIds, model));
       if (!isEmpty(tableGroupIds)) elementStrs.push(DbmlExporter.exportTableGroups(tableGroupIds, model));
       if (!isEmpty(refIds)) elementStrs.push(DbmlExporter.exportRefs(refIds, model));
+      if (!isEmpty(depIds)) elementStrs.push(DbmlExporter.exportDeps(depIds, model));
     });
 
     if (!isEmpty(model.notes)) elementStrs.push(DbmlExporter.exportStickyNotes(model));
     if (includeRecords && !isEmpty(model.records)) elementStrs.push(DbmlExporter.exportRecords(model));
+
+    const metadataStr = DbmlExporter.exportMetadata(model);
+    if (metadataStr) elementStrs.push(metadataStr);
 
     // all elements already end with 1 '\n', so join('\n') to separate them with 1 blank line
     return elementStrs.join('\n');

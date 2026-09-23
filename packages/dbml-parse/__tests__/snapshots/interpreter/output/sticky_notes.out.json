@@ -2,13 +2,14 @@
   "database": {
     "notes": [
       {
+        "color": "#FF5733",
         "content": "One line note",
         "name": "note",
         "token": {
           "end": {
             "column": 2,
             "line": 8,
-            "offset": 141
+            "offset": 158
           },
           "filepath": "/main.dbml",
           "start": {
@@ -25,13 +26,31 @@
           "end": {
             "column": 2,
             "line": 15,
-            "offset": 190
+            "offset": 207
           },
           "filepath": "/main.dbml",
           "start": {
             "column": 1,
             "line": 10,
-            "offset": 143
+            "offset": 160
+          }
+        }
+      },
+      {
+        "color": "none",
+        "content": "Note without color",
+        "name": "note3",
+        "token": {
+          "end": {
+            "column": 2,
+            "line": 19,
+            "offset": 260
+          },
+          "filepath": "/main.dbml",
+          "start": {
+            "column": 1,
+            "line": 17,
+            "offset": 209
           }
         }
       }
@@ -104,8 +123,8 @@
     "token": {
       "end": {
         "column": 1,
-        "line": 16,
-        "offset": 191
+        "line": 20,
+        "offset": 261
       },
       "filepath": "/main.dbml",
       "start": {

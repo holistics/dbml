@@ -1,5 +1,5 @@
   ERROR: 
     ./in-files/broken.dbml(4,1): Expect an identifier
-    ./in-files/broken.dbml(2,11): Unknown column setting 'pk name varchar'
+    ./in-files/broken.dbml(2,11): Custom setting 'pk name varchar' must be a string or a color literal
 
   A complete log can be found in:

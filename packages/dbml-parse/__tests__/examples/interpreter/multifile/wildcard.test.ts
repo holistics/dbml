@@ -38,7 +38,6 @@ Table memberships {
   });
 });
 
-
 describe('[example] multifile interpreter - wildcard import from file with multiple schemas', () => {
   // source has tables in public and auth schemas.
   // consumer does use * - both schemas should merge into consumer.
@@ -76,7 +75,6 @@ use * from './source.dbml'
   });
 });
 
-
 describe('[edge] wildcard import + ref auto-pull', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -87,7 +85,7 @@ Table orders {
 }
 Ref: orders.user_id > users.id
 `,
-    '/consumer.dbml': `use * from './source.dbml'`,
+    '/consumer.dbml': 'use * from \'./source.dbml\'',
   });
 
   test('ref auto-pulled via wildcard', () => {
@@ -100,7 +98,6 @@ Ref: orders.user_id > users.id
     expect(db.tables.map((t) => t.name).sort()).toEqual(['orders', 'users']);
   });
 });
-
 
 describe('[stress] wildcard import pulls refs, records, and partials', () => {
   const { compiler } = setupCompiler({
@@ -128,7 +125,7 @@ records users(id, name) {
   2, 'Bob'
 }
 `,
-    '/consumer.dbml': `use * from './source.dbml'`,
+    '/consumer.dbml': 'use * from \'./source.dbml\'',
   });
 
   test('both tables present', () => {
@@ -151,7 +148,6 @@ records users(id, name) {
     expect(db.tablePartials.find((p) => p.name === 'timestamps')).toBeDefined();
   });
 });
-
 
 describe('[stress] table with special characters in name', () => {
   const { compiler } = setupCompiler({

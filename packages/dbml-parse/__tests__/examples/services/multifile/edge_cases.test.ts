@@ -1,4 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import {
+  describe, it, expect, beforeEach,
+} from 'vitest';
 import Compiler from '@/compiler';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
@@ -54,128 +56,128 @@ describe('[advanced] multifile edge cases', () => {
     });
   });
 
-    it('should handle symbol defined multiple times across files', () => {
-      const layout = new MemoryProjectLayout();
-      layout.setSource(new Filepath('/schema1.dbml'), 'Table users { id int }');
-      layout.setSource(new Filepath('/schema2.dbml'), 'Table users { id int }');
-      const compiler = new Compiler(layout);
-      compiler.bindProject();
+  it('should handle symbol defined multiple times across files', () => {
+    const layout = new MemoryProjectLayout();
+    layout.setSource(new Filepath('/schema1.dbml'), 'Table users { id int }');
+    layout.setSource(new Filepath('/schema2.dbml'), 'Table users { id int }');
+    const compiler = new Compiler(layout);
+    compiler.bindProject();
 
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel('Ref: users.id > orders.user_id', Filepath.fromUri('file:///schema1.dbml').toUri()) as any;
+    const definitionProvider = new DBMLDefinitionProvider(compiler);
+    const model = new MockTextModel('Ref: users.id > orders.user_id', Filepath.fromUri('file:///schema1.dbml').toUri()) as any;
 
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(1, 10));
-      } catch {
-        didThrow = true;
-      }
+    let didThrow = false;
+    try {
+      definitionProvider.provideDefinition(model, createPosition(1, 10));
+    } catch {
+      didThrow = true;
+    }
 
-      expect(didThrow).toBe(false);
-    });
+    expect(didThrow).toBe(false);
+  });
 
-    it('should handle references with very long symbol names', () => {
-      const longName = 'VeryLongTableNameWithManyCharactersForTestingEdgeCase';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(
-        new Filepath('/models.dbml'),
-        `Table ${longName} { id int }`,
-      );
-      const compiler = new Compiler(layout);
-      compiler.bindProject();
+  it('should handle references with very long symbol names', () => {
+    const longName = 'VeryLongTableNameWithManyCharactersForTestingEdgeCase';
+    const layout = new MemoryProjectLayout();
+    layout.setSource(
+      new Filepath('/models.dbml'),
+      `Table ${longName} { id int }`,
+    );
+    const compiler = new Compiler(layout);
+    compiler.bindProject();
 
-      const referencesProvider = new DBMLReferencesProvider(compiler);
-      const model = new MockTextModel(`Ref: ${longName}.id > other.id`, Filepath.fromUri('file:///models.dbml').toUri()) as any;
+    const referencesProvider = new DBMLReferencesProvider(compiler);
+    const model = new MockTextModel(`Ref: ${longName}.id > other.id`, Filepath.fromUri('file:///models.dbml').toUri()) as any;
 
-      let didThrow = false;
-      try {
-        referencesProvider.provideReferences(model, createPosition(1, 10));
-      } catch {
-        didThrow = true;
-      }
+    let didThrow = false;
+    try {
+      referencesProvider.provideReferences(model, createPosition(1, 10));
+    } catch {
+      didThrow = true;
+    }
 
-      expect(didThrow).toBe(false);
-    });
+    expect(didThrow).toBe(false);
+  });
 
-    it('should handle self-referential tables in same file', () => {
-      const source = `Table nodes {
+  it('should handle self-referential tables in same file', () => {
+    const source = `Table nodes {
   id int
   parent_id int
 }
 
 Ref: nodes.parent_id > nodes.id`;
 
-      const layout = new MemoryProjectLayout();
-      layout.setSource(new Filepath('/models.dbml'), source);
-      const compiler = new Compiler(layout);
-      compiler.bindProject();
+    const layout = new MemoryProjectLayout();
+    layout.setSource(new Filepath('/models.dbml'), source);
+    const compiler = new Compiler(layout);
+    compiler.bindProject();
 
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(source, Filepath.fromUri('file:///models.dbml').toUri()) as any;
+    const definitionProvider = new DBMLDefinitionProvider(compiler);
+    const model = new MockTextModel(source, Filepath.fromUri('file:///models.dbml').toUri()) as any;
 
-      const definitions = definitionProvider.provideDefinition(model, createPosition(6, 20));
+    const definitions = definitionProvider.provideDefinition(model, createPosition(6, 20));
 
-      expect(Array.isArray(definitions)).toBe(true);
-    });
-
-    it('should handle position at end of file', () => {
-      const source = 'Table test { id int }';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(new Filepath('/test.dbml'), source);
-      const compiler = new Compiler(layout);
-
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
-
-      // Position at very end of file
-      const lastLine = source.split('\n').length;
-      const lastCol = source.split('\n')[lastLine - 1].length;
-
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(lastLine, lastCol + 5));
-      } catch {
-        didThrow = true;
-      }
-
-      expect(didThrow).toBe(false);
-    });
-
-    it('should handle position at line 0, column 0', () => {
-      const source = 'Table test { id int }';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(new Filepath('/test.dbml'), source);
-      const compiler = new Compiler(layout);
-
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
-
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(1, 1));
-      } catch {
-        didThrow = true;
-      }
-
-      expect(didThrow).toBe(false);
-    });
-
-    it('should handle very large position values', () => {
-      const source = 'Table test { id int }';
-      const layout = new MemoryProjectLayout();
-      layout.setSource(new Filepath('/test.dbml'), source);
-      const compiler = new Compiler(layout);
-
-      const definitionProvider = new DBMLDefinitionProvider(compiler);
-      const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
-
-      let didThrow = false;
-      try {
-        definitionProvider.provideDefinition(model, createPosition(999999, 999999));
-      } catch {
-        didThrow = true;
-      }
-
-      expect(didThrow).toBe(false);
-    });
+    expect(Array.isArray(definitions)).toBe(true);
   });
+
+  it('should handle position at end of file', () => {
+    const source = 'Table test { id int }';
+    const layout = new MemoryProjectLayout();
+    layout.setSource(new Filepath('/test.dbml'), source);
+    const compiler = new Compiler(layout);
+
+    const definitionProvider = new DBMLDefinitionProvider(compiler);
+    const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
+
+    // Position at very end of file
+    const lastLine = source.split('\n').length;
+    const lastCol = source.split('\n')[lastLine - 1].length;
+
+    let didThrow = false;
+    try {
+      definitionProvider.provideDefinition(model, createPosition(lastLine, lastCol + 5));
+    } catch {
+      didThrow = true;
+    }
+
+    expect(didThrow).toBe(false);
+  });
+
+  it('should handle position at line 0, column 0', () => {
+    const source = 'Table test { id int }';
+    const layout = new MemoryProjectLayout();
+    layout.setSource(new Filepath('/test.dbml'), source);
+    const compiler = new Compiler(layout);
+
+    const definitionProvider = new DBMLDefinitionProvider(compiler);
+    const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
+
+    let didThrow = false;
+    try {
+      definitionProvider.provideDefinition(model, createPosition(1, 1));
+    } catch {
+      didThrow = true;
+    }
+
+    expect(didThrow).toBe(false);
+  });
+
+  it('should handle very large position values', () => {
+    const source = 'Table test { id int }';
+    const layout = new MemoryProjectLayout();
+    layout.setSource(new Filepath('/test.dbml'), source);
+    const compiler = new Compiler(layout);
+
+    const definitionProvider = new DBMLDefinitionProvider(compiler);
+    const model = new MockTextModel(source, Filepath.fromUri('file:///test.dbml').toUri()) as any;
+
+    let didThrow = false;
+    try {
+      definitionProvider.provideDefinition(model, createPosition(999999, 999999));
+    } catch {
+      didThrow = true;
+    }
+
+    expect(didThrow).toBe(false);
+  });
+});

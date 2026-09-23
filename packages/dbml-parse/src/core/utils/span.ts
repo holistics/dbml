@@ -1,3 +1,4 @@
+import type Compiler from '@/compiler';
 import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import { SyntaxToken } from '@/core/types/tokens';
 
@@ -12,4 +13,10 @@ export function isOffsetWithinElementHeader (offset: number, element: ElementDec
     return offset >= element.start && offset < bodyStart;
   }
   return offset >= element.start && offset <= element.end;
+}
+
+export function getSourceSnippet (compiler: Compiler, node: SyntaxNode | SyntaxToken): string | undefined {
+  const source = compiler.getSource(node.filepath);
+  if (!source) return undefined;
+  return source.slice(node.start, node.end).trim();
 }

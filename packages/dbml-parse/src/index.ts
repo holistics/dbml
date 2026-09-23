@@ -17,6 +17,8 @@ export {
   SymbolKind,
 } from '@/core/types/symbol';
 
+export { MetadataKind } from '@/core/types/symbol/metadata';
+
 export * from '@/core/global_modules/records/utils';
 
 export * from '@/core/types/nodes';
@@ -51,6 +53,7 @@ export {
   formatRecordValue,
   isValidIdentifier,
   addDoubleQuoteIfNeeded,
+  normalizeQualifiedName,
 } from '@/compiler/index';
 
 // Export interpreted types for structured data
@@ -67,7 +70,6 @@ export {
   type Ref,
   type RefEndpointPair,
   type RefEndpoint,
-  type RelationCardinality,
   type Enum,
   type EnumField,
   type TableGroup,
@@ -85,12 +87,51 @@ export {
   type ElementRef,
   type FilterConfig,
   type DiagramView,
+  type CustomMetadata,
 } from '@/core/types/schemaJson';
+
+export {
+  type RelationCardinality,
+  type RelationshipOp,
+  getRelationshipOp,
+  getMultiplicities,
+  parseCardinality,
+  makeCardinalityRequired,
+  makeCardinalityOptional,
+  makeRelationshipRequired,
+  isEndpointOneSide,
+  isEndpointManySide,
+  isEndpointOptional,
+  isEndpointRequired,
+  CARDINALITY_ONE,
+  CARDINALITY_MAYBE,
+  CARDINALITY_SOME,
+  CARDINALITY_MANY,
+} from '@/core/types/relation';
 
 // DiagramView types
 export type {
   DiagramViewSyncOperation, DiagramViewBlock,
   TextEdit,
+} from '@/compiler/queries/transform';
+
+export { findDiagramViewBlocks } from '@/compiler/queries/transform';
+
+// Dep transform types
+export type { DepSyncOperation, DepSyncEdge, DepEndpointRef } from '@/compiler/queries/transform';
+
+// Element identifier types
+export type {
+  ElementIdentifier,
+  SchemaIdentifier,
+  TableIdentifier,
+  ColumnIdentifier,
+  EnumIdentifier,
+  EndpointRef,
+  RefIdentifier,
+  DepIdentifier,
+  NoteIdentifier,
+  TableGroupIdentifier,
 } from '@/compiler/queries/transform';
 
 export {

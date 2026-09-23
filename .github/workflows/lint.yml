@@ -14,6 +14,10 @@ jobs:
         node-version: [22.x]
     steps:
     - uses: actions/checkout@v3
+      with:
+        # We need to fetch all history to include the master branch, which is used to run git diff
+        # https://github.com/actions/checkout?tab=readme-ov-file#fetch-all-history-for-all-tags-and-branches
+        fetch-depth: 0
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -21,5 +25,9 @@ jobs:
         cache: 'yarn'
     - name: Install dependencies
       run: yarn install --frozen-lockfile
+    - name: Set up master ref for git diff
+      # The per-package lint scripts run `git diff ... master`, but the checkout only
+      # provides the remote-tracking ref origin/master, not a local `master` branch.
+      run: git branch --force master origin/master
     - name: Lint
       run: yarn lint

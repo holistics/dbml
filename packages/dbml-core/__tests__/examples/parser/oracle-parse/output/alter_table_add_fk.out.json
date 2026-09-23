@@ -312,14 +312,14 @@
           "fieldNames": [
             "department_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -331,14 +331,14 @@
           "fieldNames": [
             "location_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "locations",
           "fieldNames": [
             "location_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -350,14 +350,14 @@
           "fieldNames": [
             "country_code"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "countries",
           "fieldNames": [
             "country_code"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -369,14 +369,14 @@
           "fieldNames": [
             "manager_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "employees",
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -388,14 +388,14 @@
           "fieldNames": [
             "manager_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "employees",
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -406,14 +406,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -424,14 +424,14 @@
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "employees",
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -442,14 +442,14 @@
           "fieldNames": [
             "project_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "projects",
           "fieldNames": [
             "project_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -462,7 +462,7 @@
             "project_id",
             "task_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "project_tasks",
@@ -470,7 +470,7 @@
             "project_id",
             "task_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -482,14 +482,14 @@
           "fieldNames": [
             "lead_emp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "employees",
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -501,14 +501,14 @@
           "fieldNames": [
             "backup_emp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "employees",
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -520,14 +520,14 @@
           "fieldNames": [
             "assigned_emp_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "employees",
           "fieldNames": [
             "emp_id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     }

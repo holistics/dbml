@@ -60,7 +60,7 @@ interface RefEndpoint {
   tableName: string; // Parent table or child table
   schemaName: string;
   fieldNames: string[]; // The parent fields or the child fields (foreign key fields)
-  relation: '*' | '1'; // The parent endpoint is '*' and the child endpoint is '1'
+  relation: string; // The parent endpoint is '0..*' and the child endpoint is '0..1'
 }
 
 interface Ref {

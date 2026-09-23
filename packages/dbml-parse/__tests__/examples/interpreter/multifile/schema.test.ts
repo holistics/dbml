@@ -53,7 +53,6 @@ Table orders {
   });
 });
 
-
 describe('[example] multifile interpreter - alias-and-schema-strip', () => {
   // auth-tables.dbml: Table auth.users { id int [pk]; email varchar }
   // main.dbml:        use { table auth.users as u } from './auth-tables.dbml'
@@ -104,7 +103,6 @@ Table orders {
   });
 });
 
-
 describe('[example] multifile interpreter - schema merging: tables under same named schema', () => {
   // File A contributes auth.users; File B contributes auth.posts.
   // Consumer imports from both and both should appear under the auth schema.
@@ -147,7 +145,6 @@ use { table auth.posts } from './posts-db.dbml'
     expect(posts.schemaName).toBe('auth');
   });
 });
-
 
 describe('[example] multifile interpreter - transitive schema import (a -> b -> c)', () => {
   // c.dbml: defines Table x.c
@@ -334,7 +331,6 @@ Ref: R.id > R.r
   });
 });
 
-
 describe('[stress] schema-qualified table with ref auto-pull', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -366,7 +362,6 @@ use { table auth.orders } from './source.dbml'
   });
 });
 
-
 describe('[stress] aliased schema-qualified table in ref', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -394,7 +389,6 @@ use { table auth.orders as o } from './source.dbml'
     expect(ordersEp.tableName).toBe('o');
   });
 });
-
 
 describe('[stress] wildcard from two files with overlapping schemas', () => {
   const { compiler } = setupCompiler({
@@ -721,7 +715,7 @@ describe('[example] mixed selective and wildcard reuses through schema merge', (
   // c.dbml defines Table T_wild.
   // d.dbml defines Table T_sel.
   // b.dbml has `reuse * from './c'` (wildcard) and `reuse { table T_sel } from './d'` (selective).
-  // a.dbml imports schema public from b — should pull both.
+  // a.dbml imports schema public from b - should pull both.
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table T_wild {
@@ -795,7 +789,7 @@ use { schema public } from './b'
 
 describe('[example] nested schema import places members under correct schema', () => {
   // base.dbml defines Table x.y.t1.
-  // main.dbml imports schema x.y from base — t1 should be under schema x.y, not x.
+  // main.dbml imports schema x.y from base - t1 should be under schema x.y, not x.
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.y.t1 {
@@ -854,7 +848,7 @@ Ref: x.y.orders.user_id > x.y.users.id
 describe('[example] nested schema with wildcard reuse through schema merge', () => {
   // c.dbml defines Table x.y.deep.
   // b.dbml wildcard-reuses c, defines Table x.y.local.
-  // a.dbml imports schema x.y from b — should pull both.
+  // a.dbml imports schema x.y from b - should pull both.
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table x.y.deep {
@@ -894,7 +888,7 @@ Ref: x.y.local.id > x.y.deep.id
 describe('[example] reuse * from file with reuse { schema x as y } merges to aliased schema', () => {
   // base.dbml has Table x.t1 and Table x.t2.
   // mid.dbml reuses schema x aliased as y.
-  // consumer.dbml does reuse * from mid — should see t1 and t2 under schema y.
+  // consumer.dbml does reuse * from mid - should see t1 and t2 under schema y.
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.t1 {
@@ -937,7 +931,7 @@ Ref: y.t2.t1_id > y.t1.id
 });
 
 describe('[example] reuse * from file with use { schema x as y } does NOT merge (use is local-only)', () => {
-  // mid.dbml uses `use` (not reuse), so the alias is local — not transitively visible.
+  // mid.dbml uses `use` (not reuse), so the alias is local - not transitively visible.
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.t1 {
@@ -992,4 +986,3 @@ use { schema y } from './consumer'
     expect(db.tables.find((t) => t.name === 't1' && t.schemaName === 'y')).toBeDefined();
   });
 });
-

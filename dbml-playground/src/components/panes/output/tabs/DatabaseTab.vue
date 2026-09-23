@@ -59,61 +59,69 @@
               <div
                 v-for="(col, ci) in table.fields"
                 :key="ci"
-                class="flex items-center gap-1.5 py-1 border-b border-gray-50 hover:bg-blue-50"
-                :style="{ paddingLeft: '40px', paddingRight: '12px' }"
               >
-                <VTooltip
-                  placement="right"
-                  :distance="6"
+                <div
+                  class="flex items-center gap-1.5 py-1 border-b border-gray-50 hover:bg-blue-50"
+                  :style="{ paddingLeft: '40px', paddingRight: '12px' }"
                 >
-                  <PhListBullets class="w-3 h-3 text-gray-500 flex-shrink-0" />
-                  <template #popper>
-                    <span class="text-xs">Column</span>
-                  </template>
-                </VTooltip>
-                <span class="text-gray-700">{{ col.name }}</span>
-                <PhKey
-                  v-if="col.pk"
-                  class="w-3 h-3 text-blue-400 flex-shrink-0"
-                />
-                <span
-                  v-if="col.not_null"
-                  class="text-[10px] px-1 bg-gray-100 text-gray-500 rounded font-medium leading-[14px]"
-                >NN</span>
-                <span
-                  v-if="col.unique"
-                  class="text-[10px] px-1 bg-purple-100 text-purple-600 rounded font-medium leading-[14px]"
-                >U</span>
-                <span
-                  v-if="col.increment"
-                  class="text-[10px] px-1 bg-gray-100 text-gray-500 rounded font-medium leading-[14px]"
-                >AI</span>
-                <VDropdown
-                  v-if="colRefs(table, col).length"
-                  placement="bottom-start"
-                  :distance="4"
-                  :arrow-padding="0"
-                  no-auto-focus
-                  @click.stop
-                >
-                  <PhLink class="w-3 h-3 text-blue-400 flex-shrink-0 cursor-pointer hover:text-blue-600" />
-                  <template #popper>
-                    <div
-                      class="py-1 min-w-[180px] max-w-[320px]"
-                      style="font-family: 'SF Mono', Monaco, Consolas, monospace;"
-                    >
+                  <VTooltip
+                    placement="right"
+                    :distance="6"
+                  >
+                    <PhListBullets class="w-3 h-3 text-gray-500 flex-shrink-0" />
+                    <template #popper>
+                      <span class="text-xs">Column</span>
+                    </template>
+                  </VTooltip>
+                  <span class="text-gray-700">{{ col.name }}</span>
+                  <PhKey
+                    v-if="col.pk"
+                    class="w-3 h-3 text-blue-400 flex-shrink-0"
+                  />
+                  <span
+                    v-if="col.not_null"
+                    class="text-[10px] px-1 bg-gray-100 text-gray-500 rounded font-medium leading-[14px]"
+                  >NN</span>
+                  <span
+                    v-if="col.unique"
+                    class="text-[10px] px-1 bg-purple-100 text-purple-600 rounded font-medium leading-[14px]"
+                  >U</span>
+                  <span
+                    v-if="col.increment"
+                    class="text-[10px] px-1 bg-gray-100 text-gray-500 rounded font-medium leading-[14px]"
+                  >AI</span>
+                  <VDropdown
+                    v-if="colRefs(table, col).length"
+                    placement="bottom-start"
+                    :distance="4"
+                    :arrow-padding="0"
+                    no-auto-focus
+                    @click.stop
+                  >
+                    <PhLink class="w-3 h-3 text-blue-400 flex-shrink-0 cursor-pointer hover:text-blue-600" />
+                    <template #popper>
                       <div
-                        v-for="(entry, ri) in colRefs(table, col)"
-                        :key="ri"
-                        class="flex items-center gap-2 px-3 py-1 text-xs"
+                        class="py-1 min-w-[180px] max-w-[320px]"
+                        style="font-family: 'SF Mono', Monaco, Consolas, monospace;"
                       >
-                        <span class="text-blue-500 font-mono font-bold flex-shrink-0">{{ entry.arrow }}</span>
-                        <span class="text-blue-600">{{ entry.otherLabel }}</span>
+                        <div
+                          v-for="(entry, ri) in colRefs(table, col)"
+                          :key="ri"
+                          class="flex items-center gap-2 px-3 py-1 text-xs"
+                        >
+                          <span class="text-blue-500 font-mono font-bold flex-shrink-0">{{ entry.arrow }}</span>
+                          <span class="text-blue-600">{{ entry.otherLabel }}</span>
+                        </div>
                       </div>
-                    </div>
-                  </template>
-                </VDropdown>
-                <span class="text-green-700 ml-auto">{{ col.type.type_name }}</span>
+                    </template>
+                  </VDropdown>
+                  <span class="text-green-700 ml-auto">{{ col.type.type_name }}</span>
+                </div>
+                <!-- Column metadata -->
+                <DbMetadata
+                  :metadata="col.metadata"
+                  :indent="56"
+                />
               </div>
               <!-- Indexes -->
               <template v-if="table.indexes.length">
@@ -202,6 +210,11 @@
                   </div>
                 </div>
               </template>
+              <!-- Table metadata -->
+              <DbMetadata
+                :metadata="table.metadata"
+                :indent="40"
+              />
             </div>
           </div>
         </DbSection>
@@ -232,6 +245,39 @@
             <span class="text-gray-400">{{ ref_.endpoints[0].relation }}-{{ ref_.endpoints[1].relation }}</span>
             <span class="text-blue-500">{{ endpointLabel(ref_.endpoints[1]) }}</span>
           </div>
+        </DbSection>
+
+        <!-- Deps -->
+        <DbSection
+          label="Deps"
+          :count="database.deps.length ?? 0"
+          :icon="PhArrowRight"
+          icon-color="text-orange-500"
+        >
+          <template
+            v-for="(dep, di) in database.deps"
+            :key="di"
+          >
+            <div
+              v-for="(edge, ei) in dep.edges"
+              :key="`${di}-${ei}`"
+              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
+            >
+              <VTooltip
+                placement="right"
+                :distance="6"
+              >
+                <PhArrowRight class="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
+                <template #popper>
+                  <span class="text-xs">Dep</span>
+                </template>
+              </VTooltip>
+              <span class="text-blue-500">{{ depEndpointLabel(edge.upstream) }}</span>
+              <span class="text-gray-400">→</span>
+              <span class="text-blue-500">{{ depEndpointLabel(edge.downstream) }}</span>
+            </div>
+          </template>
         </DbSection>
 
         <!-- Enums -->
@@ -298,20 +344,27 @@
           <div
             v-for="(tg, tgi) in database.tableGroups"
             :key="tgi"
-            class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-            :style="{ paddingLeft: '20px', paddingRight: '12px' }"
           >
-            <VTooltip
-              placement="right"
-              :distance="6"
+            <div
+              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
             >
-              <PhFolder class="w-3.5 h-3.5 text-yellow-600 flex-shrink-0" />
-              <template #popper>
-                <span class="text-xs">TableGroup</span>
-              </template>
-            </VTooltip>
-            <span class="text-yellow-700">{{ tg.name }}</span>
-            <span class="text-gray-400 text-xs ml-auto">{{ tg.tables.length }} tables</span>
+              <VTooltip
+                placement="right"
+                :distance="6"
+              >
+                <PhFolder class="w-3.5 h-3.5 text-yellow-600 flex-shrink-0" />
+                <template #popper>
+                  <span class="text-xs">TableGroup</span>
+                </template>
+              </VTooltip>
+              <span class="text-yellow-700">{{ tg.name }}</span>
+              <span class="text-gray-400 text-xs ml-auto">{{ tg.tables.length }} tables</span>
+            </div>
+            <DbMetadata
+              :metadata="tg.metadata"
+              :indent="36"
+            />
           </div>
         </DbSection>
 
@@ -408,19 +461,26 @@
           <div
             v-for="(note, ni) in database.notes"
             :key="ni"
-            class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
-            :style="{ paddingLeft: '20px', paddingRight: '12px' }"
           >
-            <VTooltip
-              placement="right"
-              :distance="6"
+            <div
+              class="flex items-center gap-2 py-1 border-b border-gray-50 hover:bg-blue-50"
+              :style="{ paddingLeft: '20px', paddingRight: '12px' }"
             >
-              <PhNote class="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
-              <template #popper>
-                <span class="text-xs">Sticky Note</span>
-              </template>
-            </VTooltip>
-            <span class="text-blue-500">{{ note.name }}</span>
+              <VTooltip
+                placement="right"
+                :distance="6"
+              >
+                <PhNote class="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
+                <template #popper>
+                  <span class="text-xs">Sticky Note</span>
+                </template>
+              </VTooltip>
+              <span class="text-blue-500">{{ note.name }}</span>
+            </div>
+            <DbMetadata
+              :metadata="note.metadata"
+              :indent="36"
+            />
           </div>
         </DbSection>
 
@@ -541,6 +601,7 @@ import {
   PhListBullets,
   PhArrowsLeftRight,
   PhArrowsDownUp,
+  PhArrowRight,
   PhTextAa,
   PhNumberSquareOne,
   PhFolder,
@@ -557,10 +618,12 @@ import TabSettingsButton from './common/TabSettingsButton.vue';
 import type { Database } from '@dbml/parse';
 
 type RefEndpoint = Database['refs'][number]['endpoints'][number];
+type DepEndpoint = NonNullable<Database['deps']>[number]['edges'][number]['upstream'];
 type IndexEntry = Database['tables'][number]['indexes'][number];
 
 import DbSection from './common/DbSection.vue';
 import DbBadge from './common/DbBadge.vue';
+import DbMetadata from './common/DbMetadata.vue';
 
 const {
   database,
@@ -594,7 +657,7 @@ const totalCount = computed(() => {
   const db = database;
   if (!db) return 0;
   const indexCount = db.tables.reduce((n, t) => n + t.indexes.length, 0);
-  return db.tables.length + indexCount + db.refs.length + db.enums.length
+  return db.tables.length + indexCount + db.refs.length + (db.deps?.length ?? 0) + db.enums.length
     + db.tableGroups.length + (db.records?.length ?? 0) + (db.tablePartials?.length ?? 0)
     + (db.notes?.length ?? 0) + (db.diagramViews?.length ?? 0) + externalsCount.value;
 });
@@ -719,5 +782,12 @@ function colRefs (table: TableEntry, col: FieldEntry): {
 function endpointLabel (ep: RefEndpoint): string {
   const fields = ep.fieldNames.length === 1 ? ep.fieldNames[0] : `(${ep.fieldNames.join(', ')})`;
   return ep.schemaName ? `${ep.schemaName}.${ep.tableName}.${fields}` : `${ep.tableName}.${fields}`;
+}
+
+function depEndpointLabel (ep: DepEndpoint): string {
+  const base = ep.schemaName ? `${ep.schemaName}.${ep.tableName}` : ep.tableName;
+  if (ep.fieldNames.length === 0) return base;
+  const fields = ep.fieldNames.length === 1 ? ep.fieldNames[0] : `(${ep.fieldNames.join(', ')})`;
+  return `${base}.${fields}`;
 }
 </script>

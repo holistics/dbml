@@ -1,6 +1,4 @@
-import {
-  describe, expect, it,
-} from 'vitest';
+import { describe, expect, it } from 'vitest';
 import * as fc from 'fast-check';
 import {
   tableArbitrary,
@@ -32,12 +30,8 @@ import {
   // Line ending utilities
   crlfSchemaArbitrary,
 } from '../utils/arbitraries';
-import {
-  parse, lex,
-} from '../utils';
-import {
-  SyntaxNodeKind,
-} from '@/core/types/nodes';
+import { parse, lex } from '../utils';
+import { SyntaxNodeKind } from '@/core/types/nodes';
 
 const FUZZ_CONFIG = {
   numRuns: 50,

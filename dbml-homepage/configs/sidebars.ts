@@ -27,6 +27,11 @@ const SidebarConfigs: SidebarsConfig = {
           label: 'Core Database Markup',
         },
         {
+          id: 'syntax/data-lineage',
+          type: 'doc',
+          label: 'Data Lineage',
+        },
+        {
           id: 'syntax/enrichment-visualization',
           type: 'doc',
           label: 'Enrichment & Visualization',
@@ -43,7 +48,7 @@ const SidebarConfigs: SidebarsConfig = {
         },
       ],
     },
-    'database-support',
+    'ecosystem',
     'cli',
     {
       type: 'category',

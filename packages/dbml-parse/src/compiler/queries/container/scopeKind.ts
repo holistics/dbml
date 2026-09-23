@@ -19,6 +19,8 @@ export function containerScopeKind (this: Compiler, filepath: Filepath, offset: 
       return ScopeKind.ENUM;
     case 'ref':
       return ScopeKind.REF;
+    case 'dep':
+      return ScopeKind.DEP;
     case 'tablegroup':
       return ScopeKind.TABLEGROUP;
     case 'indexes':
@@ -35,6 +37,8 @@ export function containerScopeKind (this: Compiler, filepath: Filepath, offset: 
       return ScopeKind.RECORDS;
     case 'diagramview':
       return ScopeKind.DIAGRAMVIEW;
+    case 'metadata':
+      return ScopeKind.METADATA;
     default:
       return ScopeKind.CUSTOM;
   }

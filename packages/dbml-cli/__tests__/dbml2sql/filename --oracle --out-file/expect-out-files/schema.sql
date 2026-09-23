@@ -1,7 +1,7 @@
 CREATE TABLE "orders" (
   "id" int GENERATED AS IDENTITY PRIMARY KEY,
   "user_id" int UNIQUE NOT NULL,
-  "status" nvarchar2(255) NOT NULL CHECK ("status" IN ('created', 'running', 'done', 'failure'))
+  "status" nvarchar2(255) CHECK ("status" IN ('created', 'running', 'done', 'failure'))
 );
 
 CREATE TABLE "order_items" (
@@ -15,7 +15,7 @@ CREATE TABLE "products" (
   "name" nvarchar2(255),
   "merchant_id" int NOT NULL,
   "price" int,
-  "status" nvarchar2(255) NOT NULL CHECK ("status" IN ('Out of Stock', 'In Stock')),
+  "status" nvarchar2(255) CHECK ("status" IN ('Out of Stock', 'In Stock')),
   "created_at" timestamp DEFAULT current_timestamp
 );
 

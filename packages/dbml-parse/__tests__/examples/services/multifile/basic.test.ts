@@ -86,7 +86,7 @@ TableGroup content {
   users
   posts
 }`,
-  '/main.dbml': `use { tablegroup content } from './base.dbml'`,
+  '/main.dbml': 'use { tablegroup content } from \'./base.dbml\'',
 };
 
 const CIRCULAR_REF: ProjectFiles = {

@@ -29,13 +29,13 @@
       }
     },
     {
-      "code": "UNKNOWN_COLUMN_SETTING",
-      "diagnostic": "Unknown column setting 'diagram_id'",
+      "code": "INVALID_COLUMN_SETTING_VALUE",
+      "diagnostic": "Custom setting 'diagram_id' must be a string or a color literal",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
         "context": {
-          "id": "node@<attribute>@@[L9:C14, L9:C24]",
+          "id": "node@<identifier-stream>@@[L9:C14, L9:C24]",
           "snippet": "diagram_id"
         }
       }

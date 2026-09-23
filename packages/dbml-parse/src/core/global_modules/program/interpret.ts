@@ -1,12 +1,15 @@
 import Compiler from '@/compiler/index';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { CompileWarning } from '@/core/types/errors';
+import type { CompileWarning, CompileInfo } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import { ProgramNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  Alias, Database, DiagramView, Enum, Note, Project, Ref, RefEndpoint, SchemaElement, Table, TableGroup, TablePartial, TableRecord,
+  Alias, Database, Dep, DiagramView, Enum,
+  Note, Project, Ref,
+  RefEndpoint, SchemaElement, Table,
+  TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
 import { AliasKind } from '@/core/types/schemaJson';
 import {
@@ -16,7 +19,9 @@ import {
   SchemaSymbol,
   SymbolKind,
 } from '@/core/types/symbol';
-import { MetadataKind, PartialRefMetadata, RecordsMetadata } from '@/core/types/symbol/metadata';
+import {
+  MetadataKind, PartialRefMetadata, RecordsMetadata, DepMetadata,
+} from '@/core/types/symbol/metadata';
 import { TableSymbol } from '@/core/types/symbol';
 import type { InternedNodeSymbol } from '@/core/types/symbol/symbols';
 import {
@@ -24,12 +29,13 @@ import {
   TablePartialSymbol,
   UseSymbol,
 } from '@/core/types/symbol/symbols';
-import { pushExternal } from './utils';
+import { pushExternal, validateDepBlocks } from './utils';
 import type { ElementRef } from '@/core/types/schemaJson';
+import { getTokenPosition } from '@/core/utils/interpret';
+import { getMultiplicities } from '@/core/types/relation';
+import { validatePartialRef } from '../ref/constraint_fixes';
 import { validateForeignKeys, validatePrimaryKey, validateUnique } from '../records/utils/constraints';
 import type { TableInfo } from '../records/utils/constraints/fk';
-import { getTokenPosition } from '@/core/utils/interpret';
-import { getMultiplicities } from '../utils';
 
 export default class ProgramInterpreter {
   private compiler: Compiler;
@@ -38,6 +44,7 @@ export default class ProgramInterpreter {
   private filepath: Filepath;
   private errors: CompileError[] = [];
   private warnings: CompileWarning[] = [];
+  private infos: CompileInfo[] = [];
   private db: Database;
 
   constructor (compiler: Compiler, symbol: ProgramSymbol, filepath: Filepath) {
@@ -50,6 +57,7 @@ export default class ProgramInterpreter {
       tables: [],
       notes: [],
       refs: [],
+      deps: [],
       enums: [],
       tableGroups: [],
       aliases: [],
@@ -71,8 +79,9 @@ export default class ProgramInterpreter {
     this.interpretAllSymbols();
     this.interpretAllMetadata();
     this.interpretAllAliases();
-    this.warnings.push(...this.validateRecords());
-    return new Report(this.db, this.errors, this.warnings);
+    this.validatePartialRefs();
+    this.infos.push(...this.validateRecords());
+    return new Report(this.db, this.errors, this.warnings, this.infos);
   }
 
   private interpretAllSymbols () {
@@ -85,6 +94,7 @@ export default class ProgramInterpreter {
       if (result.hasValue(UNHANDLED)) continue;
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value) this.pushElement(symbol, value);
     }
@@ -123,6 +133,7 @@ export default class ProgramInterpreter {
     if (!result.hasValue(UNHANDLED)) {
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value) this.pushElement(use, value);
     }
@@ -157,6 +168,7 @@ export default class ProgramInterpreter {
   private interpretAllMetadata () {
     const metadatas = this.compiler.symbolMetadata(this.programSymbol) ?? [];
     const seenRefEndpoints = new Set<string>();
+    const seenDepEndpoints = new Set<string>();
 
     // Pre-scan: count records blocks per table to detect duplicates
     const recordsTableCount = new Map<string, {
@@ -181,6 +193,7 @@ export default class ProgramInterpreter {
       if (result.hasValue(UNHANDLED)) continue;
       this.errors.push(...result.getErrors());
       this.warnings.push(...result.getWarnings());
+      this.infos.push(...result.getInfos());
       const value = result.getValue();
       if (value === undefined) continue;
       switch (meta.kind) {
@@ -216,6 +229,43 @@ export default class ProgramInterpreter {
           this.db.refs.push(ref);
           break;
         }
+        case MetadataKind.Dep: {
+          const dep = value as Dep;
+          // Per-edge `a -> b` nodes, index-aligned with dep.edges, for a precise error location.
+          const edgeNodes = meta instanceof DepMetadata ? meta.edgeExpressions() : [];
+          // Directed src-target uniqueness: a -> b and b -> a are distinct, so no reverse key.
+          let duplicateEdgeIndex = -1;
+          (dep.edges ?? []).some((edge, i) => {
+            const { upstream: up, downstream: down } = edge;
+            const key = [
+              up.schemaName,
+              up.tableName,
+              up.fieldNames.join(','),
+              down.schemaName,
+              down.tableName,
+              down.fieldNames.join(','),
+            ].join('|');
+            if (seenDepEndpoints.has(key)) {
+              duplicateEdgeIndex = i;
+              return true;
+            }
+            seenDepEndpoints.add(key);
+            return false;
+          });
+          if (duplicateEdgeIndex >= 0) {
+            // Point at the duplicate `a -> b` line; fall back to the whole declaration (inline form).
+            const errorNode = edgeNodes[duplicateEdgeIndex] ?? meta.declaration;
+            this.errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Dep with same endpoints already exists', errorNode));
+            break;
+          }
+          const depErrors = validateDepBlocks(dep, meta);
+          if (depErrors.length > 0) {
+            this.errors.push(...depErrors);
+            break;
+          }
+          this.db.deps.push(dep);
+          break;
+        }
         case MetadataKind.Records: {
           if (meta instanceof RecordsMetadata) {
             const tableSymbol = meta.table(this.compiler);
@@ -236,7 +286,11 @@ export default class ProgramInterpreter {
         case MetadataKind.Project:
           this.db.project = value as Project;
           break;
-        default: break;
+
+        // Handled inside each element
+        case MetadataKind.MetadataElement:
+        default:
+          break;
       }
     }
   }
@@ -261,8 +315,8 @@ export default class ProgramInterpreter {
     }
   }
 
-  private validateRecords (): CompileWarning[] {
-    const warnings: CompileWarning[] = [];
+  private validateRecords (): CompileInfo[] {
+    const infos: CompileInfo[] = [];
     const fkTableMap = new Map<InternedNodeSymbol, TableInfo>();
 
     // Seed fkTableMap with ALL table symbols (record = undefined)
@@ -297,8 +351,8 @@ export default class ProgramInterpreter {
       const record = result.getValue() as TableRecord | undefined;
       if (!record) continue;
 
-      warnings.push(...validatePrimaryKey(this.compiler, tableSymbol, meta.declaration, record));
-      warnings.push(...validateUnique(this.compiler, tableSymbol, record));
+      infos.push(...validatePrimaryKey(this.compiler, tableSymbol, meta.declaration, record));
+      infos.push(...validateUnique(this.compiler, tableSymbol, record));
 
       const key = tableSymbol.originalSymbol.intern();
       const entry = fkTableMap.get(key);
@@ -311,11 +365,19 @@ export default class ProgramInterpreter {
     }
 
     const partialRefs = this.collectPartialRefs(fkTableMap);
-    warnings.push(...validateForeignKeys(this.compiler, [
+    infos.push(...validateForeignKeys(this.compiler, [
       ...this.db.refs,
       ...partialRefs,
     ], fkTableMap, this.filepath));
-    return warnings;
+    return infos;
+  }
+
+  private validatePartialRefs () {
+    const partialMetas = this.compiler.symbolMetadata(this.programSymbol)
+      .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
+    for (const meta of partialMetas) {
+      this.infos.push(...validatePartialRef(this.compiler, meta));
+    }
   }
 
   private collectPartialRefs (fkTableMap: Map<InternedNodeSymbol, TableInfo>): Ref[] {

@@ -41,7 +41,6 @@ use { table users } from './source.dbml'
   });
 });
 
-
 describe('[edge] same partial used by multiple imported tables - deduplicated', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -70,7 +69,6 @@ use { table orders } from './source.dbml'
     expect(errors.length).toBeGreaterThanOrEqual(1);
   });
 });
-
 
 describe('[edge] partial with inline ref - target table not in consumer scope', () => {
   const { compiler } = setupCompiler({
@@ -101,7 +99,6 @@ use { table products } from './source.dbml'
   });
 });
 
-
 describe('[edge] two files define same-named partial - first wins', () => {
   const { compiler } = setupCompiler({
     '/a.dbml': `
@@ -130,7 +127,6 @@ use { table orders } from './b.dbml'
     expect(errors.length).toBeGreaterThanOrEqual(1);
   });
 });
-
 
 describe('[edge] reuse chain: partial from deeply nested file', () => {
   // C defines partial, B defines table using it and reuses from C,

@@ -143,6 +143,8 @@ Parse a single-file input in the specified format to ```Database``` object. For 
 
 * The `dbmlv2` option parse dbml using the new parser. It's quicker and more robust to errors/more user-friendly error messages.
 
+* The `dbml` option is deprecated. No new features are developed against it; use `dbmlv2` instead. Features such as records, multifile support, table group notes/colors, etc. are only available in `dbmlv2`.
+
 :::
 
 ```javascript

@@ -18,7 +18,7 @@ import { type Internable, type Primitive, intern } from '@/core/types/internable
 import { SyntaxNode, SyntaxNodeIdGenerator } from '@/core/types/nodes';
 import { NodeSymbolIdGenerator, SymbolFactory } from '@/core/types/symbol';
 import {
-  DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
+  DBMLCodeActionProvider, DBMLCompletionItemProvider, DBMLDefinitionProvider, DBMLDiagnosticsProvider, DBMLReferencesProvider,
 } from '@/services/index';
 import { type DbmlProjectLayout } from './projectLayout';
 import {
@@ -37,29 +37,26 @@ import { bindFile, bindProject } from './queries/pipeline/bind';
 import { interpretFile, interpretProject } from './queries/pipeline/interpret';
 import { validateFile } from './queries/pipeline/validate';
 import { parseFile, parseProject } from './queries/pipeline/parse';
-import { lookupMembers } from './queries/symbol/lookupMembers';
+import { lookupMembers, symbolMembersLookupMap } from './queries/symbol/lookupMembers';
 import { symbolAliases } from './queries/symbol/symbolAliases';
 import {
   resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
-  type DiagramViewBlock,
-  findDiagramViewBlocks,
-  renameTable, syncDiagramView,
+  renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
 import {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
 } from './queries/utils';
 import { DEFAULT_ENTRY } from '@/constants';
 
 // Re-export types
 export { ScopeKind } from './types';
-export type { DiagramViewBlock, TableNameInput, TextEdit } from './queries/transform';
+export type { TextEdit } from './queries/transform';
 // Re-export utilities
 export {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, splitQualifiedIdentifier, unescapeString,
-  findDiagramViewBlocks,
+  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
 };
 
 // Sentinel placed in the cache while a query is being computed.
@@ -87,11 +84,18 @@ export default class Compiler {
   private cleanStaleLocalCache (filepath: Filepath): void {
     const content = this.layout.getSource(filepath);
     const key = filepath.absolute;
-    if (this.sourceSnapshot.has(key) && this.sourceSnapshot.get(key) !== content) {
-      this.localCache.delete(filepath.intern());
-      this.globalCache.clear();
+
+    const snapshot = this.sourceSnapshot.get(key);
+    if (snapshot !== undefined) {
+      if (snapshot !== content) {
+        this.localCache.delete(filepath.intern());
+        this.globalCache.clear();
+
+        this.sourceSnapshot.set(key, content); // reset snapshot on change
+      }
+    } else {
+      this.sourceSnapshot.set(key, content); // reset snapshot if not set yet
     }
-    this.sourceSnapshot.set(key, content);
   }
 
   private entrypointsSnapshot: Filepath[] | undefined;
@@ -123,6 +127,8 @@ export default class Compiler {
   // (QuerySymbol, interned argument string) -> Result
   private globalCache = new Map<QuerySymbol, Map<string, any>>();
 
+  private globallyQuerying = false; // Check if we're already inside a query, we only need to check global cache staleness once when enter the first query: queries calling each other would not have stale global cache
+
   // Turn a normal function into a Compiler's global query
   // Input: A function that only accepts internable types | primitive types
   // Output: A global query wrapping the function
@@ -132,33 +138,45 @@ export default class Compiler {
     const queryKey = Symbol();
 
     return ((...args: Args): Return => {
-      // Detect entrypoint changes before cache lookup.
-      this.cleanStaleGlobalCache();
-
-      if (!this.globalCache.has(queryKey)) {
-        this.globalCache.set(queryKey, new Map());
+      const isTopLevel = !this.globallyQuerying;
+      if (isTopLevel) {
+        this.globallyQuerying = true;
+        this.cleanStaleGlobalCache();
       }
 
-      const argKey = args.map((a) => intern(a)).join('\0');
-      const subCache = this.globalCache.get(queryKey)!;
-
-      if (subCache.has(argKey)) {
-        const cached = subCache.get(argKey);
-        if (cached === COMPUTING) {
-          throw new Error(`Cycle detected in query: ${fn.name}(${argKey})`);
-        }
-        return cached;
-      }
-
-      // Sentinel detects cycles when a query re-enters itself
-      subCache.set(argKey, COMPUTING);
       try {
-        const result = fn.apply(this, args);
-        subCache.set(argKey, result);
-        return result;
-      } catch (e) {
-        subCache.delete(argKey);
-        throw e;
+        let subCache = this.globalCache.get(queryKey);
+        if (!subCache) {
+          subCache = new Map();
+          this.globalCache.set(queryKey, subCache);
+        }
+
+        const argKey = args.length === 0
+          ? ''
+          : args.length === 1
+            ? intern(args[0]) as string
+            : args.map((a) => intern(a)).join('\0');
+
+        const cached = subCache.get(argKey);
+        if (cached) {
+          if (cached === COMPUTING) {
+            throw new Error(`Cycle detected in query: ${fn.name}(${argKey})`);
+          }
+          return cached;
+        }
+
+        // Sentinel detects cycles when a query re-enters itself
+        subCache.set(argKey, COMPUTING);
+        try {
+          const result = fn.apply(this, args);
+          subCache.set(argKey, result);
+          return result;
+        } catch (e) {
+          subCache.delete(argKey);
+          throw e;
+        }
+      } finally {
+        if (isTopLevel) this.globallyQuerying = false;
       }
     }) as (...args: Args) => Return;
   }
@@ -190,7 +208,11 @@ export default class Compiler {
       this.cleanStaleLocalCache(filepath);
 
       const filepathId = filepath.intern();
-      const argKey = args.map((a) => intern(a)).join('\0');
+      const argKey = args.length === 0
+        ? ''
+        : args.length === 1
+          ? intern(args[0]) as string
+          : args.map((a) => intern(a)).join('\0');
 
       let filepathCache = this.localCache.get(filepathId);
       if (!filepathCache) {
@@ -303,6 +325,12 @@ export default class Compiler {
   // Return all direct child symbols of a symbol
   // Signature: (symbol: NodeSymbol) => Report<NodeSymbol[]> | Report<Unhandled>
   symbolMembers = this.globalQuery(symbolMembers);
+  // (Internal) global query
+  // Build a name-indexed lookup map for a symbol's members (used by lookupMembers)
+  // This is for pure performance purposes
+  // Signature: (symbol: NodeSymbol) => Map<string, NodeSymbol[]>
+  // @internal
+  symbolMembersLookupMap = this.globalQuery(symbolMembersLookupMap);
   // A global query
   // Look up a member by kind and name inside a symbol or node scope
   // Signature: (symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string) => NodeSymbol | undefined
@@ -356,10 +384,10 @@ export default class Compiler {
 
   // transform queries
   renameTable = renameTable.bind(this);
+  updateElementSetting = updateElementSetting.bind(this);
+  updateElementSettingEdit = updateElementSettingEdit.bind(this);
   syncDiagramView = syncDiagramView.bind(this);
-  findDiagramViewBlocks (filepath: Filepath): DiagramViewBlock[] {
-    return findDiagramViewBlocks(this.getSource(filepath) ?? '');
-  }
+  syncDep = syncDep.bind(this);
 
   // @deprecated - legacy APIs for services compatibility
   readonly token = {
@@ -392,21 +420,7 @@ export default class Compiler {
       triggerCharacters?: string[];
     };
   }) {
-    const triggerCharacters = options?.autocompletion?.triggerCharacters ?? [
-      '.',
-      ',',
-      '[',
-      '(',
-      ':',
-      '>',
-      '<',
-      '-',
-      '~',
-      '\'',
-      '"',
-      '/',
-      ' ',
-    ];
+    const triggerCharacters = options?.autocompletion?.triggerCharacters ?? [];
 
     return {
       definitionProvider: new DBMLDefinitionProvider(this),
@@ -415,6 +429,7 @@ export default class Compiler {
         triggerCharacters,
       }),
       diagnosticsProvider: new DBMLDiagnosticsProvider(this),
+      codeActionProvider: new DBMLCodeActionProvider(this),
     };
   }
 }

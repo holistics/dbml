@@ -8,8 +8,10 @@ import {
   Table,
 } from './ANTLR/ASTGeneration/AST';
 
-const parseJSONToDatabase = (rawDatabase) => {
-  return new Database(rawDatabase);
+const parseJSONToDatabase = (rawDatabase, { overrideCardinality = false } = {}) => {
+  const database = new Database(rawDatabase);
+  if (overrideCardinality) database.adjustCardinalitiesFromColumns();
+  return database;
 };
 
 const createRefs = (rawRefs) => {
@@ -116,12 +118,10 @@ const generateDatabase = (schemaJson) => {
       aliases: [],
       project: {},
     };
-    return parseJSONToDatabase(rawDatabase);
+    return parseJSONToDatabase(rawDatabase, { overrideCardinality: true });
   } catch (err) {
     throw new Error(err);
   }
 };
 
-export {
-  generateDatabase,
-};
+export { generateDatabase };

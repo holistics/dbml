@@ -1,0 +1,24 @@
+Table "raw_orders" {
+  "id" int [pk]
+}
+
+Table "stg_orders" {
+  "id" int [pk]
+}
+
+Table "fct_orders" {
+  "id" int [pk]
+  "amount" decimal
+}
+
+Dep: "raw_orders" -> "stg_orders"
+
+Dep {
+  "stg_orders" -> "fct_orders"
+  "stg_orders"."id" -> "fct_orders"."amount"
+
+  note: 'Aggregate staging into facts'
+  materialized: 'table'
+  owner: 'data-team'
+  priority: 1
+}

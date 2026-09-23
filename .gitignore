@@ -2,6 +2,7 @@
 .DS_Store
 node_modules/
 dist/
+dist-profile/
 *.log
 *.cache
 *.package-lock.json
@@ -19,6 +20,7 @@ dist/
 *.swp
 packages/dbml-core/src/parse/mssql/manual_tests.js
 packages/dbml-core/benchmarks/*
+packages/dbml-parse/__benchmarks__/output
 
 # tsc
 tsconfig.tsbuildinfo
@@ -27,4 +29,8 @@ packages/dbml-connector/keys
 
 # coverage
 coverage/
+
+# profile
+__benchmarks__/output/
+
 .gitnexus

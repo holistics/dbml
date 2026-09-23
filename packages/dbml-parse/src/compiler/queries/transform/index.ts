@@ -1,9 +1,28 @@
 export { renameTable } from './renameTable';
+export { updateElementSetting, updateElementSettingEdit } from './updateElementSetting';
 export {
   syncDiagramView,
   findDiagramViewBlocks,
   type DiagramViewSyncOperation,
   type DiagramViewBlock,
 } from './syncDiagramView';
+export {
+  syncDep,
+  generateDepBlock,
+  type DepSyncOperation,
+  type DepSyncEdge,
+  type DepEndpointRef,
+} from './syncDep';
 export { applyTextEdits, type TextEdit } from './applyTextEdits';
-export { type TableNameInput } from './utils';
+export type {
+  ElementIdentifier,
+  SchemaIdentifier,
+  TableIdentifier,
+  ColumnIdentifier,
+  EnumIdentifier,
+  EndpointRef,
+  RefIdentifier,
+  DepIdentifier,
+  NoteIdentifier,
+  TableGroupIdentifier,
+} from './types';

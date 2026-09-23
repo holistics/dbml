@@ -1,7 +1,5 @@
 import { DEFAULT_ENTRY } from '@/constants';
-import {
-  type Position, type TextModel,
-} from '@/services';
+import { type Position, type TextModel } from '@/services';
 
 export function createPosition (lineNumber: number, column: number): Position {
   return {
@@ -58,7 +56,7 @@ export class MockTextModel {
   getValue (): string {
     return this.content;
   }
-  
+
   getPositionAt (offset: number): Position {
     const text = this.content.slice(0, Math.min(offset, this.content.length));
     const lines = text.split('\n');

@@ -10,8 +10,7 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  isExpressionAQuotedString,
-  isElementFieldNode, isElementNode, isExpressionAVariableNode,
+  isExpressionAQuotedString, isElementFieldNode, isElementNode, isExpressionAVariableNode,
   Settings, aggregateSettingList,
 } from '@/core/utils/validate';
 import { type LocalModule } from '../types';

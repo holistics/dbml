@@ -486,13 +486,13 @@ async function generateForeignKeys (client: Connection, schemaName: string): Pro
     const endpoint1 = {
       tableName: foreignTableName,
       fieldNames: foreignColumnNames.split(','),
-      relation: '*',
+      relation: '0..*',
     };
 
     const endpoint2 = {
       tableName: refTableName,
       fieldNames: refColumnNames.split(','),
-      relation: '1',
+      relation: '0..1',
     };
 
     return {

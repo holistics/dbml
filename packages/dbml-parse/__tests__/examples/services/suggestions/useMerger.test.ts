@@ -43,8 +43,7 @@ describe('mergeSymbolIntoUses - preserves alias when adding new specifier', () =
       '/main.dbml': content,
     });
     const result = mergeSymbolIntoUses(
-      compiler, 'orders', SymbolKind.Table,
-      Filepath.from('/base.dbml'), Filepath.from('/main.dbml'), content,
+      compiler, 'orders', SymbolKind.Table, Filepath.from('/base.dbml'), Filepath.from('/main.dbml'), content,
     );
     expect(result.topInsert).toContain('table users as u');
     expect(result.topInsert).toContain('table users as u');
@@ -58,8 +57,7 @@ describe('mergeSymbolIntoUses - preserves alias when adding new specifier', () =
       '/main.dbml': content,
     });
     const result = mergeSymbolIntoUses(
-      compiler, 'status', SymbolKind.Enum,
-      Filepath.from('/base.dbml'), Filepath.from('/main.dbml'), content,
+      compiler, 'status', SymbolKind.Enum, Filepath.from('/base.dbml'), Filepath.from('/main.dbml'), content,
     );
     expect(result.topInsert).toContain('table users as u');
     expect(result.topInsert).toContain('table orders as o');
@@ -73,8 +71,7 @@ describe('mergeSymbolIntoUses - preserves alias when adding new specifier', () =
       '/main.dbml': content,
     });
     const result = mergeSymbolIntoUses(
-      compiler, 'users', SymbolKind.Table,
-      Filepath.from('/base.dbml'), Filepath.from('/main.dbml'), content,
+      compiler, 'users', SymbolKind.Table, Filepath.from('/base.dbml'), Filepath.from('/main.dbml'), content,
     );
     expect(result.topInsert).toBe('');
   });

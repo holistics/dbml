@@ -1,0 +1,149 @@
+// ==========================================
+// E-Commerce Data Pipeline Example
+// Demonstrates Dep (dependency) blocks for data lineage
+// ==========================================
+
+// ------------------------------------------
+// Source Layer (Raw Data)
+// ------------------------------------------
+TableGroup raw_layer {
+  raw_users
+  raw_orders
+  raw_order_items
+}
+
+Table raw_users {
+  id int [pk]
+  email varchar
+  name varchar
+  created_at timestamp
+  raw_data json
+}
+
+Table raw_orders {
+  id int [pk]
+  user_id int
+  ordered_at timestamp
+  status varchar
+  raw_data json
+}
+
+Table raw_order_items {
+  id int [pk]
+  order_id int
+  product_id int
+  quantity int
+  price decimal
+}
+
+// ------------------------------------------
+// Staging Layer (Cleaned Data)
+// ------------------------------------------
+TableGroup staging_layer {
+  stg_users
+  stg_orders
+  stg_order_items
+}
+
+Table stg_users {
+  user_id int [pk]
+  email varchar
+  name varchar
+  created_at timestamp
+}
+
+Table stg_orders {
+  order_id int [pk]
+  user_id int
+  ordered_at timestamp
+  status varchar
+}
+
+Table stg_order_items {
+  order_item_id int [pk]
+  order_id int
+  product_id int
+  quantity int
+  unit_price decimal
+  line_total decimal
+}
+
+// ------------------------------------------
+// Domain/Mart Layer (Business Models)
+// ------------------------------------------
+TableGroup mart_layer {
+  dim_users
+  fct_orders
+}
+
+Table dim_users {
+  user_id int [pk]
+  email varchar
+  name varchar
+  first_order_at timestamp
+  total_orders int
+  total_spent decimal
+  created_at timestamp
+}
+
+Table fct_orders {
+  order_id int [pk]
+  user_id int
+  ordered_at timestamp
+  status varchar
+  total_items int
+  order_total decimal
+}
+
+// ------------------------------------------
+// Foreign Key References (Logical)
+// ------------------------------------------
+Ref: raw_orders.user_id > raw_users.id
+Ref: raw_order_items.order_id > raw_orders.id
+Ref: stg_orders.user_id > stg_users.user_id
+Ref: stg_order_items.order_id > stg_orders.order_id
+Ref: fct_orders.user_id > dim_users.user_id
+
+// ------------------------------------------
+// Data Dependencies (Lineage)
+// ------------------------------------------
+
+// Column-level dependencies (detailed lineage)
+// Raw -> Staging dependencies
+Dep: raw_users.id -> stg_users.user_id [note: 'Cast + rename: raw id → canonical user_id']
+Dep: raw_users.email -> stg_users.email [note: 'Lowercase + validate email']
+Dep: raw_users.name -> stg_users.name [note: 'Trim + normalize name']
+Dep: raw_users.created_at -> stg_users.created_at [note: 'Parse timestamp (UTC)']
+
+Dep: raw_orders.id -> stg_orders.order_id [note: 'Rename: id → order_id']
+Dep: raw_orders.user_id -> stg_orders.user_id [note: 'Join key to users dimension']
+Dep: raw_orders.ordered_at -> stg_orders.ordered_at [note: 'Parse + standardize order timestamp']
+Dep: raw_orders.status -> stg_orders.status [note: 'Map raw status codes → business statuses']
+
+Dep: raw_order_items.id -> stg_order_items.order_item_id
+Dep: raw_order_items.order_id -> stg_order_items.order_id
+Dep: raw_order_items.product_id -> stg_order_items.product_id
+Dep: raw_order_items.quantity -> stg_order_items.quantity
+Dep: raw_order_items.price -> stg_order_items.unit_price [note: 'Rename: price → unit_price']
+
+// Staging -> Mart dependencies
+Dep: stg_users.user_id -> dim_users.user_id
+Dep: stg_users.email -> dim_users.email
+Dep: stg_users.name -> dim_users.name
+Dep: stg_users.created_at -> dim_users.created_at
+Dep: stg_orders.ordered_at -> dim_users.first_order_at [note: 'Aggregation: MIN(ordered_at) by user']
+Dep: stg_orders.order_id -> dim_users.total_orders [note: 'Aggregation: COUNT(order_id) by user']
+
+Dep: stg_orders.order_id -> fct_orders.order_id
+Dep: stg_orders.user_id -> fct_orders.user_id
+Dep: stg_orders.ordered_at -> fct_orders.ordered_at
+Dep: stg_orders.status -> fct_orders.status
+Dep: stg_order_items.quantity -> fct_orders.total_items [note: 'Aggregation: SUM(quantity) by order_id']
+Dep: stg_order_items.line_total -> fct_orders.order_total [note: 'Aggregation: SUM(line_total) by order_id']
+
+Dep: raw_users -> stg_users [note: 'Raw data → Staging data']
+Dep: raw_orders -> stg_orders [note: 'Raw data → Staging data']
+Dep: raw_order_items -> stg_order_items [note: 'Raw data → Staging data']
+Dep: stg_users -> dim_users [note: 'Staging data → Domain data']
+Dep: stg_orders -> fct_orders [note: 'Staging data → Domain data']
+Dep: stg_order_items -> fct_orders [note: 'Staging data → Domain data']

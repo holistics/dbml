@@ -34,10 +34,11 @@ export const useUtils = {
       }
     }
     if (!node) return undefined;
-    return compiler.nodeAlias(node).mapFiltered((a) => [
-      a,
-    ], UNHANDLED, undefined).getFiltered(UNHANDLED)
-    || compiler.nodeFullname(node).getFiltered(UNHANDLED);
+    const alias = compiler.nodeAlias(node).getFiltered(UNHANDLED);
+    if (alias !== undefined) return [
+      alias,
+    ];
+    return compiler.nodeFullname(node).getFiltered(UNHANDLED);
   },
 };
 
@@ -75,6 +76,12 @@ export const useModule: GlobalModule = {
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
     if (!(symbol instanceof UseSymbol)) return Report.create(PASS_THROUGH);
+
+    // `originalSymbol` can be the `symbol` itself if the used element does not exist in the import file,
+    // meaning calling the `symbolMembers` query on it will actually call this query again -> cycled query
+    // => early return here to avoid cycled query
+    if (symbol.originalSymbol === symbol) return Report.create([]);
+
     const members = compiler.symbolMembers(symbol.originalSymbol).getFiltered(UNHANDLED);
     return Report.create(members ?? []);
   },

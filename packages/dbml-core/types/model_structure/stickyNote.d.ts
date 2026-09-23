@@ -1,30 +1,35 @@
-import Element, { Token } from './element';
+import { CustomMetadata } from '@dbml/parse';
+import Element, { Token, Color } from './element';
 import Database from './database';
 import DbState from './dbState';
-import { NormalizedModel } from './database';
+import type { NormalizedModel } from './database';
 
 export interface RawStickyNote {
     name: string;
     content: string;
     database: Database;
     token: Token;
-    headerColor: string;
+    color?: Color;
+    metadata?: CustomMetadata;
 }
 
 declare class StickyNote extends Element {
     name: string;
     content: string;
     noteToken: Token;
-    headerColor: string;
+    color?: Color;
+    metadata: CustomMetadata;
     database: Database;
     dbState: DbState;
     id: number;
-    constructor({ name, content, token, headerColor, database }: RawStickyNote);
+
+    constructor({ name, content, token, color, database, metadata }: RawStickyNote);
     generateId(): void;
     export(): {
         name: string;
         content: string;
-        headerColor: string;
+        color?: Color;
+        metadata: CustomMetadata;
     };
     normalize(model: NormalizedModel): void;
 }
@@ -32,7 +37,8 @@ export interface NormalizedNote {
     id: number;
     name: string;
     content: string;
-    headerColor: string | null;
+    color?: Color;
+    metadata: CustomMetadata;
 }
 
 export interface NormalizedNoteIdMap {

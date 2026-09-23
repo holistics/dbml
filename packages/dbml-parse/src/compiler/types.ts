@@ -5,6 +5,7 @@ export const enum ScopeKind {
   INDEXES,
   NOTE,
   REF,
+  DEP,
   PROJECT,
   CUSTOM,
   TOPLEVEL,
@@ -12,4 +13,5 @@ export const enum ScopeKind {
   CHECKS,
   RECORDS,
   DIAGRAMVIEW,
+  METADATA,
 }

@@ -1,0 +1,161 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-background-surface-color);
+  transition:
+    border-color var(--ifm-transition-fast) var(--ifm-transition-timing-default),
+    box-shadow var(--ifm-transition-fast) var(--ifm-transition-timing-default),
+    transform var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+
+  &,
+  &:hover {
+    color: var(--ifm-font-color-base);
+    text-decoration: none;
+  }
+
+  &:hover {
+    border-color: var(--ifm-color-primary);
+    box-shadow: var(--ifm-global-shadow-lw);
+    transform: translateY(-2px);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.cardName {
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  overflow-wrap: anywhere;
+}
+
+.badge {
+  flex-shrink: 0;
+  padding: 0.1rem 0.45rem;
+  border-radius: 1rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--ifm-color-emphasis-700);
+  background: var(--ifm-color-emphasis-100);
+}
+
+.cardDescription {
+  flex: 1;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  min-height: 20px;
+}
+
+.cardAuthor {
+  font-size: 0.75rem;
+  color: var(--ifm-color-emphasis-600);
+  overflow-wrap: anywhere;
+}
+
+.stars {
+  flex-shrink: 0;
+  margin-left: auto;
+  // The badge is 20px tall but its width varies with the digit count (35px at one
+  // digit, 60px+ at four). Pin the height only and let the width follow, or short
+  // counts get stretched. `.cardFooter` reserves the row height against reflow.
+  height: 20px;
+  width: auto;
+  // The badge ships white-on-transparent, which is only legible in dark mode.
+  filter: invert(1);
+  opacity: 0.55;
+  transition: opacity var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+}
+
+[data-theme='dark'] .stars {
+  filter: none;
+  opacity: 0.65;
+}
+
+.card:hover .stars {
+  opacity: 0.9;
+}
+
+.controls {
+  margin-bottom: 1.25rem;
+}
+
+.search {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  background: var(--ifm-background-color);
+  color: var(--ifm-font-color-base);
+  font-size: 0.9rem;
+
+  &:focus {
+    outline: none;
+    border-color: var(--ifm-color-primary);
+  }
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.chip {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 1rem;
+  background: transparent;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition:
+    background-color var(--ifm-transition-fast) var(--ifm-transition-timing-default),
+    border-color var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+
+  &:hover {
+    border-color: var(--ifm-color-primary);
+  }
+}
+
+.chipActive {
+  border-color: var(--ifm-color-primary);
+  background: var(--ifm-color-primary);
+  color: var(--ifm-color-white);
+}
+
+.chipCount {
+  opacity: 0.65;
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  padding: 2rem 0;
+  color: var(--ifm-color-emphasis-700);
+}

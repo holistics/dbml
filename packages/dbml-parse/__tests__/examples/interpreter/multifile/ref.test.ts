@@ -67,7 +67,6 @@ Ref: bookings.event_id > events.id
   });
 });
 
-
 describe('[example] multifile interpreter - inline ref on imported table carried to consumer', () => {
   // source.dbml: Table accounts { id int [pk] }
   //              Table users { id int [pk]; account_id int [ref: > accounts.id] }
@@ -107,7 +106,6 @@ use { table users } from './source.dbml'
     expect(accountIdField.inline_refs[0].relation).toBe('>');
   });
 });
-
 
 describe('[example] multifile interpreter - standalone Ref between two imported tables', () => {
   // Consumer imports both tables and declares a standalone Ref between them.
@@ -154,7 +152,6 @@ Ref: orders.user_id > users.id
   });
 });
 
-
 describe('[example] multifile interpreter - Ref cardinality preserved across file boundary', () => {
   // Verifies that the many-to-one cardinality (< and >) is faithfully preserved
   // when the ref endpoints reference imported tables.
@@ -198,7 +195,6 @@ Ref many_to_one: players.team_id > teams.id
   });
 });
 
-
 describe('[example] multifile interpreter - refs with same logical endpoints via different aliases across files', () => {
   // Two Ref declarations target the same pair of columns, but one uses the
   // original table name and the other uses an alias. They are two distinct
@@ -237,11 +233,10 @@ Ref r2: orders.user_id > u.id
     const ast = compiler.parseFile(fp('/consumer.dbml')).getValue().ast;
     const bindErrors = compiler.bindNode(ast).getErrors();
     expect(bindErrors).toHaveLength(2);
-    expect(bindErrors[0].diagnostic).toMatchInlineSnapshot(`"References with same endpoints exist"`);
-    expect(bindErrors[1].diagnostic).toMatchInlineSnapshot(`"References with same endpoints exist"`);
+    expect(bindErrors[0].diagnostic).toMatchInlineSnapshot('"References with same endpoints exist"');
+    expect(bindErrors[1].diagnostic).toMatchInlineSnapshot('"References with same endpoints exist"');
   });
 });
-
 
 describe('[example] multifile interpreter - aliased table renamed in ref endpoints', () => {
   // base.dbml:   Table users { id int [pk] }
@@ -289,7 +284,6 @@ Ref: orders.user_id > u.id
   });
 });
 
-
 describe('[example] multifile interpreter - aliased table renamed in cross-file ref endpoints', () => {
   // Ref is declared in the source file, not the consumer. The consumer imports
   // both tables (one with alias). The cross-file ref endpoints must be rewritten.
@@ -325,7 +319,6 @@ use { table orders } from './base.dbml'
   });
 });
 
-
 describe('[example] multifile interpreter - imported table with inline ref to unimported table', () => {
   // source.dbml defines users and orders with an inline ref: orders.user_id > users.id
   // consumer imports ONLY orders (not users).
@@ -358,7 +351,6 @@ use { table orders } from './source.dbml'
     expect(db.tables.find((t) => t.name === 'users')).toBeUndefined();
   });
 });
-
 
 describe('[example] multifile interpreter - external standalone Ref auto-pulled when both tables imported', () => {
   // source.dbml defines tables + a standalone Ref between them.
@@ -396,7 +388,6 @@ use { table orders } from './source.dbml'
   });
 });
 
-
 describe('[example] multifile interpreter - external standalone Ref NOT pulled when one table missing', () => {
   // Only orders is imported, not users. The Ref should NOT be pulled.
   const { compiler } = setupCompiler({
@@ -422,7 +413,6 @@ use { table orders } from './source.dbml'
     expect(db.refs).toHaveLength(0);
   });
 });
-
 
 describe('[example] multifile interpreter - Ref auto-pull matches through alias', () => {
   // source defines tables + standalone Ref. Consumer imports one table with alias.
@@ -458,7 +448,6 @@ use { table orders } from './source.dbml'
     expect(usersEp.tableName).toBe('u');
   });
 });
-
 
 describe('[example] multifile interpreter - Ref between tables from different imported files', () => {
   // file-a defines users, file-b defines orders + Ref to users.
@@ -497,7 +486,6 @@ use { table orders } from './file-b.dbml'
     expect(db.tables.find((t) => t.name === 'orders')).toBeDefined();
   });
 });
-
 
 describe('[example] multifile interpreter - standalone Ref from source auto-pulled via metadata', () => {
   // Verifies that refs flow through metadata, not just AST.
@@ -552,14 +540,13 @@ Table employees {
 }
 Ref: employees.dept_id > departments.id
 `);
-    partialLayout.setSource(fp, `use { table employees } from './source.dbml'`);
+    partialLayout.setSource(fp, 'use { table employees } from \'./source.dbml\'');
     const partial = new Compiler(partialLayout);
     const result = partial.interpretFile(fp);
     const db = result.getValue() as Database | undefined;
     expect(db?.refs ?? []).toHaveLength(0);
   });
 });
-
 
 describe('[edge] ref in third unreachable file is NOT pulled', () => {
   // A: users, B: orders, C: Ref between them. Consumer imports from A and B, not C.
@@ -589,7 +576,6 @@ use { table orders } from './b.dbml'
     expect(db.refs).toHaveLength(0);
   });
 });
-
 
 describe('[edge] aliased table ref endpoint rewriting', () => {
   // use { table users as u } + use { table orders }
@@ -624,7 +610,6 @@ use { table orders } from './source.dbml'
   });
 });
 
-
 describe('[edge] multiple refs between same tables - all pulled', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -652,7 +637,6 @@ use { table orders } from './source.dbml'
   });
 });
 
-
 describe('[edge] self-referential ref - single table', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -674,7 +658,6 @@ use { table employees } from './source.dbml'
     expect(db.refs[0].endpoints[1].tableName).toBe('employees');
   });
 });
-
 
 describe('[stress] composite ref auto-pull', () => {
   const { compiler } = setupCompiler({
@@ -707,7 +690,6 @@ use { table memberships } from './source.dbml'
   });
 });
 
-
 describe('[stress] ref between imported and local table', () => {
   const { compiler } = setupCompiler({
     '/source.dbml': `
@@ -735,7 +717,6 @@ Ref: orders.user_id > users.id
     expect(db.refs[0].endpoints.find((e) => e.tableName === 'users')).toBeDefined();
   });
 });
-
 
 describe('[stress] inline ref on imported table with target in scope', () => {
   const { compiler } = setupCompiler({

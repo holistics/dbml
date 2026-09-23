@@ -35,32 +35,38 @@
           v-if="group.warnings.length"
           class="text-yellow-500 text-xs"
         >{{ group.warnings.length }}W</span>
+        <span
+          v-if="group.infos.length"
+          class="text-blue-500 text-xs"
+        >{{ group.infos.length }}I</span>
       </div>
 
       <!-- Diagnostics rows -->
-      <div v-if="expanded.has(group.file)">
-        <div
+      <div
+        v-if="expanded.has(group.file)"
+        class="pl-[28px]"
+      >
+        <DiagnosticEntry
           v-for="(d, i) in group.errors"
           :key="`e-${i}`"
-          class="flex items-start gap-2 px-3 py-[3px] border-b border-gray-50 hover:bg-red-50 cursor-pointer"
-          :style="{ paddingLeft: '28px' }"
+          :diagnostic="d"
+          severity="error"
           @click="emit('position-click', d)"
-        >
-          <PhWarningCircle class="w-3.5 h-3.5 flex-shrink-0 text-red-500 mt-[1px]" />
-          <span class="text-red-700 flex-1">{{ d.message }}</span>
-          <span class="text-gray-400 flex-shrink-0">{{ d.location.line }}:{{ d.location.column }}</span>
-        </div>
-        <div
+        />
+        <DiagnosticEntry
           v-for="(d, i) in group.warnings"
           :key="`w-${i}`"
-          class="flex items-start gap-2 px-3 py-[3px] border-b border-gray-50 hover:bg-yellow-50 cursor-pointer"
-          :style="{ paddingLeft: '28px' }"
+          :diagnostic="d"
+          severity="warning"
           @click="emit('position-click', d)"
-        >
-          <PhWarning class="w-3.5 h-3.5 flex-shrink-0 text-yellow-500 mt-[1px]" />
-          <span class="text-yellow-700 flex-1">{{ d.message }}</span>
-          <span class="text-gray-400 flex-shrink-0">{{ d.location.line }}:{{ d.location.column }}</span>
-        </div>
+        />
+        <DiagnosticEntry
+          v-for="(d, i) in group.infos"
+          :key="`i-${i}`"
+          :diagnostic="d"
+          severity="info"
+          @click="emit('position-click', d)"
+        />
       </div>
     </div>
   </div>
@@ -68,28 +74,30 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import {
-  PhCheckCircle, PhWarningCircle, PhWarning, PhCaretRight,
-} from '@phosphor-icons/vue';
-import type { ParserError } from '@/types';
+import { PhCheckCircle, PhCaretRight } from '@phosphor-icons/vue';
+import DiagnosticEntry from '@/components/common/DiagnosticEntry.vue';
+import type { ParserDiagnostic } from '@/types';
 
 const {
   errors,
   warnings,
+  infos,
   currentFile,
 } = defineProps<{
-  errors: readonly ParserError[];
-  warnings: readonly ParserError[];
+  errors: readonly ParserDiagnostic[];
+  warnings: readonly ParserDiagnostic[];
+  infos: readonly ParserDiagnostic[];
   currentFile: string;
 }>();
 const emit = defineEmits<{
-  'position-click': [diag: ParserError];
+  'position-click': [diag: ParserDiagnostic];
 }>();
 
 interface DiagGroup {
   file: string;
-  errors: ParserError[];
-  warnings: ParserError[];
+  errors: ParserDiagnostic[];
+  warnings: ParserDiagnostic[];
+  infos: ParserDiagnostic[];
 }
 
 const groups = computed(() => {
@@ -99,11 +107,13 @@ const groups = computed(() => {
       file,
       errors: [],
       warnings: [],
+      infos: [],
     });
     return map.get(file)!;
   };
-  for (const e of errors) getOrCreate(currentFile).errors.push(e as ParserError);
-  for (const w of warnings) getOrCreate(currentFile).warnings.push(w as ParserError);
+  for (const e of errors) getOrCreate(currentFile).errors.push(e as ParserDiagnostic);
+  for (const w of warnings) getOrCreate(currentFile).warnings.push(w as ParserDiagnostic);
+  for (const i of infos) getOrCreate(currentFile).infos.push(i as ParserDiagnostic);
   return [...map.values()];
 });
 

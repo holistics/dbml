@@ -4,13 +4,19 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  updateElementSetting,
+  updateElementSettingEdit,
   syncDiagramView,
   findDiagramViewBlocks,
+  syncDep,
 } from './transform';
 export {
   renameTable,
+  updateElementSetting,
+  updateElementSettingEdit,
   syncDiagramView,
   findDiagramViewBlocks,
+  syncDep,
   importer,
   exporter,
   ModelExporter,
@@ -40,9 +46,25 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatRecordValue,
+  dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,
   Filepath,
+  SymbolKind,
+  MetadataKind,
+  CARDINALITY_ONE,
+  CARDINALITY_MAYBE,
+  CARDINALITY_SOME,
+  CARDINALITY_MANY,
+  getMultiplicities,
+  getRelationshipOp,
+  isEndpointOneSide,
+  isEndpointManySide,
+  isEndpointOptional,
+  isEndpointRequired,
+  makeRelationshipRequired,
 } from '@dbml/parse';
+
+export { inferMultiplicitiesFromColumns } from './transform/relations';
 
 // Re-export types
 export type {
@@ -51,5 +73,21 @@ export type {
   FilterConfig,
   DiagramViewSyncOperation,
   DiagramViewBlock,
+  DepSyncOperation,
+  DepSyncEdge,
+  DepEndpointRef,
   TextEdit,
+  ElementIdentifier,
+  SchemaIdentifier,
+  TableIdentifier,
+  ColumnIdentifier,
+  EnumIdentifier,
+  EndpointRef,
+  RefIdentifier,
+  DepIdentifier,
+  NoteIdentifier,
+  TableGroupIdentifier,
+  CustomMetadata,
+  RelationCardinality,
+  RelationshipOp,
 } from '@dbml/parse';

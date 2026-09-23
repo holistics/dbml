@@ -1,3 +1,4 @@
+import { TextEdit } from '@/compiler';
 import { Filepath } from './filepath';
 import { SyntaxNode } from '@/core/types/nodes';
 import { SyntaxToken } from '@/core/types/tokens';
@@ -66,11 +67,17 @@ export enum CompileErrorCode {
   EMPTY_REF,
   REF_REDEFINED,
 
+  INVALID_DEP_CONTEXT,
+  INVALID_DEP_FIELD,
+
   INVALID_NOTE_CONTEXT,
   INVALID_NOTE,
   NOTE_REDEFINED,
   NOTE_CONTENT_REDEFINED,
   EMPTY_NOTE,
+  UNKNOWN_NOTE_SETTING,
+  DUPLICATE_NOTE_SETTING,
+  INVALID_NOTE_SETTING_VALUE,
 
   INVALID_INDEXES_CONTEXT,
   INVALID_INDEXES_FIELD,
@@ -134,26 +141,80 @@ export enum CompileErrorCode {
   UNSUPPORTED = 5000,
   CIRCULAR_REF,
   SAME_ENDPOINT,
+  DEP_SELF_LOOP,
+  DEP_MIXED_DOWNSTREAM_TABLES,
+  DEP_DUPLICATE_DOWNSTREAM_TABLE,
+  DEP_MIXED_LEVEL,
   UNEQUAL_FIELDS_BINARY_REF,
   CONFLICTING_SETTING,
   TABLE_REAPPEAR_IN_TABLEGROUP,
+
+  INVALID_METADATA_TARGET_KIND,
+  INVALID_METADATA_FIELD,
+  DUPLICATE_METADATA_FIELD,
 }
 
-export class CompileError extends Error {
+export interface RelatedLocation {
+  nodeOrToken: SyntaxNode | SyntaxToken;
+  message: string;
+}
+
+export interface QuickFix {
+  title: string;
+  shortTitle?: string; // compact label for select boxes (e.g. "Add not null")
+  filepath: Filepath;
+  edits: TextEdit[];
+  isPreferred?: boolean; // used by "Fix all" to pick the default fix
+}
+
+export enum DiagnosticCategory {
+  // Column nullability or uniqueness doesn't match the ref operator (>, <, -, <>)
+  RefColumnMismatch = 'Mismatched optional ref constraints',
+
+  // Record value has wrong type for its column (e.g. string in integer column, invalid enum value)
+  RecordValueTypeMismatch = 'Record type errors',
+
+  // Record data violates a table constraint (PK null/duplicate, FK not found, unique duplicate)
+  RecordConstraintViolation = 'Record constraint violations',
+
+  // Diagnostics that don't fit a specific category
+  Other = 'Other',
+}
+
+export interface CompileDetails {
+  category?: DiagnosticCategory;
+  explanation?: string;
+  quickFixes?: QuickFix[];
+}
+
+export interface CompileDiagnostic extends Error {
+  code: Readonly<CompileErrorCode>;
+  diagnostic: Readonly<string>;
+  details?: Readonly<CompileDetails>;
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
+  start: Readonly<number>;
+  end: Readonly<number>;
+  filepath: Filepath;
+}
+
+export class CompileError extends Error implements CompileDiagnostic {
   code: Readonly<CompileErrorCode>;
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+  details?: Readonly<CompileDetails>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
   end: Readonly<number>;
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken, details?: CompileDetails) {
     super(message);
     this.code = code;
     this.diagnostic = message;
+    this.details = details;
     this.nodeOrToken = nodeOrToken;
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;
@@ -174,26 +235,68 @@ export class CompileError extends Error {
   }
 }
 
-export class CompileWarning extends Error {
+export class CompileWarning extends Error implements CompileDiagnostic {
   code: Readonly<CompileErrorCode>;
 
   diagnostic: Readonly<string>;
 
-  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>; // The nodes or tokens that cause the error
+  details?: Readonly<CompileDetails>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
 
   start: Readonly<number>;
 
   end: Readonly<number>;
 
-  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken) {
+  constructor (code: number, message: string, nodeOrToken: SyntaxNode | SyntaxToken, details?: CompileDetails) {
     super(message);
     this.code = code;
     this.diagnostic = message;
+    this.details = details;
     this.nodeOrToken = nodeOrToken;
     this.start = nodeOrToken.start;
     this.end = nodeOrToken.end;
     this.name = this.constructor.name;
     Object.setPrototypeOf(this, CompileError.prototype);
+  }
+
+  get filepath (): Filepath {
+    return this.nodeOrToken.filepath;
+  }
+}
+
+export class CompileInfo extends Error implements CompileDiagnostic {
+  code: Readonly<CompileErrorCode>;
+
+  diagnostic: Readonly<string>;
+
+  details?: Readonly<CompileDetails>;
+
+  nodeOrToken: Readonly<SyntaxNode | SyntaxToken>;
+
+  start: Readonly<number>;
+
+  end: Readonly<number>;
+
+  constructor (
+    code: number,
+    message: string,
+    nodeOrToken: SyntaxNode | SyntaxToken,
+    details?: CompileDetails,
+  ) {
+    super(message);
+    this.code = code;
+    this.diagnostic = message;
+    this.details = details;
+    this.nodeOrToken = nodeOrToken;
+    this.start = nodeOrToken.start;
+    this.end = nodeOrToken.end;
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, CompileInfo.prototype);
+  }
+
+  get quickFixes (): QuickFix[] | undefined {
+    return this.details?.quickFixes;
   }
 
   get filepath (): Filepath {

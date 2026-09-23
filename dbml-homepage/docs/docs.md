@@ -78,6 +78,8 @@ Table schema_name.table_name {
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
 - `note: 'string to add notes'`: add a metadata note to this table *(enrichment & visualization only — see [Table Notes](./syntax/enrichment-visualization.md#table-notes))*
 
+We also support free-form custom metadata, e.g. `Table users [owner: "data-team"]`. See [Inline Metadata](./syntax/enrichment-visualization.md#inline-metadata).
+
 :::tip
 Use [TablePartial](#tablepartial) to reuse common fields, settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
 :::
@@ -117,6 +119,8 @@ The list of column settings you can use:
 - `increment`: mark the column as auto-increment
 - ``check: `check expression`‎``: add a check expression to this column using a backtick expression. Multiple checks can be defined on a column. For checks involving multiple columns, refer to the [Check Definition](#check-definition) section
 - `note: 'string to add notes'`: add a metadata note to this column *(enrichment & visualization only — see [Column Notes](./syntax/enrichment-visualization.md#column-notes))*
+
+We also support free-form custom metadata, e.g. `email varchar [classification: "confidential"]`. See [Inline Metadata](./syntax/enrichment-visualization.md#inline-metadata).
 
 **Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id "bigint unsigned" [pk]`
 
@@ -220,23 +224,21 @@ Table users {
 // The space after '<' is optional
 ```
 
-There are 4 types of relationships: **one-to-one**, **one-to-many**, **many-to-one** and **many-to-many**
+There are 4 main types of relationships: **one-to-one**, **one-to-many**, **many-to-one** and **many-to-many**
 
 - `<`: one-to-many. E.g: `users.id < posts.user_id`
 - `>`: many-to-one. E.g: `posts.user_id > users.id`
 - `-`: one-to-one. E.g: `users.id - user_infos.user_id`
 - `<>`: many-to-many. E.g: `authors.id <> books.id`
 
-**Zero-to-(one/many)** or **(one/many)-to-zero** relationships will be automatically detected when you combine the relationship with foreign key's nullable constraint. Like this example:
-```text
-Table follows {
-  following_user_id int [ref: > users.id] // many-to-zero
-  followed_user_id int [ref: > users.id, null] // many-to-zero
-}
+Each operator can be augmented with `?` on either side to make that side **optional** — meaning the FK column is nullable and rows don't have to match.
 
+For example, `>?` means the referenced side is optional, `?>` means the source side is optional. This works with all operators.
+
+```text
 Table posts {
   id int [pk]
-  user_id int [ref: > users.id, not null] // many-to-one
+  user_id int [ref: >? users.id]   // post may have no user
 }
 ```
 

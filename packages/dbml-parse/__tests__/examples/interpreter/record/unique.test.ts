@@ -1,12 +1,6 @@
-import {
-  describe, expect, test,
-} from 'vitest';
-import {
-  interpret,
-} from '@tests/utils';
-import {
-  CompileErrorCode,
-} from '@/index';
+import { describe, expect, test } from 'vitest';
+import { interpret } from '@tests/utils';
+import { CompileErrorCode } from '@/index';
 
 describe('[example - record] composite unique constraints', () => {
   test('should accept valid unique composite values', () => {
@@ -27,9 +21,9 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(1);
@@ -97,12 +91,12 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
-    // One warning per UNIQUE column per duplicate row -> 2 rows × 2 columns = 4.
-    expect(warnings.length).toBe(4);
-    for (const w of warnings) {
-      expect(w.diagnostic).toBe('Duplicate Composite UNIQUE: (user_profiles.user_id, user_profiles.profile_type) = (1, "work")');
+    // One info per UNIQUE column per duplicate row -> 2 rows × 2 columns = 4.
+    expect(infos.length).toBe(4);
+    for (const info of infos) {
+      expect(info.diagnostic).toBe('Duplicate Composite UNIQUE: `(user_profiles.user_id, user_profiles.profile_type)` = `(1, "work")`');
     }
   });
 
@@ -124,9 +118,9 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(3);
@@ -186,9 +180,9 @@ describe('[example - record] composite unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(3);
@@ -262,9 +256,9 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records.length).toBe(3);
@@ -326,18 +320,18 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
-    // Should have warnings for duplicate unique values
-    expect(warnings.length).toBeGreaterThan(0);
+    // Should have infos for duplicate unique values
+    expect(infos.length).toBeGreaterThan(0);
 
-    // Verify users.email duplicate warnings
-    const userWarnings = warnings.filter((w) => w.diagnostic.includes('users.email') && w.diagnostic.includes('alice@example.com'));
+    // Verify users.email duplicate infos
+    const userWarnings = infos.filter((i) => i.diagnostic.includes('users.email') && i.diagnostic.includes('alice@example.com'));
     expect(userWarnings.length).toBeGreaterThan(0);
-    expect(userWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
+    expect(userWarnings.every((i) => i.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
 
-    // Verify products.sku duplicate warnings
-    const productWarnings = warnings.filter((w) => w.diagnostic.includes('products.sku') && w.diagnostic.includes('PROD-001'));
+    // Verify products.sku duplicate infos
+    const productWarnings = infos.filter((w) => w.diagnostic.includes('products.sku') && w.diagnostic.includes('PROD-001'));
     expect(productWarnings.length).toBeGreaterThan(0);
     expect(productWarnings.every((w) => w.diagnostic.includes('Duplicate UNIQUE'))).toBe(true);
   });
@@ -357,9 +351,9 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
-    expect(warnings.length).toBe(0);
+    expect(infos.length).toBe(0);
 
     const db = result.getValue()!;
     expect(db.records[0].values.length).toBe(4);
@@ -405,11 +399,11 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
-    // Should have warnings for duplicate PK
-    expect(warnings.length).toBeGreaterThan(0);
-    expect(warnings.every((w) => w.diagnostic.includes('Duplicate PK') && w.diagnostic.includes('users.id'))).toBe(true);
+    // Should have infos for duplicate PK
+    expect(infos.length).toBeGreaterThan(0);
+    expect(infos.every((w) => w.diagnostic.includes('Duplicate PK') && w.diagnostic.includes('users.id'))).toBe(true);
   });
 
   test('should validate multiple unique columns on same table', () => {
@@ -428,13 +422,13 @@ describe('[example - record] simple unique constraints', () => {
       }
     `;
     const result = interpret(source);
-    const warnings = result.getWarnings();
+    const infos = result.getInfos();
 
     // username "alice" is duplicate (rows 1 and 3) and phone "111-111" is duplicate (rows 1 and 4)
     // Each duplicate generates one warning per affected row
-    expect(warnings.length).toBeGreaterThan(0);
-    expect(warnings.some((w) => w.diagnostic.includes('users.username') && w.diagnostic.includes('alice'))).toBe(true);
-    expect(warnings.some((w) => w.diagnostic.includes('users.phone') && w.diagnostic.includes('111-111'))).toBe(true);
+    expect(infos.length).toBeGreaterThan(0);
+    expect(infos.some((i) => i.diagnostic.includes('users.username') && i.diagnostic.includes('alice'))).toBe(true);
+    expect(infos.some((i) => i.diagnostic.includes('users.phone') && i.diagnostic.includes('111-111'))).toBe(true);
   });
 
   test('should report error for duplicate records blocks', () => {
@@ -459,5 +453,25 @@ describe('[example - record] simple unique constraints', () => {
     expect(errors[0].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
     expect(errors[1].code).toBe(CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
     expect(errors[1].diagnostic).toBe("Duplicate Records blocks for the same Table 'users' - A Table can only have one Records block");
+  });
+
+  test('should not crash when unique column with default is omitted and records have duplicates', () => {
+    const source = `
+      Table items {
+        code int [unique, default: 0]
+        name varchar
+      }
+      records items(name) {
+        "Alice"
+        "Bob"
+      }
+    `;
+    const result = interpret(source);
+    const infos = result.getInfos();
+
+    // code defaults to 0 for both rows, so both have UNIQUE code = 0 - duplicates
+    expect(infos.length).toBeGreaterThanOrEqual(1);
+    expect(infos[0].diagnostic).toContain('Duplicate UNIQUE');
+    expect(infos[0].diagnostic).toContain('= `0`');
   });
 });

@@ -10,7 +10,7 @@ import {
 import type {
   Diagnostic, SyntaxToken, ProgramNode, Database, NodeSymbol,
 } from '@dbml/parse';
-import type { ParserError } from '../types';
+import type { ParserDiagnostic } from '../types';
 import { toMonacoRange } from '../utils/monaco';
 import logger from '../utils/logger';
 import { useProjectStore } from './projectStore';
@@ -69,7 +69,7 @@ function buildSymbolInfo (compiler: Compiler, symbol: NodeSymbol, depth = 0): Sy
   };
 }
 
-function toParserError (diagnostic: Diagnostic): ParserError {
+function toParserDiagnostic (diagnostic: Diagnostic): ParserDiagnostic {
   return {
     code: diagnostic.code ?? -1,
     message: String(diagnostic.text ?? ''),
@@ -81,6 +81,9 @@ function toParserError (diagnostic: Diagnostic): ParserError {
       line: Number(diagnostic.endRow),
       column: Number(diagnostic.endColumn),
     },
+    ...(diagnostic.category ? { category: diagnostic.category } : {}),
+    ...(diagnostic.explanation ? { explanation: diagnostic.explanation } : {}),
+    ...(diagnostic.quickFixes?.length ? { quickFixes: diagnostic.quickFixes } : {}),
   };
 }
 
@@ -96,8 +99,9 @@ export const useParserStore = defineStore('parser', () => {
   const ast = shallowRef<ProgramNode>();
   const database = shallowRef<Database>();
   const symbols = shallowRef<SymbolInfo[]>([]);
-  const errors = ref<readonly ParserError[]>([]);
-  const warnings = ref<readonly ParserError[]>([]);
+  const errors = ref<readonly ParserDiagnostic[]>([]);
+  const warnings = ref<readonly ParserDiagnostic[]>([]);
+  const infos = ref<readonly ParserDiagnostic[]>([]);
 
   const hasDatabase = computed(() => database.value !== undefined);
 
@@ -137,7 +141,7 @@ export const useParserStore = defineStore('parser', () => {
         ast.value = undefined;
       }
 
-      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserError);
+      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
       database.value = compiler.interpretFile(currentFilepath).getValue() as Database | undefined;
 
       const programSymbol = compiler.nodeSymbol(parseIndex.ast).getFiltered(UNHANDLED);
@@ -163,10 +167,12 @@ export const useParserStore = defineStore('parser', () => {
       }];
     } finally {
       try {
-        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserError);
+        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
+        infos.value = (diagnosticsProvider.provideInfos(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
       } catch (_err) {
-        logger.warn('Failed to get warnings');
+        logger.warn('Failed to get warnings/infos');
         warnings.value = [];
+        infos.value = [];
       }
       isLoading.value = false;
     }
@@ -194,5 +200,6 @@ export const useParserStore = defineStore('parser', () => {
     symbols,
     errors,
     warnings,
+    infos,
   };
 });

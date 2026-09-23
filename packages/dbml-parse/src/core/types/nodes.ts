@@ -375,12 +375,16 @@ export class UseSpecifierListNode extends SyntaxNode {
   }
 }
 
-// Form: <type> [<name>] [as <alias>] [<attribute-list>] (: <body> | { <body> })
+// Form: <type> [<target-kind>] [<name>] [as <alias>] [<attribute-list>] (: <body> | { <body> })
 // A declaration of a DBML element like Table, Ref, Enum, etc.
 // e.g. Table users { ... }
 // e.g. Ref: users.id > posts.user_id
+// e.g. Metadata Table public.users { owner: 'scott' }
 export class ElementDeclarationNode extends SyntaxNode {
   type?: SyntaxToken;
+
+  // Only set for a metadata block: the target-kind token (e.g. `Table`).
+  targetKind?: SyntaxToken;
 
   name?: NormalExpressionNode;
 
@@ -397,6 +401,7 @@ export class ElementDeclarationNode extends SyntaxNode {
   constructor (
     {
       type,
+      targetKind,
       name,
       as,
       alias,
@@ -405,6 +410,7 @@ export class ElementDeclarationNode extends SyntaxNode {
       body,
     }: {
       type?: SyntaxToken;
+      targetKind?: SyntaxToken;
       name?: NormalExpressionNode;
       as?: SyntaxToken;
       alias?: NormalExpressionNode;
@@ -421,6 +427,7 @@ export class ElementDeclarationNode extends SyntaxNode {
       filepath,
       [
         type,
+        targetKind,
         name,
         as,
         alias,
@@ -437,6 +444,7 @@ export class ElementDeclarationNode extends SyntaxNode {
     }
 
     this.type = type;
+    this.targetKind = targetKind;
     this.name = name;
     this.as = as;
     this.alias = alias;
@@ -445,10 +453,12 @@ export class ElementDeclarationNode extends SyntaxNode {
     this.body = body;
   }
 
-  isKind (...kinds: ElementKind[]): boolean {
+  isKind<T extends ElementKind>(...kinds: T[]): this is ElementDeclarationNode & { type: { value: T } } {
     return kinds.some((kind) => this.type?.value.toLowerCase() === kind);
   }
 
+  getElementKind<T extends ElementKind>(this: ElementDeclarationNode & { type: { value: T } }): T;
+  getElementKind (this: ElementDeclarationNode): ElementKind | undefined;
   getElementKind (): ElementKind | undefined {
     return Object.values(ElementKind).find((k) => this.isKind(k));
   }

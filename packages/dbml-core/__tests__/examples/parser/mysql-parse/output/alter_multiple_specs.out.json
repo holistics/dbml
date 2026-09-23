@@ -271,14 +271,14 @@
           "fieldNames": [
             "dept_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "departments",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -289,14 +289,14 @@
           "fieldNames": [
             "city_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "cities",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -307,14 +307,14 @@
           "fieldNames": [
             "country_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "countries",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     },
@@ -325,14 +325,14 @@
           "fieldNames": [
             "manager_id"
           ],
-          "relation": "*"
+          "relation": "0..*"
         },
         {
           "tableName": "multi_alter_test",
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1"
         }
       ]
     }

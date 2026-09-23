@@ -9,6 +9,7 @@ import type { NodeMetadata } from '@/core/types/symbol/metadata';
 import type { SchemaElement } from '@/core/types/schemaJson';
 import type { NodeSymbol } from '@/core/types/symbol';
 import { checksModule } from './checks';
+import { depModule } from './dep';
 import { diagramViewModule } from './diagramView';
 import { enumModule } from './enum';
 import { indexesModule } from './indexes';
@@ -18,6 +19,7 @@ import { recordsModule } from './records';
 import { refModule } from './ref';
 import { schemaModule } from './schema';
 import { noteModule } from './note';
+import { metadataModule } from './metadata';
 import { tableModule } from './table';
 import { tableGroupModule } from './tableGroup';
 import { tablePartialModule } from './tablePartial';
@@ -27,17 +29,21 @@ import { useModule } from './use';
 // Registry of all element modules; the dispatcher tries each in order until one claims the node.
 // Each time you add a new element, register its module here.
 export const modules: GlobalModule[] = [
+  // UseSymbol doesn't have dedicated SymbolKind but use kinds like Table, TableGroup, ...
+  // so make it the first module to claim the UseSymbol
+  useModule,
   tableModule,
   enumModule,
   recordsModule,
   indexesModule,
   checksModule,
   refModule,
+  depModule,
   projectModule,
   tableGroupModule,
   tablePartialModule,
   noteModule,
-  useModule,
+  metadataModule,
   schemaModule,
   diagramViewModule,
   programModule,

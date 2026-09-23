@@ -315,14 +315,14 @@ const generateRefs = async (client: sql.ConnectionPool, schemas: string[]): Prom
       tableName: table_name,
       schemaName: table_schema,
       fieldNames: column_names.split(','),
-      relation: '*',
+      relation: '0..*',
     };
 
     const ep2: RefEndpoint = {
       tableName: foreign_table_name,
       schemaName: foreign_table_schema,
       fieldNames: foreign_column_names.split(','),
-      relation: '1',
+      relation: '0..1',
     };
 
     const newRef = {

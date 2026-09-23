@@ -63,6 +63,15 @@ const config: Config = {
   plugins: [
     'docusaurus-plugin-sass',
     [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          // The database support matrix now lives on the ecosystem page.
+          { from: '/database-support', to: '/ecosystem' },
+        ],
+      },
+    ],
+    [
       '@docusaurus/plugin-google-gtag',
       {
         trackingID: 'G-46KNY3YRW9',

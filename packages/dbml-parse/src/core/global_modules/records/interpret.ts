@@ -1,5 +1,17 @@
 import Compiler from '@/compiler/index';
-import { CompileError, CompileErrorCode, CompileWarning } from '@/core/types/errors';
+import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
+import {
+  recordsNullNotAllowed,
+  recordsInvalidEnum,
+  recordsInvalidNumeric,
+  recordsInvalidInteger,
+  recordsExceedsPrecision,
+  recordsExceedsScale,
+  recordsInvalidBoolean,
+  recordsInvalidDatetime,
+  recordsInvalidString,
+  recordsStringTooLong,
+} from '@/core/utils/diagnostics_reporter';
 import { ElementKind } from '@/core/types/keywords';
 import { UNHANDLED } from '@/core/types/module';
 import {
@@ -60,7 +72,7 @@ export default class RecordsInterpreter {
 
   interpret (): Report<TableRecord | undefined> {
     const errors: CompileError[] = [];
-    const warnings: CompileWarning[] = [];
+    const infos: CompileInfo[] = [];
     const result = getTableAndColumnsOfRecords(this.element, this.compiler, this.filepath);
 
     if (!result || result.columns.length === 0) {
@@ -72,7 +84,7 @@ export default class RecordsInterpreter {
       const rowNode = row as FunctionApplicationNode;
       const rowResult = extractDataFromRow(rowNode, result.columns, this.compiler);
       errors.push(...rowResult.getErrors());
-      warnings.push(...rowResult.getWarnings());
+      infos.push(...rowResult.getInfos());
       const rowData = rowResult.getValue();
       if (!rowData.row) continue;
       values.push(rowData.row);
@@ -89,7 +101,7 @@ export default class RecordsInterpreter {
       token,
     };
 
-    return new Report<TableRecord | undefined>(tableRecord, errors, warnings);
+    return new Report<TableRecord | undefined>(tableRecord, errors, [], infos);
   }
 }
 
@@ -176,7 +188,7 @@ function extractDataFromRow (
   compiler: Compiler,
 ): Report<RowData> {
   const errors: CompileError[] = [];
-  const warnings: CompileWarning[] = [];
+  const infos: CompileInfo[] = [];
   const columnNodes: Record<string, SyntaxNode> = {};
 
   const args = row.callee instanceof CommaExpressionNode
@@ -193,7 +205,7 @@ function extractDataFromRow (
     return new Report({
       row: null,
       columnNodes: {},
-    }, errors, warnings);
+    }, errors, [], infos);
   }
 
   const rowValues: RecordValue[] = [];
@@ -203,7 +215,7 @@ function extractDataFromRow (
     columnNodes[column.name ?? ''] = arg;
     const result = extractValue(arg, column, compiler);
     errors.push(...result.getErrors());
-    warnings.push(...result.getWarnings());
+    infos.push(...result.getInfos());
     const value = result.getValue();
     rowValues.push(value ?? {
       value: null,
@@ -215,7 +227,7 @@ function extractDataFromRow (
   return new Report({
     row: rowValues,
     columnNodes,
-  }, errors, warnings);
+  }, errors, [], infos);
 }
 
 function getNodeSourceText (node: SyntaxNode): string {
@@ -235,7 +247,7 @@ function extractValue (
   const typeName = (typeInfo?.name ?? '').split('(')[0];
   const isEnum = !!typeInfo?.enumSymbol;
   const increment = colSymbol.increment(compiler);
-  const notNull = colSymbol.nullable(compiler) === false;
+  const notNull = colSymbol.isNotNullSet(compiler) === true;
   const dbdefault = colSymbol.default(compiler);
   const colName = colSymbol.name ?? '';
   const valueType = getRecordValueType(typeName, isEnum);
@@ -260,12 +272,8 @@ function extractValue (
         value: null,
         type: valueType,
         token,
-      }, [], [
-        new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `NULL not allowed for non-nullable column '${colName}' without default and increment`,
-          node,
-        ),
+      }, [], [], [
+        recordsNullNotAllowed(node, { colName }),
       ]);
     }
     return new Report({
@@ -290,12 +298,8 @@ function extractValue (
         value: enumValue,
         type: valueType,
         token,
-      }, [], [
-        new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid enum value for column '${colName}'`,
-          node,
-        ),
+      }, [], [], [
+        recordsInvalidEnum(node, { colName }),
       ]);
     }
 
@@ -317,12 +321,9 @@ function extractValue (
           token,
         },
         [],
+        [],
         [
-          new CompileWarning(
-            CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Invalid numeric value for column '${colName}'`,
-            node,
-          ),
+          recordsInvalidNumeric(node, { colName, typeName }),
         ],
       );
     }
@@ -333,12 +334,8 @@ function extractValue (
         value: Math.floor(numValue),
         type: valueType,
         token,
-      }, [], [
-        new CompileWarning(
-          CompileErrorCode.INVALID_RECORDS_FIELD,
-          `Invalid integer value ${numValue} for column '${colName}': expected integer, got decimal`,
-          node,
-        ),
+      }, [], [], [
+        recordsInvalidInteger(node, { colName, value: numValue }),
       ]);
     }
 
@@ -366,12 +363,8 @@ function extractValue (
           value: numValue,
           type: valueType,
           token,
-        }, [], [
-          new CompileWarning(
-            CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Numeric value ${numValue} for column '${colName}' exceeds precision: expected at most ${precision} total digits, got ${totalDigits}`,
-            node,
-          ),
+        }, [], [], [
+          recordsExceedsPrecision(node, { colName, typeName, value: numValue, precision, scale, totalDigits }),
         ]);
       }
 
@@ -380,12 +373,8 @@ function extractValue (
           value: numValue,
           type: valueType,
           token,
-        }, [], [
-          new CompileWarning(
-            CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Numeric value ${numValue} for column '${colName}' exceeds scale: expected at most ${scale} decimal digits, got ${decimalDigits}`,
-            node,
-          ),
+        }, [], [], [
+          recordsExceedsScale(node, { colName, typeName, value: numValue, precision, scale, decimalDigits }),
         ]);
       }
     }
@@ -408,12 +397,9 @@ function extractValue (
           token,
         },
         [],
+        [],
         [
-          new CompileWarning(
-            CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Invalid boolean value for column '${colName}'`,
-            node,
-          ),
+          recordsInvalidBoolean(node, { colName }),
         ],
       );
     }
@@ -435,12 +421,9 @@ function extractValue (
           token,
         },
         [],
+        [],
         [
-          new CompileWarning(
-            CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Invalid datetime value for column '${colName}', expected valid datetime format (e.g., 'YYYY-MM-DD', 'HH:MM:SS', 'YYYY-MM-DD HH:MM:SS', 'MM/DD/YYYY', 'D MMM YYYY', or 'MMM D, YYYY')`,
-            node,
-          ),
+          recordsInvalidDatetime(node, { colName }),
         ],
       );
     }
@@ -462,12 +445,9 @@ function extractValue (
           token,
         },
         [],
+        [],
         [
-          new CompileWarning(
-            CompileErrorCode.INVALID_RECORDS_FIELD,
-            `Invalid string value for column '${colName}'`,
-            node,
-          ),
+          recordsInvalidString(node, { colName }),
         ],
       );
     }
@@ -484,12 +464,8 @@ function extractValue (
           value: strValue,
           type: valueType,
           token,
-        }, [], [
-          new CompileWarning(
-            CompileErrorCode.INVALID_RECORDS_FIELD,
-            `String value for column '${colName}' exceeds maximum length: expected at most ${length} bytes (UTF-8), got ${actualByteLength} bytes`,
-            node,
-          ),
+        }, [], [], [
+          recordsStringTooLong(node, { colName, typeName, typeArg: String(typeInfo!.args![0]), maxLength: length, actualLength: actualByteLength }),
         ]);
       }
     }

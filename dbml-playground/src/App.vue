@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col bg-gray-100">
+  <div class="h-screen flex flex-col bg-slate-100">
     <header class="bg-white border-b border-gray-200 flex-shrink-0 h-14">
       <div class="w-full h-full px-6 flex justify-between items-center">
         <div class="flex items-center gap-3">
@@ -301,5 +301,8 @@ const displayVersion = isUsingWorkspaceVersion ? 'development' : version;
 <style>
 .v-popper--theme-dropdown .v-popper__arrow-container {
   display: none !important;
+}
+.v-popper--theme-dropdown .v-popper__inner {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.1) !important;
 }
 </style>

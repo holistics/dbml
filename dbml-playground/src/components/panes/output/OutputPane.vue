@@ -19,9 +19,8 @@
         >
           <span class="relative inline-flex flex-shrink-0">
             <component
-              :is="tab.id === OutputTabId.Diagnostics ? diagnosticsIcon : tab.icon"
+              :is="tab.icon"
               class="w-3.5 h-3.5"
-              :class="tab.id === OutputTabId.Diagnostics ? diagnosticsColor : ''"
             />
             <span
               v-if="tab.id === OutputTabId.Database && parser.hasDatabase"
@@ -30,11 +29,6 @@
               <span class="animate-ping absolute w-2 h-2 rounded-full bg-blue-400 opacity-40 [animation-duration:2s]" />
               <span class="relative w-1.5 h-1.5 rounded-full bg-blue-500" />
             </span>
-            <span
-              v-if="tab.id === OutputTabId.Diagnostics && (parser.errors.length + parser.warnings.length) > 0"
-              class="absolute -top-1.5 -right-2 flex items-center justify-center min-w-[12px] h-[12px] rounded-full px-[3px] text-[8px] font-bold leading-none text-white"
-              :class="parser.errors.length > 0 ? 'bg-red-500' : 'bg-yellow-500'"
-            >{{ parser.errors.length + parser.warnings.length }}</span>
           </span>
           <span class="@[460px]/tabbar:inline hidden">{{ tab.label }}</span>
         </button>
@@ -75,13 +69,6 @@
         :show-decoration="isDecorationEnabled(activeTab)"
         @toggle-decoration="toggleDecoration(activeTab)"
       />
-      <DiagnosticsTab
-        v-if="activeTab === OutputTabId.Diagnostics"
-        :errors="parser.errors"
-        :warnings="parser.warnings"
-        :current-file="project.currentFile"
-        @position-click="onDiagnosticClick"
-      />
     </div>
   </div>
 </template>
@@ -95,15 +82,11 @@ import {
   PhTreeStructure,
   PhAt,
   PhDatabase,
-  PhCheckCircle,
-  PhWarning,
-  PhWarningCircle,
 } from '@phosphor-icons/vue';
 import TokensTab from './tabs/TokensTab.vue';
 import AstTreeView from './ast/AstTreeView.vue';
 import SymbolsTab from './tabs/SymbolsTab.vue';
 import DatabaseTab from './tabs/DatabaseTab.vue';
-import DiagnosticsTab from './tabs/DiagnosticsTab.vue';
 import type { AstNode } from './ast/AstTreeNode.vue';
 import type { SymbolInfo } from '@/stores/parserStore';
 import { useParserStore } from '@/stores/parserStore';
@@ -134,18 +117,6 @@ interface Tab {
   icon: Component;
 }
 
-const diagnosticsIcon = computed(() => {
-  if (parser.errors.length > 0) return PhWarningCircle;
-  if (parser.warnings.length > 0) return PhWarning;
-  return PhCheckCircle;
-});
-
-const diagnosticsColor = computed(() => {
-  if (parser.errors.length > 0) return 'text-red-500';
-  if (parser.warnings.length > 0) return 'text-yellow-500';
-  return 'text-blue-400';
-});
-
 const TABS: Tab[] = [
   {
     id: OutputTabId.Tokens,
@@ -166,11 +137,6 @@ const TABS: Tab[] = [
     id: OutputTabId.Database,
     label: 'Database',
     icon: PhDatabase,
-  },
-  {
-    id: OutputTabId.Diagnostics,
-    label: 'Diagnostics',
-    icon: PhWarningCircle,
   },
 ];
 
@@ -275,7 +241,7 @@ function navigateTo (range: {
   }
 }
 
-// Reveal and highlight the syntax range a diagnostic points at. ParserError
+// Reveal and highlight the syntax range a diagnostic points at. ParserDiagnostic
 // carries start/end line+column - translate straight into an editor range.
 function onDiagnosticClick (diag: {
   location: {
