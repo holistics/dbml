@@ -24,6 +24,7 @@ export default defineConfig(
         '__tests__/**',
         '__benchmarks__/**',
         'eslint.config.ts',
+        'vite.config.ts',
       ],
     },
     {
@@ -74,6 +75,7 @@ export default defineConfig(
         '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
         '@stylistic/max-statements-per-line': 'off',
         '@stylistic/operator-linebreak': ['error', 'before', { overrides: { '=': 'after' } }],
+        'no-redeclare': 'off',
         '@typescript-eslint/no-explicit-any': 'warn',
       },
     },
