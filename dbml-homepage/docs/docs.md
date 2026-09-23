@@ -25,6 +25,7 @@ This part covers all constructs that define database structure and map directly 
 - [TablePartial](#tablepartial)
 - [Data Sample](#data-sample)
   - [Data Types](#data-types)
+  - [Example Records](#example-records)
 
 ## Project Definition
 
