@@ -1,9 +1,9 @@
-import exporter from '../../../src/export';
-import { scanTestNames, getFileExtension } from '../testHelpers';
-import { ExportFormat } from '../../../types/export';
-import { readFileSync } from 'fs';
-import path from 'path';
-import { test, expect, describe } from 'vitest';
+import exporter from "../../../src/export";
+import { scanTestNames, getFileExtension } from "../testHelpers";
+import { ExportFormat } from "../../../types/export";
+import { readFileSync } from "fs";
+import path from "path";
+import { test, expect, describe } from "vitest";
 
 const DBML_WITH_RECORDS = `
 Table users {
@@ -17,11 +17,24 @@ Records users(id, name) {
 }
 `.trim();
 
-describe('@dbml/core - exporter', () => {
-  const runTest = async (fileName: string, testDir: string, format: ExportFormat) => {
+describe("@dbml/core - exporter", () => {
+  const runTest = async (
+    fileName: string,
+    testDir: string,
+    format: ExportFormat,
+  ) => {
     const fileExtension = getFileExtension(format);
-    const input = readFileSync(path.resolve(__dirname, `./${testDir}/input/${fileName}.in.dbml`), { encoding: 'utf8' });
-    const output = readFileSync(path.resolve(__dirname, `./${testDir}/output/${fileName}.out.${fileExtension}`), { encoding: 'utf8' });
+    const input = readFileSync(
+      path.resolve(__dirname, `./${testDir}/input/${fileName}.in.dbml`),
+      { encoding: "utf8" },
+    );
+    const output = readFileSync(
+      path.resolve(
+        __dirname,
+        `./${testDir}/output/${fileName}.out.${fileExtension}`,
+      ),
+      { encoding: "utf8" },
+    );
     const res = exporter.export(input, format);
 
     // Exclude meaningless spaces from failing the tests
@@ -29,21 +42,23 @@ describe('@dbml/core - exporter', () => {
   };
 
   const spec = {
-    mysql_exporter: 'mysql',
-    postgres_exporter: 'postgres',
-    mssql_exporter: 'mssql',
-    oracle_exporter: 'oracle',
+    mysql_exporter: "mysql",
+    postgres_exporter: "postgres",
+    mssql_exporter: "mssql",
+    oracle_exporter: "oracle",
   } as const;
 
   for (const [exporter, type] of Object.entries(spec)) {
-    test.each(scanTestNames(__dirname, `${exporter}/input`))(`${exporter}/%s`, async (name) => {
-      await runTest(name, exporter, type);
-    });
+    test.each(scanTestNames(__dirname, `${exporter}/input`))(
+      `${exporter}/%s`,
+      async (name) => {
+        await runTest(name, exporter, type);
+      },
+    );
   }
 });
 
-const EXPECTED_DBML_WITH_RECORDS =
-`Table "users" {
+const EXPECTED_DBML_WITH_RECORDS = `Table "users" {
   "id" integer [pk]
   "name" varchar
 }
@@ -53,8 +68,7 @@ Records users(id, name) {
   2, 'Bob'
 }`;
 
-const EXPECTED_DBML_WITHOUT_RECORDS =
-`Table "users" {
+const EXPECTED_DBML_WITHOUT_RECORDS = `Table "users" {
   "id" integer [pk]
   "name" varchar
 }`;
@@ -79,29 +93,61 @@ Table posts {
 Ref: posts.user_id > users.id
 `.trim();
 
-describe('@dbml/core - ref inactive setting', () => {
-  test('exports inactive ref with inactive flag', () => {
-    const res = exporter.export(DBML_WITH_INACTIVE_REF, 'dbml');
-    expect(res).toContain('[inactive]');
+const DBML_WITH_EXAMPLE_RECORDS = `
+Table users {
+  id integer [pk]
+  name varchar
+}
+
+Records users(id, name) [example] {
+  1, 'Alice'
+  2, 'Bob'
+}
+`.trim();
+
+const DBML_WITH_MIXED_RECORDS = `
+Table users {
+  id integer [pk]
+  name varchar
+}
+
+Table posts {
+  id integer [pk]
+  title varchar
+}
+
+Records users(id, name) [example] {
+  1, 'Alice'
+}
+
+Records posts(id, title) {
+  1, 'First Post'
+}
+`.trim();
+
+describe("@dbml/core - ref inactive setting", () => {
+  test("exports inactive ref with inactive flag", () => {
+    const res = exporter.export(DBML_WITH_INACTIVE_REF, "dbml");
+    expect(res).toContain("[inactive]");
   });
 
-  test('does not export inactive flag when setting absent', () => {
-    const res = exporter.export(DBML_WITHOUT_INACTIVE_REF, 'dbml');
-    expect(res).not.toContain('inactive');
+  test("does not export inactive flag when setting absent", () => {
+    const res = exporter.export(DBML_WITHOUT_INACTIVE_REF, "dbml");
+    expect(res).not.toContain("inactive");
   });
 });
 
-describe('@dbml/core - optional ref operators', () => {
-  describe('dbml exporter', () => {
-    test('should export ref with operator -?', () => {
+describe("@dbml/core - optional ref operators", () => {
+  describe("dbml exporter", () => {
+    test("should export ref with operator -?", () => {
       const input = `
 Table users { id integer [pk] }
 Table posts { user_id integer [unique] }
 Ref: posts.user_id -? users.id
       `.trim();
-      const res = exporter.export(input, 'dbml');
+      const res = exporter.export(input, "dbml");
       expect(res.trim()).toBe(
-`Table "users" {
+        `Table "users" {
   "id" integer [pk]
 }
 
@@ -109,18 +155,19 @@ Table "posts" {
   "user_id" integer [unique]
 }
 
-Ref:"posts"."user_id" -? "users"."id"`);
+Ref:"posts"."user_id" -? "users"."id"`,
+      );
     });
 
-    test('should export ref with operator >? (no cardinality override for DBML sources)', () => {
+    test("should export ref with operator >? (no cardinality override for DBML sources)", () => {
       const input = `
 Table users { id integer [pk] }
 Table posts { user_id integer [not null] }
 Ref: posts.user_id >? users.id
       `.trim();
-      const res = exporter.export(input, 'dbml');
+      const res = exporter.export(input, "dbml");
       expect(res.trim()).toBe(
-`Table "users" {
+        `Table "users" {
   "id" integer [pk]
 }
 
@@ -128,18 +175,19 @@ Table "posts" {
   "user_id" integer [not null]
 }
 
-Ref:"users"."id" ?< "posts"."user_id"`);
+Ref:"users"."id" ?< "posts"."user_id"`,
+      );
     });
 
-    test('should export ref with operator ?<?', () => {
+    test("should export ref with operator ?<?", () => {
       const input = `
 Table users { id integer [pk] }
 Table posts { user_id integer }
 Ref: posts.user_id ?<? users.id
       `.trim();
-      const res = exporter.export(input, 'dbml');
+      const res = exporter.export(input, "dbml");
       expect(res.trim()).toBe(
-`Table "users" {
+        `Table "users" {
   "id" integer [pk]
 }
 
@@ -147,12 +195,13 @@ Table "posts" {
   "user_id" integer
 }
 
-Ref:"posts"."user_id" ?<? "users"."id"`);
+Ref:"posts"."user_id" ?<? "users"."id"`,
+      );
     });
   });
 
-  describe('table partial refs', () => {
-    test('should preserve optional ref from table partial (nullable FK)', () => {
+  describe("table partial refs", () => {
+    test("should preserve optional ref from table partial (nullable FK)", () => {
       const input = `
 TablePartial auditable {
   created_by int [ref: >? users.id]
@@ -165,14 +214,14 @@ Table posts {
   ~auditable
 }
       `.trim();
-      const res = exporter.export(input, 'dbml');
+      const res = exporter.export(input, "dbml");
       // >? should export as ?< (flipped direction, optional on the one side)
-      expect(res.trim()).toContain('?<');
+      expect(res.trim()).toContain("?<");
       // Should NOT become many-to-many (<>)
-      expect(res.trim()).not.toContain('<>');
+      expect(res.trim()).not.toContain("<>");
     });
 
-    test('should preserve required ref from table partial', () => {
+    test("should preserve required ref from table partial", () => {
       const input = `
 TablePartial auditable {
   created_by int [ref: > users.id]
@@ -185,22 +234,22 @@ Table posts {
   ~auditable
 }
       `.trim();
-      const res = exporter.export(input, 'dbml');
+      const res = exporter.export(input, "dbml");
       // > should export as < (flipped direction, required many-to-one)
       expect(res.trim()).toMatch(/"users"\."id" < "posts"\."created_by"/);
     });
   });
 
-  describe('sql exporters', () => {
-    test('mysql exporter should produce FK constraint for optional ref', () => {
+  describe("sql exporters", () => {
+    test("mysql exporter should produce FK constraint for optional ref", () => {
       const input = `
 Table users { id integer [pk] }
 Table posts { user_id integer [not null] }
 Ref: posts.user_id >? users.id
       `.trim();
-      const res = exporter.export(input, 'mysql');
+      const res = exporter.export(input, "mysql");
       expect(res.trim()).toBe(
-`CREATE TABLE \`users\` (
+        `CREATE TABLE \`users\` (
   \`id\` integer PRIMARY KEY
 );
 
@@ -208,18 +257,19 @@ CREATE TABLE \`posts\` (
   \`user_id\` integer NOT NULL
 );
 
-ALTER TABLE \`posts\` ADD FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`);`);
+ALTER TABLE \`posts\` ADD FOREIGN KEY (\`user_id\`) REFERENCES \`users\` (\`id\`);`,
+      );
     });
 
-    test('postgres exporter should produce FK constraint for optional ref', () => {
+    test("postgres exporter should produce FK constraint for optional ref", () => {
       const input = `
 Table users { id integer [pk] }
 Table posts { user_id integer [not null] }
 Ref: posts.user_id >? users.id
       `.trim();
-      const res = exporter.export(input, 'postgres');
+      const res = exporter.export(input, "postgres");
       expect(res.trim()).toBe(
-`CREATE TABLE "users" (
+        `CREATE TABLE "users" (
   "id" integer PRIMARY KEY
 );
 
@@ -227,18 +277,19 @@ CREATE TABLE "posts" (
   "user_id" integer NOT NULL
 );
 
-ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;`);
+ALTER TABLE "posts" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") DEFERRABLE INITIALLY IMMEDIATE;`,
+      );
     });
 
-    test('mssql exporter should produce FK constraint for optional ref', () => {
+    test("mssql exporter should produce FK constraint for optional ref", () => {
       const input = `
 Table users { id integer [pk] }
 Table posts { user_id integer [not null] }
 Ref: posts.user_id >? users.id
       `.trim();
-      const res = exporter.export(input, 'mssql');
+      const res = exporter.export(input, "mssql");
       expect(res.trim()).toBe(
-`CREATE TABLE [users] (
+        `CREATE TABLE [users] (
   [id] integer PRIMARY KEY
 )
 GO
@@ -249,25 +300,61 @@ CREATE TABLE [posts] (
 GO
 
 ALTER TABLE [posts] ADD FOREIGN KEY ([user_id]) REFERENCES [users] ([id])
-GO`);
+GO`,
+      );
     });
   });
 });
 
-describe('@dbml/core - exporter flags', () => {
-  describe('includeRecords', () => {
-    test('includes records by default', () => {
-      const res = exporter.export(DBML_WITH_RECORDS, 'dbml');
+describe("@dbml/core - records example flag", () => {
+  test("exports example flag in DBML output", () => {
+    const res = exporter.export(DBML_WITH_EXAMPLE_RECORDS, "dbml");
+    expect(res).toContain("[example]");
+    expect(res).toContain("Alice");
+  });
+
+  test("excludes example records from SQL output", () => {
+    for (const format of ["mysql", "postgres", "mssql", "oracle"] as const) {
+      const res = exporter.export(DBML_WITH_EXAMPLE_RECORDS, format);
+      expect(res).not.toContain("INSERT");
+      expect(res).not.toContain("Alice");
+    }
+  });
+
+  test("exports only non-example records as SQL", () => {
+    for (const format of ["mysql", "postgres", "mssql", "oracle"] as const) {
+      const res = exporter.export(DBML_WITH_MIXED_RECORDS, format);
+      expect(res).toContain("First Post");
+      expect(res).not.toContain("Alice");
+    }
+  });
+
+  test("preserves example flag in DBML roundtrip with mixed records", () => {
+    const res = exporter.export(DBML_WITH_MIXED_RECORDS, "dbml");
+    expect(res).toContain("[example]");
+    expect(res).toContain("Alice");
+    expect(res).toContain("First Post");
+  });
+});
+
+describe("@dbml/core - exporter flags", () => {
+  describe("includeRecords", () => {
+    test("includes records by default", () => {
+      const res = exporter.export(DBML_WITH_RECORDS, "dbml");
       expect(res.trim()).toBe(EXPECTED_DBML_WITH_RECORDS);
     });
 
-    test('includes records when includeRecords is true', () => {
-      const res = exporter.export(DBML_WITH_RECORDS, 'dbml', { includeRecords: true });
+    test("includes records when includeRecords is true", () => {
+      const res = exporter.export(DBML_WITH_RECORDS, "dbml", {
+        includeRecords: true,
+      });
       expect(res.trim()).toBe(EXPECTED_DBML_WITH_RECORDS);
     });
 
-    test('omits records when includeRecords is false', () => {
-      const res = exporter.export(DBML_WITH_RECORDS, 'dbml', { includeRecords: false });
+    test("omits records when includeRecords is false", () => {
+      const res = exporter.export(DBML_WITH_RECORDS, "dbml", {
+        includeRecords: false,
+      });
       expect(res.trim()).toBe(EXPECTED_DBML_WITHOUT_RECORDS);
     });
   });
