@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@dbml/parse": "^10.2.0",
+    "sqlingo": "0.11.0",
     "antlr4": "^4.13.1",
     "lodash": "^4.18.1",
     "lodash-es": "^4.18.1",

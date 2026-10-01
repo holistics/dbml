@@ -8781,6 +8781,11 @@ sql-escaper@^1.5.1:
   resolved "https://registry.yarnpkg.com/sql-escaper/-/sql-escaper-1.5.2.tgz#5b59840dc4034bd23a9b7d00501ba947a90364b7"
   integrity sha512-6CKD38c31SENivxOADeMNLdukOnUxUcflKtzVWzace7Riv1v7cAEym5Cx9Q7gYZ3ezIJI7ZpqecQq8cqNeSSFg==
 
+sqlingo@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/sqlingo/-/sqlingo-0.11.0.tgz#4cbf2d361fb7a6b6932a688a914973f259af3469"
+  integrity sha512-Fnk2tIVb7h+ty555L7Upgk/EsGOhdQr45wcDdv9pQd1WfVlA6Bk/RZ1bzSJfiGNo1tjt1h/K2YxqH2uUq9t+9g==
+
 ssri@^10.0.0, ssri@^10.0.1:
   version "10.0.1"
   resolved "https://registry.npmjs.org/ssri/-/ssri-10.0.1.tgz"
