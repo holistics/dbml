@@ -24,6 +24,7 @@
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "rm -rf ./dist && tsc --noEmit && vite build",
     "dev": "vite build --watch",
