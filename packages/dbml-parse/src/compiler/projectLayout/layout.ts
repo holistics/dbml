@@ -9,6 +9,7 @@ export interface DbmlProjectLayout {
   // - `/dbml/a.dbml` refers to './b.dbml' -> returns `/dbml/b.dbml`
   // - A cloud dbml file refers to '@id' -> returns a unique url associated with the '@id'
   // This one mirrors ECMAScript spec: The runtime chooses how to resolve the specifier, not the language engine
+  // Note: If two different specifiers both resolve to the same filepath, they are treated as same import to same files, not different files with same content
   resolveFileSpecifier (currentFilepath: Filepath, specifier: string): Filepath | undefined;
 
   getSource (filePath: Filepath): string | undefined;

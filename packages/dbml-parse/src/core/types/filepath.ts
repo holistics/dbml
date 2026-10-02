@@ -14,6 +14,7 @@ export class Filepath implements Internable<FilepathId> {
   private readonly path: string;
 
   constructor (absolutePath: string, options: { protocol?: string } = {}) {
+    absolutePath = absolutePath.split('/').map(normalizeSegment).join('/');
     const normalized = normalize(absolutePath);
     if (!isAbsolute(normalized)) {
       throw new Error(`FilePath requires an absolute path, got: "${absolutePath}"`);
@@ -119,5 +120,14 @@ export class Filepath implements Internable<FilepathId> {
 
   static isRelative (p: string): boolean {
     return !isAbsolute(normalize(p));
+  }
+}
+
+// Decode then encode a path segment
+function normalizeSegment (segment: string): string {
+  try {
+    return encodeURIComponent(decodeURIComponent(segment));
+  } catch {
+    return encodeURIComponent(segment);
   }
 }

@@ -131,7 +131,7 @@ function buildTree (filePaths: string[], explicitFolders: string[] = []): TreeNo
     const key = fp.absolute;
     if (!folderMap.has(key)) {
       const node: TreeNode = {
-        name: fp.basename,
+        name: decodeURIComponent(fp.basename),
         path: key,
         type: 'folder',
         children: [],
@@ -180,7 +180,7 @@ function buildTree (filePaths: string[], explicitFolders: string[] = []): TreeNo
       ensureFolder(fp, siblings);
     } else if (!folderSet.has(fp.absolute)) {
       siblings.push({
-        name: fp.basename,
+        name: decodeURIComponent(fp.basename),
         path: fp.absolute,
         type: 'file',
         children: [],
