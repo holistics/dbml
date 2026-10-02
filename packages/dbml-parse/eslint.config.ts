@@ -21,6 +21,8 @@ export default defineConfig(
         'dist-profile/*',
         'vite.config.ts',
         'vite.profile.config.ts',
+        'vitest.conformance.config.ts',
+        '__tests__/conformance/generated/*',
         'eslint.config.ts',
       ],
     },

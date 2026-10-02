@@ -36,11 +36,15 @@
     "lint:fix": "eslint --fix .",
     "bench": "npx tsx __benchmarks__/compiler.benchmark.ts",
     "profile:build": "vite build --config vite.profile.config.mts && cp -r __benchmarks__/input dist-profile/input",
-    "profile": "yarn profile:build && node --cpu-prof --cpu-prof-dir __benchmarks__/output/ dist-profile/__benchmarks__/compiler.profile.mjs"
+    "profile": "yarn profile:build && node --cpu-prof --cpu-prof-dir __benchmarks__/output/ dist-profile/__benchmarks__/compiler.profile.mjs",
+    "test:conformance": "vitest run --config vitest.conformance.config.ts"
   },
   "devDependencies": {
     "@types/luxon": "^3.7.1",
+    "antlr-ng": "^1.0.10",
+    "antlr4": "^4.13.2",
     "monaco-editor-core": "^0.44.0",
+    "peggy": "^5.1.0",
     "vite-plugin-no-bundle": "^4.0.0"
   },
   "dependencies": {
