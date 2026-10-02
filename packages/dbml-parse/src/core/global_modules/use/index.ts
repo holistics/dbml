@@ -1,6 +1,6 @@
 import Compiler, { addDoubleQuoteIfNeeded } from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import { Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode,
@@ -109,7 +109,7 @@ export const useModule: GlobalModule = {
     if (useDeclaration?.importPath?.value === undefined) return Report.create(undefined);
 
     // Find the referenced import path
-    const importPath = resolveImportFilepath(node.filepath, useDeclaration.importPath.value);
+    const importPath = compiler.layout.resolveFileSpecifier(node.filepath, useDeclaration.importPath.value);
     if (!importPath) return Report.create(
       undefined,
       [
@@ -154,7 +154,7 @@ export const useModule: GlobalModule = {
     if (isUseDeclaration(node)) {
       const errors: CompileError[] = [];
       if (node.importPath?.value) {
-        const importPath = resolveImportFilepath(node.filepath, node.importPath.value);
+        const importPath = compiler.layout.resolveFileSpecifier(node.filepath, node.importPath.value);
         if (!importPath) {
           errors.push(new CompileError(
             CompileErrorCode.BINDING_ERROR,
@@ -246,7 +246,7 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
     if (destructureComplexVariable(specifier.alias ?? specifier.name)?.at(-1) === name) {
       const reuseDecl = specifier.parentOfKind(UseDeclarationNode);
       if (reuseDecl?.importPath?.value) {
-        const reusePath = resolveImportFilepath(importPath, reuseDecl.importPath.value);
+        const reusePath = compiler.layout.resolveFileSpecifier(importPath, reuseDecl.importPath.value);
         const originalName = destructureComplexVariable(specifier.name)?.at(-1) ?? name;
         const found = lookupMemberInFilepath(compiler, reusePath, originalName, symbolKind, visited);
         if (found) return found;

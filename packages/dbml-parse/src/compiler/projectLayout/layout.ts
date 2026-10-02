@@ -4,6 +4,13 @@ import { Filepath } from '@/core/types/filepath';
 // Consumers mutate the concrete class directly. The compiler detects
 // content changes automatically when `getSource` or `getEntrypoints` is called.
 export interface DbmlProjectLayout {
+  // Resolve an import specifier from a current file, MUST BE deterministic
+  // For example:
+  // - `/dbml/a.dbml` refers to './b.dbml' -> returns `/dbml/b.dbml`
+  // - A cloud dbml file refers to '@id' -> returns a unique url associated with the '@id'
+  // This one mirrors ECMAScript spec: The runtime chooses how to resolve the specifier, not the language engine
+  resolveFileSpecifier (currentFilepath: Filepath, specifier: string): Filepath | undefined;
+
   getSource (filePath: Filepath): string | undefined;
 
   exists (filePath: Filepath): boolean;
@@ -25,6 +32,14 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
       : new Map(
           Object.entries(files),
         );
+  }
+
+  // From the currentFilepath, resolve the relativePath to an absolute path
+  // Append `.dbml` if relativePath does not ends with `.dbml`
+  resolveFileSpecifier (currentFilepath: Filepath, relativePath: string): Filepath | undefined {
+    if (!Filepath.isRelative(relativePath)) return undefined;
+    const resolved = Filepath.resolve(currentFilepath.dirname, relativePath);
+    return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
   }
 
   setSource (filePath: Filepath, content: string): void {

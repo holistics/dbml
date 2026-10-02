@@ -121,11 +121,3 @@ export class Filepath implements Internable<FilepathId> {
     return !isAbsolute(normalize(p));
   }
 }
-
-// From the currentFilepath, resolve the relativePath to an absolute path
-// Append `.dbml` if relativePath does not ends with `.dbml`
-export function resolveImportFilepath (currentFilepath: Filepath, relativePath: string): Filepath | undefined {
-  if (!Filepath.isRelative(relativePath)) return undefined;
-  const resolved = Filepath.resolve(currentFilepath.dirname, relativePath);
-  return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
-}

@@ -18,6 +18,14 @@ export class NodeProjectLayout implements DbmlProjectLayout {
     this.entryPoints = [...entryPoints];
   }
 
+  // From the currentFilepath, resolve the relativePath to an absolute path
+  // Append `.dbml` if relativePath does not ends with `.dbml`
+  resolveFileSpecifier (currentFilepath: Filepath, relativePath: string): Filepath | undefined {
+    if (!Filepath.isRelative(relativePath)) return undefined;
+    const resolved = Filepath.resolve(currentFilepath.dirname, relativePath);
+    return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
+  }
+
   getSource (filePath: Filepath): string | undefined {
     return safeReadFileSync(filePath.absolute, 'utf-8');
   }
