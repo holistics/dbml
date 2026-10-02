@@ -146,24 +146,37 @@ export default class DepValidator {
       if (!sub.type) return [];
       const key = sub.type.value?.toLowerCase();
       const subBody = sub.body;
-      if (!key || !(subBody instanceof FunctionApplicationNode) || !subBody.callee) return [];
+      if (!key) return [];
 
       switch (key) {
         case SettingName.Color:
-          if (!isValidHexColor(subBody.callee)) {
+          if (sub.name || !(subBody instanceof FunctionApplicationNode) || !subBody.callee || !isValidHexColor(subBody.callee)) {
             return [
               new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid color value. Expected a hex color (e.g. #fff or #aabbcc)', sub),
             ];
           }
           return [];
-        case SettingName.Note:
-          if (!isExpressionAQuotedString(subBody.callee)) {
+        case SettingName.Note: {
+          let noteValue: SyntaxNode | undefined;
+          if (subBody instanceof FunctionApplicationNode) {
+            noteValue = subBody.callee;
+          } else if (subBody instanceof BlockExpressionNode && subBody.body[0] instanceof FunctionApplicationNode) {
+            noteValue = subBody.body[0].callee;
+          }
+          if (!noteValue || !isExpressionAQuotedString(noteValue)) {
             return [
               new CompileError(CompileErrorCode.INVALID_SETTINGS, 'Invalid note value. Expected a quoted string', sub),
             ];
           }
           return [];
+        }
         default:
+          if (sub.name || subBody instanceof BlockExpressionNode) {
+            return [
+              new CompileError(CompileErrorCode.INVALID_SETTINGS, `'${key}' must be a simple field (e.g. ${key}: value). Block syntax is not allowed`, sub),
+            ];
+          }
+          if (!(subBody instanceof FunctionApplicationNode) || !subBody.callee) return [];
           if (!isExpressionAQuotedString(subBody.callee)
             && !isValidHexColor(subBody.callee)
             && !isExpressionASignedNumberExpression(subBody.callee)

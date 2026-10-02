@@ -21,7 +21,7 @@ import {
 
 class OracleExporter {
   static exportRecords (model) {
-    const records = Object.values(model.records || {});
+    const records = Object.values(model.records || {}).filter((r) => !r.example);
     if (isEmpty(records)) {
       return [];
     }

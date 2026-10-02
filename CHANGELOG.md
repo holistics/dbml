@@ -1,3 +1,27 @@
+## v10.2.0 (2026-09-23)
+
+### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#923](https://github.com/holistics/dbml/pull/958) Support example records ([@huydo862003](https://github.com/huydo862003))
+
+#### :bug: Bug Fix
+* `dbml-core`, `dbml-parse`
+  * [#980](https://github.com/holistics/dbml/pull/980) fix: reject block syntax for unknown fields inside Dep ([@huydo862003](https://github.com/huydo862003))
+* `dbml-core`
+  * [#965](https://github.com/holistics/dbml/pull/965) bug(mssql): indexes in MSSQL can't contain schema name ([@hlieberman](https://github.com/hlieberman))
+* `dbml-cli`, `dbml-core`
+  * [#962](https://github.com/holistics/dbml/pull/962) Correct semantics for enums and nulls ([@hlieberman](https://github.com/hlieberman))
+
+#### :house_with_garden: Internal
+* `dbml-parse`
+  * [#974](https://github.com/holistics/dbml/pull/974) Config lerna to always use tag alpha for *.*.*-*.* and tag latest for *.*.* ([@huydo862003](https://github.com/huydo862003))
+
+#### Committers: 4
+- Harlan Lieberman-Berg ([@hlieberman](https://github.com/hlieberman))
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- Thi Nguyen ([@TeaNguyen](https://github.com/TeaNguyen))
+- Verryanto Paulus ([@verryp](https://github.com/verryp))
+
 ## v10.1.1 (2026-08-14)
 
 #### :bug: Bug Fix

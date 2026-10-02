@@ -25,6 +25,7 @@ This part covers all constructs that define database structure and map directly 
 - [TablePartial](#tablepartial)
 - [Data Sample](#data-sample)
   - [Data Types](#data-types)
+  - [Example Records](#example-records)
 
 ## Project Definition
 
@@ -78,7 +79,7 @@ Table schema_name.table_name {
 - `column_name` can be stated in just plain text, or wrapped in a `double quote as "column name"`
 - `note: 'string to add notes'`: add a metadata note to this table *(enrichment & visualization only — see [Table Notes](./syntax/enrichment-visualization.md#table-notes))*
 
-We also support free-form custom metadata, e.g. `Table users [owner: "data-team"]`. See [Inline Metadata](./syntax/enrichment-visualization.md#inline-metadata).
+We also support free-form custom properties, e.g. `Table users [owner: "data-team"]`. See [Inline Custom Properties](./syntax/enrichment-visualization.md#inline-custom-properties).
 
 :::tip
 Use [TablePartial](#tablepartial) to reuse common fields, settings and indexes across multiple tables. Inject partials into a table using the `~partial_name` syntax.
@@ -120,7 +121,7 @@ The list of column settings you can use:
 - ``check: `check expression`‎``: add a check expression to this column using a backtick expression. Multiple checks can be defined on a column. For checks involving multiple columns, refer to the [Check Definition](#check-definition) section
 - `note: 'string to add notes'`: add a metadata note to this column *(enrichment & visualization only — see [Column Notes](./syntax/enrichment-visualization.md#column-notes))*
 
-We also support free-form custom metadata, e.g. `email varchar [classification: "confidential"]`. See [Inline Metadata](./syntax/enrichment-visualization.md#inline-metadata).
+We also support free-form custom properties, e.g. `email varchar [classification: "confidential"]`. See [Inline Custom Properties](./syntax/enrichment-visualization.md#inline-custom-properties).
 
 **Note:** You can use a workaround for un-supported settings by adding the setting name into the column type name, such as `id "bigint unsigned" [pk]`
 
@@ -534,5 +535,28 @@ records users(id, name, age, status, created_at) {
   1, 'Alice', 30, Status.active, '2024-01-15 10:30:00'
   2, 'Bob', null, 'inactive', `now()`
   3, 'Charlie', , Status.pending, '2024-01-15'
+}
+```
+
+### Example Records
+
+Records blocks can be marked as **example records**. Example records are treated as sample data — they are preserved in the DBML output but excluded from SQL `INSERT` statements during export.
+
+Example records are desirable if the records only serve as illustrative examples of real data.
+
+```text
+Table users {
+  id int [pk]
+  name varchar
+
+  records [example] {
+    1, 'Alice'
+    2, 'Bob'
+  }
+}
+
+records users(id, name) [example] {
+  1, 'Alice'
+  2, 'Bob'
 }
 ```
