@@ -155,13 +155,7 @@ export const useModule: GlobalModule = {
       const errors: CompileError[] = [];
       if (node.importPath?.value) {
         const importPath = compiler.layout.resolveFileSpecifier(node.filepath, node.importPath.value);
-        if (!importPath) {
-          errors.push(new CompileError(
-            CompileErrorCode.BINDING_ERROR,
-            `Import path must be relative, got '${node.importPath.value}'`,
-            node.importPath,
-          ));
-        } else if (!compiler.layout.exists(importPath)) {
+        if (!importPath || !compiler.layout.exists(importPath)) {
           errors.push(new CompileError(
             CompileErrorCode.NONEXISTENT_MODULE,
             `Failed to resolve the non-existent file '${node.importPath.value}'`,
