@@ -120,7 +120,7 @@ export const useModule: GlobalModule = {
     if (!compiler.layout.exists(importPath)) return Report.create(
       undefined,
       [
-        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toString()}. Does the file exist?`, node),
+        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toKey()}. Does the file exist?`, node),
       ],
     );
 
@@ -145,7 +145,7 @@ export const useModule: GlobalModule = {
     return Report.create(
       undefined,
       [
-        new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toString()}`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toKey()}`, node),
       ],
     );
   },

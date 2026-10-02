@@ -54,16 +54,21 @@ export class Filepath implements Internable<FilepathId> {
     return this.path;
   }
 
+  // Decoded path for filesystem or display use
+  get fsPath (): string {
+    return this.path.split('/').map(decodeURIComponent).join('/');
+  }
+
   get dirname (): string {
-    return dirname(this.path);
+    return dirname(this.fsPath);
   }
 
   get basename (): string {
-    return basename(this.path);
+    return basename(this.fsPath);
   }
 
   get extname (): string {
-    return extname(this.path);
+    return extname(this.fsPath);
   }
 
   // Resolve a relative path from this file's directory.
@@ -82,7 +87,7 @@ export class Filepath implements Internable<FilepathId> {
 
   // Return the path relative to a given base directory, always prefixed with './' or '../'
   relativeTo (baseDir: string): string {
-    const rel = relative(baseDir, this.path);
+    const rel = relative(baseDir, this.fsPath);
     if (!rel.startsWith('./') && !rel.startsWith('../') && ![
       '.',
       '..',
@@ -92,12 +97,13 @@ export class Filepath implements Internable<FilepathId> {
     return rel;
   }
 
-  toString (): string {
+  // Always use this in map keys or equality
+  toKey (): string {
     return this.path;
   }
 
   equals (other: Filepath): boolean {
-    return this.path === other.path;
+    return this.toKey() === other.toKey();
   }
 
   // True when this filepath is a strict ancestor directory of `other`.

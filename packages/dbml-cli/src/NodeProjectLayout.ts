@@ -27,7 +27,7 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   }
 
   getSource (filePath: Filepath): string | undefined {
-    return safeReadFileSync(filePath.absolute, 'utf-8');
+    return safeReadFileSync(filePath.fsPath, 'utf-8');
   }
 
   exists (filePath: Filepath): boolean {
@@ -35,19 +35,19 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   }
 
   isFile (filePath: Filepath): boolean {
-    return safeStatSync(filePath.absolute, {
+    return safeStatSync(filePath.fsPath, {
       throwIfNoEntry: false,
     })?.isFile() ?? false;
   }
 
   isDirectory (filePath: Filepath): boolean {
-    return safeStatSync(filePath.absolute, {
+    return safeStatSync(filePath.fsPath, {
       throwIfNoEntry: false,
     })?.isDirectory() ?? false;
   }
 
   listDirectory (dirPath?: Filepath): Filepath[] {
-    const basePath = dirPath?.absolute ?? '/';
+    const basePath = dirPath ? dirPath.fsPath : '/';
     return safeReaddirSync(basePath)?.map((entry) => basePath + entry).sort().map(Filepath.from) ?? [];
   }
 

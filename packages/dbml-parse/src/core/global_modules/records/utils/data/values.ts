@@ -207,11 +207,11 @@ export function tryExtractString (value: SyntaxNode | string | boolean | number 
   // Handle primitive string
   if (typeof value === 'string') return value;
   if (typeof value === 'number') return value.toString();
-  if (typeof value === 'boolean') return value.toString();
+  if (typeof value === 'boolean') return value.toKey();
 
   // Quoted string: 'hello', "world"
   const res = (extractQuotedStringToken(value) ?? null) ?? tryExtractNumeric(value) ?? tryExtractBoolean(value); // Important: DO NOT move extractNumeric to after extractBoolean, as `1` is extracted as `true`
-  return res === null ? null : res.toString();
+  return res === null ? null : res.toKey();
 }
 
 // Supported datetime formats using luxon format tokens (excluding ISO 8601 which is handled separately)
