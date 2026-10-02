@@ -112,6 +112,10 @@ class Parser {
     this.layout.clearSource();
   }
 
+  /**
+    * @param {Filepath | string} entrypoint
+    * @returns {Database}
+    */
   parseDbmlProject (entrypoint) {
     entrypoint = typeof entrypoint === 'string' ? Filepath.from(entrypoint) : entrypoint;
     const result = this.DBMLCompiler.interpretFile(entrypoint);
@@ -201,10 +205,14 @@ class Parser {
 
 export default Parser;
 
-// Convert the parser error to a format compatible with other parsers' errors
+/**
+  * Convert the parser error to a format compatible with other parsers' errors
+  * @param {Readonly<import('@dbml/parse').CompileError[]>} diags
+  */
 function convertDbmlParserError (diags) {
   return diags.map((error) => ({
     message: error.diagnostic,
+    filepath: error.filepath.absolute,
     location: {
       start: {
         line: error.nodeOrToken.startPos.line + 1,

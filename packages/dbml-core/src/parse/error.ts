@@ -9,7 +9,7 @@ export interface EditorPosition {
 
 export interface CompilerDiagnostic {
   readonly message: string;
-  readonly filepath?: string;
+  readonly filepath: string;
   readonly stack?: unknown;
   readonly location: {
     start: EditorPosition;
