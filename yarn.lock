@@ -1835,6 +1835,13 @@
     node-addon-api "^3.2.1"
     node-gyp-build "^4.3.0"
 
+"@peggyjs/from-mem@3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@peggyjs/from-mem/-/from-mem-3.1.3.tgz#2956c3c68ec2e08e55178049a327009ee61541b8"
+  integrity sha512-LLlgtfXIaeYXoOYovOI0spLM8ZXaqkAlmcRRrLzHJzLMqkU6Sw0R4KMoCoHx1PjaP815pSCBlS+BN6aD8t1Jgg==
+  dependencies:
+    semver "7.7.4"
+
 "@phosphor-icons/vue@^2.2.0":
   version "2.2.1"
   resolved "https://registry.npmjs.org/@phosphor-icons/vue/-/vue-2.2.1.tgz"
@@ -3558,11 +3565,6 @@ ansi-styles@^6.1.0:
   resolved "https://registry.npmjs.org/ansi-styles/-/ansi-styles-6.2.1.tgz"
   integrity sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==
 
-antlr4@^4.13.1:
-  version "4.13.2"
-  resolved "https://registry.npmjs.org/antlr4/-/antlr4-4.13.2.tgz"
-  integrity sha512-QiVbZhyy4xAZ17UPEuG3YTOt8ZaoeOR1CvEAqrEsDBsOqINslaB147i9xqljZqoyf5S+EUlGStaj+t22LT9MOg==
-
 any-promise@^1.0.0:
   version "1.3.0"
   resolved "https://registry.npmjs.org/any-promise/-/any-promise-1.3.0.tgz"
@@ -4162,6 +4164,11 @@ commander@^11.0.0:
   version "11.1.0"
   resolved "https://registry.npmjs.org/commander/-/commander-11.1.0.tgz"
   integrity sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==
+
+commander@^14.0.3:
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-14.0.3.tgz#425d79b48f9af82fcd9e4fc1ea8af6c5ec07bbc2"
+  integrity sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==
 
 commander@^2.20.0, commander@~2.20.3:
   version "2.20.3"
@@ -7828,11 +7835,6 @@ parse5@^6.0.1:
   resolved "https://registry.npmjs.org/parse5/-/parse5-6.0.1.tgz"
   integrity sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==
 
-parsimmon@^1.13.0:
-  version "1.18.1"
-  resolved "https://registry.npmjs.org/parsimmon/-/parsimmon-1.18.1.tgz"
-  integrity sha512-u7p959wLfGAhJpSDJVYXoyMCXWYwHia78HhRBWqk7AIbxdmlrfdp5wX0l3xv/iTSH5HvhN9K7o26hwwpgS5Nmw==
-
 path-browserify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/path-browserify/-/path-browserify-1.0.1.tgz"
@@ -7900,6 +7902,15 @@ pathe@^2.0.1, pathe@^2.0.3:
   version "2.0.3"
   resolved "https://registry.npmjs.org/pathe/-/pathe-2.0.3.tgz"
   integrity sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==
+
+peggy@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/peggy/-/peggy-5.1.0.tgz#8e2a681128cf776648417f60394a40b4a712f503"
+  integrity sha512-IEo5aYRZ2kXH4Qby06cjtL114PZnwLoTiA41vUmg2vPZgANn+c87m5BUurhuDr5/cu758ZlpgsAfBVx+hhO5+w==
+  dependencies:
+    "@peggyjs/from-mem" "3.1.3"
+    commander "^14.0.3"
+    source-map-generator "2.0.6"
 
 pegjs-require-import@^0.0.2:
   version "0.0.2"
@@ -8541,6 +8552,11 @@ semver@7.5.3:
   dependencies:
     lru-cache "^6.0.0"
 
+semver@7.7.4:
+  version "7.7.4"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.4.tgz#28464e36060e991fa7a11d0279d2d3f3b57a7e8a"
+  integrity sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==
+
 semver@^6.0.0:
   version "6.3.1"
   resolved "https://registry.npmjs.org/semver/-/semver-6.3.1.tgz"
@@ -8711,6 +8727,11 @@ sort-keys@^2.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
+source-map-generator@2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/source-map-generator/-/source-map-generator-2.0.6.tgz#284776dff4bd5efdefead67aaed0c0f85f5a42ca"
+  integrity sha512-IlassDs1Ve8nV6uyQZXF9kdkJpVKnMte2JZQXu13M0A5zwc+vu6+LNHfmxsHBMDtoZE21RHiKI0/xvpecZRCNg==
+
 source-map-js@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.1.tgz"
@@ -8781,10 +8802,10 @@ sql-escaper@^1.5.1:
   resolved "https://registry.yarnpkg.com/sql-escaper/-/sql-escaper-1.5.2.tgz#5b59840dc4034bd23a9b7d00501ba947a90364b7"
   integrity sha512-6CKD38c31SENivxOADeMNLdukOnUxUcflKtzVWzace7Riv1v7cAEym5Cx9Q7gYZ3ezIJI7ZpqecQq8cqNeSSFg==
 
-sqlingo@0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/sqlingo/-/sqlingo-0.11.0.tgz#4cbf2d361fb7a6b6932a688a914973f259af3469"
-  integrity sha512-Fnk2tIVb7h+ty555L7Upgk/EsGOhdQr45wcDdv9pQd1WfVlA6Bk/RZ1bzSJfiGNo1tjt1h/K2YxqH2uUq9t+9g==
+sqlingo@0.12.4:
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/sqlingo/-/sqlingo-0.12.4.tgz#6c8a9fd7216d71b958ab0c50a96c6621d984ab2e"
+  integrity sha512-QyrHx5fAMmfIFSlDy90wglrm0dJ/H6ZRwslGnx9Up8b7O/CjhxqdsI9FVPmCp9aeOb3a67BAKSdymrLuuiuSDA==
 
 ssri@^10.0.0, ssri@^10.0.1:
   version "10.0.1"

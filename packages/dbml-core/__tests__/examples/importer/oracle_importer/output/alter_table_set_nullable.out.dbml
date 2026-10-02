@@ -1,66 +1,66 @@
 Table "employees" {
-  "emp_id" NUMBER(10) [not null]
-  "emp_name" VARCHAR2(100) [not null]
-  "email" VARCHAR2(100) [not null]
-  "phone" VARCHAR2(20)
-  "salary" NUMBER(10,2)
-  "commission_pct" NUMBER(3,2)
-  "hire_date" DATE
-  "department_id" NUMBER(10) [not null]
-  "manager_id" NUMBER(10) [not null]
-  "status" VARCHAR2(20) [not null]
-  "ssn" VARCHAR2(11) [not null]
-  "badge_number" VARCHAR2(10) [not null]
-  "title" VARCHAR2(100) [not null]
-  "office_location" VARCHAR2(50) [not null]
+  "emp_id" decimal(10) [not null]
+  "emp_name" varchar(100) [not null]
+  "email" varchar(100) [not null]
+  "phone" varchar(20) [not null]
+  "salary" decimal(10,2) [not null]
+  "commission_pct" decimal(3,2) [not null]
+  "hire_date" date [not null]
+  "department_id" decimal(10) [not null]
+  "manager_id" decimal(10) [not null]
+  "status" varchar(20) [not null]
+  "ssn" varchar(11) [not null]
+  "badge_number" varchar(10) [not null]
+  "title" varchar(100) [not null]
+  "office_location" varchar(50) [not null]
 }
 
 Table "products" {
-  "product_id" NUMBER(10) [not null]
-  "product_name" VARCHAR2(200) [not null]
-  "description" VARCHAR2(4000)
-  "price" NUMBER(10,2) [not null]
-  "category" VARCHAR2(50) [not null]
-  "manufacturer" VARCHAR2(100)
-  "sku" VARCHAR2(50) [not null]
-  "weight" NUMBER(8,2)
+  "product_id" decimal(10) [not null]
+  "product_name" varchar(200) [not null]
+  "description" varchar(4000) [not null]
+  "price" decimal(10,2) [not null]
+  "category" varchar(50) [not null]
+  "manufacturer" varchar(100) [not null]
+  "sku" varchar(50) [not null]
+  "weight" decimal(8,2) [not null]
 }
 
 Table "orders" {
-  "order_id" NUMBER(10) [not null]
-  "customer_id" NUMBER(10) [not null]
-  "order_date" DATE [not null]
-  "ship_date" DATE [not null]
-  "total_amount" NUMBER(12,2) [not null]
-  "tax_amount" NUMBER(10,2) [not null]
-  "discount_amount" NUMBER(10,2) [not null]
+  "order_id" decimal(10) [not null]
+  "customer_id" decimal(10) [not null]
+  "order_date" date [not null]
+  "ship_date" date [not null]
+  "total_amount" decimal(12,2) [not null]
+  "tax_amount" decimal(10,2) [not null]
+  "discount_amount" decimal(10,2) [not null]
 }
 
 Table "datatype_tests" {
-  "col_number" NUMBER(10,2)
-  "col_varchar2" VARCHAR2(100)
-  "col_char" CHAR(10)
-  "col_date" DATE
-  "col_timestamp" TIMESTAMP
-  "col_clob" CLOB
-  "col_raw" RAW(100)
-  "col_float" FLOAT
-  "col_integer" INTEGER
-  "col_nvarchar2" NVARCHAR2(100)
-  "col_nchar" NCHAR(10)
+  "col_number" decimal(10,2) [not null]
+  "col_varchar2" varchar(100) [not null]
+  "col_char" char(10) [not null]
+  "col_date" date [not null]
+  "col_timestamp" timestamp [not null]
+  "col_clob" text [not null]
+  "col_raw" RAW(100) [not null]
+  "col_float" float [not null]
+  "col_integer" int [not null]
+  "col_nvarchar2" nvarchar(100) [not null]
+  "col_nchar" nchar(10) [not null]
 }
 
 Table "complex_test" {
-  "id" NUMBER(10) [pk]
-  "code" VARCHAR2(20) [unique]
-  "name" VARCHAR2(100) [not null]
-  "parent_id" NUMBER(10) [not null]
-  "status" VARCHAR2(20)
+  "id" decimal(10) [pk]
+  "code" varchar(20) [unique, not null]
+  "name" varchar(100) [not null]
+  "parent_id" decimal(10) [not null]
+  "status" varchar(20) [not null]
 }
 
 Table "combo_test" {
-  "col1" NUMBER(10)
-  "col2" VARCHAR2(50)
+  "col1" decimal(10) [not null]
+  "col2" varchar(50) [not null]
 }
 
 Ref "fk_complex_parent":"complex_test"."id" <? "complex_test"."parent_id"

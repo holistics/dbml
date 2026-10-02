@@ -1,152 +1,152 @@
 Table "customers" {
-  "cust_id" NUMBER(10) [unique]
-  "cust_name" VARCHAR2(100) [unique]
-  "email" VARCHAR2(100) [unique]
-  "phone" VARCHAR2(20) [unique]
+  "cust_id" decimal(10) [unique]
+  "cust_name" varchar(100) [unique]
+  "email" varchar(100) [unique]
+  "phone" varchar(20) [unique]
 }
 
 Table "inventory" {
-  "item_id" NUMBER(10) [unique]
-  "item_name" VARCHAR2(200) [unique]
-  "price" NUMBER(10,2)
-  "sku" VARCHAR2(50) [unique]
+  "item_id" decimal(10) [unique]
+  "item_name" varchar(200) [unique]
+  "price" decimal(10,2)
+  "sku" varchar(50) [unique]
 }
 
 Table "shipments" {
-  "ship_id" NUMBER(10) [unique]
-  "customer_id" NUMBER(10)
-  "ship_date" DATE [unique]
-  "tracking_number" VARCHAR2(50) [unique]
+  "ship_id" decimal(10) [unique]
+  "customer_id" decimal(10)
+  "ship_date" date [unique]
+  "tracking_number" varchar(50) [unique]
 }
 
 Table "departments" {
-  "dept_id" NUMBER(10) [unique]
-  "dept_name" VARCHAR2(100) [unique]
-  "manager_id" NUMBER(10) [unique]
-  "budget" NUMBER(12,2)
+  "dept_id" decimal(10) [unique]
+  "dept_name" varchar(100) [unique]
+  "manager_id" decimal(10) [unique]
+  "budget" decimal(12,2)
 }
 
 Table "suppliers" {
-  "supp_id" NUMBER(10) [unique]
-  "supp_name" VARCHAR2(100) [unique]
-  "contact" VARCHAR2(100) [unique]
-  "ssn" VARCHAR2(11) [unique]
+  "supp_id" decimal(10) [unique]
+  "supp_name" varchar(100) [unique]
+  "contact" varchar(100) [unique]
+  "ssn" varchar(11) [unique]
 }
 
 Table "test_datatypes" {
-  "col_number" NUMBER(10,2) [unique]
-  "col_varchar2" VARCHAR2(100) [unique]
-  "col_char" CHAR(10) [unique]
-  "col_date" DATE [unique]
-  "col_timestamp" TIMESTAMP [unique]
-  "col_clob" CLOB [unique]
+  "col_number" decimal(10,2) [unique]
+  "col_varchar2" varchar(100) [unique]
+  "col_char" char(10) [unique]
+  "col_date" date [unique]
+  "col_timestamp" timestamp [unique]
+  "col_clob" text [unique]
   "col_raw" RAW(100) [unique]
-  "col_float" FLOAT [unique]
-  "col_integer" INTEGER [unique]
-  "col_nvarchar2" NVARCHAR2(100) [unique]
-  "col_nchar" NCHAR(10) [unique]
+  "col_float" float [unique]
+  "col_integer" int [unique]
+  "col_nvarchar2" nvarchar(100) [unique]
+  "col_nchar" nchar(10) [unique]
 }
 
 Table "test_basic" {
-  "id" NUMBER(10) [unique]
-  "value" NUMBER(10) [unique]
+  "id" decimal(10) [unique]
+  "value" decimal(10) [unique]
 }
 
 Table "test_named" {
-  "code" VARCHAR2(20) [unique]
-  "ref_id" NUMBER(10) [unique]
+  "code" varchar(20) [unique]
+  "ref_id" decimal(10) [unique]
 }
 
 Table "test_status" {
-  "status" VARCHAR2(20) [unique]
-  "status_code" VARCHAR2(10) [unique]
+  "status" varchar(20) [unique]
+  "status_code" varchar(10) [unique]
 }
 
 Table "test_dates" {
-  "event_date" DATE [unique]
-  "end_date" DATE [unique]
+  "event_date" date [unique]
+  "end_date" date [unique]
 }
 
 Table "test_enable" {
-  "level" NUMBER(2) [unique]
-  "rating" NUMBER(2) [unique]
+  "level" decimal(2) [unique]
+  "rating" decimal(2) [unique]
 }
 
 Table "test_disable" {
-  "priority" NUMBER(2) [unique]
-  "rank" NUMBER(2) [unique]
+  "priority" decimal(2) [unique]
+  "rank" decimal(2) [unique]
 }
 
 Table "test_validate" {
-  "amount" NUMBER(10,2) [unique]
-  "tax" NUMBER(10,2) [unique]
+  "amount" decimal(10,2) [unique]
+  "tax" decimal(10,2) [unique]
 }
 
 Table "test_novalidate" {
-  "discount" NUMBER(10,2) [unique]
-  "margin" NUMBER(10,2) [unique]
+  "discount" decimal(10,2) [unique]
+  "margin" decimal(10,2) [unique]
 }
 
 Table "test_disable_novalidate" {
-  "weight" NUMBER(8,2) [unique]
-  "volume" NUMBER(8,2) [unique]
+  "weight" decimal(8,2) [unique]
+  "volume" decimal(8,2) [unique]
 }
 
 Table "test_rely" {
-  "code" NUMBER(10) [unique]
-  "ref_id" NUMBER(10) [unique]
+  "code" decimal(10) [unique]
+  "ref_id" decimal(10) [unique]
 }
 
 Table "test_norely" {
-  "sequence" NUMBER(10) [unique]
-  "counter" NUMBER(10) [unique]
+  "sequence" decimal(10) [unique]
+  "counter" decimal(10) [unique]
 }
 
 Table "test_enable_rely" {
-  "batch_id" NUMBER(10) [unique]
-  "lot_number" VARCHAR2(20) [unique]
+  "batch_id" decimal(10) [unique]
+  "lot_number" varchar(20) [unique]
 }
 
 Table "test_disable_norely" {
-  "zone_id" NUMBER(5) [unique]
-  "area_code" VARCHAR2(10) [unique]
+  "zone_id" decimal(5) [unique]
+  "area_code" varchar(10) [unique]
 }
 
 Table "test_deferrable_deferred" {
-  "order_id" NUMBER(10) [unique]
-  "line_item" NUMBER(5) [unique]
+  "order_id" decimal(10) [unique]
+  "line_item" decimal(5) [unique]
 }
 
 Table "test_deferrable_immediate" {
-  "invoice_id" NUMBER(10) [unique]
-  "payment_status" VARCHAR2(20) [unique]
+  "invoice_id" decimal(10) [unique]
+  "payment_status" varchar(20) [unique]
 }
 
 Table "test_not_deferrable" {
-  "ticket_id" NUMBER(10) [unique]
-  "issue_date" DATE [unique]
+  "ticket_id" decimal(10) [unique]
+  "issue_date" date [unique]
 }
 
 Table "test_datatypes_inline" {
-  "col_number" NUMBER(10,2) [unique]
-  "col_varchar2" VARCHAR2(100) [unique]
-  "col_char" CHAR(10) [unique]
-  "col_date" DATE [unique]
-  "col_timestamp" TIMESTAMP [unique]
-  "col_clob" CLOB [unique]
+  "col_number" decimal(10,2) [unique]
+  "col_varchar2" varchar(100) [unique]
+  "col_char" char(10) [unique]
+  "col_date" date [unique]
+  "col_timestamp" timestamp [unique]
+  "col_clob" text [unique]
   "col_raw" RAW(100) [unique]
-  "col_float" FLOAT [unique]
-  "col_integer" INTEGER [unique]
-  "col_nvarchar2" NVARCHAR2(100) [unique]
-  "col_nchar" NCHAR(10) [unique]
+  "col_float" float [unique]
+  "col_integer" int [unique]
+  "col_nvarchar2" nvarchar(100) [unique]
+  "col_nchar" nchar(10) [unique]
 }
 
 Table "test_long_name" {
-  "identifier" NUMBER(10) [unique]
-  "record_code" VARCHAR2(20) [unique]
+  "identifier" decimal(10) [unique]
+  "record_code" varchar(20) [unique]
 }
 
 Table "test_complex" {
-  "score" NUMBER(3) [unique]
-  "rating" VARCHAR2(20) [unique]
+  "score" decimal(3) [unique]
+  "rating" varchar(20) [unique]
 }

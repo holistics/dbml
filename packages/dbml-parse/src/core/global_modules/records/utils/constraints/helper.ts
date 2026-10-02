@@ -114,6 +114,6 @@ export function resolveRecordValueNode (
   recordValue: RecordValue,
 ) {
   const { token } = recordValue;
-  return compiler.nodeAtPosition(token.filepath, token.start.offset)
-    ?? compiler.parse.ast(token.filepath);
+  return compiler.nodeAtPosition(token.filepath!, token.start.offset)
+    ?? compiler.parse.ast(token.filepath!);
 }

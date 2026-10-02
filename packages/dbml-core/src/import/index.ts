@@ -1,4 +1,4 @@
-import { generateDatabase } from '../parse/databaseGenerator';
+import { generateDatabase } from '../parse/connector/databaseGenerator';
 import Parser from '../parse/Parser';
 import ModelExporter from '../export/ModelExporter';
 import type { DbmlExporterOptions } from '../export/DbmlExporter';

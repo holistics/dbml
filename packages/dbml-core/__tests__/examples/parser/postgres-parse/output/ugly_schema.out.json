@@ -3,1110 +3,2357 @@
   "tables": [
     {
       "name": "tipo_cliente",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "SERIAL",
-            "schemaName": null
+            "type_name": "serial",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 44,
+              "line": 6,
+              "column": 4
+            },
+            "end": {
+              "offset": 45,
+              "line": 6,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "increment": true,
-          "pk": true,
-          "checks": []
+          "pk": true
         },
         {
           "name": "nombre",
           "type": {
-            "type_name": "CHARACTER VARYING",
-            "schemaName": null
+            "type_name": "varchar",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 7,
+              "column": 8
+            },
+            "end": {
+              "offset": 86,
+              "line": 7,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "descripcion",
           "type": {
-            "type_name": "CHARACTER VARYING",
-            "schemaName": null
+            "type_name": "varchar",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 151,
+              "line": 12,
+              "column": 18
+            },
+            "end": {
+              "offset": 161,
+              "line": 12,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "note": {
-        "value": "Para identificar si es colegio, corporación u otro tipo"
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
       },
-      "checks": []
+      "note": {
+        "value": "Para identificar si es colegio, corporación u otro tipo",
+        "token": {
+          "start": {
+            "offset": 66,
+            "line": 4,
+            "column": 57
+          },
+          "end": {
+            "offset": 122,
+            "line": 4,
+            "column": 57
+          }
+        }
+      }
     },
     {
       "name": "permiso_funcion",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "uuid",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "dbdefault": {
-            "value": "uuid_generate_v4()",
-            "type": "expression"
+          "token": {
+            "start": {
+              "offset": 52,
+              "line": 5,
+              "column": 31
+            },
+            "end": {
+              "offset": 55,
+              "line": 5,
+              "column": 31
+            }
           },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true,
-          "checks": []
+          "dbdefault": {
+            "value": "UUID_GENERATE_V4()",
+            "type": "expression"
+          }
         },
         {
           "name": "nombre",
           "type": {
-            "type_name": "CHARACTER VARYING(255)",
-            "schemaName": null
+            "type_name": "varchar(255)",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 119,
+              "line": 11,
+              "column": 8
+            },
+            "end": {
+              "offset": 124,
+              "line": 11,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "descripcion",
           "type": {
-            "type_name": "CHARACTER VARYING(255)",
-            "schemaName": null
+            "type_name": "varchar(255)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 217,
+              "line": 16,
+              "column": 26
+            },
+            "end": {
+              "offset": 227,
+              "line": 16,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "es_categoria",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 262,
+              "line": 17,
+              "column": 14
+            },
+            "end": {
+              "offset": 273,
+              "line": 17,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "false",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "id_aplicacion",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 305,
+              "line": 18,
+              "column": 15
+            },
+            "end": {
+              "offset": 317,
+              "line": 18,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "orden",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 435,
+              "line": 20,
+              "column": 7
+            },
+            "end": {
+              "offset": 439,
+              "line": 20,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "mostrar_funcion",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 490,
+              "line": 22,
+              "column": 17
+            },
+            "end": {
+              "offset": 504,
+              "line": 22,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "bloquear",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 519,
+              "line": 23,
+              "column": 10
+            },
+            "end": {
+              "offset": 526,
+              "line": 23,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "false",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "uuid_categoria",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 619,
+              "line": 25,
+              "column": 16
+            },
+            "end": {
+              "offset": 632,
+              "line": 25,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "id_tipo_cliente",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 695,
+              "line": 28,
+              "column": 17
+            },
+            "end": {
+              "offset": 709,
+              "line": 28,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "mostrar_crear",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 737,
+              "line": 32,
+              "column": 15
+            },
+            "end": {
+              "offset": 749,
+              "line": 32,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "mostrar_ver",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 764,
+              "line": 32,
+              "column": 40
+            },
+            "end": {
+              "offset": 774,
+              "line": 32,
+              "column": 40
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "mostrar_modificar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 793,
+              "line": 33,
+              "column": 19
+            },
+            "end": {
+              "offset": 809,
+              "line": 33,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "mostrar_eliminar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 822,
+              "line": 34,
+              "column": 18
+            },
+            "end": {
+              "offset": 837,
+              "line": 34,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "note": {
-        "value": "Funciones/Categorías globales. Se separan por tipo de cliente."
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
       },
-      "checks": []
+      "note": {
+        "value": "Funciones/Categorías globales. Se separan por tipo de cliente.",
+        "token": {
+          "start": {
+            "offset": 49,
+            "line": 3,
+            "column": 67
+          },
+          "end": {
+            "offset": 112,
+            "line": 3,
+            "column": 67
+          }
+        }
+      }
     },
     {
       "name": "permiso_perfil",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "uuid",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "dbdefault": {
-            "value": "uuid_generate_v4()",
-            "type": "expression"
+          "token": {
+            "start": {
+              "offset": 47,
+              "line": 3,
+              "column": 6
+            },
+            "end": {
+              "offset": 50,
+              "line": 3,
+              "column": 6
+            }
           },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true,
-          "checks": []
+          "dbdefault": {
+            "value": "UUID_GENERATE_V4()",
+            "type": "expression"
+          }
         },
         {
           "name": "nombre",
           "type": {
-            "type_name": "CHARACTER VARYING",
-            "schemaName": null
+            "type_name": "varchar",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 114,
+              "line": 5,
+              "column": 26
+            },
+            "end": {
+              "offset": 119,
+              "line": 5,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "descripcion",
           "type": {
-            "type_name": "CHARACTER VARYING",
-            "schemaName": null
+            "type_name": "varchar",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 160,
+              "line": 5,
+              "column": 77
+            },
+            "end": {
+              "offset": 170,
+              "line": 5,
+              "column": 77
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "mostrar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 206,
+              "line": 5,
+              "column": 119
+            },
+            "end": {
+              "offset": 212,
+              "line": 5,
+              "column": 119
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "true",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "modificable",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 258,
+              "line": 6,
+              "column": 13
+            },
+            "end": {
+              "offset": 268,
+              "line": 6,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "true",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "id_tipo_cliente",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 295,
+              "line": 7,
+              "column": 17
+            },
+            "end": {
+              "offset": 309,
+              "line": 7,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "uuid_cliente",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 332,
+              "line": 9,
+              "column": 14
+            },
+            "end": {
+              "offset": 343,
+              "line": 9,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "uuid_grupo_cliente",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 507,
+              "line": 11,
+              "column": 20
+            },
+            "end": {
+              "offset": 524,
+              "line": 11,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "id_aplicacion",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 601,
+              "line": 13,
+              "column": 37
+            },
+            "end": {
+              "offset": 613,
+              "line": 13,
+              "column": 37
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "permiso_perfil_funcion_cliente",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "uuid",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "dbdefault": {
-            "value": "uuid_generate_v4()",
-            "type": "expression"
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 6
+            },
+            "end": {
+              "offset": 66,
+              "line": 3,
+              "column": 6
+            }
           },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true,
-          "checks": []
+          "dbdefault": {
+            "value": "UUID_GENERATE_V4()",
+            "type": "expression"
+          }
         },
         {
           "name": "uuid_funcion",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 122,
+              "line": 4,
+              "column": 14
+            },
+            "end": {
+              "offset": 133,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "uuid_perfil",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 156,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 166,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "uuid_cliente",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 188,
+              "line": 6,
+              "column": 14
+            },
+            "end": {
+              "offset": 199,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "uuid_grupo_cliente",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 284,
+              "line": 7,
+              "column": 20
+            },
+            "end": {
+              "offset": 301,
+              "line": 7,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "alias",
           "type": {
-            "type_name": "CHARACTER VARYING",
-            "schemaName": null
+            "type_name": "varchar",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 386,
+              "line": 10,
+              "column": 9
+            },
+            "end": {
+              "offset": 390,
+              "line": 10,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "habilitar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 493,
+              "line": 11,
+              "column": 11
+            },
+            "end": {
+              "offset": 501,
+              "line": 11,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "crear",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 556,
+              "line": 13,
+              "column": 7
+            },
+            "end": {
+              "offset": 560,
+              "line": 13,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "modificar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 623,
+              "line": 15,
+              "column": 11
+            },
+            "end": {
+              "offset": 631,
+              "line": 15,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "eliminar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 686,
+              "line": 16,
+              "column": 10
+            },
+            "end": {
+              "offset": 693,
+              "line": 16,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "note": {
-        "value": "Son las funciones de los perfiles por cliente"
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
       },
-      "checks": []
+      "note": {
+        "value": "Son las funciones de los perfiles por cliente",
+        "token": {
+          "start": {
+            "offset": 52,
+            "line": 3,
+            "column": 50
+          },
+          "end": {
+            "offset": 98,
+            "line": 3,
+            "column": 50
+          }
+        }
+      }
     },
     {
       "name": "permiso_funcion_perfil_global",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "uuid",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "dbdefault": {
-            "value": "uuid_generate_v4()",
-            "type": "expression"
+          "token": {
+            "start": {
+              "offset": 62,
+              "line": 3,
+              "column": 6
+            },
+            "end": {
+              "offset": 65,
+              "line": 3,
+              "column": 6
+            }
           },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true,
-          "checks": []
+          "dbdefault": {
+            "value": "UUID_GENERATE_V4()",
+            "type": "expression"
+          }
         },
         {
           "name": "uuid_funcion",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 122,
+              "line": 4,
+              "column": 14
+            },
+            "end": {
+              "offset": 133,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "uuid_perfil",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 152,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 162,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "habilitar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 182,
+              "line": 6,
+              "column": 11
+            },
+            "end": {
+              "offset": 190,
+              "line": 6,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "crear",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 237,
+              "line": 7,
+              "column": 7
+            },
+            "end": {
+              "offset": 241,
+              "line": 7,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "modificar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 296,
+              "line": 8,
+              "column": 11
+            },
+            "end": {
+              "offset": 304,
+              "line": 8,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "eliminar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 353,
+              "line": 9,
+              "column": 10
+            },
+            "end": {
+              "offset": 360,
+              "line": 9,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "note": {
-        "value": "Son las funciones de los perfiles iniciales para cada cliente. Cada cliente nuevo tendrá al menos dicha configuración desde esta tabla"
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
       },
-      "checks": []
+      "note": {
+        "value": "Son las funciones de los perfiles iniciales para cada cliente. Cada cliente nuevo tendrá al menos dicha configuración desde esta tabla",
+        "token": {
+          "start": {
+            "offset": 51,
+            "line": 3,
+            "column": 139
+          },
+          "end": {
+            "offset": 186,
+            "line": 3,
+            "column": 139
+          }
+        }
+      }
     },
     {
       "name": "permiso_usuario_cliente_funcion",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "uuid",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "dbdefault": {
-            "value": "uuid_generate_v4()",
-            "type": "expression"
+          "token": {
+            "start": {
+              "offset": 64,
+              "line": 3,
+              "column": 6
+            },
+            "end": {
+              "offset": 67,
+              "line": 3,
+              "column": 6
+            }
           },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true,
-          "checks": []
+          "dbdefault": {
+            "value": "UUID_GENERATE_V4()",
+            "type": "expression"
+          }
         },
         {
           "name": "uuid_funcion",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 130,
+              "line": 4,
+              "column": 14
+            },
+            "end": {
+              "offset": 141,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "uuid_usuario",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 157,
+              "line": 5,
+              "column": 14
+            },
+            "end": {
+              "offset": 168,
+              "line": 5,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "uuid_cliente",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 184,
+              "line": 6,
+              "column": 14
+            },
+            "end": {
+              "offset": 195,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "uuid_grupo_cliente",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 287,
+              "line": 7,
+              "column": 20
+            },
+            "end": {
+              "offset": 304,
+              "line": 7,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "funcion_modificada",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 368,
+              "line": 8,
+              "column": 20
+            },
+            "end": {
+              "offset": 385,
+              "line": 8,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "false",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "habilitar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 508,
+              "line": 9,
+              "column": 11
+            },
+            "end": {
+              "offset": 516,
+              "line": 9,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "crear",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 569,
+              "line": 10,
+              "column": 7
+            },
+            "end": {
+              "offset": 573,
+              "line": 10,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "modificar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 634,
+              "line": 11,
+              "column": 11
+            },
+            "end": {
+              "offset": 642,
+              "line": 11,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "eliminar",
           "type": {
-            "type_name": "BOOLEAN",
-            "schemaName": null
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 697,
+              "line": 12,
+              "column": 10
+            },
+            "end": {
+              "offset": 704,
+              "line": 12,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "note": {
-        "value": "Son las funciones que el usuario tiene por cliente"
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
       },
-      "checks": []
+      "note": {
+        "value": "Son las funciones que el usuario tiene por cliente",
+        "token": {
+          "start": {
+            "offset": 59,
+            "line": 7,
+            "column": 55
+          },
+          "end": {
+            "offset": 110,
+            "line": 7,
+            "column": 55
+          }
+        }
+      }
     },
     {
       "name": "permiso_perfil_tipo_usuario",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "uuid",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "dbdefault": {
-            "value": "uuid_generate_v4()",
-            "type": "expression"
+          "token": {
+            "start": {
+              "offset": 60,
+              "line": 3,
+              "column": 6
+            },
+            "end": {
+              "offset": 63,
+              "line": 3,
+              "column": 6
+            }
           },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true,
-          "checks": []
+          "dbdefault": {
+            "value": "UUID_GENERATE_V4()",
+            "type": "expression"
+          }
         },
         {
           "name": "uuid_perfil",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 165,
+              "line": 4,
+              "column": 13
+            },
+            "end": {
+              "offset": 175,
+              "line": 4,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "tipo_usuario",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 186,
+              "line": 5,
+              "column": 14
+            },
+            "end": {
+              "offset": 197,
+              "line": 5,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "descripcion",
           "type": {
-            "type_name": "CHARACTER VARYING",
-            "schemaName": null
+            "type_name": "varchar",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 264,
+              "line": 6,
+              "column": 13
+            },
+            "end": {
+              "offset": 274,
+              "line": 6,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "note": {
-        "value": "Es la tabla que permite agregar permisos por tipos de usuarios."
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
       },
-      "checks": []
+      "note": {
+        "value": "Es la tabla que permite agregar permisos por tipos de usuarios.",
+        "token": {
+          "start": {
+            "offset": 49,
+            "line": 3,
+            "column": 68
+          },
+          "end": {
+            "offset": 113,
+            "line": 3,
+            "column": 68
+          }
+        }
+      }
     },
     {
       "name": "permiso_usuario_cliente_perfil",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "uuid",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
-          "dbdefault": {
-            "value": "uuid_generate_v4()",
-            "type": "expression"
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 6
+            },
+            "end": {
+              "offset": 66,
+              "line": 3,
+              "column": 6
+            }
           },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true,
-          "checks": []
+          "dbdefault": {
+            "value": "UUID_GENERATE_V4()",
+            "type": "expression"
+          }
         },
         {
           "name": "uuid_usuario",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 129,
+              "line": 4,
+              "column": 14
+            },
+            "end": {
+              "offset": 140,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "uuid_perfil",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 156,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 166,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "uuid_cliente",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 183,
+              "line": 6,
+              "column": 14
+            },
+            "end": {
+              "offset": 194,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "uuid_grupo_cliente",
           "type": {
-            "type_name": "UUID",
-            "schemaName": null
+            "type_name": "uuid",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 286,
+              "line": 7,
+              "column": 20
+            },
+            "end": {
+              "offset": 303,
+              "line": 7,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "note": {
-        "value": "Son los perfiles del usuario según el cliente"
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
       },
-      "checks": []
+      "note": {
+        "value": "Son los perfiles del usuario según el cliente",
+        "token": {
+          "start": {
+            "offset": 52,
+            "line": 3,
+            "column": 50
+          },
+          "end": {
+            "offset": 98,
+            "line": 3,
+            "column": 50
+          }
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [
     {
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "endpoints": [
         {
           "tableName": "permiso_funcion",
+          "schemaName": null,
           "fieldNames": [
             "id_tipo_cliente"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "tipo_cliente",
+          "schemaName": null,
           "fieldNames": [
             "id"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     },
     {
-      "endpoints": [
-        {
-          "tableName": "permiso_funcion",
-          "fieldNames": [
-            "id_aplicacion"
-          ],
-          "relation": "0..*"
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         },
-        {
-          "tableName": "aplicacion",
-          "fieldNames": [
-            "id"
-          ],
-          "relation": "0..1"
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
+      },
       "endpoints": [
         {
           "tableName": "permiso_perfil",
-          "fieldNames": [
-            "uuid_cliente"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "cliente",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
-        }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "permiso_perfil",
-          "fieldNames": [
-            "uuid_grupo_cliente"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "grupo_cliente",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
-        }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "permiso_perfil",
+          "schemaName": null,
           "fieldNames": [
             "id_tipo_cliente"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "tipo_cliente",
+          "schemaName": null,
           "fieldNames": [
             "id"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     },
     {
-      "endpoints": [
-        {
-          "tableName": "permiso_perfil",
-          "fieldNames": [
-            "id_aplicacion"
-          ],
-          "relation": "0..*"
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         },
-        {
-          "tableName": "aplicacion",
-          "fieldNames": [
-            "id"
-          ],
-          "relation": "0..1"
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
+      },
       "endpoints": [
         {
           "tableName": "permiso_perfil_funcion_cliente",
+          "schemaName": null,
           "fieldNames": [
             "uuid_funcion"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "permiso_funcion",
+          "schemaName": null,
           "fieldNames": [
             "uuid"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     },
     {
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "endpoints": [
         {
           "tableName": "permiso_perfil_funcion_cliente",
+          "schemaName": null,
           "fieldNames": [
             "uuid_perfil"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "permiso_perfil",
+          "schemaName": null,
           "fieldNames": [
             "uuid"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     },
     {
-      "endpoints": [
-        {
-          "tableName": "permiso_perfil_funcion_cliente",
-          "fieldNames": [
-            "uuid_cliente"
-          ],
-          "relation": "0..*"
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         },
-        {
-          "tableName": "cliente",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "permiso_perfil_funcion_cliente",
-          "fieldNames": [
-            "uuid_grupo_cliente"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "grupo_cliente",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
-        }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
+      },
       "endpoints": [
         {
           "tableName": "permiso_funcion_perfil_global",
+          "schemaName": null,
           "fieldNames": [
             "uuid_funcion"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "permiso_funcion",
+          "schemaName": null,
           "fieldNames": [
             "uuid"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     },
     {
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "endpoints": [
         {
           "tableName": "permiso_funcion_perfil_global",
+          "schemaName": null,
           "fieldNames": [
             "uuid_perfil"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "permiso_perfil",
+          "schemaName": null,
           "fieldNames": [
             "uuid"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     },
     {
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_funcion",
+          "schemaName": null,
           "fieldNames": [
             "uuid_funcion"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "permiso_funcion",
+          "schemaName": null,
           "fieldNames": [
             "uuid"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     },
     {
-      "endpoints": [
-        {
-          "tableName": "permiso_usuario_cliente_funcion",
-          "fieldNames": [
-            "uuid_usuario"
-          ],
-          "relation": "0..*"
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         },
-        {
-          "tableName": "usuario",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "permiso_usuario_cliente_funcion",
-          "fieldNames": [
-            "uuid_cliente"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "cliente",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
-        }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "permiso_usuario_cliente_funcion",
-          "fieldNames": [
-            "uuid_grupo_cliente"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "grupo_cliente",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
-        }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
+      },
       "endpoints": [
         {
           "tableName": "permiso_perfil_tipo_usuario",
+          "schemaName": null,
           "fieldNames": [
             "uuid_perfil"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "permiso_perfil",
+          "schemaName": null,
           "fieldNames": [
             "uuid"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     },
     {
-      "endpoints": [
-        {
-          "tableName": "permiso_usuario_cliente_perfil",
-          "fieldNames": [
-            "uuid_usuario"
-          ],
-          "relation": "0..*"
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         },
-        {
-          "tableName": "usuario",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
+      },
       "endpoints": [
         {
           "tableName": "permiso_usuario_cliente_perfil",
+          "schemaName": null,
           "fieldNames": [
             "uuid_perfil"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "permiso_perfil",
+          "schemaName": null,
           "fieldNames": [
             "uuid"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "permiso_usuario_cliente_perfil",
-          "fieldNames": [
-            "uuid_cliente"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "cliente",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
-        }
-      ],
-      "onDelete": null,
-      "onUpdate": null
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "permiso_usuario_cliente_perfil",
-          "fieldNames": [
-            "uuid_grupo_cliente"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "grupo_cliente",
-          "fieldNames": [
-            "uuid"
-          ],
-          "relation": "0..1"
-        }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     }
   ],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

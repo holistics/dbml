@@ -11,7 +11,7 @@ Enum "product status" {
 }
 
 Table "orders" {
-  "id" SERIAL [pk, increment]
+  "id" serial [pk, increment]
   "user_id" int [unique, not null]
   "status" orders_status
   "created_at" varchar
@@ -22,8 +22,8 @@ Table "order_items" {
   "order_id" int
   "product_id" int
   "quantity" int [default: 1]
-  "created_at" timestamp
-  "modified_at" time
+  "created_at" timestamptz
+  "modified_at" timetz
 }
 
 Table "products" {
@@ -32,7 +32,7 @@ Table "products" {
   "merchant_id" int [not null]
   "price" int
   "status" "product status"
-  "created_at" datetime [default: `now()`]
+  "created_at" datetime [default: `CURRENT_TIMESTAMP()`]
   "modified_at" timestamp
 
   Indexes {
@@ -72,27 +72,27 @@ Table "countries" {
 
 Table "foo" {
   "bar" "text[]"
-  "bar2" "int[1]"
-  "bar3" "int[2][3]"
+  "bar2" "int[]"
+  "bar3" "int[][]"
   "bar4" "int[]"
-  "bar5" "int[2]"
-  "bar6" "text[8]"
-  "bar7" "text[100]"
-  "bar8" "time(2)[]"
-  "bar9" "time(1)[1]"
+  "bar5" "int[]"
+  "bar6" "text[]"
+  "bar7" "text[]"
+  "bar8" "timetz(2)[]"
+  "bar9" "time(1)[]"
   "bar10" "time(1)[]"
-  "bar11" "time[5]"
-  "bar12" "timestamp(2)[10][2][5]"
-  "bar13" "character varying[]"
-  "bar14" "character varying(25)[][2][]"
-  "bar15" "character varying[76]"
+  "bar11" "time[]"
+  "bar12" "timestamp(2)[][][]"
+  "bar13" "varchar[]"
+  "bar14" "varchar(25)[][][]"
+  "bar15" "varchar[]"
 }
 
 Table "accounts" {
-  "id" integer [not null, increment]
-  "domain" "character varying(100)"
-  "name" "character varying(100)"
-  "slug" "character varying(10)"
+  "id" int [not null, increment]
+  "domain" varchar(100)
+  "name" varchar(100)
+  "slug" varchar(10)
 
   Indexes {
     id [pk, name: "accounts_pkey"]
@@ -101,16 +101,16 @@ Table "accounts" {
 
 Table "tests" {
   "id" bigint [not null]
-  "type" "character varying" [default: `'testing'::charactervarying`]
+  "type" varchar [default: `CAST('testing' AS VARCHAR)`]
 }
 
 Table "users2" {
-  "username" "character varying" [not null]
-  "hashed_password" "character varying" [not null]
-  "full_name" "character varying" [not null]
-  "email" "character varying" [not null]
-  "password_changed_at" timestamp [not null, default: `'0001-01-01 00:00:00+00'::timestampwithtimezone`]
-  "created_at" timestamp [not null, default: `now()`]
+  "username" varchar [not null]
+  "hashed_password" varchar [not null]
+  "full_name" varchar [not null]
+  "email" varchar [not null]
+  "password_changed_at" timestamptz [not null, default: `CAST('0001-01-01 00:00:00+00' AS TIMESTAMPTZ)`]
+  "created_at" timestamptz [not null, default: `CURRENT_TIMESTAMP()`]
 }
 
 Table "table1" {
@@ -138,6 +138,10 @@ Table "test_table" {
   }
 }
 
+Ref:"table1".("field", "field2") ?<? "table2".("field", "field2")
+
+Ref "test_table_fk":"test_table".("name", "id") ?<? "test_table".("linked_name", "id")
+
 Ref:"orders"."id" ?<? "order_items"."order_id"
 
 Ref:"products"."id" ?<? "order_items"."product_id"
@@ -149,7 +153,3 @@ Ref:"countries"."code" ?<? "merchants"."country_code"
 Ref:"merchants"."id" <? "products"."merchant_id"
 
 Ref:"users"."id" ?<? "merchants"."admin_id"
-
-Ref:"table1".("field", "field2") ?<? "table2".("field", "field2")
-
-Ref "test_table_fk":"test_table".("name", "id") ?<? "test_table".("linked_name", "id")

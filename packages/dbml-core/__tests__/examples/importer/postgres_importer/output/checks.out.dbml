@@ -1,14 +1,14 @@
 Table "products" {
-  "id" INT [pk]
-  "price" DECIMAL(10,2) [check: `price > 0`]
-  "quantity" INT [check: `quantity >= 0`]
-  "discount" DECIMAL(5,2) [check: `discount >= 0 AND discount <= 100`]
+  "id" int [pk]
+  "price" decimal(10,2) [check: `price > 0`]
+  "quantity" int [check: `quantity >= 0`]
+  "discount" decimal(5,2) [check: `discount >= 0 AND discount <= 100`]
 }
 
 Table "employees" {
-  "emp_id" INT [pk]
-  "age" INT
-  "salary" DECIMAL(10,2)
+  "emp_id" int [pk]
+  "age" int
+  "salary" decimal(10,2)
 
   Checks {
     `age >= 18 AND age <= 65` [name: 'chk_age']
@@ -17,16 +17,16 @@ Table "employees" {
 }
 
 Table "special_table" {
-  "id" INT [pk]
-  "price" DECIMAL [check: `"price" > 0`]
-  "status" VARCHAR(20) [check: `"status" IN ('active', 'inactive')`]
+  "id" int [pk]
+  "price" decimal [check: `"price" > 0`]
+  "status" varchar(20) [check: `"status" IN ('active', 'inactive')`]
 }
 
 Table "transactions" {
-  "txn_id" INT [pk]
-  "amount" DECIMAL(10,2)
-  "fee" DECIMAL(10,2)
-  "total" DECIMAL(10,2)
+  "txn_id" int [pk]
+  "amount" decimal(10,2)
+  "fee" decimal(10,2)
+  "total" decimal(10,2)
 
   Checks {
     `total = amount + fee`
@@ -35,26 +35,26 @@ Table "transactions" {
 }
 
 Table "contacts" {
-  "contact_id" INT [pk]
-  "email" VARCHAR(100) [check: `email LIKE '%@%'`]
-  "phone" VARCHAR(20) [check: `phone ~ '^[0-9]{3}-[0-9]{3}-[0-9]{4}$'`]
+  "contact_id" int [pk]
+  "email" varchar(100) [check: `email LIKE '%@%'`]
+  "phone" varchar(20) [check: `REGEXP_LIKE(phone, '^[0-9]{3}-[0-9]{3}-[0-9]{4}$')`]
 }
 
 Table "orders" {
-  "order_id" INT [pk]
-  "status" VARCHAR(20) [check: `status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')`]
-  "priority" INT [check: `priority IN (1, 2, 3, 4, 5)`]
+  "order_id" int [pk]
+  "status" varchar(20) [check: `status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')`]
+  "priority" int [check: `priority IN (1, 2, 3, 4, 5)`]
 }
 
 Table "users" {
-  "user_id" INT [pk]
-  "role" VARCHAR(20) [check: `role NOT IN ('banned', 'deleted', 'suspended')`]
+  "user_id" int [pk]
+  "role" varchar(20) [check: `NOT role IN ('banned', 'deleted', 'suspended')`]
 }
 
 Table "ranges" {
-  "range_id" INT [pk]
-  "min_val" INT
-  "max_val" INT
+  "range_id" int [pk]
+  "min_val" int
+  "max_val" int
 
   Checks {
     `(min_val >= 0) AND (max_val <= 100) AND (min_val < max_val)`
@@ -62,23 +62,19 @@ Table "ranges" {
 }
 
 Table "inventory" {
-  "item_id" INT [pk]
-  "stock" INT
-  "status" VARCHAR(20)
+  "item_id" int [pk]
+  "stock" int
+  "status" varchar(20)
 
   Checks {
-    `CASE
-      WHEN status = 'active' THEN stock >= 0
-      WHEN status = 'discontinued' THEN stock = 0
-      ELSE TRUE
-    END`
+    `CASE WHEN status = 'active' THEN stock >= 0 WHEN status = 'discontinued' THEN stock = 0 ELSE TRUE END`
   }
 }
 
 Table "accounts" {
-  "account_id" INT [pk]
-  "balance" DECIMAL(15,2) [check: `balance >= 0`]
-  "overdraft_limit" DECIMAL(15,2) [check: `overdraft_limit >= 0`]
+  "account_id" int [pk]
+  "balance" decimal(15,2) [check: `balance >= 0`]
+  "overdraft_limit" decimal(15,2) [check: `overdraft_limit >= 0`]
 
   Checks {
     `balance + overdraft_limit >= 0` [name: 'chk_balance_overdraft']
@@ -86,9 +82,9 @@ Table "accounts" {
 }
 
 Table "shipments" {
-  "shipment_id" INT [pk]
-  "weight" DECIMAL(10,2)
-  "cost" DECIMAL(10,2)
+  "shipment_id" int [pk]
+  "weight" decimal(10,2)
+  "cost" decimal(10,2)
 
   Checks {
     `weight > 0` [name: 'chk_weight']
@@ -97,8 +93,8 @@ Table "shipments" {
 }
 
 Table "payments" {
-  "payment_id" INT [pk]
-  "amount" DECIMAL(10,2)
+  "payment_id" int [pk]
+  "amount" decimal(10,2)
 
   Checks {
     `amount > 0`
@@ -106,10 +102,10 @@ Table "payments" {
 }
 
 Table "pricing" {
-  "price_id" INT [pk]
-  "base_price" DECIMAL(10,2)
-  "discount_pct" DECIMAL(5,2)
-  "final_price" DECIMAL(10,2)
+  "price_id" int [pk]
+  "base_price" decimal(10,2)
+  "discount_pct" decimal(5,2)
+  "final_price" decimal(10,2)
 
   Checks {
     `final_price = base_price * (1 - discount_pct / 100)`
@@ -117,19 +113,19 @@ Table "pricing" {
 }
 
 Table "settings" {
-  "setting_id" INT [pk]
-  "value" VARCHAR(100)
-  "default_value" VARCHAR(100)
+  "setting_id" int [pk]
+  "value" varchar(100)
+  "default_value" varchar(100)
 
   Checks {
-    `COALESCE(value, default_value) IS NOT NULL`
+    `NOT COALESCE(value, default_value) IS NULL`
   }
 }
 
 Table "bookings" {
-  "booking_id" INT [pk]
-  "check_in" DATE
-  "check_out" DATE
+  "booking_id" int [pk]
+  "check_in" date
+  "check_out" date
 
   Checks {
     `check_out > check_in`
@@ -138,9 +134,9 @@ Table "bookings" {
 }
 
 Table "circles" {
-  "circle_id" INT [pk]
-  "radius" DECIMAL(10,2)
-  "area" DECIMAL(15,2)
+  "circle_id" int [pk]
+  "radius" decimal(10,2)
+  "area" decimal(15,2)
 
   Checks {
     `area > 0`
@@ -149,9 +145,9 @@ Table "circles" {
 }
 
 Table "documents" {
-  "doc_id" INT [pk]
-  "title" VARCHAR(200)
-  "content" TEXT
+  "doc_id" int [pk]
+  "title" varchar(200)
+  "content" text
 
   Checks {
     `LENGTH(title) > 0`
@@ -160,9 +156,9 @@ Table "documents" {
 }
 
 Table "events" {
-  "event_id" INT [pk]
-  "status" VARCHAR(20)
-  "cancelled" BOOLEAN
+  "event_id" int [pk]
+  "status" varchar(20)
+  "cancelled" boolean
 
   Checks {
     `status = 'active' OR status = 'completed' OR cancelled = TRUE`
@@ -170,17 +166,17 @@ Table "events" {
 }
 
 Table "measurements" {
-  "measurement_id" INT [pk]
-  "value" VARCHAR(50)
+  "measurement_id" int [pk]
+  "value" varchar(50)
 
   Checks {
-    `value::NUMERIC > 0`
+    `CAST(value AS DECIMAL) > 0`
   }
 }
 
 Table "grades" {
-  "grade_id" INT [pk]
-  "score" INT
+  "grade_id" int [pk]
+  "score" int
 
   Checks {
     `score BETWEEN 0 AND 100`
@@ -188,18 +184,18 @@ Table "grades" {
 }
 
 Table "products_special" {
-  "product_id" INT [pk]
-  "code" VARCHAR(50)
+  "product_id" int [pk]
+  "code" varchar(50)
 
   Checks {
-    `code ~ '^[A-Z]{3}-[0-9]{4}$'` [name: 'chk_code_format']
+    `REGEXP_LIKE(code, '^[A-Z]{3}-[0-9]{4}$')` [name: 'chk_code_format']
   }
 }
 
 Table "features" {
-  "feature_id" INT [pk]
-  "is_enabled" BOOLEAN
-  "is_premium" BOOLEAN
+  "feature_id" int [pk]
+  "is_enabled" boolean
+  "is_premium" boolean
 
   Checks {
     `is_enabled = TRUE OR is_premium = FALSE`
@@ -207,27 +203,27 @@ Table "features" {
 }
 
 Table "tags_table" {
-  "id" INT [pk]
-  "tags" "TEXT[]"
+  "id" int [pk]
+  "tags" "text[]"
 
   Checks {
-    `array_length(tags, 1) > 0`
+    `ARRAY_LENGTH(tags) > 0`
   }
 }
 
 Table "configs" {
-  "config_id" INT [pk]
-  "settings" JSONB
+  "config_id" int [pk]
+  "settings" jsonb
 
   Checks {
-    `settings IS NOT NULL`
+    `NOT settings IS NULL`
   }
 }
 
 Table "audit_log" {
-  "log_id" INT [pk]
-  "severity" INT
-  "message" TEXT
+  "log_id" int [pk]
+  "severity" int
+  "message" text
 
   Checks {
     `severity BETWEEN 1 AND 5` [name: 'chk_severity_range']

@@ -1,15 +1,15 @@
 Table "test_datatypes" {
-  "col_number" NUMBER(10,2)
-  "col_varchar2" VARCHAR2(100)
-  "col_char" CHAR(10)
-  "col_date" DATE
-  "col_timestamp" TIMESTAMP
-  "col_clob" CLOB
+  "col_number" decimal(10,2)
+  "col_varchar2" varchar(100)
+  "col_char" char(10)
+  "col_date" date
+  "col_timestamp" timestamp
+  "col_clob" text
   "col_raw" RAW(100)
-  "col_float" FLOAT
-  "col_integer" INTEGER
-  "col_nvarchar2" NVARCHAR2(100)
-  "col_nchar" NCHAR(10)
+  "col_float" float
+  "col_integer" int
+  "col_nvarchar2" nvarchar(100)
+  "col_nchar" nchar(10)
 
   Indexes {
     col_number [pk, name: "pk_number"]
@@ -27,10 +27,10 @@ Table "test_datatypes" {
 }
 
 Table "order_details" {
-  "order_id" NUMBER(10)
-  "item_id" NUMBER(10)
-  "quantity" NUMBER(10)
-  "order_date" DATE
+  "order_id" decimal(10)
+  "item_id" decimal(10)
+  "quantity" decimal(10)
+  "order_date" date
 
   Indexes {
     (order_id, item_id) [pk, name: "pk_order_details"]
@@ -38,10 +38,10 @@ Table "order_details" {
 }
 
 Table "reports" {
-  "report_id" NUMBER(10)
-  "report_name" VARCHAR2(100)
-  "report_date" DATE
-  "status" VARCHAR2(20)
+  "report_id" decimal(10)
+  "report_name" varchar(100)
+  "report_date" date
+  "status" varchar(20)
 
   Indexes {
     report_id [pk, name: "pk_very_long_constraint_name_for_testing_parser_limits"]
@@ -49,9 +49,9 @@ Table "reports" {
 }
 
 Table "sales" {
-  "sale_id" NUMBER(10)
-  "sale_date" DATE
-  "amount" NUMBER(12,2)
+  "sale_id" decimal(10)
+  "sale_date" date
+  "amount" decimal(12,2)
 
   Indexes {
     sale_id [pk, name: "pk_sale"]
@@ -59,9 +59,9 @@ Table "sales" {
 }
 
 Table "accounts" {
-  "account_id" NUMBER(10)
-  "account_number" VARCHAR2(20)
-  "balance" NUMBER(12,2)
+  "account_id" decimal(10)
+  "account_number" varchar(20)
+  "balance" decimal(12,2)
 
   Indexes {
     account_id [pk, name: "pk_account"]

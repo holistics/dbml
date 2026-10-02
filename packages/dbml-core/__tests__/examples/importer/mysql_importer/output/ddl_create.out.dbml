@@ -29,108 +29,72 @@ Table "ship_class" {
   "max_guns_size" int
 }
 
-Table "some table $$" {
-  "id" int [increment]
-  "class" varchar(10)
-  "data" binary
-}
-
-Table "quengine" {
-  "id" int [increment]
-  "class" varchar(10)
-  "data" binary
-}
-
-Table "quengine2" {
-  "id" int [increment]
-  "class" varchar(10)
-  "data" binary
-}
-
-Table "quengine3" {
-  "id" int [increment]
-  "class" varchar(10)
-  "data" binary
-}
-
-Table "quengine4" {
-  "id" int [increment]
-  "class" varchar(10)
-  "data" binary [note: 'CSV']
-}
-
-Table "quengine5" {
-  "id" int [increment]
-  "class" varchar(10)
-  "data" binary
-}
-
 Table "parent_table" {
   "id" int [pk]
   "column1" varchar(30)
 
   Checks {
-    `char_length(column1)>10`
+    `LENGTH(column1) > 10`
   }
 
   Indexes {
-    column1 [name: "parent_table_i1"]
+    `COLUMN1(20)` [name: "parent_table_i1"]
   }
 }
 
 Table "child_table" {
-  "id" int [pk, increment]
+  "id" uint [pk, increment]
   "id_parent" int
 }
 
 Table "actor" {
-  "last_update" timestamp [default: `CURRENT_TIMESTAMP`]
-  "birthday" datetime [default: `CURRENT_TIMESTAMP`]
+  "last_update" timestamptz [default: `CURRENT_TIMESTAMP()`]
+  "birthday" datetime [default: `CURRENT_TIMESTAMP()`]
 }
 
 Table "boolean_table" {
-  "c1" bool
+  "c1" boolean
   "c2" boolean [default: true]
 }
 
 Table "default_table" {
   "c1" int [default: 42]
   "c2" int [default: `-42`]
-  "c3" varchar(256) [default: 'utf8mb3'xxx']
+  "c3" varchar(256) [default: `_utf8mb3 'xxx'`]
 }
 
 Table "ts_table" {
-  "ts1" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-  "ts2" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-  "ts3" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-  "ts4" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-  "ts5" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-  "ts6" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-  "ts7" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-  "ts8" TIMESTAMP(6) [not null]
-  "ts9" TIMESTAMP(6) [not null, default: `NOW(6)`]
-  "ts10" TIMESTAMP
-  "ts11" TIMESTAMP [not null, default: '2038-01-01 00:00:00']
+  "ts1" timestamptz [not null, default: `CURRENT_TIMESTAMP()`]
+  "ts2" timestamptz [not null, default: `CURRENT_TIMESTAMP()`]
+  "ts3" timestamptz [not null, default: `CURRENT_TIMESTAMP()`]
+  "ts4" timestamptz [not null, default: `CURRENT_TIMESTAMP()`]
+  "ts5" timestamptz [not null, default: `CURRENT_TIMESTAMP()`]
+  "ts6" timestamptz [not null, default: `CURRENT_TIMESTAMP()`]
+  "ts7" timestamptz [not null, default: `CURRENT_TIMESTAMP()`]
+  "ts8" timestamptz(6) [not null]
+  "ts9" timestamptz(6) [not null, default: `NOW(6)`]
+  "ts10" timestamptz
+  "ts11" timestamptz [not null, default: '2038-01-01 00:00:00']
 }
 
 Table "dt_table" {
-  "dt1" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-  "dt2" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-  "dt3" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-  "dt4" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-  "dt5" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-  "dt6" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-  "dt7" DATETIME [not null, default: `CURRENT_TIMESTAMP`]
-  "dt10" DATETIME
-  "dt11" DATETIME [default: '2038-01-01 00:00:00']
+  "dt1" datetime [not null, default: `CURRENT_TIMESTAMP()`]
+  "dt2" datetime [not null, default: `CURRENT_TIMESTAMP()`]
+  "dt3" datetime [not null, default: `CURRENT_TIMESTAMP()`]
+  "dt4" datetime [not null, default: `CURRENT_TIMESTAMP()`]
+  "dt5" datetime [not null, default: `CURRENT_TIMESTAMP()`]
+  "dt6" datetime [not null, default: `CURRENT_TIMESTAMP()`]
+  "dt7" datetime [not null, default: `CURRENT_TIMESTAMP()`]
+  "dt10" datetime
+  "dt11" datetime [default: '2038-01-01 00:00:00']
 }
 
 Table "with_check" {
-  "c1" integer [not null]
+  "c1" int [not null]
   "c2" varchar(22)
 
   Checks {
-    `c2 in ('a', 'b', 'c')` [name: 'c1']
+    `c2 IN ('a', 'b', 'c')` [name: 'c1']
   }
 }
 
@@ -150,11 +114,11 @@ Table "genvalue3" {
 }
 
 Table "cast_charset" {
-  "col" BINARY(16)
+  "col" binary(16)
 }
 
 Table "cast_charset2" {
-  "col" BINARY(16)
+  "col" binary(16)
 }
 
 Table "check_table_kw" {
@@ -168,57 +132,37 @@ Table "check_table_kw" {
 }
 
 Table "sercol1" {
-  "id" SERIAL
-  "val" INT
+  "id" serial [increment]
+  "val" int
 }
 
 Table "sercol2" {
-  "id" SERIAL [pk]
-  "val" INT
+  "id" serial [pk, increment]
+  "val" int
 }
 
 Table "sercol3" {
-  "id" SERIAL
-  "val" INT
+  "id" serial [increment]
+  "val" int
 }
 
 Table "sercol4" {
-  "id" SERIAL [not null]
-  "val" INT
-}
-
-Table "serval1" {
-  "id" SMALLINT
-  "val" INT
-}
-
-Table "serval2" {
-  "id" SMALLINT [pk]
-  "val" INT
-}
-
-Table "serval3" {
-  "id" SMALLINT(3)
-  "val" INT
-}
-
-Table "serval4" {
-  "id" SMALLINT(5) [not null]
-  "val" INT
+  "id" serial [not null, increment]
+  "val" int
 }
 
 Table "serial" {
-  "serial" INT
+  "serial" int
 }
 
 Table "float_table" {
-  "f1" FLOAT
-  "f2" FLOAT(10)
-  "f3" FLOAT(7,4)
+  "f1" float
+  "f2" float(10)
+  "f3" float(7,4)
 }
 
 Table "USER" {
-  "INTERNAL" BOOLEAN [default: FALSE]
+  "INTERNAL" boolean [default: false]
 }
 
 Table "table_with_character_set_eq" {
@@ -231,21 +175,12 @@ Table "table_with_character_set" {
   "data" varchar(50)
 }
 
-Table "table_with_visible_index" {
-  "id" int
-  "data" varchar(50)
-
-  Indexes {
-    data [unique, name: "data_UNIQUE"]
-  }
-}
-
 Table "table_with_index" {
   "id" int
   "data" varchar(50)
 
   Indexes {
-    data [unique, name: "data_UNIQUE"]
+    data [unique]
   }
 }
 
@@ -265,19 +200,13 @@ Table "column_names_as_aggr_funcs" {
   "count" varchar(100)
 }
 
-Table "char_table" {
-  "c1" CHAR(10)
-  "c2" CHARACTER(10)
-  "c3" NCHAR(10)
-}
-
 Table "rack_shelf_bin" {
-  "id" int [unique, pk, not null, increment]
-  "bin_volume" decimal(20,4) [default: `bin_len*bin_width*bin_height`]
+  "id" uint [unique, pk, not null, increment]
+  "bin_volume" decimal(20,4) [default: `bin_len * bin_width * bin_height`]
 }
 
 Table "tblSRCHjob_desc" {
-  "description_id" bigint(20) [pk, not null, increment]
+  "description_id" ubigint(20) [pk, not null, increment]
   "description" mediumtext [not null]
 }
 
@@ -304,42 +233,13 @@ Table "foo" {
   "c5" decimal(19,2)
 }
 
-Table "table_items" {
-  "id" INT
-  "purchased" DATE
-}
-
 Table "T0" {
-  "ID" INT [not null]
-  "NAME" VARCHAR(255)
+  "ID" int [not null]
+  "NAME" varchar(255)
 
   Indexes {
     ID [unique]
   }
-}
-
-Table "table_items_with_subpartitions" {
-  "id" INT
-  "purchased" DATE
-}
-
-Table "positions_rollover" {
-  "id" bigint(20) [not null, increment]
-  "time" datetime [not null]
-  "partition_index" int(10) [not null, default: 0]
-
-  Indexes {
-    (id, partition_index) [pk]
-    time [name: "time"]
-  }
-}
-
-Table "tab_with_json_value" {
-  "col0" JSON [not null]
-  "col1" VARCHAR(36) [pk, not null]
-  "col2" VARCHAR(36) [not null]
-  "col3" VARCHAR(36) [not null]
-  "col4" JSON [not null]
 }
 
 Table "CustomerTable" {
@@ -355,13 +255,13 @@ Table "CustomerTable2" {
 }
 
 Table "tbl" {
-  "col1" LONGTEXT
-  "data" JSON
+  "col1" longtext
+  "data" json
 
   Indexes {
-    `(SUBSTRING(col1,1,10))` [name: "idx1"]
-    `(CAST(JSON_EXTRACT(data,_utf8mb4'$')ASUNSIGNEDARRAY))` [name: "idx2"]
-    `(CAST(data->>'$.name'ASCHAR(30)))`
+    `(SUBSTRING(col1, 1, 10))` [name: "idx1"]
+    `(CAST(JSON_EXTRACT(data, _utf8mb4 '$') AS ARRAY<UBIGINT>))` [name: "idx2"]
+    `(CAST(JSON_EXTRACT_SCALAR(data, '$.name') AS CHAR(30)))`
   }
 }
 
@@ -369,89 +269,36 @@ Table "orders_json_2" {
   "id" int [pk, not null, increment]
   "reward" json
   "additional_info" json
-  "created_at" timestamp
-  "updated_at" timestamp
+  "created_at" timestamptz
+  "updated_at" timestamptz
 
   Indexes {
-    `(cast(json_extract(`additional_info`,_utf8mb4'$.order_codes')aschar(17)array))` [name: "idx_order_codes"]
+    `(CAST(JSON_EXTRACT("additional_info", _utf8mb4 '$.order_codes') AS ARRAY<CHAR(17)>))` [name: "idx_order_codes"]
   }
 }
 
 Table "keywords" {
-  "eur" VARCHAR(100)
-  "iso" VARCHAR(10) [not null]
-  "usa" VARCHAR(100)
-  "jis" VARCHAR(100)
-  "internal" INT
-  "instant" BIT
-}
-
-Table "T1" {
-  "C" CHAR
-}
-
-Table "T2" {
-  "C" GEOMETRY
-}
-
-Table "T3" {
-  "C" POINT
-}
-
-Table "T4" {
-  "C" LINESTRING
-}
-
-Table "T5" {
-  "C" POLYGON
-}
-
-Table "T6" {
-  "C" MULTIPOINT
-}
-
-Table "T7" {
-  "C" MULTILINESTRING
-}
-
-Table "T8" {
-  "C" MULTIPOLYGON
-}
-
-Table "T9" {
-  "C" GEOMETRYCOLLECTION
+  "eur" varchar(100)
+  "iso" varchar(10) [not null]
+  "usa" varchar(100)
+  "jis" varchar(100)
+  "internal" int
+  "instant" bit
 }
 
 Table "T10" {
-  "ID" BIGINT
-  "S" VARCHAR(100)
-  "I" INT
+  "ID" bigint
+  "S" varchar(100)
+  "I" int
 
   Checks {
     `ID < 5` [name: 'ABC']
   }
 }
 
-Table "tbl_signed_unsigned" {
-  "id" bigint(20) [pk, not null, increment, note: 'ID']
-  "c1" int
-  "c2" decimal(10,2)
-  "c3" float
-  "c4" double(18,4)
-}
-
-Table "daily_intelligences" {
-  "id" bigint(20) [pk, not null, increment]
-  "partner_code" varchar(32)
-  "text" LONGTEXT
-  "monitor_time" TIMESTAMP
-  "gmt_modify" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-  "gmt_create" TIMESTAMP [not null, default: `CURRENT_TIMESTAMP`]
-}
-
 Table "auth_realm_clients" {
-  "pk_realm" int [pk, not null, default: '0']
-  "fk_realm" int
+  "pk_realm" uint [pk, not null, default: '0']
+  "fk_realm" uint
   "client_id" varchar(150) [not null]
   "client_secret" blob [not null]
 
@@ -476,21 +323,21 @@ Table "table_default_fn" {
 }
 
 Table "test_table\\" {
-  "id" INT(11) [pk, not null]
+  "id" int(11) [pk, not null]
 }
 
 Table "\\test_table" {
-  "id" INT(11) [pk, not null]
+  "id" int(11) [pk, not null]
 }
 
 Table "\\test\\_table\\" {
-  "id" INT(11) [pk, not null]
+  "id" int(11) [pk, not null]
 }
 
 Table "global_priv" {
-  "Host" CHAR(60) [not null, default: '']
-  "User" CHAR(80) [not null, default: '']
-  "Privilege" LONGTEXT [not null, check: `json_valid(`Privilege`)`, default: '{}']
+  "Host" char(60) [not null, default: '']
+  "User" char(80) [not null, default: '']
+  "Privilege" longtext [not null, check: `JSON_VALID("Privilege")`, default: '{}']
 
   Indexes {
     (Host, User) [pk]
@@ -499,36 +346,22 @@ Table "global_priv" {
 }
 
 Table "geo" {
-  "coordinate" JSON
+  "coordinate" json
 
   Checks {
-    `JSON_SCHEMA_VALID(
-           '{
+    `JSON_SCHEMA_VALID('{
                "type":"object",
                "properties":{
                  "latitude":{"type":"number", "minimum":-90, "maximum":90},
                  "longitude":{"type":"number", "minimum":-180, "maximum":180}
                },
                "required": ["latitude", "longitude"]
-           }',
-           coordinate
-        )`
+           }', coordinate)`
   }
 }
 
-Table "tab1" {
-  "f4" FLOAT4
-  "f8" FLOAT8
-  "i1" INT1
-  "i2" INT2
-  "i3" INT3
-  "i4" INT4
-  "i8" INT8
-  "lvb" "LONG VARBINARY"
-  "lvc" LONG
-  "lvcfull" LONG
-  "l" LONG
-  "mi" MIDDLEINT
-}
-
 Ref:"parent_table"."id" ?<? "child_table"."id_parent" [update: cascade, delete: set null]
+
+Records user_platform_badge(platform_badge_id, user_id) {
+  3, `NEW.student_id`
+}

@@ -23,12 +23,12 @@ Table "CAST" {
 }
 
 Table "DIRECTION" {
-  "LENGTH" INT
-  "LANGUAGE" INT
+  "LENGTH" int
+  "LANGUAGE" int
 }
 
 Table "ROLES" {
-  "USERS" INT
+  "USERS" int
   "WAREHOUSES" int
   "INTEGRATIONS" int
   "DATABASES" int
@@ -36,7 +36,7 @@ Table "ROLES" {
 }
 
 Table "TABLES" {
-  "VIEWS" INT
+  "VIEWS" int
   "STAGES" int
   "STREAMS" int
   "TASKS" int

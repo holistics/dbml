@@ -1,6 +1,6 @@
 Table " aba " {
-  "birthday" "string COLLATE Latin1_General_CS_AS"
-  "date of birth" string
+  "birthday" text
+  "date of birth" text
 
   Indexes {
     date of birth [pk, name: " primary key bd "]
@@ -8,15 +8,15 @@ Table " aba " {
 }
 
 Table "silver  users" {
-  "children  " integer [check: `"children  " > 0`]
-  "date of birth" string
+  "children  " int [check: `"children  " > 0`]
+  "date of birth" text
 
   Checks {
-    `"date of birth" IS NOT NULL` [name: 'silver dob']
+    `NOT "date of birth" IS NULL` [name: 'silver dob']
   }
 
   Indexes {
-    (date of birth,  a aaa ) [name: "index on silver"]
+    (date of birth, `' a aaa '`) [name: "index on silver"]
   }
 }
 

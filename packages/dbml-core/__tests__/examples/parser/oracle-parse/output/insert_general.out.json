@@ -3,140 +3,383 @@
   "tables": [
     {
       "name": "database_products",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "product_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 37,
+              "line": 2,
+              "column": 14
+            },
+            "end": {
+              "offset": 46,
+              "line": 2,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "product_name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 76,
+              "line": 3,
+              "column": 16
+            },
+            "end": {
+              "offset": 87,
+              "line": 3,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "vendor_name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 117,
+              "line": 4,
+              "column": 15
+            },
+            "end": {
+              "offset": 127,
+              "line": 4,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "release_year",
           "type": {
-            "type_name": "NUMBER(4)"
+            "type_name": "decimal(4)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 148,
+              "line": 5,
+              "column": 16
+            },
+            "end": {
+              "offset": 159,
+              "line": 5,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "is_open_source",
           "type": {
-            "type_name": "NUMBER(1)"
+            "type_name": "decimal(1)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 176,
+              "line": 6,
+              "column": 18
+            },
+            "end": {
+              "offset": 189,
+              "line": 6,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 0,
             "type": "number"
-          },
-          "checks": []
+          }
         },
         {
           "name": "license_cost",
           "type": {
-            "type_name": "NUMBER(10, 2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 216,
+              "line": 7,
+              "column": 16
+            },
+            "end": {
+              "offset": 227,
+              "line": 7,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "market_share",
           "type": {
-            "type_name": "NUMBER(5, 2)"
+            "type_name": "decimal(5,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 248,
+              "line": 8,
+              "column": 16
+            },
+            "end": {
+              "offset": 259,
+              "line": 8,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "latest_version",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 279,
+              "line": 9,
+              "column": 18
+            },
+            "end": {
+              "offset": 292,
+              "line": 9,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "description",
           "type": {
-            "type_name": "CLOB"
+            "type_name": "text",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 312,
+              "line": 10,
+              "column": 15
+            },
+            "end": {
+              "offset": 322,
+              "line": 10,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "TIMESTAMP"
+            "type_name": "timestamp",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 334,
+              "line": 11,
+              "column": 14
+            },
+            "end": {
+              "offset": 343,
+              "line": 11,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
-            "value": "SYSTIMESTAMP",
+            "value": "SYSTIMESTAMP()",
             "type": "expression"
-          },
-          "checks": []
+          }
         },
         {
           "name": "updated_at",
           "type": {
-            "type_name": "TIMESTAMP"
+            "type_name": "timestamp",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 381,
+              "line": 12,
+              "column": 14
+            },
+            "end": {
+              "offset": 390,
+              "line": 12,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
-            "value": "SYSTIMESTAMP",
+            "value": "SYSTIMESTAMP()",
             "type": "expression"
-          },
-          "checks": []
+          }
         },
         {
           "name": "is_active",
           "type": {
-            "type_name": "NUMBER(1)"
+            "type_name": "decimal(1)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 428,
+              "line": 13,
+              "column": 13
+            },
+            "end": {
+              "offset": 436,
+              "line": 13,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 1,
             "type": "number"
-          },
-          "checks": []
+          }
         },
         {
           "name": "max_connections",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 463,
+              "line": 14,
+              "column": 19
+            },
+            "end": {
+              "offset": 477,
+              "line": 14,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "status",
           "type": {
-            "type_name": "CHAR(1)"
+            "type_name": "char(1)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 495,
+              "line": 15,
+              "column": 10
+            },
+            "end": {
+              "offset": 500,
+              "line": 15,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "A",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
+  "tablePartials": [],
   "records": [
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_id",
         "product_name",
@@ -155,57 +398,214 @@
         [
           {
             "value": "db_products_seq.NEXTVAL",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "Oracle Database",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 290,
+                "line": 8,
+                "column": 46
+              },
+              "end": {
+                "offset": 306,
+                "line": 8,
+                "column": 46
+              }
+            }
           },
           {
             "value": "Oracle Corporation",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 309,
+                "line": 8,
+                "column": 68
+              },
+              "end": {
+                "offset": 328,
+                "line": 8,
+                "column": 68
+              }
+            }
           },
           {
             "value": 1979,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 331,
+                "line": 8,
+                "column": 74
+              },
+              "end": {
+                "offset": 334,
+                "line": 8,
+                "column": 74
+              }
+            }
           },
           {
             "value": 0,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 337,
+                "line": 8,
+                "column": 77
+              },
+              "end": {
+                "offset": 337,
+                "line": 8,
+                "column": 77
+              }
+            }
           },
           {
             "value": 47500,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 345,
+                "line": 9,
+                "column": 12
+              },
+              "end": {
+                "offset": 352,
+                "line": 9,
+                "column": 12
+              }
+            }
           },
           {
             "value": 28.5,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 355,
+                "line": 9,
+                "column": 18
+              },
+              "end": {
+                "offset": 358,
+                "line": 9,
+                "column": 18
+              }
+            }
           },
           {
             "value": "21c",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 361,
+                "line": 9,
+                "column": 25
+              },
+              "end": {
+                "offset": 365,
+                "line": 9,
+                "column": 25
+              }
+            }
           },
           {
             "value": "Enterprise relational database management system",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 368,
+                "line": 9,
+                "column": 77
+              },
+              "end": {
+                "offset": 417,
+                "line": 9,
+                "column": 77
+              }
+            }
           },
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 420,
+                "line": 9,
+                "column": 80
+              },
+              "end": {
+                "offset": 420,
+                "line": 9,
+                "column": 80
+              }
+            }
           },
           {
             "value": 10000,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 423,
+                "line": 9,
+                "column": 87
+              },
+              "end": {
+                "offset": 427,
+                "line": 9,
+                "column": 87
+              }
+            }
           },
           {
             "value": "A",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 430,
+                "line": 9,
+                "column": 92
+              },
+              "end": {
+                "offset": 432,
+                "line": 9,
+                "column": 92
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name",
@@ -216,25 +616,86 @@
         [
           {
             "value": "MySQL",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 139,
+                "line": 5,
+                "column": 15
+              },
+              "end": {
+                "offset": 145,
+                "line": 5,
+                "column": 15
+              }
+            }
           },
           {
             "value": "Oracle Corporation",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 148,
+                "line": 5,
+                "column": 37
+              },
+              "end": {
+                "offset": 167,
+                "line": 5,
+                "column": 37
+              }
+            }
           },
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 170,
+                "line": 5,
+                "column": 40
+              },
+              "end": {
+                "offset": 170,
+                "line": 5,
+                "column": 40
+              }
+            }
           },
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 173,
+                "line": 5,
+                "column": 43
+              },
+              "end": {
+                "offset": 173,
+                "line": 5,
+                "column": 43
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name",
@@ -245,25 +706,86 @@
         [
           {
             "value": "PostgreSQL",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 136,
+                "line": 5,
+                "column": 20
+              },
+              "end": {
+                "offset": 147,
+                "line": 5,
+                "column": 20
+              }
+            }
           },
           {
             "value": "PostgreSQL Global Development Group",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 150,
+                "line": 5,
+                "column": 59
+              },
+              "end": {
+                "offset": 186,
+                "line": 5,
+                "column": 59
+              }
+            }
           },
           {
-            "value": null,
-            "type": "boolean"
+            "value": "null",
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": null,
-            "type": "boolean"
+            "value": "null",
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "release_year",
@@ -274,25 +796,86 @@
         [
           {
             "value": "SQLite",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 138,
+                "line": 5,
+                "column": 16
+              },
+              "end": {
+                "offset": 145,
+                "line": 5,
+                "column": 16
+              }
+            }
           },
           {
             "value": 2000,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 148,
+                "line": 5,
+                "column": 22
+              },
+              "end": {
+                "offset": 151,
+                "line": 5,
+                "column": 22
+              }
+            }
           },
           {
             "value": "15.5 + 2.3",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "1000 * 10",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name",
@@ -303,25 +886,86 @@
         [
           {
             "value": "UPPER('microsoft sql server')",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 137,
+                "line": 6,
+                "column": 9
+              },
+              "end": {
+                "offset": 141,
+                "line": 6,
+                "column": 9
+              }
+            }
           },
           {
-            "value": "'Microsoft' || ' Corporation'",
-            "type": "expression"
+            "value": "'Microsoft' || /* Oracle uses || for concatenation */ ' Corporation'",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "TRIM('  Relational database management system  ')",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "SUBSTR('2022-CU10', 1, 4)",
-            "type": "expression"
+            "value": "SUBSTRING('2022-CU10', 1, 4) /* Oracle uses SUBSTR not SUBSTRING */",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 299,
+                "line": 9,
+                "column": 10
+              },
+              "end": {
+                "offset": 304,
+                "line": 9,
+                "column": 10
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name",
@@ -332,25 +976,86 @@
         [
           {
             "value": "MariaDB",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 132,
+                "line": 5,
+                "column": 17
+              },
+              "end": {
+                "offset": 140,
+                "line": 5,
+                "column": 17
+              }
+            }
           },
           {
             "value": "MariaDB Foundation",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 143,
+                "line": 5,
+                "column": 39
+              },
+              "end": {
+                "offset": 162,
+                "line": 5,
+                "column": 39
+              }
+            }
           },
           {
-            "value": "EXTRACT(YEAR FROM SYSDATE)",
-            "type": "expression"
+            "value": "EXTRACT(YEAR FROM CURRENT_TIMESTAMP())",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "SYSTIMESTAMP",
-            "type": "expression"
+            "value": "SYSTIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name",
@@ -361,61 +1066,266 @@
         [
           {
             "value": "MongoDB",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 159,
+                "line": 6,
+                "column": 25
+              },
+              "end": {
+                "offset": 167,
+                "line": 6,
+                "column": 25
+              }
+            }
           },
           {
             "value": "MongoDB Inc.",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 170,
+                "line": 6,
+                "column": 41
+              },
+              "end": {
+                "offset": 183,
+                "line": 6,
+                "column": 41
+              }
+            }
           },
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 186,
+                "line": 6,
+                "column": 44
+              },
+              "end": {
+                "offset": 186,
+                "line": 6,
+                "column": 44
+              }
+            }
           },
           {
             "value": 8.2,
-            "type": "number"
-          }
-        ],
-        [
-          {
-            "value": "Redis",
-            "type": "string"
-          },
-          {
-            "value": "Redis Ltd.",
-            "type": "string"
-          },
-          {
-            "value": 1,
-            "type": "number"
-          },
-          {
-            "value": 6.7,
-            "type": "number"
-          }
-        ],
-        [
-          {
-            "value": "Cassandra",
-            "type": "string"
-          },
-          {
-            "value": "Apache Software Foundation",
-            "type": "string"
-          },
-          {
-            "value": 1,
-            "type": "number"
-          },
-          {
-            "value": 4.1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 189,
+                "line": 6,
+                "column": 49
+              },
+              "end": {
+                "offset": 191,
+                "line": 6,
+                "column": 49
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "is_open_source",
+        "market_share"
+      ],
+      "values": [
+        [
+          {
+            "value": "Redis",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 296,
+                "line": 8,
+                "column": 23
+              },
+              "end": {
+                "offset": 302,
+                "line": 8,
+                "column": 23
+              }
+            }
+          },
+          {
+            "value": "Redis Ltd.",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 305,
+                "line": 8,
+                "column": 37
+              },
+              "end": {
+                "offset": 316,
+                "line": 8,
+                "column": 37
+              }
+            }
+          },
+          {
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 319,
+                "line": 8,
+                "column": 40
+              },
+              "end": {
+                "offset": 319,
+                "line": 8,
+                "column": 40
+              }
+            }
+          },
+          {
+            "value": 6.7,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 322,
+                "line": 8,
+                "column": 45
+              },
+              "end": {
+                "offset": 324,
+                "line": 8,
+                "column": 45
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "database_products",
+      "schemaName": null,
+      "columns": [
+        "product_name",
+        "vendor_name",
+        "is_open_source",
+        "market_share"
+      ],
+      "values": [
+        [
+          {
+            "value": "Cassandra",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 429,
+                "line": 10,
+                "column": 27
+              },
+              "end": {
+                "offset": 439,
+                "line": 10,
+                "column": 27
+              }
+            }
+          },
+          {
+            "value": "Apache Software Foundation",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 442,
+                "line": 10,
+                "column": 57
+              },
+              "end": {
+                "offset": 469,
+                "line": 10,
+                "column": 57
+              }
+            }
+          },
+          {
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 472,
+                "line": 10,
+                "column": 60
+              },
+              "end": {
+                "offset": 472,
+                "line": 10,
+                "column": 60
+              }
+            }
+          },
+          {
+            "value": 4.1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 475,
+                "line": 10,
+                "column": 65
+              },
+              "end": {
+                "offset": 477,
+                "line": 10,
+                "column": 65
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "license_cost",
@@ -426,25 +1336,86 @@
         [
           {
             "value": "IBM Db2",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 144,
+                "line": 5,
+                "column": 17
+              },
+              "end": {
+                "offset": 152,
+                "line": 5,
+                "column": 17
+              }
+            }
           },
           {
             "value": "1500.00 * 12",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "ROUND(5.678, 1)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 169,
+                "line": 5,
+                "column": 38
+              },
+              "end": {
+                "offset": 173,
+                "line": 5,
+                "column": 38
+              }
+            }
           },
           {
             "value": "POWER(2, 14)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 186,
+                "line": 5,
+                "column": 55
+              },
+              "end": {
+                "offset": 190,
+                "line": 5,
+                "column": 55
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name",
@@ -455,25 +1426,86 @@
         [
           {
             "value": "Amazon Aurora",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 151,
+                "line": 6,
+                "column": 19
+              },
+              "end": {
+                "offset": 165,
+                "line": 6,
+                "column": 19
+              }
+            }
           },
           {
             "value": "Amazon Web Services",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 172,
+                "line": 7,
+                "column": 25
+              },
+              "end": {
+                "offset": 192,
+                "line": 7,
+                "column": 25
+              }
+            }
           },
           {
-            "value": "CASE WHEN 1=1 THEN 0.00 ELSE 1000.00 END",
-            "type": "expression"
+            "value": "CASE WHEN 1 = 1 THEN 0.00 ELSE 1000.00 END",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": 0,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 245,
+                "line": 9,
+                "column": 5
+              },
+              "end": {
+                "offset": 245,
+                "line": 9,
+                "column": 5
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name"
       ],
@@ -481,13 +1513,38 @@
         [
           {
             "value": "CockroachDB",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 120,
+                "line": 5,
+                "column": 21
+              },
+              "end": {
+                "offset": 132,
+                "line": 5,
+                "column": 21
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "license_cost",
@@ -497,21 +1554,70 @@
         [
           {
             "value": "Test Database",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 119,
+                "line": 5,
+                "column": 23
+              },
+              "end": {
+                "offset": 133,
+                "line": 5,
+                "column": 23
+              }
+            }
           },
           {
             "value": "-100.00",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": 2020,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 145,
+                "line": 5,
+                "column": 38
+              },
+              "end": {
+                "offset": 148,
+                "line": 5,
+                "column": 38
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "max_connections",
@@ -521,21 +1627,70 @@
         [
           {
             "value": "Enterprise DB",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 124,
+                "line": 5,
+                "column": 23
+              },
+              "end": {
+                "offset": 138,
+                "line": 5,
+                "column": 23
+              }
+            }
           },
           {
             "value": 999999,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 141,
+                "line": 5,
+                "column": 31
+              },
+              "end": {
+                "offset": 146,
+                "line": 5,
+                "column": 31
+              }
+            }
           },
           {
             "value": 99999.99,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 149,
+                "line": 5,
+                "column": 41
+              },
+              "end": {
+                "offset": 156,
+                "line": 5,
+                "column": 41
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "description"
@@ -544,17 +1699,54 @@
         [
           {
             "value": "Neo4j",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 128,
+                "line": 5,
+                "column": 15
+              },
+              "end": {
+                "offset": 134,
+                "line": 5,
+                "column": 15
+              }
+            }
           },
           {
             "value": "'Graph database for connected data' || CHR(10) || 'Supports Cypher query language'",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "release_year",
@@ -564,21 +1756,70 @@
         [
           {
             "value": "Firebird",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 117,
+                "line": 5,
+                "column": 18
+              },
+              "end": {
+                "offset": 126,
+                "line": 5,
+                "column": 18
+              }
+            }
           },
           {
             "value": 2000,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 129,
+                "line": 5,
+                "column": 24
+              },
+              "end": {
+                "offset": 132,
+                "line": 5,
+                "column": 24
+              }
+            }
           },
           {
-            "value": "TO_TIMESTAMP('2000-07-25 10:30:00', 'YYYY-MM-DD HH24:MI:SS')",
-            "type": "expression"
+            "value": "STR_TO_TIME('2000-07-25 10:30:00', '%Y-%m-%d %H:%M:%S')",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 135,
+                "line": 5,
+                "column": 38
+              },
+              "end": {
+                "offset": 146,
+                "line": 5,
+                "column": 38
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "is_active",
         "product_name",
@@ -589,25 +1830,86 @@
         [
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 159,
+                "line": 5,
+                "column": 9
+              },
+              "end": {
+                "offset": 159,
+                "line": 5,
+                "column": 9
+              }
+            }
           },
           {
             "value": "TimescaleDB",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 162,
+                "line": 5,
+                "column": 24
+              },
+              "end": {
+                "offset": 174,
+                "line": 5,
+                "column": 24
+              }
+            }
           },
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 177,
+                "line": 5,
+                "column": 27
+              },
+              "end": {
+                "offset": 177,
+                "line": 5,
+                "column": 27
+              }
+            }
           },
           {
             "value": "Timescale Inc.",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 180,
+                "line": 5,
+                "column": 45
+              },
+              "end": {
+                "offset": 195,
+                "line": 5,
+                "column": 45
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "license_cost",
@@ -618,25 +1920,86 @@
         [
           {
             "value": "MemSQL",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 131,
+                "line": 5,
+                "column": 16
+              },
+              "end": {
+                "offset": 138,
+                "line": 5,
+                "column": 16
+              }
+            }
           },
           {
             "value": 0,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 141,
+                "line": 5,
+                "column": 22
+              },
+              "end": {
+                "offset": 144,
+                "line": 5,
+                "column": 22
+              }
+            }
           },
           {
             "value": 0,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 147,
+                "line": 5,
+                "column": 27
+              },
+              "end": {
+                "offset": 149,
+                "line": 5,
+                "column": 27
+              }
+            }
           },
           {
             "value": 0,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 152,
+                "line": 5,
+                "column": 30
+              },
+              "end": {
+                "offset": 152,
+                "line": 5,
+                "column": 30
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "release_year",
@@ -647,25 +2010,86 @@
         [
           {
             "value": "InfluxDB",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 150,
+                "line": 5,
+                "column": 18
+              },
+              "end": {
+                "offset": 159,
+                "line": 5,
+                "column": 18
+              }
+            }
           },
           {
-            "value": "EXTRACT(YEAR FROM SYSDATE)",
-            "type": "expression"
+            "value": "EXTRACT(YEAR FROM CURRENT_TIMESTAMP())",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "'v' || '2.7'",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "SYSDATE",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name",
@@ -675,21 +2099,70 @@
         [
           {
             "value": "Vertica",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 136,
+                "line": 5,
+                "column": 17
+              },
+              "end": {
+                "offset": 144,
+                "line": 5,
+                "column": 17
+              }
+            }
           },
           {
             "value": "Micro Focus",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 147,
+                "line": 5,
+                "column": 32
+              },
+              "end": {
+                "offset": 159,
+                "line": 5,
+                "column": 32
+              }
+            }
           },
           {
-            "value": "NVL(NULL, 5000.00)",
-            "type": "expression"
+            "value": "COALESCE(NULL, 5000.00)",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 162,
+                "line": 5,
+                "column": 37
+              },
+              "end": {
+                "offset": 164,
+                "line": 5,
+                "column": 37
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "is_open_source",
@@ -699,21 +2172,70 @@
         [
           {
             "value": "Greenplum",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 114,
+                "line": 5,
+                "column": 19
+              },
+              "end": {
+                "offset": 124,
+                "line": 5,
+                "column": 19
+              }
+            }
           },
           {
             "value": "DECODE('yes', 'yes', 1, 'no', 0, 0)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "A",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 164,
+                "line": 5,
+                "column": 61
+              },
+              "end": {
+                "offset": 166,
+                "line": 5,
+                "column": 61
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "max_connections",
@@ -723,21 +2245,70 @@
         [
           {
             "value": "SAP HANA",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 120,
+                "line": 5,
+                "column": 18
+              },
+              "end": {
+                "offset": 129,
+                "line": 5,
+                "column": 18
+              }
+            }
           },
           {
             "value": "LENGTH('Maximum')",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 132,
+                "line": 5,
+                "column": 26
+              },
+              "end": {
+                "offset": 137,
+                "line": 5,
+                "column": 26
+              }
+            }
           },
           {
             "value": "SAP SE",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 151,
+                "line": 5,
+                "column": 47
+              },
+              "end": {
+                "offset": 158,
+                "line": 5,
+                "column": 47
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name"
@@ -746,17 +2317,54 @@
         [
           {
             "value": "INITCAP('clickhouse')",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "INITCAP('clickhouse inc')",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "license_cost",
@@ -766,21 +2374,70 @@
         [
           {
             "value": "Snowflake",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 120,
+                "line": 5,
+                "column": 19
+              },
+              "end": {
+                "offset": 130,
+                "line": 5,
+                "column": 19
+              }
+            }
           },
           {
             "value": "COALESCE(NULL, NULL, 2500.00)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 133,
+                "line": 5,
+                "column": 29
+              },
+              "end": {
+                "offset": 140,
+                "line": 5,
+                "column": 29
+              }
+            }
           },
           {
             "value": 3.5,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 164,
+                "line": 5,
+                "column": 55
+              },
+              "end": {
+                "offset": 166,
+                "line": 5,
+                "column": 55
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "max_connections",
@@ -790,21 +2447,70 @@
         [
           {
             "value": "Teradata",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 130,
+                "line": 5,
+                "column": 18
+              },
+              "end": {
+                "offset": 139,
+                "line": 5,
+                "column": 18
+              }
+            }
           },
           {
             "value": "GREATEST(1000, 5000, 3000)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 142,
+                "line": 5,
+                "column": 28
+              },
+              "end": {
+                "offset": 149,
+                "line": 5,
+                "column": 28
+              }
+            }
           },
           {
             "value": "LEAST(10.5, 8.2, 15.7)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 170,
+                "line": 5,
+                "column": 53
+              },
+              "end": {
+                "offset": 174,
+                "line": 5,
+                "column": 53
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "max_connections",
@@ -814,21 +2520,70 @@
         [
           {
             "value": "Informix",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 118,
+                "line": 5,
+                "column": 18
+              },
+              "end": {
+                "offset": 127,
+                "line": 5,
+                "column": 18
+              }
+            }
           },
           {
-            "value": "MOD(10050, 1000)",
-            "type": "expression"
+            "value": "10050 % 1000",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 130,
+                "line": 5,
+                "column": 23
+              },
+              "end": {
+                "offset": 132,
+                "line": 5,
+                "column": 23
+              }
+            }
           },
           {
-            "value": "1980 + MOD(45, 20)",
-            "type": "expression"
+            "value": "1980 + 45 % 20",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_id",
         "product_name",
@@ -838,21 +2593,70 @@
         [
           {
             "value": "db_products_seq.NEXTVAL",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "DynamoDB",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 145,
+                "line": 5,
+                "column": 43
+              },
+              "end": {
+                "offset": 154,
+                "line": 5,
+                "column": 43
+              }
+            }
           },
           {
             "value": "Amazon Web Services",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 157,
+                "line": 5,
+                "column": 66
+              },
+              "end": {
+                "offset": 177,
+                "line": 5,
+                "column": 66
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "latest_version"
@@ -861,17 +2665,54 @@
         [
           {
             "value": "SingleStore",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 110,
+                "line": 5,
+                "column": 21
+              },
+              "end": {
+                "offset": 122,
+                "line": 5,
+                "column": 21
+              }
+            }
           },
           {
             "value": "LPAD('8', 3, '0') || '.' || RPAD('5', 2, '0')",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "description"
@@ -880,17 +2721,54 @@
         [
           {
             "value": "Azure SQL",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 104,
+                "line": 5,
+                "column": 19
+              },
+              "end": {
+                "offset": 114,
+                "line": 5,
+                "column": 19
+              }
+            }
           },
           {
             "value": "REPLACE('Microsoft cloud database service', 'cloud', 'managed cloud')",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 117,
+                "line": 5,
+                "column": 28
+              },
+              "end": {
+                "offset": 123,
+                "line": 5,
+                "column": 28
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "license_cost",
@@ -900,21 +2778,70 @@
         [
           {
             "value": "Db2 Warehouse",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 123,
+                "line": 5,
+                "column": 23
+              },
+              "end": {
+                "offset": 137,
+                "line": 5,
+                "column": 23
+              }
+            }
           },
           {
             "value": "ABS(-15000)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 140,
+                "line": 5,
+                "column": 28
+              },
+              "end": {
+                "offset": 142,
+                "line": 5,
+                "column": 28
+              }
+            }
           },
           {
             "value": "ABS(-4.5)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 153,
+                "line": 5,
+                "column": 41
+              },
+              "end": {
+                "offset": 155,
+                "line": 5,
+                "column": 41
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "market_share",
@@ -924,21 +2851,70 @@
         [
           {
             "value": "Actian Ingres",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 117,
+                "line": 5,
+                "column": 23
+              },
+              "end": {
+                "offset": 131,
+                "line": 5,
+                "column": 23
+              }
+            }
           },
           {
             "value": "TRUNC(7.89456, 2)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 134,
+                "line": 5,
+                "column": 30
+              },
+              "end": {
+                "offset": 138,
+                "line": 5,
+                "column": 30
+              }
+            }
           },
           {
             "value": "TRUNC(12345.6789, 2)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 153,
+                "line": 5,
+                "column": 49
+              },
+              "end": {
+                "offset": 157,
+                "line": 5,
+                "column": 49
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "database_products",
+      "schemaName": null,
       "columns": [
         "product_name",
         "vendor_name",
@@ -948,23 +2924,91 @@
       "values": [
         [
           {
-            "value": "UPPER(SUBSTR('rockset database', 1, 7))",
-            "type": "expression"
+            "value": "UPPER(SUBSTRING('rockset database', 1, 7))",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 153,
+                "line": 6,
+                "column": 9
+              },
+              "end": {
+                "offset": 157,
+                "line": 6,
+                "column": 9
+              }
+            }
           },
           {
             "value": "INITCAP(TRIM('  rockset inc  '))",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "'v' || TO_CHAR(ROUND(2.75, 1))",
-            "type": "expression"
+            "value": "'v' || CAST(ROUND(2.75, 1) AS TEXT)",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "TO_NUMBER(TO_CHAR(SYSDATE, 'YYYY')) - 5",
-            "type": "expression"
+            "value": "CAST(TIME_TO_STR(CURRENT_TIMESTAMP(), '%Y') AS DOUBLE) - 5",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
-  ]
+  ],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }
