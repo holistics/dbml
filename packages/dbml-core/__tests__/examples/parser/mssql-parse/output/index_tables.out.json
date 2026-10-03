@@ -3,121 +3,395 @@
   "tables": [
     {
       "name": "users",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 6
+            },
+            "end": {
+              "offset": 28,
+              "line": 2,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         },
         {
           "name": "full_name",
           "type": {
             "type_name": "nvarchar(255)",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 37,
+              "line": 3,
+              "column": 13
+            },
+            "end": {
+              "offset": 47,
+              "line": 3,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         },
         {
           "name": "email",
           "type": {
             "type_name": "nvarchar(255)",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 66,
+              "line": 4,
+              "column": 9
+            },
+            "end": {
+              "offset": 72,
+              "line": 4,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "unique": true
         },
         {
           "name": "gender",
           "type": {
             "type_name": "nvarchar(255)",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 98,
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "offset": 105,
+              "line": 5,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         },
         {
           "name": "date_of_birth",
           "type": {
             "type_name": "nvarchar(255)",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 124,
+              "line": 6,
+              "column": 17
+            },
+            "end": {
+              "offset": 138,
+              "line": 6,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "nvarchar(255)",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 157,
+              "line": 7,
+              "column": 14
+            },
+            "end": {
+              "offset": 168,
+              "line": 7,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         },
         {
           "name": "country_code",
           "type": {
             "type_name": "int",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 187,
+              "line": 8,
+              "column": 16
+            },
+            "end": {
+              "offset": 200,
+              "line": 8,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         },
         {
           "name": "active",
           "type": {
             "type_name": "boolean",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 209,
+              "line": 9,
+              "column": 10
+            },
+            "end": {
+              "offset": 216,
+              "line": 9,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "pk": true,
           "columns": [
             {
+              "type": "column",
               "value": "id",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             },
             {
+              "type": "column",
               "value": "full_name",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
           "name": "users_index_0",
           "unique": true,
+          "token": {
+            "start": {
+              "offset": 22,
+              "line": 3,
+              "column": 35
+            },
+            "end": {
+              "offset": 36,
+              "line": 3,
+              "column": 35
+            }
+          },
           "columns": [
             {
+              "type": "column",
               "value": "id",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
           "name": "User Name",
           "unique": false,
+          "token": {
+            "start": {
+              "offset": 15,
+              "line": 3,
+              "column": 24
+            },
+            "end": {
+              "offset": 25,
+              "line": 3,
+              "column": 24
+            }
+          },
           "columns": [
             {
+              "type": "column",
               "value": "full_name",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
           "name": "users_index_2",
           "unique": false,
+          "token": {
+            "start": {
+              "offset": 15,
+              "line": 3,
+              "column": 28
+            },
+            "end": {
+              "offset": 29,
+              "line": 3,
+              "column": 28
+            }
+          },
           "columns": [
             {
+              "type": "column",
               "value": "email",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             },
             {
+              "type": "column",
               "value": "created_at",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

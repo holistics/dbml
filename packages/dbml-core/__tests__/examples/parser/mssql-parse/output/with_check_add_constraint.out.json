@@ -3,118 +3,346 @@
   "tables": [
     {
       "name": "users",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 6
+            },
+            "end": {
+              "offset": 28,
+              "line": 2,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true
         },
         {
           "name": "name",
           "type": {
             "type_name": "varchar(255)",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 49,
+              "line": 3,
+              "column": 8
+            },
+            "end": {
+              "offset": 54,
+              "line": 3,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "orders",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 28,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 31,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true
         },
         {
           "name": "user_id",
           "type": {
             "type_name": "int",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 52,
+              "line": 5,
+              "column": 11
+            },
+            "end": {
+              "offset": 60,
+              "line": 5,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "audit_logs",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 32,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 35,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true
         },
         {
           "name": "order_id",
           "type": {
             "type_name": "int",
-            "schemaName": null
-          }
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 56,
+              "line": 5,
+              "column": 12
+            },
+            "end": {
+              "offset": 65,
+              "line": 5,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [
     {
+      "schemaName": null,
       "name": "FK_orders_users",
+      "onDelete": "CASCADE",
+      "onUpdate": "SET NULL",
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "endpoints": [
         {
           "tableName": "orders",
+          "schemaName": null,
           "fieldNames": [
             "user_id"
           ],
-          "relation": "*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "users",
+          "schemaName": null,
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": "CASCADE",
-      "onUpdate": "SET NULL"
+      ]
     },
     {
+      "schemaName": null,
       "name": "FK_audit_logs_orders",
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "endpoints": [
         {
           "tableName": "audit_logs",
+          "schemaName": null,
           "fieldNames": [
             "order_id"
           ],
-          "relation": "*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "orders",
+          "schemaName": null,
           "fieldNames": [
             "id"
           ],
-          "relation": "1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
-      ],
-      "onDelete": null,
-      "onUpdate": null
+      ]
     }
   ],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

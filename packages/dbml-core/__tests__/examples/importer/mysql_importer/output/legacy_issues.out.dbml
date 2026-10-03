@@ -1,15 +1,15 @@
 Table "pulse_aggregates" {
-  "bucket" int(10) [not null]
-  "period" mediumint(8) [not null]
+  "bucket" uint(10) [not null]
+  "period" umediumint(8) [not null]
   "type" varchar(255) [not null]
   "key" text [not null]
   "key_hash" binary(16)
   "aggregate" varchar(255) [not null]
   "value" decimal(20,2) [not null]
-  "count" int(10)
+  "count" uint(10)
 
   Indexes {
-    (bucket, period, type, aggregate, key_hash) [unique, name: "pulse_aggregates_bucket_period_type_aggregate_key_hash_unique"]
+    (bucket, period, type, aggregate, key_hash) [unique]
     (period, bucket) [name: "pulse_aggregates_period_bucket_index"]
     type [name: "pulse_aggregates_type_index"]
     (period, type, aggregate, bucket) [name: "pulse_aggregates_period_type_aggregate_bucket_index"]
@@ -17,7 +17,7 @@ Table "pulse_aggregates" {
 }
 
 Table "users" {
-  "id" serial [pk]
+  "id" serial [pk, increment]
   "email" varchar(255) [unique, not null]
   "first_name" varchar(255) [not null]
   "last_name" varchar(255) [not null]
@@ -30,14 +30,14 @@ Table "users" {
 }
 
 Table "user_roles" {
-  "id" serial [pk]
+  "id" serial [pk, increment]
   "role_name" varchar(255) [unique, not null]
   "description" varchar(255)
 }
 
 Table "user_role_links" {
-  "user_id" bigint [not null]
-  "role_id" bigint [not null]
+  "user_id" ubigint [not null]
+  "role_id" ubigint [not null]
 
   Indexes {
     (user_id, role_id) [pk]
@@ -51,10 +51,6 @@ Table "table1" {
   Indexes {
     name
   }
-}
-
-Table "a" {
-  "id" varchar(22)
 }
 
 Table "example" {

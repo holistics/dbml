@@ -1,62 +1,62 @@
 Table "customers" {
-  "cust_id" NUMBER(10) [default: 1]
-  "cust_name" VARCHAR2(100)
-  "email" VARCHAR2(100) [default: 'email@example.com']
-  "phone" VARCHAR2(20)
-  "address" VARCHAR2(200)
-  "status" VARCHAR2(20) [default: 'churned']
-  "reg_date" DATE [default: `SYSDATE`]
-  "last_login" TIMESTAMP
+  "cust_id" decimal(10)
+  "cust_name" varchar(100)
+  "email" varchar(100)
+  "phone" varchar(20) [default: '0123456789']
+  "address" varchar(200)
+  "status" varchar(20) [default: 'active']
+  "reg_date" date
+  "last_login" timestamp
 }
 
 Table "inventory" {
-  "item_id" NUMBER(10)
-  "item_name" VARCHAR2(200) [default: 'Unknown']
-  "price" NUMBER(10,2) [default: 0.99]
-  "category" VARCHAR2(50) [default: 'Misc']
-  "sku" VARCHAR2(50)
-  "weight" NUMBER(8,2)
-  "stock_level" NUMBER(10)
-  "reorder_level" NUMBER(10)
+  "item_id" decimal(10)
+  "item_name" varchar(200)
+  "price" decimal(10,2)
+  "category" varchar(50)
+  "sku" varchar(50)
+  "weight" decimal(8,2)
+  "stock_level" decimal(10)
+  "reorder_level" decimal(10)
 }
 
 Table "shipments" {
-  "ship_id" NUMBER(10)
-  "customer_id" NUMBER(10) [default: 1]
-  "ship_date" DATE [default: `SYSDATE`]
-  "total_amount" NUMBER(12,2)
-  "tracking_number" VARCHAR2(50) [default: `SYS_GUID()`]
-  "carrier" VARCHAR2(100)
-  "priority" NUMBER(2)
-  "notes" VARCHAR2(4000) [default: 'This is a very long default value for testing purposes, exceeding typical lengths to check parser limits and storage implications in Oracle SQL']
+  "ship_id" decimal(10)
+  "customer_id" decimal(10)
+  "ship_date" date
+  "total_amount" decimal(12,2)
+  "tracking_number" varchar(50)
+  "carrier" varchar(100)
+  "priority" decimal(2)
+  "notes" varchar(4000)
 }
 
 Table "departments" {
-  "dept_id" NUMBER(10) [default: `test_seq.NEXTVAL`]
-  "dept_name" VARCHAR2(100)
-  "manager_id" NUMBER(10)
-  "budget" NUMBER(12,2) [default: 10000]
-  "location" VARCHAR2(50) [default: `UPPER(USER) || '_DEPT'`]
-  "established_date" DATE [default: `SYSDATE`]
+  "dept_id" decimal(10)
+  "dept_name" varchar(100)
+  "manager_id" decimal(10)
+  "budget" decimal(12,2)
+  "location" varchar(50)
+  "established_date" date
 }
 
 Table "suppliers" {
-  "supp_id" NUMBER(10)
-  "supp_name" VARCHAR2(100) [default: 'Anonymous']
-  "contact" VARCHAR2(100) [default: 'N/A']
-  "ssn" VARCHAR2(11)
-  "badge_number" VARCHAR2(10)
-  "credit_limit" NUMBER(10,2) [default: `5000 + 1000`]
+  "supp_id" decimal(10)
+  "supp_name" varchar(100)
+  "contact" varchar(100)
+  "ssn" varchar(11)
+  "badge_number" varchar(10)
+  "credit_limit" decimal(10,2)
 }
 
 Table "test_defaults" {
-  "col1" NUMBER
-  "col2" VARCHAR2(50)
-  "col3" DATE
-  "col4" TIMESTAMP
-  "col5" CLOB
+  "col1" decimal
+  "col2" varchar(50)
+  "col3" date
+  "col4" timestamp
+  "col5" text
   "col6" RAW(100)
-  "col7" FLOAT
-  "col8" INTEGER
-  "col9" NVARCHAR2(100)
+  "col7" float
+  "col8" int
+  "col9" nvarchar(100)
 }

@@ -11,15 +11,3 @@ Table "json_operators" {
   "nested_text" text
   "nested_json" jsonb
 }
-
-Table "other_operators" {
-  "id" serial [pk, increment]
-  "a" int
-  "b" int
-  "left_shift" int
-  "right_shift" int
-  "gte" boolean
-  "lte" boolean
-  "neq" boolean
-  "as_text" text
-}

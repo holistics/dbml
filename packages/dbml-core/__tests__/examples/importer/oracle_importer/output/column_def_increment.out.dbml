@@ -1,76 +1,76 @@
 Table "customers" {
-  "cust_id" NUMBER [increment]
-  "cust_name" VARCHAR2(100) [default: 'Unknown']
-  "email" VARCHAR2(100) [default: 'noemail@example.com']
-  "phone" VARCHAR2(20) [default: 'N/A']
+  "cust_id" decimal [increment]
+  "cust_name" varchar(100) [default: 'Unknown']
+  "email" varchar(100) [default: 'noemail@example.com']
+  "phone" varchar(20) [default: 'N/A']
 }
 
 Table "inventory" {
-  "item_id" NUMBER [increment]
-  "item_name" VARCHAR2(200) [default: 'Default Item']
-  "price" NUMBER(10,2) [default: 0]
-  "category" VARCHAR2(50) [default: 'Misc']
+  "item_id" decimal [increment]
+  "item_name" varchar(200) [default: 'Default Item']
+  "price" decimal(10,2) [default: 0]
+  "category" varchar(50) [default: 'Misc']
 }
 
 Table "shipments" {
-  "ship_id" NUMBER [increment]
-  "customer_id" NUMBER(10) [default: 1]
-  "ship_date" DATE [default: `SYSDATE`]
-  "total_amount" NUMBER(12,2) [default: 0]
+  "ship_id" decimal [increment]
+  "customer_id" decimal(10) [default: 1]
+  "ship_date" date [default: `CURRENT_TIMESTAMP()`]
+  "total_amount" decimal(12,2) [default: 0]
 }
 
 Table "departments" {
-  "dept_id" NUMBER [increment]
-  "dept_name" VARCHAR2(100) [default: 'General']
-  "manager_id" NUMBER(10) [default: 0]
-  "budget" NUMBER(12,2) [default: 10000]
+  "dept_id" decimal [increment]
+  "dept_name" varchar(100) [default: 'General']
+  "manager_id" decimal(10) [default: 0]
+  "budget" decimal(12,2) [default: 10000]
 }
 
 Table "suppliers" {
-  "supp_id" NUMBER [increment]
-  "supp_name" VARCHAR2(100) [default: 'Anonymous']
-  "contact" VARCHAR2(100) [default: 'Contact']
-  "credit_limit" NUMBER(10,2) [default: 5000]
+  "supp_id" decimal [increment]
+  "supp_name" varchar(100) [default: 'Anonymous']
+  "contact" varchar(100) [default: 'Contact']
+  "credit_limit" decimal(10,2) [default: 5000]
 }
 
 Table "test_datatypes" {
-  "col_number" NUMBER [increment]
-  "col_varchar2" VARCHAR2(100) [default: 'Default Text']
-  "col_char" CHAR(10) [default: 'DEFAULT   ']
-  "col_date" DATE [default: `SYSDATE`]
+  "col_number" decimal [increment]
+  "col_varchar2" varchar(100) [default: 'Default Text']
+  "col_char" char(10) [default: 'DEFAULT   ']
+  "col_date" date [default: `CURRENT_TIMESTAMP()`]
 }
 
 Table "test_basic" {
-  "id" NUMBER [increment]
-  "value" NUMBER(10) [default: 100]
+  "id" decimal [increment]
+  "value" decimal(10) [default: 100]
 }
 
 Table "test_status" {
-  "status_id" NUMBER [increment]
-  "status" VARCHAR2(20) [default: 'OPEN']
+  "status_id" decimal [increment]
+  "status" varchar(20) [default: 'OPEN']
 }
 
 Table "test_not_null" {
-  "record_id" NUMBER [not null, increment]
-  "description" VARCHAR2(200) [not null, default: 'No description']
+  "record_id" decimal [not null, increment]
+  "description" varchar(200) [not null, default: 'No description']
 }
 
 Table "test_start_with" {
-  "order_id" NUMBER [increment]
-  "order_code" VARCHAR2(20) [default: 'ORD000']
+  "order_id" decimal [increment]
+  "order_code" varchar(20) [default: 'ORD000']
 }
 
 Table "test_increment" {
-  "ticket_id" NUMBER [increment]
-  "ticket_type" VARCHAR2(20) [default: 'STANDARD']
+  "ticket_id" decimal [increment]
+  "ticket_type" varchar(20) [default: 'STANDARD']
 }
 
 Table "test_maxvalue" {
-  "ref_id" NUMBER [increment]
-  "ref_name" VARCHAR2(100) [default: 'Reference']
+  "ref_id" decimal [increment]
+  "ref_name" varchar(100) [default: 'Reference']
 }
 
 Table "test_minvalue" {
-  "batch_id" NUMBER [increment]
-  "batch_name" VARCHAR2(50) [default: 'Batch']
+  "batch_id" decimal [increment]
+  "batch_name" varchar(50) [default: 'Batch']
 }

@@ -2,12 +2,8 @@ import {
   Compiler, DEFAULT_ENTRY, Filepath, MemoryProjectLayout,
 } from '@dbml/parse';
 import Database from '../model_structure/database';
-import { parse } from './ANTLR/ASTGeneration';
-import dbmlParser from './deprecated/dbmlParser.cjs';
-import mssqlParser from './deprecated/mssqlParser.cjs';
-import mysqlParser from './deprecated/mysqlParser.cjs';
-import postgresParser from './deprecated/postgresParser.cjs';
-import schemarbParser from './deprecated/schemarbParser.cjs';
+import { parse } from './sql';
+import * as schemarbParser from './schemarb/parser.js';
 import { CompilerError } from './error';
 
 class Parser {
@@ -26,22 +22,8 @@ class Parser {
     return parse(str, 'mysql');
   }
 
-  /**
-   * @deprecated Use the `parseMySQLToJSONv2` method instead
-   */
-  static parseMySQLToJSON (str) {
-    return mysqlParser.parse(str);
-  }
-
   static parsePostgresToJSONv2 (str) {
     return parse(str, 'postgres');
-  }
-
-  /**
-   * @deprecated Use the `parsePostgresToJSONv2` method instead
-   */
-  static parsePostgresToJSON (str) {
-    return postgresParser.parse(str);
   }
 
   static parseDBMLToJSONv2 (str) {
@@ -55,22 +37,8 @@ class Parser {
     return compiler.parse.rawDb(DEFAULT_ENTRY);
   }
 
-  /**
-   * @deprecated Use the `parseDBMLToJSONv2` method instead
-   */
-  static parseDBMLToJSON (str) {
-    return dbmlParser.parse(str);
-  }
-
   static parseSchemaRbToJSON (str) {
     return schemarbParser.parse(str);
-  }
-
-  /**
-   * @deprecated Use the `parseMSSQLToJSONv2` method instead
-   */
-  static parseMSSQLToJSON (str) {
-    return mssqlParser.parseWithPegError(str);
   }
 
   static parseMSSQLToJSONv2 (str) {
@@ -131,11 +99,6 @@ class Parser {
           overrideCardinality = true;
           break;
 
-        case 'mysqlLegacy':
-          rawDatabase = Parser.parseMySQLToJSON(str);
-          overrideCardinality = true;
-          break;
-
         case 'postgres':
           rawDatabase = Parser.parsePostgresToJSONv2(str);
           overrideCardinality = true;
@@ -146,26 +109,12 @@ class Parser {
           overrideCardinality = true;
           break;
 
-        case 'postgresLegacy':
-          rawDatabase = Parser.parsePostgresToJSON(str);
-          overrideCardinality = true;
-          break;
-
-        case 'dbml':
-          rawDatabase = Parser.parseDBMLToJSON(str);
-          break;
-
         case 'dbmlv2':
           rawDatabase = Parser.parseDBMLToJSONv2(str);
           break;
 
         case 'schemarb':
           rawDatabase = Parser.parseSchemaRbToJSON(str);
-          overrideCardinality = true;
-          break;
-
-        case 'mssqlLegacy':
-          rawDatabase = Parser.parseMSSQLToJSON(str);
           overrideCardinality = true;
           break;
 
@@ -201,7 +150,6 @@ class Parser {
 
 export default Parser;
 
-// Convert the parser error to a format compatible with other parsers' errors
 function convertDbmlParserError (diags) {
   return diags.map((error) => ({
     message: error.diagnostic,

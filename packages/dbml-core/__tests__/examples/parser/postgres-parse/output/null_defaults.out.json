@@ -3,106 +3,252 @@
   "tables": [
     {
       "name": "test_nulls",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 70,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 71,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "nullable_varchar",
           "type": {
-            "type_name": "VARCHAR(255)",
-            "schemaName": null
+            "type_name": "varchar(255)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 4,
+              "column": 18
+            },
+            "end": {
+              "offset": 107,
+              "line": 4,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "nullable_int",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 138,
+              "line": 5,
+              "column": 14
+            },
+            "end": {
+              "offset": 149,
+              "line": 5,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "nullable_text",
           "type": {
-            "type_name": "TEXT",
-            "schemaName": null
+            "type_name": "text",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 171,
+              "line": 6,
+              "column": 15
+            },
+            "end": {
+              "offset": 183,
+              "line": 6,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "nullable_date",
           "type": {
-            "type_name": "DATE",
-            "schemaName": null
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 206,
+              "line": 7,
+              "column": 15
+            },
+            "end": {
+              "offset": 218,
+              "line": 7,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "nullable_timestamp",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamp",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 241,
+              "line": 8,
+              "column": 20
+            },
+            "end": {
+              "offset": 258,
+              "line": 8,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "not_null_with_default",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 286,
+              "line": 9,
+              "column": 23
+            },
+            "end": {
+              "offset": 306,
+              "line": 9,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "not_null": true,
           "dbdefault": {
             "value": "value",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "just_nullable",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 348,
+              "line": 10,
+              "column": 15
+            },
+            "end": {
+              "offset": 360,
+              "line": 10,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

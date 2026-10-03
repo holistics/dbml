@@ -1,19 +1,70 @@
 {
   "schemas": [],
   "tables": [],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [
     {
       "name": "bug_status",
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "values": [
         {
-          "name": "new"
+          "name": "new",
+          "token": {
+            "start": {
+              "offset": 34,
+              "line": 1,
+              "column": 39
+            },
+            "end": {
+              "offset": 38,
+              "line": 1,
+              "column": 39
+            }
+          }
         },
         {
-          "name": "open"
+          "name": "open",
+          "token": {
+            "start": {
+              "offset": 41,
+              "line": 1,
+              "column": 47
+            },
+            "end": {
+              "offset": 46,
+              "line": 1,
+              "column": 47
+            }
+          }
         },
         {
-          "name": "closed"
+          "name": "closed",
+          "token": {
+            "start": {
+              "offset": 49,
+              "line": 1,
+              "column": 57
+            },
+            "end": {
+              "offset": 56,
+              "line": 1,
+              "column": 57
+            }
+          }
         }
       ]
     }
@@ -21,5 +72,14 @@
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

@@ -3,415 +3,1206 @@
   "tables": [
     {
       "name": "Table_0",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "default value with semicolon ;",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_1",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_2",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_3",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_4",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_5",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_6",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 41,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 42,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_7",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_8",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_9",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 25,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_10",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_11",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_12",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_13",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_14",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_15",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_16",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_17",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_18",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_19",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_20",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_21",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_22",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_23",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 64,
+              "line": 8,
+              "column": 3
+            },
+            "end": {
+              "offset": 65,
+              "line": 8,
+              "column": 3
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "default value with semicolon ;",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_24",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "default value with new delimiter @@",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "Table_inf",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 28,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "there is no way out",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

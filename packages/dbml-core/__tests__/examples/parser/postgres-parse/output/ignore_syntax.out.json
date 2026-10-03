@@ -1,10 +1,113 @@
 {
   "schemas": [],
-  "tables": [],
+  "tables": [
+    {
+      "name": "films",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "title",
+          "type": {
+            "type_name": "text",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 50,
+              "line": 4,
+              "column": 29
+            },
+            "end": {
+              "offset": 54,
+              "line": 4,
+              "column": 29
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "release",
+          "type": {
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 62,
+              "line": 4,
+              "column": 43
+            },
+            "end": {
+              "offset": 68,
+              "line": 4,
+              "column": 43
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "awards",
+          "type": {
+            "type_name": "text[]",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 76,
+              "line": 4,
+              "column": 56
+            },
+            "end": {
+              "offset": 81,
+              "line": 4,
+              "column": 56
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    }
+  ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

@@ -1,9 +1,9 @@
 Table "test_table" {
-  "id" INT [pk]
-  "name" VARCHAR(100)
-  "email" VARCHAR(100)
-  "age" INT
-  "active" BOOLEAN [default: true]
+  "id" int [pk]
+  "name" varchar(100)
+  "email" varchar(100)
+  "age" int
+  "active" boolean [default: true]
 }
 
 Records test_table(id, name, email, age, active) {

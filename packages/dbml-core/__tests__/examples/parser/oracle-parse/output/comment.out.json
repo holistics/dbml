@@ -3,29 +3,95 @@
   "tables": [
     {
       "name": "customers",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 27,
+              "line": 2,
+              "column": 6
+            },
+            "end": {
+              "offset": 30,
+              "line": 2,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "note": {
-            "value": "The name of the customer."
-          },
-          "checks": []
+            "value": "The name of the customer.",
+            "token": {
+              "start": {
+                "offset": 37,
+                "line": 2,
+                "column": 63
+              },
+              "end": {
+                "offset": 63,
+                "line": 2,
+                "column": 63
+              }
+            }
+          }
         }
       ],
       "indexes": [],
-      "note": {
-        "value": "This table stores customer data."
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
       },
-      "checks": []
+      "note": {
+        "value": "This table stores customer data.",
+        "token": {
+          "start": {
+            "offset": 32,
+            "line": 3,
+            "column": 64
+          },
+          "end": {
+            "offset": 65,
+            "line": 3,
+            "column": 64
+          }
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

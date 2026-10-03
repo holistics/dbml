@@ -3,378 +3,1236 @@
   "tables": [
     {
       "name": "test_datatypes",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "col_number",
           "type": {
-            "type_name": "NUMBER(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 488,
+              "line": 10,
+              "column": 14
+            },
+            "end": {
+              "offset": 497,
+              "line": 10,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_varchar2",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 517,
+              "line": 11,
+              "column": 16
+            },
+            "end": {
+              "offset": 528,
+              "line": 11,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_char",
           "type": {
-            "type_name": "CHAR(10)"
+            "type_name": "char(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 549,
+              "line": 12,
+              "column": 12
+            },
+            "end": {
+              "offset": 556,
+              "line": 12,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_date",
           "type": {
-            "type_name": "DATE"
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 572,
+              "line": 13,
+              "column": 12
+            },
+            "end": {
+              "offset": 579,
+              "line": 13,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_timestamp",
           "type": {
-            "type_name": "TIMESTAMP"
+            "type_name": "timestamp",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 591,
+              "line": 14,
+              "column": 17
+            },
+            "end": {
+              "offset": 603,
+              "line": 14,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_clob",
           "type": {
-            "type_name": "CLOB"
+            "type_name": "text",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 620,
+              "line": 15,
+              "column": 12
+            },
+            "end": {
+              "offset": 627,
+              "line": 15,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_raw",
           "type": {
-            "type_name": "RAW(100)"
+            "type_name": "RAW(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 639,
+              "line": 16,
+              "column": 11
+            },
+            "end": {
+              "offset": 645,
+              "line": 16,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_float",
           "type": {
-            "type_name": "FLOAT"
+            "type_name": "float",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 661,
+              "line": 17,
+              "column": 13
+            },
+            "end": {
+              "offset": 669,
+              "line": 17,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_integer",
           "type": {
-            "type_name": "INTEGER"
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 682,
+              "line": 18,
+              "column": 15
+            },
+            "end": {
+              "offset": 692,
+              "line": 18,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_nvarchar2",
           "type": {
-            "type_name": "NVARCHAR2(100)"
+            "type_name": "nvarchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 707,
+              "line": 19,
+              "column": 17
+            },
+            "end": {
+              "offset": 719,
+              "line": 19,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_nchar",
           "type": {
-            "type_name": "NCHAR(10)"
+            "type_name": "nchar(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 741,
+              "line": 20,
+              "column": 13
+            },
+            "end": {
+              "offset": 749,
+              "line": 20,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_number",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_number",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 795,
+                  "line": 21,
+                  "column": 43
+                },
+                "end": {
+                  "offset": 804,
+                  "line": 21,
+                  "column": 43
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_varchar2",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_varchar2",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 843,
+                  "line": 22,
+                  "column": 47
+                },
+                "end": {
+                  "offset": 854,
+                  "line": 22,
+                  "column": 47
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_char",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_char",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 889,
+                  "line": 23,
+                  "column": 39
+                },
+                "end": {
+                  "offset": 896,
+                  "line": 23,
+                  "column": 39
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_date",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_date",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 931,
+                  "line": 24,
+                  "column": 39
+                },
+                "end": {
+                  "offset": 938,
+                  "line": 24,
+                  "column": 39
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_timestamp",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_timestamp",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 978,
+                  "line": 25,
+                  "column": 49
+                },
+                "end": {
+                  "offset": 990,
+                  "line": 25,
+                  "column": 49
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_clob",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_clob",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 1025,
+                  "line": 26,
+                  "column": 39
+                },
+                "end": {
+                  "offset": 1032,
+                  "line": 26,
+                  "column": 39
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_raw",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_raw",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 1066,
+                  "line": 27,
+                  "column": 37
+                },
+                "end": {
+                  "offset": 1072,
+                  "line": 27,
+                  "column": 37
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_float",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_float",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 1108,
+                  "line": 28,
+                  "column": 41
+                },
+                "end": {
+                  "offset": 1116,
+                  "line": 28,
+                  "column": 41
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_integer",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_integer",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 1154,
+                  "line": 29,
+                  "column": 45
+                },
+                "end": {
+                  "offset": 1164,
+                  "line": 29,
+                  "column": 45
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_nvarchar2",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_nvarchar2",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 1204,
+                  "line": 30,
+                  "column": 49
+                },
+                "end": {
+                  "offset": 1216,
+                  "line": 30,
+                  "column": 49
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_nchar",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "col_nchar",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 1252,
+                  "line": 31,
+                  "column": 41
+                },
+                "end": {
+                  "offset": 1260,
+                  "line": 31,
+                  "column": 41
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "order_details",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "order_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 210,
+              "line": 9,
+              "column": 12
+            },
+            "end": {
+              "offset": 217,
+              "line": 9,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "item_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 235,
+              "line": 10,
+              "column": 11
+            },
+            "end": {
+              "offset": 241,
+              "line": 10,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "quantity",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 259,
+              "line": 11,
+              "column": 12
+            },
+            "end": {
+              "offset": 266,
+              "line": 11,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "order_ref",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 284,
+              "line": 12,
+              "column": 13
+            },
+            "end": {
+              "offset": 292,
+              "line": 12,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_order_ref",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "order_id",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 344,
+                  "line": 13,
+                  "column": 44
+                },
+                "end": {
+                  "offset": 351,
+                  "line": 13,
+                  "column": 44
+                }
+              }
             },
             {
+              "type": "column",
               "value": "item_id",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 354,
+                  "line": 13,
+                  "column": 53
+                },
+                "end": {
+                  "offset": 360,
+                  "line": 13,
+                  "column": 53
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "reports",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "report_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 65,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 73,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "report_name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 91,
+              "line": 6,
+              "column": 15
+            },
+            "end": {
+              "offset": 101,
+              "line": 6,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "report_date",
           "type": {
-            "type_name": "DATE"
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 122,
+              "line": 7,
+              "column": 15
+            },
+            "end": {
+              "offset": 132,
+              "line": 7,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "report_code",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 144,
+              "line": 8,
+              "column": 15
+            },
+            "end": {
+              "offset": 154,
+              "line": 8,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_very_long_constraint_name_for_testing_parser_limits",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "report_code",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 248,
+                  "line": 9,
+                  "column": 89
+                },
+                "end": {
+                  "offset": 258,
+                  "line": 9,
+                  "column": 89
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "sales",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "sale_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 59,
+              "line": 5,
+              "column": 11
+            },
+            "end": {
+              "offset": 65,
+              "line": 5,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "sale_date",
           "type": {
-            "type_name": "DATE"
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 83,
+              "line": 6,
+              "column": 13
+            },
+            "end": {
+              "offset": 91,
+              "line": 6,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "sale_code",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 103,
+              "line": 7,
+              "column": 13
+            },
+            "end": {
+              "offset": 111,
+              "line": 7,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_sale_code",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "sale_code",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 163,
+                  "line": 8,
+                  "column": 45
+                },
+                "end": {
+                  "offset": 171,
+                  "line": 8,
+                  "column": 45
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "accounts",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "account_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 71,
+              "line": 5,
+              "column": 14
+            },
+            "end": {
+              "offset": 80,
+              "line": 5,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "account_number",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 98,
+              "line": 6,
+              "column": 18
+            },
+            "end": {
+              "offset": 111,
+              "line": 6,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "balance",
           "type": {
-            "type_name": "NUMBER(12,2)"
+            "type_name": "decimal(12,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 131,
+              "line": 7,
+              "column": 11
+            },
+            "end": {
+              "offset": 137,
+              "line": 7,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "uk_account_number",
           "unique": true,
           "columns": [
             {
+              "type": "column",
               "value": "account_number",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 194,
+                  "line": 8,
+                  "column": 55
+                },
+                "end": {
+                  "offset": 207,
+                  "line": 8,
+                  "column": 55
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

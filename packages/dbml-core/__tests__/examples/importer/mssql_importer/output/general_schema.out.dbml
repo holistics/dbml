@@ -1,7 +1,7 @@
 Table "orders" {
   "id" int [pk, increment]
   "user_id" int [unique, not null]
-  "status" nvarchar(255) [not null, check: `[status] IN ('created', 'running', 'done', 'failure')`]
+  "status" nvarchar(255) [not null, check: `"status" IN ('created', 'running', 'done', 'failure')`]
   "created_at" varchar(255) [note: 'When order created']
   Note: 'This is a note in table "orders"'
 }
@@ -17,8 +17,8 @@ Table "products" {
   "name" varchar(255)
   "merchant_id" int [not null]
   "price" int
-  "status" nvarchar(255) [not null, check: `[status] IN ('Out of Stock', 'In Stock')`]
-  "created_at" datetime [default: `GETDATE()`]
+  "status" nvarchar(255) [not null, check: `"status" IN ('Out of Stock', 'In Stock')`]
+  "created_at" datetime [default: `CURRENT_TIMESTAMP()`]
 
   Indexes {
     (merchant_id, status) [name: "product_status"]
@@ -50,14 +50,14 @@ Table "countries" {
   "continent_name" varchar(255)
 }
 
-Ref:"orders"."id" < "order_items"."order_id"
+Ref:"orders"."id" ?<? "order_items"."order_id"
 
-Ref:"products"."id" < "order_items"."product_id"
+Ref:"products"."id" ?<? "order_items"."product_id"
 
-Ref:"countries"."code" < "users"."country_code"
+Ref:"countries"."code" ?<? "users"."country_code"
 
-Ref:"countries"."code" < "merchants"."country_code"
+Ref:"countries"."code" ?<? "merchants"."country_code"
 
-Ref:"merchants"."id" < "products"."merchant_id"
+Ref:"merchants"."id" <? "products"."merchant_id"
 
-Ref:"users"."id" < "merchants"."admin_id"
+Ref:"users"."id" ?<? "merchants"."admin_id"

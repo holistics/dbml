@@ -3,13 +3,31 @@
   "tables": [
     {
       "name": "products",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "name",
           "type": {
             "type_name": "varchar(MAX)",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 28,
+              "line": 2,
+              "column": 8
+            },
+            "end": {
+              "offset": 33,
+              "line": 2,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Tea",
             "type": "string"
@@ -19,8 +37,24 @@
           "name": "status",
           "type": {
             "type_name": "varchar(255)",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 67,
+              "line": 3,
+              "column": 10
+            },
+            "end": {
+              "offset": 74,
+              "line": 3,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
@@ -29,19 +63,59 @@
         {
           "name": "price",
           "type": {
-            "type_name": "double precision",
-            "schemaName": null
-          }
+            "type_name": "double",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 109,
+              "line": 4,
+              "column": 9
+            },
+            "end": {
+              "offset": 115,
+              "line": 4,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

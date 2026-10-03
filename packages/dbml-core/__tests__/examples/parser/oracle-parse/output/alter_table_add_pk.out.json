@@ -3,344 +3,1031 @@
   "tables": [
     {
       "name": "customers",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "cust_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 143,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 149,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true,
+          "not_null": true
         },
         {
           "name": "cust_name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 167,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 175,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 205,
+              "line": 6,
+              "column": 9
+            },
+            "end": {
+              "offset": 209,
+              "line": 6,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "phone",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 230,
+              "line": 7,
+              "column": 9
+            },
+            "end": {
+              "offset": 234,
+              "line": 7,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "address",
           "type": {
-            "type_name": "VARCHAR2(200)"
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 254,
+              "line": 8,
+              "column": 11
+            },
+            "end": {
+              "offset": 260,
+              "line": 8,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
-      "indexes": [
-        {
-          "name": "pk_cust_id",
-          "pk": true,
-          "columns": [
-            {
-              "value": "cust_id",
-              "type": "column"
-            }
-          ]
+      "indexes": [],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         }
-      ],
-      "checks": []
+      }
     },
     {
       "name": "inventory",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "item_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 31,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 37,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true,
+          "not_null": true
         },
         {
           "name": "item_name",
           "type": {
-            "type_name": "VARCHAR2(200)"
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 55,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 63,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "price",
           "type": {
-            "type_name": "NUMBER(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 6,
+              "column": 9
+            },
+            "end": {
+              "offset": 97,
+              "line": 6,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "category",
           "type": {
-            "type_name": "VARCHAR2(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 126,
+              "line": 7,
+              "column": 12
+            },
+            "end": {
+              "offset": 133,
+              "line": 7,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "sku",
           "type": {
-            "type_name": "VARCHAR2(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 153,
+              "line": 8,
+              "column": 7
+            },
+            "end": {
+              "offset": 155,
+              "line": 8,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
-      "indexes": [
-        {
-          "pk": true,
-          "columns": [
-            {
-              "value": "item_id",
-              "type": "column"
-            }
-          ]
+      "indexes": [],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         }
-      ],
-      "checks": []
+      }
     },
     {
       "name": "shipments",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "ship_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 31,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 37,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "customer_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 55,
+              "line": 5,
+              "column": 15
+            },
+            "end": {
+              "offset": 65,
+              "line": 5,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "ship_date",
           "type": {
-            "type_name": "DATE"
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 6,
+              "column": 13
+            },
+            "end": {
+              "offset": 100,
+              "line": 6,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "total_amount",
           "type": {
-            "type_name": "NUMBER(12,2)"
+            "type_name": "decimal(12,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 7,
+              "column": 16
+            },
+            "end": {
+              "offset": 123,
+              "line": 7,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "tracking_number",
           "type": {
-            "type_name": "VARCHAR2(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 143,
+              "line": 8,
+              "column": 19
+            },
+            "end": {
+              "offset": 157,
+              "line": 8,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "datatype_tests",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "col_number",
           "type": {
-            "type_name": "NUMBER(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 36,
+              "line": 4,
+              "column": 14
+            },
+            "end": {
+              "offset": 45,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_varchar2",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 65,
+              "line": 5,
+              "column": 16
+            },
+            "end": {
+              "offset": 76,
+              "line": 5,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_char",
           "type": {
-            "type_name": "CHAR(10)"
+            "type_name": "char(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 97,
+              "line": 6,
+              "column": 12
+            },
+            "end": {
+              "offset": 104,
+              "line": 6,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_date",
           "type": {
-            "type_name": "DATE"
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 120,
+              "line": 7,
+              "column": 12
+            },
+            "end": {
+              "offset": 127,
+              "line": 7,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_timestamp",
           "type": {
-            "type_name": "TIMESTAMP"
+            "type_name": "timestamp",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 139,
+              "line": 8,
+              "column": 17
+            },
+            "end": {
+              "offset": 151,
+              "line": 8,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_clob",
           "type": {
-            "type_name": "CLOB"
+            "type_name": "text",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 168,
+              "line": 9,
+              "column": 12
+            },
+            "end": {
+              "offset": 175,
+              "line": 9,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_raw",
           "type": {
-            "type_name": "RAW(100)"
+            "type_name": "RAW(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 187,
+              "line": 10,
+              "column": 11
+            },
+            "end": {
+              "offset": 193,
+              "line": 10,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_float",
           "type": {
-            "type_name": "FLOAT"
+            "type_name": "float",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 209,
+              "line": 11,
+              "column": 13
+            },
+            "end": {
+              "offset": 217,
+              "line": 11,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_integer",
           "type": {
-            "type_name": "INTEGER"
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 230,
+              "line": 12,
+              "column": 15
+            },
+            "end": {
+              "offset": 240,
+              "line": 12,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_nvarchar2",
           "type": {
-            "type_name": "NVARCHAR2(100)"
+            "type_name": "nvarchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 255,
+              "line": 13,
+              "column": 17
+            },
+            "end": {
+              "offset": 267,
+              "line": 13,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col_nchar",
           "type": {
-            "type_name": "NCHAR(10)"
+            "type_name": "nchar(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 289,
+              "line": 14,
+              "column": 13
+            },
+            "end": {
+              "offset": 297,
+              "line": 14,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "complex_test",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 34,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 35,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "code",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
-          "unique": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 53,
+              "line": 5,
+              "column": 8
+            },
+            "end": {
+              "offset": 56,
+              "line": 5,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "unique": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 83,
+              "line": 6,
+              "column": 8
+            },
+            "end": {
+              "offset": 86,
+              "line": 6,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "parent_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 116,
+              "line": 7,
+              "column": 13
+            },
+            "end": {
+              "offset": 124,
+              "line": 7,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "status",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 142,
+              "line": 8,
+              "column": 10
+            },
+            "end": {
+              "offset": 147,
+              "line": 8,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "name": "pk_complex_composite",
           "pk": true,
           "columns": [
             {
+              "type": "column",
               "value": "id",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             },
             {
+              "type": "column",
               "value": "code",
-              "type": "column"
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "combo_test",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "col1",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 32,
+              "line": 4,
+              "column": 8
+            },
+            "end": {
+              "offset": 35,
+              "line": 4,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "col2",
           "type": {
-            "type_name": "VARCHAR2(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 53,
+              "line": 5,
+              "column": 8
+            },
+            "end": {
+              "offset": 56,
+              "line": 5,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [
     {
+      "schemaName": null,
       "name": "fk_complex_parent",
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "endpoints": [
         {
           "tableName": "complex_test",
+          "schemaName": null,
           "fieldNames": [
             "parent_id"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "complex_test",
+          "schemaName": null,
           "fieldNames": [
             "id"
           ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
       ]
     }
   ],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

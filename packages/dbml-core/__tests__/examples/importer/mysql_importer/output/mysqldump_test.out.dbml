@@ -5,7 +5,7 @@ Table "api_key_outer_auth" {
   "created_at" datetime
 
   Indexes {
-    (api_key_outer_id, flag) [type: btree, unique, name: "UQE_api_key_outer_auth_api_key_outer_auth_af"]
+    (api_key_outer_id, flag) [unique]
     id [type: btree, name: "IDX_api_key_outer_auth_id"]
     api_key_outer_id [type: btree, name: "IDX_api_key_outer_auth_api_key_outer_id"]
     flag [type: btree, name: "IDX_api_key_outer_auth_flag"]
@@ -15,8 +15,8 @@ Table "api_key_outer_auth" {
 
 Table "entity" {
   "id" bigint [pk, not null, increment, note: 'The database table row id']
-  "dateCreated" timestamp [default: `now()`, note: 'Date / time created']
-  "dateEdited" timestamp [default: `now()`, note: 'Date / time last modified']
+  "dateCreated" timestamptz [default: `NOW()`, note: 'Date / time created']
+  "dateEdited" timestamptz [default: `NOW()`, note: 'Date / time last modified']
   "createdBy" varchar(40) [not null, default: '', note: 'The person who created the record']
   "editedBy" varchar(40) [not null, default: '', note: 'The person who last modified the record']
   "constituentId" varchar(40) [not null, note: 'The globally unique identifier for this constituent']
@@ -24,9 +24,9 @@ Table "entity" {
   "ein" varchar(16) [not null]
 
   Indexes {
-    id [unique, name: "id"]
-    constituentId [unique, name: "constituentId"]
-    ein [unique, name: "ein"]
+    id [unique]
+    constituentId [unique]
+    ein [unique]
     constituentId [name: "entity_index_0"]
     ein [name: "entity_index_1"]
   }
@@ -34,8 +34,8 @@ Table "entity" {
 
 Table "entity2" {
   "id" bigint [pk, not null, increment, note: 'The database table row id']
-  "dateCreated" timestamp [default: `now()`, note: 'Date / time created']
-  "dateEdited" timestamp [default: `now()`, note: 'Date / time last modified']
+  "dateCreated" timestamptz [default: `NOW()`, note: 'Date / time created']
+  "dateEdited" timestamptz [default: `NOW()`, note: 'Date / time last modified']
   "createdBy" varchar(40) [not null, default: '', note: 'The person who created the record']
   "editedBy" varchar(40) [not null, default: '', note: 'The person who last modified the record']
   "constituentId" varchar(40) [not null, note: 'The globally unique identifier for this constituent']
@@ -43,8 +43,8 @@ Table "entity2" {
   "ein" varchar(16) [not null]
 
   Indexes {
-    id [unique, name: "id"]
-    constituentId [unique, name: "constituentId"]
-    ein [unique, name: "ein"]
+    id [unique]
+    constituentId [unique]
+    ein [unique]
   }
 }
