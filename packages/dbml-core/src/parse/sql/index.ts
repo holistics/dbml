@@ -64,15 +64,12 @@ const DIALECT_NAMES: Record<string, string> = {
 
 /**
  * MySQL client DELIMITER command changes the statement terminator used by the
- * mysql CLI before sending SQL to the server.  The server itself never sees
- * DELIMITER — it is a client-only directive.  We emulate it here so that
- * stored-procedure / trigger bodies with embedded semicolons are still split
+ * mysql CLI before sending SQL to the server.
+ * The server itself never sees DELIMITER - it is a client-only directive.
+ * We emulate it here so that stored-procedure / trigger bodies with embedded semicolons are still split
  * correctly when the caller uses a non-standard delimiter.
  *
- * Algorithm: scan line-by-line; when we see "DELIMITER <token>", update the
- * current delimiter and emit nothing for that line.  Otherwise accumulate
- * lines until the current delimiter appears at the end of a line (ignoring
- * whitespace), then emit the accumulated text as one statement.
+ * Algorithm: scan line-by-line; when we see "DELIMITER <token>", update the current delimiter and emit nothing for that line.  Otherwise accumulate lines until the current delimiter appears at the end of a line (ignoring whitespace), then emit the accumulated text as one statement.
  */
 function splitMySQLDelimitedStatements (sql: string): string[] {
   let delimiter = ';';
@@ -118,7 +115,7 @@ function splitMySQLDelimitedStatements (sql: string): string[] {
 function processMssqlExtendedProperty (
   statement: ExecuteExpr,
   tableByKey: Map<string, Table>,
-  key: (s: string | null | undefined, n: string) => string,
+  getKey: (schema: string | null | undefined, name: string) => string,
 ): void {
   const params: Record<string, string> = {};
   for (const expr of statement.args.expressions ?? []) {
@@ -137,7 +134,7 @@ function processMssqlExtendedProperty (
   if (!level1type?.toLowerCase().includes('table')) return;
 
   const schemaName = level0name?.toLowerCase() === 'dbo' ? null : (level0name ?? null);
-  const table = tableByKey.get(key(schemaName, level1name ?? ''));
+  const table = tableByKey.get(getKey(schemaName, level1name ?? ''));
   if (!table) return;
 
   const token = buildZeroToken();
@@ -172,9 +169,9 @@ export function parse (sql: string, format: string): Database {
   }
 
   const tables: Table[] = [];
-  // Refs from CREATE TABLE / inline FKs — filtered to tables present in the file.
+  // Refs from CREATE TABLE / inline FKs, filtered to tables present in the file.
   const inlineRefs: Ref[] = [];
-  // Refs from ALTER TABLE ADD CONSTRAINT FOREIGN KEY — always included.
+  // Refs from ALTER TABLE ADD CONSTRAINT FOREIGN KEY, always included.
   const alterRefs: Ref[] = [];
   const enums: Enum[] = [];
   const records: TableRecord[] = [];

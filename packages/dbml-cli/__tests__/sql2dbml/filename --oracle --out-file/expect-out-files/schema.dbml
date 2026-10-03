@@ -1,50 +1,50 @@
 Table "departments" {
-  "dept_id" NUMBER(10) [pk]
-  "dept_name" VARCHAR2(100)
-  "location_id" NUMBER(10)
-  "manager_id" NUMBER(10)
+  "dept_id" decimal(10) [pk]
+  "dept_name" varchar(100)
+  "location_id" decimal(10)
+  "manager_id" decimal(10)
 }
 
 Table "locations" {
-  "location_id" NUMBER(10) [pk]
-  "city" VARCHAR2(100)
-  "country_code" CHAR(2)
+  "location_id" decimal(10) [pk]
+  "city" varchar(100)
+  "country_code" char(2)
 }
 
 Table "countries" {
-  "country_code" CHAR(2) [pk]
-  "country_name" VARCHAR2(100)
+  "country_code" char(2) [pk]
+  "country_name" varchar(100)
 }
 
 Table "employees" {
-  "emp_id" NUMBER(10) [pk]
-  "emp_name" VARCHAR2(100)
-  "department_id" NUMBER(10)
-  "manager_id" NUMBER(10)
-  "hire_date" DATE
-  "location_id" NUMBER(10)
+  "emp_id" decimal(10) [pk]
+  "emp_name" varchar(100)
+  "department_id" decimal(10)
+  "manager_id" decimal(10)
+  "hire_date" date
+  "location_id" decimal(10)
 }
 
 Table "projects" {
-  "project_id" NUMBER(10) [pk]
-  "project_name" VARCHAR2(200)
-  "dept_id" NUMBER(10)
-  "lead_emp_id" NUMBER(10)
-  "backup_emp_id" NUMBER(10)
+  "project_id" decimal(10) [pk]
+  "project_name" varchar(200)
+  "dept_id" decimal(10)
+  "lead_emp_id" decimal(10)
+  "backup_emp_id" decimal(10)
 }
 
 Table "assignments" {
-  "assignment_id" NUMBER(10) [pk]
-  "emp_id" NUMBER(10)
-  "project_id" NUMBER(10)
-  "start_date" DATE
+  "assignment_id" decimal(10) [pk]
+  "emp_id" decimal(10)
+  "project_id" decimal(10)
+  "start_date" date
 }
 
 Table "project_tasks" {
-  "project_id" NUMBER(10)
-  "task_id" NUMBER(10)
-  "task_name" VARCHAR2(200)
-  "assigned_emp_id" NUMBER(10)
+  "project_id" decimal(10)
+  "task_id" decimal(10)
+  "task_name" varchar(200)
+  "assigned_emp_id" decimal(10)
 
   Indexes {
     (project_id, task_id) [pk]
@@ -52,10 +52,10 @@ Table "project_tasks" {
 }
 
 Table "task_hours" {
-  "hour_id" NUMBER(10) [pk]
-  "project_id" NUMBER(10)
-  "task_id" NUMBER(10)
-  "hours_worked" NUMBER(5,2)
+  "hour_id" decimal(10) [pk]
+  "project_id" decimal(10)
+  "task_id" decimal(10)
+  "hours_worked" decimal(5,2)
 }
 
 Ref "fk_emp_dept":"departments"."dept_id" ?<? "employees"."department_id"
@@ -76,8 +76,8 @@ Ref:"projects"."project_id" ?<? "assignments"."project_id"
 
 Ref "fk_task_hours_project_task":"project_tasks".("project_id", "task_id") ?<? "task_hours".("project_id", "task_id")
 
-Ref "fk_proj_lead_emp":"employees"."emp_id" ?<? "projects"."lead_emp_id"
+Ref "fk_proj_lead_emp":"employees"."emp_id" ?<? "projects"."lead_emp_id" [delete: cascade]
 
-Ref "fk_proj_backup_emp":"employees"."emp_id" ?<? "projects"."backup_emp_id"
+Ref "fk_proj_backup_emp":"employees"."emp_id" ?<? "projects"."backup_emp_id" [delete: set null]
 
-Ref "fk_task_assigned_emp":"employees"."emp_id" ?<? "project_tasks"."assigned_emp_id"
+Ref "fk_task_assigned_emp":"employees"."emp_id" ?<? "project_tasks"."assigned_emp_id" [delete: cascade]

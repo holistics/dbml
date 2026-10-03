@@ -9,14 +9,14 @@ Table "staff" {
   "active" boolean
   "user_name" varchar(255)
   "password" varchar(255)
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "store" {
   "id" int [pk]
   "manager_staff_id" int
   "address_id" int
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "payment" {
@@ -26,7 +26,7 @@ Table "payment" {
   "rental_id" int
   "amount" decimal
   "payment_date" datetime
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "rental" {
@@ -36,7 +36,7 @@ Table "rental" {
   "customer_id" int
   "return_date" datetime
   "staff_id" int
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Ref:"store"."id" ?<? "staff"."store_id"
@@ -51,14 +51,14 @@ Ref:"staff"."id" ?<? "rental"."staff_id"
 Table "country" {
   "id" int [pk]
   "country" varchar(255)
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "city" {
   "id" int [pk]
   "city" varchar(255)
   "country_id" int
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "address" {
@@ -69,7 +69,7 @@ Table "address" {
   "city_id" int
   "postal_code" varchar(255)
   "phone" varchar(255)
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "customer" {
@@ -80,8 +80,8 @@ Table "customer" {
   "email" varchar(255)
   "address_id" int
   "active" boolean
-  "create_Date" timestamp
-  "last_update" timestamp
+  "create_Date" timestamptz
+  "last_update" timestamptz
 
   Indexes {
     (id, first_name) [type: btree, name: "customer_index_0"]
@@ -96,19 +96,19 @@ Ref:"address"."id" ?<? "customer"."address_id"
 Table "category" {
   "id" int [pk]
   "name" varchar(255)
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "film_category" {
   "id" int [pk]
   "category_id" int
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "language" {
   "id" int [pk]
   "name" varchar(255)
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "film_text" {
@@ -122,7 +122,7 @@ Table "actor" {
   "id" int [pk]
   "first_name" varchar(255)
   "last_name" varchar(255)
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "film" {
@@ -138,21 +138,21 @@ Table "film" {
   "replacement_cost" decimal
   "rating" varchar(255)
   "special_feature" varchar(255)
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "film_actor" {
   "id" int [pk]
   "film_id" int
   "actor_id" int
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Table "inventory" {
   "id" int [pk]
   "film_id" int
   "store_id" int
-  "last_update" timestamp
+  "last_update" timestamptz
 }
 
 Ref:"category"."id" ?<? "film_category"."category_id"

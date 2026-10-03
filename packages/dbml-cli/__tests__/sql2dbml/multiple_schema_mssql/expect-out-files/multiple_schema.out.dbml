@@ -1,10 +1,10 @@
 Table "users" {
   "id" int [pk]
   "name" nvarchar(255)
-  "pjs" nvarchar(255) [check: `[pjs] IN ('created2', 'running2', 'done2', 'failure2')`]
-  "pjs2" nvarchar(255) [check: `[pjs2] IN ('created2', 'running2', 'done2', 'failure2')`]
-  "pg" nvarchar(255) [check: `[pg] IN ('male', 'female')`]
-  "pg2" nvarchar(255) [check: `[pg2] IN ('male2', 'female2')`]
+  "pjs" nvarchar(255) [check: `"pjs" IN ('created2', 'running2', 'done2', 'failure2')`]
+  "pjs2" nvarchar(255) [check: `"pjs2" IN ('created2', 'running2', 'done2', 'failure2')`]
+  "pg" nvarchar(255) [check: `"pg" IN ('male', 'female')`]
+  "pg2" nvarchar(255) [check: `"pg2" IN ('male2', 'female2')`]
 }
 
 Table "products" {
@@ -12,25 +12,23 @@ Table "products" {
   "name" nvarchar(255) [note: 'Product name']
 }
 
-Ref:"schemaA"."locations"."id" ?<? "schemaA"."products"."lid"
+Ref "FK_1":"schemaA"."locations"."id" ?<? "schemaA"."products"."lid2"
 
-Ref "FK_1":"schemaA"."locations"."id" < "schemaA"."products"."lid2"
+Ref:"users"."id" <? "ecommerce"."users"."id"
 
-Ref:"users"."id" < "ecommerce"."users"."id"
+Ref "name_optional":"users"."name" <? "ecommerce"."users"."id"
 
-Ref "name_optional":"users"."name" < "ecommerce"."users"."id"
+Ref:"ecommerce"."users"."id" ?<? "schemaA"."products"."name"
 
-Ref:"ecommerce"."users"."id" < "schemaA"."products"."name"
-
-Ref:"users"."id" < "schemaA"."locations"."name"
+Ref:"users"."id" ?<? "schemaA"."locations"."name"
 
 Table "ecommerce"."users" {
   "id" int [pk]
   "name" nvarchar(255)
-  "ejs" nvarchar(255) [check: `[ejs] IN ('created2', 'running2', 'done2', 'failure2')`]
-  "ejs2" nvarchar(255) [check: `[ejs2] IN ('created2', 'running2', 'done2', 'failure2')`]
-  "eg" nvarchar(255) [check: `[eg] IN ('male', 'female')`]
-  "eg2" nvarchar(255) [check: `[eg2] IN ('male2', 'female2')`]
+  "ejs" nvarchar(255) [check: `"ejs" IN ('created2', 'running2', 'done2', 'failure2')`]
+  "ejs2" nvarchar(255) [check: `"ejs2" IN ('created2', 'running2', 'done2', 'failure2')`]
+  "eg" nvarchar(255) [check: `"eg" IN ('male', 'female')`]
+  "eg2" nvarchar(255) [check: `"eg2" IN ('male2', 'female2')`]
 
   Indexes {
     (name, ejs) [name: "idx_1"]
@@ -41,7 +39,7 @@ Table "ecommerce"."users" {
 Table "schemaA"."products" {
   "id" int [pk]
   "name" nvarchar(255)
-  "created_at" varchar(255) [default: `now()`]
+  "created_at" varchar(255) [default: `NOW()`]
   "lid" int
   "lid2" int
 

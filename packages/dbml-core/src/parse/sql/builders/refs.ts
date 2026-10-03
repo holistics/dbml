@@ -18,35 +18,6 @@ export interface ColumnFkData {
   onUpdate?: string;
 }
 
-/*
- * ReferenceExprArgs.options is (Expression | string)[]. sqlglot/sqlingo do not parse
- * ON DELETE/ON UPDATE into structured fields -- they emit raw strings like "ON DELETE CASCADE".
- * TODO(sqlingo): add structured onDelete/onUpdate to ReferenceExprArgs so this can be removed.
- */
-function extractFkActions (ref: ReferenceExpr): {
-  onDelete?: string;
-  onUpdate?: string;
-} {
-  const out: {
-    onDelete?: string;
-    onUpdate?: string;
-  } = {};
-
-  for (const option of ref.args.options ?? []) {
-    if (typeof option !== 'string') continue;
-    const upper = option.toUpperCase();
-    if (!upper.startsWith('ON ')) continue;
-    const rest = upper.slice(3);
-    const spaceIndex = rest.indexOf(' ');
-    if (spaceIndex < 0) continue;
-    const verb = rest.slice(0, spaceIndex);
-    const action = rest.slice(spaceIndex + 1);
-    if (verb === 'DELETE') out.onDelete = action;
-    else if (verb === 'UPDATE') out.onUpdate = action;
-  }
-  return out;
-}
-
 export function buildFkRef (
   expression: ForeignKeyExpr,
   srcTable: string,
@@ -111,4 +82,28 @@ export function buildColumnFkData (
     targetColumns: refColumns,
     ...extractFkActions(kind),
   };
+}
+
+function extractFkActions (ref: ReferenceExpr): {
+  onDelete?: string;
+  onUpdate?: string;
+} {
+  const out: {
+    onDelete?: string;
+    onUpdate?: string;
+  } = {};
+
+  for (const option of ref.args.options ?? []) {
+    if (typeof option !== 'string') continue;
+    const upper = option.toUpperCase();
+    if (!upper.startsWith('ON ')) continue;
+    const rest = upper.slice(3);
+    const spaceIndex = rest.indexOf(' ');
+    if (spaceIndex < 0) continue;
+    const verb = rest.slice(0, spaceIndex);
+    const action = rest.slice(spaceIndex + 1);
+    if (verb === 'DELETE') out.onDelete = action;
+    else if (verb === 'UPDATE') out.onUpdate = action;
+  }
+  return out;
 }
