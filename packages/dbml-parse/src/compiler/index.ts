@@ -43,6 +43,7 @@ import {
   resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
+import { visibleSymbols } from './queries/symbol/visibleSymbols';
 import {
   renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
@@ -362,6 +363,10 @@ export default class Compiler {
   // Return all UseSymbols across the project whose originalSymbol is the given symbol (transitive).
   // Signature: (symbol: NodeSymbol) => Report<UseSymbol[]>
   symbolUses = this.globalQuery(symbolUses);
+  // A global query
+  // Return the symbols of a top-level kind whose names are usable from a program (scope members, or reachable refs for Ref).
+  // Signature: (program: ProgramSymbol, kind: VisibleSymbolKind) => NodeSymbol[]
+  visibleSymbols = this.globalQuery(visibleSymbols);
 
   // A local query
   // Return the direct import filepath IDs declared by use statements in a file. Related: reachableFiles.
