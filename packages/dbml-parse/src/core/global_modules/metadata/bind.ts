@@ -23,7 +23,6 @@ export default class MetadataBinder {
     const targetKind = getMetadataTargetKind(this.declarationNode);
     const nameParts = destructureComplexVariable(nameNode);
     if (!nameParts?.length || !targetKind) return [];
-    console.log('bindTargetElement', { targetKind, nameParts });
 
     // Refs are not imported, so two visible files may each define a ref with the same name
     if (targetKind === MetadataTargetKind.Ref && resolveRefMetadataCandidates(this.compiler, this.declarationNode).length > 1) {

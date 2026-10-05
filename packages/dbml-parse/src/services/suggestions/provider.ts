@@ -1158,7 +1158,7 @@ function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): Co
   if (!programSymbol) return noSuggestions();
 
   const seen = new Set<string>();
-  const suggestions = visibleNamedRefs(compiler, programSymbol).flatMap((ref) => {
+  const suggestions = compiler.visibleSymbols(programSymbol, SymbolKind.Ref).flatMap((ref) => {
     const name = ref.name;
     if (name === undefined || seen.has(name)) return [];
     seen.add(name);
