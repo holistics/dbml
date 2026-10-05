@@ -172,3 +172,62 @@ Metadata Note overview {
 }
 `)
 });
+
+const REF_METADATA_DBML = `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+  author_id int
+}
+
+Ref user_posts: posts.user_id > users.id [delete: cascade, color: #111111, owner: 'inline']
+Ref: posts.author_id > users.id [inactive, team: 'data']
+
+Metadata Ref user_posts {
+  color: #e67e22
+  owner: 'block'
+}
+`.trim();
+
+describe('@dbml/core - Ref metadata', () => {
+  test('the Ref model carries merged metadata and the promoted color', () => {
+    const database = parse(REF_METADATA_DBML);
+    const refs = database.schemas.find((s) => s.name === 'public')!.refs;
+    const named = refs.find((r) => r.name === 'user_posts')!;
+    const unnamed = refs.find((r) => !r.name)!;
+    expect(named.color).toBe('#e67e22');
+    expect(named.metadata).toEqual({ owner: 'block' });
+    expect(unnamed.metadata).toEqual({ team: 'data' });
+
+    const model = database.normalize();
+    expect(model.refs[named.id].metadata).toEqual({ owner: 'block' });
+    expect(model.refs[named.id].color).toBe('#e67e22');
+
+    const out = database.export() as any;
+    const exportedRefs = out.schemas.find((s: any) => s.name === 'public').refs;
+    expect(exportedRefs.find((r: any) => r.name === 'user_posts').metadata).toEqual({ owner: 'block' });
+  });
+
+  test('the DBML exporter writes ref color and custom metadata inline', () => {
+    const out = exporter.export(REF_METADATA_DBML, 'dbml');
+    expect(out).toContain(`Ref "user_posts":"users"."id" < "posts"."user_id" [delete: cascade, color: #e67e22, owner: 'block']`);
+    expect(out).toContain(`Ref:"users"."id" < "posts"."author_id" [inactive, team: 'data']`);
+    expect(out).not.toContain('Metadata Ref');
+  });
+
+  test('exported DBML round-trips ref color and metadata', () => {
+    const exported = exporter.export(REF_METADATA_DBML, 'dbml');
+    const refs = parse(exported).schemas.find((s) => s.name === 'public')!.refs;
+    const named = refs.find((r) => r.name === 'user_posts')!;
+    const unnamed = refs.find((r) => !r.name)!;
+    expect(named.color).toBe('#e67e22');
+    expect(named.metadata).toEqual({ owner: 'block' });
+    expect(named.onDelete).toBe('cascade');
+    expect(unnamed.inactive).toBe(true);
+    expect(unnamed.metadata).toEqual({ team: 'data' });
+  });
+});

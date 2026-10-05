@@ -321,9 +321,16 @@ class DbmlExporter {
       if (ref.onDelete) {
         refActions.push(`delete: ${ref.onDelete.toLowerCase()}`);
       }
+      if (ref.color) {
+        refActions.push(`color: ${ref.color}`);
+      }
       if (ref.inactive) {
         refActions.push('inactive');
       }
+      // Custom metadata is written inline (like Dep), as an unnamed ref cannot be targeted by a Metadata block
+      Object.entries(ref.metadata ?? {}).forEach(([key, value]) => {
+        refActions.push(`${key}: ${DbmlExporter.formatDepCustomValue(value)}`);
+      });
       if (refActions.length > 0) {
         line += ` [${refActions.join(', ')}]`;
       }

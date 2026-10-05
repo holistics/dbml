@@ -24,5 +24,19 @@
         }
       }
     }
-  ]
+  ],
+  "program": {
+    "publicSchema": [
+      {
+        "context": {
+          "id": "symbol@Ref@a@[L0:C0, L0:C50]",
+          "snippet": "Ref a: Use...no action]"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@a@[L0:C0, L0:C50]",
+          "snippet": "Ref a: Use...no action]"
+        }
+      }
+    ]
+  }
 }
