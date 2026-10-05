@@ -43,6 +43,7 @@ import {
   resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
+import { visibleSymbols } from './queries/symbol/visibleSymbols';
 import {
   renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
@@ -276,6 +277,10 @@ export default class Compiler {
   symbolMetadata = this.globalQuery(symbolMetadata);
   symbolAliases = this.globalQuery(symbolAliases);
   symbolUses = this.globalQuery(symbolUses);
+  // A global query
+  // Return the symbols of a top-level kind whose names are usable from a program (scope members, or reachable refs for Ref).
+  // Signature: (program: ProgramSymbol, kind: VisibleSymbolKind) => NodeSymbol[]
+  visibleSymbols = this.globalQuery(visibleSymbols);
 
   fileDependencies = this.localQuery(fileDependencies);
   reachableFiles = this.globalQuery(reachableFiles);
