@@ -13,6 +13,7 @@ const TERMINAL_KIND: Record<MetadataTargetKind, SymbolKind> = {
   [MetadataTargetKind.Column]: SymbolKind.Column,
   [MetadataTargetKind.TableGroup]: SymbolKind.TableGroup,
   [MetadataTargetKind.Note]: SymbolKind.StickyNote,
+  [MetadataTargetKind.Ref]: SymbolKind.Ref,
 };
 
 const targetKindArbitrary = fc.constantFrom(...Object.values(MetadataTargetKind));

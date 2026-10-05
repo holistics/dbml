@@ -9,7 +9,7 @@ Table posts {
   id int [pk]
   title varchar [not null]
   content text
-  user_id int [ref: > users.id]
+  user_id int
   created_at timestamp [default: \`now()\`]
 
   indexes {
@@ -18,10 +18,17 @@ Table posts {
   }
 }
 
+Ref post_author: posts.user_id > users.id [owner: 'content-team']
+
 Enum post_status {
   draft
   published
   archived
+}
+
+Metadata Ref post_author {
+  color: #e67e22
+  reviewed: 'true'
 }
 
 Metadata Table users {
