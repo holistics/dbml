@@ -56,6 +56,8 @@ import {
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
+import { visibleNamedRefs } from '@/core/global_modules/metadata/utils';
+import { getProgramSymbol } from '@/core/global_modules/utils';
 
 // Display labels for element/keyword suggestions
 const SUGGESTION_LABEL = {
@@ -1107,6 +1109,10 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
   [MetadataTargetKind.Note]: [
     SymbolKind.StickyNote,
   ],
+  // Refs are not scope members of the files they appear in, see suggestRefNamesForMetadata
+  [MetadataTargetKind.Ref]: [
+    SymbolKind.Ref,
+  ],
 };
 
 // Canonical display labels for metadata target kinds.
@@ -1115,6 +1121,7 @@ const METADATA_TARGET_KIND_LABELS: Record<MetadataTargetKind, (typeof SUGGESTION
   [MetadataTargetKind.Column]: SUGGESTION_LABEL.Column,
   [MetadataTargetKind.TableGroup]: SUGGESTION_LABEL.TableGroup,
   [MetadataTargetKind.Note]: SUGGESTION_LABEL.Note,
+  [MetadataTargetKind.Ref]: SUGGESTION_LABEL.Ref,
 };
 
 function suggestMetadataTargetKinds (): CompletionList {
@@ -1146,10 +1153,38 @@ function suggestInMetadataHeader (
   }
 
   // After the targetKind -> suggest names of the chosen target kind.
+  if (kind === MetadataTargetKind.Ref) return suggestRefNamesForMetadata(compiler, filepath);
+
   const symbolKinds = METADATA_TARGET_SYMBOL_KINDS[kind];
   if (!symbolKinds) return noSuggestions();
 
   return suggestNamesInScope(compiler, filepath, offset, container.parent, symbolKinds);
+}
+
+// Refs are not imported, so they are suggested by the same visibility rule used to resolve `Metadata Ref <name>`
+function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): CompletionList {
+  const programSymbol = getProgramSymbol(compiler, filepath);
+  if (!programSymbol) return noSuggestions();
+
+  const seen = new Set<string>();
+  const suggestions = visibleNamedRefs(compiler, programSymbol).flatMap((ref) => {
+    const name = ref.name;
+    if (name === undefined || seen.has(name)) return [];
+    seen.add(name);
+    return [
+      {
+        label: name,
+        insertText: name,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: pickCompletionItemKind(ref.kind),
+        sortText: pickCompletionItemKind(ref.kind).toString().padStart(2, '0'),
+        detail: ref.filepath.equals(filepath) ? 'this file' : `from ${ref.filepath.basename}`,
+        range: undefined as any,
+      },
+    ];
+  });
+
+  return addQuoteToSuggestionIfNeeded({ suggestions });
 }
 
 function suggestInElementHeader (

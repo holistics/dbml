@@ -17,7 +17,7 @@ class Ref extends Element {
    * @param {import('../../types/model_structure/ref').RawRef} param0
    */
   constructor ({
-    name, color, endpoints, onDelete, onUpdate, inactive, token, schema = {}, injectedPartial = null,
+    name, color, endpoints, onDelete, onUpdate, inactive, token, schema = {}, injectedPartial = null, metadata = {},
   } = {}) {
     super(token);
     /** @type {string} */
@@ -30,6 +30,8 @@ class Ref extends Element {
     this.onUpdate = onUpdate;
     /** @type {boolean} */
     this.inactive = inactive;
+    /** @type {import('@dbml/parse').CustomMetadata} */
+    this.metadata = metadata;
     /** @type {import('../../types/model_structure/endpoint').default[]} */
     this.endpoints = [];
     /** @type {import('../../types/model_structure/schema').default} */
@@ -92,6 +94,7 @@ class Ref extends Element {
       onDelete: this.onDelete,
       onUpdate: this.onUpdate,
       inactive: this.inactive,
+      metadata: this.metadata,
       injectedPartialId: this.injectedPartial?.id,
     };
   }

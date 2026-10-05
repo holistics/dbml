@@ -2,7 +2,7 @@ import {
   destructureComplexVariable, extractVariableFromExpression,
   getBody,
 } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
+import { aggregateSettingList, isValidHexColor } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
 import type { SyntaxToken } from '@/core/types/tokens';
@@ -15,12 +15,15 @@ import {
   AttributeNode,
   PrefixExpressionNode,
 } from '@/core/types/nodes';
-import type { Ref } from '@/core/types/schemaJson';
+import type { Color, Ref } from '@/core/types/schemaJson';
 import {
   ColumnSymbol,
   RefMetadata,
+  RefSymbol,
+  SettingName,
   type Filepath,
 } from '@/core/types';
+import { UNHANDLED } from '@/core/types/module';
 import type Compiler from '@/compiler';
 import {
   extractColor,
@@ -30,6 +33,26 @@ import Report from '@/core/types/report';
 import { validateCardinality } from './constraint_fixes';
 import { getMultiplicities } from '@/core/types/relation';
 import { zip } from 'lodash-es';
+import { extractCustomInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
+
+export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, SettingName.Color> = {
+  [SettingName.Color]: {
+    isValidBuiltinFieldValue: isValidHexColor,
+    message: "'color' must be a color literal",
+    assignBuiltinField (element, value) {
+      element.color = value as Color;
+    },
+  },
+};
+
+// Ref settings that are natively attached to the ref, so they are never custom metadata
+const REF_BUILTIN_SETTINGS = [
+  SettingName.Color,
+  SettingName.Delete,
+  SettingName.Update,
+  SettingName.Inactive,
+] as const;
 
 export class RefInterpreter {
   private compiler: Compiler;
@@ -52,6 +75,13 @@ export class RefInterpreter {
       ...this.interpretName(),
       ...this.interpretBody(),
     ];
+
+    // Only named standalone refs have a symbol, so only they can be targeted by Metadata blocks
+    const symbol = this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
+    if (symbol instanceof RefSymbol) {
+      attachCustomMetadata(this.compiler, this.ref, symbol, REF_METADATA_FIELDS, this.filepath);
+    }
+
     const { infos } = this.validateRefConstraints();
     return Report.create(this.ref as Ref, errors, undefined, infos);
   }
@@ -155,6 +185,8 @@ export class RefInterpreter {
       this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value) : undefined;
 
       this.ref.inactive = settingMap.inactive?.length ? true : undefined;
+
+      this.ref.metadata = extractCustomInlineMetadata(settingMap, REF_BUILTIN_SETTINGS);
     }
 
     return [];

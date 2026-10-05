@@ -8,12 +8,13 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { isValidMetadataValue, isValidName } from '@/core/utils/validate';
+import { isSimpleName, isValidMetadataValue, isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
 import { MetadataTargetKind } from '@/core/types/symbol';
 import { COLUMN_METADATA_FIELDS, TABLE_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
 import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
+import { REF_METADATA_FIELDS } from '@/core/global_modules/ref/interpret';
 import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/utils';
 import { getMetadataTargetKind } from './utils';
 
@@ -22,6 +23,7 @@ const METADATA_FIELDS_BY_KIND: Record<MetadataTargetKind, MetadataFieldRegistry<
   [MetadataTargetKind.Column]: COLUMN_METADATA_FIELDS,
   [MetadataTargetKind.TableGroup]: TABLEGROUP_METADATA_FIELDS,
   [MetadataTargetKind.Note]: NOTE_METADATA_FIELDS,
+  [MetadataTargetKind.Ref]: REF_METADATA_FIELDS,
 };
 
 export default class MetadataValidator {
@@ -67,6 +69,20 @@ export default class MetadataValidator {
           nameNode,
         ),
       ];
+    }
+    // Refs can only be targeted by their (simple) name. Unnamed refs, e.g. by their endpoints, are not supported
+    if (getMetadataTargetKind(this.declarationNode) === MetadataTargetKind.Ref) {
+      if (!isSimpleName(nameNode)) {
+        return [
+          new CompileError(
+            CompileErrorCode.INVALID_NAME,
+            'A Metadata Ref target must be a ref name (an identifier or a quoted identifier)',
+            nameNode,
+          ),
+        ];
+      }
+
+      return [];
     }
     if (!isValidName(nameNode)) {
       return [
