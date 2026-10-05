@@ -56,7 +56,6 @@ import {
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
-import { visibleNamedRefs } from '@/core/global_modules/metadata/utils';
 import { getProgramSymbol } from '@/core/global_modules/utils';
 
 // Display labels for element/keyword suggestions
@@ -1167,7 +1166,7 @@ function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): Co
   if (!programSymbol) return noSuggestions();
 
   const seen = new Set<string>();
-  const suggestions = visibleNamedRefs(compiler, programSymbol).flatMap((ref) => {
+  const suggestions = compiler.visibleSymbols(programSymbol, SymbolKind.Ref).flatMap((ref) => {
     const name = ref.name;
     if (name === undefined || seen.has(name)) return [];
     seen.add(name);
