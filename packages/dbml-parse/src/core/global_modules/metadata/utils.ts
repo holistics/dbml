@@ -6,13 +6,9 @@ import {
 import type {
   Column, MetadataValues, Note, Ref, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
-import { ElementKind } from '@/core/types/keywords';
 import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
-import {
-  NodeSymbol, SymbolKind, MetadataTargetKind, RefSymbol, type ProgramSymbol,
-} from '@/core/types/symbol';
+import { NodeSymbol, SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
 import { destructureComplexVariable } from '@/core/utils/expression';
-import { isElementNode } from '@/core/utils/validate';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import { getDefaultSchemaSymbol, getProgramSymbol } from '../utils';
 
@@ -85,35 +81,15 @@ export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Metada
   return nameParts.map((namePart, idx) => ({ name: namePart, symbolKind: kindParts[idx] }));
 }
 
-/**
-  * Named refs visible from a program: refs are not imported via `use`, a ref is visible wherever it shows up in the output,
-  * i.e. its RefMetadata is owned by the program (the program reaches the ref's file and sees both endpoint tables).
-  *
-  * NOTE: Scans declarations directly instead of `symbolMetadata`, as this runs while the resolution index is being built.
-  */
-export function visibleNamedRefs (compiler: Compiler, programSymbol: ProgramSymbol): RefSymbol[] {
-  return compiler.reachableFiles(programSymbol.filepath).flatMap((filepath) => {
-    const { ast } = compiler.parseFile(filepath).getValue();
-    return ast.body.flatMap((node) => {
-      if (!isElementNode(node, ElementKind.Ref)) return [];
-      const symbol = compiler.nodeSymbol(node).getFiltered(UNHANDLED);
-      if (!(symbol instanceof RefSymbol)) return [];
-      const refMetadata = compiler.nodeMetadata(node).getFiltered(UNHANDLED);
-      if (!refMetadata?.owners(compiler).includes(programSymbol)) return [];
-      return [symbol];
-    });
-  });
-}
-
 /** Every visible named ref a `Metadata Ref <name>` header may refer to. More than one means the name is ambiguous. */
-export function resolveRefMetadataCandidates (compiler: Compiler, metadataNode: ElementDeclarationNode): RefSymbol[] {
+export function resolveRefMetadataCandidates (compiler: Compiler, metadataNode: ElementDeclarationNode): NodeSymbol[] {
   const programSymbol = getProgramSymbol(compiler, metadataNode.filepath);
   if (!programSymbol) return [];
 
   const nameParts = destructureComplexVariable(metadataNode.name);
   if (nameParts?.length !== 1) return [];
 
-  return visibleNamedRefs(compiler, programSymbol).filter((ref) => ref.name === nameParts[0]);
+  return compiler.visibleSymbols(programSymbol, SymbolKind.Ref).filter((ref) => ref.name === nameParts[0]);
 }
 
 // Resolve the target element a Metadata declaration annotates, from its `<target-kind> <name>` header
