@@ -317,6 +317,8 @@ define referential actions. Similar to `ON DELETE/UPDATE CASCADE/...` in SQL.
 
 For the `color` setting on relationships, see [Colors](./syntax/enrichment-visualization.md#colors).
 
+Any other key in the settings list is a [custom property](./syntax/enrichment-visualization.md#custom-properties), e.g. `[delete: cascade, owner: "data-team"]`. A named ref can also get properties from a [`Metadata Ref` block](./syntax/enrichment-visualization.md#metadata-ref).
+
 *Relationship settings and names are not supported for inline form ref.*
 
 ### Many-to-many relationship

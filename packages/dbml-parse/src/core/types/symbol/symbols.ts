@@ -40,6 +40,8 @@ export enum SymbolKind {
 
   StickyNote = 'Note',
 
+  Ref = 'Ref',
+
   TablePartial = 'TablePartial',
   PartialInjection = 'PartialInjection',
 
@@ -72,6 +74,7 @@ export enum MetadataTargetKind {
   Column = SymbolKind.Column,
   TableGroup = SymbolKind.TableGroup,
   Note = SymbolKind.StickyNote,
+  Ref = SymbolKind.Ref,
 }
 
 declare const __nodeSymbolBrand: unique symbol;
@@ -777,6 +780,35 @@ export class NoteSymbol extends NodeSymbol {
 
   override get canBeImported (): boolean {
     return true;
+  }
+
+  override get originalSymbol (): NodeSymbol {
+    return this;
+  }
+}
+
+// Named standalone Ref: `Ref name: a.x > b.y`. Not importable - a ref is visible wherever both its endpoint tables are.
+export class RefSymbol extends NodeSymbol {
+  constructor (
+    {
+      declaration,
+      name,
+    }: {
+      declaration?: SyntaxNode;
+      name?: string;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Ref,
+      declaration,
+      name,
+    }, id, filepath);
+  }
+
+  override get canBeImported (): boolean {
+    return false;
   }
 
   override get originalSymbol (): NodeSymbol {

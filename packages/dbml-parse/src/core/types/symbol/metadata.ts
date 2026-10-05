@@ -614,6 +614,16 @@ export class MetadataElementMetadata extends NodeMetadata {
       target = tableSymbol;
     }
 
+    // A Ref is never a schema member of the programs it appears in (refs are not imported).
+    // => A program owns the metadata when it sees both of the ref's endpoint tables, the same rule that makes the ref appear there.
+    if (target.kind === SymbolKind.Ref) {
+      const refMetadata = target.declaration
+        ? compiler.nodeMetadata(target.declaration).getFiltered(UNHANDLED)
+        : undefined;
+      if (!(refMetadata instanceof RefMetadata)) return [];
+      return refMetadata.owners(compiler);
+    }
+
     return this.resolveOwnerPrograms(compiler, [target]);
   }
 }
