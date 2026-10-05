@@ -11,6 +11,7 @@ import { destructureComplexVariableTuple, extractStringFromIdentifierStream } fr
 import {
   Settings, aggregateSettingList, isSimpleName, isValidHexColor, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
 } from '@/core/utils/validate';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class RefValidator {
   private declarationNode: ElementDeclarationNode;
@@ -253,7 +254,14 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
         clean[name] = attrs;
         break;
       default:
-        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
+        // Any non-builtin key is free-form inline custom metadata
+        errors.push(
+          ...validateCustomInlineMetadata(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_REF_SETTING,
+            invalidValue: CompileErrorCode.INVALID_REF_SETTING_VALUE,
+          }));
+        clean[name] = attrs;
+        break;
     }
   }
   return new Report(clean, errors);

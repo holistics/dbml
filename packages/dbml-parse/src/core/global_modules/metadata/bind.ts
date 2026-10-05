@@ -5,7 +5,8 @@ import {
 } from '@/core/types/nodes';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
-import { resolveMetadataTarget } from './utils';
+import { MetadataTargetKind } from '@/core/types/symbol';
+import { resolveMetadataTarget, resolveRefMetadataCandidates } from './utils';
 
 export default class MetadataBinder {
   constructor (private compiler: Compiler, private declarationNode: ElementDeclarationNode) {}
@@ -22,6 +23,18 @@ export default class MetadataBinder {
     const targetKind = getMetadataTargetKind(this.declarationNode);
     const nameParts = destructureComplexVariable(nameNode);
     if (!nameParts?.length || !targetKind) return [];
+    console.log('bindTargetElement', { targetKind, nameParts });
+
+    // Refs are not imported, so two visible files may each define a ref with the same name
+    if (targetKind === MetadataTargetKind.Ref && resolveRefMetadataCandidates(this.compiler, this.declarationNode).length > 1) {
+      return [
+        new CompileError(
+          CompileErrorCode.BINDING_ERROR,
+          `Ref '${nameParts.join('.')}' is ambiguous: it has multiple definitions`,
+          nameNode ?? this.declarationNode,
+        ),
+      ];
+    }
 
     const target = resolveMetadataTarget(this.compiler, this.declarationNode);
 
@@ -29,7 +42,7 @@ export default class MetadataBinder {
       return [
         new CompileError(
           CompileErrorCode.BINDING_ERROR,
-          'cannot find metadata target element',
+          `Cannot find metadata target element: \`${this.declarationNode.targetKind?.value} ${nameParts.join('.')}\``,
           nameNode ?? this.declarationNode,
         ),
       ];

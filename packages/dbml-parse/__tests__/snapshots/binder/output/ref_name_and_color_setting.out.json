@@ -448,6 +448,26 @@
             "snippet": "c"
           }
         ]
+      },
+      {
+        "context": {
+          "id": "symbol@Ref@short_ref@[L11:C0, L11:C43]",
+          "snippet": "Ref short_...: #aabbcc]"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@short_ref@[L11:C0, L11:C43]",
+          "snippet": "Ref short_...: #aabbcc]"
+        }
+      },
+      {
+        "context": {
+          "id": "symbol@Ref@long_ref@[L14:C0, L16:C1]",
+          "snippet": "Ref long_r...#123456]\n}"
+        },
+        "declaration": {
+          "id": "node@<element-declaration>@long_ref@[L14:C0, L16:C1]",
+          "snippet": "Ref long_r...#123456]\n}"
+        }
       }
     ]
   }

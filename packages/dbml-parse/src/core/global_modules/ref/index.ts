@@ -11,12 +11,12 @@ import {
 import type { NodeMetadata } from '@/core/types/symbol/metadata';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
-  AttributeNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, InfixExpressionNode,
+  AttributeNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, InfixExpressionNode, ProgramNode,
 } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { NodeSymbol, SymbolKind } from '@/core/types/symbol';
+import { NodeSymbol, RefSymbol, SymbolKind } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
   extractStringFromIdentifierStream, getBody,
@@ -42,7 +42,33 @@ function isInsideRefBody (node: SyntaxNode): boolean {
   return false;
 }
 
+// Public utils that other modules can use
+export const refUtils = {
+  getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
+    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Ref '${name}' already exists in schema '${schemaLabel}'`, errorNode);
+  },
+};
+
 export const refModule: GlobalModule = {
+  // Only named top-level refs get a symbol - unnamed refs cannot be targeted by name
+  nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
+    if (!isElementNode(node, ElementKind.Ref) || !(node.parentNode instanceof ProgramNode)) return Report.create(PASS_THROUGH);
+
+    const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
+    if (name === undefined) return Report.create(PASS_THROUGH);
+
+    return new Report(compiler.symbolFactory.create(RefSymbol, {
+      declaration: node,
+      name,
+    }, node.filepath));
+  },
+
+  symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
+    if (!symbol.isKind(SymbolKind.Ref)) return Report.create(PASS_THROUGH);
+
+    return new Report([]);
+  },
+
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node) && !isAccessExpression(node)) return Report.create(PASS_THROUGH);
     if (!isInsideRefBody(node)) return Report.create(PASS_THROUGH);
