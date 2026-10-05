@@ -193,6 +193,7 @@ export interface Ref {
   onDelete?: string;
   onUpdate?: string;
   inactive?: boolean;
+  metadata?: CustomMetadata;
   token: TokenPosition;
 }
 
