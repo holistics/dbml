@@ -21,10 +21,7 @@ export default defineConfig({
       external: [
         '@dbml/parse', // Do not bundle @dbml/parse to allow @dbml/core's peerDeps & consumers to sync
         'antlr4',
-        'lodash',
         'luxon',
-        'parsimmon',
-        'pluralize',
       ],
       output: {
         preserveModules: true, /// preserve module structure instead of bundling everything in 1 file to enable file-based tree-shaking
