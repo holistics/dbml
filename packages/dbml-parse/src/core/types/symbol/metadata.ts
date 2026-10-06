@@ -29,7 +29,6 @@ import {
   destructureCallExpression,
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
-import { getRightmostVariable } from '@/core/utils/validate';
 
 export enum MetadataKind {
   Ref = 'ref',
@@ -398,15 +397,7 @@ export class DepMetadata extends NodeMetadata {
     ].filter((t): t is TableSymbol => !!t);
     if (tableSymbols.length === 0) return [];
 
-    const declarationFilepath = this.declaration.filepath;
-    const reachableFiles = compiler.reachableFiles();
-    return reachableFiles
-      .flatMap((f) => compiler.nodeSymbol(compiler.parseFile(f).getValue().ast).getFiltered(UNHANDLED) || [])
-      .filter((s) => {
-        const reachableFromProgram = compiler.reachableFiles(s.filepath);
-        return reachableFromProgram.some((f) => f.equals(declarationFilepath))
-          && tableSymbols.every((t) => (s as ProgramSymbol).inNestedSchema(compiler, t));
-      });
+    return this.resolveOwnerPrograms(compiler, tableSymbols);
   }
 }
 
@@ -590,41 +581,20 @@ export class MetadataElementMetadata extends NodeMetadata {
     super(declaration);
   }
 
-  // The element this metadata annotates (Table/Column/Schema/.etc).
-  // Resolved via the header-name referee, which metadataModule.nodeReferee maps to the target through resolveMetadataTarget.
+  // The element affected by this metadata block (Table/Column/Schema/.etc), if it resolves to exactly one. Related: Compiler.metadataTargets.
   target (compiler: Compiler): NodeSymbol | undefined {
-    const nameNode = this.declaration.name;
-    if (!nameNode) return undefined;
-    const targetNode = getRightmostVariable(nameNode) ?? nameNode;
-    return compiler.nodeReferee(targetNode).getFiltered(UNHANDLED)?.originalSymbol;
+    const targets = compiler.metadataTargets(this);
+    return targets.length === 1 ? targets[0] : undefined;
   }
 
+  // The Owner is the Target, independent of program. Whether the block applies in a program is Compiler.metadataBlocksFor.
   override owners (compiler: Compiler): NodeSymbol[] {
-    let target = this.target(compiler);
-    if (!target) return [];
-
-    // A Column lives inside a Table, not as a direct schema member, so inNestedSchema would not find it.
-    // => Normalise to the containing table.
-    if (target.kind === SymbolKind.Column) {
-      const tableNode = target.declaration?.parentOfKind(ElementDeclarationNode);
-      const tableSymbol = tableNode
-        ? compiler.nodeSymbol(tableNode).getFiltered(UNHANDLED)?.originalSymbol
-        : undefined;
-      if (!tableSymbol) return [];
-      target = tableSymbol;
-    }
-
-    // A Ref is never a schema member of the programs it appears in (refs are not imported).
-    // => A program owns the metadata when it sees both of the ref's endpoint tables, the same rule that makes the ref appear there.
-    if (target.kind === SymbolKind.Ref) {
-      const refMetadata = target.declaration
-        ? compiler.nodeMetadata(target.declaration).getFiltered(UNHANDLED)
-        : undefined;
-      if (!(refMetadata instanceof RefMetadata)) return [];
-      return refMetadata.owners(compiler);
-    }
-
-    return this.resolveOwnerPrograms(compiler, [target]);
+    const target = this.target(compiler);
+    return target
+      ? [
+          target.originalSymbol,
+        ]
+      : [];
   }
 }
 
