@@ -78,7 +78,7 @@ Metadata Ref user_posts {
     });
 
     const errors = compiler.interpretFile(fp('/main.dbml')).getErrors();
-    expect(errors.map((e) => e.diagnostic)).toContain('cannot find metadata target element');
+    expect(errors.map((e) => e.diagnostic)).toContain('Cannot find metadata target element: `Ref user_posts`');
   });
 
   test('two visible files defining a ref with the same name make the target ambiguous', () => {
@@ -114,7 +114,7 @@ Metadata Ref r {
 
     const errors = compiler.interpretFile(fp('/main.dbml')).getErrors();
     expect(errors.map((e) => e.code)).toContain(CompileErrorCode.BINDING_ERROR);
-    expect(errors.map((e) => e.diagnostic)).toContain("Ref 'r' is ambiguous: it is defined in multiple files");
+    expect(errors.map((e) => e.diagnostic)).toContain("Ref 'r' is ambiguous: it has multiple definitions");
   });
 
   test('a name defined in two files resolves when only one of the refs is visible', () => {

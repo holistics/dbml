@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler/index';
 import type { Filepath } from '@/core/types/filepath';
-import { PASS_THROUGH, PassThrough } from '@/core/types/module';
+import { PASS_THROUGH, PassThrough, UNHANDLED } from '@/core/types/module';
 import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
@@ -13,7 +13,6 @@ import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 
 import MetadataBinder from './bind';
 import MetadataInterpreter from './interpret';
-import { resolveMetadataTarget } from './utils';
 import type { GlobalModule } from '../types';
 
 export const metadataModule: GlobalModule = {
@@ -25,6 +24,7 @@ export const metadataModule: GlobalModule = {
   },
 
   // Resolve the target element
+  // Resolve to none if there are 0 or 2+ matching targets
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node)) return new Report(PASS_THROUGH);
 
@@ -40,8 +40,11 @@ export const metadataModule: GlobalModule = {
     const targetKind = getMetadataTargetKind(metadataNode);
     if (!targetKind) return new Report(undefined);
 
-    const target = resolveMetadataTarget(compiler, metadataNode);
-    return new Report(target);
+    const block = compiler.nodeMetadata(metadataNode).getFiltered(UNHANDLED);
+    if (!(block instanceof MetadataElementMetadata)) return new Report(undefined);
+
+    const targets = compiler.metadataTargets(block);
+    return new Report(targets.length === 1 ? targets[0] : undefined);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

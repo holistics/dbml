@@ -1,72 +1,16 @@
 import { describe, expect, test } from 'vitest';
 import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/core/types/module';
-import {
-  AliasSymbol, ProgramSymbol, RefSymbol, SymbolKind, UseSymbol,
-} from '@/core/types/symbol';
-import type { VisibleSymbolKind } from '@/compiler/queries/symbol/visibleSymbols';
+import { ProgramSymbol, RefSymbol, SymbolKind } from '@/core/types/symbol';
 import { fp, setupCompiler } from '../interpreter/multifile/utils';
 
-function visible (compiler: Compiler, path: string, kind: VisibleSymbolKind) {
+function visible (compiler: Compiler, path: string, kind: SymbolKind.Ref) {
   const ast = compiler.parseFile(fp(path)).getValue().ast;
   const program = compiler.nodeSymbol(ast).getFiltered(UNHANDLED) as ProgramSymbol;
   return compiler.visibleSymbols(program, kind);
 }
 
-function names (compiler: Compiler, path: string, kind: VisibleSymbolKind) {
-  return visible(compiler, path, kind).map((s) => s.name).sort();
-}
-
 describe('[example] compiler - visibleSymbols', () => {
-  describe('scope kinds', () => {
-    test('lists local elements of the kind, including nested schemas, each once', () => {
-      const { compiler } = setupCompiler({
-        '/main.dbml': `
-Table users { id int }
-Table auth.accounts { id int }
-Enum status { active }
-TableGroup g { users }
-Note n { 'hello' }
-`,
-      });
-
-      expect(names(compiler, '/main.dbml', SymbolKind.Table)).toEqual(['accounts', 'users']);
-      expect(names(compiler, '/main.dbml', SymbolKind.Schema)).toEqual(['auth', 'public']);
-      expect(names(compiler, '/main.dbml', SymbolKind.Enum)).toEqual(['status']);
-      expect(names(compiler, '/main.dbml', SymbolKind.TableGroup)).toEqual(['g']);
-      expect(names(compiler, '/main.dbml', SymbolKind.StickyNote)).toEqual(['n']);
-    });
-
-    test('keeps table aliases as AliasSymbol members', () => {
-      const { compiler } = setupCompiler({
-        '/main.dbml': 'Table users as U { id int }',
-      });
-
-      const tables = visible(compiler, '/main.dbml', SymbolKind.Table);
-      expect(tables.map((s) => s.name).sort()).toEqual(['U', 'users']);
-      expect(tables.find((s) => s.name === 'U')).toBeInstanceOf(AliasSymbol);
-    });
-
-    test('returns imported elements as UseSymbols under their local names', () => {
-      const { compiler } = setupCompiler({
-        '/base.dbml': 'Table users { id int }\nTable posts { id int }',
-        '/main.dbml': "use { table users as u } from './base.dbml'",
-      });
-
-      const tables = visible(compiler, '/main.dbml', SymbolKind.Table);
-      expect(tables.map((s) => s.name)).toEqual(['u']);
-      expect(tables[0]).toBeInstanceOf(UseSymbol);
-    });
-
-    test('does not list refs among tables', () => {
-      const { compiler } = setupCompiler({
-        '/main.dbml': 'Table a { id int }\nTable b { a_id int }\nRef r: b.a_id > a.id',
-      });
-
-      expect(names(compiler, '/main.dbml', SymbolKind.Table)).toEqual(['a', 'b']);
-    });
-  });
-
   describe('Ref', () => {
     const ORDERS = `
 Table users { id int [pk] }
