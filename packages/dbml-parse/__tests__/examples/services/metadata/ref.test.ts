@@ -121,7 +121,7 @@ Metadata Ref nope {
 }`;
       const errors = interpret(TABLES + source).getErrors();
       expect(errors.map((e) => e.code)).toContain(CompileErrorCode.BINDING_ERROR);
-      expect(errors.map((e) => e.diagnostic)).toContain('cannot find metadata target element');
+      expect(errors.map((e) => e.diagnostic)).toContain('Cannot find metadata target element: `Ref nope`');
     });
 
     it('rejects targeting an unnamed ref by its endpoints', () => {
