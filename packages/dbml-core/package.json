@@ -20,6 +20,7 @@
     "types"
   ],
   "types": "./types/index.d.ts",
+  "sideEffects": false,
   "main": "./lib/index.cjs",
   "module": "./lib/index.mjs",
   "exports": {
