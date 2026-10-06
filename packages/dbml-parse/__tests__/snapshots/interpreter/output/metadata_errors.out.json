@@ -2,7 +2,7 @@
   "errors": [
     {
       "code": "BINDING_ERROR",
-      "diagnostic": "cannot find metadata target element",
+      "diagnostic": "Cannot find metadata target element: `Table public.missing`",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
