@@ -22,7 +22,6 @@ export default defineConfig({
         '@dbml/parse', // Do not bundle @dbml/parse to allow @dbml/core's peerDeps & consumers to sync
         'antlr4',
         'lodash',
-        'lodash-es',
         'luxon',
         'parsimmon',
         'pluralize',
