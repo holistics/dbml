@@ -1,6 +1,6 @@
 import Compiler, { addDoubleQuoteIfNeeded } from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import { Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
   InfixExpressionNode, SyntaxNode, UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode,
@@ -109,7 +109,7 @@ export const useModule: GlobalModule = {
     if (useDeclaration?.importPath?.value === undefined) return Report.create(undefined);
 
     // Find the referenced import path
-    const importPath = resolveImportFilepath(node.filepath, useDeclaration.importPath.value);
+    const importPath = compiler.layout.resolveFileSpecifier(node.filepath, useDeclaration.importPath.value);
     if (!importPath) return Report.create(
       undefined,
       [
@@ -120,7 +120,7 @@ export const useModule: GlobalModule = {
     if (!compiler.layout.exists(importPath)) return Report.create(
       undefined,
       [
-        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toString()}. Does the file exist?`, node),
+        new CompileError(CompileErrorCode.NONEXISTENT_MODULE, `${symbolKind} '${fullname?.join('.') ?? name}' does not exist in file ${importPath.toKey()}. Does the file exist?`, node),
       ],
     );
 
@@ -145,7 +145,7 @@ export const useModule: GlobalModule = {
     return Report.create(
       undefined,
       [
-        new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toString()}`, node),
+        new CompileError(CompileErrorCode.BINDING_ERROR, `${symbolKind} '${name}' does not exist in file ${importPath.toKey()}`, node),
       ],
     );
   },
@@ -154,14 +154,8 @@ export const useModule: GlobalModule = {
     if (isUseDeclaration(node)) {
       const errors: CompileError[] = [];
       if (node.importPath?.value) {
-        const importPath = resolveImportFilepath(node.filepath, node.importPath.value);
-        if (!importPath) {
-          errors.push(new CompileError(
-            CompileErrorCode.BINDING_ERROR,
-            `Import path must be relative, got '${node.importPath.value}'`,
-            node.importPath,
-          ));
-        } else if (!compiler.layout.exists(importPath)) {
+        const importPath = compiler.layout.resolveFileSpecifier(node.filepath, node.importPath.value);
+        if (!importPath || !compiler.layout.exists(importPath)) {
           errors.push(new CompileError(
             CompileErrorCode.NONEXISTENT_MODULE,
             `Failed to resolve the non-existent file '${node.importPath.value}'`,
@@ -246,7 +240,7 @@ function lookupMemberInFilepath (compiler: Compiler, importPath: Filepath | unde
     if (destructureComplexVariable(specifier.alias ?? specifier.name)?.at(-1) === name) {
       const reuseDecl = specifier.parentOfKind(UseDeclarationNode);
       if (reuseDecl?.importPath?.value) {
-        const reusePath = resolveImportFilepath(importPath, reuseDecl.importPath.value);
+        const reusePath = compiler.layout.resolveFileSpecifier(importPath, reuseDecl.importPath.value);
         const originalName = destructureComplexVariable(specifier.name)?.at(-1) ?? name;
         const found = lookupMemberInFilepath(compiler, reusePath, originalName, symbolKind, visited);
         if (found) return found;

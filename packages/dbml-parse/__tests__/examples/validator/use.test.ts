@@ -24,11 +24,14 @@ describe('[example] use declaration validation', () => {
     expect(validate('use { table x } from \'./a\'\nTable t { id int }').getErrors()).toHaveLength(0);
   });
 
-  test('invalid: absolute import path', () => {
+  test('valid: absolute import path', () => {
     const errors = validate('use { table users } from \'/absolute/path\'').getErrors();
-    expect(errors).toHaveLength(1);
-    expect(errors[0].code).toBe(CompileErrorCode.INVALID_USE_SPECIFIER_NAME);
-    expect(errors[0].diagnostic).toBe("Import path must be a relative path (starting with './' or '../')");
+    expect(errors).toHaveLength(0);
+  });
+
+  test('valid: absolute import path with @', () => {
+    const errors = validate('use { table users } from \'@id\'').getErrors();
+    expect(errors).toHaveLength(0);
   });
 
   test('invalid: unknown specifier kind', () => {
