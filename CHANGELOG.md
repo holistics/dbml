@@ -1,3 +1,34 @@
+## v10.3.0 (2026-10-07)
+
+#### :running_woman: Performance
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#990](https://github.com/holistics/dbml/pull/990) Perf/enable tree shaking ([@huydo862003](https://github.com/huydo862003))
+
+#### :rocket: New Feature
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#983](https://github.com/holistics/dbml/pull/983) Chore: Expose diagnostic filepath ([@xuantho573](https://github.com/xuantho573))
+* `dbml-cli`, `dbml-parse`
+  * [#984](https://github.com/holistics/dbml/pull/984) Feat/absolute file import ([@huydo862003](https://github.com/huydo862003))
+
+#### :memo: Documentation
+* [#971](https://github.com/holistics/dbml/pull/971) Chore(docs): update copywriting for metadata to custom properties ([@xuantho573](https://github.com/xuantho573))
+
+#### :robot: Dependencies Update
+* [#818](https://github.com/holistics/dbml/pull/818) chore(deps): bump webpack from 5.94.0 to 5.111.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#953](https://github.com/holistics/dbml/pull/953) chore(deps): bump postcss from 8.5.15 to 8.5.28 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#954](https://github.com/holistics/dbml/pull/954) chore(deps): bump nanoid from 3.3.12 to 3.3.18 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#961](https://github.com/holistics/dbml/pull/961) chore(deps): bump browserslist from 4.23.0 to 4.29.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#970](https://github.com/holistics/dbml/pull/970) chore(deps): bump colord from 2.9.3 to 2.10.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#972](https://github.com/holistics/dbml/pull/972) chore(deps): bump svgo from 3.3.4 to 3.3.5 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#975](https://github.com/holistics/dbml/pull/975) chore(deps): bump joi from 17.13.4 to 17.13.8 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#966](https://github.com/holistics/dbml/pull/966) chore(deps): bump @humanfs/node from 0.16.6 to 0.16.8 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#967](https://github.com/holistics/dbml/pull/967) chore(deps): bump mysql2 from 3.11.0 to 3.23.1 ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#976](https://github.com/holistics/dbml/pull/976) chore(deps-dev): bump vitest from 4.1.8 to 4.1.11 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 2
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v10.2.0 (2026-09-23)
 
 ### :rocket: New Feature
