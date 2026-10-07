@@ -90,4 +90,5 @@ export type {
   CustomMetadata,
   RelationCardinality,
   RelationshipOp,
+  DbmlProjectLayout,
 } from '@dbml/parse';
