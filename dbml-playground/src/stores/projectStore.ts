@@ -1,7 +1,7 @@
 import { ref, computed, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { debounce } from 'lodash-es';
-import { DEFAULT_ENTRY } from '@dbml/parse';
+import { DEFAULT_ENTRY, Filepath } from '@dbml/parse';
 import { DEFAULT_SAMPLE_CONTENT } from '@/services/sample-content';
 import { compressToBase64, decompressFromBase64 } from '../utils/compression';
 import logger from '../utils/logger';
@@ -128,6 +128,8 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   function addFile (path: string, content = '') {
+    path = Filepath.from(path).absolute;
+
     files.value[path] = content;
     currentFile.value = path;
     persistProject();
@@ -147,6 +149,8 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   function renameFile (oldPath: string, newPath: string) {
+    newPath = Filepath.from(newPath).absolute;
+
     if (oldPath === newPath || files.value[newPath] !== undefined) return;
     const content = files.value[oldPath] ?? '';
     files.value[newPath] = content;
@@ -158,6 +162,8 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   function addFolder (path: string) {
+    path = Filepath.from(path).absolute;
+
     if (!folders.value.includes(path)) {
       folders.value.push(path);
       persistProject();
@@ -179,6 +185,8 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   function renameFolder (oldPath: string, newPath: string) {
+    newPath = Filepath.from(newPath).absolute;
+
     if (oldPath === newPath) return;
     const prefix = oldPath + '/';
     folders.value = folders.value.map((f) => {
