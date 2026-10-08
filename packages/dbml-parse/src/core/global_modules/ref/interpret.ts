@@ -1,6 +1,5 @@
 import {
-  destructureComplexVariable, extractVariableFromExpression,
-  getBody,
+  destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression, getBody,
 } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
@@ -24,6 +23,7 @@ import type Compiler from '@/compiler';
 import {
   extractColor,
   getTokenPosition,
+  normalizeNote,
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
 import { validateCardinality } from './constraint_fixes';
@@ -36,6 +36,7 @@ import { REF_METADATA_FIELDS } from '../metadata/registries';
 // Ref settings that are natively attached to the ref, so they are never custom metadata
 const REF_BUILTIN_SETTINGS = [
   SettingName.Color,
+  SettingName.Note,
   SettingName.Delete,
   SettingName.Update,
   SettingName.Inactive,
@@ -170,6 +171,14 @@ export class RefInterpreter {
         : extractVariableFromExpression(updateSetting) as string;
 
       this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value) : undefined;
+
+      const [
+        noteNode,
+      ] = settingMap[SettingName.Note] || [];
+      this.ref.note = noteNode && {
+        value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
+        token: getTokenPosition(noteNode),
+      };
 
       this.ref.inactive = settingMap.inactive?.length ? true : undefined;
 
