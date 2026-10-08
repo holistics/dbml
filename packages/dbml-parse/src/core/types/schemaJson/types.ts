@@ -181,6 +181,10 @@ export interface Ref {
   name: string | null;
   endpoints: RefEndpointPair;
   color?: Color;
+  note?: {
+    value: string;
+    token: TokenPosition;
+  };
   onDelete?: string;
   onUpdate?: string;
   inactive?: boolean;
