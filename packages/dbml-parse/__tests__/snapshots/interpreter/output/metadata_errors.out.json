@@ -2,7 +2,7 @@
   "errors": [
     {
       "code": "BINDING_ERROR",
-      "diagnostic": "cannot find metadata target element",
+      "diagnostic": "Cannot find metadata target element: `Table public.missing`",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -14,7 +14,7 @@
     },
     {
       "code": "INVALID_METADATA_TARGET_KIND",
-      "diagnostic": "A Metadata target kind must be one of: Table, Column, TableGroup, Note",
+      "diagnostic": "A Metadata target kind must be one of: Table, Column, TableGroup, Note, Ref",
       "filepath": "/main.dbml",
       "level": "error",
       "token": {
@@ -28,7 +28,7 @@
     },
     {
       "code": "INVALID_METADATA_TARGET_KIND",
-      "diagnostic": "A Metadata target kind must be one of: Table, Column, TableGroup, Note",
+      "diagnostic": "A Metadata target kind must be one of: Table, Column, TableGroup, Note, Ref",
       "filepath": "/main.dbml",
       "level": "error",
       "token": {

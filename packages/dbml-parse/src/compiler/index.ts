@@ -43,6 +43,9 @@ import {
   resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
+import { visibleSymbols } from './queries/symbol/visibleSymbols';
+import { metadataTargets } from './queries/metadata/metadataTargets';
+import { isSymbolVisible } from './queries/metadata/isSymbolVisible';
 import {
   renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
@@ -362,14 +365,30 @@ export default class Compiler {
   // Return all UseSymbols across the project whose originalSymbol is the given symbol (transitive).
   // Signature: (symbol: NodeSymbol) => Report<UseSymbol[]>
   symbolUses = this.globalQuery(symbolUses);
+  /**
+    * A global query
+    * Return the named refs visible from a program (refs are not imported via `use`).
+    */
+  visibleSymbols = this.globalQuery(visibleSymbols);
+  /**
+    * A global query
+    * Whether a symbol is visible from a program
+    */
+  isSymbolVisible = this.globalQuery(isSymbolVisible);
+  /**
+    * A global query
+    * Resolve all candidates that a metadata block can target
+    */
+  metadataTargets = this.globalQuery(metadataTargets);
 
   // A local query
   // Return the direct import filepath IDs declared by use statements in a file. Related: reachableFiles.
   // Signature: (filepath: Filepath) => Filepath[]
   fileDependencies = this.localQuery(fileDependencies);
-  // A global query
-  // BFS-traverse imports from an entry filepath and return all reachable files. Related: fileDependencies.
-  // Signature: (entry: Filepath) => Filepath[]
+  /**
+    * A global query
+    * BFS-traverse imports from an entry filepath and return all reachable files. Related: fileDependencies.
+    */
   reachableFiles = this.globalQuery(reachableFiles);
   // A global query
   // Return the importable members (non-schema, schema, reuses, uses) of a schema symbol, program symbol, or file.
