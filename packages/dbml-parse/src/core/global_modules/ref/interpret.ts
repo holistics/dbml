@@ -1,23 +1,18 @@
 import {
-  destructureComplexVariable, extractVariableFromExpression,
-  getBody,
+  destructureComplexVariable, extractQuotedStringToken, extractVariableFromExpression, getBody,
 } from '@/core/utils/expression';
-import { aggregateSettingList, isValidHexColor } from '@/core/utils/validate';
+import { aggregateSettingList, isExpressionAQuotedString, isValidHexColor } from '@/core/utils/validate';
 import { extractStringFromIdentifierStream } from '@/core/utils/expression';
 import { CompileError, CompileErrorCode, CompileInfo } from '@/core/types/errors';
-import type { SyntaxToken } from '@/core/types/tokens';
 import {
   ElementDeclarationNode,
   FunctionApplicationNode,
-  InfixExpressionNode,
   IdentifierStreamNode,
   ListExpressionNode,
   AttributeNode,
-  PrefixExpressionNode,
 } from '@/core/types/nodes';
 import type { Color, Ref } from '@/core/types/schemaJson';
 import {
-  ColumnSymbol,
   RefMetadata,
   RefSymbol,
   SettingName,
@@ -28,6 +23,7 @@ import type Compiler from '@/compiler';
 import {
   extractColor,
   getTokenPosition,
+  normalizeNote,
 } from '@/core/utils/interpret';
 import Report from '@/core/types/report';
 import { validateCardinality } from './constraint_fixes';
@@ -36,7 +32,7 @@ import { zip } from 'lodash-es';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
 import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
 
-export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, SettingName.Color> = {
+export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, SettingName.Color | SettingName.Note> = {
   [SettingName.Color]: {
     isValidBuiltinFieldValue: isValidHexColor,
     message: "'color' must be a color literal",
@@ -44,11 +40,19 @@ export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, SettingName.Color> 
       element.color = value as Color;
     },
   },
+  [SettingName.Note]: {
+    isValidBuiltinFieldValue: isExpressionAQuotedString,
+    message: "'note' must be a string literal",
+    assignBuiltinField (element, value, token) {
+      element.note = { value, token };
+    },
+  },
 };
 
 // Ref settings that are natively attached to the ref, so they are never custom metadata
 const REF_BUILTIN_SETTINGS = [
   SettingName.Color,
+  SettingName.Note,
   SettingName.Delete,
   SettingName.Update,
   SettingName.Inactive,
@@ -183,6 +187,14 @@ export class RefInterpreter {
         : extractVariableFromExpression(updateSetting) as string;
 
       this.ref.color = settingMap.color?.length ? extractColor(settingMap.color?.at(0)?.value) : undefined;
+
+      const [
+        noteNode,
+      ] = settingMap[SettingName.Note] || [];
+      this.ref.note = noteNode && {
+        value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
+        token: getTokenPosition(noteNode),
+      };
 
       this.ref.inactive = settingMap.inactive?.length ? true : undefined;
 
