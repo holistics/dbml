@@ -1,5 +1,5 @@
 import type { CustomMetadata } from '@dbml/parse';
-import Element, { Token, Color } from './element';
+import Element, { Token, Color, RawNote } from './element';
 import Endpoint from './endpoint';
 import Schema from './schema';
 import DbState from './dbState';
@@ -8,6 +8,7 @@ import TablePartial from './tablePartial';
 export interface RawRef {
     name: string;
     color?: Color;
+    note?: RawNote;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
@@ -19,6 +20,8 @@ export interface RawRef {
 declare class Ref extends Element {
     name: string;
     color?: Color;
+    note: string;
+    noteToken: Token;
     endpoints: Endpoint[];
     onDelete: any;
     onUpdate: any;
@@ -52,6 +55,7 @@ declare class Ref extends Element {
         onUpdate: any;
         metadata: CustomMetadata;
         injectedPartialId?: number;
+        note: string;
     };
     exportChild(): {
         endpoints: {
@@ -80,6 +84,7 @@ export interface NormalizedRef {
     schemaId: number;
     endpointIds: number[];
     injectedPartialId?: number;
+    note: string;
 }
 
 export interface NormalizedRefIdMap {
