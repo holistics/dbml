@@ -1,3 +1,16 @@
+## v10.3.1 (2026-10-09)
+
+#### :house_with_garden: Internal
+* `dbml-core`
+  * [#998](https://github.com/holistics/dbml/pull/998) Revert externalize antlr and luxon to avoid breaking vscode extensions ([@huydo862003](https://github.com/huydo862003))
+
+#### :robot: Dependencies Update
+* [#993](https://github.com/holistics/dbml/pull/993) chore(deps): bump shell-quote from 1.10.0 to 1.12.0 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))
+* [#994](https://github.com/holistics/dbml/pull/994) chore(deps): bump source-map-js from 1.2.1 to 1.2.2 ([@dependabot[bot]](https://github.com/apps/dependabot))
+
+#### Committers: 1
+- Huy Do Nguyen An ([@huydo862003](https://github.com/huydo862003))
+
 ## v10.3.0 (2026-10-07)
 
 #### :running_woman: Performance
