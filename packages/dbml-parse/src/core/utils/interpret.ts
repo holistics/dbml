@@ -1,13 +1,13 @@
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type {
-  Color, ColumnType, CustomMetadata, TokenPosition,
+  Color, ColumnType, CustomMetadata, CustomMetadataValue, TokenPosition,
 } from '@/core/types/schemaJson';
 import { ArrayNode, CallExpressionNode, FunctionExpressionNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression,
+  destructureComplexVariable, destructureMemberAccessExpression, extractBooleanLiteral, extractNumericLiteral, extractQuotedStringToken, extractVariableFromExpression,
 } from './expression';
 import {
   isExpressionASignedNumberExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode, isValidHexColor,
@@ -192,9 +192,16 @@ export function extractCustomInlineMetadata (settingMap: Settings, builtinSettin
   return values;
 }
 
-// Best-effort scalar extraction for a free-form metadata value node, tries quoted string then color
-export function extractMetadataValue (node?: SyntaxNode): string | Color | undefined {
+// Best-effort scalar extraction for a free-form metadata value node.
+// Tries: quoted string -> color.
+export function extractMetadataValue (node?: SyntaxNode): CustomMetadataValue | undefined {
   if (!node) return undefined;
+
+  const boolean = extractBooleanLiteral(node);
+  if (boolean !== null) return boolean;
+
+  const number = extractNumericLiteral(node);
+  if (number !== null) return number;
 
   const quoted = extractQuotedStringToken(node);
   if (quoted !== undefined) return quoted;

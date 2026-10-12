@@ -4,7 +4,7 @@ import {
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
-  Column, MetadataValues, Note, Table, TableGroup, TokenPosition,
+  Column, CustomMetadataValue, MetadataValues, Note, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
 import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
 import { NodeSymbol, SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
@@ -25,11 +25,11 @@ interface MetadataField<T extends MetadataTarget> {
   message: string;
 
   /** Write the metadata value to the element builtin props (e.g. write to `table.note`) */
-  assignBuiltinField (element: Partial<T>, value: string, token: TokenPosition): void;
+  assignBuiltinField (element: Partial<T>, value: CustomMetadataValue, token: TokenPosition): void;
 }
 
-// Per-kind registry of promotable settings, each with its own validate + assign
-export type MetadataFieldRegistry<T extends MetadataTarget, K extends SettingName = SettingName> = Record<K, MetadataField<T>>;
+// A per-kind registry: exactly the promotable settings for that kind, each carrying its own validate + assign. K is tightened per kind.
+export type MetadataFieldRegistry<T extends MetadataTarget, K extends SettingName> = Record<K, MetadataField<T>>;
 
 type NameWithSymbolKind = {
   name: string;
@@ -145,7 +145,7 @@ export function attachCustomMetadata<T extends MetadataTarget> (
     .filter((v) => !!v) as MetadataValues[];
   if (!valueSets.length) return;
 
-  const lowerKeyMap: Record<string, { originalKey: string; value: string; token: TokenPosition }> = {};
+  const lowerKeyMap: Record<string, { originalKey: string; value: CustomMetadataValue; token: TokenPosition }> = {};
   for (const values of valueSets) {
     for (const [originalKey, { value, token }] of Object.entries(values)) {
       lowerKeyMap[originalKey.toLowerCase()] = { originalKey, value, token };

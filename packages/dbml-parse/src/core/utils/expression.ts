@@ -1,6 +1,7 @@
 import { last } from 'lodash-es';
 import {
   isAccessExpression,
+  isExpressionAnIdentifierNode,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isTupleOfVariables,
@@ -179,8 +180,17 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
   return null;
 }
 
-// Destructure a call expression like `schema.table(col1, col2)` or `table(col1, col2)`
-// Returns the callee variables (schema, table) and the args (col1, col2)
+export function extractBooleanLiteral (node?: SyntaxNode): boolean | null {
+  if (isExpressionAnIdentifierNode(node)) {
+    const value = node.expression.variable.value.toLowerCase();
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+  }
+  return null;
+}
+
+// Destructure a call expression like `schema.table(col1, col2)` or `table(col1, col2)`.
+// Returns the callee variables (schema, table) and the args (col1, col2).
 //   schema.table(col1, col2) => { variables: [schema, table], args: [col1, col2] }
 //   table(col1, col2)        => { variables: [table], args: [col1, col2] }
 //   table()                  => { variables: [table], args: [] }

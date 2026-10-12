@@ -2,7 +2,7 @@ import { groupBy, isEmpty, reduce } from 'lodash-es';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, getRelationshipOp, normalizeQualifiedName, parseCardinality,
 } from '@dbml/parse';
-import type { CustomMetadata } from '@dbml/parse';
+import type { CustomMetadata, CustomMetadataValue } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
 import { DEFAULT_SCHEMA_NAME } from '../model_structure/config';
 import type { NormalizedModel, RecordValue } from '../../types/model_structure/database';
@@ -474,13 +474,18 @@ class DbmlExporter {
     return recordStrs.join('\n');
   }
 
+  static formatMetadataValue (value: CustomMetadataValue): string {
+    if (typeof value === 'string') return DbmlExporter.escapeNote(value);
+    return String(value);
+  }
+
   static exportMetadata (model: NormalizedModel): string {
     const blocks: string[] = [];
     const database = model.database['1'];
 
     const buildMetadataBlock = (header: string, metadata: CustomMetadata) => {
       const bodyLines = Object.entries(metadata)
-        .map(([key, value]) => `  ${key}: ${DbmlExporter.escapeNote(value)}`)
+        .map(([key, value]) => `  ${key}: ${DbmlExporter.formatMetadataValue(value)}`)
         .join('\n');
       return `Metadata ${header} {\n${bodyLines}\n}\n`;
     };

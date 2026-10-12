@@ -431,6 +431,7 @@ export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Not
     isValidBuiltinFieldValue: isExpressionAQuotedString,
     message: "'note' must be a string literal",
     assignBuiltinField (element, value, token) {
+      if (typeof value !== 'string') return;
       element.note = { value, token };
     },
   },
@@ -438,6 +439,7 @@ export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Not
     isValidBuiltinFieldValue: isValidHexColor,
     message: "'headercolor' must be a color literal",
     assignBuiltinField (element, value) {
+      if (typeof value !== 'string') return;
       element.headerColor = value as Color;
     },
   },
@@ -448,6 +450,7 @@ export const COLUMN_METADATA_FIELDS: MetadataFieldRegistry<Column, SettingName.N
     isValidBuiltinFieldValue: isExpressionAQuotedString,
     message: "'note' must be a quoted string",
     assignBuiltinField (element, value, token) {
+      if (typeof value !== 'string') return;
       element.note = { value, token };
     },
   },

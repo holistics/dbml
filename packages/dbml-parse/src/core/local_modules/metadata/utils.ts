@@ -1,6 +1,6 @@
 import { CompileError, CompileErrorCode, MetadataTargetKind } from '@/core/types';
 import type { AttributeNode, ElementDeclarationNode } from '@/core/types/nodes';
-import { isValidMetadataValue } from '@/core/utils/validate';
+import { extractMetadataValue } from '@/core/utils/interpret';
 
 export function getMetadataTargetKind (node: ElementDeclarationNode): MetadataTargetKind | undefined {
   const value = node.targetKind?.value?.toLowerCase();
@@ -23,10 +23,10 @@ export function validateCustomInlineMetadata (
   }
 
   attrs.forEach((attr) => {
-    if (!isValidMetadataValue(attr.value)) {
+    if (extractMetadataValue(attr.value) === undefined) {
       errors.push(new CompileError(
         errorCodes.invalidValue,
-        `Custom setting '${name}' must be a string or a color literal`,
+        `Custom setting '${name}' must be a string, a color literal, a number literal, or a boolean literal`,
         attr.value || attr.name || attr,
       ));
     }
