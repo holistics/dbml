@@ -31,6 +31,7 @@ export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color
     isValidBuiltinFieldValue: isValidColorOrNone,
     message: "'color' must be a color literal or 'none'",
     assignBuiltinField (element, value) {
+      if (typeof value !== 'string') return;
       element.color = value as Color;
     },
   },

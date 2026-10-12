@@ -88,6 +88,7 @@ export {
   type FilterConfig,
   type DiagramView,
   type CustomMetadata,
+  type CustomMetadataValue,
 } from '@/core/types/schemaJson';
 
 export {

@@ -1,6 +1,8 @@
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
-import { destructureComplexVariable, extractNumericLiteral, extractQuotedStringToken } from '@/core/utils/expression';
+import {
+  destructureComplexVariable, extractBooleanLiteral, extractNumericLiteral, extractQuotedStringToken,
+} from '@/core/utils/expression';
 import { isExpressionASignedNumberExpression } from '@/core/utils/validate';
 import { isExpressionAnIdentifierNode } from '@/core/utils/validate';
 import {
@@ -158,11 +160,8 @@ export function tryExtractBoolean (value: SyntaxNode | number | string | boolean
   }
 
   // Identifier: true, false
-  if (isExpressionAnIdentifierNode(value)) {
-    const varName = value.expression.variable?.value?.toLowerCase();
-    if (varName === 'true') return true;
-    if (varName === 'false') return false;
-  }
+  const booleanLiteral = extractBooleanLiteral(value);
+  if (booleanLiteral !== null) return booleanLiteral;
 
   // Numeric literal: 0, 1
   const numVal = extractNumericLiteral(value);
