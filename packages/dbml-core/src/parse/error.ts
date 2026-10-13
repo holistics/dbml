@@ -42,27 +42,3 @@ function flattenDiag (diag: DiagInput): CompilerDiagnostic[] {
   if (diag instanceof CompilerDiagnostics) return diag.diags;
   return [diag];
 }
-
-type ParseDiagnosticInput = {
-  diagnostic: string;
-  code?: number;
-  filepath: { absolute: string };
-  nodeOrToken: { startPos: EditorPosition; endPos: EditorPosition };
-};
-
-// Convert @dbml/parse CompileError/CompileWarning/CompileInfo array into legacy @dbml/core CompilerDiagnostics.
-export function processDbmlParserDiagnostics (
-  errors: ParseDiagnosticInput[],
-  type: WarningLevel = 'error',
-): CompilerDiagnostics {
-  return new CompilerDiagnostics(errors.map((error) => ({
-    message: error.diagnostic,
-    filepath: error.filepath.absolute,
-    location: {
-      start: error.nodeOrToken.startPos,
-      end: error.nodeOrToken.endPos,
-    },
-    type,
-    code: error.code,
-  })));
-}

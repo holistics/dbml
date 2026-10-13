@@ -1,6 +1,6 @@
 import ModelExporter from './export/ModelExporter';
 import Parser from './parse/Parser';
-import { CompilerDiagnostics, processDbmlParserDiagnostics } from './parse/error';
+import { CompilerDiagnostics } from './parse/error';
 import importer from './import';
 import exporter from './export';
 import {
@@ -24,7 +24,6 @@ export {
   syncDep,
   ModelExporter,
   CompilerDiagnostics,
-  processDbmlParserDiagnostics,
   Parser,
   VERSION,
 };

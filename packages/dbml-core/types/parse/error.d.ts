@@ -28,8 +28,3 @@ export declare class CompilerDiagnostics {
   static create(nestedDiags: unknown): CompilerDiagnostics;
   map(callback: (diag: CompilerDiagnostic) => CompilerDiagnostic): CompilerDiagnostics;
 }
-
-export declare function processDbmlParserDiagnostics(
-  errors: Array<{ diagnostic: string; code?: number; filepath: { absolute: string }; nodeOrToken: { startPos: EditorPosition; endPos: EditorPosition } }>,
-  type?: WarningLevel,
-): CompilerDiagnostics;
