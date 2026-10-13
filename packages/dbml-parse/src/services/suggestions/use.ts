@@ -225,11 +225,12 @@ function suggestUseFilepath (
     const dirPath = typedPrefix.slice(0, lastSlash + 1) || '/';
 
     for (const entry of compiler.layout.listDirectory(Filepath.from(dirPath))) {
-      if (!entry.absolute.startsWith(typedPrefix)) continue;
+      const entryPath = entry.fsPath;
+      if (!entryPath.startsWith(typedPrefix)) continue;
 
       const isDir = compiler.layout.isDirectory(entry);
       if (isDir) {
-        const label = `${entry.absolute}/`;
+        const label = `${entryPath}/`;
         const insertText = shouldQuote ? `'${label}'` : label;
         items.set(label, {
           label,
@@ -243,7 +244,7 @@ function suggestUseFilepath (
         const specifier = compiler.layout.getSpecifierForFile(currentFilepath, entry);
         if (specifier === undefined) continue;
 
-        const label = entry.absolute;
+        const label = entryPath;
         if (fileProvidesAllSpecifiers(compiler, entry, requiredSymbols)) bestMatches.add(label);
 
         const insertText = shouldQuote ? `'${specifier}'` : specifier;
