@@ -42,3 +42,27 @@ function flattenDiag (diag: DiagInput): CompilerDiagnostic[] {
   if (diag instanceof CompilerDiagnostics) return diag.diags;
   return [diag];
 }
+
+export interface ParseDiagnostic {
+  type: 'error' | 'warning' | 'info';
+  text: string;
+  startRow: number;
+  startColumn: number;
+  endRow: number;
+  endColumn: number;
+  code?: number;
+  filepath?: string;
+}
+
+export function processDbmlParserDiagnostics (error: CompilerDiagnostics): ParseDiagnostic[] {
+  return error.diags.map((diag) => ({
+    type: diag.type ?? 'error',
+    text: diag.message,
+    startRow: diag.location.start.line,
+    startColumn: diag.location.start.column,
+    endRow: diag.location.end?.line ?? diag.location.start.line,
+    endColumn: diag.location.end?.column ?? diag.location.start.column,
+    code: diag.code,
+    filepath: diag.filepath,
+  }));
+}
