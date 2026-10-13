@@ -1,4 +1,4 @@
-import { INLINE_FILE } from '@dbml/arch';
+import { INLINE_FILE, SELF_FILE } from '@dbml/arch';
 
 export const DEFAULT_SAMPLE_CONTENT = `Table users {
   id int [pk]
@@ -88,6 +88,8 @@ Table mart_orders [dep: <- fct_orders] {
 
 export const ARCHITECTURE_SAMPLE_CONTENT = INLINE_FILE;
 
+export const SELF_SAMPLE_CONTENT = SELF_FILE;
+
 export const SAMPLE_CATEGORIES: readonly SampleCategory[] = [
   {
     name: 'Basic Example',
@@ -98,6 +100,11 @@ export const SAMPLE_CATEGORIES: readonly SampleCategory[] = [
     name: 'Architecture',
     description: 'A network diagram: Kind opens the vocabulary, Group nests, Link draws',
     content: ARCHITECTURE_SAMPLE_CONTENT,
+  },
+  {
+    name: 'DBML itself',
+    description: 'The architecture dialect drawn in its own language: stages, not files',
+    content: SELF_SAMPLE_CONTENT,
   },
   {
     name: 'Data Lineage',

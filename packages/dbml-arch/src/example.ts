@@ -405,3 +405,337 @@ export const EXAMPLE_FILES: Record<string, string> = {
   '/main.arch.dbml': MAIN_FILE,
   '/packs/devops.arch.dbml': PACK_FILE,
 };
+
+/**
+ * DBML DRAWING ITSELF, and the reason this export exists.
+ *
+ * The estate example proves the language can describe a network, which is what the pictures it
+ * was lifted from happened to be. This one asks a harder question: can the same twelve words
+ * describe a CODEBASE?
+ *
+ * TWO THINGS WENT WRONG BEFORE THIS VERSION, and both are worth recording because they are
+ * the kind of mistake a diagramming language invites.
+ *
+ * The first draft drew one box per file. Thirty boxes, every one of them a filename, and the
+ * thing a reader actually wants — what happens to the text between being typed and being
+ * drawn — buried underneath. So a box here is a STAGE, one per step that changes the shape of
+ * the data, and there are fifteen of them.
+ *
+ * The second draft moved the file listings into free-standing `Note` boxes inside each
+ * container. That is reference material competing with the drawing for the same square
+ * inches: the layout engine placed each sticky wherever it fitted, the lines had to route
+ * around them, and the picture got worse the more reference material it carried. A note
+ * belongs TO something. So the listings are notes ON the containers, written as markdown, and
+ * the renderer shows them on hover rather than painting them on the canvas. The drawing is the
+ * pipeline; the notes are what you ask for when you want the detail.
+ *
+ * One gap is left standing rather than papered over: a line carries `proto` and `host`, which
+ * are network words, so `proto` is doing duty as a generic edge label and reads oddly for an
+ * import.
+ */
+export const SELF_FILE = `---
+title: DBML, drawn in DBML
+owner: dbx
+updated: 2026-10-13
+---
+
+Project dbml_itself {
+  diagram_type: 'architecture'
+  Note: 'What happens to a file between being typed and being drawn'
+}
+
+// Not one of the thirty-one built-in words describes code, so every word here is declared.
+// The vocabulary opening by seven is the vocabulary working; it is also the argument for
+// shipping a second pack next to the devops one.
+Kind Stage  [icon: chip,   color: '#3f6ea8']
+Kind Shape  [icon: graph,  color: '#4a7c59']
+Kind Words  [icon: tag]
+Kind Closed [icon: lock,   color: '#8a5a2b']
+Kind Author [icon: person]
+Kind Canvas [icon: browser]
+Kind Lib    [icon: nodejs]
+
+Author author [name: 'Whoever writes the file']
+
+// ── @dbml/parse: the front end both dialects share ────────────────────────────
+// A NODE TAKES A NOTE THE SAME WAY A CONTAINER DOES: a body with a \`Note:\` in it. Nothing
+// about the syntax changes because the box is smaller.
+Stage lex [name: 'Lexer'] {
+  Note: '''
+  **642 lines, and not one DBML word in them.**
+
+  It lexes identifiers, strings, numbers and punctuation. \`Table\` is
+  an identifier to it, and so is \`Server\`.
+
+  - \`allowFrontMatter\` is the one switch the dialect turns on here
+  - \`---\` ... \`---\` comes back as a single trivia token, fences on
+  '''
+}
+
+Stage parse [name: 'Parser'] {
+  Note: '''
+  **1623 lines with no mention of \`ElementKind\`.**
+
+  One generic \`elementDeclaration()\` reads \`Keyword name [settings] { body }\`
+  and does not care which keyword it was.
+
+  - \`allowBodylessElement\` lets \`Server api1\` stand on its own
+  - an architecture file is mostly bodyless; a DBML file is mostly bodies
+  '''
+}
+Stage filegraph [name: 'File graph & cache'] {
+  Note: '''
+  **Borrowed whole, and not adapted.**
+
+  \`use * from './packs/devops.arch'\` is DBML's own import, its own
+  resolver and its own cache.
+
+  - a specifier with no \`.dbml\` on it gets one appended
+  - which is why the suffix is \`.arch.dbml\` and not \`.dbml.arch\`
+  - the reverse misses, in every spelling
+  '''
+}
+Shape tokens    [name: 'Tokens']
+Shape ast       [name: 'Syntax tree']
+Words dbmlwords [name: "DBML's 16 elements"]
+
+// ── @dbml/arch: the architecture dialect ──────────────────────────────────────
+Stage dialect [name: 'Three dialect switches'] {
+  Note: '''
+  **Three switches, all off for DBML.**
+
+  - \`lexer.allowFrontMatter\`
+  - \`parser.allowBodylessElement\`
+  - an injectable module list, passed EMPTY here
+
+  All 2043 DBML tests pass unchanged with all three present.
+  Turning the bodyless one on by default would cost exactly one
+  fuzz test file, which is the measured price of never branching.
+  '''
+}
+Stage bind [name: 'Bind & interpret'] {
+  Note: '''
+  **Where this dialect stops borrowing.**
+
+  DBML's 16 modules resolve names against a schema. An architecture
+  file has no schema, so binding is written here instead.
+
+  - \`read.ts\` is the only file that touches a syntax node
+  - everything above it speaks in names, settings and ranges
+  - 18 of 20 architecture constructs parse through DBML unchanged
+  '''
+}
+Words archvocab [name: '31 kinds, 84 icon names'] {
+  Note: '''
+  **Closed at any moment, opened by one declaration.**
+
+  A model needs a closed set so \`Microservice\` cannot silently draw a
+  blank box. A person needs an open one, because no estate fits
+  thirty-one words.
+
+  - \`Kind Mongo [icon: mongodb]\` adds a word
+  - \`Kind Firewall [icon: firewall, color: '#c0453a']\` overrules one
+  - the grammar is untouched either way
+  '''
+}
+Shape model [name: 'NetworkModel'] {
+  Note: '''
+  **The whole contract between the two repositories.**
+
+  Types and two predicates. The moment a function lands in it that
+  does real work, the contract has become a library and the next
+  producer has to adopt its behaviour as well as its shape.
+
+  - \`kinds\`, \`elements\`, \`links\`, \`roots\`, \`frontMatter\`
+  - anything that can produce it can be drawn
+  '''
+}
+
+// ── the closed renderer, a separate repository ────────────────────────────────
+Closed measure [name: 'Measure boxes'] {
+  Note: '''
+  **Measured first, placed later.**
+
+  That order is what makes the layout engine swappable: ELK, a grid,
+  or a person dragging all take a box whose size is already settled
+  by the text inside it.
+
+  - a node is an icon and a caption, with no frame
+  - a note is NOT measured; it has no box to take up room
+  '''
+}
+Closed place [name: 'Place boxes'] {
+  Note: '''
+  **ELK places, with a grid behind it.**
+
+  - \`elk.layered\`, containers as real nesting
+  - saved overrides go on top: engine first, then the sidecar
+  - only leaves are saved; a container's box is always re-derived
+  '''
+}
+Closed route [name: 'Route lines'] {
+  Note: '''
+  **A\\* over an orthogonal visibility grid.**
+
+  ELK places the boxes; the lines are ours, because ELK's routing
+  put 1321px of line directly on top of other line in the worked
+  example. That is now 0.
+
+  - \`anchorBox()\` — sideways on the icon, vertically on the box
+  - \`fanOut()\` — lines sharing a side fan out, ordered by the far end
+  - \`separateLanes()\` — a pass for the corridors still shared
+  '''
+}
+Closed paint [name: 'Paint SVG'] {
+  Note: '''
+  **No canvas and no WebGL: the export is what is on screen.**
+
+  Colours arrive as \`var()\` references, so the page's theme owns
+  them and the same renderer sits in a playground, a docs page and
+  a product that each think they own the palette.
+
+  - dimming is a class, so a selection costs no geometry
+  - the drawings live here; the NAMES live in the open repo
+  '''
+}
+Lib    elk     [name: 'elkjs']
+
+// ── the playground ────────────────────────────────────────────────────────────
+Canvas editor [name: 'Monaco editor']
+Canvas stores [name: 'Pinia stores'] {
+  Note: '''
+  **Two compilers, one editor.**
+
+  - \`archStore\` compiles, and decides whether there IS a diagram
+  - \`parserStore\` is the DBML side, suppressed on an architecture
+    file so it does not report 154 problems about a language the
+    document is not written in
+  '''
+}
+Canvas pane   [name: 'Architecture pane']
+
+// A container's note is markdown, and it is where the file listing lives. A triple-quoted
+// string keeps its line breaks, so a list stays a list.
+Group frontend [name: '@dbml/parse — open, vocabulary-neutral'] {
+  lex
+  parse
+  filegraph
+  tokens
+  ast
+
+  Note: '''
+  **The front end, shared by both dialects.**
+
+  - \`src/core/lexer/\` — 642 lines, not one DBML word
+  - \`src/core/parser/\` — 1623 lines, no mention of \`ElementKind\`
+  - \`src/compiler/\` — layout, modules, dialect options
+  - \`src/core/types/\`, \`src/utils/\`
+
+  The lexer names no DBML word and the parser has a single generic
+  \`elementDeclaration()\`. That is the whole reason a second dialect
+  needs no fork of either.
+  '''
+}
+
+Group vocabulary_dbml [name: "DBML's own vocabulary"] {
+  dbmlwords
+
+  Note: '''
+  **\`src/core/global_modules/\` — 10,362 lines, 16 modules.**
+
+  - \`table\`, \`tablePartial\`, \`tableGroup\`, \`records\`
+  - \`ref\`, \`dep\`, \`enum\`, \`indexes\`
+  - \`project\`, \`note\`, \`metadata\`, \`diagramView\`
+  - \`use\`, \`program\`, \`checks\`, \`schema\`
+
+  An architecture file is compiled with this list EMPTY, which is how
+  no DBML element can claim a node in it.
+  '''
+}
+
+Group archpkg [name: '@dbml/arch — open, the new language'] {
+  dialect
+  bind
+  archvocab
+  model
+
+  Note: '''
+  **The dialect. 1368 lines, seven files.**
+
+  - \`compile.ts\` — bind and interpret, this dialect's own
+  - \`read.ts\` — 137 lines, the ONLY file that touches a syntax node
+  - \`vocabulary.ts\` — 31 built-in kinds
+  - \`icons.ts\` — 84 names, and no drawings
+  - \`model.ts\` — \`NetworkModel\`, the renderer's input contract
+  - \`example.ts\` — this file
+
+  If DBML moves its AST, \`read.ts\` moves and nothing else does.
+  '''
+}
+
+Group renderer [name: 'dbx-graph-renderer — closed, separate repository', style: dashed] {
+  measure
+  place
+  route
+  paint
+  elk
+
+  Note: '''
+  **Closed, and depends on no parser.**
+
+  - \`scene/\` — measure every box before anything is placed
+  - \`layout/\` — ELK, a grid fallback, saved overrides
+  - \`route/\` — A* over an orthogonal visibility grid
+  - \`paint/\` — SVG, and \`icons.ts\`: the drawings, not the names
+  - \`interact/\` — wheel scrolls, Cmd+wheel zooms, middle drag pans
+
+  Anything that can produce a \`NetworkModel\` can be drawn here.
+  '''
+}
+
+Group playground [name: 'dbml-playground'] {
+  editor
+  stores
+  pane
+
+  Note: '''
+  **Where both dialects are tried on.**
+
+  - \`stores/archStore.ts\` — compiles, decides if there IS a diagram
+  - \`stores/parserStore.ts\` — the DBML side, gated so architecture
+    files do not collect 154 red squiggles
+  - \`components/panes/\` — the canvas, hidden when there is nothing to draw
+  - \`components/editor/\` — Monaco
+  '''
+}
+
+Metadata bind {
+  reads 'read.ts, 137 lines'
+  owns 'binding and interpretation, deliberately not shared with DBML'
+}
+
+Metadata archvocab {
+  pairs_with 'the renderer icons.ts, asserted by a test on the closed side'
+}
+
+// ── what becomes what ─────────────────────────────────────────────────────────
+Link: author > editor   [proto: 'types .arch.dbml']
+Link: editor > stores
+Link: stores > dialect
+Link: dialect > filegraph [proto: 'front matter, bodyless elements, no modules']
+Link: filegraph > lex
+Link: lex > tokens
+Link: tokens > parse
+Link: parse > ast
+Link: ast > dbmlwords   [proto: 'DBML only']
+Link: ast > bind        [proto: 'architecture only']
+Link: bind > archvocab
+Link: bind > model
+Link: model > measure   [proto: 'the whole contract between the repositories']
+Link: measure > place
+Link: place > elk
+Link: place > route
+Link: route > paint
+Link: paint > pane      [proto: SVG]
+Link: stores > pane
+`;

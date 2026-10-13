@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { Compiler, Filepath, MemoryProjectLayout } from '@dbml/parse';
 import { compileArch, isArchitecture } from '../src/compile.js';
 import { isIconName } from '../src/icons.js';
-import { EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE } from '../src/example.js';
+import { isGroup, isNode } from '../src/model.js';
+import {
+  EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE, SELF_FILE,
+} from '../src/example.js';
 
 const one = (src: string) => compileArch({ '/main.arch.dbml': src });
 const codes = (src: string) => one(src).diagnostics.map((d) => d.code);
@@ -183,6 +186,95 @@ describe('the inline sample', () => {
     for (const kind of model.kinds.values()) {
       if (kind.glyph) continue;
       expect(isIconName(kind.icon), `${kind.name} -> ${kind.icon}`).toBe(true);
+    }
+  });
+});
+
+describe('the self-portrait', () => {
+  /**
+   * A codebase is not a network, and this is the cheapest test of whether the twelve words
+   * stretch that far: if the drawing of this package stops compiling, the language moved
+   * under a diagram somebody is reading.
+   */
+  it('compiles with no diagnostics, drawing packages and imports rather than hosts', () => {
+    const { model, diagnostics, diagramType } = compileArch({ '/self': SELF_FILE }, '/self');
+    expect(diagnostics).toEqual([]);
+    expect(diagramType).toBe('architecture');
+    expect(model.elements.size).toBeGreaterThan(20);
+  });
+
+  /**
+   * Not one of the thirty-one built-in words fits a package or a source file, so the drawing
+   * opens the vocabulary eight times and uses nothing it was given. That is the vocabulary
+   * working as designed, and also the clearest argument for a second pack.
+   */
+  it('draws itself entirely out of kinds it declared, using no built-in word', () => {
+    const { model, diagnostics } = compileArch({ '/self': SELF_FILE }, '/self');
+    expect(diagnostics).toEqual([]);
+
+    const declared = [...model.kinds.values()].filter((k) => !k.builtin);
+    expect(declared.map((k) => k.name).sort()).toEqual(
+      ['Author', 'Canvas', 'Closed', 'Lib', 'Shape', 'Stage', 'Words'],
+    );
+    for (const kind of declared) {
+      expect(isIconName(kind.icon), `${kind.name} -> ${kind.icon}`).toBe(true);
+    }
+
+    const used = new Set([...model.elements.values()].filter(isNode).map((n) => n.kind));
+    const builtinsUsed = [...used].filter((name) => model.kinds.get(name)?.builtin);
+    expect(builtinsUsed).toEqual([]);
+  });
+
+  /**
+   * A box per file was unreadable and a sticky note per listing was worse, so the listing is
+   * a note ON the container, written as markdown. Two things have to hold for that: a group
+   * has to carry a note at all (it silently dropped one until this was written), and the line
+   * breaks have to survive, because a file list flattened to one line is a paragraph.
+   */
+  it('hangs a markdown listing off every container, line breaks intact', () => {
+    const { model } = compileArch({ '/self': SELF_FILE }, '/self');
+    const groups = [...model.elements.values()].filter(isGroup);
+    expect(groups.length).toBeGreaterThan(3);
+
+    for (const group of groups) {
+      expect(group.note, `${group.id} has no note`).toBeTruthy();
+      expect(group.note!.split('\n').length, `${group.id} is one line`).toBeGreaterThan(2);
+      expect(group.note, `${group.id} lists nothing`).toContain('- `');
+    }
+
+    // the stickies are gone: the drawing is stages and containers, nothing else
+    expect([...model.elements.values()].filter((e) => e.sort === 'note')).toEqual([]);
+  });
+
+  /**
+   * A note is not a container feature. The same body works on a node, which matters because
+   * the question a reader has about a box is usually about THAT box, not about the room it
+   * is standing in.
+   */
+  it('takes the same note on a node, with no change to the syntax', () => {
+    const { model, diagnostics } = compileArch({ '/self': SELF_FILE }, '/self');
+    expect(diagnostics).toEqual([]);
+
+    const lexer = model.elements.get('lex');
+    expect(lexer?.sort).toBe('node');
+    expect(lexer?.note).toContain('642 lines');
+    expect(lexer?.note).toContain('- `allowFrontMatter`');
+    expect(lexer?.note!.split('\n').length).toBeGreaterThan(3);
+
+    // most of the stages carry one: the drawing is the pipeline, the notes are the detail
+    const noted = [...model.elements.values()].filter((e) => isNode(e) && e.note);
+    expect(noted.length).toBeGreaterThan(8);
+    for (const node of noted) {
+      expect(node.note!.split('\n').length, node.id).toBeGreaterThan(2);
+    }
+  });
+
+  it('strips the indentation the author used, so the markdown starts at column one', () => {
+    const { model } = compileArch({ '/self': SELF_FILE }, '/self');
+    const note = model.elements.get('archpkg')?.note ?? '';
+    expect(note.startsWith('**')).toBe(true);
+    for (const line of note.split('\n')) {
+      expect(line === line.trimStart() || line.startsWith('  '), line).toBe(true);
     }
   });
 });

@@ -60,5 +60,10 @@ export default defineConfig({
     // fails silently into the grid fallback. Excluding it does not buy the code splitting
     // either: that is rollup's doing at build time, and it still produces its own chunk.
     include: ['monaco-editor', 'vue', 'elkjs/lib/elk.bundled.js'],
+    // The renderer is consumed as TypeScript source over a `yarn link`. Vite already skips
+    // pre-bundling a linked package, but saying so here is what keeps an edit in that checkout
+    // live: the moment it lands in the dependency cache instead, the playground serves a
+    // snapshot and every change to the renderer looks like it did nothing.
+    exclude: ['@holistics/dbx-graph-renderer'],
   },
 });

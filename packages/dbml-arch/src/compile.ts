@@ -401,10 +401,43 @@ function readGroup (declaration: ElementDeclarationNode, id: string, file: strin
     children,
     settings,
     meta: {},
-    note: null,
+    note: noteOf(declaration),
     parent: null,
     at: locate(declaration, file),
   };
+}
+
+/**
+ * `Note: '...'` inside a body, in whichever element carries one.
+ *
+ * NEWLINES SURVIVE, which is the whole reason this is not a one-liner. A note on a container
+ * is where a file listing goes, and a file listing is a list: flattening it to one line turns
+ * reference material into a paragraph nobody reads. DBML's triple-quoted string already keeps
+ * the line breaks, so all this has to do is not throw them away, and strip the indentation the
+ * author used to keep the source readable.
+ *
+ * The text is handed on as the author wrote it. Whether `- a` becomes a bullet is the
+ * renderer's business; the language's business is to deliver the characters intact.
+ */
+function noteOf (declaration: ElementDeclarationNode): string | null {
+  for (const row of bodyOf(declaration)) {
+    // `Note: 'DigitalOcean managed load balancer'` inside a body is a nested declaration
+    if (!isElement(row)) continue;
+    if (elementKindWord(row) !== 'Note') continue;
+    const text = bodyOf(row).map((n) => nameOf(rowOf(n)?.callee) ?? '').join(' ');
+    return dedent(text) || null;
+  }
+  return null;
+}
+
+/** the common left margin is the author indenting their source, not part of the note */
+function dedent (text: string): string {
+  const lines = text.split('\n');
+  const indents = lines
+    .filter((line) => line.trim())
+    .map((line) => line.length - line.trimStart().length);
+  const margin = indents.length ? Math.min(...indents) : 0;
+  return lines.map((line) => line.slice(margin)).join('\n').trim();
 }
 
 function readNode (
@@ -414,15 +447,7 @@ function readNode (
   file: string,
 ): NodeElement {
   const settings = settingsOf(declaration.attributeList);
-  let note: string | null = null;
-
-  for (const row of bodyOf(declaration)) {
-    // `Note: 'DigitalOcean managed load balancer'` inside a body is a nested declaration
-    if (!isElement(row)) continue;
-    if (elementKindWord(row) === 'Note') {
-      note = bodyOf(row).map((n) => nameOf(rowOf(n)?.callee) ?? '').join(' ').trim() || null;
-    }
-  }
+  const note = noteOf(declaration);
 
   return {
     sort: 'node',
