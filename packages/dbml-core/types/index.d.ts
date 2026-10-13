@@ -26,7 +26,7 @@ export type { ExportFormat, ExportOptions } from './export/index';
 export type { DbmlExporterOptions } from './export/DbmlExporter';
 export type { JsonExporterOptions } from './export/JsonExporter';
 export type { ImportFormat, ImportOptions } from './import/index';
-export { CompilerDiagnostic, CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, ParseDiagnostic, processDbmlParserDiagnostics } from './parse/error';
+export { CompilerDiagnostic, CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel, processDbmlParserDiagnostics } from './parse/error';
 export * from './model_structure';
 
 export {

@@ -29,15 +29,7 @@ export declare class CompilerDiagnostics {
   map(callback: (diag: CompilerDiagnostic) => CompilerDiagnostic): CompilerDiagnostics;
 }
 
-export interface ParseDiagnostic {
-  type: 'error' | 'warning' | 'info';
-  text: string;
-  startRow: number;
-  startColumn: number;
-  endRow: number;
-  endColumn: number;
-  code?: number;
-  filepath?: string;
-}
-
-export declare function processDbmlParserDiagnostics(error: CompilerDiagnostics): ParseDiagnostic[];
+export declare function processDbmlParserDiagnostics(
+  errors: Array<{ diagnostic: string; code?: number; filepath: { absolute: string }; nodeOrToken: { startPos: EditorPosition; endPos: EditorPosition } }>,
+  type?: WarningLevel,
+): CompilerDiagnostics;
