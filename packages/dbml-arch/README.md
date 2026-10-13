@@ -124,7 +124,16 @@ yarn vitest run                       # 16 tests
 yarn --cwd ../../dbml-playground dev  # the Architecture tab, http://localhost:3001
 ```
 
-The playground resolves `@dbml/arch` and `@holistics/dbx-graph-renderer` from source, so edits to either are
-live. `@dbml/parse` is the exception: its own sources use `@/` to mean its own `src`, which
-collides with the playground's `@` alias, so it runs from `dist`. Run `yarn build` in
+`@holistics/dbx-graph-renderer` is closed and is not on the registry yet, so link it:
+
+```bash
+cd ~/<wherever>/dbx-graph-renderer && yarn link
+cd ~/<wherever>/dbml/dbml-playground && yarn link @holistics/dbx-graph-renderer
+```
+
+Without it everything works except the Architecture tab.
+
+The playground resolves `@dbml/arch` and the renderer from source, so edits to either are live.
+`@dbml/parse` is the exception: its own sources use `@/` to mean its own `src`, which collides
+with the playground's `@` alias, so it runs from `dist`. Run `yarn build` in
 `packages/dbml-parse` after touching the kernel.

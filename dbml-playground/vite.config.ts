@@ -1,7 +1,23 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import tailwindcss from '@tailwindcss/vite';
-import { resolve } from 'path';
+import { createRequire } from 'node:module';
+import { dirname, resolve } from 'path';
+
+/**
+ * Where the renderer actually is, asked of the resolver rather than guessed from a path.
+ *
+ * It is a closed package and most people working on DBML will not have it. Returning undefined
+ * is the honest answer then: everything in the playground works except the Architecture tab.
+ */
+function rendererRoot (): string | undefined {
+  try {
+    const require = createRequire(import.meta.url);
+    return dirname(require.resolve('@holistics/dbx-graph-renderer/package.json'));
+  } catch {
+    return undefined;
+  }
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,20 +38,17 @@ export default defineConfig({
       // after touching the kernel. `@dbml/arch` has no such alias of its own, so it runs from
       // source and edits to the dialect are live.
       '@dbml/arch': resolve(__dirname, '../packages/dbml-arch/src/index.ts'),
-      // The drawing lives in holistics/dbx-graph-renderer, which is closed, checked out beside
-      // this one. It is the only closed dependency here and it is confined to this alias and to
-      // ArchitectureTab.vue: `@dbml/arch` owns the model and the icon names and takes none.
-      // The stylesheet first: aliases match in order, and the bare name would swallow it.
-      '@holistics/dbx-graph-renderer/styles.css': resolve(__dirname, '../../dbx-graph-renderer/src/styles.css'),
-      '@holistics/dbx-graph-renderer': resolve(__dirname, '../../dbx-graph-renderer/src/index.ts'),
     },
   },
   server: {
     port: 3001,
     open: true,
     fs: {
-      // the renderer lives in a sibling repository, holistics/dbx-graph-renderer
-      allow: [resolve(__dirname, '..'), resolve(__dirname, '../../dbx-graph-renderer')],
+      // `@holistics/dbx-graph-renderer` is consumed as source and is usually `yarn link`ed, so
+      // it resolves to wherever that checkout happens to be. Vite refuses to serve files from
+      // outside the project root unless told, and the whole point of a link is that the path is
+      // not ours to predict.
+      allow: [resolve(__dirname, '..'), rendererRoot()].filter(Boolean) as string[],
     },
   },
   build: {
