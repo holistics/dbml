@@ -22,17 +22,20 @@ export default defineConfig({
       // after touching the kernel. `@dbml/arch` has no such alias of its own, so it runs from
       // source and edits to the dialect are live.
       '@dbml/arch': resolve(__dirname, '../packages/dbml-arch/src/index.ts'),
-      // the stylesheet first: aliases match in order, and the bare name would swallow it
-      '@atlas/renderer/styles.css': resolve(__dirname, '../../atlas-lang/packages/renderer/src/styles.css'),
-      '@atlas/renderer': resolve(__dirname, '../../atlas-lang/packages/renderer/src/index.ts'),
+      // The drawing lives in a closed repository, checked out beside this one. It is the only
+      // closed dependency here and it is confined to this alias and to ArchitectureTab.vue:
+      // `@dbml/arch` owns the model and the icon names and takes none.
+      // The stylesheet first: aliases match in order, and the bare name would swallow it.
+      '@atlas/arch-renderer/styles.css': resolve(__dirname, '../../code-atlas/packages/arch-renderer/src/styles.css'),
+      '@atlas/arch-renderer': resolve(__dirname, '../../code-atlas/packages/arch-renderer/src/index.ts'),
     },
   },
   server: {
     port: 3001,
     open: true,
     fs: {
-      // the renderer lives in a sibling repo while the dialect proves itself
-      allow: [resolve(__dirname, '..'), resolve(__dirname, '../../atlas-lang')],
+      // the renderer lives in a sibling repository, holistics/dbx-code-atlas
+      allow: [resolve(__dirname, '..'), resolve(__dirname, '../../code-atlas')],
     },
   },
   build: {

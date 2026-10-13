@@ -107,14 +107,15 @@ file moves and nothing else does.
 
 ## The renderer
 
-`@atlas/renderer` draws the result. It knows nothing about DBML or about any parser: it declares
+`@atlas/arch-renderer` draws the result. It knows nothing about DBML or about any parser: it declares
 its own input contract in `src/model.ts` and draws anything that satisfies it. That is why the
 playground tab is thirty lines of wiring rather than a port.
 
-It currently lives in a sibling repository (`../../../atlas-lang`) while the dialect proves
-itself, and is resolved by path in `vitest.config.ts`, `tsconfig.json` and the playground's
-`vite.config.ts`. It is deliberately **not** a `file:` dependency: one pointing outside this
-repository would break a plain clone.
+It lives in `holistics/dbx-code-atlas`, which is closed, and **this repository does not depend
+on it**: `@dbml/arch` owns the model (`src/model.ts`) and the icon names (`src/icons.ts`), so
+the language works without the drawing. The only thing that needs it is the playground's
+Architecture tab, through one alias in `dbml-playground/vite.config.ts`, and the playground is
+not published.
 
 ## Running it
 
@@ -123,7 +124,7 @@ yarn vitest run                       # 16 tests
 yarn --cwd ../../dbml-playground dev  # the Architecture tab, http://localhost:3001
 ```
 
-The playground resolves `@dbml/arch` and `@atlas/renderer` from source, so edits to either are
+The playground resolves `@dbml/arch` and `@atlas/arch-renderer` from source, so edits to either are
 live. `@dbml/parse` is the exception: its own sources use `@/` to mean its own `src`, which
 collides with the playground's `@` alias, so it runs from `dist`. Run `yarn build` in
 `packages/dbml-parse` after touching the kernel.

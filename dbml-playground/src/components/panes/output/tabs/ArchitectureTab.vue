@@ -6,7 +6,7 @@
  * graph, the same Monaco model and the same diagnostics plumbing. What differs is the element
  * vocabulary and two grammar switches, and this tab is where that difference becomes a picture.
  *
- * The renderer is `@atlas/renderer`, which knows nothing about DBML or about any parser: it
+ * The renderer is `@atlas/arch-renderer`, which knows nothing about DBML or about any parser: it
  * takes a NetworkModel and draws it. That is why this file is thirty lines of wiring rather
  * than a port.
  *
@@ -19,8 +19,8 @@
 import {
   onBeforeUnmount, onMounted, ref, shallowRef, watch,
 } from 'vue';
-import { NetworkView, type SavedLayout } from '@atlas/renderer';
-import '@atlas/renderer/styles.css';
+import { NetworkView, type SavedLayout } from '@atlas/arch-renderer';
+import '@atlas/arch-renderer/styles.css';
 import { useArchStore } from '@/stores/archStore';
 import { useProjectStore } from '@/stores/projectStore';
 
