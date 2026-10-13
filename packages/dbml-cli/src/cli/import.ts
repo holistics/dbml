@@ -47,9 +47,7 @@ export default async function importHandler (program: Command) {
     }
   } catch (error) {
     if (error instanceof CompilerDiagnostics) {
-      const msg = `\n    ${error.diags.map((diag: CompilerDiagnostic) => new SyntaxError(diag.filepath ?? '', diag)).map(({
-        message,
-      }: { message: string }) => message).join('\n    ')}`;
+      const msg = `\n    ${error.diags.map((diag: CompilerDiagnostic) => new SyntaxError(diag.filepath ?? '', diag)).map((e: SyntaxError) => e.message).join('\n    ')}`;
       consoleLogger.error(msg);
       fileLogger.error(msg);
       return;

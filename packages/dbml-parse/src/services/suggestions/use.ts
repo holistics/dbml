@@ -192,7 +192,7 @@ function isAbsolutePathBrowse (s: string): boolean {
 }
 
 // Suggest import paths. Two modes:
-// - Filepath mode (user types /, ./, ../): browse via listDirectory, insert specifier on file select
+// - Filepath browse mode (user types /): browse via listDirectory, insert specifier on file select
 // - Specifier mode (anything else): list reachable files, map to specifier, filter by prefix
 function suggestUseFilepath (
   compiler: Compiler,
