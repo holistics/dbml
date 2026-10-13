@@ -21,7 +21,6 @@ import {
 } from '@/services/types';
 import { getEditorRange } from '../utils';
 import { uniqBy } from 'lodash-es';
-import { DBML_EXT } from '@/constants';
 
 // Use-declaration completions. Returns null if cursor not inside a use statement.
 export function suggestUseCompletion (
@@ -227,9 +226,8 @@ function suggestUseFilepath (
   for (const filepath of allFilepaths) {
     if (filepath.equals(currentFilepath)) continue; // Do not suggest current filepath
 
-    let relativePathToCurrentDir = filepath.relativeTo(currentDir);
-    if (relativePathToCurrentDir.endsWith(DBML_EXT)) relativePathToCurrentDir = relativePathToCurrentDir.slice(0, -DBML_EXT.length); // slice off `.dbml` postfix to allow conciseness
-    if (!relativePathToCurrentDir.startsWith('.')) relativePathToCurrentDir = `./${relativePathToCurrentDir}`;
+    const relativePathToCurrentDir = compiler.layout.getSpecifierForFile(currentFilepath, filepath);
+    if (relativePathToCurrentDir === undefined) continue;
 
     if (existingIncompleteImportPath && !relativePathToCurrentDir.startsWith(existingIncompleteImportPath)) continue;
 

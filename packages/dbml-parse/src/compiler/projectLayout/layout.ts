@@ -12,6 +12,11 @@ export interface DbmlProjectLayout {
   // Note: If two different specifiers both resolve to the same filepath, they are treated as same import to same files, not different files with same content
   resolveFileSpecifier (currentFilepath: Filepath, specifier: string): Filepath | undefined;
 
+  // The inverse of resolveFileSpecifier.
+  // Returns the specifier the user should type to import targetFilepath from currentFilepath.
+  // Returns undefined if no specifier can express this relationship in the layout.
+  getSpecifierForFile (currentFilepath: Filepath, targetFilepath: Filepath): string | undefined;
+
   getSource (filePath: Filepath): string | undefined;
 
   exists (filePath: Filepath): boolean;
@@ -41,6 +46,12 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
     if (!Filepath.isRelative(relativePath)) return undefined;
     const resolved = Filepath.resolve(currentFilepath.dirname, relativePath);
     return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
+  }
+
+  getSpecifierForFile (currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {
+    let specifier = targetFilepath.relativeTo(currentFilepath.dirname);
+    if (specifier.endsWith('.dbml')) specifier = specifier.slice(0, -'.dbml'.length);
+    return specifier;
   }
 
   setSource (filePath: Filepath, content: string): void {

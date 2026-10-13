@@ -273,6 +273,14 @@ Ref: nodes.parent_id > nodes.id`;
       getEntrypoints (): Filepath[] {
         return [...this.files.keys()].map(Filepath.from).sort((a, b) => a.absolute.localeCompare(b.absolute));
       }
+
+      getSpecifierForFile (_currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {
+        const match = targetFilepath.absolute.match(/^\/@imports\/(.+)\.dbml$/);
+        if (match) return `@${match[1]}`;
+        let specifier = targetFilepath.relativeTo(_currentFilepath.dirname);
+        if (specifier.endsWith('.dbml')) specifier = specifier.slice(0, -'.dbml'.length);
+        return specifier;
+      }
     }
 
     it('should resolve @id import and retrieve source correctly', () => {
