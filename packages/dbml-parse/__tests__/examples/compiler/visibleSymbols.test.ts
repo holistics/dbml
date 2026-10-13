@@ -59,7 +59,7 @@ Ref: posts.id - users.id
 
       const refs = visible(compiler, '/main.dbml', SymbolKind.Ref);
       expect(refs.map((s) => s.name)).toEqual(['r', 'r']);
-      expect(new Set(refs.map((s) => s.filepath.toString())).size).toBe(2);
+      expect(new Set(refs.map((s) => s.filepath.toKey())).size).toBe(2);
     });
   });
 });
