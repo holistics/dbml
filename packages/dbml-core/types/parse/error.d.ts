@@ -22,9 +22,22 @@ export declare interface CompilerDiagnostic {
   readonly code?: Readonly<ErrorCode>;
 }
 
-export declare class CompilerError {
+export declare class CompilerDiagnostics {
   diags: CompilerDiagnostic[];
   constructor(diags: CompilerDiagnostic[]);
-  static create(nestedDiags: unknown): CompilerError;
-  map(callback: (diag: CompilerDiagnostic) => CompilerDiagnostic): CompilerError;
+  static create(nestedDiags: unknown): CompilerDiagnostics;
+  map(callback: (diag: CompilerDiagnostic) => CompilerDiagnostic): CompilerDiagnostics;
 }
+
+export interface ParseDiagnostic {
+  type: 'error' | 'warning' | 'info';
+  text: string;
+  startRow: number;
+  startColumn: number;
+  endRow: number;
+  endColumn: number;
+  code?: number;
+  filepath?: string;
+}
+
+export declare function processDbmlParserDiagnostics(error: CompilerDiagnostics): ParseDiagnostic[];
