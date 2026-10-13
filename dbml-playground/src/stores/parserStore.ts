@@ -14,6 +14,7 @@ import type { ParserDiagnostic } from '../types';
 import { toMonacoRange } from '../utils/monaco';
 import logger from '../utils/logger';
 import { useProjectStore } from './projectStore';
+import { useArchStore } from './archStore';
 
 const DEBOUNCE_MS = 300;
 
@@ -92,6 +93,17 @@ export const useParserStore = defineStore('parser', () => {
   const compiler = new Compiler(layout);
   const diagnosticsProvider = new DBMLDiagnosticsProvider(compiler);
   const project = useProjectStore();
+  const arch = useArchStore();
+
+  /**
+   * DBML's validator has nothing useful to say about an architecture document.
+   *
+   * It is the same grammar, so the file parses; it is a different vocabulary, so every element
+   * in it is an unknown kind. Left alone this buries the editor in red over a file that is
+   * correct, and buries the real architecture diagnostics along with it. Tokens, nodes and
+   * symbols stay: those are about the tree, and the tree is the same machinery.
+   */
+  const isArchitectureDocument = () => arch.hasArchitecture;
 
   const isLoading = ref(false);
 
@@ -141,8 +153,13 @@ export const useParserStore = defineStore('parser', () => {
         ast.value = undefined;
       }
 
-      errors.value = (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
-      database.value = compiler.interpretFile(currentFilepath).getValue() as Database | undefined;
+      const architecture = isArchitectureDocument();
+      errors.value = architecture
+        ? []
+        : (diagnosticsProvider.provideErrors(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
+      database.value = architecture
+        ? undefined
+        : compiler.interpretFile(currentFilepath).getValue() as Database | undefined;
 
       const programSymbol = compiler.nodeSymbol(parseIndex.ast).getFiltered(UNHANDLED);
       symbols.value = programSymbol ? [buildSymbolInfo(compiler, programSymbol)] : [];
@@ -167,8 +184,13 @@ export const useParserStore = defineStore('parser', () => {
       }];
     } finally {
       try {
-        warnings.value = (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
-        infos.value = (diagnosticsProvider.provideInfos(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
+        const architecture = isArchitectureDocument();
+        warnings.value = architecture
+          ? []
+          : (diagnosticsProvider.provideWarnings(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
+        infos.value = architecture
+          ? []
+          : (diagnosticsProvider.provideInfos(currentFilepath) as Diagnostic[]).filter((d) => d.filepath.equals(currentFilepath)).map(toParserDiagnostic);
       } catch (_err) {
         logger.warn('Failed to get warnings/infos');
         warnings.value = [];

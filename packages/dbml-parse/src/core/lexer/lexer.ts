@@ -8,6 +8,20 @@ import {
 } from '@/core/types/tokens';
 import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 
+/**
+ * Grammar switches the lexer offers a dialect. Off by default, so DBML is untouched.
+ */
+export interface LexerOptions {
+  /**
+   * Read a `---` fenced block at the very top of a file as one trivia token.
+   *
+   * It is Markdown's convention and people expect it for file-level metadata. DBML has no use
+   * for it, because `Project { ... }` already carries that and its interpreter files any
+   * unrecognised field as a free-form property. A dialect that wants both says so here.
+   */
+  allowFrontMatter?: boolean;
+}
+
 export default class Lexer {
   private start: Position = {
     offset: 0,
@@ -29,9 +43,34 @@ export default class Lexer {
 
   private errors: CompileError[] = []; // list of errors during lexing
 
-  constructor (text: string, filepath: Filepath) {
+  private readonly options: LexerOptions;
+
+  constructor (text: string, filepath: Filepath, options: LexerOptions = {}) {
     this.text = text;
     this.filepath = filepath;
+    this.options = options;
+  }
+
+  /**
+   * Only at offset zero, and only up to the closing fence.
+   *
+   * It is consumed character by character like everything else, so `line` and `column` keep
+   * counting and every token after it still reports where it really is. Lifting the block out
+   * of the text instead would shift every diagnostic in the file by however many lines it had.
+   */
+  private scanFrontMatter (): void {
+    if (!this.options.allowFrontMatter) return;
+    if (!this.text.startsWith('---')) return;
+    const afterFence = this.text[3];
+    if (afterFence !== '\n' && afterFence !== '\r') return;
+
+    const closing = this.text.indexOf('\n---', 3);
+    if (closing === -1) return; // an unterminated fence is not front matter, it is just text
+
+    let end = this.text.indexOf('\n', closing + 1);
+    if (end === -1) end = this.text.length;
+    while (this.current.offset < end) this.advance();
+    this.addToken(SyntaxTokenKind.FRONT_MATTER);
   }
 
   private isAtEnd (): boolean {
@@ -109,6 +148,7 @@ export default class Lexer {
   }
 
   scanTokens () {
+    this.scanFrontMatter();
     while (!this.isAtEnd()) {
       const c = this.advance();
       switch (c) {

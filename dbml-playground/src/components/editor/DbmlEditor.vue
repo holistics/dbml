@@ -34,6 +34,7 @@ import { DBMLLanguageService } from '@/components/editor/dbml_language';
 import { useMonacoModel } from '@/components/editor/useMonacoModel';
 import { useVimController } from '@/components/editor/useVimController';
 import { useParserStore } from '@/stores/parserStore';
+import { useArchStore } from '@/stores/archStore';
 import { updateDiagnosticMarkers } from '@/components/editor/dbml_services';
 
 const {
@@ -271,6 +272,7 @@ const SUGGESTION_TRIGGER_CHARS = [
 ];
 
 const parser = useParserStore();
+const arch = useArchStore();
 let pendingRetrigger = false;
 
 function shouldTriggerSuggestion (_editor: monaco.editor.IStandaloneCodeEditor): boolean {
@@ -296,12 +298,12 @@ watch(() => filepath, () => {
   pendingRetrigger = false;
 });
 
-watch([() => parser.errors, () => parser.warnings, () => parser.infos], () => {
+watch([() => parser.errors, () => parser.warnings, () => parser.infos, () => arch.hasArchitecture], () => {
   const _editor = editor.value;
   if (!_editor) return;
   const model = _editor.getModel();
   if (!model) return;
-  updateDiagnosticMarkers(model);
+  updateDiagnosticMarkers(model, arch.hasArchitecture);
 });
 
 // After each completed parse the compiler is fully synced - retrigger the

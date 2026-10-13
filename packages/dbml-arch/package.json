@@ -1,0 +1,21 @@
+{
+  "name": "@dbml/arch",
+  "version": "10.3.1",
+  "private": true,
+  "type": "module",
+  "description": "The architecture dialect: DBML's lexer, parser and file graph, a different vocabulary, and a NetworkModel the renderer can draw.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "@dbml/parse": "^10.3.1"
+  },
+  "//": "The drawing lives in a closed package and this one does not depend on it. The model in src/model.ts and the icon names in src/icons.ts are owned here, because they are the public output of an open compiler and part of the language it accepts."
+}

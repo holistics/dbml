@@ -7,6 +7,7 @@ export enum OutputTabId {
   Nodes = 'nodes',
   Symbols = 'symbols',
   Database = 'database',
+  Architecture = 'architecture',
   Diagnostics = 'diagnostics',
 }
 

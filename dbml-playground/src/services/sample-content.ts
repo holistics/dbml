@@ -1,3 +1,5 @@
+import { INLINE_FILE } from '@dbml/arch';
+
 export const DEFAULT_SAMPLE_CONTENT = `Table users {
   id int [pk]
   username varchar [not null]
@@ -84,11 +86,18 @@ Table mart_orders [dep: <- fct_orders] {
   total decimal
 }`;
 
+export const ARCHITECTURE_SAMPLE_CONTENT = INLINE_FILE;
+
 export const SAMPLE_CATEGORIES: readonly SampleCategory[] = [
   {
     name: 'Basic Example',
     description: 'Simple tables with relationships',
     content: DEFAULT_SAMPLE_CONTENT,
+  },
+  {
+    name: 'Architecture',
+    description: 'A network diagram: Kind opens the vocabulary, Group nests, Link draws',
+    content: ARCHITECTURE_SAMPLE_CONTENT,
   },
   {
     name: 'Data Lineage',

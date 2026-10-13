@@ -1,5 +1,6 @@
 import {
   bindNode,
+  dbmlModules,
   interpretMetadata,
   interpretSymbol,
   nodeMetadata,
@@ -7,6 +8,18 @@ import {
   nodeSymbol,
   symbolMembers,
 } from '@/core/global_modules';
+import type { GlobalModule } from '@/core/global_modules/types';
+import type { ParserOptions } from '@/core/parser/parser';
+import type { LexerOptions } from '@/core/lexer/lexer';
+
+/**
+ * Grammar switches a dialect asks for, gathered in one place so the Compiler does not grow a
+ * parameter per stage. Every switch inside is off by default, so DBML is exactly what it was.
+ */
+export interface DialectOptions {
+  lexer?: LexerOptions;
+  parser?: ParserOptions;
+}
 import {
   nodeFullname, nodeAlias, nodeSettings, validateNode,
 } from '@/core/local_modules';
@@ -72,8 +85,20 @@ export default class Compiler {
   readonly symbolIdGenerator = new NodeSymbolIdGenerator();
   readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  // The structure of the DbmlProject
-  constructor (public layout: DbmlProjectLayout) {}
+  /**
+   * @param layout the structure of the DbmlProject
+   * @param modules the element vocabulary. Defaults to DBML's own, so every existing caller is
+   *   unchanged. A dialect that wants different elements passes its own list: the lexer, the
+   *   parser, the symbol table, the file graph, the caching and the diagnostics are all shared,
+   *   and only the words differ. Composing rather than replacing is the point, so a dialect
+   *   that still wants `Note` or `use` includes those modules in its own list.
+   * @param dialect grammar switches the vocabulary needs. Empty for DBML.
+   */
+  constructor (
+    public layout: DbmlProjectLayout,
+    public readonly modules: GlobalModule[] = dbmlModules,
+    public readonly dialect: DialectOptions = {},
+  ) {}
 
   getSource (filepath: Filepath): string | undefined {
     return this.layout.getSource(filepath);

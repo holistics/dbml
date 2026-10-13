@@ -26,9 +26,20 @@ import { tablePartialModule } from './tablePartial';
 import type { GlobalModule } from './types';
 import { useModule } from './use';
 
-// Registry of all element modules; the dispatcher tries each in order until one claims the node.
-// Each time you add a new element, register its module here.
-export const modules: GlobalModule[] = [
+/**
+ * The DBML vocabulary: the modules a Compiler uses when nobody says otherwise.
+ *
+ * The dispatcher tries each in order until one claims the node, so order is meaningful. Each
+ * time you add a new DBML element, register its module here.
+ *
+ * A Compiler may also be built with a different list (see `Compiler`'s second argument). The
+ * lexer and the parser do not know this vocabulary at all: `parser.ts` has one generic
+ * `elementDeclaration()` and never mentions `ElementKind`, so another dialect is a different
+ * array, not a different grammar. Pass a different list and the same front end binds a
+ * different language, which is how the architecture dialect reuses all of this without forking
+ * it or widening DBML's own vocabulary by a single word.
+ */
+export const dbmlModules: GlobalModule[] = [
   // UseSymbol doesn't have dedicated SymbolKind but use kinds like Table, TableGroup, ...
   // so make it the first module to claim the UseSymbol
   useModule,
@@ -49,12 +60,13 @@ export const modules: GlobalModule[] = [
   programModule,
 ];
 
-// Chain-of-responsibility: iterate modules until one handles the node (returns non-PASS_THROUGH)
+// Chain-of-responsibility: iterate the compiler's modules until one handles the node
 function dispatch<K extends keyof GlobalModule> (
+  compiler: Compiler,
   method: K,
   ...args: Parameters<NonNullable<GlobalModule[K]>>
 ): ReturnType<NonNullable<GlobalModule[K]>> | Report<PassThrough> {
-  for (const module of modules) {
+  for (const module of compiler.modules) {
     const fn = module[method] as any;
     if (fn) {
       const result = fn(...args);
@@ -68,36 +80,36 @@ function dispatch<K extends keyof GlobalModule> (
 }
 
 export function nodeSymbol (this: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<Unhandled> {
-  const res = dispatch('nodeSymbol', this, node);
+  const res = dispatch(this, 'nodeSymbol', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
 export function symbolMembers (this: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<Unhandled> {
-  const res = dispatch('symbolMembers', this, symbol);
+  const res = dispatch(this, 'symbolMembers', this, symbol);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
 export function nodeReferee (this: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<Unhandled> {
-  const res = dispatch('nodeReferee', this, node);
+  const res = dispatch(this, 'nodeReferee', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
 export function bindNode (this: Compiler, node: SyntaxNode): Report<void> | Report<Unhandled> {
-  const res = dispatch('bindNode', this, node);
+  const res = dispatch(this, 'bindNode', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
 export function nodeMetadata (this: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<Unhandled> {
-  const res = dispatch('nodeMetadata', this, node);
+  const res = dispatch(this, 'nodeMetadata', this, node);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
 export function interpretSymbol (this: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
-  const res = dispatch('interpretSymbol', this, symbol, filepath);
+  const res = dispatch(this, 'interpretSymbol', this, symbol, filepath);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
 export function interpretMetadata (this: Compiler, metadata: NodeMetadata, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
-  const res = dispatch('interpretMetadata', this, metadata, filepath);
+  const res = dispatch(this, 'interpretMetadata', this, metadata, filepath);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
