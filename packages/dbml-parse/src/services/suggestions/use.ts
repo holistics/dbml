@@ -187,7 +187,13 @@ function suggestUseSpecifierStart (): CompletionList {
   };
 }
 
-// Suggest direct-child subpaths. Files matching all specifiers sort first.
+function isAbsolutePathBrowse (s: string): boolean {
+  return s.startsWith('/');
+}
+
+// Suggest import paths. Two modes:
+// - Filepath mode (user types /, ./, ../): browse via listDirectory, insert specifier on file select
+// - Specifier mode (anything else): list reachable files, map to specifier, filter by prefix
 function suggestUseFilepath (
   compiler: Compiler,
   currentFilepath: Filepath,
@@ -195,19 +201,13 @@ function suggestUseFilepath (
   model: TextModel,
   useDeclaration: UseDeclarationNode,
 ): CompletionList {
-  const currentDir = currentFilepath.dirname;
+  const typedPrefix = importPath?.value ?? '';
+  const shouldQuote = importPath === undefined;
 
-  // Default to `./` so direct-children slicing lines up with
-  // `asImportPath`'s output when the user hasn't started the string yet.
-  const existingIncompleteImportPath = importPath ? importPath.value : './';
-  // If the import path hasn't been typed out, we need to quote it
-  const shouldInsertQuoteToImportPath = importPath === undefined;
-
-  // Target range between quotes so replacement preserves them.
-  let existingImportPathRange: any;
+  let range: any;
   if (importPath) {
     const tokenRange = getEditorRange(model, importPath);
-    existingImportPathRange = {
+    range = {
       startLineNumber: tokenRange.startLineNumber,
       startColumn: tokenRange.startColumn + 1,
       endLineNumber: tokenRange.endLineNumber,
@@ -215,62 +215,93 @@ function suggestUseFilepath (
     };
   }
 
-  const pathToCompletionItem = new Map<string, CompletionItem>();
-  // Folders containing a matching file sort first.
-  const childContainsMatch = new Map<string, boolean>();
+  const requiredSymbols = extractRequiredSymbols(useDeclaration);
+  const items = new Map<string, CompletionItem>();
+  const bestMatches = new Set<string>();
 
-  // Scan all reachable files
-  const allFilepaths = uniqBy(compiler.layout.getEntrypoints().flatMap((f) => [
-    ...compiler.reachableFiles(f),
-  ]), (p) => p.intern());
-  for (const filepath of allFilepaths) {
-    if (filepath.equals(currentFilepath)) continue; // Do not suggest current filepath
+  if (isAbsolutePathBrowse(typedPrefix)) {
+    // Filepath mode: browse directory, insert specifier for files
+    const lastSlash = typedPrefix.lastIndexOf('/');
+    const dirPath = typedPrefix.slice(0, lastSlash + 1) || '/';
 
-    const relativePathToCurrentDir = compiler.layout.getSpecifierForFile(currentFilepath, filepath);
-    if (relativePathToCurrentDir === undefined) continue;
+    for (const entry of compiler.layout.listDirectory(Filepath.from(dirPath))) {
+      if (!entry.absolute.startsWith(typedPrefix)) continue;
 
-    if (existingIncompleteImportPath && !relativePathToCurrentDir.startsWith(existingIncompleteImportPath)) continue;
+      const isDir = compiler.layout.isDirectory(entry);
+      if (isDir) {
+        const label = `${entry.absolute}/`;
+        const insertText = shouldQuote ? `'${label}'` : label;
+        items.set(label, {
+          label,
+          insertText,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          kind: CompletionItemKind.Folder,
+          sortText: `2${label}`,
+          range,
+        });
+      } else {
+        const specifier = compiler.layout.getSpecifierForFile(currentFilepath, entry);
+        if (specifier === undefined) continue;
 
-    // Take next segment only - deeper entries collapse onto their folder.
-    const tail = relativePathToCurrentDir.slice(existingIncompleteImportPath.length);
-    const childLabel = `${existingIncompleteImportPath}${tail.split('/')[0]}`;
+        const label = entry.absolute;
+        if (fileProvidesAllSpecifiers(compiler, entry, requiredSymbols)) bestMatches.add(label);
 
-    // Ask layout so symlinks resolve correctly.
-    const childAbsolute = Filepath.resolve(currentDir, childLabel);
-    const isDir = compiler.layout.isDirectory(childAbsolute);
+        const insertText = shouldQuote ? `'${specifier}'` : specifier;
+        items.set(label, {
+          label,
+          detail: specifier,
+          insertText,
+          insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+          kind: CompletionItemKind.File,
+          sortText: `3${label}`,
+          range,
+        });
+      }
+    }
+  } else {
+    // Specifier mode: list all reachable files, map to specifier, filter by prefix
+    const allFilepaths = uniqBy(compiler.layout.getEntrypoints().flatMap((f) => [
+      ...compiler.reachableFiles(f),
+    ]), (p) => p.intern());
 
-    const requiredSymbols = extractRequiredSymbols(useDeclaration);
-    const fileMatches = fileProvidesAllSpecifiers(compiler, filepath, requiredSymbols);
-    if (fileMatches) childContainsMatch.set(childLabel, true);
+    for (const filepath of allFilepaths) {
+      if (filepath.equals(currentFilepath)) continue;
 
-    if (pathToCompletionItem.has(childLabel)) continue;
+      const specifier = compiler.layout.getSpecifierForFile(currentFilepath, filepath);
+      if (specifier === undefined || !specifier.startsWith(typedPrefix)) continue;
 
-    const insertText = shouldInsertQuoteToImportPath ? `'${childLabel}'` : childLabel;
-    pathToCompletionItem.set(childLabel, {
-      label: childLabel,
-      insertText,
-      insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-      kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
-      // Sort: best-match file (0) -> best-match folder (1) -> folder (2) -> file (3).
-      sortText: `${isDir ? '2' : '3'}${childLabel}`,
-      range: existingImportPathRange,
-    });
+      // Collapse to next segment (only when user has started typing a prefix)
+      let childLabel = specifier;
+      let isDir = false;
+      if (typedPrefix) {
+        const tail = specifier.slice(typedPrefix.length);
+        childLabel = `${typedPrefix}${tail.split('/')[0]}`;
+        isDir = childLabel !== specifier;
+      }
+
+      if (fileProvidesAllSpecifiers(compiler, filepath, requiredSymbols)) bestMatches.add(childLabel);
+      if (items.has(childLabel)) continue;
+
+      const insertText = shouldQuote ? `'${childLabel}'` : childLabel;
+      items.set(childLabel, {
+        label: childLabel,
+        insertText,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
+        sortText: `${isDir ? '2' : '3'}${childLabel}`,
+        range,
+      });
+    }
   }
 
-  for (const [
-    label,
-    item,
-  ] of pathToCompletionItem) {
-    if (!childContainsMatch.get(label)) continue;
+  // Promote best matches to top
+  for (const [label, item] of items) {
+    if (!bestMatches.has(label)) continue;
     item.sortText = `${item.kind === CompletionItemKind.File ? '0' : '1'}${label}`;
-    item.detail = 'best match';
+    item.detail = item.detail ? `${item.detail} · best match` : 'best match';
   }
 
-  return {
-    suggestions: [
-      ...pathToCompletionItem.values(),
-    ],
-  };
+  return { suggestions: [...items.values()] };
 }
 
 // Extract { name, kind } pairs from the use declaration's specifier list.
