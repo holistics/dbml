@@ -20,7 +20,6 @@ import {
   type TextModel,
 } from '@/services/types';
 import { getEditorRange } from '../utils';
-import { uniqBy } from 'lodash-es';
 
 // Use-declaration completions. Returns null if cursor not inside a use statement.
 export function suggestUseCompletion (
@@ -272,10 +271,9 @@ function suggestUseFilepath (
       }
     }
   } else {
-    // Specifier mode: list all reachable files, map to specifier, filter by prefix
-    const allFilepaths = uniqBy(compiler.layout.getEntrypoints().flatMap((f) => [
-      ...compiler.reachableFiles(f),
-    ]), (p) => p.intern());
+    // Specifier mode: list top-level project files via listDirectory, map to specifier, filter by prefix
+    const allFilepaths = compiler.layout.listDirectory(Filepath.from('/'))
+      .filter((f) => compiler.layout.isFile(f));
 
     for (const filepath of allFilepaths) {
       if (filepath.equals(currentFilepath)) continue;
@@ -283,25 +281,17 @@ function suggestUseFilepath (
       const specifier = compiler.layout.getSpecifierForFile(currentFilepath, filepath);
       if (specifier === undefined || !specifier.startsWith(existingIncompleteImportPath)) continue;
 
-      // Collapse to next segment (only when user has started typing a prefix)
-      let childLabel = specifier;
-      let isDir = false;
-      if (existingIncompleteImportPath) {
-        const tail = specifier.slice(existingIncompleteImportPath.length);
-        childLabel = `${existingIncompleteImportPath}${tail.split('/')[0]}`;
-        isDir = childLabel !== specifier;
-      }
+      if (fileProvidesAllSpecifiers(compiler, filepath, requiredSymbols)) bestMatches.add(specifier);
+      if (items.has(specifier)) continue;
 
-      if (fileProvidesAllSpecifiers(compiler, filepath, requiredSymbols)) bestMatches.add(childLabel);
-      if (items.has(childLabel)) continue;
-
-      const insertText = shouldInsertQuoteToImportPath ? `'${childLabel}'` : childLabel;
-      items.set(childLabel, {
-        label: childLabel,
+      const insertText = shouldInsertQuoteToImportPath ? `'${specifier}'` : specifier;
+      items.set(specifier, {
+        label: specifier,
+        detail: filepath.fsPath,
         insertText,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
-        sortText: `${isDir ? '2' : '3'}${childLabel}`,
+        kind: CompletionItemKind.File,
+        sortText: `3${specifier}`,
         range,
       });
     }
