@@ -21,6 +21,11 @@ import {
 } from '@/services/types';
 import { getEditorRange } from '../utils';
 
+export interface SuggestUseCompletionOptions {
+  // Maximum directory depth for specifier-mode file listing (default: 2)
+  fileListDepth?: number;
+}
+
 // Use-declaration completions. Returns null if cursor not inside a use statement.
 export function suggestUseCompletion (
   compiler: Compiler,
@@ -28,11 +33,13 @@ export function suggestUseCompletion (
   offset: number,
   bOcToken: SyntaxToken | undefined,
   model: TextModel,
+  options: SuggestUseCompletionOptions = {},
 ): CompletionList | null {
+  const fileListDepth = options.fileListDepth ?? 2;
   const ast = compiler.parse.ast(filepath);
   for (const node of ast.body) {
     if (node instanceof UseDeclarationNode && offset >= node.start && offset <= node.fullEnd) {
-      return suggestInUseDeclaration(compiler, filepath, offset, node, model, bOcToken);
+      return suggestInUseDeclaration(compiler, filepath, offset, node, model, bOcToken, fileListDepth);
     }
   }
   return null;
@@ -45,10 +52,11 @@ function suggestInUseDeclaration (
   useDecl: UseDeclarationNode,
   model: TextModel,
   bOcToken: SyntaxToken | undefined,
+  fileListDepth: number,
 ): CompletionList {
   // Inside importPath string -> filepath completions
   if (useDecl.importPath && isOffsetWithinSpan(offset, useDecl.importPath)) {
-    return suggestUseFilepath(compiler, filepath, useDecl.importPath, model, useDecl);
+    return suggestUseFilepath(compiler, filepath, useDecl.importPath, model, useDecl, fileListDepth);
   }
 
   // After closing quote of importPath -> no suggestions
@@ -58,7 +66,7 @@ function suggestInUseDeclaration (
 
   // After `from` but no importPath yet -> filepath completions
   if (useDecl.fromKeyword && offset > useDecl.fromKeyword.end) {
-    return suggestUseFilepath(compiler, filepath, undefined, model, useDecl);
+    return suggestUseFilepath(compiler, filepath, undefined, model, useDecl, fileListDepth);
   }
 
   // Inside specifier list
@@ -195,6 +203,7 @@ function suggestUseFilepath (
   importPath: SyntaxToken | undefined,
   model: TextModel,
   useDeclaration: UseDeclarationNode,
+  fileListDepth: number,
 ): CompletionList {
   // Default to empty string so all specifiers/paths pass the prefix filter
   // when the user hasn't started the string yet.
@@ -271,9 +280,8 @@ function suggestUseFilepath (
       }
     }
   } else {
-    // Specifier mode: list top-level project files via listDirectory, map to specifier, filter by prefix
-    const allFilepaths = compiler.layout.listDirectory(Filepath.from('/'))
-      .filter((f) => compiler.layout.isFile(f));
+    // Specifier mode: collect all files by traversing directories up to fileListDepth levels
+    const allFilepaths = collectFiles(compiler.layout, Filepath.from('/'), fileListDepth);
 
     for (const filepath of allFilepaths) {
       if (filepath.equals(currentFilepath)) continue;
@@ -305,6 +313,20 @@ function suggestUseFilepath (
   }
 
   return { suggestions: [...items.values()] };
+}
+
+// Collect all files reachable from dirPath up to `depth` directory levels.
+function collectFiles (layout: Compiler['layout'], dirPath: Filepath, depth: number): Filepath[] {
+  if (depth <= 0) return [];
+  const result: Filepath[] = [];
+  for (const entry of layout.listDirectory(dirPath)) {
+    if (layout.isFile(entry)) {
+      result.push(entry);
+    } else if (layout.isDirectory(entry)) {
+      result.push(...collectFiles(layout, entry, depth - 1));
+    }
+  }
+  return result;
 }
 
 // Extract { name, kind } pairs from the use declaration's specifier list.
