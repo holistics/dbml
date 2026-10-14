@@ -739,3 +739,191 @@ Link: route > paint
 Link: paint > pane      [proto: SVG]
 Link: stores > pane
 `;
+
+/**
+ * A BOOK, DRAWN WITH A VOCABULARY MEANT FOR SERVERS.
+ *
+ * This one is here as evidence rather than as decoration. Everything else in this file
+ * describes software, which is the domain the language was lifted from, so none of it can say
+ * whether the design generalises or merely fits the examples it was built against.
+ *
+ * So: five nights of Adlerian dialogue, drawn as an argument. A box is a premise, a claim, a
+ * refuted belief or a practice; a line is `leads to` or `refutes`; a container is a night.
+ *
+ * WHAT IT COST, written down because a working example is a bad place to hide a limitation.
+ *
+ * The four link operators are `>`, `<`, `<>` and `-`. An argument wants `refutes`, `supports`
+ * and `requires`, and all three end up spelled on the line as `[proto: 'bác bỏ']` — a network
+ * word doing duty as a generic label for the third time in this package. That is now the
+ * clearest signal in the repository that the LINE's vocabulary is the part of this language
+ * still shaped by where it was lifted from. The boxes generalised; the lines did not.
+ *
+ * Nothing else bent. None of the thirty-one built-in kinds is any use here and the vocabulary
+ * opened by six without complaint, which is the `Kind` design working on a domain nobody had
+ * it in mind for. Vietnamese identifiers lex as identifiers, diacritics and all, so
+ * `mục_đích_luận` is a name and `Tiền_đề` is a kind.
+ */
+export const BOOK_FILE = `---
+title: Dám bị ghét
+authors: Kishimi Ichiro, Koga Fumitake
+form: năm đêm đối thoại
+---
+
+Project dam_bi_ghet {
+  diagram_type: 'architecture'
+  Note: 'Tâm lý học Adler, đọc như một lập luận chứ không phải một mục lục'
+}
+
+// Không một từ nào trong ba mươi mốt từ có sẵn mô tả được một luận điểm.
+Kind Tiền_đề   [icon: key,     color: '#3f6ea8']
+Kind Luận_điểm [icon: chip]
+Kind Sai_lầm   [icon: warning, color: '#c0453a']
+Kind Thực_hành [icon: rocket,  color: '#4a7c59']
+Kind Kết_quả   [icon: check,   color: '#b2761c']
+Kind Người     [icon: person]
+
+Người adler    [name: 'Alfred Adler']
+Người socrates [name: 'Socrates']
+
+// ── Đêm thứ nhất ──────────────────────────────────────────────────────────────
+Sai_lầm   nguyên_nhân_luận [name: 'Nguyên nhân luận']
+Tiền_đề   mục_đích_luận    [name: 'Mục đích luận']
+Sai_lầm   sang_chấn        [name: 'Sang chấn tâm lý']
+Luận_điểm lối_sống         [name: 'Lối sống là một lựa chọn']
+Thực_hành can_đảm          [name: 'Can đảm để thay đổi']
+
+// ── Đêm thứ hai ───────────────────────────────────────────────────────────────
+Tiền_đề   quan_hệ     [name: 'Mọi phiền muộn đều là quan hệ người với người']
+Luận_điểm tự_ti       [name: 'Cảm giác tự ti là chủ quan']
+Sai_lầm   phức_cảm    [name: 'Phức cảm tự ti']
+Sai_lầm   tự_tôn      [name: 'Phức cảm tự tôn']
+Sai_lầm   cạnh_tranh  [name: 'Xem đời là cuộc cạnh tranh']
+Sai_lầm   tranh_giành [name: 'Tranh giành quyền lực']
+Luận_điểm nhiệm_vụ    [name: 'Ba nhiệm vụ cuộc đời']
+Sai_lầm   nói_dối     [name: 'Lời nói dối cuộc đời']
+
+// ── Đêm thứ ba ────────────────────────────────────────────────────────────────
+Sai_lầm   thừa_nhận [name: 'Nhu cầu được thừa nhận']
+Thực_hành phân_chia [name: 'Phân chia nhiệm vụ']
+Kết_quả   tự_do     [name: 'Tự do là dám bị ghét']
+
+// ── Đêm thứ tư ────────────────────────────────────────────────────────────────
+Sai_lầm   quan_hệ_dọc   [name: 'Quan hệ theo chiều dọc']
+Thực_hành quan_hệ_ngang [name: 'Quan hệ theo chiều ngang']
+Sai_lầm   khen_mắng     [name: 'Khen ngợi và mắng mỏ']
+Thực_hành khích_lệ      [name: 'Khích lệ lòng can đảm']
+Tiền_đề   cộng_đồng     [name: 'Cảm thức cộng đồng']
+Luận_điểm giá_trị       [name: 'Có mặt ở đây đã là có giá trị']
+
+// ── Đêm thứ năm ───────────────────────────────────────────────────────────────
+Thực_hành chấp_nhận   [name: 'Chấp nhận bản thân']
+Thực_hành tin_tưởng   [name: 'Tin tưởng người khác']
+Thực_hành cống_hiến   [name: 'Cống hiến cho người khác']
+Sai_lầm   đường_thẳng [name: 'Đời là một đường thẳng']
+Tiền_đề   khoảnh_khắc [name: 'Đời là những khoảnh khắc nối tiếp']
+Thực_hành bình_thường [name: 'Dám bình thường']
+Kết_quả   hạnh_phúc   [name: 'Hạnh phúc là cảm thấy mình có ích']
+
+Group đêm1 [name: 'Đêm thứ nhất: hãy phủ nhận sang chấn tâm lý'] {
+  nguyên_nhân_luận  mục_đích_luận  sang_chấn  lối_sống  can_đảm
+
+  Note: '''
+  **Người ta không bị quá khứ đẩy, mà bị mục đích kéo.**
+
+  - \`nguyên nhân luận\` giải thích hiện tại bằng quá khứ, rồi kết luận là không đổi được
+  - \`mục đích luận\` hỏi: cậu đang theo đuổi điều gì khi giữ nguyên mình như thế này
+  - cơn giận không bùng ra, nó được ngụy tạo để đạt một mục đích
+  '''
+}
+
+Group đêm2 [name: 'Đêm thứ hai: mọi phiền muộn đều bắt nguồn từ quan hệ'] {
+  quan_hệ  tự_ti  phức_cảm  tự_tôn  cạnh_tranh  tranh_giành  nhiệm_vụ  nói_dối
+
+  Note: '''
+  **Cảm giác tự ti là nhiên liệu. Phức cảm tự ti là một cái cớ.**
+
+  - tự ti là so với \`bản thân lý tưởng\`, không phải so với người khác
+  - \`vì A nên không làm được B\` là bao biện, không phải nguyên nhân
+  - khoe khoang và bi quan là cùng một thứ: phức cảm tự tôn
+  - ba nhiệm vụ: công việc, bạn bè, tình yêu
+  '''
+}
+
+Group đêm3 [name: 'Đêm thứ ba: bỏ qua nhiệm vụ của người khác'] {
+  thừa_nhận  phân_chia  tự_do
+
+  Note: '''
+  **Một câu hỏi duy nhất: kết quả cuối cùng ai chịu?**
+
+  - trả lời xong là biết nhiệm vụ đó của ai
+  - không can thiệp vào nhiệm vụ người khác, cũng không cho ai can thiệp vào mình
+  - bị ghét là cái giá của tự do, không phải là thất bại
+  '''
+}
+
+Group đêm4 [name: 'Đêm thứ tư: trung tâm thế giới nằm ở đâu'] {
+  quan_hệ_dọc  quan_hệ_ngang  khen_mắng  khích_lệ  cộng_đồng  giá_trị
+
+  Note: '''
+  **Khen và mắng là cùng một thứ: đánh giá từ trên xuống.**
+
+  - cả hai đều giả định một quan hệ dọc
+  - thay vào đó là \`cảm ơn\`, \`giúp được tôi rồi\`: lời nói ngang hàng
+  - giá trị không đo từ hành vi mà đo từ sự tồn tại
+  '''
+}
+
+Group đêm5 [name: 'Đêm thứ năm: sống hết mình ngay tại đây, vào lúc này'] {
+  chấp_nhận  tin_tưởng  cống_hiến  đường_thẳng  khoảnh_khắc  bình_thường  hạnh_phúc
+
+  Note: '''
+  **Ba việc này không phải ba bước, mà là một vòng tròn.**
+
+  - \`chấp nhận bản thân\` mới dám tin người khác mà không sợ phản bội
+  - tin người khác mới thấy họ là bạn, nên mới cống hiến được
+  - cống hiến mới thấy mình có ích, nên mới chấp nhận được bản thân
+  - đời không phải đường thẳng đến đích, mà là khiêu vũ từng khoảnh khắc
+  '''
+}
+
+// ── lập luận chạy như thế nào ─────────────────────────────────────────────────
+// \`proto\` ở đây đang làm nhãn chung, không phải giao thức. Xem ghi chú phía trên.
+Link: adler > mục_đích_luận  [proto: 'tâm lý học cá nhân']
+Link: socrates - adler       [proto: 'đối thoại, không giảng bài']
+
+Link: mục_đích_luận > nguyên_nhân_luận [proto: 'bác bỏ']
+Link: mục_đích_luận > sang_chấn        [proto: 'bác bỏ']
+Link: mục_đích_luận > lối_sống
+Link: lối_sống > can_đảm               [proto: 'đổi được, nhưng phải dám']
+Link: can_đảm > quan_hệ
+
+Link: quan_hệ > tự_ti
+Link: tự_ti > phức_cảm       [proto: 'khi biến thành cái cớ']
+Link: phức_cảm > tự_tôn
+Link: quan_hệ > cạnh_tranh   [proto: 'nếu nhìn theo chiều dọc']
+Link: cạnh_tranh > tranh_giành
+Link: quan_hệ > nhiệm_vụ
+Link: nhiệm_vụ > nói_dối     [proto: 'khi tìm cớ né tránh']
+
+Link: nhiệm_vụ > phân_chia
+Link: phân_chia > thừa_nhận  [proto: 'bác bỏ']
+Link: phân_chia > tự_do
+Link: tự_do > cộng_đồng
+
+Link: cạnh_tranh > quan_hệ_dọc
+Link: quan_hệ_dọc > khen_mắng
+Link: cộng_đồng > quan_hệ_ngang [proto: 'mục tiêu của quan hệ']
+Link: quan_hệ_ngang > khích_lệ  [proto: 'thay cho khen và mắng']
+Link: khích_lệ > giá_trị
+Link: giá_trị > chấp_nhận
+
+Link: chấp_nhận > tin_tưởng
+Link: tin_tưởng > cống_hiến
+Link: cống_hiến > chấp_nhận  [proto: 'vòng tròn, không phải ba bước']
+Link: cống_hiến > hạnh_phúc
+
+Link: khoảnh_khắc > đường_thẳng [proto: 'bác bỏ']
+Link: khoảnh_khắc > bình_thường
+Link: bình_thường > hạnh_phúc
+Link: cộng_đồng > khoảnh_khắc    [proto: 'ngôi sao dẫn đường']
+`;

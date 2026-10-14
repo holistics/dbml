@@ -4,7 +4,7 @@ import { compileArch, isArchitecture } from '../src/compile.js';
 import { isIconName } from '../src/icons.js';
 import { isGroup, isNode } from '../src/model.js';
 import {
-  EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE, SELF_FILE,
+  BOOK_FILE, EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE, SELF_FILE,
 } from '../src/example.js';
 
 const one = (src: string) => compileArch({ '/main.arch.dbml': src });
@@ -437,5 +437,68 @@ Metadata Table users {
     layout.setSource(Filepath.from('/main.dbml'), 'Table users');
     const compiler = new Compiler(layout);
     expect(compiler.parseFile(Filepath.from('/main.dbml')).getErrors().length).toBeGreaterThan(0);
+  });
+});
+
+/**
+ * EVIDENCE THAT THE DESIGN GENERALISES, OR THE PLACE WHERE IT DOES NOT.
+ *
+ * Every other sample in this package describes software, which is the domain the language was
+ * lifted from, so none of them can tell us whether `Kind`, `Group` and `Link` are a general
+ * shape or a shape fitted to its own examples. A book is the cheapest way to ask, and the
+ * useful part of the answer is the part that does not work.
+ */
+describe('a book, drawn with a vocabulary meant for servers', () => {
+  it('compiles an argument with no diagnostics, in Vietnamese', () => {
+    const { model, diagnostics, diagramType } = compileArch({ '/b': BOOK_FILE }, '/b');
+    expect(diagnostics).toEqual([]);
+    expect(diagramType).toBe('architecture');
+    expect(model.elements.size).toBeGreaterThan(30);
+    expect(model.links.length).toBeGreaterThan(30);
+  });
+
+  /**
+   * Diacritics are the part people assume will break. They do not: the lexer asks whether a
+   * character can start or continue an identifier, not whether it is ASCII.
+   */
+  it('lexes Vietnamese as identifiers, so a name and a kind can be written in it', () => {
+    const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
+    expect(model.elements.has('mục_đích_luận')).toBe(true);
+    expect(model.elements.get('mục_đích_luận')?.label).toBe('Mục đích luận');
+
+    const declared = [...model.kinds.values()].filter((k) => !k.builtin).map((k) => k.name);
+    expect(declared).toContain('Tiền_đề');
+    expect(declared).toContain('Luận_điểm');
+    expect(declared.length).toBe(6);
+  });
+
+  /**
+   * Not one built-in word survives the move off infrastructure, and the vocabulary opens six
+   * times without complaint. That is `Kind` doing its job on a domain nobody designed it for.
+   */
+  it('uses no built-in kind, because none of the thirty-one describes an argument', () => {
+    const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
+    const used = new Set([...model.elements.values()].filter(isNode).map((n) => n.kind));
+    expect([...used].filter((name) => model.kinds.get(name)?.builtin)).toEqual([]);
+  });
+
+  /**
+   * THE PART THAT DID NOT GENERALISE, asserted so it cannot be quietly forgotten.
+   *
+   * An argument's edges are `refutes`, `leads to` and `requires`. The language has four
+   * operators and one label slot, and that slot is called `proto`. Every edge below is a
+   * relation between ideas wearing a network word, which is the strongest evidence in this
+   * package that the LINE's vocabulary is still shaped by where it was lifted from.
+   */
+  it('spells every relation as proto, which is a network word on an argument', () => {
+    const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
+
+    const labelled = model.links.filter((link) => link.settings.proto !== undefined);
+    expect(labelled.length).toBeGreaterThan(10);
+    expect(labelled.some((link) => link.settings.proto === 'bác bỏ')).toBe(true);
+
+    // nothing on any of these lines is a protocol or a host
+    expect(model.links.some((link) => link.settings.host !== undefined)).toBe(false);
+    expect(new Set(model.links.map((link) => link.op))).toEqual(new Set(['>', '-']));
   });
 });
