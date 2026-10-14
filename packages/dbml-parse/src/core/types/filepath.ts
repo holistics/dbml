@@ -54,7 +54,7 @@ export class Filepath implements Internable<FilepathId> {
     }
   }
 
-  /* @deprecated "Use Filepath.urlSafePath instead for clarity" */
+  /** @deprecated Use Filepath.urlSafePath instead for clarity */
   get absolute (): string {
     return this.path;
   }
@@ -93,7 +93,7 @@ export class Filepath implements Internable<FilepathId> {
   join (...segments: string[]): Filepath {
     // Filepath is a virtual path abstraction backed by in-memory maps, not real filesystem I/O
     // bearer:disable javascript_lang_path_traversal
-    return new Filepath(join(this.fsPath, ...segments));
+    return new Filepath(join(this.path, ...segments));
   }
 
   // Return the path relative to a given base directory, always prefixed with './' or '../'
@@ -128,7 +128,7 @@ export class Filepath implements Internable<FilepathId> {
   toUri (options: { protocol?: string } = {}): string {
     const protocol = options.protocol || this.protocol;
     if (!protocol) {
-      return this.path;
+      return this.fsPath;
     }
     // Windows: C:/path needs an extra leading slash -> file:///C:/path
     const prefix = hasDriveRoot(this.path) ? `${protocol}:///` : `${protocol}://`;

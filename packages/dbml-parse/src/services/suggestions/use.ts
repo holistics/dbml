@@ -17,7 +17,6 @@ import {
   CompletionItemInsertTextRule,
   CompletionItemKind,
   type CompletionList,
-  type Range,
   type TextModel,
 } from '@/services/types';
 import { getEditorRange } from '../utils';
@@ -201,7 +200,7 @@ function suggestUseFilepath (
   const typedPrefix = importPath?.value ?? '';
   const shouldQuote = importPath === undefined;
 
-  let range: Range | undefined;
+  let range: any;
   if (importPath) {
     const tokenRange = getEditorRange(model, importPath);
     range = {
@@ -231,6 +230,7 @@ function suggestUseFilepath (
     const dirPath = resolvedPrefix.slice(0, lastSlash + 1) || '/';
 
     for (const entry of compiler.layout.listDirectory(Filepath.from(dirPath))) {
+      if (entry.equals(currentFilepath)) continue;
       const entryPath = entry.fsPath;
       if (!entryPath.startsWith(resolvedPrefix)) continue;
 
