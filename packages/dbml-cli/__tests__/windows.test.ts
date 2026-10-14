@@ -22,7 +22,7 @@ describeOnWindows('@dbml/cli - Windows paths', () => {
     const {
       stdout,
     } = await exec(`node "${binFile}" ${opts.args.join(' ')}`);
-    const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8');
+    const expectStdout = fs.readFileSync(path.join(dirName, './stdout.txt'), 'utf-8').replaceAll('\r\n', '\n');
     const actualStdout = stripAnsi(stdout).replaceAll('\r\n', '\n');
 
     expect(actualStdout).toBe(expectStdout);
