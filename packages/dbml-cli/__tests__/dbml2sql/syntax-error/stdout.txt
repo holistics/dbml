@@ -1,5 +1,5 @@
   ERROR: 
     ecommerce.dbml(17,24): Expect an identifier
-    ecommerce.dbml(17,30): Custom setting 'pk manager_staff_id int' must be a string or a color literal
+    ecommerce.dbml(17,30): Custom setting 'pk manager_staff_id int' must be a string, a color literal, a number literal, or a boolean literal
 
   A complete log can be found in:
