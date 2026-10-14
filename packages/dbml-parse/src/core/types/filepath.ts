@@ -126,7 +126,7 @@ export class Filepath implements Internable<FilepathId> {
 
   // Convert filepath to monaco URI
   toUri (options: { protocol?: string } = {}): string {
-    const protocol = options.protocol?.replace(/:$/, '') || this.protocol;
+    const protocol = options.protocol || this.protocol;
     if (!protocol) {
       return this.path;
     }

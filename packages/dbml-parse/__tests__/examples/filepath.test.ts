@@ -140,7 +140,7 @@ describe('Filepath', () => {
 
     it('returns file:// URI with protocol option', () => {
       const fp = Filepath.from('/home/user/main.dbml');
-      const uri = fp.toUri({ protocol: 'file:' });
+      const uri = fp.toUri({ protocol: 'file' });
       expect(uri).toBe('file:///home/user/main.dbml');
     });
 
@@ -152,7 +152,7 @@ describe('Filepath', () => {
 
     it('handles Windows drive letter with file:// protocol', () => {
       const fp = Filepath.from('C:/Users/project/main.dbml');
-      const uri = fp.toUri({ protocol: 'file:' });
+      const uri = fp.toUri({ protocol: 'file' });
       expect(uri).toMatch(/^file:\/\/\/[Cc]:\/Users\/project\/main\.dbml$/);
     });
 
@@ -380,7 +380,7 @@ describe('Filepath', () => {
   describe('URI round-trip edge cases', () => {
     it('round-trips path with spaces', () => {
       const fp = Filepath.from('/home/user/my project/main.dbml');
-      const uri = fp.toUri({ protocol: 'file:' });
+      const uri = fp.toUri({ protocol: 'file' });
       const fp2 = Filepath.fromUri(uri);
       expect(fp.equals(fp2)).toBe(true);
       expect(fp2.fsPath).toBe('/home/user/my project/main.dbml');
@@ -388,7 +388,7 @@ describe('Filepath', () => {
 
     it('round-trips Windows path with spaces', () => {
       const fp = Filepath.from('C:/Users/My Documents/main.dbml');
-      const uri = fp.toUri({ protocol: 'file:' });
+      const uri = fp.toUri({ protocol: 'file' });
       const fp2 = Filepath.fromUri(uri);
       expect(fp.equals(fp2)).toBe(true);
       expect(fp2.fsPath).toBe('C:/Users/My Documents/main.dbml');
@@ -396,7 +396,7 @@ describe('Filepath', () => {
 
     it('round-trips path with unicode', () => {
       const fp = Filepath.from('/home/user/日本語/main.dbml');
-      const uri = fp.toUri({ protocol: 'file:' });
+      const uri = fp.toUri({ protocol: 'file' });
       const fp2 = Filepath.fromUri(uri);
       expect(fp.equals(fp2)).toBe(true);
       expect(fp2.fsPath).toBe('/home/user/日本語/main.dbml');
@@ -404,21 +404,21 @@ describe('Filepath', () => {
 
     it('round-trips path with parentheses', () => {
       const fp = Filepath.from('/home/user/project (copy)/main.dbml');
-      const uri = fp.toUri({ protocol: 'file:' });
+      const uri = fp.toUri({ protocol: 'file' });
       const fp2 = Filepath.fromUri(uri);
       expect(fp.equals(fp2)).toBe(true);
     });
 
     it('round-trips path with hash (#) in name', () => {
       const fp = Filepath.from('/home/user/C# project/main.dbml');
-      const uri = fp.toUri({ protocol: 'file:' });
+      const uri = fp.toUri({ protocol: 'file' });
       const fp2 = Filepath.fromUri(uri);
       expect(fp.equals(fp2)).toBe(true);
     });
 
     it('round-trips Windows backslash path through URI', () => {
       const fp = Filepath.from('C:\\Users\\project\\main.dbml');
-      const uri = fp.toUri({ protocol: 'file:' });
+      const uri = fp.toUri({ protocol: 'file' });
       const fp2 = Filepath.fromUri(uri);
       expect(fp.equals(fp2)).toBe(true);
     });
