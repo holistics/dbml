@@ -45,7 +45,7 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
   resolveFileSpecifier (currentFilepath: Filepath, relativePath: string): Filepath | undefined {
     if (!Filepath.isRelative(relativePath)) return undefined;
     const resolved = Filepath.resolve(currentFilepath.dirname, relativePath);
-    return resolved.urlSafePath.endsWith('.dbml') ? resolved : Filepath.from(resolved.urlSafePath + '.dbml');
+    return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
   }
 
   getSpecifierForFile (currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {
@@ -55,16 +55,16 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
   }
 
   setSource (filePath: Filepath, content: string): void {
-    this.files.set(filePath.urlSafePath, content);
+    this.files.set(filePath.absolute, content);
   }
 
   getSource (filePath: Filepath): string | undefined {
-    const val = this.files.get(filePath.urlSafePath);
+    const val = this.files.get(filePath.absolute);
     return val ?? undefined;
   }
 
   deleteSource (filePath: Filepath): void {
-    this.files.delete(filePath.urlSafePath);
+    this.files.delete(filePath.absolute);
   }
 
   clearSource (): void {
@@ -76,11 +76,11 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
   }
 
   isFile (filePath: Filepath): boolean {
-    return this.files.has(filePath.urlSafePath);
+    return this.files.has(filePath.absolute);
   }
 
   isDirectory (filePath: Filepath): boolean {
-    const prefix = filePath.urlSafePath.endsWith('/') ? filePath.urlSafePath : `${filePath.urlSafePath}/`;
+    const prefix = filePath.absolute.endsWith('/') ? filePath.absolute : `${filePath.absolute}/`;
     for (const f of this.files.keys()) {
       if (f.startsWith(prefix)) return true;
     }
@@ -88,7 +88,7 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
   }
 
   listDirectory (dirPath?: Filepath): Filepath[] {
-    const base = dirPath?.urlSafePath ?? '/';
+    const base = dirPath?.absolute ?? '/';
     const prefix = base.endsWith('/') ? base : base + '/';
     const entries = new Set<string>();
 
@@ -109,7 +109,7 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
       ...this.files.keys(),
     ]
       .map(Filepath.from)
-      .sort((a, b) => a.urlSafePath.localeCompare(b.urlSafePath));
+      .sort((a, b) => a.absolute.localeCompare(b.absolute));
   }
 
   clone (): MemoryProjectLayout {

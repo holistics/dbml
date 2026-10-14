@@ -241,7 +241,7 @@ function renameAlias (
 
   const refs = compiler.symbolReferences(useSymbol);
   for (const ref of refs) {
-    if (ref.filepath.urlSafePath !== filepath.urlSafePath) continue;
+    if (ref.filepath.absolute !== filepath.absolute) continue;
     if (ref === spec.alias) continue; // skip alias declaration token, already handled
     edits.push({
       start: ref.start,
@@ -252,7 +252,7 @@ function renameAlias (
 
   return new Map([
     [
-      filepath.urlSafePath,
+      filepath.absolute,
       applyTextEdits(source, edits),
     ],
   ]);
@@ -282,7 +282,7 @@ function renameRealDeclaration (
     edits: TextEdit[];
   }>();
   const addEdit = (fp: Filepath, edit: TextEdit): void => {
-    const key = fp.urlSafePath;
+    const key = fp.absolute;
     let bucket = editsByFile.get(key);
     if (!bucket) {
       bucket = {
@@ -327,7 +327,7 @@ function renameRealDeclaration (
     fp, edits,
   } of editsByFile.values()) {
     const src = compiler.getSource(fp) ?? '';
-    result.set(fp.urlSafePath, applyTextEdits(src, edits));
+    result.set(fp.absolute, applyTextEdits(src, edits));
   }
 
   return result;

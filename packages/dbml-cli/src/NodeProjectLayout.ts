@@ -23,7 +23,7 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   resolveFileSpecifier (currentFilepath: Filepath, relativePath: string): Filepath | undefined {
     if (!Filepath.isRelative(relativePath)) return undefined;
     const resolved = Filepath.resolve(currentFilepath.dirname, relativePath);
-    return resolved.urlSafePath.endsWith('.dbml') ? resolved : Filepath.from(resolved.urlSafePath + '.dbml');
+    return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
   }
 
   getSpecifierForFile (currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {

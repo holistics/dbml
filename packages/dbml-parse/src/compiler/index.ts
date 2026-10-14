@@ -83,7 +83,7 @@ export default class Compiler {
   // Purge local + global caches if `filepath`'s content changed since last seen
   private cleanStaleLocalCache (filepath: Filepath): void {
     const content = this.layout.getSource(filepath);
-    const key = filepath.urlSafePath;
+    const key = filepath.absolute;
 
     const snapshot = this.sourceSnapshot.get(key);
     if (snapshot !== undefined) {
@@ -107,7 +107,7 @@ export default class Compiler {
     let dirty = false;
     if (this.entrypointsSnapshot !== undefined) {
       if (this.entrypointsSnapshot.length !== entrypoints.length
-        || this.entrypointsSnapshot.some((fp, i) => fp.urlSafePath !== entrypoints[i].urlSafePath)) {
+        || this.entrypointsSnapshot.some((fp, i) => fp.absolute !== entrypoints[i].absolute)) {
         dirty = true;
       }
     }

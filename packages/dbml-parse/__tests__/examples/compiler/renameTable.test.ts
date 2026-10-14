@@ -15,7 +15,7 @@ function renameTable (
   layout.setSource(DEFAULT_ENTRY, input);
   const compiler = new Compiler(layout);
   const changes = compiler.renameTable(DEFAULT_ENTRY, oldName, newName);
-  return changes.get(DEFAULT_ENTRY.urlSafePath) ?? input;
+  return changes.get(DEFAULT_ENTRY.absolute) ?? input;
 }
 
 describe('[example] renameTable (string format)', () => {
@@ -1916,7 +1916,7 @@ Table users {
     layout.setSource(fp, base);
     const compiler = new Compiler(layout);
 
-    const result = compiler.renameTable(fp, 'users', 'accounts').get(fp.urlSafePath)!;
+    const result = compiler.renameTable(fp, 'users', 'accounts').get(fp.absolute)!;
     expect(result).toContain('Table accounts');
     expect(result).toContain('accounts.id'); // ref updated
     expect(result).not.toContain('users');
@@ -1932,8 +1932,8 @@ Table users {
     });
 
     const changes = compiler.renameTable(fp('/consumer.dbml'), 'users', 'accounts');
-    const baseAfter = changes.get(fp('/base.dbml').urlSafePath)!;
-    const consumerAfter = changes.get(fp('/consumer.dbml').urlSafePath)!;
+    const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+    const consumerAfter = changes.get(fp('/consumer.dbml').absolute)!;
 
     expect(baseAfter).toContain('Table accounts');
     expect(baseAfter).not.toContain('Table users');
@@ -1957,8 +1957,8 @@ Table posts {
     });
 
     const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-    const baseAfter = changes.get(fp('/base.dbml').urlSafePath)!;
-    const mainAfter = changes.get(fp('/main.dbml').urlSafePath)!;
+    const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
 
     expect(baseAfter).toContain('Table accounts');
     expect(baseAfter).toContain('accounts.id'); // ref in same file updated
@@ -2010,7 +2010,7 @@ Table posts {
     layout.setSource(fp, source);
     const compiler = new Compiler(layout);
 
-    const result = compiler.renameTable(fp, 'auth.users', 'auth.members').get(fp.urlSafePath)!;
+    const result = compiler.renameTable(fp, 'auth.users', 'auth.members').get(fp.absolute)!;
     expect(result).toContain('auth.members');
     expect(result).toContain('auth.members.id');
     expect(result).not.toContain('auth.users');
@@ -2023,10 +2023,10 @@ Table posts {
     });
 
     const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
-    const mainAfter = changes.get(fp('/main.dbml').urlSafePath)!;
+    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
 
     // Original declaration left alone - alias rename never touches the source file.
-    expect(changes.has(fp('/base.dbml').urlSafePath)).toBe(false);
+    expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
     expect(mainAfter).toContain('use { table users as member }');
     expect(mainAfter).toContain('ref: > member.id');
     expect(mainAfter).not.toContain(' u.');
@@ -2052,7 +2052,7 @@ Table posts {
     });
 
     const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-    const mainAfter = changes.get(fp('/main.dbml').urlSafePath)!;
+    const mainAfter = changes.get(fp('/main.dbml').absolute)!;
 
     // The source-side token gets the new name; the local alias `u` is preserved
     // because alias-side refs do not resolve to the original symbol.
@@ -2111,8 +2111,8 @@ Ref: U.id < U.id
       });
 
       const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
-      const baseAfter = changes.get(fp('/base.dbml').urlSafePath)!;
-      const mainAfter = changes.get(fp('/main.dbml').urlSafePath)!;
+      const baseAfter = changes.get(fp('/base.dbml').absolute)!;
+      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
 
       expect(baseAfter).toContain('Table accounts');
       expect(baseAfter).not.toContain('Table users');
@@ -2129,11 +2129,11 @@ Ref: U.id < U.id
       });
 
       const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-      expect(changes.get(fp('/base.dbml').urlSafePath)!).toContain('Table accounts');
-      expect(changes.get(fp('/a.dbml').urlSafePath)!).toContain('use { table accounts }');
-      expect(changes.get(fp('/a.dbml').urlSafePath)!).toContain('ref: > accounts.id');
-      expect(changes.get(fp('/b.dbml').urlSafePath)!).toContain('use { table accounts }');
-      expect(changes.get(fp('/b.dbml').urlSafePath)!).toContain('ref: > accounts.id');
+      expect(changes.get(fp('/base.dbml').absolute)!).toContain('Table accounts');
+      expect(changes.get(fp('/a.dbml').absolute)!).toContain('use { table accounts }');
+      expect(changes.get(fp('/a.dbml').absolute)!).toContain('ref: > accounts.id');
+      expect(changes.get(fp('/b.dbml').absolute)!).toContain('use { table accounts }');
+      expect(changes.get(fp('/b.dbml').absolute)!).toContain('ref: > accounts.id');
     });
   });
 
@@ -2145,10 +2145,10 @@ Ref: U.id < U.id
       });
 
       const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
-      const mainAfter = changes.get(fp('/main.dbml').urlSafePath)!;
+      const mainAfter = changes.get(fp('/main.dbml').absolute)!;
 
       // Base file untouched - alias rename never propagates to the source.
-      expect(changes.has(fp('/base.dbml').urlSafePath)).toBe(false);
+      expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
       // Only the alias token and its refs change; source-side `users` stays.
       expect(mainAfter).toContain('use { table users as member }');
       expect(mainAfter).toContain('ref: > member.id');
@@ -2162,8 +2162,8 @@ Ref: U.id < U.id
       });
 
       const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
-      const aliasedAfter = changes.get(fp('/aliased.dbml').urlSafePath)!;
-      const unaliasedAfter = changes.get(fp('/unaliased.dbml').urlSafePath)!;
+      const aliasedAfter = changes.get(fp('/aliased.dbml').absolute)!;
+      const unaliasedAfter = changes.get(fp('/unaliased.dbml').absolute)!;
 
       // Aliased importer: source-name token in specifier flips, alias + refs preserved.
       expect(aliasedAfter).toContain('use { table accounts as u }');

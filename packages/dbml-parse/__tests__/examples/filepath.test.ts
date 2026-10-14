@@ -6,22 +6,22 @@ describe('Filepath', () => {
     describe('Linux/Mac paths', () => {
       it('accepts absolute unix path', () => {
         const fp = Filepath.from('/home/user/project/main.dbml');
-        expect(fp.urlSafePath).toBe('/home/user/project/main.dbml');
+        expect(fp.absolute).toBe('/home/user/project/main.dbml');
       });
 
       it('accepts root path', () => {
         const fp = Filepath.from('/');
-        expect(fp.urlSafePath).toBe('/');
+        expect(fp.absolute).toBe('/');
       });
 
       it('normalizes redundant slashes', () => {
         const fp = Filepath.from('/home//user///project/main.dbml');
-        expect(fp.urlSafePath).toBe('/home/user/project/main.dbml');
+        expect(fp.absolute).toBe('/home/user/project/main.dbml');
       });
 
       it('normalizes . and .. segments', () => {
         const fp = Filepath.from('/home/user/./project/../project/main.dbml');
-        expect(fp.urlSafePath).toBe('/home/user/project/main.dbml');
+        expect(fp.absolute).toBe('/home/user/project/main.dbml');
       });
 
       it('rejects relative path', () => {
@@ -34,27 +34,27 @@ describe('Filepath', () => {
     describe('Windows paths', () => {
       it('accepts C:/ drive path', () => {
         const fp = Filepath.from('C:/Users/project/main.dbml');
-        expect(fp.urlSafePath).toBe('C:/Users/project/main.dbml');
+        expect(fp.absolute).toBe('C:/Users/project/main.dbml');
       });
 
       it('accepts lowercase drive letter (pathe normalizes to uppercase)', () => {
         const fp = Filepath.from('c:/Users/project/main.dbml');
-        expect(fp.urlSafePath).toBe('C:/Users/project/main.dbml');
+        expect(fp.absolute).toBe('C:/Users/project/main.dbml');
       });
 
       it('accepts C:\\ backslash path', () => {
         const fp = Filepath.from('C:\\Users\\project\\main.dbml');
-        expect(fp.urlSafePath).toBe('C:/Users/project/main.dbml');
+        expect(fp.absolute).toBe('C:/Users/project/main.dbml');
       });
 
       it('accepts mixed slash/backslash', () => {
         const fp = Filepath.from('C:\\Users/project\\main.dbml');
-        expect(fp.urlSafePath).toBe('C:/Users/project/main.dbml');
+        expect(fp.absolute).toBe('C:/Users/project/main.dbml');
       });
 
       it('normalizes . and .. in Windows paths', () => {
         const fp = Filepath.from('C:/Users/./project/../project/main.dbml');
-        expect(fp.urlSafePath).toBe('C:/Users/project/main.dbml');
+        expect(fp.absolute).toBe('C:/Users/project/main.dbml');
       });
     });
 
@@ -64,20 +64,22 @@ describe('Filepath', () => {
         expect(fp.fsPath).toBe('/home/user/my project/main.dbml');
       });
 
-      it('handles already-encoded segments', () => {
+      it('treats percent-encoded input as literal characters in from()', () => {
+        // Filepath.from() receives filesystem paths, not URIs
+        // %20 is treated as literal characters, not decoded
         const fp = Filepath.from('/home/user/my%20project/main.dbml');
-        expect(fp.fsPath).toBe('/home/user/my project/main.dbml');
+        expect(fp.absolute).toBe('/home/user/my%20project/main.dbml');
+      });
+
+      it('decodes percent-encoded input in fromUri()', () => {
+        // fromUri() is the URI entry point, URL API decodes
+        const fp = Filepath.fromUri('file:///home/user/my%20project/main.dbml');
+        expect(fp.absolute).toBe('/home/user/my project/main.dbml');
       });
 
       it('handles unicode characters', () => {
         const fp = Filepath.from('/home/user/日本語/main.dbml');
-        expect(fp.fsPath).toBe('/home/user/日本語/main.dbml');
-      });
-
-      it('round-trips encoded and unencoded spaces consistently', () => {
-        const fp1 = Filepath.from('/home/user/my project/main.dbml');
-        const fp2 = Filepath.from('/home/user/my%20project/main.dbml');
-        expect(fp1.equals(fp2)).toBe(true);
+        expect(fp.absolute).toBe('/home/user/日本語/main.dbml');
       });
     });
   });
@@ -86,12 +88,12 @@ describe('Filepath', () => {
     describe('file:// protocol', () => {
       it('parses file:///unix/path', () => {
         const fp = Filepath.fromUri('file:///home/user/main.dbml');
-        expect(fp.urlSafePath).toBe('/home/user/main.dbml');
+        expect(fp.absolute).toBe('/home/user/main.dbml');
       });
 
       it('parses file:///C:/windows/path', () => {
         const fp = Filepath.fromUri('file:///C:/Users/project/main.dbml');
-        expect(fp.urlSafePath).toBe('C:/Users/project/main.dbml');
+        expect(fp.absolute).toBe('C:/Users/project/main.dbml');
       });
 
       it('handles encoded spaces in URI', () => {
@@ -108,26 +110,26 @@ describe('Filepath', () => {
     describe('inmemory:// protocol', () => {
       it('parses inmemory:// URI', () => {
         const fp = Filepath.fromUri('inmemory://model/1');
-        expect(fp.urlSafePath).toBe('/model/1');
+        expect(fp.absolute).toBe('/model/1');
       });
     });
 
     describe('vscode-userdata:// protocol', () => {
       it('parses vscode-userdata URI', () => {
         const fp = Filepath.fromUri('vscode-userdata:///home/user/main.dbml');
-        expect(fp.urlSafePath).toBe('/home/user/main.dbml');
+        expect(fp.absolute).toBe('/home/user/main.dbml');
       });
     });
 
     describe('plain paths (no protocol)', () => {
       it('falls back to plain absolute path', () => {
         const fp = Filepath.fromUri('/home/user/main.dbml');
-        expect(fp.urlSafePath).toBe('/home/user/main.dbml');
+        expect(fp.absolute).toBe('/home/user/main.dbml');
       });
 
       it('falls back to Windows path', () => {
         const fp = Filepath.fromUri('C:/Users/project/main.dbml');
-        expect(fp.urlSafePath).toBe('C:/Users/project/main.dbml');
+        expect(fp.absolute).toBe('C:/Users/project/main.dbml');
       });
     });
   });
@@ -178,19 +180,15 @@ describe('Filepath', () => {
   });
 
   describe('fsPath', () => {
-    it('decodes URI-encoded segments', () => {
-      const fp = Filepath.from('/home/user/my%20project/main.dbml');
+    it('returns same as absolute (no encoding in storage)', () => {
+      const fp = Filepath.from('/home/user/my project/main.dbml');
+      expect(fp.fsPath).toBe(fp.absolute);
       expect(fp.fsPath).toBe('/home/user/my project/main.dbml');
     });
 
-    it('returns unchanged path when no encoding', () => {
-      const fp = Filepath.from('/home/user/project/main.dbml');
-      expect(fp.fsPath).toBe('/home/user/project/main.dbml');
-    });
-
-    it('decodes Windows path correctly', () => {
-      const fp = Filepath.from('C:/Users/My%20Documents/main.dbml');
-      expect(fp.fsPath).toBe('C:/Users/My Documents/main.dbml');
+    it('fromUri decodes then fsPath returns decoded', () => {
+      const fp = Filepath.fromUri('file:///home/user/my%20project/main.dbml');
+      expect(fp.fsPath).toBe('/home/user/my project/main.dbml');
     });
   });
 
@@ -225,37 +223,37 @@ describe('Filepath', () => {
     it('resolves relative path from unix file', () => {
       const fp = Filepath.from('/home/user/project/main.dbml');
       const resolved = fp.resolve('./other.dbml');
-      expect(resolved.urlSafePath).toBe('/home/user/project/other.dbml');
+      expect(resolved.absolute).toBe('/home/user/project/other.dbml');
     });
 
     it('resolves .. from unix file', () => {
       const fp = Filepath.from('/home/user/project/main.dbml');
       const resolved = fp.resolve('../shared/types.dbml');
-      expect(resolved.urlSafePath).toBe('/home/user/shared/types.dbml');
+      expect(resolved.absolute).toBe('/home/user/shared/types.dbml');
     });
 
     it('resolves relative path from Windows file', () => {
       const fp = Filepath.from('C:/Users/project/main.dbml');
       const resolved = fp.resolve('./other.dbml');
-      expect(resolved.urlSafePath).toBe('C:/Users/project/other.dbml');
+      expect(resolved.absolute).toBe('C:/Users/project/other.dbml');
     });
 
     it('resolves .. from Windows file', () => {
       const fp = Filepath.from('C:/Users/project/main.dbml');
       const resolved = fp.resolve('../shared/types.dbml');
-      expect(resolved.urlSafePath).toBe('C:/Users/shared/types.dbml');
+      expect(resolved.absolute).toBe('C:/Users/shared/types.dbml');
     });
   });
 
   describe('Filepath.resolve (static)', () => {
     it('resolves from unix dir', () => {
       const fp = Filepath.resolve('/home/user/project', './main.dbml');
-      expect(fp.urlSafePath).toBe('/home/user/project/main.dbml');
+      expect(fp.absolute).toBe('/home/user/project/main.dbml');
     });
 
     it('resolves from Windows dir', () => {
       const fp = Filepath.resolve('C:/Users/project', './main.dbml');
-      expect(fp.urlSafePath).toBe('C:/Users/project/main.dbml');
+      expect(fp.absolute).toBe('C:/Users/project/main.dbml');
     });
   });
 
@@ -263,13 +261,13 @@ describe('Filepath', () => {
     it('joins segments on unix path', () => {
       const fp = Filepath.from('/home/user');
       const joined = fp.join('project', 'main.dbml');
-      expect(joined.urlSafePath).toBe('/home/user/project/main.dbml');
+      expect(joined.absolute).toBe('/home/user/project/main.dbml');
     });
 
     it('joins segments on Windows path', () => {
       const fp = Filepath.from('C:/Users');
       const joined = fp.join('project', 'main.dbml');
-      expect(joined.urlSafePath).toBe('C:/Users/project/main.dbml');
+      expect(joined.absolute).toBe('C:/Users/project/main.dbml');
     });
   });
 

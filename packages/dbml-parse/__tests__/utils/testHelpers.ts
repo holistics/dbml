@@ -209,7 +209,7 @@ export function toSnapshot (
     return symbolToSnapshot(compiler, value as NodeSymbol, { includeReferences });
   }
   if (value instanceof Filepath) {
-    return value.urlSafePath;
+    return value.absolute;
   }
   if (typeof value === 'object') {
     return sortObject(Object.fromEntries(
@@ -371,7 +371,7 @@ export function syntaxTokenToSnapshot (
         id: tokenReadableId,
         snippet,
         isInvalid,
-        filepath: filepath.urlSafePath,
+        filepath: filepath.absolute,
       },
     };
   }

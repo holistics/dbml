@@ -197,7 +197,7 @@ Table users {
     const deps = compiler.fileDependencies(fileB);
     expect(deps).toHaveLength(1);
     expect(deps[0]).toBeInstanceOf(Filepath);
-    expect(deps[0].urlSafePath).toBe(fileA.urlSafePath);
+    expect(deps[0].absolute).toBe(fileA.absolute);
   });
 
   test('reachableFiles returns Filepath array', () => {
@@ -214,9 +214,9 @@ Table users {
     const reachable = compiler.reachableFiles(fileC);
     expect(Array.isArray(reachable)).toBe(true);
     expect(reachable.length).toBe(3);
-    const paths = reachable.map((f: Filepath) => f.urlSafePath);
-    expect(paths).toContain(fileA.urlSafePath);
-    expect(paths).toContain(fileB.urlSafePath);
-    expect(paths).toContain(fileC.urlSafePath);
+    const paths = reachable.map((f: Filepath) => f.absolute);
+    expect(paths).toContain(fileA.absolute);
+    expect(paths).toContain(fileB.absolute);
+    expect(paths).toContain(fileC.absolute);
   });
 });

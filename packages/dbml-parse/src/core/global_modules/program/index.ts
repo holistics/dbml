@@ -25,7 +25,7 @@ export const programModule: GlobalModule = {
         ProgramSymbol,
         {
           declaration: node,
-          name: node.filepath.urlSafePath,
+          name: node.filepath.absolute,
         },
         node.filepath,
       ),
