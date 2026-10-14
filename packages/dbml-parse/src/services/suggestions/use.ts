@@ -187,10 +187,6 @@ function suggestUseSpecifierStart (): CompletionList {
   };
 }
 
-function isAbsolutePathBrowse (s: string): boolean {
-  return s.startsWith('/');
-}
-
 // Suggest import paths. Two modes:
 // - Filepath browse mode (user types /): browse via listDirectory, insert specifier on file select
 // - Specifier mode (anything else): list reachable files, map to specifier, filter by prefix
@@ -219,7 +215,7 @@ function suggestUseFilepath (
   const items = new Map<string, CompletionItem>();
   const bestMatches = new Set<string>();
 
-  if (isAbsolutePathBrowse(typedPrefix)) {
+  if (typedPrefix.startsWith('/')) {
     // Filepath mode: browse directory, insert specifier for files
     const lastSlash = typedPrefix.lastIndexOf('/');
     const dirPath = typedPrefix.slice(0, lastSlash + 1) || '/';
