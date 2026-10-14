@@ -172,3 +172,42 @@ Metadata Note overview {
 }
 `)
 });
+
+test('@dbml/core - exporter metadata blocks with number and boolean values', () => {
+  const dbml = `
+Table users {
+  id int [pk, rank: 3, pii: true]
+}
+
+Metadata Table users {
+  count: 42
+  ratio: 1.5
+  active: false
+  owner: 'scott'
+}
+`.trim();
+
+  const database = (new Parser()).parse(dbml, 'dbmlv2');
+  const users = database.schemas[0].tables[0];
+  expect(users.metadata).toEqual({
+    count: 42, ratio: 1.5, active: false, owner: 'scott',
+  });
+  expect(users.fields[0].metadata).toEqual({ rank: 3, pii: true });
+
+  const out = exporter.export(dbml, 'dbml');
+  expect(out).toContain(`Metadata Table "users" {
+  count: 42
+  ratio: 1.5
+  active: false
+  owner: 'scott'
+}`);
+  expect(out).toContain(`Metadata Column "users"."id" {
+  rank: 3
+  pii: true
+}`);
+
+  // Exported DBML re-parses to the same typed values
+  const reparsed = (new Parser()).parse(out, 'dbmlv2');
+  expect(reparsed.schemas[0].tables[0].metadata).toEqual(users.metadata);
+  expect(reparsed.schemas[0].tables[0].fields[0].metadata).toEqual({ rank: 3, pii: true });
+});
