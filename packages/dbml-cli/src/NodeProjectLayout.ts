@@ -29,7 +29,9 @@ export class NodeProjectLayout implements DbmlProjectLayout {
   getFileSpecifierInfo (currentFilepath: Filepath, targetFilepath: Filepath): FileSpecifierInfo | undefined {
     let specifier = targetFilepath.relativeTo(currentFilepath.dirname);
     if (specifier.endsWith('.dbml')) specifier = specifier.slice(0, -'.dbml'.length);
-    return { specifier };
+    return {
+      specifier,
+    };
   }
 
   getSource (filePath: Filepath): string | undefined {
