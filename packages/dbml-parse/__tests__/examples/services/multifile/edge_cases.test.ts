@@ -43,7 +43,7 @@ describe('[advanced] multifile edge cases', () => {
       const uri = filepath1.toUri();
       const filepath2 = Filepath.fromUri(uri);
 
-      expect(filepath2.absolute).toBe(original);
+      expect(filepath2.urlSafePath).toBe(original);
     });
 
     it('should handle special characters in file paths', () => {
@@ -51,37 +51,37 @@ describe('[advanced] multifile edge cases', () => {
       const encoded = '/home/user/project-2024/%5Btest%5D/models.dbml';
       const filepath = new Filepath(pathWithSpecialChars);
 
-      expect(filepath.absolute).toBe(encoded);
-      expect(Filepath.fromUri(filepath.toUri()).absolute).toBe(encoded);
+      expect(filepath.urlSafePath).toBe(encoded);
+      expect(Filepath.fromUri(filepath.toUri()).urlSafePath).toBe(encoded);
     });
 
     it('should not double-encode already-encoded paths', () => {
       const encoded = '/home/user/%5Btest%5D/file.dbml';
       const filepath = new Filepath(encoded);
 
-      expect(filepath.absolute).toBe(encoded);
+      expect(filepath.urlSafePath).toBe(encoded);
     });
 
     it('should normalize partially-encoded paths', () => {
       const partial = '/home/user/[test]/%5Bother%5D/file.dbml';
       const filepath = new Filepath(partial);
 
-      expect(filepath.absolute).toBe('/home/user/%5Btest%5D/%5Bother%5D/file.dbml');
+      expect(filepath.urlSafePath).toBe('/home/user/%5Btest%5D/%5Bother%5D/file.dbml');
     });
 
     it('should encode spaces in path segments', () => {
       const path = '/home/user/my project/file.dbml';
       const filepath = new Filepath(path);
 
-      expect(filepath.absolute).toBe('/home/user/my%20project/file.dbml');
+      expect(filepath.urlSafePath).toBe('/home/user/my%20project/file.dbml');
     });
 
     it('should handle unicode in path segments', () => {
       const path = '/home/user/日本語/file.dbml';
       const filepath = new Filepath(path);
-      const filepath2 = new Filepath(filepath.absolute);
+      const filepath2 = new Filepath(filepath.urlSafePath);
 
-      expect(filepath.absolute).toBe(filepath2.absolute);
+      expect(filepath.urlSafePath).toBe(filepath2.urlSafePath);
     });
 
     it('should produce equal filepaths from encoded and unencoded input', () => {
@@ -223,7 +223,7 @@ Ref: nodes.parent_id > nodes.id`;
       private files = new Map<string, string>();
 
       setSource (filePath: Filepath, content: string): void {
-        this.files.set(filePath.absolute, content);
+        this.files.set(filePath.urlSafePath, content);
       }
 
       resolveFileSpecifier (_currentFilepath: Filepath, specifier: string): Filepath | undefined {
@@ -233,13 +233,13 @@ Ref: nodes.parent_id > nodes.id`;
         }
         if (Filepath.isRelative(specifier)) {
           const resolved = Filepath.resolve(_currentFilepath.dirname, specifier);
-          return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
+          return resolved.urlSafePath.endsWith('.dbml') ? resolved : Filepath.from(resolved.urlSafePath + '.dbml');
         }
         return undefined;
       }
 
       getSource (filePath: Filepath): string | undefined {
-        return this.files.get(filePath.absolute);
+        return this.files.get(filePath.urlSafePath);
       }
 
       exists (filePath: Filepath): boolean {
@@ -247,11 +247,11 @@ Ref: nodes.parent_id > nodes.id`;
       }
 
       isFile (filePath: Filepath): boolean {
-        return this.files.has(filePath.absolute);
+        return this.files.has(filePath.urlSafePath);
       }
 
       isDirectory (filePath: Filepath): boolean {
-        const prefix = filePath.absolute.endsWith('/') ? filePath.absolute : `${filePath.absolute}/`;
+        const prefix = filePath.urlSafePath.endsWith('/') ? filePath.urlSafePath : `${filePath.urlSafePath}/`;
         for (const f of this.files.keys()) {
           if (f.startsWith(prefix)) return true;
         }
@@ -259,7 +259,7 @@ Ref: nodes.parent_id > nodes.id`;
       }
 
       listDirectory (dirPath?: Filepath): Filepath[] {
-        const base = dirPath?.absolute ?? '/';
+        const base = dirPath?.urlSafePath ?? '/';
         const prefix = base.endsWith('/') ? base : base + '/';
         const entries = new Set<string>();
         for (const f of this.files.keys()) {
@@ -272,7 +272,7 @@ Ref: nodes.parent_id > nodes.id`;
       }
 
       getEntrypoints (): Filepath[] {
-        return [...this.files.keys()].map(Filepath.from).sort((a, b) => a.absolute.localeCompare(b.absolute));
+        return [...this.files.keys()].map(Filepath.from).sort((a, b) => a.urlSafePath.localeCompare(b.urlSafePath));
       }
 
       getSpecifierForFile (_currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {

@@ -13,8 +13,8 @@ export function fileDependencies (this: Compiler, filepath: Filepath): Filepath[
   for (const node of ast.body) {
     if (!(node instanceof UseDeclarationNode) || !node.importPath) continue;
     const resolvedPath = this.layout.resolveFileSpecifier(filepath, node.importPath.value);
-    if (!resolvedPath || seen.has(resolvedPath.absolute)) continue;
-    seen.add(resolvedPath.absolute);
+    if (!resolvedPath || seen.has(resolvedPath.urlSafePath)) continue;
+    seen.add(resolvedPath.urlSafePath);
     deps.push(resolvedPath);
   }
 

@@ -54,7 +54,12 @@ export class Filepath implements Internable<FilepathId> {
     }
   }
 
+  /* @deprecated "Use Filepath.urlSafePath instead for clarity" */
   get absolute (): string {
+    return this.path;
+  }
+
+  get urlSafePath (): string {
     return this.path;
   }
 

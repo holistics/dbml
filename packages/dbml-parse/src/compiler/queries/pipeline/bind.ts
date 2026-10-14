@@ -27,7 +27,7 @@ export function bindProject (this: Compiler): Map<string, Report<void>> {
 
   for (const d of deps) {
     const bindResult = this.bindFile(d);
-    result.set(d.absolute, bindResult);
+    result.set(d.urlSafePath, bindResult);
   }
 
   return result;

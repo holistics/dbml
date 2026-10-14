@@ -52,7 +52,7 @@ export function interpretProject (this: Compiler): Report<MasterDatabase> {
     const result = symbol ? this.interpretSymbol(symbol, file) : Report.create(UNHANDLED);
     const db = result.getFiltered(UNHANDLED);
     if (db) {
-      perFile.set(file.absolute, db as Database);
+      perFile.set(file.urlSafePath, db as Database);
     }
     errors.push(...result.getErrors());
     warnings.push(...result.getWarnings());

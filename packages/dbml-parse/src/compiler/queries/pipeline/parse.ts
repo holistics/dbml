@@ -34,7 +34,7 @@ export function parseProject (this: Compiler): Map<string, Report<FileParseIndex
 
   for (const d of deps) {
     const parseResult = this.parseFile(d);
-    result.set(d.absolute, parseResult);
+    result.set(d.urlSafePath, parseResult);
   }
 
   return result;
