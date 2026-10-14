@@ -127,7 +127,11 @@ jobs:
     - name: Install dependencies
       run: yarn install --frozen-lockfile
     - name: Build packages
-      run: yarn build
+      run: |
+        yarn workspace @dbml/parse build
+        yarn workspace @dbml/core build
+        yarn workspace @dbml/connector build
+        yarn workspace @dbml/cli build
     - name: Run dbml-cli Windows path tests
       working-directory: packages/dbml-cli
       run: npx vitest run __tests__/windows.test.ts
