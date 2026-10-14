@@ -17,6 +17,7 @@ import {
   CompletionItemInsertTextRule,
   CompletionItemKind,
   type CompletionList,
+  type Range,
   type TextModel,
 } from '@/services/types';
 import { getEditorRange } from '../utils';
@@ -188,8 +189,8 @@ function suggestUseSpecifierStart (): CompletionList {
 }
 
 // Suggest import paths. Two modes:
-// - Filepath browse mode (user types /): browse via listDirectory, insert specifier on file select
-// - Specifier mode (anything else): list reachable files, map to specifier, filter by prefix
+// - Filepath browse mode (user types /, ./, ../): browse via listDirectory, insert specifier on file select
+// - Specifier mode (anything else, e.g. @id): list reachable files, map to specifier, filter by prefix
 function suggestUseFilepath (
   compiler: Compiler,
   currentFilepath: Filepath,
@@ -200,7 +201,7 @@ function suggestUseFilepath (
   const typedPrefix = importPath?.value ?? '';
   const shouldQuote = importPath === undefined;
 
-  let range: any;
+  let range: Range | undefined;
   if (importPath) {
     const tokenRange = getEditorRange(model, importPath);
     range = {
@@ -215,18 +216,30 @@ function suggestUseFilepath (
   const items = new Map<string, CompletionItem>();
   const bestMatches = new Set<string>();
 
-  if (typedPrefix.startsWith('/')) {
-    // Filepath mode: browse directory, insert specifier for files
-    const lastSlash = typedPrefix.lastIndexOf('/');
-    const dirPath = typedPrefix.slice(0, lastSlash + 1) || '/';
+  // Filepath browse mode: user types a path (/, ./, ../) to browse the filesystem
+  const isPathBrowse = typedPrefix.startsWith('/') || typedPrefix.startsWith('./') || typedPrefix.startsWith('../');
+  if (isPathBrowse) {
+    // Resolve relative prefixes to absolute for listDirectory
+    let resolvedPrefix: string;
+    if (typedPrefix.startsWith('/')) {
+      resolvedPrefix = typedPrefix;
+    } else {
+      const resolved = Filepath.resolve(currentFilepath.dirname, typedPrefix).fsPath;
+      resolvedPrefix = typedPrefix.endsWith('/') && !resolved.endsWith('/') ? resolved + '/' : resolved;
+    }
+    const lastSlash = resolvedPrefix.lastIndexOf('/');
+    const dirPath = resolvedPrefix.slice(0, lastSlash + 1) || '/';
 
     for (const entry of compiler.layout.listDirectory(Filepath.from(dirPath))) {
       const entryPath = entry.fsPath;
-      if (!entryPath.startsWith(typedPrefix)) continue;
+      if (!entryPath.startsWith(resolvedPrefix)) continue;
+
+      // For relative browse (./,../), show relative labels; for absolute (/), show absolute
+      const displayPath = typedPrefix + entryPath.slice(resolvedPrefix.length);
 
       const isDir = compiler.layout.isDirectory(entry);
       if (isDir) {
-        const label = `${entryPath}/`;
+        const label = `${displayPath}/`;
         const insertText = shouldQuote ? `'${label}'` : label;
         items.set(label, {
           label,
@@ -240,7 +253,7 @@ function suggestUseFilepath (
         const specifier = compiler.layout.getSpecifierForFile(currentFilepath, entry);
         if (specifier === undefined) continue;
 
-        const label = entryPath;
+        const label = displayPath;
         if (fileProvidesAllSpecifiers(compiler, entry, requiredSymbols)) bestMatches.add(label);
 
         const insertText = shouldQuote ? `'${specifier}'` : specifier;

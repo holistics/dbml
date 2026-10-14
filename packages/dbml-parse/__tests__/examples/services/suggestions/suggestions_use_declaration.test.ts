@@ -198,9 +198,9 @@ Enum color { red blue }
       // cursor after `./sub/`
       const result = provider.provideCompletionItems(model, createPosition(1, 19));
       const labels = result.suggestions.map((s) => String(s.label));
-      expect(labels).toContain('./sub/a');
-      expect(labels).toContain('./sub/b');
-      expect(labels).not.toContain('./other');
+      expect(labels).toContain('./sub/a.dbml');
+      expect(labels).toContain('./sub/b.dbml');
+      expect(labels).not.toContain('./other.dbml');
     });
 
     it('collapses nested files into folder entries at the current prefix', () => {
@@ -213,10 +213,9 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
       const labels = result.suggestions.map((s) => String(s.label));
-      // Only the first directory segment under `./` is surfaced; the
-      // leaf `./sub/deeper/a` stays hidden until the user descends.
-      expect(labels).toContain('./sub');
-      expect(labels).not.toContain('./sub/deeper/a');
+      // listDirectory shows direct children only; deeper files hidden until user descends
+      expect(labels).toContain('./sub/');
+      expect(labels).not.toContain('./sub/deeper/a.dbml');
     });
 
     it('tags folders as Folder and files as File', () => {
@@ -229,13 +228,13 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
-      const folder = result.suggestions.find((s) => String(s.label) === './sub');
-      const file = result.suggestions.find((s) => String(s.label) === './other');
+      const folder = result.suggestions.find((s) => String(s.label) === './sub/');
+      const file = result.suggestions.find((s) => String(s.label) === './other.dbml');
       expect(folder?.kind).toBe(CompletionItemKind.Folder);
       expect(file?.kind).toBe(CompletionItemKind.File);
     });
 
-    it('replaces content between quotes without re-inserting them', () => {
+    it('inserts specifier when selecting a file via relative browse', () => {
       const compiler = setupMultiFile({
         '/schema.dbml': 'Table users { id int [pk] }',
         '/main.dbml': "use * from './'",
@@ -245,10 +244,9 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor inside the `'./'` literal
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
-      const schemaItem = result.suggestions.find((s) => String(s.label) === './schema');
+      const schemaItem = result.suggestions.find((s) => String(s.label) === './schema.dbml');
       expect(schemaItem).toBeDefined();
-      // Bare insertText (no surrounding quotes) since the range targets
-      // content-between-quotes only.
+      // insertText is the specifier (without .dbml), not the raw filename
       expect(schemaItem!.insertText).toBe('./schema');
     });
   });
