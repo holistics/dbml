@@ -9,7 +9,7 @@
   "scripts": {
     "test": "npx lerna run test",
     "build": "yarn clean-build && npx lerna run build",
-    "clean-build": "rm -rf ./packages/dbml-cli/lib ./packages/dbml-core/lib ./packages/dbml-parse/dist ./packages/dbml-connector/dist",
+    "clean-build": "rimraf ./packages/dbml-cli/lib ./packages/dbml-core/lib ./packages/dbml-parse/dist ./packages/dbml-connector/dist",
     "lint": "npx lerna run lint",
     "lint:all": "npx lerna run lint:all",
     "lint:fix": "npx lerna run lint:fix",
@@ -26,6 +26,7 @@
     "fast-check": "^4.3.0",
     "globals": "^16.5.0",
     "lerna": "^7.1.4",
+    "rimraf": "^6.0.1",
     "lerna-changelog": "^2.2.0",
     "nodemark": "^0.3.0",
     "typescript": "^5.9.3",

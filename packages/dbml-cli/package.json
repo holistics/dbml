@@ -9,7 +9,7 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "coverage": "vitest --coverage",
-    "build": "rm -rf ./lib && tsc --noEmit && vite build",
+    "build": "rimraf ./lib && tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "prepublish": "npm run build",
     "lint": "eslint $(git diff --relative --name-only --diff-filter=ACMRTUXB master -- . | grep -E '\\.(js|ts)$')",
