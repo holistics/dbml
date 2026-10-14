@@ -310,19 +310,6 @@ Enum color { red blue }
       expect(item!.insertText).toBe('./schemas/users');
     });
 
-    it('shows specifier in detail field', () => {
-      const compiler = setupMultiFile({
-        '/schemas/users.dbml': 'Table users { id int }',
-        '/main.dbml': "use * from '/schemas/'",
-      });
-      const program = "use * from '/schemas/'";
-      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
-      const provider = new DBMLCompletionItemProvider(compiler);
-      const result = provider.provideCompletionItems(model, createPosition(1, 21));
-      const item = result.suggestions.find((s) => String(s.label) === '/schemas/users.dbml');
-      expect(item!.detail).toBe('./schemas/users');
-    });
-
     it('inserts directory path for continued browsing', () => {
       const compiler = setupMultiFile({
         '/schemas/sub/a.dbml': 'Table a { id int }',

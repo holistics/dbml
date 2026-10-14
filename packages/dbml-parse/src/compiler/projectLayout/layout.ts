@@ -1,5 +1,11 @@
 import { Filepath } from '@/core/types/filepath';
 
+export interface FileSpecifierInfo {
+  specifier: string;
+  label?: string;
+  detail?: string;
+}
+
 // A read-only view of the project layout.
 // Consumers mutate the concrete class directly. The compiler detects
 // content changes automatically when `getSource` or `getEntrypoints` is called.
@@ -15,7 +21,7 @@ export interface DbmlProjectLayout {
   // The inverse of resolveFileSpecifier.
   // Returns the specifier the user should type to import targetFilepath from currentFilepath.
   // Returns undefined if no specifier can express this relationship in the layout.
-  getSpecifierForFile (currentFilepath: Filepath, targetFilepath: Filepath): string | undefined;
+  getFileSpecifierInfo (currentFilepath: Filepath, targetFilepath: Filepath): FileSpecifierInfo | undefined;
 
   getSource (filePath: Filepath): string | undefined;
 
@@ -48,10 +54,10 @@ export class MemoryProjectLayout implements DbmlProjectLayout {
     return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
   }
 
-  getSpecifierForFile (currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {
+  getFileSpecifierInfo (currentFilepath: Filepath, targetFilepath: Filepath): FileSpecifierInfo | undefined {
     let specifier = targetFilepath.relativeTo(currentFilepath.dirname);
     if (specifier.endsWith('.dbml')) specifier = specifier.slice(0, -'.dbml'.length);
-    return specifier;
+    return { specifier };
   }
 
   setSource (filePath: Filepath, content: string): void {

@@ -210,6 +210,17 @@ Ref: nodes.parent_id > nodes.id`;
         this.files.set(filePath.absolute, content);
       }
 
+      getFileSpecifierInfo (_currentFilepath: Filepath, targetFilepath: Filepath): { specifier: string } | undefined {
+        // Check if it's an @id import
+        if (targetFilepath.absolute.startsWith('/@imports/')) {
+          const id = targetFilepath.absolute.slice('/@imports/'.length).replace('.dbml', '');
+          return { specifier: `@${id}` };
+        }
+        let specifier = targetFilepath.relativeTo(_currentFilepath.dirname);
+        if (specifier.endsWith('.dbml')) specifier = specifier.slice(0, -'.dbml'.length);
+        return { specifier };
+      }
+
       resolveFileSpecifier (_currentFilepath: Filepath, specifier: string): Filepath | undefined {
         if (specifier.startsWith('@')) {
           const id = specifier.slice(1);

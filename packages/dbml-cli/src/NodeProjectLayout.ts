@@ -2,7 +2,7 @@ import {
   readFileSync, readdirSync, statSync,
 } from 'node:fs';
 import {
-  type DbmlProjectLayout, Filepath,
+  type DbmlProjectLayout, type FileSpecifierInfo, Filepath,
 } from '@dbml/parse';
 import {
   fileLogger,
@@ -26,10 +26,10 @@ export class NodeProjectLayout implements DbmlProjectLayout {
     return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
   }
 
-  getSpecifierForFile (currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {
+  getFileSpecifierInfo (currentFilepath: Filepath, targetFilepath: Filepath): FileSpecifierInfo | undefined {
     let specifier = targetFilepath.relativeTo(currentFilepath.dirname);
     if (specifier.endsWith('.dbml')) specifier = specifier.slice(0, -'.dbml'.length);
-    return specifier;
+    return { specifier };
   }
 
   getSource (filePath: Filepath): string | undefined {

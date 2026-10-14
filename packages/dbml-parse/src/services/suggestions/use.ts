@@ -289,10 +289,10 @@ function suggestUseFilepath (
       existingIncompleteImportPath,
     )) {
       const isDir = compiler.layout.isDirectory(entry);
-      const specifier = isDir
+      const fileSpecifier = isDir
         ? undefined
-        : compiler.layout.getSpecifierForFile(currentFilepath, entry);
-      if (!isDir && specifier === undefined) continue;
+        : compiler.layout.getFileSpecifierInfo(currentFilepath, entry);
+      if (!isDir && fileSpecifier === undefined) continue;
 
       if (
         !isDir
@@ -300,12 +300,13 @@ function suggestUseFilepath (
       )
         bestMatches.add(label);
 
+      const insertValue = fileSpecifier?.specifier ?? label;
       items.set(label, {
-        label,
-        detail: specifier,
+        label: fileSpecifier?.label ?? label,
+        detail: fileSpecifier?.detail,
         insertText: shouldInsertQuoteToImportPath
-          ? `'${specifier ?? label}'`
-          : (specifier ?? label),
+          ? `'${insertValue}'`
+          : insertValue,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
         kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
         sortText: `${isDir ? '2' : '3'}${label}`,
@@ -314,25 +315,22 @@ function suggestUseFilepath (
     }
   } else {
     // Specifier mode: collect all files by traversing directories up to fileListDepth levels
-    const allFilepaths = listFilesRecursive(
-      compiler.layout,
-      Filepath.from('/'),
-      fileListDepth,
-    );
+    const allFilepaths = listFilesRecursive(compiler.layout, Filepath.from('/'), fileListDepth);
 
     for (const filepath of allFilepaths) {
       if (filepath.equals(currentFilepath)) continue;
 
-      const specifier = compiler.layout.getSpecifierForFile(
+      const fileSpecifier = compiler.layout.getFileSpecifierInfo(
         currentFilepath,
         filepath,
       );
       if (
-        specifier === undefined
-        || !specifier.startsWith(existingIncompleteImportPath)
+        fileSpecifier === undefined
+        || !fileSpecifier.specifier.startsWith(existingIncompleteImportPath)
       )
         continue;
 
+      const { specifier, label: specifierLabel, detail } = fileSpecifier;
       if (doesFileProvideAllSpecifiers(compiler, filepath, requiredSymbols))
         bestMatches.add(specifier);
       if (items.has(specifier)) continue;
@@ -341,7 +339,8 @@ function suggestUseFilepath (
         ? `'${specifier}'`
         : specifier;
       items.set(specifier, {
-        label: specifier,
+        label: specifierLabel ?? specifier,
+        detail,
         insertText,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
         kind: CompletionItemKind.File,
