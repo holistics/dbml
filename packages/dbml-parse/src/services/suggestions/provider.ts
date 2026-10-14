@@ -474,7 +474,7 @@ function suggestMembersOfSymbol (
         // in the currently-open file; `from <basename>` for imports.
         const originFp = member.originalFilepath;
         const detail = originFp && !originFp.equals(symbol.filepath)
-          ? `from ${originFp.basename}`
+          ? `from ${compiler.layout.getFileSpecifierInfo(symbol.filepath, originFp)?.label ?? originFp.basename}`
           : 'this file';
         return {
           label: name,
