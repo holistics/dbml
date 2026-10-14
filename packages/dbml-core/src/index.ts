@@ -98,4 +98,5 @@ export type {
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,
+  FileSpecifierInfo,
 } from '@dbml/parse';
