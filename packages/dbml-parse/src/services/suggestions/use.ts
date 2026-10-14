@@ -197,8 +197,11 @@ function suggestUseFilepath (
   model: TextModel,
   useDeclaration: UseDeclarationNode,
 ): CompletionList {
-  const typedPrefix = importPath?.value ?? '';
-  const shouldQuote = importPath === undefined;
+  // Default to empty string so all specifiers/paths pass the prefix filter
+  // when the user hasn't started the string yet.
+  const existingIncompleteImportPath = importPath ? importPath.value : '';
+  // If the import path hasn't been typed out, we need to quote it
+  const shouldInsertQuoteToImportPath = importPath === undefined;
 
   let range: any;
   if (importPath) {
@@ -216,15 +219,15 @@ function suggestUseFilepath (
   const bestMatches = new Set<string>();
 
   // Filepath browse mode: user types a path (/, ./, ../) to browse the filesystem
-  const isPathBrowse = typedPrefix.startsWith('/') || typedPrefix.startsWith('./') || typedPrefix.startsWith('../');
+  const isPathBrowse = existingIncompleteImportPath.startsWith('/') || existingIncompleteImportPath.startsWith('./') || existingIncompleteImportPath.startsWith('../');
   if (isPathBrowse) {
     // Resolve relative prefixes to absolute for listDirectory
     let resolvedPrefix: string;
-    if (typedPrefix.startsWith('/')) {
-      resolvedPrefix = typedPrefix;
+    if (existingIncompleteImportPath.startsWith('/')) {
+      resolvedPrefix = existingIncompleteImportPath;
     } else {
-      const resolved = Filepath.resolve(currentFilepath.dirname, typedPrefix).fsPath;
-      resolvedPrefix = typedPrefix.endsWith('/') && !resolved.endsWith('/') ? resolved + '/' : resolved;
+      const resolved = Filepath.resolve(currentFilepath.dirname, existingIncompleteImportPath).fsPath;
+      resolvedPrefix = existingIncompleteImportPath.endsWith('/') && !resolved.endsWith('/') ? resolved + '/' : resolved;
     }
     const lastSlash = resolvedPrefix.lastIndexOf('/');
     const dirPath = resolvedPrefix.slice(0, lastSlash + 1) || '/';
@@ -235,12 +238,12 @@ function suggestUseFilepath (
       if (!entryPath.startsWith(resolvedPrefix)) continue;
 
       // For relative browse (./,../), show relative labels; for absolute (/), show absolute
-      const displayPath = typedPrefix + entryPath.slice(resolvedPrefix.length);
+      const displayPath = existingIncompleteImportPath + entryPath.slice(resolvedPrefix.length);
 
       const isDir = compiler.layout.isDirectory(entry);
       if (isDir) {
         const label = `${displayPath}/`;
-        const insertText = shouldQuote ? `'${label}'` : label;
+        const insertText = shouldInsertQuoteToImportPath ? `'${label}'` : label;
         items.set(label, {
           label,
           insertText,
@@ -256,7 +259,7 @@ function suggestUseFilepath (
         const label = displayPath;
         if (fileProvidesAllSpecifiers(compiler, entry, requiredSymbols)) bestMatches.add(label);
 
-        const insertText = shouldQuote ? `'${specifier}'` : specifier;
+        const insertText = shouldInsertQuoteToImportPath ? `'${specifier}'` : specifier;
         items.set(label, {
           label,
           detail: specifier,
@@ -278,21 +281,21 @@ function suggestUseFilepath (
       if (filepath.equals(currentFilepath)) continue;
 
       const specifier = compiler.layout.getSpecifierForFile(currentFilepath, filepath);
-      if (specifier === undefined || !specifier.startsWith(typedPrefix)) continue;
+      if (specifier === undefined || !specifier.startsWith(existingIncompleteImportPath)) continue;
 
       // Collapse to next segment (only when user has started typing a prefix)
       let childLabel = specifier;
       let isDir = false;
-      if (typedPrefix) {
-        const tail = specifier.slice(typedPrefix.length);
-        childLabel = `${typedPrefix}${tail.split('/')[0]}`;
+      if (existingIncompleteImportPath) {
+        const tail = specifier.slice(existingIncompleteImportPath.length);
+        childLabel = `${existingIncompleteImportPath}${tail.split('/')[0]}`;
         isDir = childLabel !== specifier;
       }
 
       if (fileProvidesAllSpecifiers(compiler, filepath, requiredSymbols)) bestMatches.add(childLabel);
       if (items.has(childLabel)) continue;
 
-      const insertText = shouldQuote ? `'${childLabel}'` : childLabel;
+      const insertText = shouldInsertQuoteToImportPath ? `'${childLabel}'` : childLabel;
       items.set(childLabel, {
         label: childLabel,
         insertText,
