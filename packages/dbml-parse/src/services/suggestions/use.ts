@@ -234,8 +234,8 @@ function suggestUseFilepath (
     if (existingIncompleteImportPath.startsWith('/')) {
       resolvedPrefix = existingIncompleteImportPath;
     } else {
-      const resolved = Filepath.resolve(currentFilepath.dirname, existingIncompleteImportPath).fsPath;
-      resolvedPrefix = existingIncompleteImportPath.endsWith('/') && !resolved.endsWith('/') ? resolved + '/' : resolved;
+      resolvedPrefix = Filepath.resolve(currentFilepath.dirname, existingIncompleteImportPath).fsPath;
+      if (existingIncompleteImportPath.endsWith('/') && !resolvedPrefix.endsWith('/')) resolvedPrefix += '/';
     }
     const lastSlash = resolvedPrefix.lastIndexOf('/');
     const dirPath = resolvedPrefix.slice(0, lastSlash + 1) || '/';
