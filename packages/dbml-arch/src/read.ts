@@ -64,7 +64,7 @@ export function numberOf (node?: SyntaxNode): number | null {
 }
 
 /**
- * `[name: 'API1', style: dashed, inactive]`.
+ * `[style: dashed, inactive]`.
  *
  * A setting with no value is `true`, the way `[pk]` is in DBML: a flag is a setting whose name
  * carries the whole meaning, and making the author write `[inactive: true]` buys nothing.
@@ -80,7 +80,7 @@ export function settingsOf (list?: ListExpressionNode): Settings {
   return out;
 }
 
-function valueOf (node: SyntaxNode): SettingValue | undefined {
+export function valueOf (node: SyntaxNode): SettingValue | undefined {
   const num = numberOf(node);
   if (num !== null) return num;
   const text = nameOf(node);
@@ -149,3 +149,35 @@ export const locate = (node: SyntaxNode, file: string): Located => ({
 });
 
 export const isElement = (node: SyntaxNode): node is ElementDeclarationNode => node instanceof ElementDeclarationNode;
+
+/**
+ * `owner: 'scott'` ON A LINE OF ITS OWN, which DBML writes inside `Project` and `Metadata`.
+ *
+ * The parser files it as a declaration whose TYPE is the key and whose body is the value, so
+ * it does not come back through `rowOf` the way `owner 'scott'` does. Reading both shapes here
+ * is what lets a body carry properties at all.
+ */
+export interface Property {
+  key: string;
+  /** undefined when the author wrote a key and no value, which is an error everywhere */
+  value: SettingValue | undefined;
+}
+
+export function propertyOf (node: SyntaxNode): Property | undefined {
+  // `key: 'value'` — a nested declaration, the shape `Project { database_type: 'x' }` uses
+  if (isElement(node)) {
+    const key = elementKindWord(node);
+    if (!key) return undefined;
+    const [first] = bodyOf(node);
+    if (!first) return { key, value: undefined };
+    const row = rowOf(first);
+    return { key, value: row ? valueOf(row.callee ?? first) : valueOf(first) };
+  }
+
+  // `key 'value'` and a bare `key`, which is how a group body and a column body read
+  const row = rowOf(node);
+  const key = nameOf(row?.callee);
+  if (!key) return undefined;
+  const [arg] = row?.args ?? [];
+  return { key, value: arg === undefined ? undefined : valueOf(arg) };
+}

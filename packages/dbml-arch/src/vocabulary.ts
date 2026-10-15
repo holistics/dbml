@@ -65,8 +65,8 @@ const GENERIC_KINDS: Record<string, KindSpec> = {
  *
  * So the keyword is the ROLE and `type` is the BRAND:
  *
- *   Proxy    lb1      [name: 'ha 1', type: 'haproxy']
- *   Database users_db [name: 'Users DB', type: 'postgres']
+ *   Proxy "ha 1" as lb1          { type: 'haproxy' }
+ *   Database "Users DB" as users_db { type: 'postgres' }
  *
  * Four things came back from making that swap. The vocabulary a reader has to learn dropped
  * from 73 words to 31. The role survives as a structured fact, so a drawing can still be asked

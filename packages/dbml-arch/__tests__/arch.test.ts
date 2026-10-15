@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { Compiler, Filepath, MemoryProjectLayout } from '@dbml/parse';
 import { compileArch, isArchitecture } from '../src/compile.js';
-import { isIconName } from '../src/icons.js';
-import { BUILTIN_KINDS, suggestKind } from '../src/vocabulary.js';
+import { ICON_NAMES, isIconName } from '../src/icons.js';
+import { archMonarchTokensProvider, archThemeRules } from '../src/monarch.js';
+import { BUILTIN_KINDS, RESERVED, suggestKind } from '../src/vocabulary.js';
 import {
   diagramTypeOf, isArchDiagramType, isArchitectureSource, scanFrontMatter,
 } from '../src/frontmatter.js';
@@ -22,10 +23,66 @@ describe('the architecture dialect on DBML\'s grammar', () => {
     expect(model.elements.get('mongo1')?.sort).toBe('node');
   });
 
-  it('takes the label from a setting and falls back to the id', () => {
-    const { model } = one("Server api1 [name: 'dbdiagram API1']\nServer api2");
-    expect(model.elements.get('api1')?.label).toBe('dbdiagram API1');
-    expect(model.elements.get('api2')?.label).toBe('api2');
+  /**
+   * THE NAME IS THE NAME, which is DBML's design and not one worth improving on. A caption
+   * used to be a `name:` setting while the declared word was the handle; both halves are now
+   * in the one place DBML puts them.
+   */
+  it('draws the declared name, and takes the alias as the handle', () => {
+    const { model, diagnostics } = compileArch(
+      { '/d': '---\ndiagram_type: arch\n---\n\nServer "dbdiagram API1" as api1\nServer api2' },
+      '/d',
+    );
+    expect(diagnostics).toEqual([]);
+
+    expect(model.elements.get('api1')).toMatchObject({ id: 'api1', alias: 'api1', label: 'dbdiagram API1' });
+    // no alias, so the name is both
+    expect(model.elements.get('api2')).toMatchObject({ id: 'api2', alias: null, label: 'api2' });
+  });
+
+  /**
+   * One step past DBML, and a canvas forces it: two boxes legitimately read `Internet`, where
+   * two tables called `users` would be a mistake. The handle is unique; the caption need not be.
+   */
+  it('lets two boxes share a caption when their handles differ', () => {
+    const { model, diagnostics } = compileArch({
+      '/d': [
+        '---', 'diagram_type: arch', '---', '',
+        'Internet "Internet" as net_dbdiagram',
+        'Internet "Internet" as net_dbdocs',
+        'Link: net_dbdiagram > net_dbdocs',
+      ].join('\n'),
+    }, '/d');
+
+    expect(diagnostics).toEqual([]);
+    expect([...model.elements.values()].map((e) => e.label)).toEqual(['Internet', 'Internet']);
+    expect(model.links[0]).toMatchObject({ from: 'net_dbdiagram', to: 'net_dbdocs' });
+  });
+
+  it('still refuses two handles that are the same', () => {
+    const { diagnostics } = compileArch(
+      { '/d': '---\ndiagram_type: arch\n---\n\nServer "A" as x\nServer "B" as x' },
+      '/d',
+    );
+    expect(diagnostics.map((d) => d.code)).toEqual(['duplicate-name']);
+  });
+
+  it('resolves a link, a member and a metadata target through either spelling', () => {
+    const { model, diagnostics } = compileArch({
+      '/d': [
+        '---', 'diagram_type: arch', '---', '',
+        'Server "dbdiagram API1" as api1',
+        'Database "Main" as pg',
+        'Group "API servers" as api { api1 }',
+        'Link: api1 > pg',
+        'Metadata pg {', "  owner: 'platform-team'", '}',
+      ].join('\n'),
+    }, '/d');
+
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('api1')?.parent).toBe('api');
+    expect(model.links[0]).toMatchObject({ from: 'api1', to: 'pg' });
+    expect(model.elements.get('pg')?.settings).toMatchObject({ owner: 'platform-team' });
   });
 
   it('puts the protocol and the host on the line, where they describe something', () => {
@@ -109,7 +166,7 @@ describe('the worked example', () => {
 
   it('attaches metadata declared outside the thing it describes', () => {
     const { model } = compileArch(EXAMPLE_FILES, EXAMPLE_ENTRY);
-    expect(model.elements.get('api1')?.meta).toMatchObject({ owner: 'platform-team' });
+    expect(model.elements.get('api1')?.settings).toMatchObject({ owner: 'platform-team' });
   });
 
   it('produces a model that is complete enough to draw', () => {
@@ -518,6 +575,7 @@ describe('a book, drawn with a vocabulary meant for servers', () => {
   it('lexes Vietnamese as identifiers, so a name and a kind can be written in it', () => {
     const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
     expect(model.elements.has('mục_đích_luận')).toBe(true);
+    // the name is drawn and the alias is the handle, so a Vietnamese caption keeps its spaces
     expect(model.elements.get('mục_đích_luận')?.label).toBe('Mục đích luận');
 
     const declared = [...model.kinds.values()].filter((k) => !k.builtin).map((k) => k.name);
@@ -572,7 +630,7 @@ describe('a brand is a setting, not a keyword', () => {
   );
 
   it('keeps the role and the brand as two separate facts', () => {
-    const { model, diagnostics } = draw("Proxy lb1 [name: \"ha 1\", type: 'haproxy']");
+    const { model, diagnostics } = draw("Proxy \"ha 1\" as lb1 {\n  type: 'haproxy'\n}");
     expect(diagnostics).toEqual([]);
 
     const lb = model.elements.get('lb1');
@@ -952,7 +1010,7 @@ describe('quotes mean what they say', () => {
         "Link: api > pg [proto: TCP, port: 5432]",
         "Group vpc [name: 'Production', cidr: '10.0.0.0/16'] { api pg }",
         'Metadata pg {',
-        '  tf_module \'modules/rds\'',
+        "  tf_module: 'modules/rds'",
         '}',
       ].join('\n'),
     }, '/d');
@@ -963,6 +1021,289 @@ describe('quotes mean what they say', () => {
     });
     expect(model.links[0].settings).toMatchObject({ proto: 'TCP', port: 5432 });
     expect(model.elements.get('vpc')?.settings).toMatchObject({ cidr: '10.0.0.0/16' });
-    expect(model.elements.get('pg')?.meta).toMatchObject({ tf_module: 'modules/rds' });
+    expect(model.elements.get('pg')?.settings).toMatchObject({ tf_module: 'modules/rds' });
+  });
+});
+
+/**
+ * METADATA, SPELLED THE WAY DBML SPELLS IT.
+ *
+ * Four divergences had crept in, and every one of them punished a reader for following DBML's
+ * own documentation: the colon was not accepted, the kind-qualified target was not read, a
+ * valueless key was swallowed and a repeated key quietly took the last value. DBML errors on
+ * the last two by name.
+ */
+describe('metadata follows DBML', () => {
+  const draw = (src: string) => compileArch(
+    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
+    '/d',
+  );
+
+  it("takes `key: 'value'`, which is what the DBML docs show", () => {
+    const { model, diagnostics } = draw("Server api\nMetadata api {\n  owner: 'scott'\n}");
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('api')?.settings).toMatchObject({ owner: 'scott' });
+  });
+
+  /**
+   * The reason this matters: a real name has a dash in it, and the parser only accepts a bare
+   * identifier in the slot the short form reads from. The kind-qualified form is DBML's, and
+   * it is the one that takes a quoted name.
+   */
+  it('takes the kind-qualified target, which is the only form that accepts a quoted name', () => {
+    const { model, diagnostics } = draw([
+      "Database \"dbdocs-dev\" [type: 'postgres']",
+      'Metadata Database "dbdocs-dev" {',
+      "  owner: 'platform-team'",
+      '}',
+    ].join('\n'));
+
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('dbdocs-dev')?.settings).toMatchObject({ owner: 'platform-team' });
+  });
+
+  it('says so when the stated kind is not what that thing is', () => {
+    const { diagnostics } = draw("Server api\nMetadata Database api {\n  owner: 'x'\n}");
+    expect(diagnostics.map((d) => d.code)).toEqual(['metadata-kind-mismatch']);
+    expect(diagnostics[0].severity).toBe('warning');
+    expect(diagnostics[0].message).toContain('Server');
+  });
+
+  /**
+   * Measured against DBML itself, which refuses all three and whose wording is reused: a
+   * reader who hits this has almost certainly arrived from DBML's own documentation.
+   */
+  it('refuses what DBML refuses, in the words DBML uses', () => {
+    for (const body of ['oncall', "owner 'scott'"]) {
+      const { diagnostics } = draw(`Server api\nMetadata api {\n  ${body}\n}`);
+      expect(diagnostics.map((d) => d.code), body).toEqual(['bad-property']);
+      expect(diagnostics[0].message, body).toBe("A Metadata field must use the 'key: value' syntax");
+    }
+
+    const dup = draw("Server api\nMetadata api {\n  a: '1'\n  a: '2'\n}");
+    expect(dup.diagnostics.map((d) => d.code)).toEqual(['duplicate-property']);
+    expect(dup.diagnostics[0].message).toBe('Duplicate Metadata fields are defined');
+  });
+
+  /**
+   * ONE BAG. There were two stores of free-form properties with no rule for choosing between
+   * them. DBML has one, with a precedence: inline lowest, then `Metadata` from imported files,
+   * then `Metadata` here.
+   */
+  it('layers a block over the inline settings, later and louder', () => {
+    const { model, diagnostics } = draw([
+      "Server api [type: 'docker', tier: 'two']",
+      'Metadata api {',
+      "  tier: 'one'",
+      "  owner: 'platform-team'",
+      '}',
+    ].join('\n'));
+
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('api')?.settings).toMatchObject({
+      type: 'docker',          // inline, untouched
+      tier: 'one',             // inline said two, the block wins
+      owner: 'platform-team',  // only the block said it
+    });
+  });
+
+  it('lets a later file outrank an earlier one, as DBML documents', () => {
+    const { model, diagnostics } = compileArch({
+      '/main.arch.dbml': [
+        '---', 'diagram_type: arch', '---', '',
+        "use * from './ops.arch'",
+        'Server api',
+      ].join('\n'),
+      '/ops.arch.dbml': "Metadata api {\n  owner: 'ops-team'\n}",
+    }, '/main.arch.dbml');
+
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('api')?.settings).toMatchObject({ owner: 'ops-team' });
+  });
+});
+
+/**
+ * `[ ]` IS FOR THE DRAWING. THE BODY IS FOR EVERYTHING ELSE.
+ *
+ * This is the split DBML makes on a TABLE, which is what an architecture element actually
+ * resembles: a DBML table takes two settings — `headercolor` and `note` — and everything that
+ * describes it lives in its body. Constraints in brackets are a COLUMN thing, and a column is
+ * not what we are.
+ */
+describe('the body carries the properties', () => {
+  const draw = (src: string) => compileArch(
+    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
+    '/d',
+  );
+
+  it('reads key: value lines on an element', () => {
+    const { model, diagnostics } = draw([
+      "Database users_db [type: 'postgres'] {",
+      "  version: '16.3'",
+      '  port: 5432',
+      "  owner: 'platform-team'",
+      '}',
+    ].join('\n'));
+
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('users_db')?.settings).toEqual({
+      type: 'postgres', version: '16.3', port: 5432, owner: 'platform-team',
+    });
+  });
+
+  it('reads them on a container too, beside its members', () => {
+    const { model, diagnostics } = draw([
+      'Server a',
+      'Server b',
+      "Group g [name: 'G'] {",
+      '  a',
+      '  b',
+      "  owner: 'platform-team'",
+      '}',
+    ].join('\n'));
+
+    expect(diagnostics).toEqual([]);
+    const group = model.elements.get('g');
+    expect(group?.settings).toMatchObject({ name: 'G', owner: 'platform-team' });
+    expect(isGroup(group) && group.children).toEqual(['a', 'b']);
+  });
+
+  it('leaves Note where it was, rather than treating it as a property', () => {
+    const { model, diagnostics } = draw("Database d {\n  version: '16.3'\n  Note: 'the main one'\n}");
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('d')?.note).toBe('the main one');
+    expect(model.elements.get('d')?.settings).toEqual({ version: '16.3' });
+  });
+
+  it('lets the body win a collision, being the more specific place to have said it', () => {
+    const { model } = draw("Database d [type: 'postgres', tier: 'two'] {\n  tier: 'one'\n}");
+    expect(model.elements.get('d')?.settings).toMatchObject({ type: 'postgres', tier: 'one' });
+  });
+
+  it('refuses a key set twice in one body', () => {
+    const { diagnostics } = draw("Database d {\n  a: '1'\n  a: '2'\n}");
+    expect(diagnostics.map((x) => x.code)).toEqual(['duplicate-property']);
+  });
+
+  /**
+   * The samples are the check that the split is liveable: if every element needed a body, the
+   * rule would be wrong. They do not — a box with a name and a product stays on one line.
+   */
+  it('leaves a simple box on one line, which is most boxes', () => {
+    const { model, diagnostics } = draw("Cache sessions [name: 'Session cache', type: 'redis']");
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('sessions')?.settings).toEqual({
+      name: 'Session cache', type: 'redis',
+    });
+  });
+});
+
+/**
+ * A BARE WORD IS A FLAG IN A BODY, the way `[pk]` is a flag in a settings list — except in a
+ * container, where a bare word is a member name and always will be, because listing names is
+ * what a container's body is for.
+ */
+describe('flags in a body', () => {
+  const draw = (src: string) => compileArch(
+    { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
+    '/d',
+  );
+
+  it('reads a bare word as true', () => {
+    const { model, diagnostics } = draw("Database d {\n  type: 'postgres'\n  ssl\n}");
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('d')?.settings).toEqual({ type: 'postgres', ssl: true });
+  });
+
+  it('reads several on one line, as a group body reads several members', () => {
+    const { model, diagnostics } = draw('Database d { login  superuser }');
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('d')?.settings).toEqual({ login: true, superuser: true });
+  });
+
+  it('refuses the same flag twice', () => {
+    expect(draw('Database d {\n  ssl\n  ssl\n}').diagnostics.map((x) => x.code))
+      .toEqual(['duplicate-property']);
+  });
+
+  it('still reads a container body as member names, never as flags', () => {
+    const { model, diagnostics } = draw('Server a\nServer b\nGroup g { a b }');
+    const group = model.elements.get('g');
+    expect(diagnostics).toEqual([]);
+    expect(group?.settings).toEqual({});
+    expect(isGroup(group) && group.children).toEqual(['a', 'b']);
+  });
+
+  it('lets a container carry both, since a property has a colon and a member does not', () => {
+    const { model, diagnostics } = draw("Server a\nGroup g {\n  a\n  owner: 'platform-team'\n}");
+    const group = model.elements.get('g');
+    expect(diagnostics).toEqual([]);
+    expect(group?.settings).toEqual({ owner: 'platform-team' });
+    expect(isGroup(group) && group.children).toEqual(['a']);
+  });
+});
+
+/**
+ * THE HIGHLIGHTER READS THE SAME LISTS THE COMPILER DOES.
+ *
+ * DBML's own tokenizer cannot colour this dialect: it knows `table`, `ref`, `pk` and a hundred
+ * SQL type names, none of which appear here, and it knows a few of them loosely — `text`,
+ * `set` and `image` are DBML data types and ordinary words in an architecture file, so what
+ * did light up lit up wrongly.
+ *
+ * The grammar lives beside the vocabulary so that adding a role or a mark needs no second
+ * edit. These assert the wiring, which is the part a refactor can quietly break.
+ */
+describe('syntax highlighting for the dialect', () => {
+  it('takes its roles, reserved words and marks from the compiler, not a copy', () => {
+    expect(archMonarchTokensProvider.roles).toEqual(Object.keys(BUILTIN_KINDS));
+    expect(archMonarchTokensProvider.icons).toEqual(ICON_NAMES);
+    for (const word of RESERVED) {
+      expect(archMonarchTokensProvider.declarations, word).toContain(word);
+    }
+    // the two the grammar needs that are not reserved, because they join a declaration
+    expect(archMonarchTokensProvider.declarations).toContain('as');
+    expect(archMonarchTokensProvider.declarations).toContain('Partial');
+  });
+
+  it('references no state it does not define', () => {
+    const states = Object.keys(archMonarchTokensProvider.tokenizer);
+    const lists = new Set([...states, 'brackets', 'pop', 'push', 'popall',
+      'declarations', 'roles', 'settings', 'icons', 'default', 'idtf']);
+
+    const referenced = new Set<string>();
+    JSON.stringify(archMonarchTokensProvider.tokenizer, (_key, value) => {
+      if (typeof value === 'string' && value.startsWith('@')) referenced.add(value.slice(1));
+      return value;
+    });
+
+    expect([...referenced].filter((name) => !lists.has(name))).toEqual([]);
+  });
+
+  /**
+   * The leading word is a keyword by POSITION, not by membership, and it has to be: `Kind
+   * Microservice` invents a role at compile time and no static list can hold it.
+   */
+  it('matches the leading word positionally, so a declared role is coloured too', () => {
+    const root = archMonarchTokensProvider.tokenizer.root as unknown[];
+    const leading = root.find((rule) => Array.isArray(rule)
+      && String((rule as unknown[])[0]).includes('^(\\s*)'));
+    expect(leading, 'no start-of-line rule for the element keyword').toBeTruthy();
+  });
+
+  it('gives every token it produces a colour', () => {
+    const produced = new Set<string>();
+    JSON.stringify(archMonarchTokensProvider.tokenizer, (key, value) => {
+      if (key === 'token' && typeof value === 'string') produced.add(value);
+      if (typeof value === 'string' && /^[a-z]+(\.[a-z]+)*$/.test(value)) produced.add(value);
+      return value;
+    });
+    const coloured = new Set(archThemeRules.map((rule) => rule.token));
+
+    for (const token of produced) {
+      if (token === '' || token.startsWith('@')) continue;
+      const root = token.split('.')[0];
+      expect(coloured.has(token) || coloured.has(root), token).toBe(true);
+    }
   });
 });

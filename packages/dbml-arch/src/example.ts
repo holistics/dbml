@@ -42,80 +42,124 @@ Project dbx {
 use * from './packs/devops.arch'
 
 // ── outside ───────────────────────────────────────────────────────────────────
-Internet net_dbdiagram [name: 'Internet']
-Internet net_dbdocs [name: 'Internet']
-CDN cf_dbdiagram [name: 'Cloudflare', type: 'cloudflare']
-CDN cf_dbdocs [name: 'Cloudflare', type: 'cloudflare']
-Client dbx_eng [name: 'DBX Engineers']
-VPN tailscale [name: 'Tailscale']
-Team holistics [name: 'Holistics Data Analytics']
-Warehouse bigquery [name: 'Google BigQuery', type: 'bigquery']
+Internet "Internet" as net_dbdiagram
+Internet "Internet" as net_dbdocs
+CDN "Cloudflare" as cf_dbdiagram {
+  type: 'cloudflare'
+}
+CDN "Cloudflare" as cf_dbdocs {
+  type: 'cloudflare'
+}
+Client "DBX Engineers" as dbx_eng
+VPN "Tailscale" as tailscale
+Team "Holistics Data Analytics" as holistics
+Warehouse "Google BigQuery" as bigquery {
+  type: 'bigquery'
+}
 
 // ── the managed edge, outside the private network ─────────────────────────────
-LoadBalancer dbdiagram_do_lb_be [name: 'dbdiagram-do-lb-be']
-LoadBalancer dbdiagram_do_lb_ws [name: 'dbdiagram-do-lb-ws']
+LoadBalancer "dbdiagram-do-lb-be" as dbdiagram_do_lb_be
+LoadBalancer "dbdiagram-do-lb-ws" as dbdiagram_do_lb_ws
 Note do_lbs_dbdiagram { 'DigitalOcean Load Balancers' }
 
-CDN dbdiagram_fe [name: 'DBDiagram Frontend - AWS CloudFront', type: 'aws']
+CDN "DBDiagram Frontend - AWS CloudFront" as dbdiagram_fe {
+  type: 'aws'
+}
 
-LoadBalancer dbdocs_do_lb_fe [name: 'dbdocs-do-lb-fe']
-LoadBalancer dbdocs_do_lb_be [name: 'dbdocs-do-lb-be']
+LoadBalancer "dbdocs-do-lb-fe" as dbdocs_do_lb_fe
+LoadBalancer "dbdocs-do-lb-be" as dbdocs_do_lb_be
 Note do_lbs_dbdocs { 'DigitalOcean Load Balancers' }
 
-Server runsql_ssr [name: 'runSQL Frontend SSR server']
-Server runsql_be [name: 'runSQL Backend Server']
+Server "runSQL Frontend SSR server" as runsql_ssr
+Server "runSQL Backend Server" as runsql_be
 
 // ── dbdiagram ─────────────────────────────────────────────────────────────────
-Proxy dbdiagram_lb1 [name: 'dbdiagram-lb-1', type: 'haproxy']
-Proxy dbdiagram_lb2 [name: 'dbdiagram-lb-2', type: 'haproxy']
-Server api1 [name: 'dbdiagram API1']
-Server api2 [name: 'dbdiagram API2']
-Server ws1 [name: 'dbdiagram WS1']
-Server ws2 [name: 'dbdiagram WS2']
-Database mongo1 [name: 'dbdiagram mongodb 1', type: 'mongodb']
-Database mongo2 [name: 'dbdiagram mongodb 2', type: 'mongodb']
-Database mongo3 [name: 'dbdiagram mongodb 3', type: 'mongodb']
-Cache redis [name: 'Redis Cache', type: 'redis']
+Proxy "dbdiagram-lb-1" as dbdiagram_lb1 {
+  type: 'haproxy'
+}
+Proxy "dbdiagram-lb-2" as dbdiagram_lb2 {
+  type: 'haproxy'
+}
+Server "dbdiagram API1" as api1
+Server "dbdiagram API2" as api2
+Server "dbdiagram WS1" as ws1
+Server "dbdiagram WS2" as ws2
+Database "dbdiagram mongodb 1" as mongo1 {
+  type: 'mongodb'
+}
+Database "dbdiagram mongodb 2" as mongo2 {
+  type: 'mongodb'
+}
+Database "dbdiagram mongodb 3" as mongo3 {
+  type: 'mongodb'
+}
+Cache "Redis Cache" as redis {
+  type: 'redis'
+}
 
 // ── dbdocs ────────────────────────────────────────────────────────────────────
-Proxy dbdocs_lb1 [name: 'dbdocs lb-1', type: 'haproxy']
-Proxy dbdocs_lb2 [name: 'dbdocs lb-2', type: 'haproxy']
-Server dbdocs_web [name: 'DBDocs Web servers']
-Server dbdocs_api [name: 'DBDocs API Servers']
-Database dbdocs_pg_master [name: 'Master', type: 'postgres']
-Database dbdocs_pg_standby [name: 'Standby', type: 'postgres']
+Proxy "dbdocs lb-1" as dbdocs_lb1 {
+  type: 'haproxy'
+}
+Proxy "dbdocs lb-2" as dbdocs_lb2 {
+  type: 'haproxy'
+}
+Server "DBDocs Web servers" as dbdocs_web
+Server "DBDocs API Servers" as dbdocs_api
+Database "Master" as dbdocs_pg_master {
+  type: 'postgres'
+}
+Database "Standby" as dbdocs_pg_standby {
+  type: 'postgres'
+}
 
 // ── runSQL ────────────────────────────────────────────────────────────────────
-Database runsql_pg [name: 'runSQL Postgres Main DB', type: 'postgres']
-Container runsql_sandbox [name: 'runSQL Sandbox DBs servers', type: 'docker']
-Server runsql_pgbouncer [name: 'runsql-pgbouncer']
+Database "runSQL Postgres Main DB" as runsql_pg {
+  type: 'postgres'
+}
+Container "runSQL Sandbox DBs servers" as runsql_sandbox {
+  type: 'docker'
+}
+Server "runsql-pgbouncer" as runsql_pgbouncer
 
 // ── dbx ai ────────────────────────────────────────────────────────────────────
-Server orca1 [name: 'dbx-orca-1']
-Server orca2 [name: 'dbx-orca-2']
-Proxy dbx_ai_lb [name: 'dbx-ai-lb', type: 'haproxy']
-Database dbx_pgvector [name: 'dbx-ai pgvector', type: 'postgres']
-Pipeline airbyte [name: 'Airbyte ETL', type: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4']
+Server "dbx-orca-1" as orca1
+Server "dbx-orca-2" as orca2
+Proxy "dbx-ai-lb" as dbx_ai_lb {
+  type: 'haproxy'
+}
+Database "dbx-ai pgvector" as dbx_pgvector {
+  type: 'postgres'
+}
+Pipeline "Airbyte ETL" as airbyte {
+  type: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4'
+}
 
 // ── operations ────────────────────────────────────────────────────────────────
-Monitoring grafana [name: 'Grafana', type: 'grafana']
-Monitoring loki [name: 'Grafana loki', type: 'grafana']
-Monitoring prometheus [name: 'Prometheus (monitoring)', type: 'prometheus']
-Firewall ossec [name: 'OSSEC']
-Server deploy [name: 'Deployment server']
+Monitoring "Grafana" as grafana {
+  type: 'grafana'
+}
+Monitoring "Grafana loki" as loki {
+  type: 'grafana'
+}
+Monitoring "Prometheus (monitoring)" as prometheus {
+  type: 'prometheus'
+}
+Firewall "OSSEC" as ossec
+Server "Deployment server" as deploy
 
 // A group lists names, and a name may be a node OR another group, so nesting needs no new
 // syntax and moving something between containers is one line.
-Group dbdiagram_api [name: 'dbdiagram API servers'] { api1 api2 }
-Group dbdiagram_ws [name: 'dbdiagram Websocket servers'] { ws1 ws2 }
-Group dbdiagram_proxy [name: 'dbdiagram Internal Proxy'] { dbdiagram_lb1 dbdiagram_lb2 }
-Group mongo_rs [name: 'dbdiagram mongodb replica set'] { mongo1 mongo2 mongo3 }
-Group dbdocs_proxy [name: 'DBDocs Internal Proxy'] { dbdocs_lb1 dbdocs_lb2 }
-Group dbdocs_pg [name: 'DBDocs Postgres Main DBs'] { dbdocs_pg_master dbdocs_pg_standby }
-Group dbx_ai_orca [name: 'dbx-ai-orca'] { orca1 orca2 }
-Group monitoring [name: 'Monitoring system'] { grafana loki prometheus }
+Group "dbdiagram API servers" as dbdiagram_api { api1 api2 }
+Group "dbdiagram Websocket servers" as dbdiagram_ws { ws1 ws2 }
+Group "dbdiagram Internal Proxy" as dbdiagram_proxy { dbdiagram_lb1 dbdiagram_lb2 }
+Group "dbdiagram mongodb replica set" as mongo_rs { mongo1 mongo2 mongo3 }
+Group "DBDocs Internal Proxy" as dbdocs_proxy { dbdocs_lb1 dbdocs_lb2 }
+Group "DBDocs Postgres Main DBs" as dbdocs_pg { dbdocs_pg_master dbdocs_pg_standby }
+Group "dbx-ai-orca" as dbx_ai_orca { orca1 orca2 }
+Group "Monitoring system" as monitoring { grafana loki prometheus }
 
-Group production [name: 'Production servers', style: dashed] {
+Group "Production servers" as production [style: dashed] {
   dbdiagram_proxy
   dbdiagram_api
   dbdiagram_ws
@@ -134,7 +178,7 @@ Group production [name: 'Production servers', style: dashed] {
   runsql_pgbouncer
 }
 
-Group private_net [name: 'Private network'] {
+Group "Private network" as private_net {
   production
   monitoring
   ossec
@@ -143,8 +187,8 @@ Group private_net [name: 'Private network'] {
 
 // Metadata can land on something declared anywhere, including another file.
 Metadata api1 {
-  owner 'platform-team'
-  runbook 'wiki/dbdiagram-api'
+  owner: 'platform-team'
+  runbook: 'wiki/dbdiagram-api'
 }
 
 // ── what talks to what ────────────────────────────────────────────────────────
@@ -235,80 +279,124 @@ Kind Firewall [icon: firewall, color: '#c0453a']
 Kind Lakehouse [icon: graph, color: '#4a7c59']
 
 // ── outside ───────────────────────────────────────────────────────────────────
-Internet net_dbdiagram [name: 'Internet']
-Internet net_dbdocs [name: 'Internet']
-CDN cf_dbdiagram [name: 'Cloudflare', type: 'cloudflare']
-CDN cf_dbdocs [name: 'Cloudflare', type: 'cloudflare']
-Client dbx_eng [name: 'DBX Engineers']
-VPN tailscale [name: 'Tailscale']
-Team holistics [name: 'Holistics Data Analytics']
-Warehouse bigquery [name: 'Google BigQuery', type: 'bigquery']
+Internet "Internet" as net_dbdiagram
+Internet "Internet" as net_dbdocs
+CDN "Cloudflare" as cf_dbdiagram {
+  type: 'cloudflare'
+}
+CDN "Cloudflare" as cf_dbdocs {
+  type: 'cloudflare'
+}
+Client "DBX Engineers" as dbx_eng
+VPN "Tailscale" as tailscale
+Team "Holistics Data Analytics" as holistics
+Warehouse "Google BigQuery" as bigquery {
+  type: 'bigquery'
+}
 
 // ── the managed edge, outside the private network ─────────────────────────────
-LoadBalancer dbdiagram_do_lb_be [name: 'dbdiagram-do-lb-be']
-LoadBalancer dbdiagram_do_lb_ws [name: 'dbdiagram-do-lb-ws']
+LoadBalancer "dbdiagram-do-lb-be" as dbdiagram_do_lb_be
+LoadBalancer "dbdiagram-do-lb-ws" as dbdiagram_do_lb_ws
 Note do_lbs_dbdiagram { 'DigitalOcean Load Balancers' }
 
-CDN dbdiagram_fe [name: 'DBDiagram Frontend - AWS CloudFront', type: 'aws']
+CDN "DBDiagram Frontend - AWS CloudFront" as dbdiagram_fe {
+  type: 'aws'
+}
 
-LoadBalancer dbdocs_do_lb_fe [name: 'dbdocs-do-lb-fe']
-LoadBalancer dbdocs_do_lb_be [name: 'dbdocs-do-lb-be']
+LoadBalancer "dbdocs-do-lb-fe" as dbdocs_do_lb_fe
+LoadBalancer "dbdocs-do-lb-be" as dbdocs_do_lb_be
 Note do_lbs_dbdocs { 'DigitalOcean Load Balancers' }
 
-Server runsql_ssr [name: 'runSQL Frontend SSR server']
-Server runsql_be [name: 'runSQL Backend Server']
+Server "runSQL Frontend SSR server" as runsql_ssr
+Server "runSQL Backend Server" as runsql_be
 
 // ── dbdiagram ─────────────────────────────────────────────────────────────────
-Proxy dbdiagram_lb1 [name: 'dbdiagram-lb-1', type: 'haproxy']
-Proxy dbdiagram_lb2 [name: 'dbdiagram-lb-2', type: 'haproxy']
-Server api1 [name: 'dbdiagram API1']
-Server api2 [name: 'dbdiagram API2']
-Server ws1 [name: 'dbdiagram WS1']
-Server ws2 [name: 'dbdiagram WS2']
-Database mongo1 [name: 'dbdiagram mongodb 1', type: 'mongodb']
-Database mongo2 [name: 'dbdiagram mongodb 2', type: 'mongodb']
-Database mongo3 [name: 'dbdiagram mongodb 3', type: 'mongodb']
-Cache redis [name: 'Redis Cache', type: 'redis']
+Proxy "dbdiagram-lb-1" as dbdiagram_lb1 {
+  type: 'haproxy'
+}
+Proxy "dbdiagram-lb-2" as dbdiagram_lb2 {
+  type: 'haproxy'
+}
+Server "dbdiagram API1" as api1
+Server "dbdiagram API2" as api2
+Server "dbdiagram WS1" as ws1
+Server "dbdiagram WS2" as ws2
+Database "dbdiagram mongodb 1" as mongo1 {
+  type: 'mongodb'
+}
+Database "dbdiagram mongodb 2" as mongo2 {
+  type: 'mongodb'
+}
+Database "dbdiagram mongodb 3" as mongo3 {
+  type: 'mongodb'
+}
+Cache "Redis Cache" as redis {
+  type: 'redis'
+}
 
 // ── dbdocs ────────────────────────────────────────────────────────────────────
-Proxy dbdocs_lb1 [name: 'dbdocs lb-1', type: 'haproxy']
-Proxy dbdocs_lb2 [name: 'dbdocs lb-2', type: 'haproxy']
-Server dbdocs_web [name: 'DBDocs Web servers']
-Server dbdocs_api [name: 'DBDocs API Servers']
-Database dbdocs_pg_master [name: 'Master', type: 'postgres']
-Database dbdocs_pg_standby [name: 'Standby', type: 'postgres']
+Proxy "dbdocs lb-1" as dbdocs_lb1 {
+  type: 'haproxy'
+}
+Proxy "dbdocs lb-2" as dbdocs_lb2 {
+  type: 'haproxy'
+}
+Server "DBDocs Web servers" as dbdocs_web
+Server "DBDocs API Servers" as dbdocs_api
+Database "Master" as dbdocs_pg_master {
+  type: 'postgres'
+}
+Database "Standby" as dbdocs_pg_standby {
+  type: 'postgres'
+}
 
 // ── runSQL ────────────────────────────────────────────────────────────────────
-Database runsql_pg [name: 'runSQL Postgres Main DB', type: 'postgres']
-Container runsql_sandbox [name: 'runSQL Sandbox DBs servers', type: 'docker']
-Server runsql_pgbouncer [name: 'runsql-pgbouncer']
+Database "runSQL Postgres Main DB" as runsql_pg {
+  type: 'postgres'
+}
+Container "runSQL Sandbox DBs servers" as runsql_sandbox {
+  type: 'docker'
+}
+Server "runsql-pgbouncer" as runsql_pgbouncer
 
 // ── dbx ai ────────────────────────────────────────────────────────────────────
-Server orca1 [name: 'dbx-orca-1']
-Server orca2 [name: 'dbx-orca-2']
-Proxy dbx_ai_lb [name: 'dbx-ai-lb', type: 'haproxy']
-Database dbx_pgvector [name: 'dbx-ai pgvector', type: 'postgres']
-Pipeline airbyte [name: 'Airbyte ETL', type: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4']
+Server "dbx-orca-1" as orca1
+Server "dbx-orca-2" as orca2
+Proxy "dbx-ai-lb" as dbx_ai_lb {
+  type: 'haproxy'
+}
+Database "dbx-ai pgvector" as dbx_pgvector {
+  type: 'postgres'
+}
+Pipeline "Airbyte ETL" as airbyte {
+  type: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4'
+}
 
 // ── operations ────────────────────────────────────────────────────────────────
-Monitoring grafana [name: 'Grafana', type: 'grafana']
-Monitoring loki [name: 'Grafana loki', type: 'grafana']
-Monitoring prometheus [name: 'Prometheus (monitoring)', type: 'prometheus']
-Firewall ossec [name: 'OSSEC']
-Server deploy [name: 'Deployment server']
+Monitoring "Grafana" as grafana {
+  type: 'grafana'
+}
+Monitoring "Grafana loki" as loki {
+  type: 'grafana'
+}
+Monitoring "Prometheus (monitoring)" as prometheus {
+  type: 'prometheus'
+}
+Firewall "OSSEC" as ossec
+Server "Deployment server" as deploy
 
 // A group lists names, and a name may be a node OR another group, so nesting needs no new
 // syntax and moving something between containers is one line.
-Group dbdiagram_api [name: 'dbdiagram API servers'] { api1 api2 }
-Group dbdiagram_ws [name: 'dbdiagram Websocket servers'] { ws1 ws2 }
-Group dbdiagram_proxy [name: 'dbdiagram Internal Proxy'] { dbdiagram_lb1 dbdiagram_lb2 }
-Group mongo_rs [name: 'dbdiagram mongodb replica set'] { mongo1 mongo2 mongo3 }
-Group dbdocs_proxy [name: 'DBDocs Internal Proxy'] { dbdocs_lb1 dbdocs_lb2 }
-Group dbdocs_pg [name: 'DBDocs Postgres Main DBs'] { dbdocs_pg_master dbdocs_pg_standby }
-Group dbx_ai_orca [name: 'dbx-ai-orca'] { orca1 orca2 }
-Group monitoring [name: 'Monitoring system'] { grafana loki prometheus }
+Group "dbdiagram API servers" as dbdiagram_api { api1 api2 }
+Group "dbdiagram Websocket servers" as dbdiagram_ws { ws1 ws2 }
+Group "dbdiagram Internal Proxy" as dbdiagram_proxy { dbdiagram_lb1 dbdiagram_lb2 }
+Group "dbdiagram mongodb replica set" as mongo_rs { mongo1 mongo2 mongo3 }
+Group "DBDocs Internal Proxy" as dbdocs_proxy { dbdocs_lb1 dbdocs_lb2 }
+Group "DBDocs Postgres Main DBs" as dbdocs_pg { dbdocs_pg_master dbdocs_pg_standby }
+Group "dbx-ai-orca" as dbx_ai_orca { orca1 orca2 }
+Group "Monitoring system" as monitoring { grafana loki prometheus }
 
-Group production [name: 'Production servers', style: dashed] {
+Group "Production servers" as production [style: dashed] {
   dbdiagram_proxy
   dbdiagram_api
   dbdiagram_ws
@@ -327,7 +415,7 @@ Group production [name: 'Production servers', style: dashed] {
   runsql_pgbouncer
 }
 
-Group private_net [name: 'Private network'] {
+Group "Private network" as private_net {
   production
   monitoring
   ossec
@@ -336,8 +424,8 @@ Group private_net [name: 'Private network'] {
 
 // Metadata can land on something declared anywhere, including another file.
 Metadata api1 {
-  owner 'platform-team'
-  runbook 'wiki/dbdiagram-api'
+  owner: 'platform-team'
+  runbook: 'wiki/dbdiagram-api'
 }
 
 // ── what talks to what ────────────────────────────────────────────────────────
@@ -452,12 +540,12 @@ Kind Author [icon: person]
 Kind Canvas [icon: browser]
 Kind Lib [icon: nodejs]
 
-Author author [name: 'Whoever writes the file']
+Author "Whoever writes the file" as author
 
 // ── @dbml/parse: the front end both dialects share ────────────────────────────
 // A NODE TAKES A NOTE THE SAME WAY A CONTAINER DOES: a body with a \`Note:\` in it. Nothing
 // about the syntax changes because the box is smaller.
-Stage lex [name: 'Lexer'] {
+Stage "Lexer" as lex {
   Note: '''
   **642 lines, and not one DBML word in them.**
 
@@ -469,7 +557,7 @@ Stage lex [name: 'Lexer'] {
   '''
 }
 
-Stage parse [name: 'Parser'] {
+Stage "Parser" as parse {
   Note: '''
   **1623 lines with no mention of \`ElementKind\`.**
 
@@ -480,7 +568,7 @@ Stage parse [name: 'Parser'] {
   - an architecture file is mostly bodyless; a DBML file is mostly bodies
   '''
 }
-Stage filegraph [name: 'File graph & cache'] {
+Stage "File graph & cache" as filegraph {
   Note: '''
   **Borrowed whole, and not adapted.**
 
@@ -492,12 +580,12 @@ Stage filegraph [name: 'File graph & cache'] {
   - the reverse misses, in every spelling
   '''
 }
-Shape tokens [name: 'Tokens']
-Shape ast [name: 'Syntax tree']
-Words dbmlwords [name: "DBML's 16 elements"]
+Shape "Tokens" as tokens
+Shape "Syntax tree" as ast
+Words "DBML's 16 elements" as dbmlwords
 
 // ── @dbml/arch: the architecture dialect ──────────────────────────────────────
-Stage dialect [name: 'Three dialect switches'] {
+Stage "Three dialect switches" as dialect {
   Note: '''
   **Three switches, all off for DBML.**
 
@@ -510,7 +598,7 @@ Stage dialect [name: 'Three dialect switches'] {
   fuzz test file, which is the measured price of never branching.
   '''
 }
-Stage bind [name: 'Bind & interpret'] {
+Stage "Bind & interpret" as bind {
   Note: '''
   **Where this dialect stops borrowing.**
 
@@ -522,7 +610,7 @@ Stage bind [name: 'Bind & interpret'] {
   - 18 of 20 architecture constructs parse through DBML unchanged
   '''
 }
-Words archvocab [name: '31 kinds, 84 icon names'] {
+Words "31 kinds, 84 icon names" as archvocab {
   Note: '''
   **Closed at any moment, opened by one declaration.**
 
@@ -535,7 +623,7 @@ Words archvocab [name: '31 kinds, 84 icon names'] {
   - the grammar is untouched either way
   '''
 }
-Shape model [name: 'NetworkModel'] {
+Shape "NetworkModel" as model {
   Note: '''
   **The whole contract between the two repositories.**
 
@@ -549,7 +637,7 @@ Shape model [name: 'NetworkModel'] {
 }
 
 // ── the closed renderer, a separate repository ────────────────────────────────
-Closed measure [name: 'Measure boxes'] {
+Closed "Measure boxes" as measure {
   Note: '''
   **Measured first, placed later.**
 
@@ -561,7 +649,7 @@ Closed measure [name: 'Measure boxes'] {
   - a note is NOT measured; it has no box to take up room
   '''
 }
-Closed place [name: 'Place boxes'] {
+Closed "Place boxes" as place {
   Note: '''
   **ELK places, with a grid behind it.**
 
@@ -570,7 +658,7 @@ Closed place [name: 'Place boxes'] {
   - only leaves are saved; a container's box is always re-derived
   '''
 }
-Closed route [name: 'Route lines'] {
+Closed "Route lines" as route {
   Note: '''
   **A\\* over an orthogonal visibility grid.**
 
@@ -583,7 +671,7 @@ Closed route [name: 'Route lines'] {
   - \`separateLanes()\` — a pass for the corridors still shared
   '''
 }
-Closed paint [name: 'Paint SVG'] {
+Closed "Paint SVG" as paint {
   Note: '''
   **No canvas and no WebGL: the export is what is on screen.**
 
@@ -595,11 +683,11 @@ Closed paint [name: 'Paint SVG'] {
   - the drawings live here; the NAMES live in the open repo
   '''
 }
-Lib elk [name: 'elkjs']
+Lib "elkjs" as elk
 
 // ── the playground ────────────────────────────────────────────────────────────
-Canvas editor [name: 'Monaco editor']
-Canvas stores [name: 'Pinia stores'] {
+Canvas "Monaco editor" as editor
+Canvas "Pinia stores" as stores {
   Note: '''
   **Two compilers, one editor.**
 
@@ -609,11 +697,11 @@ Canvas stores [name: 'Pinia stores'] {
     document is not written in
   '''
 }
-Canvas pane [name: 'Architecture pane']
+Canvas "Architecture pane" as pane
 
 // A container's note is markdown, and it is where the file listing lives. A triple-quoted
 // string keeps its line breaks, so a list stays a list.
-Group frontend [name: '@dbml/parse — open, vocabulary-neutral'] {
+Group "@dbml/parse — open, vocabulary-neutral" as frontend {
   lex
   parse
   filegraph
@@ -634,7 +722,7 @@ Group frontend [name: '@dbml/parse — open, vocabulary-neutral'] {
   '''
 }
 
-Group vocabulary_dbml [name: "DBML's own vocabulary"] {
+Group "DBML's own vocabulary" as vocabulary_dbml {
   dbmlwords
 
   Note: '''
@@ -650,7 +738,7 @@ Group vocabulary_dbml [name: "DBML's own vocabulary"] {
   '''
 }
 
-Group archpkg [name: '@dbml/arch — open, the new language'] {
+Group "@dbml/arch — open, the new language" as archpkg {
   dialect
   bind
   archvocab
@@ -670,7 +758,7 @@ Group archpkg [name: '@dbml/arch — open, the new language'] {
   '''
 }
 
-Group renderer [name: 'dbx-graph-renderer — closed, separate repository', style: dashed] {
+Group "dbx-graph-renderer — closed, separate repository" as renderer [style: dashed] {
   measure
   place
   route
@@ -690,7 +778,7 @@ Group renderer [name: 'dbx-graph-renderer — closed, separate repository', styl
   '''
 }
 
-Group playground [name: 'dbml-playground'] {
+Group "dbml-playground" as playground {
   editor
   stores
   pane
@@ -707,12 +795,12 @@ Group playground [name: 'dbml-playground'] {
 }
 
 Metadata bind {
-  reads 'read.ts, 137 lines'
-  owns 'binding and interpretation, deliberately not shared with DBML'
+  reads: 'read.ts, 137 lines'
+  owns: 'binding and interpretation, deliberately not shared with DBML'
 }
 
 Metadata archvocab {
-  pairs_with 'the renderer icons.ts, asserted by a test on the closed side'
+  pairs_with: 'the renderer icons.ts, asserted by a test on the closed side'
 }
 
 // ── what becomes what ─────────────────────────────────────────────────────────
@@ -779,49 +867,49 @@ Kind Thực_hành [icon: rocket, color: '#4a7c59']
 Kind Kết_quả [icon: check, color: '#b2761c']
 Kind Người [icon: person]
 
-Người adler    [name: 'Alfred Adler']
-Người socrates [name: 'Socrates']
+Người "Alfred Adler" as adler
+Người "Socrates" as socrates
 
 // ── Đêm thứ nhất ──────────────────────────────────────────────────────────────
-Sai_lầm   nguyên_nhân_luận [name: 'Nguyên nhân luận']
-Tiền_đề   mục_đích_luận    [name: 'Mục đích luận']
-Sai_lầm   sang_chấn        [name: 'Sang chấn tâm lý']
-Luận_điểm lối_sống         [name: 'Lối sống là một lựa chọn']
-Thực_hành can_đảm          [name: 'Can đảm để thay đổi']
+Sai_lầm "Nguyên nhân luận" as nguyên_nhân_luận
+Tiền_đề "Mục đích luận" as mục_đích_luận
+Sai_lầm "Sang chấn tâm lý" as sang_chấn
+Luận_điểm "Lối sống là một lựa chọn" as lối_sống
+Thực_hành "Can đảm để thay đổi" as can_đảm
 
 // ── Đêm thứ hai ───────────────────────────────────────────────────────────────
-Tiền_đề   quan_hệ     [name: 'Mọi phiền muộn đều là quan hệ người với người']
-Luận_điểm tự_ti       [name: 'Cảm giác tự ti là chủ quan']
-Sai_lầm   phức_cảm    [name: 'Phức cảm tự ti']
-Sai_lầm   tự_tôn      [name: 'Phức cảm tự tôn']
-Sai_lầm   cạnh_tranh  [name: 'Xem đời là cuộc cạnh tranh']
-Sai_lầm   tranh_giành [name: 'Tranh giành quyền lực']
-Luận_điểm nhiệm_vụ    [name: 'Ba nhiệm vụ cuộc đời']
-Sai_lầm   nói_dối     [name: 'Lời nói dối cuộc đời']
+Tiền_đề "Mọi phiền muộn đều là quan hệ người với người" as quan_hệ
+Luận_điểm "Cảm giác tự ti là chủ quan" as tự_ti
+Sai_lầm "Phức cảm tự ti" as phức_cảm
+Sai_lầm "Phức cảm tự tôn" as tự_tôn
+Sai_lầm "Xem đời là cuộc cạnh tranh" as cạnh_tranh
+Sai_lầm "Tranh giành quyền lực" as tranh_giành
+Luận_điểm "Ba nhiệm vụ cuộc đời" as nhiệm_vụ
+Sai_lầm "Lời nói dối cuộc đời" as nói_dối
 
 // ── Đêm thứ ba ────────────────────────────────────────────────────────────────
-Sai_lầm   thừa_nhận [name: 'Nhu cầu được thừa nhận']
-Thực_hành phân_chia [name: 'Phân chia nhiệm vụ']
-Kết_quả   tự_do     [name: 'Tự do là dám bị ghét']
+Sai_lầm "Nhu cầu được thừa nhận" as thừa_nhận
+Thực_hành "Phân chia nhiệm vụ" as phân_chia
+Kết_quả "Tự do là dám bị ghét" as tự_do
 
 // ── Đêm thứ tư ────────────────────────────────────────────────────────────────
-Sai_lầm   quan_hệ_dọc   [name: 'Quan hệ theo chiều dọc']
-Thực_hành quan_hệ_ngang [name: 'Quan hệ theo chiều ngang']
-Sai_lầm   khen_mắng     [name: 'Khen ngợi và mắng mỏ']
-Thực_hành khích_lệ      [name: 'Khích lệ lòng can đảm']
-Tiền_đề   cộng_đồng     [name: 'Cảm thức cộng đồng']
-Luận_điểm giá_trị       [name: 'Có mặt ở đây đã là có giá trị']
+Sai_lầm "Quan hệ theo chiều dọc" as quan_hệ_dọc
+Thực_hành "Quan hệ theo chiều ngang" as quan_hệ_ngang
+Sai_lầm "Khen ngợi và mắng mỏ" as khen_mắng
+Thực_hành "Khích lệ lòng can đảm" as khích_lệ
+Tiền_đề "Cảm thức cộng đồng" as cộng_đồng
+Luận_điểm "Có mặt ở đây đã là có giá trị" as giá_trị
 
 // ── Đêm thứ năm ───────────────────────────────────────────────────────────────
-Thực_hành chấp_nhận   [name: 'Chấp nhận bản thân']
-Thực_hành tin_tưởng   [name: 'Tin tưởng người khác']
-Thực_hành cống_hiến   [name: 'Cống hiến cho người khác']
-Sai_lầm   đường_thẳng [name: 'Đời là một đường thẳng']
-Tiền_đề   khoảnh_khắc [name: 'Đời là những khoảnh khắc nối tiếp']
-Thực_hành bình_thường [name: 'Dám bình thường']
-Kết_quả   hạnh_phúc   [name: 'Hạnh phúc là cảm thấy mình có ích']
+Thực_hành "Chấp nhận bản thân" as chấp_nhận
+Thực_hành "Tin tưởng người khác" as tin_tưởng
+Thực_hành "Cống hiến cho người khác" as cống_hiến
+Sai_lầm "Đời là một đường thẳng" as đường_thẳng
+Tiền_đề "Đời là những khoảnh khắc nối tiếp" as khoảnh_khắc
+Thực_hành "Dám bình thường" as bình_thường
+Kết_quả "Hạnh phúc là cảm thấy mình có ích" as hạnh_phúc
 
-Group đêm1 [name: 'Đêm thứ nhất: hãy phủ nhận sang chấn tâm lý'] {
+Group "Đêm thứ nhất: hãy phủ nhận sang chấn tâm lý" as đêm1 {
   nguyên_nhân_luận  mục_đích_luận  sang_chấn  lối_sống  can_đảm
 
   Note: '''
@@ -833,7 +921,7 @@ Group đêm1 [name: 'Đêm thứ nhất: hãy phủ nhận sang chấn tâm lý'
   '''
 }
 
-Group đêm2 [name: 'Đêm thứ hai: mọi phiền muộn đều bắt nguồn từ quan hệ'] {
+Group "Đêm thứ hai: mọi phiền muộn đều bắt nguồn từ quan hệ" as đêm2 {
   quan_hệ  tự_ti  phức_cảm  tự_tôn  cạnh_tranh  tranh_giành  nhiệm_vụ  nói_dối
 
   Note: '''
@@ -846,7 +934,7 @@ Group đêm2 [name: 'Đêm thứ hai: mọi phiền muộn đều bắt nguồn 
   '''
 }
 
-Group đêm3 [name: 'Đêm thứ ba: bỏ qua nhiệm vụ của người khác'] {
+Group "Đêm thứ ba: bỏ qua nhiệm vụ của người khác" as đêm3 {
   thừa_nhận  phân_chia  tự_do
 
   Note: '''
@@ -858,7 +946,7 @@ Group đêm3 [name: 'Đêm thứ ba: bỏ qua nhiệm vụ của người khác'
   '''
 }
 
-Group đêm4 [name: 'Đêm thứ tư: trung tâm thế giới nằm ở đâu'] {
+Group "Đêm thứ tư: trung tâm thế giới nằm ở đâu" as đêm4 {
   quan_hệ_dọc  quan_hệ_ngang  khen_mắng  khích_lệ  cộng_đồng  giá_trị
 
   Note: '''
@@ -870,7 +958,7 @@ Group đêm4 [name: 'Đêm thứ tư: trung tâm thế giới nằm ở đâu'] 
   '''
 }
 
-Group đêm5 [name: 'Đêm thứ năm: sống hết mình ngay tại đây, vào lúc này'] {
+Group "Đêm thứ năm: sống hết mình ngay tại đây, vào lúc này" as đêm5 {
   chấp_nhận  tin_tưởng  cống_hiến  đường_thẳng  khoảnh_khắc  bình_thường  hạnh_phúc
 
   Note: '''

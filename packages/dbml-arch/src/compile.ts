@@ -6,12 +6,12 @@ const FRONT_MATTER: string = SyntaxTokenKind.FRONT_MATTER;
 import type {
   DbmlProjectLayout, ElementDeclarationNode, SyntaxNode, SyntaxToken,
 } from '@dbml/parse';
-import { emptyNetworkModel } from './model.js';
+import { emptyNetworkModel, isNode } from './model.js';
 import type {
   Element, GroupElement, KindDef, Link, LinkOp, NetworkModel, NodeElement, Settings,
 } from './model.js';
 import {
-  bodyOf, elementKindWord, infixOf, isElement, locate, nameOf, rowOf, settingsOf, targetOf,
+  bodyOf, elementKindWord, infixOf, isElement, locate, nameOf, propertyOf, rowOf, settingsOf, targetOf,
 } from './read.js';
 import { resolveIcon } from './icons.js';
 import { ARCH_TYPES, isArchDiagramType } from './frontmatter.js';
@@ -241,6 +241,7 @@ export function interpret (compiler: Compiler, entry: string): ArchResult {
   // Kinds are collected before anything that uses them, so a Kind may be declared below the
   // element that needs it. Order in a file is the author's business, not the compiler's.
   const vocabulary = new Vocabulary(model.kinds);
+  const directory = new Directory(model.elements);
   for (const [name, spec] of Object.entries(BUILTIN_KINDS)) {
     vocabulary.set(name, {
       name, icon: spec.icon, glyph: null, image: null, category: spec.category, color: null, builtin: true, at: null,
@@ -337,25 +338,28 @@ export function interpret (compiler: Compiler, entry: string): ArchResult {
       say('error', 'missing-name', `A ${word} needs a name`, declaration, where);
       continue;
     }
-    if (model.elements.has(name)) {
-      say('error', 'duplicate-name', `${name} is already declared`, declaration, where);
+    const handle = nameOf(declaration.alias) ?? name;
+    if (directory.taken(handle)) {
+      say('error', 'duplicate-name', `${handle} is already declared`, declaration, where);
       continue;
     }
 
     if (word === 'Group') {
-      model.elements.set(name, readGroup(declaration, name, where));
+      const group = readGroup(declaration, handle, name, where, say);
+      model.elements.set(handle, group);
+      directory.add(group);
       continue;
     }
     if (word === 'Note') {
       const text = bodyOf(declaration).map((row) => nameOf(rowOf(row)?.callee) ?? '').join(' ').trim();
-      model.elements.set(name, {
+      model.elements.set(handle, {
         sort: 'note',
-        id: name,
+        id: handle,
+        alias: null,
         label: name,
         text,
         settings: {},
-        meta: {},
-        note: null,
+            note: null,
         parent: null,
         at: locate(declaration, where),
       });
@@ -367,21 +371,22 @@ export function interpret (compiler: Compiler, entry: string): ArchResult {
       say('error', 'unknown-kind', `${word} is not a kind. ${suggestKind(word)}`, declaration, where);
       continue;
     }
-    const node = readNode(declaration, name, kindName, where);
+    const node = readNode(declaration, handle, name, kindName, where, where, say);
 
     // the brand, which beats the role's mark but never replaces the role itself
     const brand = readType(node.settings, declaration, where, say);
     node.type = brand.type;
     if (brand.image) node.image = brand.image;
 
-    model.elements.set(name, node);
+    model.elements.set(handle, node);
+    directory.add(node);
   }
 
   // ── pass three: parents, metadata, links ────────────────────────────────────
   for (const element of model.elements.values()) {
     if (element.sort !== 'group') continue;
     for (const child of element.children) {
-      const target = model.elements.get(child);
+      const target = directory.find(child);
       if (!target) continue;
       if (target.parent && target.parent !== element.id) {
         // the first container to claim a name keeps it; a second one is a real mistake
@@ -392,28 +397,74 @@ export function interpret (compiler: Compiler, entry: string): ArchResult {
   }
   for (const element of model.elements.values()) {
     if (element.sort !== 'group') continue;
-    element.children = element.children.filter((child) => model.elements.get(child)?.parent === element.id);
+    element.children = element.children
+      .map((child) => directory.find(child)?.id ?? child)
+      .filter((child) => model.elements.get(child)?.parent === element.id);
   }
 
   for (const { node: declaration, file: where } of declarations) {
     if (elementKindWord(declaration) !== 'Metadata') continue;
     /**
-     * DBML's parser reads a second identifier after `Metadata` as the target KIND, because a
-     * DBML metadata block names what it is attached to twice: `Metadata Table users { ... }`.
-     * This dialect names the thing once, so the identifier the parser filed under `targetKind`
-     * is the thing. Reading it from there is cheaper than teaching the grammar a second shape.
+     * `Metadata Database "dbdocs-dev" { owner: 'x' }` — THE WAY DBML SPELLS IT.
+     *
+     * DBML names the target twice, by kind and by name, and the parser files the first word
+     * under `targetKind`. This dialect used to name it once and read it out of that slot,
+     * which worked until the name needed quoting: the parser only accepts a bare identifier
+     * there, so `Metadata "dbdocs-dev"` failed with five cascading errors. Real names have
+     * dashes in them, so that was the common path.
+     *
+     * Both shapes are read. The kind-qualified one is DBML's and is the only one that takes a
+     * quoted name; the short one stays because it is what everything already written uses.
      */
-    const name = declaration.targetKind?.value ?? nameOf(declaration.name);
-    const target = name ? model.elements.get(name) : undefined;
+    const qualified = nameOf(declaration.name);
+    const name = qualified ?? declaration.targetKind?.value;
+    const target = name ? directory.find(name) : undefined;
     if (!target) {
       say('error', 'unknown-metadata-target', `${name ?? 'that'} is not declared anywhere`, declaration, where);
       continue;
     }
+    // `Metadata Database users` must not claim something that is not a Database
+    const statedKind = qualified ? declaration.targetKind?.value : undefined;
+    if (statedKind && isNode(target) && target.kind.toLowerCase() !== statedKind.toLowerCase()) {
+      say(
+        'warning',
+        'metadata-kind-mismatch',
+        `${name} is a ${target.kind}, not a ${statedKind}`,
+        declaration,
+        where,
+      );
+    }
+
+    /**
+     * The body is `key: 'value'`, with the colon, because that is what DBML documents:
+     *
+     *   Metadata Table users { owner: 'scott' }
+     *
+     * It used to be read without one, so a reader following DBML's own documentation got an
+     * empty result and no complaint. A key with no value and a repeated key are both errors in
+     * DBML, and both were silent here.
+     */
+    const seenKeys = new Set<string>();
     for (const row of bodyOf(declaration)) {
-      const parsedRow = rowOf(row);
-      const key = nameOf(parsedRow?.callee);
-      if (!key) continue;
-      target.meta[key] = nameOf(parsedRow?.args[0]) ?? true;
+      // the colon is required, and `owner 'scott'` is refused in the same words DBML refuses
+      // it, because a reader who hits this has almost certainly come from DBML's own docs
+      const entry = isElement(row) ? propertyOf(row) : undefined;
+      if (!entry) {
+        say('error', 'bad-property', "A Metadata field must use the 'key: value' syntax", row, where);
+        continue;
+      }
+      if (entry.value === undefined) {
+        say('error', 'bad-property', "A Metadata field must use the 'key: value' syntax", row, where);
+        continue;
+      }
+      if (seenKeys.has(entry.key)) {
+        say('error', 'duplicate-property', 'Duplicate Metadata fields are defined', row, where);
+        continue;
+      }
+      seenKeys.add(entry.key);
+      // a Metadata block outranks the element's own settings, and a later file outranks an
+      // earlier one, which is the precedence DBML documents
+      target.settings[entry.key] = entry.value;
     }
   }
 
@@ -425,8 +476,10 @@ export function interpret (compiler: Compiler, entry: string): ArchResult {
     const link = readLink(declaration, where, counter, say);
     if (!link) continue;
 
-    const from = model.elements.get(link.from);
-    const to = model.elements.get(link.to);
+    const from = directory.find(link.from);
+    const to = directory.find(link.to);
+    if (from) link.from = from.id;
+    if (to) link.to = to.id;
     if (!from) say('error', 'unknown-endpoint', `${link.from} is not declared anywhere`, declaration, where);
     if (!to) say('error', 'unknown-endpoint', `${link.to} is not declared anywhere`, declaration, where);
     if (!from || !to) continue;
@@ -448,8 +501,16 @@ export function interpret (compiler: Compiler, entry: string): ArchResult {
   return { model, diagnostics, diagramType };
 }
 
-function readGroup (declaration: ElementDeclarationNode, id: string, file: string): GroupElement {
+function readGroup (
+  declaration: ElementDeclarationNode,
+  id: string,
+  label: string,
+  file: string,
+  say: (s: Severity, c: string, m: string, n: SyntaxNode, w?: string) => void,
+): GroupElement {
+  const alias = nameOf(declaration.alias) ?? null;
   const settings = settingsOf(declaration.attributeList);
+  bodyPropertiesInto(declaration, settings, file, say, false);
   const children: string[] = [];
   for (const row of bodyOf(declaration)) {
     // `{ api1  api2 }` on one line is a callee and an argument to DBML's parser, exactly as
@@ -464,10 +525,10 @@ function readGroup (declaration: ElementDeclarationNode, id: string, file: strin
   return {
     sort: 'group',
     id,
-    label: typeof settings.name === 'string' ? settings.name : id,
+    alias,
+    label,
     children,
     settings,
-    meta: {},
     note: noteOf(declaration),
     parent: null,
     at: locate(declaration, file),
@@ -503,6 +564,36 @@ function readType (
   }
   say('warning', 'unknown-type', `There is no type called ${value}. ${suggestIcon(value)}`, declaration, where);
   return { type: null, image: null };
+}
+
+/**
+ * A REFERENCE RESOLVES BY NAME OR BY ALIAS, which is how DBML resolves a table.
+ *
+ * THE ALIAS IS THE IDENTITY when there is one, and the name is only what is drawn. That is one
+ * step past DBML, and a diagram forces it: two boxes legitimately read `Internet` on the same
+ * canvas, where two tables called `users` are a mistake. So the handle an author writes in a
+ * link is unique, and the caption need not be.
+ *
+ * The name is what the reader sees and is often long and quoted — `"dbdiagram API1"`. The
+ * alias is what the author types in forty links. Both have to reach the same element, and the
+ * name has to win a collision, because the name is the thing and the alias is a convenience.
+ */
+class Directory {
+  private readonly byAlias = new Map<string, string>();
+
+  constructor (private readonly elements: Map<string, Element>) {}
+
+  add (element: Element): void {
+    if (element.alias) this.byAlias.set(element.alias, element.id);
+  }
+
+  find (reference: string): Element | undefined {
+    return this.elements.get(reference) ?? this.elements.get(this.byAlias.get(reference) ?? '\u0000');
+  }
+
+  taken (reference: string): boolean {
+    return this.elements.has(reference) || this.byAlias.has(reference);
+  }
 }
 
 /**
@@ -595,13 +686,86 @@ function dedent (text: string): string {
   return lines.map((line) => line.slice(margin)).join('\n').trim();
 }
 
+/**
+ * THE BODY CARRIES THE PROPERTIES, and `[ ]` is kept for the drawing.
+ *
+ * This is the split DBML already makes on a TABLE, which is the thing an architecture element
+ * actually resembles. A DBML table takes exactly two settings — `headercolor` and `note` — and
+ * everything that describes the table lives in its body. It is a COLUMN that carries
+ * constraints in brackets, and a column is not what we are.
+ *
+ * So `[ ]` means one thing here and only one: how the box is drawn. Everything else — what the
+ * thing is, what it runs, who owns it — goes in the body, one per line, with a colon.
+ *
+ *   Database users_db [type: 'postgres'] {
+ *     version: '16.3'
+ *     port: 5432
+ *     owner: 'platform-team'
+ *   }
+ *
+ * The body wins a collision, because it is the more specific place to have said something.
+ */
+function bodyPropertiesInto (
+  declaration: ElementDeclarationNode,
+  settings: Settings,
+  where: string,
+  say: (s: Severity, c: string, m: string, n: SyntaxNode, w?: string) => void,
+  /**
+   * A bare word is a FLAG on an element and a MEMBER NAME in a container, and there is no way
+   * around that: a group's body exists to list names. `ssl` on its own line reads exactly as
+   * `[pk]` does in DBML, and a group is the one place it cannot.
+   */
+  bareWordIsAFlag = true,
+): void {
+  const seen = new Set<string>();
+  for (const row of bodyOf(declaration)) {
+    if (!isElement(row)) {
+      if (!bareWordIsAFlag) continue;           // a member name, read by readGroup
+      // `login  superuser` on one line is a callee and an argument to the parser, exactly as
+      // `{ api1  api2 }` is in a group, so read the whole row rather than only its head
+      const parsed = rowOf(row);
+      if (!parsed) continue;
+      for (const part of [parsed.callee, ...parsed.args]) {
+        const flag = nameOf(part);
+        if (!flag) continue;
+        if (seen.has(flag)) {
+          say('error', 'duplicate-property', `${flag} is set twice`, row, where);
+          continue;
+        }
+        seen.add(flag);
+        settings[flag] = true;
+      }
+      continue;
+    }
+    const key = elementKindWord(row);
+    if (!key || key === 'Note') continue;       // a note is read by noteOf
+
+    const entry = propertyOf(row);
+    if (!entry || entry.value === undefined) {
+      say('error', 'bad-property', `A property reads  ${key}: 'value'`, row, where);
+      continue;
+    }
+    if (seen.has(entry.key)) {
+      say('error', 'duplicate-property', `${entry.key} is set twice`, row, where);
+      continue;
+    }
+    seen.add(entry.key);
+    settings[entry.key] = entry.value;
+  }
+}
+
 function readNode (
   declaration: ElementDeclarationNode,
   id: string,
+  label: string,
   kind: string,
   file: string,
+  where: string,
+  say: (s: Severity, c: string, m: string, n: SyntaxNode, w?: string) => void,
 ): NodeElement {
+  const alias = nameOf(declaration.alias) ?? null;
   const settings = settingsOf(declaration.attributeList);
+  bodyPropertiesInto(declaration, settings, where, say);
   const note = noteOf(declaration);
 
   return {
@@ -610,9 +774,9 @@ function readNode (
     kind,
     type: null,
     image: null,
-    label: typeof settings.name === 'string' ? settings.name : id,
+    alias,
+    label,
     settings,
-    meta: {},
     note,
     parent: null,
     at: locate(declaration, file),

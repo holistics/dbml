@@ -14,3 +14,4 @@ export type { KindSpec } from './vocabulary.js';
 export {
   BOOK_FILE, EXAMPLE_FILES, EXAMPLE_ENTRY, INLINE_FILE, MAIN_FILE, PACK_FILE, SELF_FILE,
 } from './example.js';
+export { archLanguageConfiguration, archMonarchTokensProvider, archThemeRules } from './monarch.js';

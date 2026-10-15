@@ -44,10 +44,26 @@ export interface KindDef {
 }
 
 interface ElementBase {
+  /** the declared name, which is also what is drawn: `Database "Users DB"` */
   id: string;
+  /**
+   * The short handle, when the author gave one: `Database "Users DB" as users_db`.
+   *
+   * DBML's own table alias, used for the same reason — a name a reader wants to see is rarely
+   * a name you want to retype in forty links.
+   */
+  alias: string | null;
   label: string;
+  /**
+   * ONE BAG, which is what DBML has.
+   *
+   * There used to be two: `settings` for what was written inline and `meta` for what a
+   * `Metadata` block attached. They were the same type and nothing could say which to reach
+   * for. DBML has one set of custom properties with a documented precedence — inline lowest,
+   * then `Metadata` blocks from imported files, then `Metadata` blocks here — so a block
+   * writes into the same place, later and louder.
+   */
   settings: Settings;
-  meta: Settings;
   note: string | null;
   parent: string | null;
   at: Located;

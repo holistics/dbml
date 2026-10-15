@@ -31,6 +31,8 @@ import {
 } from 'vue';
 import * as monaco from 'monaco-editor';
 import { DBMLLanguageService } from '@/components/editor/dbml_language';
+import { ArchLanguageService } from '@/components/editor/arch_language';
+import { isArchitectureSource } from '@dbml/arch';
 import { useMonacoModel } from '@/components/editor/useMonacoModel';
 import { useVimController } from '@/components/editor/useVimController';
 import { useParserStore } from '@/stores/parserStore';
@@ -62,6 +64,21 @@ const emit = defineEmits<{
 // Monaco model
 
 const DBML_LANGUAGE_ID = DBMLLanguageService.getLanguageId();
+const ARCH_LANGUAGE_ID = ArchLanguageService.getLanguageId();
+
+ArchLanguageService.registerLanguage();
+
+/**
+ * WHICH HIGHLIGHTER, decided by the document rather than by the filename.
+ *
+ * `isArchitectureSource` reads `diagram_type` off the head of the string with a regular
+ * expression — no lexer, no parser — which is the whole reason the marker lives in front
+ * matter. It is cheap enough to ask on every keystroke, so a document that becomes an
+ * architecture file lights up the moment the line is typed.
+ */
+const languageFor = (source: string): string => (
+  isArchitectureSource(source) ? ARCH_LANGUAGE_ID : DBML_LANGUAGE_ID
+);
 
 const monacoUri = computed(() => monaco.Uri.file(filepath));
 
@@ -71,7 +88,8 @@ const {
   setLanguage,
 } = useMonacoModel(monacoUri);
 
-setLanguage(DBML_LANGUAGE_ID);
+setLanguage(languageFor(content.value));
+
 
 // Sync model <-> v-model
 watch(model, (m, _, onCleanup) => {
@@ -98,9 +116,31 @@ watch(content, (value) => {
 const editorContainer = useTemplateRef<HTMLElement>('editorContainer');
 const editor = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null);
 
+/**
+ * Re-highlight when the document changes what it says it is.
+ *
+ * This sits BELOW `editor` on purpose. It runs immediately, and an immediate watcher that
+ * reaches a `const` declared further down the file throws
+ * `Cannot access 'editor' before initialization` — a temporal dead zone, not a Vue problem,
+ * and one this file has already been bitten by once.
+ */
+watch(content, (value) => {
+  const next = languageFor(value);
+  if (model.value.getLanguageId() === next) return;
+
+  setLanguage(next);
+  monaco.editor.setTheme(
+    next === ARCH_LANGUAGE_ID
+      ? ArchLanguageService.getThemeName()
+      : DBMLLanguageService.getThemeName(),
+  );
+}, { immediate: true });
+
 function editorConfig (): monaco.editor.IStandaloneEditorConstructionOptions {
   return {
-    theme: DBMLLanguageService.getThemeName(),
+    theme: languageFor(content.value) === ARCH_LANGUAGE_ID
+      ? ArchLanguageService.getThemeName()
+      : DBMLLanguageService.getThemeName(),
     readOnly,
     minimap: {
       enabled: false,
