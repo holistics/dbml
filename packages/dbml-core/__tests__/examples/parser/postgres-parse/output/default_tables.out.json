@@ -3,110 +3,256 @@
   "tables": [
     {
       "name": "products",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
-          "dbdefault": {
-            "value": "123",
-            "type": "number"
+          "token": {
+            "start": {
+              "offset": 42,
+              "line": 2,
+              "column": 6
+            },
+            "end": {
+              "offset": 45,
+              "line": 2,
+              "column": 6
+            }
           },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "pk": true,
-          "checks": []
+          "dbdefault": {
+            "value": 123,
+            "type": "number"
+          }
         },
         {
           "name": "name",
           "type": {
             "type_name": "varchar",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 78,
+              "line": 3,
+              "column": 8
+            },
+            "end": {
+              "offset": 83,
+              "line": 3,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Tea",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "merchant_id",
           "type": {
             "type_name": "int",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 110,
+              "line": 4,
+              "column": 15
+            },
+            "end": {
+              "offset": 122,
+              "line": 4,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
         },
         {
           "name": "price",
           "type": {
-            "type_name": "float",
-            "schemaName": null
+            "type_name": "double",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 140,
+              "line": 5,
+              "column": 9
+            },
+            "end": {
+              "offset": 146,
+              "line": 5,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
-            "value": "123.12",
+            "value": 123.12,
             "type": "number"
-          },
-          "checks": []
+          }
         },
         {
           "name": "status",
           "type": {
             "type_name": "varchar",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 172,
+              "line": 6,
+              "column": 10
+            },
+            "end": {
+              "offset": 179,
+              "line": 6,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "null",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 205,
+              "line": 7,
+              "column": 14
+            },
+            "end": {
+              "offset": 216,
+              "line": 7,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
-            "value": "now()",
+            "value": "CURRENT_TIMESTAMP()",
             "type": "expression"
-          },
-          "checks": []
+          }
         },
         {
           "name": "stock",
           "type": {
             "type_name": "boolean",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 245,
+              "line": 8,
+              "column": 9
+            },
+            "end": {
+              "offset": 251,
+              "line": 8,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "true",
             "type": "boolean"
-          },
-          "checks": []
+          }
         },
         {
           "name": "expiration",
           "type": {
             "type_name": "date",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 277,
+              "line": 9,
+              "column": 14
+            },
+            "end": {
+              "offset": 288,
+              "line": 9,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
-            "value": "current_date+interval'1 year'",
+            "value": "CURRENT_DATE + INTERVAL '1' YEAR",
             "type": "expression"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

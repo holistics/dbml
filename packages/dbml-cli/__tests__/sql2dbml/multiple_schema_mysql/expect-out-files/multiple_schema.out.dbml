@@ -22,6 +22,30 @@ Enum "users_pg2_enum" {
   "female2"
 }
 
+Enum "users_ejs_enum" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "users_ejs2_enum" {
+  "created2"
+  "running2"
+  "done2"
+  "failure2"
+}
+
+Enum "users_eg_enum" {
+  "male"
+  "female"
+}
+
+Enum "users_eg2_enum" {
+  "male2"
+  "female2"
+}
+
 Table "users" {
   "id" int [pk]
   "name" varchar(255)
@@ -44,8 +68,8 @@ Table "orders" {
   "name2" varchar(255)
 
   Indexes {
-    (id1, id2) [pk, type: hash, name: "CPK_1"]
-    (name, name2) [type: btree, unique, name: "I_UNIQUE_1"]
+    (id1, id2) [pk, name: "CPK_1"]
+    (name, name2) [unique, name: "I_UNIQUE_1"]
     (id1, id2) [type: hash, name: "INDEX_2"]
   }
   Note: 'this is table orders'
@@ -55,10 +79,6 @@ Table "orders2" {
   "id1" int
   "id2" int
   "pid" int
-
-  Indexes {
-    (id1, id2) [pk, name: "testCPK"]
-  }
 }
 
 Table "orders4" {
@@ -86,37 +106,13 @@ Ref:"ecommerce"."users"."id" ?<? "schemaA"."products"."name"
 
 Ref:"users"."id" ?<? "schemaA"."locations"."name"
 
-Enum "ecommerce"."users_ejs_enum" {
-  "created2"
-  "running2"
-  "done2"
-  "failure2"
-}
-
-Enum "ecommerce"."users_ejs2_enum" {
-  "created2"
-  "running2"
-  "done2"
-  "failure2"
-}
-
-Enum "ecommerce"."users_eg_enum" {
-  "male"
-  "female"
-}
-
-Enum "ecommerce"."users_eg2_enum" {
-  "male2"
-  "female2"
-}
-
 Table "ecommerce"."users" {
   "id" int [pk]
   "name" varchar(255)
-  "ejs" ecommerce.users_ejs_enum
-  "ejs2" ecommerce.users_ejs2_enum
-  "eg" ecommerce.users_eg_enum
-  "eg2" ecommerce.users_eg2_enum
+  "ejs" users_ejs_enum
+  "ejs2" users_ejs2_enum
+  "eg" users_eg_enum
+  "eg2" users_eg2_enum
 }
 
 Table "schemaA"."products" {
@@ -131,6 +127,6 @@ Table "schemaA"."locations" {
 }
 
 Table "schemaB"."orders3" {
-  "id1" int [pk]
+  "id1" int [pk, not null]
   "id2" int
 }

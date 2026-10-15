@@ -14,7 +14,7 @@ export enum AliasKind {
 export interface TokenPosition {
   start: Position;
   end: Position;
-  filepath: Filepath;
+  filepath?: Filepath;
 }
 
 export interface ElementRef {

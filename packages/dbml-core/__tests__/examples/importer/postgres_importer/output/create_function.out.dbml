@@ -1,4 +1,4 @@
 Table "test_table" {
-  "id" integer [pk]
+  "id" int [pk]
   "name" varchar(100)
 }

@@ -11,7 +11,7 @@ Enum "product status" {
 }
 
 Table "orders" {
-  "id" SERIAL [pk, increment]
+  "id" serial [pk, increment]
   "user_id" int [unique, not null]
   "status" orders_status
   "created_at" varchar
@@ -29,7 +29,7 @@ Table "products" {
   "merchant_id" int [not null]
   "price" int
   "status" "product status"
-  "created_at" datetime [default: `now()`]
+  "created_at" datetime [default: `CURRENT_TIMESTAMP()`]
 
   Indexes {
     (merchant_id, status) [name: "product_status"]
@@ -40,11 +40,15 @@ Table "products" {
 Table "users" {
   "id" int [pk]
   "full_name" varchar
-  "email" varchar [unique]
+  "email" varchar
   "gender" varchar
   "date_of_birth" varchar
   "created_at" varchar
   "country_code" int
+
+  Indexes {
+    email [unique, name: "email_must_be_unique"]
+  }
 }
 
 Table "merchants" {
@@ -56,7 +60,7 @@ Table "merchants" {
 }
 
 Table "countries" {
-  "code" int [pk]
+  "code" int [pk, not null]
   "name" varchar
   "continent_name" varchar
 }

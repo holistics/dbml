@@ -3,7 +3,7 @@ Table "staff" {
   "first_name" varchar
   "last_name" varchar
   "address_id" int
-  "picture" blob
+  "picture" varbinary
   "email" varchar
   "store_id" int
   "active" boolean

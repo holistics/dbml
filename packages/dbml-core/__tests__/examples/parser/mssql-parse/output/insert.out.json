@@ -4,31 +4,81 @@
     {
       "name": "T1",
       "schemaName": "dbo",
+      "alias": null,
       "fields": [
         {
           "name": "column_1",
           "type": {
-            "type_name": "int IDENTITY",
-            "schemaName": null
-          }
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 23,
+              "line": 2,
+              "column": 30
+            },
+            "end": {
+              "offset": 30,
+              "line": 2,
+              "column": 30
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "column_2",
           "type": {
-            "type_name": "VARCHAR(30)",
-            "schemaName": null
-          }
+            "type_name": "varchar(30)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 46,
+              "line": 2,
+              "column": 53
+            },
+            "end": {
+              "offset": 53,
+              "line": 2,
+              "column": 53
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
+  "tablePartials": [],
   "records": [
     {
       "tableName": "UnitMeasure",
@@ -42,21 +92,70 @@
         [
           {
             "value": "N'Square Yards'",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 85,
+                "line": 2,
+                "column": 23
+              },
+              "end": {
+                "offset": 99,
+                "line": 2,
+                "column": 23
+              }
+            }
           },
           {
             "value": "N'Y2'",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 102,
+                "line": 2,
+                "column": 30
+              },
+              "end": {
+                "offset": 106,
+                "line": 2,
+                "column": 30
+              }
+            }
           },
           {
-            "value": "GETDATE()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 109,
+                "line": 2,
+                "column": 39
+              },
+              "end": {
+                "offset": 115,
+                "line": 2,
+                "column": 39
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "special_chars",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -65,50 +164,171 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 101,
+                "line": 5,
+                "column": 4
+              },
+              "end": {
+                "offset": 101,
+                "line": 5,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Special 1",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 104,
+                "line": 5,
+                "column": 17
+              },
+              "end": {
+                "offset": 114,
+                "line": 5,
+                "column": 17
+              }
+            }
           },
           {
-            "value": "test''s value",
-            "type": "string"
+            "value": "test's value",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 117,
+                "line": 5,
+                "column": 34
+              },
+              "end": {
+                "offset": 131,
+                "line": 5,
+                "column": 34
+              }
+            }
           }
         ],
         [
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 138,
+                "line": 6,
+                "column": 4
+              },
+              "end": {
+                "offset": 138,
+                "line": 6,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Special 2",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 141,
+                "line": 6,
+                "column": 17
+              },
+              "end": {
+                "offset": 151,
+                "line": 6,
+                "column": 17
+              }
+            }
           },
           {
             "value": "value with \"quotes\"",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 154,
+                "line": 6,
+                "column": 40
+              },
+              "end": {
+                "offset": 174,
+                "line": 6,
+                "column": 40
+              }
+            }
           }
         ],
         [
           {
-            "value": "3",
-            "type": "number"
+            "value": 3,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 181,
+                "line": 7,
+                "column": 4
+              },
+              "end": {
+                "offset": 181,
+                "line": 7,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Special 3",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 184,
+                "line": 7,
+                "column": 17
+              },
+              "end": {
+                "offset": 194,
+                "line": 7,
+                "column": 17
+              }
+            }
           },
           {
             "value": "value with [brackets]",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 197,
+                "line": 7,
+                "column": 42
+              },
+              "end": {
+                "offset": 219,
+                "line": 7,
+                "column": 42
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "complex_table",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -118,83 +338,219 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 105,
+                "line": 6,
+                "column": 4
+              },
+              "end": {
+                "offset": 105,
+                "line": 6,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Complex 1",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 108,
+                "line": 6,
+                "column": 17
+              },
+              "end": {
+                "offset": 118,
+                "line": 6,
+                "column": 17
+              }
+            }
           },
           {
             "value": "ABS(-100) * 2 + 3",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "GETDATE()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 140,
+                "line": 6,
+                "column": 45
+              },
+              "end": {
+                "offset": 146,
+                "line": 6,
+                "column": 45
+              }
+            }
           }
         ],
         [
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 155,
+                "line": 7,
+                "column": 4
+              },
+              "end": {
+                "offset": 155,
+                "line": 7,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Complex 2",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 158,
+                "line": 7,
+                "column": 17
+              },
+              "end": {
+                "offset": 168,
+                "line": 7,
+                "column": 17
+              }
+            }
           },
           {
             "value": "CAST(123 AS VARCHAR(10)) + 'test'",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "CURRENT_TIMESTAMP",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ],
         [
           {
-            "value": "3",
-            "type": "number"
+            "value": 3,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 229,
+                "line": 8,
+                "column": 4
+              },
+              "end": {
+                "offset": 229,
+                "line": 8,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Complex 3",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 232,
+                "line": 8,
+                "column": 17
+              },
+              "end": {
+                "offset": 242,
+                "line": 8,
+                "column": 17
+              }
+            }
           },
           {
             "value": "NULLIF(1, 1)",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 245,
+                "line": 8,
+                "column": 25
+              },
+              "end": {
+                "offset": 250,
+                "line": 8,
+                "column": 25
+              }
+            }
           },
           {
-            "value": "GETDATE()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 259,
+                "line": 8,
+                "column": 40
+              },
+              "end": {
+                "offset": 265,
+                "line": 8,
+                "column": 40
+              }
+            }
           }
         ]
-      ]
-    },
-    {
-      "tableName": "UnitMeasure",
-      "schemaName": "Production",
-      "columns": [],
-      "values": [
-        [
-          {
-            "value": "N'FT'",
-            "type": "expression"
-          },
-          {
-            "value": "N'Feet'",
-            "type": "expression"
-          },
-          {
-            "value": "20080414",
-            "type": "string"
-          }
-        ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "T1",
+      "schemaName": null,
       "columns": [
         "column_1",
         "column_2"
@@ -202,18 +558,55 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 40,
+                "line": 2,
+                "column": 40
+              },
+              "end": {
+                "offset": 40,
+                "line": 2,
+                "column": 40
+              }
+            }
           },
           {
             "value": "Row #1",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 43,
+                "line": 2,
+                "column": 50
+              },
+              "end": {
+                "offset": 50,
+                "line": 2,
+                "column": 50
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "T1",
+      "schemaName": null,
       "columns": [
         "column_1",
         "column_2"
@@ -221,25 +614,93 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 46,
+                "line": 3,
+                "column": 11
+              },
+              "end": {
+                "offset": 46,
+                "line": 3,
+                "column": 11
+              }
+            }
           },
           {
             "value": "Explicit identity value",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 49,
+                "line": 3,
+                "column": 38
+              },
+              "end": {
+                "offset": 73,
+                "line": 3,
+                "column": 38
+              }
+            }
           }
         ],
         [
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 88,
+                "line": 4,
+                "column": 12
+              },
+              "end": {
+                "offset": 88,
+                "line": 4,
+                "column": 12
+              }
+            }
           },
           {
             "value": "Explicit identity value",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 91,
+                "line": 4,
+                "column": 39
+              },
+              "end": {
+                "offset": 115,
+                "line": 4,
+                "column": 39
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
-  ]
+  ],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

@@ -1,5 +1,5 @@
 Table "a" {
-  "id" integer [unique, pk, default: 1]
+  "id" int [unique, pk, default: 1]
   "name" varchar(255) [check: `"id" > -1`]
 }
 
@@ -15,8 +15,8 @@ Table "b" {
 }
 
 Table "c" {
-  "index" "CHARACTER VARYING(255)" [unique]
-  "phone" SERIAL [increment]
+  "index" varchar(255) [unique]
+  "phone" serial [increment]
   "time" timestamp
 }
 
@@ -26,20 +26,20 @@ Table "circles" {
 
 Table "foo" {
   "bar" "text[]"
-  "bar2" "int[1]"
-  "bar3" "int[2][3]"
+  "bar2" "int[]"
+  "bar3" "int[][]"
   "bar4" "int[]"
-  "bar5" "int[2]"
-  "bar6" "text[8]"
-  "bar7" "text[100]"
-  "bar8" "time(2)[]"
-  "bar9" "time(1)[1]"
+  "bar5" "int[]"
+  "bar6" "text[]"
+  "bar7" "text[]"
+  "bar8" "timetz(2)[]"
+  "bar9" "time(1)[]"
   "bar10" "time(1)[]"
-  "bar11" "time[5]"
-  "bar12" "timestamp(2)[10][2][5]"
-  "bar13" "character varying[]"
-  "bar14" "character varying(25)[][2][]"
-  "bar15" "character varying[76]"
+  "bar11" "time[]"
+  "bar12" "timestamp(2)[][][]"
+  "bar13" "varchar[]"
+  "bar14" "varchar(25)[][][]"
+  "bar15" "varchar[]"
 }
 
 Ref:"a"."id" ?<? "b"."id" [delete: no action]

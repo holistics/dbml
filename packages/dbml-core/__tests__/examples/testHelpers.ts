@@ -34,7 +34,12 @@ function omitDeep (obj: any, predicate: (key: string, value: unknown) => boolean
       return;
     }
     if (isObject(value)) {
-      obj[key] = omitDeep(value, predicate);
+      const result = omitDeep(value, predicate);
+      if (predicate(key, result)) {
+        delete obj[key];
+      } else {
+        obj[key] = result;
+      }
     }
   });
   return obj;

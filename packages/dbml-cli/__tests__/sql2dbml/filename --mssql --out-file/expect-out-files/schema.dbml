@@ -1,25 +1,21 @@
 Table "UserMaster" {
-  "UserMasterKey" "BIGINT IDENTITY(1,1)" [not null]
+  "UserMasterKey" bigint [not null, increment]
 }
 
 Table "CodeDef" {
-  "CdKey" "BIGINT IDENTITY(1,1)" [not null]
-  "Category" NVARCHAR(50) [not null]
-  "Description" NVARCHAR(100)
-  "Code" NVARCHAR(50) [not null]
-  "ParentCdKey" BIGINT
-  "UserMasterKeyAddedBy" BIGINT [not null]
-  "UserMasterKeyLastEditedBy" BIGINT
-  "AddedDtTm" DATETIMEOFFSET(7) [not null]
-  "LastEditedDtTm" DATETIMEOFFSET(7)
-  "EffectiveFromDtTm" DATETIMEOFFSET(7) [not null]
-  "EffectiveThruDtTm" DATETIMEOFFSET(7)
-
-  Indexes {
-    CdKey [pk, name: "PK__CodeDef__4922449ECDD244C3"]
-  }
+  "CdKey" bigint [not null, increment]
+  "Category" nvarchar(50) [not null]
+  "Description" nvarchar(100)
+  "Code" nvarchar(50) [not null]
+  "ParentCdKey" bigint
+  "UserMasterKeyAddedBy" bigint [not null]
+  "UserMasterKeyLastEditedBy" bigint
+  "AddedDtTm" timestamptz(7) [not null]
+  "LastEditedDtTm" timestamptz(7)
+  "EffectiveFromDtTm" timestamptz(7) [not null]
+  "EffectiveThruDtTm" timestamptz(7)
 }
 
-Ref "fk__CodeDef__ParentCdKey__CodeDef__CdKey":"CodeDef"."CdKey" < "CodeDef"."ParentCdKey"
+Ref "fk__CodeDef__ParentCdKey__CodeDef__CdKey":"CodeDef"."CdKey" ?<? "CodeDef"."ParentCdKey"
 
-Ref "fk__CodeDef__UserMasterKeyLastEditedBy__UserMaster_UserMasterKey":"UserMaster"."UserMasterKey" < "CodeDef"."UserMasterKeyLastEditedBy"
+Ref "fk__CodeDef__UserMasterKeyLastEditedBy__UserMaster_UserMasterKey":"UserMaster"."UserMasterKey" ?<? "CodeDef"."UserMasterKeyLastEditedBy"

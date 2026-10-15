@@ -1,13 +1,13 @@
 Table "departments" {
-  "id" integer [pk]
-  "name" nvarchar2(255)
-  "budget" "number(10, 2)"
+  "id" int [pk]
+  "name" nvarchar(255)
+  "budget" decimal(10,2)
 }
 
 Table "employees" {
-  "id" integer [pk]
-  "dept_id" integer
-  "name" nvarchar2(255)
+  "id" int [pk]
+  "dept_id" int
+  "name" nvarchar(255)
 }
 
 Records departments(id, name, budget) {

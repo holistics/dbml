@@ -1,14 +1,14 @@
 Table "products" {
-  "id" integer [pk]
+  "id" int [pk]
   "name" nvarchar(255)
   "price" decimal(10,2)
   "in_stock" bit
 }
 
 Table "orders" {
-  "id" integer [pk]
-  "product_id" integer
-  "quantity" integer
+  "id" int [pk]
+  "product_id" int
+  "quantity" int
 }
 
 Records products(id, name, price, in_stock) {

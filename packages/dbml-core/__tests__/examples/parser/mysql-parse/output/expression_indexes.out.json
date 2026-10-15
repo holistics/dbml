@@ -3,1235 +3,3754 @@
   "tables": [
     {
       "name": "expr_lower",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 121,
+              "line": 5,
+              "column": 4
+            },
+            "end": {
+              "offset": 122,
+              "line": 5,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 143,
+              "line": 6,
+              "column": 7
+            },
+            "end": {
+              "offset": 147,
+              "line": 6,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 171,
+              "line": 7,
+              "column": 23
+            },
+            "end": {
+              "offset": 185,
+              "line": 7,
+              "column": 23
+            }
+          },
           "name": "idx_lower_email",
           "columns": [
             {
               "type": "expression",
-              "value": "(LOWER(email))"
+              "value": "(LOWER(email))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_upper",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 59,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 60,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 84,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 108,
+              "line": 5,
+              "column": 22
+            },
+            "end": {
+              "offset": 121,
+              "line": 5,
+              "column": 22
+            }
+          },
           "name": "idx_upper_name",
           "columns": [
             {
               "type": "expression",
-              "value": "(UPPER(name))"
+              "value": "(UPPER(name))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_substring",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 67,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 68,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "code",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 89,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 92,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 115,
+              "line": 5,
+              "column": 18
+            },
+            "end": {
+              "offset": 124,
+              "line": 5,
+              "column": 18
+            }
+          },
           "name": "idx_prefix",
           "columns": [
             {
               "type": "expression",
-              "value": "(SUBSTRING(code,1,5))"
+              "value": "(SUBSTRING(code, 1, 5))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_concat",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 61,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 62,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "first_name",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 83,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 92,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "last_name",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 109,
+              "line": 5,
+              "column": 11
+            },
+            "end": {
+              "offset": 117,
+              "line": 5,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 140,
+              "line": 6,
+              "column": 21
+            },
+            "end": {
+              "offset": 152,
+              "line": 6,
+              "column": 21
+            }
+          },
           "name": "idx_full_name",
           "columns": [
             {
               "type": "expression",
-              "value": "(CONCAT(first_name,' ',last_name))"
+              "value": "(CONCAT(first_name, ' ', last_name))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_arithmetic",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 69,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 70,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "price",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 91,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 95,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "tax_rate",
           "type": {
-            "type_name": "DECIMAL(5,2)",
-            "schemaName": null
+            "type_name": "decimal(5,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 114,
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "offset": 121,
+              "line": 5,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 145,
+              "line": 6,
+              "column": 17
+            },
+            "end": {
+              "offset": 153,
+              "line": 6,
+              "column": 17
+            }
+          },
           "name": "idx_total",
           "columns": [
             {
               "type": "expression",
-              "value": "(price*(1+tax_rate))"
+              "value": "(price * (1 + tax_rate))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_round",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 59,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 60,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "value",
           "type": {
-            "type_name": "DECIMAL(10,5)",
-            "schemaName": null
+            "type_name": "decimal(10,5)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 85,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 110,
+              "line": 5,
+              "column": 19
+            },
+            "end": {
+              "offset": 120,
+              "line": 5,
+              "column": 19
+            }
+          },
           "name": "idx_rounded",
           "columns": [
             {
               "type": "expression",
-              "value": "(ROUND(value,2))"
+              "value": "(ROUND(value, 2))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_floor",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 59,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 60,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "amount",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 4,
+              "column": 8
+            },
+            "end": {
+              "offset": 86,
+              "line": 4,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 111,
+              "line": 5,
+              "column": 19
+            },
+            "end": {
+              "offset": 121,
+              "line": 5,
+              "column": 19
+            }
+          },
           "name": "idx_floored",
           "columns": [
             {
               "type": "expression",
-              "value": "(FLOOR(amount))"
+              "value": "(FLOOR(amount))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_ceil",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 57,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 58,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "price",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 79,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 83,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 108,
+              "line": 5,
+              "column": 18
+            },
+            "end": {
+              "offset": 117,
+              "line": 5,
+              "column": 18
+            }
+          },
           "name": "idx_ceiled",
           "columns": [
             {
               "type": "expression",
-              "value": "(CEIL(price))"
+              "value": "(CEIL(price))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_abs",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 55,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 56,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "delta",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 81,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 96,
+              "line": 5,
+              "column": 20
+            },
+            "end": {
+              "offset": 107,
+              "line": 5,
+              "column": 20
+            }
+          },
           "name": "idx_absolute",
           "columns": [
             {
               "type": "expression",
-              "value": "(ABS(delta))"
+              "value": "(ABS(delta))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_date",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 67,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 68,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 89,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 98,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 119,
+              "line": 5,
+              "column": 16
+            },
+            "end": {
+              "offset": 126,
+              "line": 5,
+              "column": 16
+            }
+          },
           "name": "idx_year",
           "columns": [
             {
               "type": "expression",
-              "value": "(YEAR(created_at))"
+              "value": "(YEAR(CAST(created_at AS DATE)))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 158,
+              "line": 6,
+              "column": 17
+            },
+            "end": {
+              "offset": 166,
+              "line": 6,
+              "column": 17
+            }
+          },
           "name": "idx_month",
           "columns": [
             {
               "type": "expression",
-              "value": "(MONTH(created_at))"
+              "value": "(MONTH(CAST(created_at AS DATE)))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 199,
+              "line": 7,
+              "column": 15
+            },
+            "end": {
+              "offset": 205,
+              "line": 7,
+              "column": 15
+            }
+          },
           "name": "idx_day",
           "columns": [
             {
               "type": "expression",
-              "value": "(DAY(created_at))"
+              "value": "(DAY(CAST(created_at AS DATE)))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_date_format",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 71,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 72,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "event_date",
           "type": {
-            "type_name": "DATE",
-            "schemaName": null
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 102,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 118,
+              "line": 5,
+              "column": 22
+            },
+            "end": {
+              "offset": 131,
+              "line": 5,
+              "column": 22
+            }
+          },
           "name": "idx_year_month",
           "columns": [
             {
               "type": "expression",
-              "value": "(DATE_FORMAT(event_date,'%Y-%m'))"
+              "value": "(TIME_TO_STR(CAST(event_date AS TIMESTAMP), '%Y-%m'))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_json",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 68,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 69,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "data",
           "type": {
-            "type_name": "JSON",
-            "schemaName": null
+            "type_name": "json",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 90,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 93,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 109,
+              "line": 5,
+              "column": 21
+            },
+            "end": {
+              "offset": 121,
+              "line": 5,
+              "column": 21
+            }
+          },
           "name": "idx_json_name",
           "columns": [
             {
               "type": "expression",
-              "value": "(CAST(data->>'$.name'ASCHAR(100)))"
+              "value": "(CAST(JSON_EXTRACT_SCALAR(data, '$.name') AS CHAR(100)))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 171,
+              "line": 6,
+              "column": 20
+            },
+            "end": {
+              "offset": 182,
+              "line": 6,
+              "column": 20
+            }
+          },
           "name": "idx_json_age",
           "columns": [
             {
               "type": "expression",
-              "value": "(CAST(data->>'$.age'ASUNSIGNED))"
+              "value": "(CAST(JSON_EXTRACT_SCALAR(data, '$.age') AS UBIGINT))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_json_extract",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 73,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 74,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "metadata",
           "type": {
-            "type_name": "JSON",
-            "schemaName": null
+            "type_name": "json",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 95,
+              "line": 4,
+              "column": 10
+            },
+            "end": {
+              "offset": 102,
+              "line": 4,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 118,
+              "line": 5,
+              "column": 21
+            },
+            "end": {
+              "offset": 130,
+              "line": 5,
+              "column": 21
+            }
+          },
           "name": "idx_json_type",
           "columns": [
             {
               "type": "expression",
-              "value": "(JSON_UNQUOTE(JSON_EXTRACT(metadata,'$.type')))"
+              "value": "(JSON_UNQUOTE(JSON_EXTRACT(metadata, '$.type')))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_cast",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 57,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 58,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "value",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 79,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 83,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 106,
+              "line": 5,
+              "column": 18
+            },
+            "end": {
+              "offset": 115,
+              "line": 5,
+              "column": 18
+            }
+          },
           "name": "idx_as_int",
           "columns": [
             {
               "type": "expression",
-              "value": "(CAST(valueASSIGNED))"
+              "value": "(CAST(value AS BIGINT))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 152,
+              "line": 6,
+              "column": 22
+            },
+            "end": {
+              "offset": 165,
+              "line": 6,
+              "column": 22
+            }
+          },
           "name": "idx_as_decimal",
           "columns": [
             {
               "type": "expression",
-              "value": "(CAST(valueASDECIMAL(10,2)))"
+              "value": "(CAST(value AS DECIMAL(10, 2)))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_coalesce",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 65,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 66,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "primary_val",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 87,
+              "line": 4,
+              "column": 13
+            },
+            "end": {
+              "offset": 97,
+              "line": 4,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "secondary_val",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 106,
+              "line": 5,
+              "column": 15
+            },
+            "end": {
+              "offset": 118,
+              "line": 5,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 133,
+              "line": 6,
+              "column": 20
+            },
+            "end": {
+              "offset": 144,
+              "line": 6,
+              "column": 20
+            }
+          },
           "name": "idx_coalesce",
           "columns": [
             {
               "type": "expression",
-              "value": "(COALESCE(primary_val,secondary_val,0))"
+              "value": "(COALESCE(primary_val, secondary_val, 0))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_trim",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 57,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 58,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "text_data",
           "type": {
-            "type_name": "VARCHAR(200)",
-            "schemaName": null
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 79,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 87,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 111,
+              "line": 5,
+              "column": 19
+            },
+            "end": {
+              "offset": 121,
+              "line": 5,
+              "column": 19
+            }
+          },
           "name": "idx_trimmed",
           "columns": [
             {
               "type": "expression",
-              "value": "(TRIM(text_data))"
+              "value": "(TRIM(text_data))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_ltrim_rtrim",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 71,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 72,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "data",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 96,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 120,
+              "line": 5,
+              "column": 17
+            },
+            "end": {
+              "offset": 128,
+              "line": 5,
+              "column": 17
+            }
+          },
           "name": "idx_ltrim",
           "columns": [
             {
               "type": "expression",
-              "value": "(LTRIM(data))"
+              "value": "(LTRIM(data))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 155,
+              "line": 6,
+              "column": 17
+            },
+            "end": {
+              "offset": 163,
+              "line": 6,
+              "column": 17
+            }
+          },
           "name": "idx_rtrim",
           "columns": [
             {
               "type": "expression",
-              "value": "(RTRIM(data))"
+              "value": "(RTRIM(data))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_replace",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 64,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "phone",
           "type": {
-            "type_name": "VARCHAR(20)",
-            "schemaName": null
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 85,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 89,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 5,
+              "column": 23
+            },
+            "end": {
+              "offset": 126,
+              "line": 5,
+              "column": 23
+            }
+          },
           "name": "idx_clean_phone",
           "columns": [
             {
               "type": "expression",
-              "value": "(REPLACE(REPLACE(phone,'-',''),' ',''))"
+              "value": "(REPLACE(REPLACE(phone, '-', ''), ' ', ''))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_if",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 53,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 54,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "age",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 75,
+              "line": 4,
+              "column": 5
+            },
+            "end": {
+              "offset": 77,
+              "line": 4,
+              "column": 5
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 5,
+              "column": 20
+            },
+            "end": {
+              "offset": 103,
+              "line": 5,
+              "column": 20
+            }
+          },
           "name": "idx_is_adult",
           "columns": [
             {
               "type": "expression",
-              "value": "(IF(age>=18,1,0))"
+              "value": "(CASE WHEN age >= 18 THEN 1 ELSE 0 END)",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_case",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 57,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 58,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "score",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 79,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 83,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 98,
+              "line": 5,
+              "column": 17
+            },
+            "end": {
+              "offset": 106,
+              "line": 5,
+              "column": 17
+            }
+          },
           "name": "idx_grade",
           "columns": [
             {
               "type": "expression",
-              "value": "(CASEWHENscore>=90THEN'A'WHENscore>=80THEN'B'WHENscore>=70THEN'C'ELSE'F'END)"
+              "value": "(CASE WHEN score >= 90 THEN 'A' WHEN score >= 80 THEN 'B' WHEN score >= 70 THEN 'C' ELSE 'F' END)",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_char_length",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 71,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 72,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "description",
           "type": {
-            "type_name": "TEXT",
-            "schemaName": null
+            "type_name": "text",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 4,
+              "column": 13
+            },
+            "end": {
+              "offset": 103,
+              "line": 4,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 119,
+              "line": 5,
+              "column": 18
+            },
+            "end": {
+              "offset": 128,
+              "line": 5,
+              "column": 18
+            }
+          },
           "name": "idx_length",
           "columns": [
             {
               "type": "expression",
-              "value": "(CHAR_LENGTH(description))"
+              "value": "(LENGTH(description))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_left_right",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 69,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 70,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "code",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 91,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 94,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 117,
+              "line": 5,
+              "column": 17
+            },
+            "end": {
+              "offset": 125,
+              "line": 5,
+              "column": 17
+            }
+          },
           "name": "idx_left5",
           "columns": [
             {
               "type": "expression",
-              "value": "(LEFT(code,5))"
+              "value": "(LEFT(code, 5))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 154,
+              "line": 6,
+              "column": 18
+            },
+            "end": {
+              "offset": 163,
+              "line": 6,
+              "column": 18
+            }
+          },
           "name": "idx_right5",
           "columns": [
             {
               "type": "expression",
-              "value": "(RIGHT(code,5))"
+              "value": "(RIGHT(code, 5))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_mod",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 55,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 56,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "value",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 81,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 96,
+              "line": 5,
+              "column": 17
+            },
+            "end": {
+              "offset": 104,
+              "line": 5,
+              "column": 17
+            }
+          },
           "name": "idx_mod10",
           "columns": [
             {
               "type": "expression",
-              "value": "(MOD(value,10))"
+              "value": "(value % 10)",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_greatest_least",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 78,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "val1",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 99,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 102,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "val2",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 111,
+              "line": 5,
+              "column": 6
+            },
+            "end": {
+              "offset": 114,
+              "line": 5,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "val3",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 123,
+              "line": 6,
+              "column": 6
+            },
+            "end": {
+              "offset": 126,
+              "line": 6,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 141,
+              "line": 7,
+              "column": 15
+            },
+            "end": {
+              "offset": 147,
+              "line": 7,
+              "column": 15
+            }
+          },
           "name": "idx_max",
           "columns": [
             {
               "type": "expression",
-              "value": "(GREATEST(val1,val2,val3))"
+              "value": "(GREATEST(val1, val2, val3))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 189,
+              "line": 8,
+              "column": 15
+            },
+            "end": {
+              "offset": 195,
+              "line": 8,
+              "column": 15
+            }
+          },
           "name": "idx_min",
           "columns": [
             {
               "type": "expression",
-              "value": "(LEAST(val1,val2,val3))"
+              "value": "(LEAST(val1, val2, val3))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_nullif",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 61,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 62,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "numerator",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 83,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 91,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "denominator",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 100,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 110,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 125,
+              "line": 6,
+              "column": 20
+            },
+            "end": {
+              "offset": 136,
+              "line": 6,
+              "column": 20
+            }
+          },
           "name": "idx_safe_div",
           "columns": [
             {
               "type": "expression",
-              "value": "(numerator/NULLIF(denominator,0))"
+              "value": "(numerator / NULLIF(NULLIF(denominator, 0), 0))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_pad",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 61,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 62,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "code",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 83,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 86,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 101,
+              "line": 5,
+              "column": 18
+            },
+            "end": {
+              "offset": 110,
+              "line": 5,
+              "column": 18
+            }
+          },
           "name": "idx_padded",
           "columns": [
             {
               "type": "expression",
-              "value": "(LPAD(code,8,'0'))"
+              "value": "(LPAD(code, 8, '0'))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_complex",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 58,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 59,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "a",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 80,
+              "line": 4,
+              "column": 3
+            },
+            "end": {
+              "offset": 80,
+              "line": 4,
+              "column": 3
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "b",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 99,
+              "line": 5,
+              "column": 3
+            },
+            "end": {
+              "offset": 99,
+              "line": 5,
+              "column": 3
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 118,
+              "line": 6,
+              "column": 3
+            },
+            "end": {
+              "offset": 118,
+              "line": 6,
+              "column": 3
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 143,
+              "line": 7,
+              "column": 19
+            },
+            "end": {
+              "offset": 153,
+              "line": 7,
+              "column": 19
+            }
+          },
           "name": "idx_formula",
           "columns": [
             {
               "type": "expression",
-              "value": "(ROUND((a*b+c)/NULLIF(a+b,0),2))"
+              "value": "(ROUND((a * b + c) / NULLIF(NULLIF(a + b, 0), 0), 2))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_reverse",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 64,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "code",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 85,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 88,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 111,
+              "line": 5,
+              "column": 20
+            },
+            "end": {
+              "offset": 122,
+              "line": 5,
+              "column": 20
+            }
+          },
           "name": "idx_reversed",
           "columns": [
             {
               "type": "expression",
-              "value": "(REVERSE(code))"
+              "value": "(REVERSE(code))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_hex",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 55,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 56,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "value",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 81,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 96,
+              "line": 5,
+              "column": 15
+            },
+            "end": {
+              "offset": 102,
+              "line": 5,
+              "column": 15
+            }
+          },
           "name": "idx_hex",
           "columns": [
             {
               "type": "expression",
-              "value": "(HEX(value))"
+              "value": "(HEX(value))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_timestamp_diff",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 82,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "start_time",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 103,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 112,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "end_time",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 127,
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "offset": 134,
+              "line": 5,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 155,
+              "line": 6,
+              "column": 20
+            },
+            "end": {
+              "offset": 166,
+              "line": 6,
+              "column": 20
+            }
+          },
           "name": "idx_duration",
           "columns": [
             {
               "type": "expression",
-              "value": "(TIMESTAMPDIFF(SECOND,start_time,end_time))"
+              "value": "(TIMESTAMPDIFF(end_time, start_time, SECOND))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_datediff",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 65,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 66,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "start_date",
           "type": {
-            "type_name": "DATE",
-            "schemaName": null
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 87,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 96,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "end_date",
           "type": {
-            "type_name": "DATE",
-            "schemaName": null
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 106,
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "offset": 113,
+              "line": 5,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 129,
+              "line": 6,
+              "column": 21
+            },
+            "end": {
+              "offset": 141,
+              "line": 6,
+              "column": 21
+            }
+          },
           "name": "idx_days_diff",
           "columns": [
             {
               "type": "expression",
-              "value": "(DATEDIFF(end_date,start_date))"
+              "value": "(DATEDIFF(end_date, start_date))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_create_test",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 66,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 67,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 88,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 92,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 110,
+              "line": 5,
+              "column": 6
+            },
+            "end": {
+              "offset": 113,
+              "line": 5,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "price",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 131,
+              "line": 6,
+              "column": 7
+            },
+            "end": {
+              "offset": 135,
+              "line": 6,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
@@ -1239,728 +3758,2294 @@
         {
           "name": "idx_lower_email",
           "unique": false,
+          "token": {
+            "start": {
+              "offset": 13,
+              "line": 1,
+              "column": 28
+            },
+            "end": {
+              "offset": 27,
+              "line": 1,
+              "column": 28
+            }
+          },
           "columns": [
             {
               "type": "expression",
-              "value": "(LOWER(email))"
+              "value": "(LOWER(email))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
           "name": "idx_upper_name",
           "unique": false,
+          "token": {
+            "start": {
+              "offset": 13,
+              "line": 1,
+              "column": 27
+            },
+            "end": {
+              "offset": 26,
+              "line": 1,
+              "column": 27
+            }
+          },
           "columns": [
             {
               "type": "expression",
-              "value": "(UPPER(name))"
+              "value": "(UPPER(name))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
           "name": "idx_rounded_price",
           "unique": false,
+          "token": {
+            "start": {
+              "offset": 13,
+              "line": 1,
+              "column": 30
+            },
+            "end": {
+              "offset": 29,
+              "line": 1,
+              "column": 30
+            }
+          },
           "columns": [
             {
               "type": "expression",
-              "value": "(ROUND(price))"
+              "value": "(ROUND(price))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_alter_test",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 72,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 73,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "data",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
-          "checks": []
-        }
-      ],
-      "indexes": [],
-      "checks": []
-    },
-    {
-      "name": "expr_visible",
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "INT",
-            "schemaName": null
-          },
-          "pk": true,
-          "checks": []
-        },
-        {
-          "name": "email",
-          "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
-          },
-          "checks": []
-        }
-      ],
-      "indexes": [
-        {
-          "name": "idx_lower_email",
-          "columns": [
-            {
-              "type": "expression",
-              "value": "(LOWER(email))"
+          "token": {
+            "start": {
+              "offset": 94,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 97,
+              "line": 4,
+              "column": 6
             }
-          ]
-        }
-      ],
-      "checks": []
-    },
-    {
-      "name": "expr_invisible",
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "INT",
-            "schemaName": null
           },
-          "pk": true,
-          "checks": []
-        },
-        {
-          "name": "name",
-          "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
-          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
-          "name": "idx_upper_name",
-          "columns": [
-            {
-              "type": "expression",
-              "value": "(UPPER(name))"
+          "token": {
+            "start": {
+              "offset": 38,
+              "line": 1,
+              "column": 47
+            },
+            "end": {
+              "offset": 46,
+              "line": 1,
+              "column": 47
             }
-          ]
-        }
-      ],
-      "checks": []
-    },
-    {
-      "name": "expr_comment",
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "INT",
-            "schemaName": null
           },
-          "pk": true,
-          "checks": []
-        },
-        {
-          "name": "data",
-          "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
-          },
-          "checks": []
-        }
-      ],
-      "indexes": [
-        {
           "name": "idx_lower",
           "columns": [
             {
               "type": "expression",
-              "value": "(LOWER(data))"
+              "value": "(LOWER(data))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "token": {
+            "start": {
+              "offset": 38,
+              "line": 1,
+              "column": 46
+            },
+            "end": {
+              "offset": 45,
+              "line": 1,
+              "column": 46
+            }
+          },
+          "name": "idx_trim",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(TRIM(data))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
-      "name": "expr_all_options",
+      "name": "expr_visible",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 64,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
-          "name": "text_col",
+          "name": "email",
           "type": {
-            "type_name": "VARCHAR(200)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 85,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 89,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
-          "name": "idx_expr",
+          "token": {
+            "start": {
+              "offset": 113,
+              "line": 5,
+              "column": 23
+            },
+            "end": {
+              "offset": 127,
+              "line": 5,
+              "column": 23
+            }
+          },
+          "name": "idx_lower_email",
           "columns": [
             {
               "type": "expression",
-              "value": "(TRIM(LOWER(text_col)))"
+              "value": "(LOWER(email))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
-      "name": "expr_multiple",
+      "name": "expr_invisible",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
+          "token": {
+            "start": {
+              "offset": 67,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 68,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 89,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 92,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "token": {
+            "start": {
+              "offset": 116,
+              "line": 5,
+              "column": 22
+            },
+            "end": {
+              "offset": 129,
+              "line": 5,
+              "column": 22
+            }
+          },
+          "name": "idx_upper_name",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(UPPER(name))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "name": "expr_comment",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 64,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 85,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 88,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 5,
+              "column": 17
+            },
+            "end": {
+              "offset": 120,
+              "line": 5,
+              "column": 17
+            }
+          },
+          "name": "idx_lower",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(LOWER(data))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "name": "expr_all_options",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 71,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 72,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
+        },
+        {
+          "name": "text_col",
+          "type": {
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 4,
+              "column": 10
+            },
+            "end": {
+              "offset": 100,
+              "line": 4,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        }
+      ],
+      "indexes": [
+        {
+          "token": {
+            "start": {
+              "offset": 124,
+              "line": 5,
+              "column": 16
+            },
+            "end": {
+              "offset": 131,
+              "line": 5,
+              "column": 16
+            }
+          },
+          "name": "idx_expr",
+          "columns": [
+            {
+              "type": "expression",
+              "value": "(TRIM(LOWER(text_col)))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "name": "expr_multiple",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 62,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 63,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "first_name",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 84,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 93,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "last_name",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 110,
+              "line": 5,
+              "column": 11
+            },
+            "end": {
+              "offset": 118,
+              "line": 5,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 135,
+              "line": 6,
+              "column": 7
+            },
+            "end": {
+              "offset": 139,
+              "line": 6,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "price",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 157,
+              "line": 7,
+              "column": 7
+            },
+            "end": {
+              "offset": 161,
+              "line": 7,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 186,
+              "line": 8,
+              "column": 23
+            },
+            "end": {
+              "offset": 200,
+              "line": 8,
+              "column": 23
+            }
+          },
           "name": "idx_lower_first",
           "columns": [
             {
               "type": "expression",
-              "value": "(LOWER(first_name))"
+              "value": "(LOWER(first_name))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 233,
+              "line": 9,
+              "column": 22
+            },
+            "end": {
+              "offset": 246,
+              "line": 9,
+              "column": 22
+            }
+          },
           "name": "idx_lower_last",
           "columns": [
             {
               "type": "expression",
-              "value": "(LOWER(last_name))"
+              "value": "(LOWER(last_name))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 278,
+              "line": 10,
+              "column": 23
+            },
+            "end": {
+              "offset": 292,
+              "line": 10,
+              "column": 23
+            }
+          },
           "name": "idx_lower_email",
           "columns": [
             {
               "type": "expression",
-              "value": "(LOWER(email))"
+              "value": "(LOWER(email))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 320,
+              "line": 11,
+              "column": 21
+            },
+            "end": {
+              "offset": 332,
+              "line": 11,
+              "column": 21
+            }
+          },
           "name": "idx_full_name",
           "columns": [
             {
               "type": "expression",
-              "value": "(CONCAT(first_name,' ',last_name))"
+              "value": "(CONCAT(first_name, ' ', last_name))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         },
         {
+          "token": {
+            "start": {
+              "offset": 382,
+              "line": 12,
+              "column": 25
+            },
+            "end": {
+              "offset": 398,
+              "line": 12,
+              "column": 25
+            }
+          },
           "name": "idx_rounded_price",
           "columns": [
             {
               "type": "expression",
-              "value": "(ROUND(price,2))"
+              "value": "(ROUND(price, 2))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_unique",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 56,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 57,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 78,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 82,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
-          "name": "uk_lower_email",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "unique": true,
           "columns": [
             {
-              "type": "expression",
-              "value": "(LOWER(email))"
+              "type": "column",
+              "value": "(LOWER(email))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_desc",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 57,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 58,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 79,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 88,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 109,
+              "line": 5,
+              "column": 21
+            },
+            "end": {
+              "offset": 121,
+              "line": 5,
+              "column": 21
+            }
+          },
           "name": "idx_year_desc",
           "columns": [
             {
               "type": "expression",
-              "value": "(YEAR(created_at))"
+              "value": "(YEAR(CAST(created_at AS DATE)))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_on_generated",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 97,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 98,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "base_val",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 119,
+              "line": 4,
+              "column": 10
+            },
+            "end": {
+              "offset": 126,
+              "line": 4,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "computed_val",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 135,
+              "line": 5,
+              "column": 14
+            },
+            "end": {
+              "offset": 146,
+              "line": 5,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 186,
+              "line": 6,
+              "column": 16
+            },
+            "end": {
+              "offset": 193,
+              "line": 6,
+              "column": 16
+            }
+          },
           "name": "idx_expr",
           "columns": [
             {
               "type": "expression",
-              "value": "(computed_val+10)"
+              "value": "(computed_val + 10)",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_nested",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 76,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 77,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "text_data",
           "type": {
-            "type_name": "VARCHAR(200)",
-            "schemaName": null
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 98,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 106,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 130,
+              "line": 5,
+              "column": 18
+            },
+            "end": {
+              "offset": 139,
+              "line": 5,
+              "column": 18
+            }
+          },
           "name": "idx_nested",
           "columns": [
             {
               "type": "expression",
-              "value": "(UPPER(TRIM(SUBSTRING(text_data,1,50))))"
+              "value": "(UPPER(TRIM(SUBSTRING(text_data, 1, 50))))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_multi_col",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 93,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 94,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "first_name",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 115,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 124,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "last_name",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 141,
+              "line": 5,
+              "column": 11
+            },
+            "end": {
+              "offset": 149,
+              "line": 5,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "suffix",
           "type": {
-            "type_name": "VARCHAR(10)",
-            "schemaName": null
+            "type_name": "varchar(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 166,
+              "line": 6,
+              "column": 8
+            },
+            "end": {
+              "offset": 171,
+              "line": 6,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 194,
+              "line": 7,
+              "column": 19
+            },
+            "end": {
+              "offset": 204,
+              "line": 7,
+              "column": 19
+            }
+          },
           "name": "idx_complex",
           "columns": [
             {
               "type": "expression",
-              "value": "(CONCAT(UPPER(first_name),' ',UPPER(last_name),' ',COALESCE(suffix,'')))"
+              "value": "(CONCAT(UPPER(first_name), ' ', UPPER(last_name), ' ', COALESCE(suffix, '')))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_soundex",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 64,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 85,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 88,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 5,
+              "column": 19
+            },
+            "end": {
+              "offset": 122,
+              "line": 5,
+              "column": 19
+            }
+          },
           "name": "idx_soundex",
           "columns": [
             {
               "type": "expression",
-              "value": "(SOUNDEX(name))"
+              "value": "(SOUNDEX(name))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_md5",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 55,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 56,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "data",
           "type": {
-            "type_name": "VARCHAR(200)",
-            "schemaName": null
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 80,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 104,
+              "line": 5,
+              "column": 16
+            },
+            "end": {
+              "offset": 111,
+              "line": 5,
+              "column": 16
+            }
+          },
           "name": "idx_hash",
           "columns": [
             {
               "type": "expression",
-              "value": "(MD5(data))"
+              "value": "(MD5(data))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_sha",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 61,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 62,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "sensitive_data",
           "type": {
-            "type_name": "VARCHAR(200)",
-            "schemaName": null
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 83,
+              "line": 4,
+              "column": 16
+            },
+            "end": {
+              "offset": 96,
+              "line": 4,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 120,
+              "line": 5,
+              "column": 16
+            },
+            "end": {
+              "offset": 127,
+              "line": 5,
+              "column": 16
+            }
+          },
           "name": "idx_sha1",
           "columns": [
             {
               "type": "expression",
-              "value": "(SHA1(sensitive_data))"
+              "value": "(SHA(sensitive_data))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_ip",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 73,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 74,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "ip_address",
           "type": {
-            "type_name": "VARCHAR(15)",
-            "schemaName": null
+            "type_name": "varchar(15)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 95,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 104,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 127,
+              "line": 5,
+              "column": 18
+            },
+            "end": {
+              "offset": 136,
+              "line": 5,
+              "column": 18
+            }
+          },
           "name": "idx_ip_num",
           "columns": [
             {
               "type": "expression",
-              "value": "(INET_ATON(ip_address))"
+              "value": "(INET_ATON(ip_address))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr-backticks",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 80,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 81,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "col-name",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 102,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 111,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 135,
+              "line": 5,
+              "column": 18
+            },
+            "end": {
+              "offset": 144,
+              "line": 5,
+              "column": 18
+            }
+          },
           "name": "idx-expr",
           "columns": [
             {
               "type": "expression",
-              "value": "(LOWER(`col-name`))"
+              "value": "(LOWER(\"col-name\"))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_elt",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 55,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 56,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "status_code",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 4,
+              "column": 13
+            },
+            "end": {
+              "offset": 87,
+              "line": 4,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 102,
+              "line": 5,
+              "column": 23
+            },
+            "end": {
+              "offset": 116,
+              "line": 5,
+              "column": 23
+            }
+          },
           "name": "idx_status_text",
           "columns": [
             {
               "type": "expression",
-              "value": "(ELT(status_code,'pending','active','inactive'))"
+              "value": "(ELT(status_code, 'pending', 'active', 'inactive'))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "expr_field",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 59,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 60,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "priority",
           "type": {
-            "type_name": "VARCHAR(20)",
-            "schemaName": null
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 4,
+              "column": 10
+            },
+            "end": {
+              "offset": 88,
+              "line": 4,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 111,
+              "line": 5,
+              "column": 26
+            },
+            "end": {
+              "offset": 128,
+              "line": 5,
+              "column": 26
+            }
+          },
           "name": "idx_priority_order",
           "columns": [
             {
               "type": "expression",
-              "value": "(FIELD(priority,'high','medium','low'))"
+              "value": "(FIELD(priority, 'high', 'medium', 'low'))",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

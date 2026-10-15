@@ -3,71 +3,201 @@
   "tables": [
     {
       "name": "employees",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 65,
+              "line": 4,
+              "column": 4
+            },
+            "end": {
+              "offset": 66,
+              "line": 4,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 90,
+              "line": 5,
+              "column": 6
+            },
+            "end": {
+              "offset": 93,
+              "line": 5,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "department",
           "type": {
-            "type_name": "VARCHAR2(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 6,
+              "column": 12
+            },
+            "end": {
+              "offset": 121,
+              "line": 6,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "salary",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 139,
+              "line": 7,
+              "column": 8
+            },
+            "end": {
+              "offset": 144,
+              "line": 7,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "departments",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 31,
+              "line": 4,
+              "column": 4
+            },
+            "end": {
+              "offset": 32,
+              "line": 4,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 56,
+              "line": 5,
+              "column": 6
+            },
+            "end": {
+              "offset": 59,
+              "line": 5,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
+  "tablePartials": [],
   "records": [
     {
       "tableName": "employees",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -78,61 +208,266 @@
         [
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 125,
+                "line": 5,
+                "column": 57
+              },
+              "end": {
+                "offset": 125,
+                "line": 5,
+                "column": 57
+              }
+            }
           },
           {
             "value": "Alice",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 128,
+                "line": 5,
+                "column": 66
+              },
+              "end": {
+                "offset": 134,
+                "line": 5,
+                "column": 66
+              }
+            }
           },
           {
             "value": "Engineering",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 137,
+                "line": 5,
+                "column": 81
+              },
+              "end": {
+                "offset": 149,
+                "line": 5,
+                "column": 81
+              }
+            }
           },
           {
             "value": 75000,
-            "type": "number"
-          }
-        ],
-        [
-          {
-            "value": 2,
-            "type": "number"
-          },
-          {
-            "value": "Bob",
-            "type": "string"
-          },
-          {
-            "value": "Engineering",
-            "type": "string"
-          },
-          {
-            "value": 80000,
-            "type": "number"
-          }
-        ],
-        [
-          {
-            "value": 3,
-            "type": "number"
-          },
-          {
-            "value": "Charlie",
-            "type": "string"
-          },
-          {
-            "value": "Engineering",
-            "type": "string"
-          },
-          {
-            "value": 70000,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 152,
+                "line": 5,
+                "column": 88
+              },
+              "end": {
+                "offset": 156,
+                "line": 5,
+                "column": 88
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "employees",
+      "schemaName": null,
+      "columns": [
+        "id",
+        "name",
+        "department",
+        "salary"
+      ],
+      "values": [
+        [
+          {
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 215,
+                "line": 6,
+                "column": 57
+              },
+              "end": {
+                "offset": 215,
+                "line": 6,
+                "column": 57
+              }
+            }
+          },
+          {
+            "value": "Bob",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 218,
+                "line": 6,
+                "column": 64
+              },
+              "end": {
+                "offset": 222,
+                "line": 6,
+                "column": 64
+              }
+            }
+          },
+          {
+            "value": "Engineering",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 225,
+                "line": 6,
+                "column": 79
+              },
+              "end": {
+                "offset": 237,
+                "line": 6,
+                "column": 79
+              }
+            }
+          },
+          {
+            "value": 80000,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 240,
+                "line": 6,
+                "column": 86
+              },
+              "end": {
+                "offset": 244,
+                "line": 6,
+                "column": 86
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "employees",
+      "schemaName": null,
+      "columns": [
+        "id",
+        "name",
+        "department",
+        "salary"
+      ],
+      "values": [
+        [
+          {
+            "value": 3,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 303,
+                "line": 7,
+                "column": 57
+              },
+              "end": {
+                "offset": 303,
+                "line": 7,
+                "column": 57
+              }
+            }
+          },
+          {
+            "value": "Charlie",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 306,
+                "line": 7,
+                "column": 68
+              },
+              "end": {
+                "offset": 314,
+                "line": 7,
+                "column": 68
+              }
+            }
+          },
+          {
+            "value": "Engineering",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 317,
+                "line": 7,
+                "column": 83
+              },
+              "end": {
+                "offset": 329,
+                "line": 7,
+                "column": 83
+              }
+            }
+          },
+          {
+            "value": 70000,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 332,
+                "line": 7,
+                "column": 90
+              },
+              "end": {
+                "offset": 336,
+                "line": 7,
+                "column": 90
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "employees",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -143,25 +478,86 @@
         [
           {
             "value": 4,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 113,
+                "line": 5,
+                "column": 57
+              },
+              "end": {
+                "offset": 113,
+                "line": 5,
+                "column": 57
+              }
+            }
           },
           {
             "value": "Diana",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 116,
+                "line": 5,
+                "column": 66
+              },
+              "end": {
+                "offset": 122,
+                "line": 5,
+                "column": 66
+              }
+            }
           },
           {
             "value": "Sales",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 125,
+                "line": 5,
+                "column": 75
+              },
+              "end": {
+                "offset": 131,
+                "line": 5,
+                "column": 75
+              }
+            }
           },
           {
             "value": 65000,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 134,
+                "line": 5,
+                "column": 82
+              },
+              "end": {
+                "offset": 138,
+                "line": 5,
+                "column": 82
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "departments",
+      "schemaName": null,
       "columns": [
         "id",
         "name"
@@ -170,27 +566,110 @@
         [
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 179,
+                "line": 6,
+                "column": 39
+              },
+              "end": {
+                "offset": 179,
+                "line": 6,
+                "column": 39
+              }
+            }
           },
           {
             "value": "Engineering",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 182,
+                "line": 6,
+                "column": 54
+              },
+              "end": {
+                "offset": 194,
+                "line": 6,
+                "column": 54
+              }
+            }
           }
-        ],
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "departments",
+      "schemaName": null,
+      "columns": [
+        "id",
+        "name"
+      ],
+      "values": [
         [
           {
             "value": 2,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 235,
+                "line": 7,
+                "column": 39
+              },
+              "end": {
+                "offset": 235,
+                "line": 7,
+                "column": 39
+              }
+            }
           },
           {
             "value": "Sales",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 238,
+                "line": 7,
+                "column": 48
+              },
+              "end": {
+                "offset": 244,
+                "line": 7,
+                "column": 48
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "employees",
+      "schemaName": null,
       "columns": [
         "id",
         "name"
@@ -199,17 +678,54 @@
         [
           {
             "value": 5,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 113,
+                "line": 5,
+                "column": 37
+              },
+              "end": {
+                "offset": 113,
+                "line": 5,
+                "column": 37
+              }
+            }
           },
           {
             "value": "Eve",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 116,
+                "line": 5,
+                "column": 44
+              },
+              "end": {
+                "offset": 120,
+                "line": 5,
+                "column": 44
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "employees",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -219,21 +735,70 @@
         [
           {
             "value": 6,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 171,
+                "line": 6,
+                "column": 49
+              },
+              "end": {
+                "offset": 171,
+                "line": 6,
+                "column": 49
+              }
+            }
           },
           {
             "value": "Frank",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 174,
+                "line": 6,
+                "column": 58
+              },
+              "end": {
+                "offset": 180,
+                "line": 6,
+                "column": 58
+              }
+            }
           },
           {
             "value": "Marketing",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 183,
+                "line": 6,
+                "column": 71
+              },
+              "end": {
+                "offset": 193,
+                "line": 6,
+                "column": 71
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "employees",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -244,25 +809,86 @@
         [
           {
             "value": 7,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 252,
+                "line": 7,
+                "column": 57
+              },
+              "end": {
+                "offset": 252,
+                "line": 7,
+                "column": 57
+              }
+            }
           },
           {
             "value": "Grace",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 255,
+                "line": 7,
+                "column": 66
+              },
+              "end": {
+                "offset": 261,
+                "line": 7,
+                "column": 66
+              }
+            }
           },
           {
             "value": "Marketing",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 264,
+                "line": 7,
+                "column": 79
+              },
+              "end": {
+                "offset": 274,
+                "line": 7,
+                "column": 79
+              }
+            }
           },
           {
             "value": 72000,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 277,
+                "line": 7,
+                "column": 86
+              },
+              "end": {
+                "offset": 281,
+                "line": 7,
+                "column": 86
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "employees",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -273,25 +899,86 @@
         [
           {
             "value": 8,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 115,
+                "line": 5,
+                "column": 9
+              },
+              "end": {
+                "offset": 115,
+                "line": 5,
+                "column": 9
+              }
+            }
           },
           {
             "value": "Henry",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 118,
+                "line": 5,
+                "column": 18
+              },
+              "end": {
+                "offset": 124,
+                "line": 5,
+                "column": 18
+              }
+            }
           },
           {
             "value": "HR",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 127,
+                "line": 5,
+                "column": 24
+              },
+              "end": {
+                "offset": 130,
+                "line": 5,
+                "column": 24
+              }
+            }
           },
           {
             "value": 68000,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 133,
+                "line": 5,
+                "column": 31
+              },
+              "end": {
+                "offset": 137,
+                "line": 5,
+                "column": 31
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "employees",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -301,32 +988,147 @@
         [
           {
             "value": 9,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 96,
+                "line": 5,
+                "column": 45
+              },
+              "end": {
+                "offset": 96,
+                "line": 5,
+                "column": 45
+              }
+            }
           },
           {
             "value": "Iris",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 99,
+                "line": 5,
+                "column": 53
+              },
+              "end": {
+                "offset": 104,
+                "line": 5,
+                "column": 53
+              }
+            }
           },
           {
             "value": "50000 + 20000",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
-        ],
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "employees",
+      "schemaName": null,
+      "columns": [
+        "id",
+        "name",
+        "salary"
+      ],
+      "values": [
         [
           {
             "value": 10,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 166,
+                "line": 6,
+                "column": 46
+              },
+              "end": {
+                "offset": 167,
+                "line": 6,
+                "column": 46
+              }
+            }
           },
           {
             "value": "UPPER('jack')",
-            "type": "expression"
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 170,
+                "line": 6,
+                "column": 53
+              },
+              "end": {
+                "offset": 174,
+                "line": 6,
+                "column": 53
+              }
+            }
           },
           {
             "value": 75000,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 185,
+                "line": 6,
+                "column": 68
+              },
+              "end": {
+                "offset": 189,
+                "line": 6,
+                "column": 68
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
-  ]
+  ],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

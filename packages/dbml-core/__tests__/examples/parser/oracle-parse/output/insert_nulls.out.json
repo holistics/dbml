@@ -3,49 +3,132 @@
   "tables": [
     {
       "name": "users",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 65,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 66,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 90,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 93,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 5,
+              "column": 7
+            },
+            "end": {
+              "offset": 116,
+              "line": 5,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "age",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 135,
+              "line": 6,
+              "column": 5
+            },
+            "end": {
+              "offset": 137,
+              "line": 6,
+              "column": 5
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
+  "tablePartials": [],
   "records": [
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -56,25 +139,86 @@
         [
           {
             "value": 1,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 51,
+                "line": 3,
+                "column": 50
+              },
+              "end": {
+                "offset": 51,
+                "line": 3,
+                "column": 50
+              }
+            }
           },
           {
             "value": "Alice",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 54,
+                "line": 3,
+                "column": 59
+              },
+              "end": {
+                "offset": 60,
+                "line": 3,
+                "column": 59
+              }
+            }
           },
           {
             "value": "alice@example.com",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 63,
+                "line": 3,
+                "column": 80
+              },
+              "end": {
+                "offset": 81,
+                "line": 3,
+                "column": 80
+              }
+            }
           },
           {
             "value": 25,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 84,
+                "line": 3,
+                "column": 84
+              },
+              "end": {
+                "offset": 85,
+                "line": 3,
+                "column": 84
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -85,25 +229,86 @@
         [
           {
             "value": 2,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 50,
+                "line": 2,
+                "column": 50
+              },
+              "end": {
+                "offset": 50,
+                "line": 2,
+                "column": 50
+              }
+            }
           },
           {
             "value": "Bob",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 53,
+                "line": 2,
+                "column": 57
+              },
+              "end": {
+                "offset": 57,
+                "line": 2,
+                "column": 57
+              }
+            }
           },
           {
-            "value": null,
-            "type": "boolean"
+            "value": "null",
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": 30,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 66,
+                "line": 2,
+                "column": 67
+              },
+              "end": {
+                "offset": 67,
+                "line": 2,
+                "column": 67
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -114,25 +319,86 @@
         [
           {
             "value": 3,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 50,
+                "line": 2,
+                "column": 50
+              },
+              "end": {
+                "offset": 50,
+                "line": 2,
+                "column": 50
+              }
+            }
           },
           {
-            "value": null,
-            "type": "boolean"
+            "value": "null",
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": null,
-            "type": "boolean"
+            "value": "null",
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": null,
-            "type": "boolean"
+            "value": "null",
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -143,22 +409,90 @@
         [
           {
             "value": 4,
-            "type": "number"
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 27,
+                "line": 2,
+                "column": 27
+              },
+              "end": {
+                "offset": 27,
+                "line": 2,
+                "column": 27
+              }
+            }
           },
           {
             "value": "Charlie",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 30,
+                "line": 2,
+                "column": 38
+              },
+              "end": {
+                "offset": 38,
+                "line": 2,
+                "column": 38
+              }
+            }
           },
           {
-            "value": null,
-            "type": "boolean"
+            "value": "null",
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": null,
-            "type": "boolean"
+            "value": "null",
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
-  ]
+  ],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

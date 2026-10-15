@@ -3,343 +3,1811 @@
   "tables": [
     {
       "name": "multi_alter_test",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 135,
+              "line": 5,
+              "column": 4
+            },
+            "end": {
+              "offset": 136,
+              "line": 5,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 157,
+              "line": 6,
+              "column": 6
+            },
+            "end": {
+              "offset": 160,
+              "line": 6,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 178,
+              "line": 7,
+              "column": 7
+            },
+            "end": {
+              "offset": 182,
+              "line": 7,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "status",
           "type": {
-            "type_name": "VARCHAR(20)",
-            "schemaName": null
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 200,
+              "line": 8,
+              "column": 8
+            },
+            "end": {
+              "offset": 205,
+              "line": 8,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
-          "checks": []
-        }
-      ],
-      "indexes": [],
-      "checks": [
-        {
-          "expression": "score >= 0",
-          "name": "chk_score"
-        },
-        {
-          "expression": "rating BETWEEN 0 AND 5",
-          "name": "chk_rating"
-        },
-        {
-          "expression": "min_val >= 0",
-          "name": "chk_min"
-        },
-        {
-          "expression": "max_val <= 100",
-          "name": "chk_max"
-        },
-        {
-          "expression": "min_val < max_val",
-          "name": "chk_range"
-        },
-        {
-          "expression": "col3 > 0",
-          "name": "chk_col3"
-        }
-      ]
-    },
-    {
-      "name": "departments",
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "INT",
-            "schemaName": null
+          "token": {
+            "start": {
+              "offset": 222,
+              "line": 9,
+              "column": 12
+            },
+            "end": {
+              "offset": 231,
+              "line": 9,
+              "column": 12
+            }
           },
-          "pk": true,
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
-          "name": "name",
+          "name": "phone",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
-          "checks": []
-        }
-      ],
-      "indexes": [],
-      "checks": []
-    },
-    {
-      "name": "cities",
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "INT",
-            "schemaName": null
+          "token": {
+            "start": {
+              "offset": 71,
+              "line": 3,
+              "column": 16
+            },
+            "end": {
+              "offset": 75,
+              "line": 3,
+              "column": 16
+            }
           },
-          "pk": true,
-          "checks": []
-        },
-        {
-          "name": "name",
-          "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
-          },
-          "checks": []
-        }
-      ],
-      "indexes": [],
-      "checks": []
-    },
-    {
-      "name": "countries",
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "INT",
-            "schemaName": null
-          },
-          "pk": true,
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
-          "name": "name",
+          "name": "city",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
-          "checks": []
-        }
-      ],
-      "indexes": [],
-      "checks": []
-    },
-    {
-      "name": "pk_test",
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "INT",
-            "schemaName": null
+          "token": {
+            "start": {
+              "offset": 101,
+              "line": 4,
+              "column": 15
+            },
+            "end": {
+              "offset": 104,
+              "line": 4,
+              "column": 15
+            }
           },
-          "pk": true,
-          "checks": []
-        },
-        {
-          "name": "code",
-          "type": {
-            "type_name": "VARCHAR(20)",
-            "schemaName": null
-          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
-          "name": "name",
+          "name": "department",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 64,
+              "line": 3,
+              "column": 21
+            },
+            "end": {
+              "offset": 73,
+              "line": 3,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "country",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 68,
+              "line": 3,
+              "column": 18
+            },
+            "end": {
+              "offset": 74,
+              "line": 3,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "zip_code",
+          "type": {
+            "type_name": "varchar(10)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 87,
+              "line": 3,
+              "column": 19
+            },
+            "end": {
+              "offset": 94,
+              "line": 3,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "score",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 3,
+              "column": 16
+            },
+            "end": {
+              "offset": 85,
+              "line": 3,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          }
+        },
+        {
+          "name": "rating",
+          "type": {
+            "type_name": "decimal(3,2)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 113,
+              "line": 4,
+              "column": 17
+            },
+            "end": {
+              "offset": 118,
+              "line": 4,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "description",
+          "type": {
+            "type_name": "text",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 84,
+              "line": 3,
+              "column": 22
+            },
+            "end": {
+              "offset": 94,
+              "line": 3,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "active",
+          "type": {
+            "type_name": "boolean",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 77,
+              "line": 3,
+              "column": 17
+            },
+            "end": {
+              "offset": 82,
+              "line": 3,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "dbdefault": {
+            "value": "true",
+            "type": "boolean"
+          }
+        },
+        {
+          "name": "updated_at",
+          "type": {
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 117,
+              "line": 4,
+              "column": 21
+            },
+            "end": {
+              "offset": 126,
+              "line": 4,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "first_name",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 89,
+              "line": 3,
+              "column": 21
+            },
+            "end": {
+              "offset": 98,
+              "line": 3,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
+        },
+        {
+          "name": "last_name",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 134,
+              "line": 4,
+              "column": 20
+            },
+            "end": {
+              "offset": 142,
+              "line": 4,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "not_null": true
+        },
+        {
+          "name": "middle_name",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 178,
+              "line": 5,
+              "column": 22
+            },
+            "end": {
+              "offset": 188,
+              "line": 5,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "birthdate",
+          "type": {
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 215,
+              "line": 6,
+              "column": 20
+            },
+            "end": {
+              "offset": 223,
+              "line": 6,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "salary",
+          "type": {
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 242,
+              "line": 7,
+              "column": 17
+            },
+            "end": {
+              "offset": 247,
+              "line": 7,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [
+            {
+              "expression": "salary > 0",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "age_years",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 75,
+              "line": 3,
+              "column": 20
+            },
+            "end": {
+              "offset": 83,
+              "line": 3,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "city_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 40,
+              "line": 2,
+              "column": 18
+            },
+            "end": {
+              "offset": 46,
+              "line": 2,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "country_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 64,
+              "line": 3,
+              "column": 21
+            },
+            "end": {
+              "offset": 73,
+              "line": 3,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "temp_col",
+          "type": {
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 91,
+              "line": 3,
+              "column": 19
+            },
+            "end": {
+              "offset": 98,
+              "line": 3,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "created_date",
+          "type": {
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 90,
+              "line": 3,
+              "column": 23
+            },
+            "end": {
+              "offset": 101,
+              "line": 3,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "dbdefault": {
+            "value": "CURRENT_DATE",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "uuid",
+          "type": {
+            "type_name": "varchar(36)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 140,
+              "line": 4,
+              "column": 15
+            },
+            "end": {
+              "offset": 143,
+              "line": 4,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "dbdefault": {
+            "value": "UUID()",
+            "type": "expression"
+          }
+        },
+        {
+          "name": "sequence_num",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 186,
+              "line": 5,
+              "column": 23
+            },
+            "end": {
+              "offset": 197,
+              "line": 5,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "dbdefault": {
+            "value": 0,
+            "type": "number"
+          }
+        },
+        {
+          "name": "manager_id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 113,
+              "line": 3,
+              "column": 21
+            },
+            "end": {
+              "offset": 122,
+              "line": 3,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "FULLTEXT",
+          "type": {
+            "type_name": "varchar",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 66,
+              "line": 3,
+              "column": 12
+            },
+            "end": {
+              "offset": 73,
+              "line": 3,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "FULLTEXT",
+          "type": {
+            "type_name": "varchar",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 109,
+              "line": 4,
+              "column": 12
+            },
+            "end": {
+              "offset": 116,
+              "line": 4,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "min_val",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 87,
+              "line": 3,
+              "column": 18
+            },
+            "end": {
+              "offset": 93,
+              "line": 3,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "max_val",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 111,
+              "line": 4,
+              "column": 18
+            },
+            "end": {
+              "offset": 117,
+              "line": 4,
+              "column": 18
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "col1",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 96,
+              "line": 3,
+              "column": 15
+            },
+            "end": {
+              "offset": 99,
+              "line": 3,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "col2",
+          "type": {
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 117,
+              "line": 4,
+              "column": 15
+            },
+            "end": {
+              "offset": 120,
+              "line": 4,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "col3",
+          "type": {
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 146,
+              "line": 5,
+              "column": 15
+            },
+            "end": {
+              "offset": 149,
+              "line": 5,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "priority",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 95,
+              "line": 3,
+              "column": 19
+            },
+            "end": {
+              "offset": 102,
+              "line": 3,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "category",
+          "type": {
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 129,
+              "line": 4,
+              "column": 19
+            },
+            "end": {
+              "offset": 136,
+              "line": 4,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "instant_col",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 92,
+              "line": 3,
+              "column": 22
+            },
+            "end": {
+              "offset": 102,
+              "line": 3,
+              "column": 22
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "hidden_col",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 104,
+              "line": 3,
+              "column": 21
+            },
+            "end": {
+              "offset": 113,
+              "line": 3,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
-          "pk": true,
+          "token": {
+            "start": {
+              "offset": 98,
+              "line": 4,
+              "column": 24
+            },
+            "end": {
+              "offset": 111,
+              "line": 4,
+              "column": 24
+            }
+          },
+          "name": "idx_department",
           "columns": [
             {
               "type": "column",
-              "value": "id"
+              "value": "department",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 18
             },
+            "end": {
+              "offset": 70,
+              "line": 3,
+              "column": 18
+            }
+          },
+          "name": "idx_name",
+          "columns": [
             {
               "type": "column",
-              "value": "code"
+              "value": "name",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "token": {
+            "start": {
+              "offset": 119,
+              "line": 4,
+              "column": 17
+            },
+            "end": {
+              "offset": 125,
+              "line": 4,
+              "column": 17
+            }
+          },
+          "name": "idx_zip",
+          "columns": [
+            {
+              "type": "column",
+              "value": "zip_code",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "token": {
+            "start": {
+              "offset": 144,
+              "line": 5,
+              "column": 19
+            },
+            "end": {
+              "offset": 152,
+              "line": 5,
+              "column": 19
+            }
+          },
+          "name": "idx_score",
+          "columns": [
+            {
+              "type": "column",
+              "value": "score",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 18
+            },
+            "end": {
+              "offset": 70,
+              "line": 3,
+              "column": 18
+            }
+          },
+          "name": "idx_dept",
+          "columns": [
+            {
+              "type": "column",
+              "value": "dept_id",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "token": {
+            "start": {
+              "offset": 146,
+              "line": 4,
+              "column": 17
+            },
+            "end": {
+              "offset": 152,
+              "line": 4,
+              "column": 17
+            }
+          },
+          "name": "idx_age",
+          "columns": [
+            {
+              "type": "column",
+              "value": "age_years",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [
+        {
+          "expression": "score >= 0",
+          "name": "chk_score",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
+        },
+        {
+          "expression": "min_val >= 0",
+          "name": "chk_min",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
+        }
+      ],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
-      "name": "auto_inc_test",
+      "name": "departments",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "pk": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 58,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 59,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
-          "name": "data",
+          "name": "name",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 80,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 83,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
-      "name": "partition_test",
+      "name": "cities",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 46,
+              "line": 2,
+              "column": 23
+            },
+            "end": {
+              "offset": 47,
+              "line": 2,
+              "column": 23
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 66,
+              "line": 2,
+              "column": 45
+            },
+            "end": {
+              "offset": 69,
+              "line": 2,
+              "column": 45
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "name": "countries",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 24,
+              "line": 1,
+              "column": 26
+            },
+            "end": {
+              "offset": 25,
+              "line": 1,
+              "column": 26
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 44,
+              "line": 1,
+              "column": 48
+            },
+            "end": {
+              "offset": 47,
+              "line": 1,
+              "column": 48
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "name": "pk_test",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 72,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 73,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true,
+          "not_null": true
+        },
+        {
+          "name": "code",
+          "type": {
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 82,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 85,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "name",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 102,
+              "line": 5,
+              "column": 6
+            },
+            "end": {
+              "offset": 105,
+              "line": 5,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "name": "auto_inc_test",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 87,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 88,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true,
+          "pk": true
+        },
+        {
+          "name": "data",
+          "type": {
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 124,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 127,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": []
+        },
+        {
+          "name": "created_at",
+          "type": {
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 37,
+              "line": 2,
+              "column": 21
+            },
+            "end": {
+              "offset": 46,
+              "line": 2,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "dbdefault": {
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression"
+          }
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "name": "partition_test",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 86,
+              "line": 3,
+              "column": 4
+            },
+            "end": {
+              "offset": 87,
+              "line": 3,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "created_year",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 96,
+              "line": 4,
+              "column": 14
+            },
+            "end": {
+              "offset": 107,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "data",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 116,
+              "line": 5,
+              "column": 6
+            },
+            "end": {
+              "offset": 119,
+              "line": 5,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [
         {
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          },
           "pk": true,
           "columns": [
             {
               "type": "column",
-              "value": "id"
+              "value": "id",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             },
             {
               "type": "column",
-              "value": "created_year"
+              "value": "created_year",
+              "token": {
+                "start": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                },
+                "end": {
+                  "offset": 0,
+                  "line": 1,
+                  "column": 1
+                }
+              }
             }
           ]
         }
       ],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [
     {
-      "endpoints": [
-        {
-          "tableName": "multi_alter_test",
-          "fieldNames": [
-            "dept_id"
-          ],
-          "relation": "0..*"
+      "schemaName": null,
+      "name": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         },
-        {
-          "tableName": "departments",
-          "fieldNames": [
-            "id"
-          ],
-          "relation": "0..1"
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
         }
-      ]
-    },
-    {
+      },
       "endpoints": [
         {
           "tableName": "multi_alter_test",
+          "schemaName": null,
           "fieldNames": [
             "city_id"
           ],
-          "relation": "0..*"
+          "relation": "0..*",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         },
         {
           "tableName": "cities",
+          "schemaName": null,
           "fieldNames": [
             "id"
           ],
-          "relation": "0..1"
-        }
-      ]
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "multi_alter_test",
-          "fieldNames": [
-            "country_id"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "countries",
-          "fieldNames": [
-            "id"
-          ],
-          "relation": "0..1"
-        }
-      ]
-    },
-    {
-      "endpoints": [
-        {
-          "tableName": "multi_alter_test",
-          "fieldNames": [
-            "manager_id"
-          ],
-          "relation": "0..*"
-        },
-        {
-          "tableName": "multi_alter_test",
-          "fieldNames": [
-            "id"
-          ],
-          "relation": "0..1"
+          "relation": "0..1",
+          "token": {
+            "start": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            },
+            "end": {
+              "offset": 0,
+              "line": 1,
+              "column": 1
+            }
+          }
         }
       ]
     }
   ],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

@@ -44,7 +44,7 @@ Table "test0" {
   "gid" int(11)
 
   Indexes {
-    gid [type: hash, name: "gid"]
+    gid [type: btree, name: "gid"]
   }
 }
 
@@ -71,6 +71,6 @@ Table "test3" {
   "gid" int(11)
 
   Indexes {
-    gid [type: btree, name: "gid"]
+    gid [type: hash, name: "gid"]
   }
 }

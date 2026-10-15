@@ -4,7 +4,7 @@ Table "table1" {
 }
 
 Table "table2" {
-  "id" integer [pk, increment]
+  "id" int [pk, increment]
   "name" varchar
 }
 
@@ -34,7 +34,7 @@ Table "table7" {
 }
 
 Table "table8" {
-  "id" Int [pk, increment]
+  "id" int [pk, increment]
   "name" varchar
 }
 

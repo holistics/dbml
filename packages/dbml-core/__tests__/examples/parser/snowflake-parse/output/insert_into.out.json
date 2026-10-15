@@ -1,14 +1,18 @@
 {
   "schemas": [],
   "tables": [],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
+  "tablePartials": [],
   "records": [
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -17,22 +21,71 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 74,
+                "line": 2,
+                "column": 45
+              },
+              "end": {
+                "offset": 74,
+                "line": 2,
+                "column": 45
+              }
+            }
           },
           {
             "value": "Alice",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 77,
+                "line": 2,
+                "column": 54
+              },
+              "end": {
+                "offset": 83,
+                "line": 2,
+                "column": 54
+              }
+            }
           },
           {
             "value": "alice@example.com",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 86,
+                "line": 2,
+                "column": 75
+              },
+              "end": {
+                "offset": 104,
+                "line": 2,
+                "column": 75
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -41,33 +94,117 @@
       "values": [
         [
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 63,
+                "line": 5,
+                "column": 4
+              },
+              "end": {
+                "offset": 63,
+                "line": 5,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Bob",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 66,
+                "line": 5,
+                "column": 11
+              },
+              "end": {
+                "offset": 70,
+                "line": 5,
+                "column": 11
+              }
+            }
           },
           {
             "value": "bob@example.com",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 73,
+                "line": 5,
+                "column": 30
+              },
+              "end": {
+                "offset": 89,
+                "line": 5,
+                "column": 30
+              }
+            }
           }
         ],
         [
           {
-            "value": "3",
-            "type": "number"
+            "value": 3,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 96,
+                "line": 6,
+                "column": 4
+              },
+              "end": {
+                "offset": 96,
+                "line": 6,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Charlie",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 99,
+                "line": 6,
+                "column": 15
+              },
+              "end": {
+                "offset": 107,
+                "line": 6,
+                "column": 15
+              }
+            }
           },
           {
             "value": "charlie@example.com",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 110,
+                "line": 6,
+                "column": 38
+              },
+              "end": {
+                "offset": 130,
+                "line": 6,
+                "column": 38
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "products",
@@ -80,19 +217,75 @@
       "values": [
         [
           {
-            "value": "100",
-            "type": "number"
+            "value": 100,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 105,
+                "line": 4,
+                "column": 78
+              },
+              "end": {
+                "offset": 107,
+                "line": 4,
+                "column": 78
+              }
+            }
           },
           {
             "value": "Widget",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 110,
+                "line": 4,
+                "column": 88
+              },
+              "end": {
+                "offset": 117,
+                "line": 4,
+                "column": 88
+              }
+            }
           },
           {
-            "value": "9.99",
-            "type": "number"
+            "value": 9.99,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 120,
+                "line": 4,
+                "column": 94
+              },
+              "end": {
+                "offset": 123,
+                "line": 4,
+                "column": 94
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
-  ]
+  ],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }
