@@ -14,6 +14,7 @@ export class Filepath implements Internable<FilepathId> {
   private readonly path: string;
 
   constructor (absolutePath: string, options: { protocol?: string } = {}) {
+    absolutePath = absolutePath.split('/').map(normalizeSegment).join('/');
     const normalized = normalize(absolutePath);
     if (!isAbsolute(normalized)) {
       throw new Error(`FilePath requires an absolute path, got: "${absolutePath}"`);
@@ -53,16 +54,21 @@ export class Filepath implements Internable<FilepathId> {
     return this.path;
   }
 
+  // Decoded path for filesystem or display use
+  get fsPath (): string {
+    return this.path.split('/').map(decodeURIComponent).join('/');
+  }
+
   get dirname (): string {
-    return dirname(this.path);
+    return dirname(this.fsPath);
   }
 
   get basename (): string {
-    return basename(this.path);
+    return basename(this.fsPath);
   }
 
   get extname (): string {
-    return extname(this.path);
+    return extname(this.fsPath);
   }
 
   // Resolve a relative path from this file's directory.
@@ -81,7 +87,7 @@ export class Filepath implements Internable<FilepathId> {
 
   // Return the path relative to a given base directory, always prefixed with './' or '../'
   relativeTo (baseDir: string): string {
-    const rel = relative(baseDir, this.path);
+    const rel = relative(baseDir, this.fsPath);
     if (!rel.startsWith('./') && !rel.startsWith('../') && ![
       '.',
       '..',
@@ -91,12 +97,13 @@ export class Filepath implements Internable<FilepathId> {
     return rel;
   }
 
-  toString (): string {
+  // Always use this in map keys or equality
+  toKey (): string {
     return this.path;
   }
 
   equals (other: Filepath): boolean {
-    return this.path === other.path;
+    return this.toKey() === other.toKey();
   }
 
   // True when this filepath is a strict ancestor directory of `other`.
@@ -122,10 +129,11 @@ export class Filepath implements Internable<FilepathId> {
   }
 }
 
-// From the currentFilepath, resolve the relativePath to an absolute path
-// Append `.dbml` if relativePath does not ends with `.dbml`
-export function resolveImportFilepath (currentFilepath: Filepath, relativePath: string): Filepath | undefined {
-  if (!Filepath.isRelative(relativePath)) return undefined;
-  const resolved = Filepath.resolve(currentFilepath.dirname, relativePath);
-  return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
+// Decode then encode a path segment
+function normalizeSegment (segment: string): string {
+  try {
+    return encodeURIComponent(decodeURIComponent(segment));
+  } catch {
+    return encodeURIComponent(segment);
+  }
 }

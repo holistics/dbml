@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { useUtils } from '@/core/global_modules/use';
-import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import {
   ElementDeclarationNode, UseDeclarationNode, UseSpecifierNode, WildcardNode,
@@ -141,7 +141,7 @@ function collectImports (compiler: Compiler, filepath: Filepath) {
 
   for (const element of ast.body) {
     if (!(element instanceof UseDeclarationNode) || !element.specifiers || !element.importPath) continue;
-    const importPath = resolveImportFilepath(filepath, element.importPath.value);
+    const importPath = compiler.layout.resolveFileSpecifier(filepath, element.importPath.value);
     if (!importPath) continue;
 
     if (element.isReuse) {

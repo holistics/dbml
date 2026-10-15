@@ -91,4 +91,5 @@ export type {
   TableGroupIdentifier,
   RelationCardinality,
   RelationshipOp,
+  DbmlProjectLayout,
 } from '@dbml/parse';

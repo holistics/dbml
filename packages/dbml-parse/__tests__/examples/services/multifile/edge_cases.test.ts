@@ -6,7 +6,7 @@ import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import { MockTextModel, createPosition } from '../../../utils';
 import { Filepath } from '@/core/types/filepath';
-import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
+import { MemoryProjectLayout, type DbmlProjectLayout } from '@/compiler/projectLayout/layout';
 
 describe('[advanced] multifile edge cases', () => {
   describe('URI handling edge cases', () => {
@@ -47,12 +47,47 @@ describe('[advanced] multifile edge cases', () => {
 
     it('should handle special characters in file paths', () => {
       const pathWithSpecialChars = '/home/user/project-2024/[test]/models.dbml';
+      const encoded = '/home/user/project-2024/%5Btest%5D/models.dbml';
       const filepath = new Filepath(pathWithSpecialChars);
-      const uri = filepath.toUri();
 
-      // Should be properly encoded/escaped
-      expect(uri).toBe(pathWithSpecialChars);
-      expect(Filepath.fromUri(uri).absolute).toBe(pathWithSpecialChars);
+      expect(filepath.absolute).toBe(encoded);
+      expect(Filepath.fromUri(filepath.toUri()).absolute).toBe(encoded);
+    });
+
+    it('should not double-encode already-encoded paths', () => {
+      const encoded = '/home/user/%5Btest%5D/file.dbml';
+      const filepath = new Filepath(encoded);
+
+      expect(filepath.absolute).toBe(encoded);
+    });
+
+    it('should normalize partially-encoded paths', () => {
+      const partial = '/home/user/[test]/%5Bother%5D/file.dbml';
+      const filepath = new Filepath(partial);
+
+      expect(filepath.absolute).toBe('/home/user/%5Btest%5D/%5Bother%5D/file.dbml');
+    });
+
+    it('should encode spaces in path segments', () => {
+      const path = '/home/user/my project/file.dbml';
+      const filepath = new Filepath(path);
+
+      expect(filepath.absolute).toBe('/home/user/my%20project/file.dbml');
+    });
+
+    it('should handle unicode in path segments', () => {
+      const path = '/home/user/日本語/file.dbml';
+      const filepath = new Filepath(path);
+      const filepath2 = new Filepath(filepath.absolute);
+
+      expect(filepath.absolute).toBe(filepath2.absolute);
+    });
+
+    it('should produce equal filepaths from encoded and unencoded input', () => {
+      const a = new Filepath('/home/user/[test]/file.dbml');
+      const b = new Filepath('/home/user/%5Btest%5D/file.dbml');
+
+      expect(a.equals(b)).toBe(true);
     });
   });
 
@@ -179,5 +214,142 @@ Ref: nodes.parent_id > nodes.id`;
     }
 
     expect(didThrow).toBe(false);
+  });
+
+  describe('custom project layout with @id import', () => {
+    // A layout that resolves `@<id>` specifiers to a unique filepath like `/@imports/<id>.dbml`
+    class IdImportLayout implements DbmlProjectLayout {
+      private files = new Map<string, string>();
+
+      setSource (filePath: Filepath, content: string): void {
+        this.files.set(filePath.absolute, content);
+      }
+
+      resolveFileSpecifier (_currentFilepath: Filepath, specifier: string): Filepath | undefined {
+        if (specifier.startsWith('@')) {
+          const id = specifier.slice(1);
+          return Filepath.from(`/@imports/${id}.dbml`);
+        }
+        if (Filepath.isRelative(specifier)) {
+          const resolved = Filepath.resolve(_currentFilepath.dirname, specifier);
+          return resolved.absolute.endsWith('.dbml') ? resolved : Filepath.from(resolved.absolute + '.dbml');
+        }
+        return undefined;
+      }
+
+      getSource (filePath: Filepath): string | undefined {
+        return this.files.get(filePath.absolute);
+      }
+
+      exists (filePath: Filepath): boolean {
+        return this.isFile(filePath) || this.isDirectory(filePath);
+      }
+
+      isFile (filePath: Filepath): boolean {
+        return this.files.has(filePath.absolute);
+      }
+
+      isDirectory (filePath: Filepath): boolean {
+        const prefix = filePath.absolute.endsWith('/') ? filePath.absolute : `${filePath.absolute}/`;
+        for (const f of this.files.keys()) {
+          if (f.startsWith(prefix)) return true;
+        }
+        return false;
+      }
+
+      listDirectory (dirPath?: Filepath): Filepath[] {
+        const base = dirPath?.absolute ?? '/';
+        const prefix = base.endsWith('/') ? base : base + '/';
+        const entries = new Set<string>();
+        for (const f of this.files.keys()) {
+          if (!f.startsWith(prefix)) continue;
+          const rest = f.slice(prefix.length);
+          const slash = rest.indexOf('/');
+          entries.add(prefix + (slash === -1 ? rest : rest.slice(0, slash)));
+        }
+        return [...entries].sort().map(Filepath.from);
+      }
+
+      getEntrypoints (): Filepath[] {
+        return [...this.files.keys()].map(Filepath.from).sort((a, b) => a.absolute.localeCompare(b.absolute));
+      }
+    }
+
+    it('should resolve @id import and retrieve source correctly', () => {
+      const layout = new IdImportLayout();
+      const main = Filepath.from('/main.dbml');
+      const sharedUsers = Filepath.from('/@imports/shared-users.dbml');
+
+      layout.setSource(sharedUsers, 'Table users { id int [pk]\n email varchar }');
+      layout.setSource(main, `use { table users } from '@shared-users'
+Table orders {
+  id int [pk]
+  user_id int [ref: > users.id]
+}`);
+
+      // Verify resolveFileSpecifier maps @id to the correct filepath
+      const resolved = layout.resolveFileSpecifier(main, '@shared-users');
+      expect(resolved).toBeDefined();
+      expect(resolved!.equals(sharedUsers)).toBe(true);
+
+      // Verify getSource returns the content for the resolved filepath
+      expect(layout.getSource(resolved!)).toBe('Table users { id int [pk]\n email varchar }');
+
+      // Verify the compiler can bind the project with cross-file references
+      const compiler = new Compiler(layout);
+      compiler.bindProject();
+      const errors = compiler.interpretFile(main).getErrors();
+      expect(errors).toHaveLength(0);
+    });
+
+    it('should treat two different specifiers resolving to same filepath as same file', () => {
+      const layout = new IdImportLayout();
+      const file1 = Filepath.from('/a.dbml');
+      const file2 = Filepath.from('/b.dbml');
+      const shared = Filepath.from('/@imports/common.dbml');
+
+      layout.setSource(shared, 'Table common { id int [pk] }');
+      layout.setSource(file1, "use { table common } from '@common'");
+      layout.setSource(file2, "use { table common } from '@common'");
+
+      // Both resolve to the same filepath
+      const resolved1 = layout.resolveFileSpecifier(file1, '@common');
+      const resolved2 = layout.resolveFileSpecifier(file2, '@common');
+      expect(resolved1!.equals(resolved2!)).toBe(true);
+
+      const compiler = new Compiler(layout);
+      compiler.bindProject();
+      const errors1 = compiler.interpretFile(file1).getErrors();
+      const errors2 = compiler.interpretFile(file2).getErrors();
+      expect(errors1).toHaveLength(0);
+      expect(errors2).toHaveLength(0);
+    });
+
+    it('should not conflict when @id and relative path resolve to the same file', () => {
+      const layout = new IdImportLayout();
+      const shared = Filepath.from('/@imports/models.dbml');
+      const main = Filepath.from('/@imports/main.dbml');
+
+      layout.setSource(shared, 'Table users { id int [pk] }');
+      layout.setSource(main, `use { table users } from '@models'
+use { table users } from './models'
+
+Table orders {
+  id int [pk]
+  user_id int [ref: > users.id]
+}`);
+
+      // Both specifiers resolve to the same filepath
+      const byId = layout.resolveFileSpecifier(main, '@models');
+      const byRel = layout.resolveFileSpecifier(main, './models');
+      expect(byId!.equals(byRel!)).toBe(true);
+
+      const compiler = new Compiler(layout);
+      compiler.bindProject();
+      const errors = compiler.interpretFile(main).getErrors();
+
+      // No duplicate symbol errors - they refer to the same file
+      expect(errors).toHaveLength(0);
+    });
   });
 });

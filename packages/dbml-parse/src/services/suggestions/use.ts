@@ -1,5 +1,5 @@
 import Compiler from '@/compiler';
-import { Filepath, resolveImportFilepath } from '@/core/types/filepath';
+import { Filepath } from '@/core/types/filepath';
 import { ImportKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/core/types/module';
 import {
@@ -127,7 +127,7 @@ function suggestUseElementNames (
   symbolKind: SymbolKind,
 ): CompletionList {
   if (!importPath) return noSuggestions();
-  const targetFilepath = resolveImportFilepath(currentFilepath, importPath.value);
+  const targetFilepath = compiler.layout.resolveFileSpecifier(currentFilepath, importPath.value);
   if (!targetFilepath) return noSuggestions();
 
   const usable = compiler.usableMembers(targetFilepath).getFiltered(UNHANDLED);
