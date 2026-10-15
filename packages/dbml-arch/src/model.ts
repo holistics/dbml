@@ -31,6 +31,12 @@ export interface KindDef {
   icon: string;
   /** raw path data, when the producer drew its own mark instead of naming one in the pack */
   glyph: string[] | null;
+  /**
+   * A picture to draw in place of the mark: a brand the pack does not carry, a team's own
+   * logo, a screenshot. An `https:` or `data:` URL and nothing else, checked by the compiler,
+   * because this string becomes an `href` inside an SVG in somebody else's page.
+   */
+  image: string | null;
   category: Category;
   color: string | null;
   builtin: boolean;
@@ -49,7 +55,18 @@ interface ElementBase {
 
 export interface NodeElement extends ElementBase {
   sort: 'node';
+  /** the ROLE: what sort of thing this is, and the word that opened the declaration */
   kind: string;
+  /**
+   * THE BRAND, resolved to a mark in the pack: `type: 'pg'` arrives here as `postgres`.
+   *
+   * The role and the brand are two different facts and both are worth keeping. A drawing can
+   * be asked which of its boxes are databases, which it could not be if the brand had replaced
+   * the role; and swapping a vendor touches one word.
+   */
+  type: string | null;
+  /** a picture, when the brand is one the pack has never heard of */
+  image: string | null;
 }
 
 export interface GroupElement extends ElementBase {

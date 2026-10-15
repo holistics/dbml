@@ -10,6 +10,7 @@ import {
   PrimaryExpressionNode,
   VariableNode,
 } from '@dbml/parse';
+import { SyntaxTokenKind } from '@dbml/parse';
 import type { SyntaxNode } from '@dbml/parse';
 import type { Located, SettingValue, Settings } from './model.js';
 
@@ -40,13 +41,26 @@ export function nameOf (node?: SyntaxNode): string | undefined {
   return undefined;
 }
 
+/**
+ * A NUMBER IS A NUMBER, AND A QUOTED STRING IS A STRING, even when it looks like one.
+ *
+ * This used to call `Number()` on any literal it found, which meant `engine_version: '16.3'`
+ * arrived as the number 16.3 and `'16.30'` arrived as 16.3 as well. For a drawing that is
+ * harmless; for anything generating configuration out of the model it is not, because a
+ * version, a zero-padded zone and an account id are all strings that happen to be digits.
+ *
+ * The lexer already tells them apart: a quoted value is a STRING_LITERAL and a bare one is a
+ * NUMERIC_LITERAL. Reading the token's kind costs nothing and is the only way to keep the
+ * author's quotes meaning what they say.
+ */
 export function numberOf (node?: SyntaxNode): number | null {
-  if (node instanceof PrimaryExpressionNode && node.expression instanceof LiteralNode) {
-    const raw = node.expression.literal?.value;
-    const value = Number(raw);
-    return Number.isFinite(value) ? value : null;
+  if (!(node instanceof PrimaryExpressionNode) || !(node.expression instanceof LiteralNode)) {
+    return null;
   }
-  return null;
+  const token = node.expression.literal;
+  if (token?.kind !== SyntaxTokenKind.NUMERIC_LITERAL) return null;
+  const value = Number(token.value);
+  return Number.isFinite(value) ? value : null;
 }
 
 /**

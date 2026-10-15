@@ -519,8 +519,17 @@ export default class Lexer {
       }
 
       // The first way to return a numeric literal without error:
-      // a digit is encountered as the last character
-      if (!isDot && this.current.offset === this.text.length - 1) {
+      // a digit is encountered as the last character.
+      //
+      // THE DIGIT TEST IS NOT OPTIONAL. Without it this branch consumes whatever the last
+      // character happens to be, so a file ending in `100]` lexed as one NUMERIC_LITERAL
+      // spelling `100]`, the closing bracket never reached the parser, and the error was
+      // "Expect a closing bracket ']'" pointing at a bracket that is plainly there.
+      //
+      // DBML never saw it because its elements always have a body, so a `]` is never the last
+      // character of a file. A dialect with bodyless elements makes `Table t [note: 100]` a
+      // whole document, and then it is.
+      if (!isDot && this.current.offset === this.text.length - 1 && isDigit(this.peek()!)) {
         this.advance();
 
         return this.addToken(SyntaxTokenKind.NUMERIC_LITERAL);

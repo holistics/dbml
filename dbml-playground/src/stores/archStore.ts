@@ -1,7 +1,8 @@
 import { computed } from 'vue';
 import { defineStore } from 'pinia';
 import {
-  compileArch, isArchitecture, type ArchDiagnostic, type NetworkModel,
+  compileArch, isArchitecture, isArchitectureSource,
+  type ArchDiagnostic, type NetworkModel,
 } from '@dbml/arch';
 import { useProjectStore } from './projectStore';
 
@@ -13,13 +14,20 @@ import { useProjectStore } from './projectStore';
  * vocabularies cannot yet share one parse. When it does, this store collapses into the parser
  * store and the document is read once.
  *
- * WHAT DECIDES WHETHER A DOCUMENT IS ARCHITECTURE. Not its name. dbdiagram's cloud documents
+ * WHAT DECIDES WHETHER A DOCUMENT IS ARCHITECTURE. Not its name: dbdiagram's cloud documents
  * have no path at all, so a filename can never be the signal, and `.arch.dbml` is a convention
- * for a file tree and a CI glob, nothing more. What decides it is the content: a document with
- * `Kind` declarations and elements built on them is an architecture diagram wherever it is
- * stored. `Project { diagram_type: 'architecture' }` is advice on top of that, and it earns its
- * place on exactly one case inference cannot cover: four `Kind` lines and nothing drawn yet is
- * not "unknown", and a canvas must not flicker between answers while somebody is typing.
+ * for a file tree and a CI glob, nothing more.
+ *
+ * THE MARKER DECIDES, AND IT DECIDES FIRST. `isArchitectureSource` reads `diagram_type` off
+ * the raw string with a regular expression, before any lexer or parser has run, which is
+ * exactly why the marker lives in front matter rather than inside `Project`: reaching it
+ * inside `Project` would mean parsing the file, and parsing is the thing being chosen. A
+ * document that says it is a schema is never handed to this compiler at all.
+ *
+ * Content is the FALLBACK, for a document that says nothing: one with `Kind` declarations and
+ * elements built on them is an architecture diagram wherever it is stored. The marker also
+ * covers the one case inference cannot: four `Kind` lines and nothing drawn yet is not
+ * "unknown", and a canvas must not flicker between answers while somebody is typing.
  */
 export const useArchStore = defineStore('arch', () => {
   const project = useProjectStore();
@@ -30,6 +38,15 @@ export const useArchStore = defineStore('arch', () => {
       files[path.startsWith('/') ? path : `/${path}`] = source;
     }
     const entry = project.currentFile.startsWith('/') ? project.currentFile : `/${project.currentFile}`;
+
+    // a document that says it is something else is not compiled at all: routing happens before
+    // the work, not after it
+    const source = files[entry] ?? '';
+    const marker = /^\s*---[ \t]*\r?\n/.test(source);
+    if (marker && !isArchitectureSource(source)) {
+      return { model: null as NetworkModel | null, diagramType: null as string | null, diagnostics: [] as ArchDiagnostic[] };
+    }
+
     try {
       return compileArch(files, entry);
     } catch (error) {

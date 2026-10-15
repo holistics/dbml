@@ -12,107 +12,108 @@
  * the thing being named.
  */
 export const PACK_FILE = `// A pack is a file of vocabulary. Ship one per cloud, per team, per house style.
-// A drawn brand carries its own colour, so most of a pack is a list of names.
-// A Kind may also overrule a built-in word, which is how a house style travels.
-Kind Firewall   [icon: firewall, color: '#c0453a']
-Kind Cloudflare [icon: cloudflare]
-Kind CloudFront [icon: aws]
-Kind BigQuery   [icon: bigquery]
-Kind HAProxy    [icon: haproxy]
-Kind Mongo      [icon: mongodb]
-Kind Redis      [icon: redis]
-Kind Postgres   [icon: postgres]
-Kind Docker     [icon: docker]
-Kind Grafana    [icon: grafana]
-Kind Prometheus [icon: prometheus]
+//
+// IT USED TO BE ELEVEN LINES AND IT IS NOW TWO, because a brand is no longer a word at all.
+// Postgres, Mongo, Redis and HAProxy are settings now:
+//
+//   Database users_db [type: 'postgres']
+//
+// A pack is left with what only a pack can do: name a ROLE the built-ins do not have, and
+// overrule one they do.
+
+// overruling a built-in word, which is how a house style travels
+Kind Firewall [icon: firewall, color: '#c0453a']
+
+// a ROLE the built-ins do not have. A brand needs no Kind at all: it is a [type: ...]
+Kind Lakehouse [icon: graph, color: '#4a7c59']
 `;
 
 export const MAIN_FILE = `---
 title: DBX network diagram
 owner: platform-team
 updated: 2026-10-12
+diagram_type: arch
 ---
 
 Project dbx {
-  diagram_type: 'architecture'
   Note: 'The DBX production estate'
 }
 
 use * from './packs/devops.arch'
 
 // ── outside ───────────────────────────────────────────────────────────────────
-Internet   net_dbdiagram [name: 'Internet']
-Internet   net_dbdocs    [name: 'Internet']
-Cloudflare cf_dbdiagram  [name: 'Cloudflare']
-Cloudflare cf_dbdocs     [name: 'Cloudflare']
-Client     dbx_eng       [name: 'DBX Engineers']
-VPN        tailscale     [name: 'Tailscale']
-Team       holistics     [name: 'Holistics Data Analytics']
-BigQuery   bigquery      [name: 'Google BigQuery']
+Internet net_dbdiagram [name: 'Internet']
+Internet net_dbdocs [name: 'Internet']
+CDN cf_dbdiagram [name: 'Cloudflare', type: 'cloudflare']
+CDN cf_dbdocs [name: 'Cloudflare', type: 'cloudflare']
+Client dbx_eng [name: 'DBX Engineers']
+VPN tailscale [name: 'Tailscale']
+Team holistics [name: 'Holistics Data Analytics']
+Warehouse bigquery [name: 'Google BigQuery', type: 'bigquery']
 
 // ── the managed edge, outside the private network ─────────────────────────────
 LoadBalancer dbdiagram_do_lb_be [name: 'dbdiagram-do-lb-be']
 LoadBalancer dbdiagram_do_lb_ws [name: 'dbdiagram-do-lb-ws']
-Note         do_lbs_dbdiagram   { 'DigitalOcean Load Balancers' }
+Note do_lbs_dbdiagram { 'DigitalOcean Load Balancers' }
 
-CloudFront   dbdiagram_fe       [name: 'DBDiagram Frontend - AWS CloudFront']
+CDN dbdiagram_fe [name: 'DBDiagram Frontend - AWS CloudFront', type: 'aws']
 
-LoadBalancer dbdocs_do_lb_fe    [name: 'dbdocs-do-lb-fe']
-LoadBalancer dbdocs_do_lb_be    [name: 'dbdocs-do-lb-be']
-Note         do_lbs_dbdocs      { 'DigitalOcean Load Balancers' }
+LoadBalancer dbdocs_do_lb_fe [name: 'dbdocs-do-lb-fe']
+LoadBalancer dbdocs_do_lb_be [name: 'dbdocs-do-lb-be']
+Note do_lbs_dbdocs { 'DigitalOcean Load Balancers' }
 
-Server       runsql_ssr         [name: 'runSQL Frontend SSR server']
-Server       runsql_be          [name: 'runSQL Backend Server']
+Server runsql_ssr [name: 'runSQL Frontend SSR server']
+Server runsql_be [name: 'runSQL Backend Server']
 
 // ── dbdiagram ─────────────────────────────────────────────────────────────────
-HAProxy  dbdiagram_lb1 [name: 'dbdiagram-lb-1']
-HAProxy  dbdiagram_lb2 [name: 'dbdiagram-lb-2']
-Server   api1          [name: 'dbdiagram API1']
-Server   api2          [name: 'dbdiagram API2']
-Server   ws1           [name: 'dbdiagram WS1']
-Server   ws2           [name: 'dbdiagram WS2']
-Mongo    mongo1        [name: 'dbdiagram mongodb 1']
-Mongo    mongo2        [name: 'dbdiagram mongodb 2']
-Mongo    mongo3        [name: 'dbdiagram mongodb 3']
-Redis    redis         [name: 'Redis Cache']
+Proxy dbdiagram_lb1 [name: 'dbdiagram-lb-1', type: 'haproxy']
+Proxy dbdiagram_lb2 [name: 'dbdiagram-lb-2', type: 'haproxy']
+Server api1 [name: 'dbdiagram API1']
+Server api2 [name: 'dbdiagram API2']
+Server ws1 [name: 'dbdiagram WS1']
+Server ws2 [name: 'dbdiagram WS2']
+Database mongo1 [name: 'dbdiagram mongodb 1', type: 'mongodb']
+Database mongo2 [name: 'dbdiagram mongodb 2', type: 'mongodb']
+Database mongo3 [name: 'dbdiagram mongodb 3', type: 'mongodb']
+Cache redis [name: 'Redis Cache', type: 'redis']
 
 // ── dbdocs ────────────────────────────────────────────────────────────────────
-HAProxy  dbdocs_lb1  [name: 'dbdocs lb-1']
-HAProxy  dbdocs_lb2  [name: 'dbdocs lb-2']
-Server   dbdocs_web  [name: 'DBDocs Web servers']
-Server   dbdocs_api  [name: 'DBDocs API Servers']
-Postgres dbdocs_pg_master  [name: 'Master']
-Postgres dbdocs_pg_standby [name: 'Standby']
+Proxy dbdocs_lb1 [name: 'dbdocs lb-1', type: 'haproxy']
+Proxy dbdocs_lb2 [name: 'dbdocs lb-2', type: 'haproxy']
+Server dbdocs_web [name: 'DBDocs Web servers']
+Server dbdocs_api [name: 'DBDocs API Servers']
+Database dbdocs_pg_master [name: 'Master', type: 'postgres']
+Database dbdocs_pg_standby [name: 'Standby', type: 'postgres']
 
 // ── runSQL ────────────────────────────────────────────────────────────────────
-Postgres runsql_pg        [name: 'runSQL Postgres Main DB']
-Docker   runsql_sandbox   [name: 'runSQL Sandbox DBs servers']
-Server   runsql_pgbouncer [name: 'runsql-pgbouncer']
+Database runsql_pg [name: 'runSQL Postgres Main DB', type: 'postgres']
+Container runsql_sandbox [name: 'runSQL Sandbox DBs servers', type: 'docker']
+Server runsql_pgbouncer [name: 'runsql-pgbouncer']
 
 // ── dbx ai ────────────────────────────────────────────────────────────────────
-Server   orca1       [name: 'dbx-orca-1']
-Server   orca2       [name: 'dbx-orca-2']
-HAProxy  dbx_ai_lb   [name: 'dbx-ai-lb']
-Postgres dbx_pgvector [name: 'dbx-ai pgvector']
-Pipeline airbyte     [name: 'Airbyte ETL']
+Server orca1 [name: 'dbx-orca-1']
+Server orca2 [name: 'dbx-orca-2']
+Proxy dbx_ai_lb [name: 'dbx-ai-lb', type: 'haproxy']
+Database dbx_pgvector [name: 'dbx-ai pgvector', type: 'postgres']
+Pipeline airbyte [name: 'Airbyte ETL', type: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4']
 
 // ── operations ────────────────────────────────────────────────────────────────
-Grafana    grafana    [name: 'Grafana']
-Grafana    loki       [name: 'Grafana loki']
-Prometheus prometheus [name: 'Prometheus (monitoring)']
-Firewall   ossec      [name: 'OSSEC']
-Server     deploy     [name: 'Deployment server']
+Monitoring grafana [name: 'Grafana', type: 'grafana']
+Monitoring loki [name: 'Grafana loki', type: 'grafana']
+Monitoring prometheus [name: 'Prometheus (monitoring)', type: 'prometheus']
+Firewall ossec [name: 'OSSEC']
+Server deploy [name: 'Deployment server']
 
 // A group lists names, and a name may be a node OR another group, so nesting needs no new
 // syntax and moving something between containers is one line.
-Group dbdiagram_api   [name: 'dbdiagram API servers']       { api1  api2 }
-Group dbdiagram_ws    [name: 'dbdiagram Websocket servers'] { ws1  ws2 }
-Group dbdiagram_proxy [name: 'dbdiagram Internal Proxy']    { dbdiagram_lb1  dbdiagram_lb2 }
-Group mongo_rs        [name: 'dbdiagram mongodb replica set'] { mongo1  mongo2  mongo3 }
-Group dbdocs_proxy    [name: 'DBDocs Internal Proxy']       { dbdocs_lb1  dbdocs_lb2 }
-Group dbdocs_pg       [name: 'DBDocs Postgres Main DBs']    { dbdocs_pg_master  dbdocs_pg_standby }
-Group dbx_ai_orca     [name: 'dbx-ai-orca']                 { orca1  orca2 }
-Group monitoring      [name: 'Monitoring system']           { grafana  loki  prometheus }
+Group dbdiagram_api [name: 'dbdiagram API servers'] { api1 api2 }
+Group dbdiagram_ws [name: 'dbdiagram Websocket servers'] { ws1 ws2 }
+Group dbdiagram_proxy [name: 'dbdiagram Internal Proxy'] { dbdiagram_lb1 dbdiagram_lb2 }
+Group mongo_rs [name: 'dbdiagram mongodb replica set'] { mongo1 mongo2 mongo3 }
+Group dbdocs_proxy [name: 'DBDocs Internal Proxy'] { dbdocs_lb1 dbdocs_lb2 }
+Group dbdocs_pg [name: 'DBDocs Postgres Main DBs'] { dbdocs_pg_master dbdocs_pg_standby }
+Group dbx_ai_orca [name: 'dbx-ai-orca'] { orca1 orca2 }
+Group monitoring [name: 'Monitoring system'] { grafana loki prometheus }
 
 Group production [name: 'Production servers', style: dashed] {
   dbdiagram_proxy
@@ -213,103 +214,99 @@ export const INLINE_FILE = `---
 title: DBX network diagram
 owner: platform-team
 updated: 2026-10-12
+diagram_type: arch
 ---
 
 Project dbx {
-  diagram_type: 'architecture'
   Note: 'The DBX production estate'
 }
 
 // The vocabulary. In a project with files this is a pack you import:
 //   use * from './packs/devops.arch'
-// A pack is a file of vocabulary. Ship one per cloud, per team, per house style.
-// A drawn brand carries its own colour, so most of a pack is a list of names.
-// A Kind may also overrule a built-in word, which is how a house style travels.
-Kind Firewall   [icon: firewall, color: '#c0453a']
-Kind Cloudflare [icon: cloudflare]
-Kind CloudFront [icon: aws]
-Kind BigQuery   [icon: bigquery]
-Kind HAProxy    [icon: haproxy]
-Kind Mongo      [icon: mongodb]
-Kind Redis      [icon: redis]
-Kind Postgres   [icon: postgres]
-Kind Docker     [icon: docker]
-Kind Grafana    [icon: grafana]
-Kind Prometheus [icon: prometheus]
+//
+// A brand is a setting, not a word:  Database users_db [type: 'postgres']
+// So a pack is left with what only a pack can do: name a ROLE the built-ins lack, and
+// overrule one they have.
+
+// overruling a built-in word, which is how a house style travels
+Kind Firewall [icon: firewall, color: '#c0453a']
+
+// a ROLE the built-ins do not have. A brand needs no Kind at all: it is a [type: ...]
+Kind Lakehouse [icon: graph, color: '#4a7c59']
 
 // ── outside ───────────────────────────────────────────────────────────────────
-Internet   net_dbdiagram [name: 'Internet']
-Internet   net_dbdocs    [name: 'Internet']
-Cloudflare cf_dbdiagram  [name: 'Cloudflare']
-Cloudflare cf_dbdocs     [name: 'Cloudflare']
-Client     dbx_eng       [name: 'DBX Engineers']
-VPN        tailscale     [name: 'Tailscale']
-Team       holistics     [name: 'Holistics Data Analytics']
-BigQuery   bigquery      [name: 'Google BigQuery']
+Internet net_dbdiagram [name: 'Internet']
+Internet net_dbdocs [name: 'Internet']
+CDN cf_dbdiagram [name: 'Cloudflare', type: 'cloudflare']
+CDN cf_dbdocs [name: 'Cloudflare', type: 'cloudflare']
+Client dbx_eng [name: 'DBX Engineers']
+VPN tailscale [name: 'Tailscale']
+Team holistics [name: 'Holistics Data Analytics']
+Warehouse bigquery [name: 'Google BigQuery', type: 'bigquery']
 
 // ── the managed edge, outside the private network ─────────────────────────────
 LoadBalancer dbdiagram_do_lb_be [name: 'dbdiagram-do-lb-be']
 LoadBalancer dbdiagram_do_lb_ws [name: 'dbdiagram-do-lb-ws']
-Note         do_lbs_dbdiagram   { 'DigitalOcean Load Balancers' }
+Note do_lbs_dbdiagram { 'DigitalOcean Load Balancers' }
 
-CloudFront   dbdiagram_fe       [name: 'DBDiagram Frontend - AWS CloudFront']
+CDN dbdiagram_fe [name: 'DBDiagram Frontend - AWS CloudFront', type: 'aws']
 
-LoadBalancer dbdocs_do_lb_fe    [name: 'dbdocs-do-lb-fe']
-LoadBalancer dbdocs_do_lb_be    [name: 'dbdocs-do-lb-be']
-Note         do_lbs_dbdocs      { 'DigitalOcean Load Balancers' }
+LoadBalancer dbdocs_do_lb_fe [name: 'dbdocs-do-lb-fe']
+LoadBalancer dbdocs_do_lb_be [name: 'dbdocs-do-lb-be']
+Note do_lbs_dbdocs { 'DigitalOcean Load Balancers' }
 
-Server       runsql_ssr         [name: 'runSQL Frontend SSR server']
-Server       runsql_be          [name: 'runSQL Backend Server']
+Server runsql_ssr [name: 'runSQL Frontend SSR server']
+Server runsql_be [name: 'runSQL Backend Server']
 
 // ── dbdiagram ─────────────────────────────────────────────────────────────────
-HAProxy  dbdiagram_lb1 [name: 'dbdiagram-lb-1']
-HAProxy  dbdiagram_lb2 [name: 'dbdiagram-lb-2']
-Server   api1          [name: 'dbdiagram API1']
-Server   api2          [name: 'dbdiagram API2']
-Server   ws1           [name: 'dbdiagram WS1']
-Server   ws2           [name: 'dbdiagram WS2']
-Mongo    mongo1        [name: 'dbdiagram mongodb 1']
-Mongo    mongo2        [name: 'dbdiagram mongodb 2']
-Mongo    mongo3        [name: 'dbdiagram mongodb 3']
-Redis    redis         [name: 'Redis Cache']
+Proxy dbdiagram_lb1 [name: 'dbdiagram-lb-1', type: 'haproxy']
+Proxy dbdiagram_lb2 [name: 'dbdiagram-lb-2', type: 'haproxy']
+Server api1 [name: 'dbdiagram API1']
+Server api2 [name: 'dbdiagram API2']
+Server ws1 [name: 'dbdiagram WS1']
+Server ws2 [name: 'dbdiagram WS2']
+Database mongo1 [name: 'dbdiagram mongodb 1', type: 'mongodb']
+Database mongo2 [name: 'dbdiagram mongodb 2', type: 'mongodb']
+Database mongo3 [name: 'dbdiagram mongodb 3', type: 'mongodb']
+Cache redis [name: 'Redis Cache', type: 'redis']
 
 // ── dbdocs ────────────────────────────────────────────────────────────────────
-HAProxy  dbdocs_lb1  [name: 'dbdocs lb-1']
-HAProxy  dbdocs_lb2  [name: 'dbdocs lb-2']
-Server   dbdocs_web  [name: 'DBDocs Web servers']
-Server   dbdocs_api  [name: 'DBDocs API Servers']
-Postgres dbdocs_pg_master  [name: 'Master']
-Postgres dbdocs_pg_standby [name: 'Standby']
+Proxy dbdocs_lb1 [name: 'dbdocs lb-1', type: 'haproxy']
+Proxy dbdocs_lb2 [name: 'dbdocs lb-2', type: 'haproxy']
+Server dbdocs_web [name: 'DBDocs Web servers']
+Server dbdocs_api [name: 'DBDocs API Servers']
+Database dbdocs_pg_master [name: 'Master', type: 'postgres']
+Database dbdocs_pg_standby [name: 'Standby', type: 'postgres']
 
 // ── runSQL ────────────────────────────────────────────────────────────────────
-Postgres runsql_pg        [name: 'runSQL Postgres Main DB']
-Docker   runsql_sandbox   [name: 'runSQL Sandbox DBs servers']
-Server   runsql_pgbouncer [name: 'runsql-pgbouncer']
+Database runsql_pg [name: 'runSQL Postgres Main DB', type: 'postgres']
+Container runsql_sandbox [name: 'runSQL Sandbox DBs servers', type: 'docker']
+Server runsql_pgbouncer [name: 'runsql-pgbouncer']
 
 // ── dbx ai ────────────────────────────────────────────────────────────────────
-Server   orca1       [name: 'dbx-orca-1']
-Server   orca2       [name: 'dbx-orca-2']
-HAProxy  dbx_ai_lb   [name: 'dbx-ai-lb']
-Postgres dbx_pgvector [name: 'dbx-ai pgvector']
-Pipeline airbyte     [name: 'Airbyte ETL']
+Server orca1 [name: 'dbx-orca-1']
+Server orca2 [name: 'dbx-orca-2']
+Proxy dbx_ai_lb [name: 'dbx-ai-lb', type: 'haproxy']
+Database dbx_pgvector [name: 'dbx-ai pgvector', type: 'postgres']
+Pipeline airbyte [name: 'Airbyte ETL', type: 'https://avatars.githubusercontent.com/u/59758427?s=200&v=4']
 
 // ── operations ────────────────────────────────────────────────────────────────
-Grafana    grafana    [name: 'Grafana']
-Grafana    loki       [name: 'Grafana loki']
-Prometheus prometheus [name: 'Prometheus (monitoring)']
-Firewall   ossec      [name: 'OSSEC']
-Server     deploy     [name: 'Deployment server']
+Monitoring grafana [name: 'Grafana', type: 'grafana']
+Monitoring loki [name: 'Grafana loki', type: 'grafana']
+Monitoring prometheus [name: 'Prometheus (monitoring)', type: 'prometheus']
+Firewall ossec [name: 'OSSEC']
+Server deploy [name: 'Deployment server']
 
 // A group lists names, and a name may be a node OR another group, so nesting needs no new
 // syntax and moving something between containers is one line.
-Group dbdiagram_api   [name: 'dbdiagram API servers']       { api1  api2 }
-Group dbdiagram_ws    [name: 'dbdiagram Websocket servers'] { ws1  ws2 }
-Group dbdiagram_proxy [name: 'dbdiagram Internal Proxy']    { dbdiagram_lb1  dbdiagram_lb2 }
-Group mongo_rs        [name: 'dbdiagram mongodb replica set'] { mongo1  mongo2  mongo3 }
-Group dbdocs_proxy    [name: 'DBDocs Internal Proxy']       { dbdocs_lb1  dbdocs_lb2 }
-Group dbdocs_pg       [name: 'DBDocs Postgres Main DBs']    { dbdocs_pg_master  dbdocs_pg_standby }
-Group dbx_ai_orca     [name: 'dbx-ai-orca']                 { orca1  orca2 }
-Group monitoring      [name: 'Monitoring system']           { grafana  loki  prometheus }
+Group dbdiagram_api [name: 'dbdiagram API servers'] { api1 api2 }
+Group dbdiagram_ws [name: 'dbdiagram Websocket servers'] { ws1 ws2 }
+Group dbdiagram_proxy [name: 'dbdiagram Internal Proxy'] { dbdiagram_lb1 dbdiagram_lb2 }
+Group mongo_rs [name: 'dbdiagram mongodb replica set'] { mongo1 mongo2 mongo3 }
+Group dbdocs_proxy [name: 'DBDocs Internal Proxy'] { dbdocs_lb1 dbdocs_lb2 }
+Group dbdocs_pg [name: 'DBDocs Postgres Main DBs'] { dbdocs_pg_master dbdocs_pg_standby }
+Group dbx_ai_orca [name: 'dbx-ai-orca'] { orca1 orca2 }
+Group monitoring [name: 'Monitoring system'] { grafana loki prometheus }
 
 Group production [name: 'Production servers', style: dashed] {
   dbdiagram_proxy
@@ -437,23 +434,23 @@ export const SELF_FILE = `---
 title: DBML, drawn in DBML
 owner: dbx
 updated: 2026-10-13
+diagram_type: arch
 ---
 
 Project dbml_itself {
-  diagram_type: 'architecture'
   Note: 'What happens to a file between being typed and being drawn'
 }
 
 // Not one of the thirty-one built-in words describes code, so every word here is declared.
 // The vocabulary opening by seven is the vocabulary working; it is also the argument for
 // shipping a second pack next to the devops one.
-Kind Stage  [icon: chip,   color: '#3f6ea8']
-Kind Shape  [icon: graph,  color: '#4a7c59']
-Kind Words  [icon: tag]
-Kind Closed [icon: lock,   color: '#8a5a2b']
+Kind Stage [icon: chip, color: '#3f6ea8']
+Kind Shape [icon: graph, color: '#4a7c59']
+Kind Words [icon: tag]
+Kind Closed [icon: lock, color: '#8a5a2b']
 Kind Author [icon: person]
 Kind Canvas [icon: browser]
-Kind Lib    [icon: nodejs]
+Kind Lib [icon: nodejs]
 
 Author author [name: 'Whoever writes the file']
 
@@ -495,8 +492,8 @@ Stage filegraph [name: 'File graph & cache'] {
   - the reverse misses, in every spelling
   '''
 }
-Shape tokens    [name: 'Tokens']
-Shape ast       [name: 'Syntax tree']
+Shape tokens [name: 'Tokens']
+Shape ast [name: 'Syntax tree']
 Words dbmlwords [name: "DBML's 16 elements"]
 
 // ── @dbml/arch: the architecture dialect ──────────────────────────────────────
@@ -598,7 +595,7 @@ Closed paint [name: 'Paint SVG'] {
   - the drawings live here; the NAMES live in the open repo
   '''
 }
-Lib    elk     [name: 'elkjs']
+Lib elk [name: 'elkjs']
 
 // ── the playground ────────────────────────────────────────────────────────────
 Canvas editor [name: 'Monaco editor']
@@ -612,7 +609,7 @@ Canvas stores [name: 'Pinia stores'] {
     document is not written in
   '''
 }
-Canvas pane   [name: 'Architecture pane']
+Canvas pane [name: 'Architecture pane']
 
 // A container's note is markdown, and it is where the file listing lives. A triple-quoted
 // string keeps its line breaks, so a list stays a list.
@@ -767,20 +764,20 @@ export const BOOK_FILE = `---
 title: Dám bị ghét
 authors: Kishimi Ichiro, Koga Fumitake
 form: năm đêm đối thoại
+diagram_type: arch
 ---
 
 Project dam_bi_ghet {
-  diagram_type: 'architecture'
   Note: 'Tâm lý học Adler, đọc như một lập luận chứ không phải một mục lục'
 }
 
 // Không một từ nào trong ba mươi mốt từ có sẵn mô tả được một luận điểm.
-Kind Tiền_đề   [icon: key,     color: '#3f6ea8']
+Kind Tiền_đề [icon: key, color: '#3f6ea8']
 Kind Luận_điểm [icon: chip]
-Kind Sai_lầm   [icon: warning, color: '#c0453a']
-Kind Thực_hành [icon: rocket,  color: '#4a7c59']
-Kind Kết_quả   [icon: check,   color: '#b2761c']
-Kind Người     [icon: person]
+Kind Sai_lầm [icon: warning, color: '#c0453a']
+Kind Thực_hành [icon: rocket, color: '#4a7c59']
+Kind Kết_quả [icon: check, color: '#b2761c']
+Kind Người [icon: person]
 
 Người adler    [name: 'Alfred Adler']
 Người socrates [name: 'Socrates']

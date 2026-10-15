@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { Compiler, Filepath, MemoryProjectLayout } from '@dbml/parse';
 import { compileArch, isArchitecture } from '../src/compile.js';
 import { isIconName } from '../src/icons.js';
+import { BUILTIN_KINDS, suggestKind } from '../src/vocabulary.js';
+import {
+  diagramTypeOf, isArchDiagramType, isArchitectureSource, scanFrontMatter,
+} from '../src/frontmatter.js';
 import { isGroup, isNode } from '../src/model.js';
+import type { NetworkModel } from '../src/model.js';
 import {
   BOOK_FILE, EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE, SELF_FILE,
 } from '../src/example.js';
@@ -93,8 +98,10 @@ describe('the worked example', () => {
     const { model, diagnostics } = compileArch(EXAMPLE_FILES, EXAMPLE_ENTRY);
     expect(diagnostics).toEqual([]);
     expect(model.files).toContain('/packs/devops.arch.dbml');
-    // the kinds came from the pack, the elements from the entry
-    expect(model.kinds.get('Mongo')?.icon).toBe('mongodb');
+    // the roles came from the pack, the elements and their brands from the entry
+    expect(model.kinds.get('Lakehouse')?.icon).toBe('graph');
+    expect(isNode(model.elements.get('mongo1')) && model.elements.get('mongo1'))
+      .toMatchObject({ kind: 'Database', type: 'mongodb' });
     expect(model.elements.get('mongo1')?.parent).toBe('mongo_rs');
     expect(model.elements.get('mongo_rs')?.parent).toBe('production');
     expect(model.elements.get('production')?.parent).toBe('private_net');
@@ -133,29 +140,76 @@ describe('what decides the dialect', () => {
     }
   });
 
-  it('reads diagram_type off Project, and treats it as advice', () => {
-    const marked = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'architecture'\n}\nServer a" }, '/d.dbml');
-    expect(marked.diagramType).toBe('architecture');
+  /**
+   * THE MARKER LIVES IN FRONT MATTER, and `Project` is not an alternative to it.
+   *
+   * `database_type: 'PostgreSQL'` is a property of the DATABASE: it changes the SQL that
+   * comes out and nothing about how the file is read. A diagram type describes the DOCUMENT
+   * and says which pipeline should pick it up, which is a different kind of statement.
+   *
+   * It is also the only placement that can ever work. Finding a `Project` block means parsing
+   * the file, and parsing is the thing being chosen; front matter is fenced, first, and comes
+   * back from the lexer as one trivia token, so a host can read it without parsing anything.
+   */
+  it('reads diagram_type off front matter, and treats it as advice', () => {
+    const marked = compileArch({ '/d.dbml': '---\ndiagram_type: arch\n---\n\nServer a' }, '/d.dbml');
+    expect(marked.diagramType).toBe('arch');
     expect(marked.diagnostics).toEqual([]);
+
     // advice, not a mode: the drawing is identical without it
     const bare = compileArch({ '/d.dbml': 'Server a' }, '/d.dbml');
     expect(bare.diagramType).toBeNull();
     expect(bare.model.elements.size).toBe(marked.model.elements.size);
   });
 
+  /**
+   * NOT read from `Project`, and that is the point rather than an omission. Honouring it
+   * there would produce a file that compiles here and cannot be routed by the host that has
+   * to decide which compiler to call, which is worse than not working.
+   */
+  it('refuses to honour it inside Project, because a host cannot reach it there', () => {
+    const misplaced = compileArch(
+      { '/d.dbml': "Project x {\n  diagram_type: 'arch'\n}\nServer a" },
+      '/d.dbml',
+    );
+    expect(misplaced.diagramType).toBeNull();
+    expect(misplaced.diagnostics.map((d) => d.code)).toEqual(['diagram-type-not-here']);
+    expect(misplaced.diagnostics[0].severity).toBe('error');
+    expect(misplaced.diagnostics[0].message).toContain('diagram_type: arch');
+    // the content heuristic still answers, which is what keeps the drawing on screen
+    expect(isArchitecture(misplaced)).toBe(true);
+  });
+
+  it('answers from front matter even when a Project block argues with it', () => {
+    const both = compileArch(
+      { '/d.dbml': "---\ndiagram_type: arch\n---\n\nProject x {\n  diagram_type: 'database'\n}\nServer a" },
+      '/d.dbml',
+    );
+    expect(both.diagramType).toBe('arch');
+    expect(both.diagnostics.map((d) => d.code)).toEqual(['diagram-type-not-here']);
+  });
+
+  it('accepts the long spelling, so nobody has to remember two words', () => {
+    for (const spelling of ['arch', 'architecture', 'Arch', 'ARCHITECTURE']) {
+      const r = compileArch({ '/d.dbml': `---\ndiagram_type: ${spelling}\n---\n\nServer a` }, '/d.dbml');
+      expect(isArchitecture(r), spelling).toBe(true);
+      expect(r.diagnostics, spelling).toEqual([]);
+    }
+  });
+
   it('answers for a document that declares a vocabulary and has drawn nothing yet', () => {
     // inference says "unknown" here and the marker says "architecture". That gap is the whole
     // reason the marker exists: a canvas must not flicker while somebody is still typing.
     const { model, diagramType } = compileArch(
-      { '/d.dbml': "Project x {\n  diagram_type: 'architecture'\n}\nKind Mongo [icon: mongodb]" },
+      { '/d.dbml': "---\ndiagram_type: arch\n---\nKind Mongo [icon: mongodb]" },
       '/d.dbml',
     );
     expect(model.elements.size).toBe(0);
-    expect(diagramType).toBe('architecture');
+    expect(diagramType).toBe('arch');
   });
 
   it('keeps Project out of the drawing', () => {
-    const { model } = compileArch({ '/d.dbml': "Project x {\n  diagram_type: 'architecture'\n}\nServer a" }, '/d.dbml');
+    const { model } = compileArch({ '/d.dbml': "---\ndiagram_type: arch\n---\nServer a" }, '/d.dbml');
     expect([...model.elements.keys()]).toEqual(['a']);
   });
 });
@@ -175,7 +229,7 @@ describe('the inline sample', () => {
   it('compiles as one document, with no imports and no filename to read', () => {
     const { model, diagnostics, diagramType } = compileArch({ '/d': INLINE_FILE }, '/d');
     expect(diagnostics).toEqual([]);
-    expect(diagramType).toBe('architecture');
+    expect(diagramType).toBe('arch');
     expect(model.files).toEqual(['/d']);
     expect(model.elements.size).toBeGreaterThan(20);
     expect(model.links.length).toBeGreaterThan(14);
@@ -199,7 +253,7 @@ describe('the self-portrait', () => {
   it('compiles with no diagnostics, drawing packages and imports rather than hosts', () => {
     const { model, diagnostics, diagramType } = compileArch({ '/self': SELF_FILE }, '/self');
     expect(diagnostics).toEqual([]);
-    expect(diagramType).toBe('architecture');
+    expect(diagramType).toBe('arch');
     expect(model.elements.size).toBeGreaterThan(20);
   });
 
@@ -290,7 +344,7 @@ describe('deciding whether to show an architecture canvas', () => {
 
   it('says no to a vocabulary with nothing drawn on it, unless the author said otherwise', () => {
     expect(asks('Kind Mongo [icon: mongodb]')).toBe(false);
-    expect(asks("Project x {\n  diagram_type: 'architecture'\n}\nKind Mongo [icon: mongodb]")).toBe(true);
+    expect(asks("---\ndiagram_type: arch\n---\nKind Mongo [icon: mongodb]")).toBe(true);
   });
 
   it('says no to notes alone, which a half-written file collects by accident', () => {
@@ -379,7 +433,7 @@ describe('the example carries both kinds of metadata', () => {
     expect(model.frontMatter.title).toBe('DBX network diagram');
     expect(model.frontMatter.owner).toBe('platform-team');
     // Project is for what the editor needs to know, front matter is for whoever reads the file
-    expect(diagramType).toBe('architecture');
+    expect(diagramType).toBe('arch');
   });
 });
 
@@ -452,7 +506,7 @@ describe('a book, drawn with a vocabulary meant for servers', () => {
   it('compiles an argument with no diagnostics, in Vietnamese', () => {
     const { model, diagnostics, diagramType } = compileArch({ '/b': BOOK_FILE }, '/b');
     expect(diagnostics).toEqual([]);
-    expect(diagramType).toBe('architecture');
+    expect(diagramType).toBe('arch');
     expect(model.elements.size).toBeGreaterThan(30);
     expect(model.links.length).toBeGreaterThan(30);
   });
@@ -500,5 +554,415 @@ describe('a book, drawn with a vocabulary meant for servers', () => {
     // nothing on any of these lines is a protocol or a host
     expect(model.links.some((link) => link.settings.host !== undefined)).toBe(false);
     expect(new Set(model.links.map((link) => link.op))).toEqual(new Set(['>', '-']));
+  });
+});
+
+/**
+ * THE DEVOPS CASE, WHICH IS THE CASE.
+ *
+ * Every estate diagram in the wild is mostly brands. They were keywords for a while, which was
+ * the wrong shape: DBML does not have a `PostgresTable`, it has `Table` and a setting. So the
+ * keyword is the ROLE and `type` is the BRAND, and the vocabulary a reader learns went from 73
+ * words back to 31.
+ */
+describe('a brand is a setting, not a keyword', () => {
+  const draw = (line: string) => compileArch(
+    { '/d': `---\ndiagram_type: arch\n---\n\n${line}` },
+    '/d',
+  );
+
+  it('keeps the role and the brand as two separate facts', () => {
+    const { model, diagnostics } = draw("Proxy lb1 [name: \"ha 1\", type: 'haproxy']");
+    expect(diagnostics).toEqual([]);
+
+    const lb = model.elements.get('lb1');
+    expect(isNode(lb) && lb).toMatchObject({ kind: 'Proxy', type: 'haproxy', label: 'ha 1' });
+  });
+
+  /**
+   * The point of keeping both. A drawing can be asked which of its boxes are databases, which
+   * it could not be when the box simply said `Postgres` and the role had been thrown away.
+   */
+  it('can still be asked which boxes are databases, whatever vendor they run', () => {
+    const { model } = draw([
+      "Database users_db [type: 'postgres']",
+      "Database events [type: 'mongodb']",
+      "Cache sessions [type: 'redis']",
+      "Proxy lb [type: 'haproxy']",
+    ].join('\n'));
+
+    const databases = [...model.elements.values()].filter(isNode).filter((n) => n.kind === 'Database');
+    expect(databases.map((n) => n.id)).toEqual(['users_db', 'events']);
+    expect(databases.map((n) => n.type)).toEqual(['postgres', 'mongodb']);
+  });
+
+  /**
+   * The spelling problem evaporated with the keywords. `pg`, `postgres` and `postgresql` were
+   * going to be three keywords each; they are already one alias table in the icon pack.
+   */
+  it('resolves the spellings people type through the pack aliases', () => {
+    for (const [typed, resolved] of [['pg', 'postgres'], ['postgresql', 'postgres'],
+      ['mongo', 'mongodb'], ['k8s', 'kubernetes'], ['elasticsearch', 'elastic']]) {
+      const { model, diagnostics } = draw(`Database d [type: '${typed}']`);
+      expect(diagnostics, typed).toEqual([]);
+      expect(isNode(model.elements.get('d')) && model.elements.get('d')).toMatchObject({ type: resolved });
+    }
+  });
+
+  it('draws a devops estate out of roles, with no vocabulary at all', () => {
+    const { model, diagnostics } = draw([
+      "CDN        edge     [type: 'cloudflare']",
+      "Proxy      lb       [type: 'haproxy']",
+      "Container  api      [type: 'docker']",
+      "Database   main     [type: 'postgres']",
+      "Cache      sessions [type: 'redis']",
+      "Monitoring metrics  [type: 'prometheus']",
+      'Link: edge > lb',
+      'Link: lb > api',
+      'Link: api > main',
+    ].join('\n'));
+
+    expect(diagnostics).toEqual([]);
+    expect([...model.elements.values()].filter(isNode).map((n) => n.type))
+      .toEqual(['cloudflare', 'haproxy', 'docker', 'postgres', 'redis', 'prometheus']);
+  });
+
+  /**
+   * Anyone who wrote the brand as a keyword gets told where it went, not "declare it", which
+   * would send them off to write a `Kind` line for something the language already handles.
+   */
+  it('tells a brand used as a keyword which setting it belongs in', () => {
+    const { diagnostics } = draw('Postgres users_db');
+    expect(diagnostics.map((d) => d.code)).toEqual(['unknown-kind']);
+    expect(diagnostics[0].message).toContain("Database name [type: 'postgres']");
+  });
+
+  it('still suggests the near role for a word that is neither', () => {
+    const { diagnostics } = draw('Databse d');
+    expect(diagnostics[0].message).toContain('Database');
+    expect(suggestKind('Zarf')).toContain('Kind Zarf');
+  });
+
+  it('warns on a type nobody can draw, and keeps the box', () => {
+    const { model, diagnostics } = draw("Database d [type: 'postgress']");
+    expect(diagnostics.map((d) => d.code)).toEqual(['unknown-type']);
+    expect(diagnostics[0].message).toContain('postgres');
+    expect(isNode(model.elements.get('d')) && model.elements.get('d')).toMatchObject({ type: null });
+  });
+
+  /**
+   * THE ANSWER TO "a brand the pack has never drawn". It is the same setting: no second word
+   * to learn, and nothing else about the declaration changes.
+   */
+  it('takes a URL in the same slot, for a brand the pack has never drawn', () => {
+    const { model, diagnostics } = draw("Database d [type: 'https://example.com/acme.svg']");
+    expect(diagnostics).toEqual([]);
+    expect(isNode(model.elements.get('d')) && model.elements.get('d'))
+      .toMatchObject({ type: null, image: 'https://example.com/acme.svg' });
+  });
+
+  it('refuses a scheme that would execute, in that slot too', () => {
+    const { diagnostics } = draw("Database d [type: 'javascript:alert(1)']");
+    expect(diagnostics.map((d) => d.code)).toEqual(['bad-image']);
+  });
+
+  it('leaves the pack for what only a pack can do', () => {
+    const { model, diagnostics } = compileArch(EXAMPLE_FILES, EXAMPLE_ENTRY);
+    expect(diagnostics).toEqual([]);
+
+    const declared = [...model.kinds.values()].filter((k) => !k.builtin).map((k) => k.name);
+    expect(declared.sort()).toEqual(['Firewall', 'Lakehouse']);
+    // one overrules a built-in role, the other names a role the built-ins lack
+    expect(model.kinds.get('Firewall')?.color).toBe('#c0453a');
+    expect(model.kinds.get('Lakehouse')?.builtin).toBe(false);
+  });
+
+  it('has 31 roles and no brands among them', () => {
+    expect(Object.keys(BUILTIN_KINDS)).toHaveLength(31);
+    for (const brand of ['Postgres', 'Mongo', 'Redis', 'HAProxy', 'Docker', 'Kubernetes']) {
+      expect(BUILTIN_KINDS[brand], brand).toBeUndefined();
+    }
+  });
+});
+
+/**
+ * A PICTURE GOES IN THE SLOT THAT ALREADY NAMES THE MARK.
+ *
+ * There is no `image` setting and there should not be one: an element's picture is its
+ * `type`, a kind's is its `icon`, and which you write is decided by what you are describing
+ * rather than by whether you have a name or a URL in hand.
+ */
+describe('a picture, in the slot that already names the mark', () => {
+  const draw = (body: string) => compileArch(
+    { '/d': `---\ndiagram_type: arch\n---\n\n${body}` },
+    '/d',
+  );
+  const pictureOf = (model: NetworkModel, id: string): string | null => {
+    const element = model.elements.get(id);
+    return isNode(element) ? element.image : null;
+  };
+
+  it('takes a URL where a kind names its mark', () => {
+    const { model, diagnostics } = draw([
+      "Kind Vendor [icon: 'https://example.com/vendor.svg']",
+      'Vendor billing',
+    ].join('\n'));
+    expect(diagnostics).toEqual([]);
+    expect(model.kinds.get('Vendor')?.image).toBe('https://example.com/vendor.svg');
+    // the mark falls back to a box, so a failed fetch still leaves something to draw
+    expect(model.kinds.get('Vendor')?.icon).toBe('box');
+  });
+
+  it('takes a data URI as readily as a URL', () => {
+    const { diagnostics, model } = draw("Database d [type: 'data:image/png;base64,iVBORw0KGgo=']");
+    expect(diagnostics).toEqual([]);
+    expect(pictureOf(model, 'd')).toContain('data:image/png');
+  });
+
+  /**
+   * NOT A FORMALITY. The string becomes an `href` inside an SVG in somebody else's page, and
+   * a `javascript:` href there executes. The author of a diagram is not always the person
+   * opening it: a file arrives in a pull request, a document is shared from another team.
+   */
+  it('refuses a scheme that would execute, or break on a TLS page, in both slots', () => {
+    for (const bad of ['javascript:alert(1)', 'http://example.com/a.png', 'file:///etc/passwd',
+      'data:text/html,<script>']) {
+      const onType = draw(`Database d [type: '${bad}']`);
+      expect(pictureOf(onType.model, 'd'), bad).toBe(null);
+      expect(onType.diagnostics.map((d) => d.code), bad).toEqual(['bad-image']);
+
+      const onKind = draw(`Kind Vendor [icon: '${bad}']\nVendor v`);
+      expect(onKind.model.kinds.get('Vendor')?.image, bad).toBe(null);
+      expect(onKind.diagnostics.map((d) => d.code), bad).toEqual(['bad-image']);
+    }
+  });
+
+  it('lets an element overrule the picture its kind carries', () => {
+    const { model, diagnostics } = draw([
+      "Kind Vendor [icon: 'https://example.com/vendor.svg']",
+      'Vendor a',
+      "Vendor b [type: 'https://example.com/other.svg']",
+    ].join('\n'));
+    expect(diagnostics).toEqual([]);
+    expect(pictureOf(model, 'a')).toBe(null);
+    expect(model.kinds.get('Vendor')?.image).toBe('https://example.com/vendor.svg');
+    expect(pictureOf(model, 'b')).toBe('https://example.com/other.svg');
+  });
+
+  it('has no image setting at all, which is the point', () => {
+    const { model, diagnostics } = draw("Database d [image: 'https://example.com/a.svg']");
+    expect(diagnostics).toEqual([]);
+    expect(pictureOf(model, 'd')).toBe(null);
+    // it survives as a free-form property, the way any unknown setting does
+    expect(model.elements.get('d')?.settings.image).toBe('https://example.com/a.svg');
+  });
+});
+
+/**
+ * A KIND WORD SITS WHERE `Table` SITS, so it behaves the way `Table` behaves.
+ *
+ * DBML matches every keyword on `value.toLowerCase()`. This dialect did not, and the result
+ * was the worst kind of inconsistency: `database api` reported that `database` is not a kind,
+ * while `Database api` on the next line worked. Nothing in the language explained why.
+ */
+describe('a kind word is case-insensitive, because Table is', () => {
+  const draw = (line: string) => compileArch(
+    { '/d': `---\ndiagram_type: arch\n---\n${line}` },
+    '/d',
+  );
+
+  it('takes any casing of a built-in word', () => {
+    for (const spelling of ['Database', 'database', 'DATABASE', 'DataBase']) {
+      expect(draw(`${spelling} a`).diagnostics, spelling).toEqual([]);
+    }
+    for (const spelling of ['LoadBalancer', 'loadbalancer', 'LOADBALANCER']) {
+      expect(draw(`${spelling} a`).diagnostics, spelling).toEqual([]);
+    }
+    for (const spelling of ['Cache', 'cache', 'CACHE']) {
+      expect(draw(`${spelling} a`).diagnostics, spelling).toEqual([]);
+    }
+  });
+
+  /**
+   * The author's casing is NOT kept. Everything downstream looks a kind up by name — the
+   * renderer's icon, a tooltip, a host reading the model — and two spellings of one word
+   * would be two kinds to all of them.
+   */
+  it('records the canonical spelling, whatever was typed', () => {
+    const { model } = draw('loadbalancer a');
+    expect(isNode(model.elements.get('a')) && model.elements.get('a')).toMatchObject({ kind: 'LoadBalancer' });
+    expect(model.kinds.get('LoadBalancer')?.icon).toBe('balancer');
+  });
+
+  it('refuses a reserved word in any casing, the way it refuses the capital one', () => {
+    for (const spelling of ['Group', 'group', 'GROUP', 'note', 'link']) {
+      const { diagnostics } = draw(`Kind ${spelling} [icon: box]`);
+      expect(diagnostics.map((d) => d.code), spelling).toEqual(['reserved-kind']);
+    }
+  });
+
+  /**
+   * Overruling a built-in is what a pack is for, and it has to work however the author spells
+   * it. One entry per word, not two differing only in case.
+   */
+  it('overrules a built-in word declared in another case, instead of sitting beside it', () => {
+    const { model, diagnostics } = compileArch({
+      '/d': [
+        "---", 'diagram_type: arch', "---",
+        "Kind database [icon: database, color: '#c0453a']",
+        'Database a',
+      ].join('\n'),
+    }, '/d');
+
+    expect(diagnostics).toEqual([]);
+    const entries = [...model.kinds.values()].filter((k) => k.name.toLowerCase() === 'database');
+    expect(entries).toHaveLength(1);
+    expect(entries[0].color).toBe('#c0453a');
+    expect(isNode(model.elements.get('a')) && model.elements.get('a')).toMatchObject({ kind: 'database' });
+  });
+
+  it('has no two built-in words differing only in case, which would make the table ambiguous', () => {
+    const lowered = Object.keys(BUILTIN_KINDS).map((name) => name.toLowerCase());
+    expect(new Set(lowered).size).toBe(lowered.length);
+  });
+});
+
+/**
+ * ROUTING A DOCUMENT BEFORE PARSING IT.
+ *
+ * A host holding a string has to answer one question first: database schema, or architecture
+ * diagram? The two want different parser options, a different module list and a different
+ * renderer, so the answer must arrive BEFORE any of those are chosen. That is possible only
+ * because the marker is in front matter: the block is fenced, it is first, and reading it is a
+ * regular expression over the head of a string.
+ */
+describe('the marker chooses the pipeline, which is why it is in front matter', () => {
+  const ARCH = "---\ndiagram_type: arch\n---\n\nPostgres main\nRedis cache";
+  const SCHEMA = "Project p {\n  database_type: 'PostgreSQL'\n}\n\nTable users {\n  id int [pk]\n}";
+
+  it('reads the type off a raw string, with no lexer and no parser', () => {
+    expect(diagramTypeOf(ARCH)).toBe('arch');
+    expect(diagramTypeOf(SCHEMA)).toBeNull();
+    expect(isArchitectureSource(ARCH)).toBe(true);
+    expect(isArchitectureSource(SCHEMA)).toBe(false);
+  });
+
+  it('never throws, so routing cannot fail on anything a person can type', () => {
+    for (const nonsense of ['', '---', '---\n', '--- \n---', '{{{', '\u0000', '---\nx\n---',
+      'a'.repeat(50000), '---\ndiagram_type\n---', '---\n: arch\n---']) {
+      expect(() => diagramTypeOf(nonsense)).not.toThrow();
+    }
+    expect(diagramTypeOf('---\ndiagram_type\n---')).toBeNull();
+    expect(diagramTypeOf('---\n: arch\n---')).toBeNull();
+  });
+
+  it('only counts a fenced block at the very top', () => {
+    expect(diagramTypeOf('Server a\n\n---\ndiagram_type: arch\n---')).toBeNull();
+    expect(diagramTypeOf('// a comment\n---\ndiagram_type: arch\n---')).toBeNull();
+    expect(diagramTypeOf('\n\n---\ndiagram_type: arch\n---\nServer a')).toBe('arch');
+    expect(diagramTypeOf('---\r\ndiagram_type: arch\r\n---\r\nServer a')).toBe('arch');
+  });
+
+  it('takes a quoted value and any casing of the two spellings', () => {
+    expect(diagramTypeOf("---\ndiagram_type: 'arch'\n---")).toBe('arch');
+    expect(diagramTypeOf('---\ndiagram_type: "architecture"\n---')).toBe('architecture');
+    for (const spelling of ['arch', 'Arch', 'ARCH', 'architecture', 'Architecture']) {
+      expect(isArchDiagramType(spelling), spelling).toBe(true);
+    }
+    for (const other of ['database', 'dbml', '', null, undefined, 'archive']) {
+      expect(isArchDiagramType(other as string), String(other)).toBe(false);
+    }
+  });
+
+  /**
+   * THE INVARIANT THAT MATTERS. The cheap scan routes the document and the compiler reads the
+   * same block properly a moment later. If the two ever disagree, a file is sent to one
+   * pipeline and then describes itself as the other, and the symptom is a blank canvas nobody
+   * can explain.
+   */
+  it('agrees with what the compiler reads out of the same block, on every sample', () => {
+    const samples: Record<string, string> = {
+      inline: INLINE_FILE, self: SELF_FILE, book: BOOK_FILE, main: EXAMPLE_FILES[EXAMPLE_ENTRY],
+    };
+    for (const [name, source] of Object.entries(samples)) {
+      const scanned = scanFrontMatter(source);
+      const { model } = compileArch({ '/d.arch.dbml': source }, '/d.arch.dbml');
+      for (const [key, value] of Object.entries(scanned)) {
+        expect(model.frontMatter[key], `${name}.${key}`).toBe(value);
+      }
+      expect(diagramTypeOf(source), name).toBe(
+        compileArch({ '/d.arch.dbml': source }, '/d.arch.dbml').diagramType,
+      );
+    }
+  });
+
+  it('routes every sample this package ships to the architecture compiler', () => {
+    for (const source of [INLINE_FILE, SELF_FILE, BOOK_FILE, EXAMPLE_FILES[EXAMPLE_ENTRY]]) {
+      expect(isArchitectureSource(source)).toBe(true);
+    }
+  });
+});
+
+/**
+ * A VERSION IS A STRING THAT HAPPENS TO BE DIGITS.
+ *
+ * `numberOf` called `Number()` on any literal it found, so `engine_version: '16.3'` arrived
+ * as the number 16.3 and `'16.30'` arrived as 16.3 as well. Harmless on a drawing; fatal to
+ * anything generating configuration out of the model, where a version, a zero-padded zone and
+ * an account id are all strings made of digits.
+ */
+describe('quotes mean what they say', () => {
+  const settingsOf = (line: string): Record<string, unknown> => {
+    const { model, diagnostics } = compileArch(
+      { '/d': `---\ndiagram_type: arch\n---\n\nDatabase d [${line}]` },
+      '/d',
+    );
+    expect(diagnostics).toEqual([]);
+    return model.elements.get('d')?.settings ?? {};
+  };
+
+  it('keeps a quoted value a string, however numeric it looks', () => {
+    expect(settingsOf("engine_version: '16.3'")).toEqual({ engine_version: '16.3' });
+    expect(settingsOf("engine_version: '16.30'")).toEqual({ engine_version: '16.30' });
+    expect(settingsOf("zone: '01'")).toEqual({ zone: '01' });
+    expect(settingsOf("account: '0123456789'")).toEqual({ account: '0123456789' });
+  });
+
+  it('still reads a bare number as a number', () => {
+    expect(settingsOf('allocated_storage: 100')).toEqual({ allocated_storage: 100 });
+    expect(settingsOf('ratio: 0.5')).toEqual({ ratio: 0.5 });
+  });
+
+  it('keeps a bare word a word, and a bare flag true', () => {
+    expect(settingsOf('provider: aws')).toEqual({ provider: 'aws' });
+    expect(settingsOf('multi_az')).toEqual({ multi_az: true });
+  });
+
+  /**
+   * Everything an infrastructure tool would want already parses, on elements, on links and on
+   * containers, with no change to the grammar at all. Whether any of it should be there is a
+   * separate question; that it survives is what makes the question worth asking.
+   */
+  it('carries free-form settings through to the model, wherever they are written', () => {
+    const { model, diagnostics } = compileArch({
+      '/d': [
+        '---', 'diagram_type: arch', '---', '',
+        "Database pg [type: 'postgres', region: 'ap-southeast-1', instance_class: 'db.t3.medium']",
+        "Server api [type: 'docker']",
+        "Link: api > pg [proto: TCP, port: 5432]",
+        "Group vpc [name: 'Production', cidr: '10.0.0.0/16'] { api pg }",
+        'Metadata pg {',
+        '  tf_module \'modules/rds\'',
+        '}',
+      ].join('\n'),
+    }, '/d');
+
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('pg')?.settings).toMatchObject({
+      region: 'ap-southeast-1', instance_class: 'db.t3.medium',
+    });
+    expect(model.links[0].settings).toMatchObject({ proto: 'TCP', port: 5432 });
+    expect(model.elements.get('vpc')?.settings).toMatchObject({ cidr: '10.0.0.0/16' });
+    expect(model.elements.get('pg')?.meta).toMatchObject({ tf_module: 'modules/rds' });
   });
 });

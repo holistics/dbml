@@ -4,6 +4,9 @@ export {
 export type { ArchDiagnostic, ArchResult, Severity } from './compile.js';
 export { BUILTIN_KINDS, RESERVED, suggestIcon } from './vocabulary.js';
 export {
+  ARCH_TYPES, diagramTypeOf, isArchDiagramType, isArchitectureSource, scanFrontMatter,
+} from './frontmatter.js';
+export {
   ICON_ALIAS, ICON_NAMES, isIconName, resolveIcon,
 } from './icons.js';
 export * from './model.js';

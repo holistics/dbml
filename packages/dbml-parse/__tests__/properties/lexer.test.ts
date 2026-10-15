@@ -411,3 +411,45 @@ describe('[property] lexer - negative tests', () => {
     );
   });
 });
+
+/**
+ * A NUMBER MUST NOT EAT THE CHARACTER AFTER IT.
+ *
+ * `numericLiteralOrIdentifier` had a branch for "the number runs to the end of the file" that
+ * tested the POSITION and not the CHARACTER, so when the last character of a document was a
+ * terminator it was consumed into the number. `Table t [note: 100]` lexed as a single
+ * NUMERIC_LITERAL spelling `100]`, the bracket never reached the parser, and the reported
+ * error was "Expect a closing bracket ']'" pointing at a bracket that is plainly there.
+ *
+ * DBML never reached it because a DBML element always has a body, so `]` is never the last
+ * character of a file. It took a dialect with bodyless elements, where `Table t [note: 100]`
+ * is a whole document, to make it reachable.
+ */
+describe('[regression] a number at the end of a document', () => {
+  const kinds = (source: string): string[] =>
+    lex(source).getValue().map((token) => token.kind).filter((kind) => kind !== SyntaxTokenKind.EOF);
+
+  const values = (source: string): string[] =>
+    lex(source).getValue().map((token) => token.value).filter(Boolean);
+
+  it('stops at a terminator that happens to be the last character', () => {
+    for (const terminator of [']', '}', ')', ',']) {
+      const source = `x: 100${terminator}`;
+      expect(values(source), source).toContain('100');
+      expect(values(source), source).toContain(terminator);
+      expect(values(source), source).not.toContain(`100${terminator}`);
+    }
+  });
+
+  it('still reads a number that really does end the document', () => {
+    for (const source of ['100', 'x: 100', '0.5', '1e3', 'x: 42']) {
+      expect(values(source), source).toContain(source.endsWith('42') ? '42' : source.split(' ').pop());
+    }
+    expect(kinds('100')).toEqual([SyntaxTokenKind.NUMERIC_LITERAL]);
+  });
+
+  it('is unaffected by what follows when the document does not end there', () => {
+    expect(values('x: 100]\n')).toContain('100');
+    expect(values('x: 100]\n')).toContain(']');
+  });
+});
