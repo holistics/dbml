@@ -80,4 +80,41 @@ describe('@dbml/connector', () => {
       await client.end();
     }
   });
+
+  test('postgres keeps array column defaults that are not an ARRAY[...] list', async () => {
+    const testDir = path.join(__dirname, 'connectors', 'postgres');
+    const { connection } = JSON.parse(fs.readFileSync(path.join(testDir, 'connection.json'), 'utf-8'));
+    const schema = `dbml_array_default_${Math.random().toString(16).slice(2)}`;
+    const client = new Client({ connectionString: connection });
+
+    await client.connect();
+    try {
+      await client.query(`CREATE SCHEMA "${schema}"`);
+      await client.query(`
+        CREATE TABLE "${schema}".t (
+          literal_col varchar[] DEFAULT '{full_name,date_of_birth}',
+          empty_literal_col text[] DEFAULT '{}',
+          int_literal_col integer[] DEFAULT '{1,2}',
+          empty_array_col text[] DEFAULT ARRAY[]::text[],
+          function_col integer[] DEFAULT array_fill(0, ARRAY[3]),
+          array_col text[] DEFAULT ARRAY['a', 'b']
+        );
+      `);
+
+      const schemaJson = await connector.fetchSchemaJson(`${connection}?schemas=${schema}`, 'postgres');
+      const dbdefaults = Object.fromEntries(schemaJson.fields[`${schema}.t`].map(({ name, dbdefault }) => [name, dbdefault]));
+
+      expect(dbdefaults).toEqual({
+        literal_col: { type: 'string', value: '{full_name,date_of_birth}' },
+        empty_literal_col: { type: 'string', value: '{}' },
+        int_literal_col: { type: 'string', value: '{1,2}' },
+        empty_array_col: { type: 'expression', value: 'ARRAY[]::text[]' },
+        function_col: { type: 'expression', value: 'array_fill(0, ARRAY[3])' },
+        array_col: { type: 'expression', value: 'ARRAY[\'a\',  \'b\']' },
+      });
+    } finally {
+      await client.query(`DROP SCHEMA IF EXISTS "${schema}" CASCADE`);
+      await client.end();
+    }
+  });
 });
