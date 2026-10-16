@@ -23,7 +23,7 @@ export default defineConfig({
       ],
       output: {
         preserveModules: true, /// preserve module structure instead of bundling everything in 1 file to enable file-based tree-shaking
-        preserveModulesRoot: 'src',
+        preserveModulesRoot: path.resolve(__dirname, 'src'),
       },
     },
   },

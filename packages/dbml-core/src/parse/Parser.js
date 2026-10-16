@@ -8,7 +8,7 @@ import mssqlParser from './deprecated/mssqlParser.cjs';
 import mysqlParser from './deprecated/mysqlParser.cjs';
 import postgresParser from './deprecated/postgresParser.cjs';
 import schemarbParser from './deprecated/schemarbParser.cjs';
-import { CompilerError } from './error';
+import { CompilerDiagnostics } from './error';
 
 class Parser {
   constructor () {
@@ -50,7 +50,7 @@ class Parser {
     const compiler = new Compiler(layout);
 
     const diags = convertDbmlParserError(compiler.parse.errors(DEFAULT_ENTRY));
-    if (diags.length > 0) throw CompilerError.create(diags);
+    if (diags.length > 0) throw CompilerDiagnostics.create(diags);
 
     return compiler.parse.rawDb(DEFAULT_ENTRY);
   }
@@ -120,7 +120,7 @@ class Parser {
     entrypoint = typeof entrypoint === 'string' ? Filepath.from(entrypoint) : entrypoint;
     const result = this.DBMLCompiler.interpretFile(entrypoint);
     const diags = convertDbmlParserError(result.getErrors());
-    if (diags.length > 0) throw CompilerError.create(diags);
+    if (diags.length > 0) throw CompilerDiagnostics.create(diags);
 
     return Parser.parseJSONToDatabase(result.getValue() || {});
   }
@@ -198,7 +198,7 @@ class Parser {
       const schema = Parser.parseJSONToDatabase(rawDatabase, { overrideCardinality });
       return schema;
     } catch (diags) {
-      throw CompilerError.create(diags);
+      throw CompilerDiagnostics.create(diags);
     }
   }
 }

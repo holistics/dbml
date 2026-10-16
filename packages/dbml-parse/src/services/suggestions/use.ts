@@ -1,16 +1,23 @@
 import Compiler from '@/compiler';
+import { type DbmlProjectLayout } from '@/compiler/projectLayout/layout';
 import { Filepath } from '@/core/types/filepath';
 import { ImportKind } from '@/core/types/symbol';
 import { UNHANDLED } from '@/core/types/module';
 import {
-  UseDeclarationNode, UseSpecifierListNode, UseSpecifierNode, WildcardNode,
+  UseDeclarationNode,
+  UseSpecifierListNode,
+  UseSpecifierNode,
+  WildcardNode,
 } from '@/core/types/nodes';
 import { SymbolKind, UseSymbol } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
 import { extractVariableFromExpression } from '@/core/utils/expression';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 import {
-  noSuggestions, pickCompletionItemKind, prependSpace, shouldPrependSpace,
+  noSuggestions,
+  pickCompletionItemKind,
+  prependSpace,
+  shouldPrependSpace,
 } from '@/services/suggestions/utils';
 import {
   type CompletionItem,
@@ -20,8 +27,11 @@ import {
   type TextModel,
 } from '@/services/types';
 import { getEditorRange } from '../utils';
-import { uniqBy } from 'lodash-es';
-import { DBML_EXT } from '@/constants';
+
+export interface SuggestUseCompletionOptions {
+  // Maximum directory depth for specifier-mode file listing (default: 2)
+  fileListDepth?: number;
+}
 
 // Use-declaration completions. Returns null if cursor not inside a use statement.
 export function suggestUseCompletion (
@@ -30,11 +40,24 @@ export function suggestUseCompletion (
   offset: number,
   bOcToken: SyntaxToken | undefined,
   model: TextModel,
+  options: SuggestUseCompletionOptions = {},
 ): CompletionList | null {
   const ast = compiler.parse.ast(filepath);
   for (const node of ast.body) {
-    if (node instanceof UseDeclarationNode && offset >= node.start && offset <= node.fullEnd) {
-      return suggestInUseDeclaration(compiler, filepath, offset, node, model, bOcToken);
+    if (
+      node instanceof UseDeclarationNode
+      && offset >= node.start
+      && offset <= node.fullEnd
+    ) {
+      return suggestInUseDeclaration(
+        compiler,
+        filepath,
+        offset,
+        node,
+        model,
+        bOcToken,
+        options,
+      );
     }
   }
   return null;
@@ -47,10 +70,18 @@ function suggestInUseDeclaration (
   useDecl: UseDeclarationNode,
   model: TextModel,
   bOcToken: SyntaxToken | undefined,
+  options: SuggestUseCompletionOptions,
 ): CompletionList {
   // Inside importPath string -> filepath completions
   if (useDecl.importPath && isOffsetWithinSpan(offset, useDecl.importPath)) {
-    return suggestUseFilepath(compiler, filepath, useDecl.importPath, model, useDecl);
+    return suggestUseFilepath(
+      compiler,
+      filepath,
+      useDecl.importPath,
+      model,
+      useDecl,
+      options,
+    );
   }
 
   // After closing quote of importPath -> no suggestions
@@ -60,7 +91,14 @@ function suggestInUseDeclaration (
 
   // After `from` but no importPath yet -> filepath completions
   if (useDecl.fromKeyword && offset > useDecl.fromKeyword.end) {
-    return suggestUseFilepath(compiler, filepath, undefined, model, useDecl);
+    return suggestUseFilepath(
+      compiler,
+      filepath,
+      undefined,
+      model,
+      useDecl,
+      options,
+    );
   }
 
   // Inside specifier list
@@ -68,9 +106,18 @@ function suggestInUseDeclaration (
     // No openBrace -> cursor before specifier list (e.g. `use |`)
     if (!useDecl.specifiers.openBrace) {
       const res = suggestUseSpecifierStart();
-      return shouldPrependSpace(useDecl.useKeyword, offset) ? prependSpace(res) : res;
+      return shouldPrependSpace(useDecl.useKeyword, offset)
+        ? prependSpace(res)
+        : res;
     }
-    return suggestInUseSpecifierList(compiler, filepath, offset, useDecl.specifiers, useDecl.importPath, bOcToken);
+    return suggestInUseSpecifierList(
+      compiler,
+      filepath,
+      offset,
+      useDecl.specifiers,
+      useDecl.importPath,
+      bOcToken,
+    );
   }
 
   // After `*` wildcard -> nothing to suggest
@@ -80,7 +127,9 @@ function suggestInUseDeclaration (
 
   // After `use`/`reuse`, before specifiers
   const res = suggestUseSpecifierStart();
-  return shouldPrependSpace(useDecl.useKeyword, offset) ? prependSpace(res) : res;
+  return shouldPrependSpace(useDecl.useKeyword, offset)
+    ? prependSpace(res)
+    : res;
 }
 
 function suggestInUseSpecifierList (
@@ -92,13 +141,20 @@ function suggestInUseSpecifierList (
   bOcToken: SyntaxToken | undefined,
 ): CompletionList {
   for (const spec of specList.specifiers) {
-    const inSpan = !Number.isNaN(spec.start) && offset >= spec.start && offset <= spec.end;
-    const bOcIsSpec = bOcToken === spec.importKind || bOcToken === spec.asKeyword;
+    const inSpan =
+      !Number.isNaN(spec.start) && offset >= spec.start && offset <= spec.end;
+    const bOcIsSpec =
+      bOcToken === spec.importKind || bOcToken === spec.asKeyword;
     if (inSpan || bOcIsSpec) {
       if (spec.importKind && offset > spec.importKind.end) {
         const symbolKind = spec.getSymbolKind();
         if (symbolKind !== undefined && symbolKind !== SymbolKind.Schema) {
-          return suggestUseElementNames(compiler, filepath, importPath, symbolKind);
+          return suggestUseElementNames(
+            compiler,
+            filepath,
+            importPath,
+            symbolKind,
+          );
         }
       }
       return suggestImportKinds();
@@ -127,7 +183,10 @@ function suggestUseElementNames (
   symbolKind: SymbolKind,
 ): CompletionList {
   if (!importPath) return noSuggestions();
-  const targetFilepath = compiler.layout.resolveFileSpecifier(currentFilepath, importPath.value);
+  const targetFilepath = compiler.layout.resolveFileSpecifier(
+    currentFilepath,
+    importPath.value,
+  );
   if (!targetFilepath) return noSuggestions();
 
   const usable = compiler.usableMembers(targetFilepath).getFiltered(UNHANDLED);
@@ -137,7 +196,8 @@ function suggestUseElementNames (
 
   // Collect from schema members (which resolves reuse chains)
   for (const schema of usable.schemaMembers) {
-    const schemaMembers = compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
+    const schemaMembers =
+      compiler.symbolMembers(schema).getFiltered(UNHANDLED) ?? [];
     for (const member of schemaMembers) {
       if (member.kind !== symbolKind) continue;
       // Only suggest symbols that can be imported (reused, not use-only)
@@ -153,9 +213,7 @@ function suggestUseElementNames (
   }
 
   return {
-    suggestions: [
-      ...names,
-    ].map((name) => ({
+    suggestions: [...names].map((name) => ({
       label: name,
       insertText: name,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
@@ -188,27 +246,27 @@ function suggestUseSpecifierStart (): CompletionList {
   };
 }
 
-// Suggest direct-child subpaths. Files matching all specifiers sort first.
+// Suggest import paths. Two modes:
+// - Filepath browse mode (user types /, ./, ../): browse via listDirectory, insert specifier on file select
+// - Specifier mode (anything else, e.g. @id): list reachable files, map to specifier, filter by prefix
 function suggestUseFilepath (
   compiler: Compiler,
   currentFilepath: Filepath,
   importPath: SyntaxToken | undefined,
   model: TextModel,
   useDeclaration: UseDeclarationNode,
+  { fileListDepth = 2 }: SuggestUseCompletionOptions,
 ): CompletionList {
-  const currentDir = currentFilepath.dirname;
-
-  // Default to `./` so direct-children slicing lines up with
-  // `asImportPath`'s output when the user hasn't started the string yet.
-  const existingIncompleteImportPath = importPath ? importPath.value : './';
+  // Default to empty string so all specifiers/paths pass the prefix filter
+  // when the user hasn't started the string yet.
+  const existingIncompleteImportPath = importPath ? importPath.value : '';
   // If the import path hasn't been typed out, we need to quote it
   const shouldInsertQuoteToImportPath = importPath === undefined;
 
-  // Target range between quotes so replacement preserves them.
-  let existingImportPathRange: any;
+  let range: any;
   if (importPath) {
     const tokenRange = getEditorRange(model, importPath);
-    existingImportPathRange = {
+    range = {
       startLineNumber: tokenRange.startLineNumber,
       startColumn: tokenRange.startColumn + 1,
       endLineNumber: tokenRange.endLineNumber,
@@ -216,63 +274,150 @@ function suggestUseFilepath (
     };
   }
 
-  const pathToCompletionItem = new Map<string, CompletionItem>();
-  // Folders containing a matching file sort first.
-  const childContainsMatch = new Map<string, boolean>();
+  const requiredSymbols = extractRequiredSymbols(useDeclaration);
+  const items = new Map<string, CompletionItem>();
+  const bestMatches = new Set<string>();
 
-  // Scan all reachable files
-  const allFilepaths = uniqBy(compiler.layout.getEntrypoints().flatMap((f) => [
-    ...compiler.reachableFiles(f),
-  ]), (p) => p.intern());
-  for (const filepath of allFilepaths) {
-    if (filepath.equals(currentFilepath)) continue; // Do not suggest current filepath
+  const isPathBrowse =
+    existingIncompleteImportPath.startsWith('/')
+    || existingIncompleteImportPath.startsWith('./')
+    || existingIncompleteImportPath.startsWith('../');
+  if (isPathBrowse) {
+    for (const { label, entry } of listDirectoryEntries(
+      compiler,
+      currentFilepath,
+      existingIncompleteImportPath,
+    )) {
+      const isDir = compiler.layout.isDirectory(entry);
+      const fileSpecifier = isDir
+        ? undefined
+        : compiler.layout.getFileSpecifierInfo(currentFilepath, entry);
+      if (!isDir && fileSpecifier === undefined) continue;
 
-    let relativePathToCurrentDir = filepath.relativeTo(currentDir);
-    if (relativePathToCurrentDir.endsWith(DBML_EXT)) relativePathToCurrentDir = relativePathToCurrentDir.slice(0, -DBML_EXT.length); // slice off `.dbml` postfix to allow conciseness
-    if (!relativePathToCurrentDir.startsWith('.')) relativePathToCurrentDir = `./${relativePathToCurrentDir}`;
+      if (
+        !isDir
+        && doesFileProvideAllSpecifiers(compiler, entry, requiredSymbols)
+      )
+        bestMatches.add(label);
 
-    if (existingIncompleteImportPath && !relativePathToCurrentDir.startsWith(existingIncompleteImportPath)) continue;
+      const insertValue = fileSpecifier?.specifier ?? label;
+      items.set(label, {
+        label: fileSpecifier?.label ?? label,
+        detail: fileSpecifier?.detail,
+        insertText: shouldInsertQuoteToImportPath
+          ? `'${insertValue}'`
+          : insertValue,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
+        sortText: `${isDir ? '2' : '3'}${label}`,
+        range,
+      });
+    }
+  } else {
+    // Specifier mode: collect all files by traversing directories up to fileListDepth levels
+    const allFilepaths = listFilesRecursive(compiler.layout, Filepath.from('/'), fileListDepth);
 
-    // Take next segment only - deeper entries collapse onto their folder.
-    const tail = relativePathToCurrentDir.slice(existingIncompleteImportPath.length);
-    const childLabel = `${existingIncompleteImportPath}${tail.split('/')[0]}`;
+    for (const filepath of allFilepaths) {
+      if (filepath.equals(currentFilepath)) continue;
 
-    // Ask layout so symlinks resolve correctly.
-    const childAbsolute = Filepath.resolve(currentDir, childLabel);
-    const isDir = compiler.layout.isDirectory(childAbsolute);
+      const fileSpecifier = compiler.layout.getFileSpecifierInfo(
+        currentFilepath,
+        filepath,
+      );
+      if (
+        fileSpecifier === undefined
+        || !fileSpecifier.specifier.startsWith(existingIncompleteImportPath)
+      )
+        continue;
 
-    const requiredSymbols = extractRequiredSymbols(useDeclaration);
-    const fileMatches = fileProvidesAllSpecifiers(compiler, filepath, requiredSymbols);
-    if (fileMatches) childContainsMatch.set(childLabel, true);
+      const { specifier, label: specifierLabel, detail } = fileSpecifier;
+      if (doesFileProvideAllSpecifiers(compiler, filepath, requiredSymbols))
+        bestMatches.add(specifier);
+      if (items.has(specifier)) continue;
 
-    if (pathToCompletionItem.has(childLabel)) continue;
-
-    const insertText = shouldInsertQuoteToImportPath ? `'${childLabel}'` : childLabel;
-    pathToCompletionItem.set(childLabel, {
-      label: childLabel,
-      insertText,
-      insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-      kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
-      // Sort: best-match file (0) -> best-match folder (1) -> folder (2) -> file (3).
-      sortText: `${isDir ? '2' : '3'}${childLabel}`,
-      range: existingImportPathRange,
-    });
+      const insertText = shouldInsertQuoteToImportPath
+        ? `'${specifier}'`
+        : specifier;
+      items.set(specifier, {
+        label: specifierLabel ?? specifier,
+        detail,
+        insertText,
+        insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
+        kind: CompletionItemKind.File,
+        sortText: `3${specifier}`,
+        range,
+      });
+    }
   }
 
-  for (const [
-    label,
-    item,
-  ] of pathToCompletionItem) {
-    if (!childContainsMatch.get(label)) continue;
+  // Promote best matches to top
+  for (const [label, item] of items) {
+    if (!bestMatches.has(label)) continue;
     item.sortText = `${item.kind === CompletionItemKind.File ? '0' : '1'}${label}`;
-    item.detail = 'best match';
+    item.detail = item.detail ? `${item.detail} · best match` : 'best match';
   }
 
-  return {
-    suggestions: [
-      ...pathToCompletionItem.values(),
-    ],
-  };
+  return { suggestions: [...items.values()] };
+}
+
+// List directory entries matching the user's partial path
+function listDirectoryEntries (
+  compiler: Compiler,
+  currentFilepath: Filepath,
+  partialPath: string,
+): Array<{ label: string; entry: Filepath }> {
+  // Resolve relative prefix (./foo, ../bar) to absolute
+  let resolvedPrefix: string;
+  if (partialPath.startsWith('/')) {
+    resolvedPrefix = partialPath;
+  } else {
+    resolvedPrefix = Filepath.resolve(
+      currentFilepath.dirname,
+      partialPath,
+    ).fsPath;
+    if (partialPath.endsWith('/') && !resolvedPrefix.endsWith('/'))
+      resolvedPrefix += '/';
+  }
+
+  const dirPath = resolvedPrefix.endsWith('/')
+    ? resolvedPrefix
+    : Filepath.from(resolvedPrefix).dirname;
+
+  const results: Array<{ label: string; entry: Filepath }> = [];
+
+  for (const entry of compiler.layout.listDirectory(Filepath.from(dirPath))) {
+    if (entry.equals(currentFilepath)) continue;
+    if (!entry.fsPath.startsWith(resolvedPrefix)) continue;
+
+    // Convert absolute path back to the user's relative partial path
+    const basename = entry.fsPath.slice(resolvedPrefix.length);
+    const isDirectory = compiler.layout.isDirectory(entry);
+    const label = isDirectory
+      ? `${partialPath}${basename}/`
+      : `${partialPath}${basename}`;
+
+    results.push({ label, entry });
+  }
+
+  return results;
+}
+
+// Collect all files reachable from dirPath up to `depth` directory levels.
+function listFilesRecursive (
+  layout: DbmlProjectLayout,
+  dirPath: Filepath,
+  depth: number,
+): Filepath[] {
+  if (depth <= 0) return [];
+  const result: Filepath[] = [];
+  for (const entry of layout.listDirectory(dirPath)) {
+    if (layout.isFile(entry)) {
+      result.push(entry);
+    } else if (layout.isDirectory(entry)) {
+      result.push(...listFilesRecursive(layout, entry, depth - 1));
+    }
+  }
+  return result;
 }
 
 // Extract { name, kind } pairs from the use declaration's specifier list.
@@ -296,16 +441,15 @@ function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{
 }
 
 // True when file provides every required specifier by name + kind.
-function fileProvidesAllSpecifiers (
+function doesFileProvideAllSpecifiers (
   compiler: Compiler,
   filepath: Filepath,
-  required: Array<{ name: string;
-    kind: SymbolKind; }>,
+  required: Array<{ name: string; kind: SymbolKind }>,
 ): boolean {
   if (required.length === 0) return false;
   const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
   if (!usable) return false;
-  return required.every(({
-    name, kind,
-  }) => usable.nonSchemaMembers.some((m) => m.kind === kind && m.name === name));
+  return required.every(({ name, kind }) =>
+    usable.nonSchemaMembers.some((m) => m.kind === kind && m.name === name),
+  );
 }

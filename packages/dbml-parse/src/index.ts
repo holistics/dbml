@@ -36,7 +36,11 @@ export {
   // Error types
   CompileError,
   CompileErrorCode,
+  CompileWarning,
+  CompileInfo,
 } from '@/core/types/errors';
+
+export type { Diagnostic, DiagnosticQuickFix } from '@/services/diagnostics/provider';
 
 export type {
   // Position interface

@@ -1,6 +1,6 @@
 import { flatten, last } from 'lodash-es';
 import { ParseTreeListener, ParseTreeWalker } from 'antlr4';
-import { CompilerError } from '../../../error';
+import { CompilerDiagnostics } from '../../../error';
 import OracleSqlParserVisitor from '../../parsers/oraclesql/OracleSqlParserVisitor';
 import OracleSqlParser from '../../parsers/oraclesql/OracleSqlParser';
 import {
@@ -83,8 +83,8 @@ const processIndexExpression = (e) => {
   };
 };
 
-const createCompilerError = (ctx, message) => {
-  return CompilerError.create([{
+const createCompilerDiagnostics = (ctx, message) => {
+  return CompilerDiagnostics.create([{
     message,
     location: {
       start: {
@@ -299,7 +299,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   visitColumn_definition (ctx) {
     const name = last(ctx.column_name().accept(this));
     const type = ctx.datatype()?.accept(this) || ctx.type_name()?.accept(this);
-    if (!type) throw createCompilerError(ctx, 'Importing a column definition without a type is not supported');
+    if (!type) throw createCompilerDiagnostics(ctx, 'Importing a column definition without a type is not supported');
     const constraints = (ctx.inline_constraint() || []).map((c) => c.accept(this)).filter(Boolean);
     if (ctx.DEFAULT()) {
       const value = ctx.expression().accept(this);
@@ -521,7 +521,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //  : REFERENCES tableview_name paren_column_list? (ON DELETE (CASCADE | SET NULL_))?
   //  ;
   visitReferences_clause (ctx) {
-    if (!ctx.paren_column_list()) throw createCompilerError(ctx.tableview_name(), 'Importing a foreign key with implicit referenced columns is not supported');
+    if (!ctx.paren_column_list()) throw createCompilerDiagnostics(ctx.tableview_name(), 'Importing a foreign key with implicit referenced columns is not supported');
     const names = ctx.tableview_name().accept(this);
     const refTableName = last(names);
     const refSchemaName = names.length > 1 ? names[names.length - 2] : undefined;
@@ -631,7 +631,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
     const table = findTable(this.data.tables, schemaName, tableName);
     if (!table) {
-      throw createCompilerError(ctx.tableview_name(), `Table "${tableName}" not found`);
+      throw createCompilerDiagnostics(ctx.tableview_name(), `Table "${tableName}" not found`);
     }
     const note = ctx.quoted_string().accept(this);
     table.note = { value: note };
@@ -650,11 +650,11 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
 
     const table = findTable(this.data.tables, schemaName, tableName);
     if (!table) {
-      throw createCompilerError(ctx.column_name(), `Table "${tableName}" not found`);
+      throw createCompilerDiagnostics(ctx.column_name(), `Table "${tableName}" not found`);
     }
     const field = findColumn(table, columnName);
     if (!field) {
-      throw createCompilerError(ctx.column_name(), `Column "${columnName}" not found in table "${tableName}"`);
+      throw createCompilerDiagnostics(ctx.column_name(), `Column "${columnName}" not found in table "${tableName}"`);
     }
     const note = ctx.quoted_string().accept(this);
     field.note = { value: note };
@@ -670,7 +670,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
     const schemaName = names.length > 1 ? names[names.length - 2] : undefined;
     const table = findTable(this.data.tables, schemaName, tableName);
     if (!table) {
-      throw createCompilerError(ctx.tableview_name(), `Table "${tableName}" not found`);
+      throw createCompilerDiagnostics(ctx.tableview_name(), `Table "${tableName}" not found`);
     }
 
     function handleConstraint (column, constraint) {
@@ -728,7 +728,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
       res.forEach((r) => {
         const column = r.column !== null ? findColumn(table, r.column) : null;
         if (r.column !== null && !column) {
-          throw createCompilerError(ctx.tableview_name(), `Column "${r.column}" not found on Table "${tableName}"`);
+          throw createCompilerDiagnostics(ctx.tableview_name(), `Column "${r.column}" not found on Table "${tableName}"`);
         }
         r.constraints.forEach((c) => handleConstraint.bind(this)(column, c));
       });
@@ -832,7 +832,7 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
 
     const table = findTable(this.data.tables, schemaName, tableName);
     if (!table) {
-      throw createCompilerError(ctx.table_index_clause(), `Table ${tableName} not found`);
+      throw createCompilerDiagnostics(ctx.table_index_clause(), `Table ${tableName} not found`);
     }
 
     if (!table.indexes) table.indexes = [];
