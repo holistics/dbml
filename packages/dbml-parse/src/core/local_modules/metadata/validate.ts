@@ -8,7 +8,7 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { isValidMetadataValue, isValidName } from '@/core/utils/validate';
+import { isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
 import { MetadataTargetKind } from '@/core/types/symbol';
 import { COLUMN_METADATA_FIELDS, TABLE_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
@@ -16,6 +16,7 @@ import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/int
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
 import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/utils';
 import { getMetadataTargetKind } from './utils';
+import { extractMetadataValue } from '@/core/utils/interpret';
 
 const METADATA_FIELDS_BY_KIND: Record<MetadataTargetKind, MetadataFieldRegistry<any, any>> = {
   [MetadataTargetKind.Table]: TABLE_METADATA_FIELDS,
@@ -151,11 +152,11 @@ export default class MetadataValidator {
       }
 
       // Only validate the value when a real callee is present. Missing callee is handled as `parse` phase
-      if (!isValidMetadataValue(sub.body?.callee)) {
+      if (extractMetadataValue(sub.body?.callee) === undefined) {
         return [
           new CompileError(
             CompileErrorCode.INVALID_METADATA_FIELD,
-            'A Metadata field value must be a string or a color literal',
+            'A Metadata field value must be a string, a color literal, a number literal, or a boolean literal',
             sub.body ?? sub,
           ),
         ];

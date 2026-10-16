@@ -46,10 +46,10 @@ export default class MetadataInterpreter {
         : undefined;
 
       const value = extractMetadataValue(valueNode);
-      if (!value) continue;
+      if (value === undefined) continue;
 
       this.values[key] = {
-        value: key === 'note' ? normalizeNote(value) : value,
+        value: (key === 'note' && typeof value === 'string') ? normalizeNote(value) : value,
         token: getTokenPosition(stmt),
       };
     }
