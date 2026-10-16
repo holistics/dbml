@@ -54,7 +54,9 @@ const getFieldType = (data_type: string, udt_name: string, character_maximum_len
 };
 
 const getDbdefault = (data_type: string, column_default: string, default_type: DefaultType): DefaultInfo => {
-  if (data_type === 'ARRAY') {
+  // Only a non-empty ARRAY[...] constructor is rewritten here. Other array defaults, such as
+  // '{a,b}'::text[], ARRAY[]::text[] or a function call, are handled below like any other default
+  if (data_type === 'ARRAY' && column_default.startsWith('ARRAY[') && !column_default.startsWith('ARRAY[]')) {
     const values = column_default.slice(6, -1).split(',').map((value) => {
       return value.split('::')[0];
     });
