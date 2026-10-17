@@ -1005,84 +1005,75 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L13:C4, L15:C7]",
-                      "snippet": "1\r\n    + 2\r\n    + 3"
+                      "id": "node@<function-application>@1@[L13:C4, L13:C5]",
+                      "snippet": "1"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<infix-expression>@@[L13:C4, L15:C7]",
-                          "snippet": "1\r\n    + 2\r\n    + 3"
+                          "id": "node@<primary-expression>@1@[L13:C4, L13:C5]",
+                          "snippet": "1"
                         },
                         "children": {
-                          "leftExpression": {
+                          "expression": {
                             "context": {
-                              "id": "node@<infix-expression>@@[L13:C4, L14:C7]",
-                              "snippet": "1\r\n    + 2"
+                              "id": "node@<literal>@1@[L13:C4, L13:C5]",
+                              "snippet": "1"
                             },
                             "children": {
-                              "leftExpression": {
+                              "literal": {
                                 "context": {
-                                  "id": "node@<primary-expression>@1@[L13:C4, L13:C5]",
+                                  "id": "token@<number>@1@[L13:C4, L13:C5]",
                                   "snippet": "1"
                                 },
-                                "children": {
-                                  "expression": {
-                                    "context": {
-                                      "id": "node@<literal>@1@[L13:C4, L13:C5]",
-                                      "snippet": "1"
-                                    },
-                                    "children": {
-                                      "literal": {
-                                        "context": {
-                                          "id": "token@<number>@1@[L13:C4, L13:C5]",
-                                          "snippet": "1"
-                                        },
-                                        "leadingTrivia": "\n    ",
-                                        "trailingTrivia": "\n",
-                                        "value": "1"
-                                      }
-                                    },
-                                    "fullEnd": 152,
-                                    "fullStart": 144
-                                  }
-                                },
-                                "fullEnd": 152,
-                                "fullStart": 144
-                              },
-                              "op": {
+                                "leadingTrivia": "\n    ",
+                                "trailingTrivia": "\n",
+                                "value": "1"
+                              }
+                            },
+                            "fullEnd": 152,
+                            "fullStart": 144
+                          }
+                        },
+                        "fullEnd": 152,
+                        "fullStart": 144
+                      }
+                    },
+                    "fullEnd": 152,
+                    "fullStart": 144
+                  },
+                  {
+                    "context": {
+                      "id": "node@<function-application>@@[L14:C4, L14:C7]",
+                      "snippet": "+ 2"
+                    },
+                    "children": {
+                      "callee": {
+                        "context": {
+                          "id": "node@<prefix-expression>@@[L14:C4, L14:C7]",
+                          "snippet": "+ 2"
+                        },
+                        "children": {
+                          "expression": {
+                            "context": {
+                              "id": "node@<primary-expression>@2@[L14:C6, L14:C7]",
+                              "snippet": "2"
+                            },
+                            "children": {
+                              "expression": {
                                 "context": {
-                                  "id": "token@<op>@+@[L14:C4, L14:C5]",
-                                  "snippet": "+"
-                                },
-                                "leadingTrivia": "    ",
-                                "trailingTrivia": " ",
-                                "value": "+"
-                              },
-                              "rightExpression": {
-                                "context": {
-                                  "id": "node@<primary-expression>@2@[L14:C6, L14:C7]",
+                                  "id": "node@<literal>@2@[L14:C6, L14:C7]",
                                   "snippet": "2"
                                 },
                                 "children": {
-                                  "expression": {
+                                  "literal": {
                                     "context": {
-                                      "id": "node@<literal>@2@[L14:C6, L14:C7]",
+                                      "id": "token@<number>@2@[L14:C6, L14:C7]",
                                       "snippet": "2"
                                     },
-                                    "children": {
-                                      "literal": {
-                                        "context": {
-                                          "id": "token@<number>@2@[L14:C6, L14:C7]",
-                                          "snippet": "2"
-                                        },
-                                        "leadingTrivia": "",
-                                        "trailingTrivia": "\n",
-                                        "value": "2"
-                                      }
-                                    },
-                                    "fullEnd": 161,
-                                    "fullStart": 158
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": "\n",
+                                    "value": "2"
                                   }
                                 },
                                 "fullEnd": 161,
@@ -1090,18 +1081,38 @@
                               }
                             },
                             "fullEnd": 161,
-                            "fullStart": 144
+                            "fullStart": 158
                           },
                           "op": {
                             "context": {
-                              "id": "token@<op>@+@[L15:C4, L15:C5]",
+                              "id": "token@<op>@+@[L14:C4, L14:C5]",
                               "snippet": "+"
                             },
                             "leadingTrivia": "    ",
                             "trailingTrivia": " ",
                             "value": "+"
-                          },
-                          "rightExpression": {
+                          }
+                        },
+                        "fullEnd": 161,
+                        "fullStart": 152
+                      }
+                    },
+                    "fullEnd": 161,
+                    "fullStart": 152
+                  },
+                  {
+                    "context": {
+                      "id": "node@<function-application>@@[L15:C4, L15:C7]",
+                      "snippet": "+ 3"
+                    },
+                    "children": {
+                      "callee": {
+                        "context": {
+                          "id": "node@<prefix-expression>@@[L15:C4, L15:C7]",
+                          "snippet": "+ 3"
+                        },
+                        "children": {
+                          "expression": {
                             "context": {
                               "id": "node@<primary-expression>@3@[L15:C6, L15:C7]",
                               "snippet": "3"
@@ -1129,14 +1140,23 @@
                             },
                             "fullEnd": 170,
                             "fullStart": 167
+                          },
+                          "op": {
+                            "context": {
+                              "id": "token@<op>@+@[L15:C4, L15:C5]",
+                              "snippet": "+"
+                            },
+                            "leadingTrivia": "    ",
+                            "trailingTrivia": " ",
+                            "value": "+"
                           }
                         },
                         "fullEnd": 170,
-                        "fullStart": 144
+                        "fullStart": 161
                       }
                     },
                     "fullEnd": 170,
-                    "fullStart": 144
+                    "fullStart": 161
                   },
                   {
                     "context": {
@@ -2967,14 +2987,14 @@
                   },
                   {
                     "context": {
-                      "id": "node@<function-application>@@[L45:C4, L48:C14]",
-                      "snippet": "a != b + c...---++---+1"
+                      "id": "node@<function-application>@@[L45:C4, L45:C17]",
+                      "snippet": "a != b + c ()"
                     },
                     "children": {
                       "callee": {
                         "context": {
-                          "id": "node@<infix-expression>@@[L45:C4, L48:C14]",
-                          "snippet": "a != b + c...---++---+1"
+                          "id": "node@<infix-expression>@@[L45:C4, L45:C17]",
+                          "snippet": "a != b + c ()"
                         },
                         "children": {
                           "leftExpression": {
@@ -3017,291 +3037,264 @@
                           },
                           "rightExpression": {
                             "context": {
-                              "id": "node@<infix-expression>@@[L45:C9, L48:C14]",
-                              "snippet": "b + c ()\r\n...---++---+1"
+                              "id": "node@<infix-expression>@@[L45:C9, L45:C17]",
+                              "snippet": "b + c ()"
                             },
                             "children": {
                               "leftExpression": {
                                 "context": {
-                                  "id": "node@<infix-expression>@@[L45:C9, L47:C15]",
-                                  "snippet": "b + c ()\r\n...++----++-1"
+                                  "id": "node@<primary-expression>@b@[L45:C9, L45:C10]",
+                                  "snippet": "b"
                                 },
                                 "children": {
-                                  "leftExpression": {
+                                  "expression": {
                                     "context": {
-                                      "id": "node@<infix-expression>@@[L45:C9, L45:C17]",
-                                      "snippet": "b + c ()"
+                                      "id": "node@<variable>@b@[L45:C9, L45:C10]",
+                                      "snippet": "b"
                                     },
                                     "children": {
-                                      "leftExpression": {
+                                      "variable": {
                                         "context": {
-                                          "id": "node@<primary-expression>@b@[L45:C9, L45:C10]",
+                                          "id": "token@<identifier>@b@[L45:C9, L45:C10]",
                                           "snippet": "b"
-                                        },
-                                        "children": {
-                                          "expression": {
-                                            "context": {
-                                              "id": "node@<variable>@b@[L45:C9, L45:C10]",
-                                              "snippet": "b"
-                                            },
-                                            "children": {
-                                              "variable": {
-                                                "context": {
-                                                  "id": "token@<identifier>@b@[L45:C9, L45:C10]",
-                                                  "snippet": "b"
-                                                },
-                                                "leadingTrivia": "",
-                                                "trailingTrivia": " ",
-                                                "value": "b"
-                                              }
-                                            },
-                                            "fullEnd": 417,
-                                            "fullStart": 415
-                                          }
-                                        },
-                                        "fullEnd": 417,
-                                        "fullStart": 415
-                                      },
-                                      "op": {
-                                        "context": {
-                                          "id": "token@<op>@+@[L45:C11, L45:C12]",
-                                          "snippet": "+"
                                         },
                                         "leadingTrivia": "",
                                         "trailingTrivia": " ",
-                                        "value": "+"
-                                      },
-                                      "rightExpression": {
+                                        "value": "b"
+                                      }
+                                    },
+                                    "fullEnd": 417,
+                                    "fullStart": 415
+                                  }
+                                },
+                                "fullEnd": 417,
+                                "fullStart": 415
+                              },
+                              "op": {
+                                "context": {
+                                  "id": "token@<op>@+@[L45:C11, L45:C12]",
+                                  "snippet": "+"
+                                },
+                                "leadingTrivia": "",
+                                "trailingTrivia": " ",
+                                "value": "+"
+                              },
+                              "rightExpression": {
+                                "context": {
+                                  "id": "node@<call-expression>@@[L45:C13, L45:C17]",
+                                  "snippet": "c ()"
+                                },
+                                "children": {
+                                  "argumentList": {
+                                    "context": {
+                                      "id": "node@<tuple-expression>@@[L45:C15, L45:C17]",
+                                      "snippet": "()"
+                                    },
+                                    "children": {
+                                      "tupleCloseParen": {
                                         "context": {
-                                          "id": "node@<call-expression>@@[L45:C13, L45:C17]",
-                                          "snippet": "c ()"
+                                          "id": "token@<rparen>@)@[L45:C16, L45:C17]",
+                                          "snippet": ")"
                                         },
-                                        "children": {
-                                          "argumentList": {
-                                            "context": {
-                                              "id": "node@<tuple-expression>@@[L45:C15, L45:C17]",
-                                              "snippet": "()"
-                                            },
-                                            "children": {
-                                              "tupleCloseParen": {
-                                                "context": {
-                                                  "id": "token@<rparen>@)@[L45:C16, L45:C17]",
-                                                  "snippet": ")"
-                                                },
-                                                "leadingTrivia": "",
-                                                "trailingTrivia": "\n",
-                                                "value": ")"
-                                              },
-                                              "tupleOpenParen": {
-                                                "context": {
-                                                  "id": "token@<lparen>@(@[L45:C15, L45:C16]",
-                                                  "snippet": "("
-                                                },
-                                                "leadingTrivia": "",
-                                                "trailingTrivia": "",
-                                                "value": "("
-                                              }
-                                            },
-                                            "fullEnd": 425,
-                                            "fullStart": 421
-                                          },
-                                          "callee": {
-                                            "context": {
-                                              "id": "node@<primary-expression>@c@[L45:C13, L45:C14]",
-                                              "snippet": "c"
-                                            },
-                                            "children": {
-                                              "expression": {
-                                                "context": {
-                                                  "id": "node@<variable>@c@[L45:C13, L45:C14]",
-                                                  "snippet": "c"
-                                                },
-                                                "children": {
-                                                  "variable": {
-                                                    "context": {
-                                                      "id": "token@<identifier>@c@[L45:C13, L45:C14]",
-                                                      "snippet": "c"
-                                                    },
-                                                    "leadingTrivia": "",
-                                                    "trailingTrivia": " ",
-                                                    "value": "c"
-                                                  }
-                                                },
-                                                "fullEnd": 421,
-                                                "fullStart": 419
-                                              }
-                                            },
-                                            "fullEnd": 421,
-                                            "fullStart": 419
-                                          }
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "\n",
+                                        "value": ")"
+                                      },
+                                      "tupleOpenParen": {
+                                        "context": {
+                                          "id": "token@<lparen>@(@[L45:C15, L45:C16]",
+                                          "snippet": "("
                                         },
-                                        "fullEnd": 425,
-                                        "fullStart": 419
+                                        "leadingTrivia": "",
+                                        "trailingTrivia": "",
+                                        "value": "("
                                       }
                                     },
                                     "fullEnd": 425,
-                                    "fullStart": 415
+                                    "fullStart": 421
                                   },
-                                  "op": {
+                                  "callee": {
                                     "context": {
-                                      "id": "token@<op>@+@[L47:C4, L47:C5]",
-                                      "snippet": "+"
-                                    },
-                                    "leadingTrivia": "\n    ",
-                                    "trailingTrivia": "",
-                                    "value": "+"
-                                  },
-                                  "rightExpression": {
-                                    "context": {
-                                      "id": "node@<prefix-expression>@@[L47:C5, L47:C15]",
-                                      "snippet": "++----++-1"
+                                      "id": "node@<primary-expression>@c@[L45:C13, L45:C14]",
+                                      "snippet": "c"
                                     },
                                     "children": {
                                       "expression": {
                                         "context": {
-                                          "id": "node@<prefix-expression>@@[L47:C6, L47:C15]",
-                                          "snippet": "+----++-1"
+                                          "id": "node@<variable>@c@[L45:C13, L45:C14]",
+                                          "snippet": "c"
+                                        },
+                                        "children": {
+                                          "variable": {
+                                            "context": {
+                                              "id": "token@<identifier>@c@[L45:C13, L45:C14]",
+                                              "snippet": "c"
+                                            },
+                                            "leadingTrivia": "",
+                                            "trailingTrivia": " ",
+                                            "value": "c"
+                                          }
+                                        },
+                                        "fullEnd": 421,
+                                        "fullStart": 419
+                                      }
+                                    },
+                                    "fullEnd": 421,
+                                    "fullStart": 419
+                                  }
+                                },
+                                "fullEnd": 425,
+                                "fullStart": 419
+                              }
+                            },
+                            "fullEnd": 425,
+                            "fullStart": 415
+                          }
+                        },
+                        "fullEnd": 425,
+                        "fullStart": 405
+                      }
+                    },
+                    "fullEnd": 425,
+                    "fullStart": 405
+                  },
+                  {
+                    "context": {
+                      "id": "node@<function-application>@@[L47:C4, L47:C15]",
+                      "snippet": "+++----++-1"
+                    },
+                    "children": {
+                      "callee": {
+                        "context": {
+                          "id": "node@<prefix-expression>@@[L47:C4, L47:C15]",
+                          "snippet": "+++----++-1"
+                        },
+                        "children": {
+                          "expression": {
+                            "context": {
+                              "id": "node@<prefix-expression>@@[L47:C5, L47:C15]",
+                              "snippet": "++----++-1"
+                            },
+                            "children": {
+                              "expression": {
+                                "context": {
+                                  "id": "node@<prefix-expression>@@[L47:C6, L47:C15]",
+                                  "snippet": "+----++-1"
+                                },
+                                "children": {
+                                  "expression": {
+                                    "context": {
+                                      "id": "node@<prefix-expression>@@[L47:C7, L47:C15]",
+                                      "snippet": "----++-1"
+                                    },
+                                    "children": {
+                                      "expression": {
+                                        "context": {
+                                          "id": "node@<prefix-expression>@@[L47:C8, L47:C15]",
+                                          "snippet": "---++-1"
                                         },
                                         "children": {
                                           "expression": {
                                             "context": {
-                                              "id": "node@<prefix-expression>@@[L47:C7, L47:C15]",
-                                              "snippet": "----++-1"
+                                              "id": "node@<prefix-expression>@@[L47:C9, L47:C15]",
+                                              "snippet": "--++-1"
                                             },
                                             "children": {
                                               "expression": {
                                                 "context": {
-                                                  "id": "node@<prefix-expression>@@[L47:C8, L47:C15]",
-                                                  "snippet": "---++-1"
+                                                  "id": "node@<prefix-expression>@@[L47:C10, L47:C15]",
+                                                  "snippet": "-++-1"
                                                 },
                                                 "children": {
                                                   "expression": {
                                                     "context": {
-                                                      "id": "node@<prefix-expression>@@[L47:C9, L47:C15]",
-                                                      "snippet": "--++-1"
+                                                      "id": "node@<prefix-expression>@@[L47:C11, L47:C15]",
+                                                      "snippet": "++-1"
                                                     },
                                                     "children": {
                                                       "expression": {
                                                         "context": {
-                                                          "id": "node@<prefix-expression>@@[L47:C10, L47:C15]",
-                                                          "snippet": "-++-1"
+                                                          "id": "node@<prefix-expression>@@[L47:C12, L47:C15]",
+                                                          "snippet": "+-1"
                                                         },
                                                         "children": {
                                                           "expression": {
                                                             "context": {
-                                                              "id": "node@<prefix-expression>@@[L47:C11, L47:C15]",
-                                                              "snippet": "++-1"
+                                                              "id": "node@<prefix-expression>@@[L47:C13, L47:C15]",
+                                                              "snippet": "-1"
                                                             },
                                                             "children": {
                                                               "expression": {
                                                                 "context": {
-                                                                  "id": "node@<prefix-expression>@@[L47:C12, L47:C15]",
-                                                                  "snippet": "+-1"
+                                                                  "id": "node@<primary-expression>@1@[L47:C14, L47:C15]",
+                                                                  "snippet": "1"
                                                                 },
                                                                 "children": {
                                                                   "expression": {
                                                                     "context": {
-                                                                      "id": "node@<prefix-expression>@@[L47:C13, L47:C15]",
-                                                                      "snippet": "-1"
+                                                                      "id": "node@<literal>@1@[L47:C14, L47:C15]",
+                                                                      "snippet": "1"
                                                                     },
                                                                     "children": {
-                                                                      "expression": {
+                                                                      "literal": {
                                                                         "context": {
-                                                                          "id": "node@<primary-expression>@1@[L47:C14, L47:C15]",
+                                                                          "id": "token@<number>@1@[L47:C14, L47:C15]",
                                                                           "snippet": "1"
                                                                         },
-                                                                        "children": {
-                                                                          "expression": {
-                                                                            "context": {
-                                                                              "id": "node@<literal>@1@[L47:C14, L47:C15]",
-                                                                              "snippet": "1"
-                                                                            },
-                                                                            "children": {
-                                                                              "literal": {
-                                                                                "context": {
-                                                                                  "id": "token@<number>@1@[L47:C14, L47:C15]",
-                                                                                  "snippet": "1"
-                                                                                },
-                                                                                "leadingTrivia": "",
-                                                                                "trailingTrivia": "\n",
-                                                                                "value": "1"
-                                                                              }
-                                                                            },
-                                                                            "fullEnd": 444,
-                                                                            "fullStart": 441
-                                                                          }
-                                                                        },
-                                                                        "fullEnd": 444,
-                                                                        "fullStart": 441
-                                                                      },
-                                                                      "op": {
-                                                                        "context": {
-                                                                          "id": "token@<op>@-@[L47:C13, L47:C14]",
-                                                                          "snippet": "-"
-                                                                        },
                                                                         "leadingTrivia": "",
-                                                                        "trailingTrivia": "",
-                                                                        "value": "-"
+                                                                        "trailingTrivia": "\n",
+                                                                        "value": "1"
                                                                       }
                                                                     },
                                                                     "fullEnd": 444,
-                                                                    "fullStart": 440
-                                                                  },
-                                                                  "op": {
-                                                                    "context": {
-                                                                      "id": "token@<op>@+@[L47:C12, L47:C13]",
-                                                                      "snippet": "+"
-                                                                    },
-                                                                    "leadingTrivia": "",
-                                                                    "trailingTrivia": "",
-                                                                    "value": "+"
+                                                                    "fullStart": 441
                                                                   }
                                                                 },
                                                                 "fullEnd": 444,
-                                                                "fullStart": 439
+                                                                "fullStart": 441
                                                               },
                                                               "op": {
                                                                 "context": {
-                                                                  "id": "token@<op>@+@[L47:C11, L47:C12]",
-                                                                  "snippet": "+"
+                                                                  "id": "token@<op>@-@[L47:C13, L47:C14]",
+                                                                  "snippet": "-"
                                                                 },
                                                                 "leadingTrivia": "",
                                                                 "trailingTrivia": "",
-                                                                "value": "+"
+                                                                "value": "-"
                                                               }
                                                             },
                                                             "fullEnd": 444,
-                                                            "fullStart": 438
+                                                            "fullStart": 440
                                                           },
                                                           "op": {
                                                             "context": {
-                                                              "id": "token@<op>@-@[L47:C10, L47:C11]",
-                                                              "snippet": "-"
+                                                              "id": "token@<op>@+@[L47:C12, L47:C13]",
+                                                              "snippet": "+"
                                                             },
                                                             "leadingTrivia": "",
                                                             "trailingTrivia": "",
-                                                            "value": "-"
+                                                            "value": "+"
                                                           }
                                                         },
                                                         "fullEnd": 444,
-                                                        "fullStart": 437
+                                                        "fullStart": 439
                                                       },
                                                       "op": {
                                                         "context": {
-                                                          "id": "token@<op>@-@[L47:C9, L47:C10]",
-                                                          "snippet": "-"
+                                                          "id": "token@<op>@+@[L47:C11, L47:C12]",
+                                                          "snippet": "+"
                                                         },
                                                         "leadingTrivia": "",
                                                         "trailingTrivia": "",
-                                                        "value": "-"
+                                                        "value": "+"
                                                       }
                                                     },
                                                     "fullEnd": 444,
-                                                    "fullStart": 436
+                                                    "fullStart": 438
                                                   },
                                                   "op": {
                                                     "context": {
-                                                      "id": "token@<op>@-@[L47:C8, L47:C9]",
+                                                      "id": "token@<op>@-@[L47:C10, L47:C11]",
                                                       "snippet": "-"
                                                     },
                                                     "leadingTrivia": "",
@@ -3310,11 +3303,11 @@
                                                   }
                                                 },
                                                 "fullEnd": 444,
-                                                "fullStart": 435
+                                                "fullStart": 437
                                               },
                                               "op": {
                                                 "context": {
-                                                  "id": "token@<op>@-@[L47:C7, L47:C8]",
+                                                  "id": "token@<op>@-@[L47:C9, L47:C10]",
                                                   "snippet": "-"
                                                 },
                                                 "leadingTrivia": "",
@@ -3323,153 +3316,182 @@
                                               }
                                             },
                                             "fullEnd": 444,
-                                            "fullStart": 434
+                                            "fullStart": 436
                                           },
                                           "op": {
                                             "context": {
-                                              "id": "token@<op>@+@[L47:C6, L47:C7]",
-                                              "snippet": "+"
+                                              "id": "token@<op>@-@[L47:C8, L47:C9]",
+                                              "snippet": "-"
                                             },
                                             "leadingTrivia": "",
                                             "trailingTrivia": "",
-                                            "value": "+"
+                                            "value": "-"
                                           }
                                         },
                                         "fullEnd": 444,
-                                        "fullStart": 433
+                                        "fullStart": 435
                                       },
                                       "op": {
                                         "context": {
-                                          "id": "token@<op>@+@[L47:C5, L47:C6]",
-                                          "snippet": "+"
+                                          "id": "token@<op>@-@[L47:C7, L47:C8]",
+                                          "snippet": "-"
                                         },
                                         "leadingTrivia": "",
                                         "trailingTrivia": "",
-                                        "value": "+"
+                                        "value": "-"
                                       }
                                     },
                                     "fullEnd": 444,
-                                    "fullStart": 432
+                                    "fullStart": 434
+                                  },
+                                  "op": {
+                                    "context": {
+                                      "id": "token@<op>@+@[L47:C6, L47:C7]",
+                                      "snippet": "+"
+                                    },
+                                    "leadingTrivia": "",
+                                    "trailingTrivia": "",
+                                    "value": "+"
                                   }
                                 },
                                 "fullEnd": 444,
-                                "fullStart": 415
+                                "fullStart": 433
                               },
                               "op": {
                                 "context": {
-                                  "id": "token@<op>@-@[L48:C4, L48:C5]",
-                                  "snippet": "-"
+                                  "id": "token@<op>@+@[L47:C5, L47:C6]",
+                                  "snippet": "+"
                                 },
-                                "leadingTrivia": "    ",
+                                "leadingTrivia": "",
                                 "trailingTrivia": "",
-                                "value": "-"
-                              },
-                              "rightExpression": {
+                                "value": "+"
+                              }
+                            },
+                            "fullEnd": 444,
+                            "fullStart": 432
+                          },
+                          "op": {
+                            "context": {
+                              "id": "token@<op>@+@[L47:C4, L47:C5]",
+                              "snippet": "+"
+                            },
+                            "leadingTrivia": "\n    ",
+                            "trailingTrivia": "",
+                            "value": "+"
+                          }
+                        },
+                        "fullEnd": 444,
+                        "fullStart": 426
+                      }
+                    },
+                    "fullEnd": 444,
+                    "fullStart": 426
+                  },
+                  {
+                    "context": {
+                      "id": "node@<function-application>@@[L48:C4, L48:C14]",
+                      "snippet": "---++---+1"
+                    },
+                    "children": {
+                      "callee": {
+                        "context": {
+                          "id": "node@<prefix-expression>@@[L48:C4, L48:C14]",
+                          "snippet": "---++---+1"
+                        },
+                        "children": {
+                          "expression": {
+                            "context": {
+                              "id": "node@<prefix-expression>@@[L48:C5, L48:C14]",
+                              "snippet": "--++---+1"
+                            },
+                            "children": {
+                              "expression": {
                                 "context": {
-                                  "id": "node@<prefix-expression>@@[L48:C5, L48:C14]",
-                                  "snippet": "--++---+1"
+                                  "id": "node@<prefix-expression>@@[L48:C6, L48:C14]",
+                                  "snippet": "-++---+1"
                                 },
                                 "children": {
                                   "expression": {
                                     "context": {
-                                      "id": "node@<prefix-expression>@@[L48:C6, L48:C14]",
-                                      "snippet": "-++---+1"
+                                      "id": "node@<prefix-expression>@@[L48:C7, L48:C14]",
+                                      "snippet": "++---+1"
                                     },
                                     "children": {
                                       "expression": {
                                         "context": {
-                                          "id": "node@<prefix-expression>@@[L48:C7, L48:C14]",
-                                          "snippet": "++---+1"
+                                          "id": "node@<prefix-expression>@@[L48:C8, L48:C14]",
+                                          "snippet": "+---+1"
                                         },
                                         "children": {
                                           "expression": {
                                             "context": {
-                                              "id": "node@<prefix-expression>@@[L48:C8, L48:C14]",
-                                              "snippet": "+---+1"
+                                              "id": "node@<prefix-expression>@@[L48:C9, L48:C14]",
+                                              "snippet": "---+1"
                                             },
                                             "children": {
                                               "expression": {
                                                 "context": {
-                                                  "id": "node@<prefix-expression>@@[L48:C9, L48:C14]",
-                                                  "snippet": "---+1"
+                                                  "id": "node@<prefix-expression>@@[L48:C10, L48:C14]",
+                                                  "snippet": "--+1"
                                                 },
                                                 "children": {
                                                   "expression": {
                                                     "context": {
-                                                      "id": "node@<prefix-expression>@@[L48:C10, L48:C14]",
-                                                      "snippet": "--+1"
+                                                      "id": "node@<prefix-expression>@@[L48:C11, L48:C14]",
+                                                      "snippet": "-+1"
                                                     },
                                                     "children": {
                                                       "expression": {
                                                         "context": {
-                                                          "id": "node@<prefix-expression>@@[L48:C11, L48:C14]",
-                                                          "snippet": "-+1"
+                                                          "id": "node@<prefix-expression>@@[L48:C12, L48:C14]",
+                                                          "snippet": "+1"
                                                         },
                                                         "children": {
                                                           "expression": {
                                                             "context": {
-                                                              "id": "node@<prefix-expression>@@[L48:C12, L48:C14]",
-                                                              "snippet": "+1"
+                                                              "id": "node@<primary-expression>@1@[L48:C13, L48:C14]",
+                                                              "snippet": "1"
                                                             },
                                                             "children": {
                                                               "expression": {
                                                                 "context": {
-                                                                  "id": "node@<primary-expression>@1@[L48:C13, L48:C14]",
+                                                                  "id": "node@<literal>@1@[L48:C13, L48:C14]",
                                                                   "snippet": "1"
                                                                 },
                                                                 "children": {
-                                                                  "expression": {
+                                                                  "literal": {
                                                                     "context": {
-                                                                      "id": "node@<literal>@1@[L48:C13, L48:C14]",
+                                                                      "id": "token@<number>@1@[L48:C13, L48:C14]",
                                                                       "snippet": "1"
                                                                     },
-                                                                    "children": {
-                                                                      "literal": {
-                                                                        "context": {
-                                                                          "id": "token@<number>@1@[L48:C13, L48:C14]",
-                                                                          "snippet": "1"
-                                                                        },
-                                                                        "leadingTrivia": "",
-                                                                        "trailingTrivia": "\n",
-                                                                        "value": "1"
-                                                                      }
-                                                                    },
-                                                                    "fullEnd": 460,
-                                                                    "fullStart": 457
+                                                                    "leadingTrivia": "",
+                                                                    "trailingTrivia": "\n",
+                                                                    "value": "1"
                                                                   }
                                                                 },
                                                                 "fullEnd": 460,
                                                                 "fullStart": 457
-                                                              },
-                                                              "op": {
-                                                                "context": {
-                                                                  "id": "token@<op>@+@[L48:C12, L48:C13]",
-                                                                  "snippet": "+"
-                                                                },
-                                                                "leadingTrivia": "",
-                                                                "trailingTrivia": "",
-                                                                "value": "+"
                                                               }
                                                             },
                                                             "fullEnd": 460,
-                                                            "fullStart": 456
+                                                            "fullStart": 457
                                                           },
                                                           "op": {
                                                             "context": {
-                                                              "id": "token@<op>@-@[L48:C11, L48:C12]",
-                                                              "snippet": "-"
+                                                              "id": "token@<op>@+@[L48:C12, L48:C13]",
+                                                              "snippet": "+"
                                                             },
                                                             "leadingTrivia": "",
                                                             "trailingTrivia": "",
-                                                            "value": "-"
+                                                            "value": "+"
                                                           }
                                                         },
                                                         "fullEnd": 460,
-                                                        "fullStart": 455
+                                                        "fullStart": 456
                                                       },
                                                       "op": {
                                                         "context": {
-                                                          "id": "token@<op>@-@[L48:C10, L48:C11]",
+                                                          "id": "token@<op>@-@[L48:C11, L48:C12]",
                                                           "snippet": "-"
                                                         },
                                                         "leadingTrivia": "",
@@ -3478,11 +3500,11 @@
                                                       }
                                                     },
                                                     "fullEnd": 460,
-                                                    "fullStart": 454
+                                                    "fullStart": 455
                                                   },
                                                   "op": {
                                                     "context": {
-                                                      "id": "token@<op>@-@[L48:C9, L48:C10]",
+                                                      "id": "token@<op>@-@[L48:C10, L48:C11]",
                                                       "snippet": "-"
                                                     },
                                                     "leadingTrivia": "",
@@ -3491,24 +3513,24 @@
                                                   }
                                                 },
                                                 "fullEnd": 460,
-                                                "fullStart": 453
+                                                "fullStart": 454
                                               },
                                               "op": {
                                                 "context": {
-                                                  "id": "token@<op>@+@[L48:C8, L48:C9]",
-                                                  "snippet": "+"
+                                                  "id": "token@<op>@-@[L48:C9, L48:C10]",
+                                                  "snippet": "-"
                                                 },
                                                 "leadingTrivia": "",
                                                 "trailingTrivia": "",
-                                                "value": "+"
+                                                "value": "-"
                                               }
                                             },
                                             "fullEnd": 460,
-                                            "fullStart": 452
+                                            "fullStart": 453
                                           },
                                           "op": {
                                             "context": {
-                                              "id": "token@<op>@+@[L48:C7, L48:C8]",
+                                              "id": "token@<op>@+@[L48:C8, L48:C9]",
                                               "snippet": "+"
                                             },
                                             "leadingTrivia": "",
@@ -3517,24 +3539,24 @@
                                           }
                                         },
                                         "fullEnd": 460,
-                                        "fullStart": 451
+                                        "fullStart": 452
                                       },
                                       "op": {
                                         "context": {
-                                          "id": "token@<op>@-@[L48:C6, L48:C7]",
-                                          "snippet": "-"
+                                          "id": "token@<op>@+@[L48:C7, L48:C8]",
+                                          "snippet": "+"
                                         },
                                         "leadingTrivia": "",
                                         "trailingTrivia": "",
-                                        "value": "-"
+                                        "value": "+"
                                       }
                                     },
                                     "fullEnd": 460,
-                                    "fullStart": 450
+                                    "fullStart": 451
                                   },
                                   "op": {
                                     "context": {
-                                      "id": "token@<op>@-@[L48:C5, L48:C6]",
+                                      "id": "token@<op>@-@[L48:C6, L48:C7]",
                                       "snippet": "-"
                                     },
                                     "leadingTrivia": "",
@@ -3543,19 +3565,37 @@
                                   }
                                 },
                                 "fullEnd": 460,
-                                "fullStart": 449
+                                "fullStart": 450
+                              },
+                              "op": {
+                                "context": {
+                                  "id": "token@<op>@-@[L48:C5, L48:C6]",
+                                  "snippet": "-"
+                                },
+                                "leadingTrivia": "",
+                                "trailingTrivia": "",
+                                "value": "-"
                               }
                             },
                             "fullEnd": 460,
-                            "fullStart": 415
+                            "fullStart": 449
+                          },
+                          "op": {
+                            "context": {
+                              "id": "token@<op>@-@[L48:C4, L48:C5]",
+                              "snippet": "-"
+                            },
+                            "leadingTrivia": "    ",
+                            "trailingTrivia": "",
+                            "value": "-"
                           }
                         },
                         "fullEnd": 460,
-                        "fullStart": 405
+                        "fullStart": 444
                       }
                     },
                     "fullEnd": 460,
-                    "fullStart": 405
+                    "fullStart": 444
                   }
                 ]
               },
