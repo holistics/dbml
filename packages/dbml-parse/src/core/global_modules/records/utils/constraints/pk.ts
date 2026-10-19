@@ -24,7 +24,7 @@ import {
   toKeyedRows,
 } from './helper';
 
-// Validate primary key constraints for a table's records.
+// Validate primary key constraints for a table's records
 export function validatePrimaryKey (compiler: Compiler, tableSymbol: TableSymbol, recordBlock: SyntaxNode, record: TableRecord): CompileInfo[] {
   if (isEmpty(record.values)) return [];
 
@@ -35,8 +35,8 @@ export function validatePrimaryKey (compiler: Compiler, tableSymbol: TableSymbol
   );
 }
 
-// Validate a single PK constraint (single or composite) against all rows.
-// Returns warnings for missing columns, null values, and duplicates.
+// Validate a single PK constraint (single or composite) against all rows
+// Returns warnings for missing columns, null values, and duplicates
 function validatePkConstraint (
   compiler: Compiler,
   tableSymbol: TableSymbol,
@@ -76,8 +76,7 @@ function validatePkConstraint (
   ];
 }
 
-// Create warnings for rows that have NULL in PK columns.
-// Returns one warning per specified PK column per row.
+// Create warnings for rows that have NULL in PK columns, one warning per PK column per row
 function createNullErrors (
   compiler: Compiler,
   tableSymbol: TableSymbol,
@@ -93,8 +92,7 @@ function createNullErrors (
   );
 }
 
-// Find rows with duplicate PK values.
-// Returns warnings for each duplicate row.
+// Find rows with duplicate PK values, returns warnings for each duplicate row
 function findDuplicateErrors (
   compiler: Compiler,
   tableSymbol: TableSymbol,
@@ -115,8 +113,8 @@ function findDuplicateErrors (
   );
 }
 
-// Check if any PK columns are missing from the record column list.
-// Returns warnings if missing columns have no default or auto-increment.
+// Check if any PK columns are missing from the record column list
+// Returns warnings if missing columns have no default or auto-increment
 function checkMissingPkColumns (
   compiler: Compiler,
   tableSymbol: TableSymbol,
@@ -139,8 +137,7 @@ function checkMissingPkColumns (
     recordsPkMissing(compiler, recordBlock, { table: tableSymbol, columns: missingWithoutDefaultSymbols }));
 }
 
-// Collect all PK constraints for a table.
-// Returns an array of ColumnSymbol arrays: single-column PKs and composite PKs from indexes.
+// Collect all PK constraints for a table: single-column PKs and composite PKs from indexes
 function collectPkConstraints (tableSymbol: TableSymbol, compiler: Compiler): ColumnSymbol[][] {
   const columns = tableSymbol.mergedColumns(compiler);
   const columnSymbolMap = keyBy(columns, (c) => c.name ?? '');

@@ -23,7 +23,7 @@ import { getEditorRange } from '../utils';
 import { uniqBy } from 'lodash-es';
 import { DBML_EXT } from '@/constants';
 
-// Use-declaration completions. Returns null if cursor not inside a use statement.
+// Use-declaration completions, returns null if cursor is not inside a use statement
 export function suggestUseCompletion (
   compiler: Compiler,
   filepath: Filepath,
@@ -188,7 +188,7 @@ function suggestUseSpecifierStart (): CompletionList {
   };
 }
 
-// Suggest direct-child subpaths. Files matching all specifiers sort first.
+// Suggest direct-child subpaths, files matching all specifiers sort first
 function suggestUseFilepath (
   compiler: Compiler,
   currentFilepath: Filepath,
@@ -198,13 +198,12 @@ function suggestUseFilepath (
 ): CompletionList {
   const currentDir = currentFilepath.dirname;
 
-  // Default to `./` so direct-children slicing lines up with
-  // `asImportPath`'s output when the user hasn't started the string yet.
+  // Default to `./` for slicing when the user hasn't started typing a path
   const existingIncompleteImportPath = importPath ? importPath.value : './';
   // If the import path hasn't been typed out, we need to quote it
   const shouldInsertQuoteToImportPath = importPath === undefined;
 
-  // Target range between quotes so replacement preserves them.
+  // Target range between quotes so replacement preserves them
   let existingImportPathRange: any;
   if (importPath) {
     const tokenRange = getEditorRange(model, importPath);
@@ -217,7 +216,7 @@ function suggestUseFilepath (
   }
 
   const pathToCompletionItem = new Map<string, CompletionItem>();
-  // Folders containing a matching file sort first.
+  // Folders containing a matching file sort first
   const childContainsMatch = new Map<string, boolean>();
 
   // Scan all reachable files
@@ -233,11 +232,11 @@ function suggestUseFilepath (
 
     if (existingIncompleteImportPath && !relativePathToCurrentDir.startsWith(existingIncompleteImportPath)) continue;
 
-    // Take next segment only - deeper entries collapse onto their folder.
+    // Take next segment only, deeper entries collapse onto their folder
     const tail = relativePathToCurrentDir.slice(existingIncompleteImportPath.length);
     const childLabel = `${existingIncompleteImportPath}${tail.split('/')[0]}`;
 
-    // Ask layout so symlinks resolve correctly.
+    // Ask layout so symlinks resolve correctly
     const childAbsolute = Filepath.resolve(currentDir, childLabel);
     const isDir = compiler.layout.isDirectory(childAbsolute);
 
@@ -253,7 +252,7 @@ function suggestUseFilepath (
       insertText,
       insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
       kind: isDir ? CompletionItemKind.Folder : CompletionItemKind.File,
-      // Sort: best-match file (0) -> best-match folder (1) -> folder (2) -> file (3).
+      // Sort: best-match file (0) -> best-match folder (1) -> folder (2) -> file (3)
       sortText: `${isDir ? '2' : '3'}${childLabel}`,
       range: existingImportPathRange,
     });
@@ -275,7 +274,7 @@ function suggestUseFilepath (
   };
 }
 
-// Extract { name, kind } pairs from the use declaration's specifier list.
+// Extract { name, kind } pairs from the use declaration's specifier list
 function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{
   name: string;
   kind: SymbolKind;
@@ -295,7 +294,7 @@ function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{
   });
 }
 
-// True when file provides every required specifier by name + kind.
+// True when file provides every required specifier by name + kind
 function fileProvidesAllSpecifiers (
   compiler: Compiler,
   filepath: Filepath,

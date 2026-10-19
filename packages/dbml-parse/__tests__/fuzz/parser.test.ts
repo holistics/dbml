@@ -473,7 +473,7 @@ describe('[fuzz] parser - true binary fuzzing (unconstrained)', () => {
           maxLength: 1000,
         }),
         (bytes: Uint8Array) => {
-          // Convert bytes to string - may contain null bytes, control chars, etc.
+          // Convert bytes to string, may contain null bytes, control chars, etc
           const source = String.fromCharCode(...bytes);
 
           let didThrow = false;

@@ -4,7 +4,7 @@
 // use { table T } from './path'
 // ```
 // If we auto import table R from './path'
-// Then `use { table R } from './path'` should be merged into use T.
+// Then `use { table R } from './path'` should be merged into use T
 // Result:
 // ```
 // use {
@@ -73,7 +73,7 @@ export function scanExistingUses (
           kind = specifier.importKind?.value;
           name = extractVariableFromExpression(specifier.name);
         } else if (specifier.importKind) {
-          // Parse recovery: `use { User }` - "kind slot" holds the symbol name.
+          // Parse recovery: `use { User }` where the "kind slot" holds the symbol name
           name = specifier.importKind.value ?? undefined;
         }
 
@@ -134,7 +134,7 @@ export function mergeSymbolIntoUses (
   if (existingUseIndex !== -1) {
     const existingUse = existingUses[existingUseIndex];
 
-    // Duplicate - nothing to do. Surface no edit.
+    // Duplicate, nothing to do, surface no edit
     if (existingUse.specifiers.some((s) => s.name === symbolName)) {
       return {
         topInsert: '',
@@ -162,22 +162,21 @@ export function mergeSymbolIntoUses (
   };
 }
 
-// Render a multi-line use statement with an extra trailing blank line so it
-// cleanly separates from the element declaration that follows.
+// Render a multi-line use statement with an extra trailing blank line
+// to cleanly separate it from the element declaration that follows
 function buildUseStatement (specifiers: string[], sourceFileStr: string, lineEnd: string): string {
   const body = specifiers.map((s) => `  ${s}`).join(lineEnd);
   return `use {${lineEnd}${body}${lineEnd}} from '${sourceFileStr}'${lineEnd}${lineEnd}`;
 }
 
-// Extend a range so it consumes any trailing newline(s), so deleting it
-// removes the statement cleanly without leaving a blank line behind.
+// Extend a range so it consumes any trailing newlines, to avoid leaving a blank line behind
 function expandToFullLines (fileContent: string, start: number, end: number): {
   startOffset: number;
   endOffset: number;
 } {
-  // Pull the start back to the beginning of the line.
+  // Pull the start back to the beginning of the line
   const lineStart = fileContent.lastIndexOf('\n', start - 1) + 1;
-  // Eat the trailing line break so the surrounding blank line doesn't linger.
+  // Eat the trailing line break so the surrounding blank line doesn't linger
   let newEnd = end;
   while (newEnd < fileContent.length && (fileContent[newEnd] === ' ' || fileContent[newEnd] === '\t')) newEnd++;
   if (newEnd < fileContent.length && fileContent[newEnd] === '\r') newEnd++;

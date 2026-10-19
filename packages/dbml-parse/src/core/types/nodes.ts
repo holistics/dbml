@@ -185,8 +185,8 @@ export enum SyntaxNodeKind {
   WILDCARD = '<wildcard>',
 }
 
+// Root node of a DBML program containing top-level statements in source order
 // Form: (<element-declaration> | <use-declaration>)*
-// The root node of a DBML program containing top-level statements in source order.
 export class ProgramNode extends SyntaxNode {
   body: (UseDeclarationNode | ElementDeclarationNode)[];
 
@@ -375,15 +375,15 @@ export class UseSpecifierListNode extends SyntaxNode {
   }
 }
 
+// A declaration of a DBML element like Table, Ref, Enum, etc
 // Form: <type> [<target-kind>] [<name>] [as <alias>] [<attribute-list>] (: <body> | { <body> })
-// A declaration of a DBML element like Table, Ref, Enum, etc.
 // e.g. Table users { ... }
 // e.g. Ref: users.id > posts.user_id
 // e.g. Metadata Table public.users { owner: 'scott' }
 export class ElementDeclarationNode extends SyntaxNode {
   type?: SyntaxToken;
 
-  // Only set for a metadata block: the target-kind token (e.g. `Table`).
+  // Only set for a metadata block: the target-kind token (e.g. `Table`)
   targetKind?: SyntaxToken;
 
   name?: NormalExpressionNode;

@@ -71,9 +71,8 @@ describe('[example] multifile interpreter - inline ref on imported table carried
   // source.dbml: Table accounts { id int [pk] }
   //              Table users { id int [pk]; account_id int [ref: > accounts.id] }
   // consumer.dbml: use { table accounts } + use { table users }
-  // Inline refs on an imported table's columns must survive in the consumer's
-  // exported schema (the inline ref is part of the table definition, not a
-  // standalone Ref, so it travels with the table).
+  // Inline refs on imported table columns must survive in the consumer's exported schema
+  // inline refs travel with the table, not as standalone Ref
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table accounts {
@@ -108,8 +107,8 @@ use { table users } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - standalone Ref between two imported tables', () => {
-  // Consumer imports both tables and declares a standalone Ref between them.
-  // The Ref must appear in the consumer's exported schema.
+  // Consumer imports both tables and declares a standalone Ref between them
+  // The Ref must appear in the consumer's exported schema
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table users {
@@ -153,8 +152,7 @@ Ref: orders.user_id > users.id
 });
 
 describe('[example] multifile interpreter - Ref cardinality preserved across file boundary', () => {
-  // Verifies that the many-to-one cardinality (< and >) is faithfully preserved
-  // when the ref endpoints reference imported tables.
+  // Verifies that the many-to-one cardinality (< and >) is faithfully preserved when the ref endpoints reference imported tables
   const { compiler } = setupCompiler({
     '/tables.dbml': `
 Table teams {
@@ -196,9 +194,8 @@ Ref many_to_one: players.team_id > teams.id
 });
 
 describe('[example] multifile interpreter - refs with same logical endpoints via different aliases across files', () => {
-  // Two Ref declarations target the same pair of columns, but one uses the
-  // original table name and the other uses an alias. They are two distinct
-  // textual Refs - the system should include both in the exported schema.
+  // Two Ref declarations target the same pair of columns via different names
+  // they are two distinct textual Refs, both should be included in the exported schema
   //
   // Scenario:
   //   base.dbml:     Table users { id int [pk] }
@@ -285,8 +282,8 @@ Ref: orders.user_id > u.id
 });
 
 describe('[example] multifile interpreter - aliased table renamed in cross-file ref endpoints', () => {
-  // Ref is declared in the source file, not the consumer. The consumer imports
-  // both tables (one with alias). The cross-file ref endpoints must be rewritten.
+  // Ref is declared in the source file, not the consumer
+  // The consumer imports both tables (one with alias) and cross-file ref endpoints must be rewritten
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table users {
@@ -321,8 +318,8 @@ use { table orders } from './base.dbml'
 
 describe('[example] multifile interpreter - imported table with inline ref to unimported table', () => {
   // source.dbml defines users and orders with an inline ref: orders.user_id > users.id
-  // consumer imports ONLY orders (not users).
-  // The inline ref on orders.user_id references users which is not in scope.
+  // consumer imports ONLY orders (not users)
+  // The inline ref on orders.user_id references users which is not in scope
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table users {
@@ -353,9 +350,9 @@ use { table orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - external standalone Ref auto-pulled when both tables imported', () => {
-  // source.dbml defines tables + a standalone Ref between them.
-  // consumer imports both tables.
-  // The Ref should be auto-pulled because both endpoints are in scope.
+  // source.dbml defines tables + a standalone Ref between them
+  // consumer imports both tables
+  // The Ref should be auto-pulled because both endpoints are in scope
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table users {
@@ -389,7 +386,7 @@ use { table orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - external standalone Ref NOT pulled when one table missing', () => {
-  // Only orders is imported, not users. The Ref should NOT be pulled.
+  // Only orders is imported, not users, the Ref should NOT be pulled
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table users {
@@ -415,8 +412,8 @@ use { table orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - Ref auto-pull matches through alias', () => {
-  // source defines tables + standalone Ref. Consumer imports one table with alias.
-  // Ref should still auto-pull if both endpoints are in scope (original or aliased).
+  // source defines tables + standalone Ref, consumer imports one table with alias
+  // Ref should still auto-pull if both endpoints are in scope (original or aliased)
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table users {
@@ -450,8 +447,8 @@ use { table orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - Ref between tables from different imported files', () => {
-  // file-a defines users, file-b defines orders + Ref to users.
-  // consumer imports both. The Ref in file-b references file-a's table.
+  // file-a defines users, file-b defines orders + Ref to users
+  // consumer imports both, the Ref in file-b references file-a's table
   const { compiler } = setupCompiler({
     '/file-a.dbml': `
 Table users {
@@ -488,9 +485,8 @@ use { table orders } from './file-b.dbml'
 });
 
 describe('[example] multifile interpreter - standalone Ref from source auto-pulled via metadata', () => {
-  // Verifies that refs flow through metadata, not just AST.
-  // Source has two tables and a standalone Ref.
-  // Consumer imports both tables - ref should appear via metadata pulling.
+  // Verifies that refs flow through metadata, not just AST
+  // Source has two tables and a standalone Ref, consumer imports both tables and ref should appear via metadata pulling
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table departments {
@@ -549,7 +545,7 @@ Ref: employees.dept_id > departments.id
 });
 
 describe('[edge] ref in third unreachable file is NOT pulled', () => {
-  // A: users, B: orders, C: Ref between them. Consumer imports from A and B, not C.
+  // A: users, B: orders, C: Ref between them, consumer imports from A and B but not C
   const { compiler } = setupCompiler({
     '/a.dbml': `
 Table users {

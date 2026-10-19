@@ -15,7 +15,7 @@ describe('@dbml/core - Dep model', () => {
     });
   });
 
-  describe('Dep #1 — bare-table endpoints', () => {
+  describe('Dep #1, bare-table endpoints', () => {
     test('1 edge with empty fieldNames on both endpoints', () => {
       const dep = database.schemas[0].deps[0];
       expect(dep.edges).toHaveLength(1);
@@ -32,7 +32,7 @@ describe('@dbml/core - Dep model', () => {
     });
   });
 
-  describe('Dep #2 — multi-edge with note + custom', () => {
+  describe('Dep #2, multi-edge with note + custom', () => {
     test('2 edges; first is bare-bare, second is column-level', () => {
       const dep = database.schemas[0].deps[1];
       expect(dep.edges).toHaveLength(2);
@@ -49,7 +49,7 @@ describe('@dbml/core - Dep model', () => {
     });
   });
 
-  describe('Dep #3 — schema-qualified, cross-schema', () => {
+  describe('Dep #3: schema-qualified, cross-schema', () => {
     test('upstream is analytics.events.ts, downstream is public.fct_orders.id', () => {
       const dep = database.schemas[0].deps[2];
       expect(dep.edges).toHaveLength(1);
@@ -63,7 +63,7 @@ describe('@dbml/core - Dep model', () => {
     });
   });
 
-  describe('DepEdge — table + field resolution', () => {
+  describe('DepEdge, table + field resolution', () => {
     test('bare-table edge resolves upstreamTable / downstreamTable, empty fields arrays', () => {
       const edge = database.schemas[0].deps[0].edges[0];
       expect(edge.upstreamTable?.name).toBe('raw_orders');

@@ -42,7 +42,7 @@ export default class RecordsValidator {
     ];
   }
 
-  // Validate that Records can only appear top-level or inside a Table.
+  // Validate that Records can only appear top-level or inside a Table
   // Valid:
   //   records users(id, name) { ... }        // top-level
   //   table users { records (id, name) { } } // inside a table
@@ -157,7 +157,7 @@ export default class RecordsValidator {
     return validateRecordsSettings(settingList).getErrors();
   }
 
-  // Validate that records body contains only simple values (one comma-separated row per line).
+  // Validate that records body contains only simple values (one comma-separated row per line)
   // Valid values:
   //   1, 2, 3                      // numbers
   //   -5, +10                      // signed numbers
@@ -194,13 +194,11 @@ export default class RecordsValidator {
     return rows.flatMap((row) => this.validateDataRow(row));
   }
 
-  // Validate a single data row. Structure should be:
-  //   row.callee = CommaExpressionNode (e.g., 1, 'hello', true) or single value (e.g., 1)
-  //   row.args = [] (empty)
+  // Validate a single data row: row.callee is a CommaExpressionNode or single value, row.args is empty
   private validateDataRow (row: FunctionApplicationNode): CompileError[] {
     const errors: CompileError[] = [];
 
-    // Callee must exist & Args should be empty - all values should be in callee as a comma expression
+    // Callee must exist and args must be empty, all values should be in callee as a comma expression
     if (!row.callee || row.args.length > 0) {
       errors.push(new CompileError(
         CompileErrorCode.INVALID_RECORDS_FIELD,
@@ -236,7 +234,7 @@ export default class RecordsValidator {
     return errors;
   }
 
-  // Check if a value is valid for a record field.
+  // Check if a value is valid for a record field
   private isValidRecordValue (value: SyntaxNode): boolean {
     // Empty values from consecutive commas: 1,,3 or ,1,2
     if (value instanceof EmptyNode) {

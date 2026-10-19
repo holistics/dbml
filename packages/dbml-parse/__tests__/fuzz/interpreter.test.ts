@@ -493,7 +493,7 @@ describe('[fuzz] interpreter - semantic correctness', () => {
   });
 });
 
-// Special Patterns - self-references, circular refs, etc.
+// Special Patterns: self-references, circular refs, etc
 describe('[fuzz] interpreter - special patterns', () => {
   it('should interpret self-referential tables', () => {
     fc.assert(

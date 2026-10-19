@@ -37,7 +37,7 @@ function constraintLabel (columns: ColumnSymbol[], kind: string): string {
 
 /* Type validation */
 
-// NULL value in a NOT NULL column with no default or auto-increment.
+// NULL value in a NOT NULL column with no default or auto-increment
 export function recordsNullNotAllowed (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -53,7 +53,7 @@ export function recordsNullNotAllowed (
   );
 }
 
-// Value doesn't match any member of the enum type.
+// Value doesn't match any member of the enum type
 export function recordsInvalidEnum (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -69,7 +69,7 @@ export function recordsInvalidEnum (
   );
 }
 
-// Value is not a valid number for a numeric column.
+// Value is not a valid number for a numeric column
 export function recordsInvalidNumeric (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -86,7 +86,7 @@ export function recordsInvalidNumeric (
   );
 }
 
-// Decimal value provided for an integer column.
+// Decimal value provided for an integer column
 export function recordsInvalidInteger (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -103,7 +103,7 @@ export function recordsInvalidInteger (
   );
 }
 
-// Numeric value exceeds the column's precision.
+// Numeric value exceeds the column's precision
 export function recordsExceedsPrecision (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -124,7 +124,7 @@ export function recordsExceedsPrecision (
   );
 }
 
-// Numeric value exceeds the column's scale (decimal places).
+// Numeric value exceeds the column's scale (decimal places)
 export function recordsExceedsScale (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -145,7 +145,7 @@ export function recordsExceedsScale (
   );
 }
 
-// Value is not a valid boolean.
+// Value is not a valid boolean
 export function recordsInvalidBoolean (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -161,7 +161,7 @@ export function recordsInvalidBoolean (
   );
 }
 
-// Value is not a valid datetime format.
+// Value is not a valid datetime format
 export function recordsInvalidDatetime (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -177,7 +177,7 @@ export function recordsInvalidDatetime (
   );
 }
 
-// Value is not a valid string (not quoted).
+// Value is not a valid string (not quoted)
 export function recordsInvalidString (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -193,7 +193,7 @@ export function recordsInvalidString (
   );
 }
 
-// String value exceeds the column's maximum byte length.
+// String value exceeds the column's maximum byte length
 export function recordsStringTooLong (
   node: SyntaxNode | SyntaxToken,
   options: {
@@ -215,7 +215,7 @@ export function recordsStringTooLong (
 
 /* Constraint validation */
 
-// NULL value in a primary key column.
+// NULL value in a primary key column
 export function recordsPkNull (
   compiler: Compiler,
   node: SyntaxNode | SyntaxToken,
@@ -235,7 +235,7 @@ export function recordsPkNull (
   );
 }
 
-// Duplicate value in a primary key column.
+// Duplicate value in a primary key column
 export function recordsPkDuplicate (
   compiler: Compiler,
   node: SyntaxNode | SyntaxToken,
@@ -256,7 +256,7 @@ export function recordsPkDuplicate (
   );
 }
 
-// PK column missing from records block with no default or auto-increment.
+// PK column missing from records block with no default or auto-increment
 export function recordsPkMissing (
   compiler: Compiler,
   node: SyntaxNode | SyntaxToken,
@@ -276,7 +276,7 @@ export function recordsPkMissing (
   );
 }
 
-// FK column is null but the relationship requires a value.
+// FK column is null but the relationship requires a value
 export function recordsFkNull (
   compiler: Compiler,
   node: SyntaxNode | SyntaxToken,
@@ -300,7 +300,7 @@ export function recordsFkNull (
   );
 }
 
-// FK value doesn't exist in the referenced table.
+// FK value doesn't exist in the referenced table
 export function recordsFkNotFound (
   compiler: Compiler,
   node: SyntaxNode | SyntaxToken,
@@ -324,7 +324,7 @@ export function recordsFkNotFound (
   );
 }
 
-// Duplicate value in a unique column.
+// Duplicate value in a unique column
 export function recordsUniqueDuplicate (
   compiler: Compiler,
   node: SyntaxNode | SyntaxToken,

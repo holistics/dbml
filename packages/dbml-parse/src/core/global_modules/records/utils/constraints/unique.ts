@@ -19,7 +19,7 @@ import {
   toKeyedRows,
 } from './helper';
 
-// Validate unique constraints for a table's records.
+// Validate unique constraints for a table's records
 export function validateUnique (compiler: Compiler, tableSymbol: TableSymbol, record: TableRecord): CompileInfo[] {
   if (isEmpty(record.values)) return [];
 
@@ -59,8 +59,7 @@ function collectUniqueConstraints (compiler: Compiler, tableSymbol: TableSymbol)
   ];
 }
 
-// Check if 1 unique constraint is violated.
-// A unique constraint is represented as a list of column symbols
+// Check if 1 unique constraint is violated, a unique constraint is a list of column symbols
 function checkUniqueDuplicates (
   compiler: Compiler,
   tableSymbol: TableSymbol,

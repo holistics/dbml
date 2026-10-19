@@ -180,7 +180,7 @@ export const tableModule: GlobalModule = {
       members.splice(index, 0, ...pMembers);
     }
 
-    // Deduplicate columns: direct columns win over injected; among injected, later wins
+    // Deduplicate columns: direct columns win over injected, among injected later wins
     // Remove injected columns that are overridden by direct columns
     const directNames = new Set(members.filter((m) => m.isKind(SymbolKind.Column) && !(m instanceof InjectedColumnSymbol)).map((m) => m.name));
     const withoutOverridden = members.filter((m) => !(m instanceof InjectedColumnSymbol && directNames.has(m.name)));

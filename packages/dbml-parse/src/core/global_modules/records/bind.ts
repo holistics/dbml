@@ -161,8 +161,7 @@ export default class RecordsBinder {
     return errors;
   }
 
-  // Bind enum field references in data rows.
-  // Example data rows with enum references:
+  // Bind enum field references in data rows, example data rows with enum references:
   //   1, status.active, 'hello'       // binds: Enum[status], EnumField[active]
   //   myschema.status.pending, 42     // binds: Schema[myschema], Enum[status], EnumField[pending]
   private bindBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

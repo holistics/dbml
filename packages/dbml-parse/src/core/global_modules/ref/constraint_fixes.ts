@@ -23,13 +23,8 @@ import {
 } from '@/core/utils/diagnostics_reporter';
 import type { RefMetadata, PartialRefMetadata } from '@/core/types/symbol/metadata';
 
-// Check consistency between a ref's cardinality and column constraints for one side.
-//   - cardinality -> columns: does the operator match the column constraints?
-//   - columns -> cardinality: do the column constraints suggest a different operator?
-//
-// NOTE: Nullability checks only apply when the other side is the "source" (FK) side:
-//   - many-to-one / one-to-many: the many side is the source -> < requires the many side to be non-nullable, but doesn't require the one side (a PK can still not be mapped to a source)
-//   - one-to-one: the right side is the source (SQL exporter convention)
+// Check consistency between a ref's cardinality and column constraints for one side
+// Nullability checks only apply when the other side is the source (FK) side
 export function validateCardinality (
   compiler: Compiler,
   meta: RefMetadata | PartialRefMetadata,
@@ -41,9 +36,9 @@ export function validateCardinality (
 ): CompileInfo[] {
   const { allowOtherColFix = true, allowOwnColFix = true } = options ?? {};
 
-  const op = meta.op(compiler); // <, <?, etc.
+  const op = meta.op(compiler);
   const opToken = meta.opToken();
-  const cardinalities = meta.cardinalities(compiler); // a pair of 0..1, 1, *, etc.
+  const cardinalities = meta.cardinalities(compiler);
   if (!op || !opToken || !cardinalities) return [];
 
   const rawOwnCard = side === 'left' ? cardinalities[0] : cardinalities[1];
@@ -68,7 +63,7 @@ export function validateCardinality (
 
   const infos: CompileInfo[] = [];
 
-  // Push a diagnostic for the node and for each column declaration that differs from the node.
+  // Push a diagnostic for the node and for each column declaration that differs from it
   function pushDiag (
     node: SyntaxNode | SyntaxToken,
     columns: ColumnSymbol[],
@@ -82,14 +77,13 @@ export function validateCardinality (
     }
   }
 
-  // Determine if the other side is the source (FK) side.
-  // Nullability checks on otherColumns only make sense for the source side.
+  // Nullability checks on otherColumns only make sense when it is the source (FK) side
   const otherIsSource = otherCard.max === '*' || (ownCard.max === 1 && otherCard.max === 1 && side === 'left');
 
   /* Nullability vs cardinality min */
 
-  // card.min >= 1: other (source) columns must not all be nullable.
-  // A composite FK is only nullable when ALL columns are nullable.
+  // card.min >= 1: other (source) columns must not all be nullable
+  // A composite FK is only nullable when ALL columns are nullable
   if (ownCard.min >= 1 && otherIsSource) {
     const allOtherNullable = otherColumns.length > 0 && otherColumns.every((col) => col.nullable(compiler));
     if (allOtherNullable) {
@@ -109,7 +103,7 @@ export function validateCardinality (
     }
   }
 
-  // card.min === 0: if other (source) columns are all NOT NULL, this side should be required.
+  // card.min === 0: if other (source) columns are all NOT NULL, this side should be required
   if (ownCard.min === 0 && otherIsSource) {
     const allOtherNotNull = otherColumns.length > 0 && otherColumns.every((col) => col.nullable(compiler) === false);
     if (allOtherNotNull) {
@@ -131,7 +125,7 @@ export function validateCardinality (
 
   /* Uniqueness vs cardinality max */
 
-  // card.max === *: if ownColumns are unique/pk, max should be 1.
+  // card.max === *: if ownColumns are unique/pk, max should be 1
   if (ownCard.max === '*' && isColumnsUnique(compiler, ownColumns)) {
     const qnames = ownColumns.map((c) => c.qualifiedName(compiler).join('.')).join(', ');
     const fixes = [
@@ -147,7 +141,7 @@ export function validateCardinality (
       }));
   }
 
-  // card.max === 1: ownColumns should be unique/pk.
+  // card.max === 1: ownColumns should be unique/pk
   if (ownCard.max === 1 && !isColumnsUnique(compiler, ownColumns)) {
     const qnames = ownColumns.map((c) => c.qualifiedName(compiler).join('.')).join(', ');
     const fixes = [
@@ -240,9 +234,9 @@ function suggestMakeNullable (col: ColumnSymbol, compiler: Compiler): QuickFix |
     ] };
 }
 
-// Check if a set of columns is covered by a unique or pk constraint.
-// Single column: check col.unique() or col.pk().
-// Composite: check if any composite unique/pk index on the table matches exactly these columns.
+// Check if a set of columns is covered by a unique or pk constraint
+// Single column: check col.unique() or col.pk()
+// Composite: check if any composite unique/pk index on the table matches exactly these columns
 function isColumnsUnique (compiler: Compiler, columns: ColumnSymbol[]): boolean {
   if (columns.length === 0) return false;
 

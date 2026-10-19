@@ -122,8 +122,8 @@ export function isValidHexColor (value?: SyntaxNode): value is PrimaryExpression
   return true;
 }
 
-// A color value is valid if it is a hex color literal OR the `none` keyword
-// (transparent). Mirrors how inline color settings accept `none`.
+// A color value is valid if it is a hex color literal OR the `none` keyword (transparent)
+// Mirrors how inline color settings accept `none`
 export function isValidColorOrNone (value?: SyntaxNode): boolean {
   if (isValidHexColor(value)) return true;
 
@@ -132,7 +132,7 @@ export function isValidColorOrNone (value?: SyntaxNode): boolean {
 }
 
 // Is the `value` a valid value for a column's `default` setting
-// It's a valid only if it's a literal or a complex variable (potentially an enum member)
+// Valid only if it's a literal or a complex variable (potentially an enum member)
 export function isValidDefaultValue (value?: SyntaxNode): boolean {
   if (isExpressionAQuotedString(value)) {
     return true;
@@ -502,9 +502,9 @@ export function isValidIndexName (
   );
 }
 
-// Extracts the rightmost variable node from an expression.
-// For a simple variable node, returns itself. For an access expression (e.g. `ecommerce.merchants`),
-// returns the rightmost fragment (`merchants`) if it is a variable node.
+// Extracts the rightmost variable node from an expression
+// For a simple variable node, returns itself
+// For an access expression (e.g. `ecommerce.merchants`), returns the rightmost fragment if it is a variable node
 export function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined {
   if (isExpressionAVariableNode(node)) return node;
   if (isAccessExpression(node)) {
@@ -514,9 +514,9 @@ export function getRightmostVariable (node: SyntaxNode): SyntaxNode | undefined 
   return undefined;
 }
 
-// Returns true if `node` is the rightmost (terminal) fragment of an access expression chain.
-// A node is terminal when its containing access expression is NOT itself the left-hand side
-// of a further access expression (e.g. `users` in `public.users` or `auth.public.users`).
+// Returns true if `node` is the rightmost (terminal) fragment of an access expression chain
+// A node is terminal when its containing expression is NOT itself the left-hand side of a further access expression
+// e.g. `users` in `public.users` or `auth.public.users`
 export function isTerminalAccessFragment (node: SyntaxNode): boolean {
   const currentAccess = node.parentNode;
   if (!isAccessExpression(currentAccess)) return false;

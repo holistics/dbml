@@ -3,7 +3,7 @@ import {
 } from 'pathe';
 import type { Internable } from './internable';
 
-// Matches a Windows drive-letter prefix after normalization (e.g. "C:/").
+// Matches a Windows drive-letter prefix after normalization (e.g. "C:/")
 const WIN_DRIVE_RE = /^[a-zA-Z]:\//;
 
 declare const __filepathIdBrand: unique symbol;
@@ -71,7 +71,7 @@ export class Filepath implements Internable<FilepathId> {
     return extname(this.fsPath);
   }
 
-  // Resolve a relative path from this file's directory.
+  // Resolve a relative path from this file's directory
   resolve (relativePath: string): Filepath {
     // Filepath is a virtual path abstraction backed by in-memory maps, not real filesystem I/O
     // bearer:disable javascript_lang_path_traversal
@@ -106,7 +106,7 @@ export class Filepath implements Internable<FilepathId> {
     return this.toKey() === other.toKey();
   }
 
-  // True when this filepath is a strict ancestor directory of `other`.
+  // True when this filepath is a strict ancestor directory of `other`
   isParentOf (other: Filepath): boolean {
     if (this.path === other.path) return false;
     const prefix = this.path.endsWith('/') ? this.path : `${this.path}/`;

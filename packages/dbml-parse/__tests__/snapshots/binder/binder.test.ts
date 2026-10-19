@@ -17,13 +17,8 @@ function serializeBinderResult (compiler: Compiler, ast: ProgramNode): string {
   const infos = report.getInfos();
   const nodeReferees = collectNodesWithReferee(compiler, ast);
 
-  // FIXME: this snapshot manually splits the program's symbol table into
-  // (named schemas at the top, public-schema members below) so the output
-  // matches what we want long-term: named schemas owned by the program node and
-  // the public schema only carrying non-schema members. The current analyzer
-  // can't express that directly. The query-based-compiler rework will surface
-  // this shape natively, at which point this loop can be replaced by a single
-  // `compiler.symbolMembers(programSymbol)` walk.
+  // FIXME: this snapshot manually splits the program's symbol table into (named schemas at the top, public-schema members below)
+  // The current analyzer can't express that directly, replace this loop with a single `compiler.symbolMembers(programSymbol)` walk when possible
   const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
   const schemas: NodeSymbol[] = [];
   const publicSchemaMembers: NodeSymbol[] = [];

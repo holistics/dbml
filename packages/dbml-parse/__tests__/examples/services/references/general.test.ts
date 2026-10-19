@@ -639,10 +639,8 @@ Ref: orders.(merchant_id, merchant_country) > merchants.(id, country_code)`;
       const references = referencesProvider.provideReferences(model, position);
 
       expect(Array.isArray(references)).toBe(true);
-      // The container stack for a cursor at the first char of `id` doesn't
-      // descend into the column's FunctionApplication, so the provider
-      // resolves against the outer Table. Returns the single ref to
-      // `merchants` from the composite-ref tuple access.
+      // The container stack for a cursor at the first char of `id` doesn't descend into the column's FunctionApplication
+      // So the provider resolves against the outer Table and returns the single ref to `merchants` from the composite-ref tuple access
       expect(references.length).toBe(1);
       const sourceText = extractTextFromRange(program, references[0].range);
       expect(sourceText).toBe('merchants');

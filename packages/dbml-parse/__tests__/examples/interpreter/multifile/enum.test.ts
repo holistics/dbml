@@ -102,9 +102,8 @@ Table jobs {
 });
 
 describe('[example] multifile interpreter - tablegroup pulls tables that reference enums', () => {
-  // base.dbml defines an enum, tables using it, and a tablegroup.
-  // consumer imports the tablegroup. The enum should also appear in schema
-  // since the pulled table references it.
+  // base.dbml defines an enum, tables using it, and a tablegroup
+  // consumer imports the tablegroup and the enum should also appear in schema since the pulled table references it
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Enum status {

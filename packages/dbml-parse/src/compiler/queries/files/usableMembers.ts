@@ -91,8 +91,8 @@ export function schemaMembership (compiler: Compiler, schema: SchemaSymbol, elem
     kind: 'none',
   };
 
-  // For schema specifiers, the entire fullname IS the schema chain.
-  // For non-schema specifiers, the last segment is the element name and everything before is the schema chain.
+  // For schema specifiers, the entire fullname IS the schema chain
+  // For non-schema specifiers, the last segment is the element name and everything before is the schema chain
   const isSchemaSpecifier = element instanceof UseSpecifierNode && element.getSymbolKind() === SymbolKind.Schema;
   const elementSchemaChain = isSchemaSpecifier
     ? fullname
@@ -329,9 +329,9 @@ function usableMembersForSchema (
   };
 }
 
-// Register schemas from use/reuse { schema ... } specifiers at the program level.
-// `use { schema x.a }` -> registers top-level `x`.
-// `use { schema x.a as b }` -> registers top-level `b` (aliased).
+// Register schemas from use/reuse { schema ... } specifiers at the program level
+// `use { schema x.a }` -> registers top-level `x`
+// `use { schema x.a as b }` -> registers top-level `b` (aliased)
 function registerProgramSchemas (
   compiler: Compiler,
   specifiers: UseSpecifierNode[],
@@ -350,10 +350,10 @@ function registerProgramSchemas (
   }
 }
 
-// Register child schemas from use/reuse { schema ... } specifiers at a schema level.
-// `usableMembers(schema_x)` with `use { schema x.a }` -> registers child `a` under `x`.
-// Aliased specifiers (e.g. `use { schema x.a as b }`) have visibleName `['b']`,
-// which won't match the schema chain - registered at the program level instead.
+// Register child schemas from use/reuse { schema ... } specifiers at a schema level
+// `usableMembers(schema_x)` with `use { schema x.a }` -> registers child `a` under `x`
+// Aliased specifiers (e.g. `use { schema x.a as b }`) have visibleName `['b']`, which won't match the schema chain
+// Those are registered at the program level instead
 function registerSchemaChildren (
   compiler: Compiler,
   specifiers: UseSpecifierNode[],
@@ -383,7 +383,7 @@ function registerSchemaChildren (
   }
 }
 
-// Collect top-level schema names from a file's declarations and use/reuse specifiers.
+// Collect top-level schema names from a file's declarations and use/reuse specifiers
 function collectTopLevelSchemaNames (compiler: Compiler, filepath: Filepath): string[] {
   const {
     ast,
@@ -410,7 +410,7 @@ function collectTopLevelSchemaNames (compiler: Compiler, filepath: Filepath): st
   return names;
 }
 
-// Collect child schema names under a given qualified name from a file's declarations and use/reuse specifiers.
+// Collect child schema names under a given qualified name from a file's declarations and use/reuse specifiers
 function collectChildSchemaNames (compiler: Compiler, filepath: Filepath, parentQualifiedName: string[]): string[] {
   const {
     ast,

@@ -1,9 +1,9 @@
 import Database from '../../../src/model_structure/database';
 import { test, expect, describe } from 'vitest';
 
-// Self-reference rule: a table may depend on itself (A -> A), a column may feed
-// another column of its table (a.x -> a.y) or its own table (a.x -> a);
-// only a column depending on itself (a.x -> a.x) is an error.
+// Self-reference rule: a table may depend on itself (A -> A)
+// a column may feed another column of its table (a.x -> a.y) or its own table (a.x -> a)
+// only a.x -> a.x (column feeding itself) is an error
 const rawDb = (edges: { up: string[]; down: string[] }[]) => ({
   schemas: [],
   aliases: [],
