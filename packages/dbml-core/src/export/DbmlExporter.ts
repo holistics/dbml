@@ -327,6 +327,9 @@ class DbmlExporter {
       if (ref.inactive) {
         refActions.push('inactive');
       }
+      if (ref.note) {
+        refActions.push(`note: ${DbmlExporter.escapeNote(ref.note)}`);
+      }
       // Custom metadata is written inline (like Dep), as an unnamed ref cannot be targeted by a Metadata block
       Object.entries(ref.metadata ?? {}).forEach(([key, value]) => {
         refActions.push(`${key}: ${DbmlExporter.formatDepCustomValue(value)}`);
