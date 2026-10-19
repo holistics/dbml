@@ -230,4 +230,36 @@ describe('@dbml/core - Ref metadata', () => {
     expect(unnamed.inactive).toBe(true);
     expect(unnamed.metadata).toEqual({ team: 'data' });
   });
+
+  const REF_NOTE_DBML = `
+Table users {
+  id int [pk]
+}
+
+Table posts {
+  id int [pk]
+  user_id int
+  author_id int
+}
+
+Ref user_posts: posts.user_id > users.id [note: 'inline note']
+Ref: posts.author_id > users.id [note: 'it\\'s the author']
+
+Metadata Ref user_posts {
+  note: 'block note'
+}
+`.trim();
+
+  test('the DBML exporter writes the ref note inline', () => {
+    const out = exporter.export(REF_NOTE_DBML, 'dbml');
+    expect(out).toContain(`Ref "user_posts":"users"."id" < "posts"."user_id" [note: 'block note']`);
+    expect(out).toContain(`Ref:"users"."id" < "posts"."author_id" [note: '''it\\'s the author''']`);
+  });
+
+  test('exported DBML round-trips the ref note', () => {
+    const exported = exporter.export(REF_NOTE_DBML, 'dbml');
+    const refs = parse(exported).schemas.find((s) => s.name === 'public')!.refs;
+    expect(refs.find((r) => r.name === 'user_posts')!.note).toBe('block note');
+    expect(refs.find((r) => !r.name)!.note).toBe('it\'s the author');
+  });
 });

@@ -191,10 +191,13 @@ export class RefInterpreter {
       const [
         noteNode,
       ] = settingMap[SettingName.Note] || [];
-      this.ref.note = noteNode && {
-        value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
-        token: getTokenPosition(noteNode),
-      };
+      const noteValue = noteNode && extractQuotedStringToken(noteNode.value);
+      this.ref.note = noteValue !== undefined
+        ? {
+            value: normalizeNote(noteValue),
+            token: getTokenPosition(noteNode),
+          }
+        : undefined;
 
       this.ref.inactive = settingMap.inactive?.length ? true : undefined;
 
