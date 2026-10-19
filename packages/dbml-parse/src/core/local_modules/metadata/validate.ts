@@ -103,8 +103,8 @@ export default class MetadataValidator {
   }
 
   private validateFields (fields: FunctionApplicationNode[]): CompileError[] {
-    // A Metadata body may only contain 'key: value' fields (parsed as ElementDeclarationNode).
-    // => An expression such as `id int` parses as a FunctionApplicationNode and is never valid here.
+    // A Metadata body may only contain 'key: value' fields, parsed as ElementDeclarationNode
+    // An expression such as `id int` parses as a FunctionApplicationNode and is never valid here
     return fields.map((field) => new CompileError(
       CompileErrorCode.INVALID_METADATA_FIELD,
       'A Metadata field must use the \'key: value\' syntax',
@@ -119,7 +119,7 @@ export default class MetadataValidator {
     const errors = subs.flatMap((sub) => {
       if (!sub.type) return [];
 
-      // Metadata value only accept a string/color. Validation rejects a complex (block) body.
+      // Metadata value only accepts a string/color, validation rejects a complex (block) body
       if (sub.body instanceof BlockExpressionNode) {
         return [
           new CompileError(

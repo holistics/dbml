@@ -222,10 +222,9 @@ function nodeRefereeOfDiagramViewTableRef (
     return Report.create(undefined);
   }
 
-  // Right side of access expression (e.g. `public` in `public.users`):
-  // resolve via the left sibling's schema symbol.
-  // If this access expression is itself nested inside another (e.g. `public` in `auth.public.users`),
-  // the fragment is intermediate and must resolve to Schema; otherwise it is terminal and must be Table.
+  // Right side of access expression (e.g., `public` in `public.users`)
+  // resolve via the left sibling's schema symbol
+  // Fragment is intermediate (must resolve to Schema) when nested, terminal (must be Table) otherwise
   if (isAccessExpression(node.parentNode)) {
     const left = nodeRefereeOfLeftExpression(compiler, node);
     if (left) {

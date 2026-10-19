@@ -233,7 +233,7 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
         });
         break;
       default:
-        // Any non-builtin key is free-form inline custom metadata.
+        // Any non-builtin key is free-form inline custom metadata
         errors.push(
           ...validateCustomInlineMetadata(name, attrs, {
             duplicate: CompileErrorCode.DUPLICATE_TABLE_SETTING,
@@ -411,7 +411,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         break;
 
       default:
-        // Any non-builtin key is free-form inline custom metadata.
+        // Any non-builtin key is free-form inline custom metadata
         errors.push(
           ...validateCustomInlineMetadata(name, attrs, {
             duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,

@@ -44,7 +44,7 @@ function resolveEndpoint (compiler: Compiler, filepath: Filepath, endpoint: Endp
   return { table, columns };
 }
 
-// Aliases and imports give the same element more than one symbol; its declaration is single.
+// Aliases and imports give the same element multiple symbols, but its declaration is single
 function sameSymbol (left: NodeSymbol | undefined, right: NodeSymbol | undefined): boolean {
   const leftDeclaration = left?.originalSymbol.declaration;
   return !!leftDeclaration && leftDeclaration === right?.originalSymbol.declaration;

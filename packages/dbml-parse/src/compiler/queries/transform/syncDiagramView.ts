@@ -227,8 +227,8 @@ function generateDiagramViewBlock (
 
   // Trinity emission
   if (anyTrinityItems) {
-    // Per-dim: emit only dims with items. Trinity-omit rule promotes omitted
-    // peers to [] on parse; null peers cannot be preserved in this branch.
+    // Per-dim: emit only dims with items
+    // Trinity-omit rule promotes omitted peers to [] on parse, null peers cannot be preserved in this branch
     if (states.tables === 'items') emitListSubBlock(lines, 'Tables', formatedTables);
     if (states.tableGroups === 'items') emitListSubBlock(lines, 'TableGroups', formatedTableGroups);
     if (states.schemas === 'items') emitListSubBlock(lines, 'Schemas', formatedSchemas);
@@ -240,10 +240,10 @@ function generateDiagramViewBlock (
   if (states.stickyNotes === 'items') {
     emitListSubBlock(lines, 'Notes', formatedNotes);
   } else if (states.stickyNotes === 'empty') {
-    // Emit show-all only when no other dim already carries it.
+    // Emit show-all only when no other dim already carries it
     emitWildcardSubBlock(lines, 'Notes');
   }
-  // states.stickyNotes === 'null' -> omit; interpreter default is null.
+  // states.stickyNotes === 'null' -> omit, interpreter default is null
 
   lines.push('}');
   return lines.join('\n');

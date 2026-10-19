@@ -580,7 +580,7 @@ export class RecordsMetadata extends NodeMetadata {
   }
 }
 
-// Metadata element block: `Metadata <target-kind> <qualified-name> { ... }`.
+// Metadata element block: `Metadata <target-kind> <qualified-name> { ... }`
 export class MetadataElementMetadata extends NodeMetadata {
   declare declaration: ElementDeclarationNode;
 
@@ -590,8 +590,8 @@ export class MetadataElementMetadata extends NodeMetadata {
     super(declaration);
   }
 
-  // The element this metadata annotates (Table/Column/Schema/.etc).
-  // Resolved via the header-name referee, which metadataModule.nodeReferee maps to the target through resolveMetadataTarget.
+  // The element this metadata annotates (Table/Column/Schema, etc)
+  // Resolved via the header-name referee, which metadataModule.nodeReferee maps to the target through resolveMetadataTarget
   target (compiler: Compiler): NodeSymbol | undefined {
     const nameNode = this.declaration.name;
     if (!nameNode) return undefined;
@@ -603,8 +603,7 @@ export class MetadataElementMetadata extends NodeMetadata {
     let target = this.target(compiler);
     if (!target) return [];
 
-    // A Column lives inside a Table, not as a direct schema member, so inNestedSchema would not find it.
-    // => Normalise to the containing table.
+    // A Column lives inside a Table, not as a direct schema member, so normalise to the containing table
     if (target.kind === SymbolKind.Column) {
       const tableNode = target.declaration?.parentOfKind(ElementDeclarationNode);
       const tableSymbol = tableNode
@@ -665,7 +664,7 @@ function extractTableFromEndpoint (compiler: Compiler, expr: SyntaxNode | undefi
   if (!expr) return undefined;
   const fragments = destructureComplexVariableTuple(expr);
   if (!fragments) return undefined;
-  // If tuple: table = last variable; else table = second-to-last (last is column)
+  // If tuple: table = last variable, else table = second-to-last (last is column)
   const tableNode = fragments.tupleElements.length > 0
     ? fragments.variables.at(-1)
     : fragments.variables.at(-2);

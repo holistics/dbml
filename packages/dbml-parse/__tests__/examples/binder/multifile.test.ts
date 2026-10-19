@@ -5,7 +5,7 @@ import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { NodeSymbol, UseSymbol, SymbolKind } from '@/core/types';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 
-// Build a multi-file compiler from a record of absolute filepath -> source.
+// Build a multi-file compiler from a record of absolute filepath to source
 function setupCompiler (files: Record<string, string>): { compiler: Compiler; fps: Record<string, Filepath> } {
   const layout = new MemoryProjectLayout();
   const fps: Record<string, Filepath> = {};
@@ -52,8 +52,8 @@ describe('[example] multifile binder', () => {
     });
 
     test('import of nonexistent element kind is rejected', () => {
-      // 'table' is a valid import kind; using the wrong kind for an existing symbol
-      // (e.g. importing a table as an enum) should produce a binding error
+      // 'table' is a valid import kind
+      // using the wrong kind for an existing symbol (e.g., importing a table as an enum) should produce a binding error
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int }',
         '/main.dbml': "use { enum users } from './base.dbml'",
@@ -126,8 +126,8 @@ describe('[example] multifile binder', () => {
     });
 
     test('two specifiers of the same element under different aliases are both resolvable', () => {
-      // Importing the same table twice under different names is valid.
-      // Each alias should resolve independently.
+      // Importing the same table twice under different names is valid
+      // Each alias should resolve independently
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': [
@@ -229,8 +229,8 @@ Table posts { id int [pk] }`,
     });
 
     test('wildcard use with schema-qualified tables has no binding errors', () => {
-      // Tables from auth schema are pulled in; the auth schema is visible transitively
-      // but not as a named member of the public scope (known limitation).
+      // Tables from auth schema are pulled in
+      // the auth schema is visible transitively but not as a named member of the public scope
       const { compiler, fps } = setupCompiler({
         '/auth.dbml': 'Table auth.users { id int [pk] }\nTable auth.roles { id int [pk] }',
         '/main.dbml': "use * from './auth.dbml'",
@@ -258,7 +258,7 @@ Table posts { id int [pk] }`,
     });
 
     test('use (non-reuse) does NOT re-export to downstream importers', () => {
-      // middle.dbml uses (not reuses) users; consumer importing from middle should not see it
+      // middle.dbml uses (not reuses) users, consumer importing from middle should not see it
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': "use { table users } from './base.dbml'",
@@ -354,9 +354,8 @@ Table y_table {
     });
 
     test('schema-qualified enum import has no binding errors and UseSymbol points to the declaration', () => {
-      // `Enum auth.roles` is declared with an explicit schema prefix.
-      // `use { enum auth.roles }` must resolve the specifier without errors,
-      // and the resulting UseSymbol must point to the original enum declaration.
+      // `Enum auth.roles` is declared with an explicit schema prefix
+      // `use { enum auth.roles }` must resolve the specifier without errors and the resulting UseSymbol must point to the original enum declaration
       const { compiler, fps } = setupCompiler({
         '/types.dbml': 'Enum auth.roles { admin member }',
         '/main.dbml': "use { enum auth.roles } from './types.dbml'",
@@ -416,8 +415,8 @@ Table y_table {
 
   describe('alias shadows local name', () => {
     test('importing a symbol under an alias that matches a locally-defined table produces DUPLICATE_NAME', () => {
-      // `use { table accounts as users }` creates a local name 'users'.
-      // The file also defines `Table users` - these two collide.
+      // `use { table accounts as users }` creates a local name 'users'
+      // The file also defines `Table users`, these two collide
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table accounts { id int [pk] }',
         '/main.dbml': [
@@ -464,7 +463,7 @@ Table y_table {
       expect(compiler.bindNode(mainAst).getErrors()).toHaveLength(0);
 
       const schemaSymbol = compiler.lookupMembers(mainAst, SymbolKind.Schema, DEFAULT_SCHEMA_NAME)!;
-      // products comes through the reuse chain; categories is defined directly in hub
+      // products comes through the reuse chain, categories is defined directly in hub
       const products = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'products');
       const categories = compiler.lookupMembers(schemaSymbol, SymbolKind.Table, 'categories');
       expect(products).toBeInstanceOf(UseSymbol);
@@ -473,12 +472,8 @@ Table y_table {
   });
 
   describe('mixed selective + wildcard from the same file', () => {
-    // Importing the same symbol twice from the same file - once via a
-    // selective `use { table users }` and once via `use *` - is idempotent.
-    // schemaModule.symbolMembers dedupes UseSymbols by
-    // (originalSymbol, locally-visible name), so two distinct UseSymbol
-    // wrappers around the same underlying table collapse into a single entry
-    // instead of colliding as DUPLICATE_NAME.
+    // Importing the same symbol twice (selective and wildcard) is idempotent
+    // schemaModule.symbolMembers dedupes UseSymbols by (originalSymbol, locally-visible name), collapsing two wrappers into one entry instead of DUPLICATE_NAME
     test('selective + wildcard from the same file is idempotent (no DUPLICATE_NAME)', () => {
       const { compiler, fps } = setupCompiler({
         '/shared.dbml': 'Table users { id int [pk] }\nTable roles { id int [pk] }',
@@ -610,8 +605,8 @@ Table y_table {
   });
 
   describe('selective alias + no-alias for the same symbol from the same file', () => {
-    // Importing the same table once with an alias and once without produces two
-    // distinct local names - deduplication by (originalSymbol, name) keeps both.
+    // Importing the same table once with an alias and once without produces two distinct local names
+    // Deduplication by (originalSymbol, name) keeps both
     test('both alias and original name are visible, no DUPLICATE_NAME', () => {
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
@@ -689,8 +684,8 @@ Table y_table {
   });
 
   describe('same symbol from 3 simultaneous import paths with different aliases', () => {
-    // base declares users; mid-a and mid-b both reuse from base.
-    // Consumer imports users from all three sources under three different aliases.
+    // base declares users, mid-a and mid-b both reuse from base
+    // Consumer imports users from all three sources under three different aliases
     test('all three aliases resolve independently with no errors', () => {
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
@@ -720,9 +715,8 @@ Table y_table {
   });
 
   describe('wildcard from base + wildcard from mid that reuses base', () => {
-    // Two wildcards, but the same underlying symbol. UseSymbol.originalSymbol
-    // recursively unwraps through the chain, so both resolve to the same id ->
-    // the dedup key is identical -> collapsed to one entry -> no DUPLICATE_NAME.
+    // Two wildcards but the same underlying symbol, UseSymbol.originalSymbol recursively unwraps through the chain
+    // Both resolve to the same id, so the dedup key is identical and collapses to one entry with no DUPLICATE_NAME
     test('same symbol reached via two wildcard paths is deduplicated, no DUPLICATE_NAME', () => {
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
@@ -743,9 +737,8 @@ Table y_table {
   });
 
   describe('selective alias + wildcard from a reuse chain', () => {
-    // Consumer imports users-as-local_u from base (selective) and uses * from
-    // mid (wildcard, which reuses base). The wildcard exposes 'users' under its
-    // original name. Two distinct local names -> both survive, no conflict.
+    // Consumer imports users-as-local_u from base (selective) and uses * from mid (wildcard, which reuses base)
+    // The wildcard exposes 'users' under its original name, two distinct local names survive with no conflict
     test('selective alias and wildcard produce two distinct local names, both visible', () => {
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
@@ -800,9 +793,8 @@ Table y_table {
   });
 
   describe('external Ref in source is not importable', () => {
-    // source.dbml declares both tables and a standalone Ref between them.
-    // consumer imports both tables. The Ref is NOT in ImportKind and thus does
-    // NOT appear in the consumer's schema - refs must be redeclared locally.
+    // source.dbml declares both tables and a standalone Ref between them
+    // consumer imports both tables, but the Ref does not appear in the consumer's schema since refs must be redeclared locally
     test('consumer with both tables imported has zero binding errors', () => {
       const { compiler, fps } = setupCompiler({
         '/source.dbml': [
@@ -978,10 +970,8 @@ Table y_table {
 
   // selective use + wildcard reuse of the same symbol - reuse semantic must survive
   describe('selective use + wildcard reuse of the same symbol', () => {
-    // middle.dbml has both `use { table users }` (local only) and `reuse *`
-    // (transitive) from base. Both bring 'users' into middle's scope.
-    // The reuse wildcard must NOT be silently dropped - downstream consumers
-    // must still see 'users' via the reuse chain.
+    // middle.dbml has both `use { table users }` (local only) and `reuse *` (transitive) from base
+    // The reuse wildcard must not be silently dropped, downstream consumers must still see 'users' via the reuse chain
     test('reuse * transitivity is preserved even when selective use imports the same symbol', () => {
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
@@ -1027,7 +1017,7 @@ Table y_table {
     });
 
     test('selective use + wildcard reuse: middle scope has the symbol regardless', () => {
-      // Even if dedup drops one variant, 'users' must still be resolvable in middle.
+      // Even if dedup drops one variant, 'users' must still be resolvable in middle
       const { compiler, fps } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/middle.dbml': [

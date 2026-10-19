@@ -4,10 +4,8 @@ import { NodeSymbol, SymbolKind, UseSymbol } from '@/core/types/symbol';
 import { useUtils } from '@/core/global_modules/use';
 import type Compiler from '../../index';
 
-// From a list of symbol members
-// Returns a Map from member name to the list of members with that name.
-// This is for pure performance purposes
-// As looking up in a list repeatedly in `lookupMembers` is too slow
+// From a list of symbol members, returns a Map from member name to the list of members with that name
+// This is for pure performance: looking up in a list repeatedly in `lookupMembers` is too slow
 export function symbolMembersLookupMap (
   this: Compiler,
   symbol: NodeSymbol,

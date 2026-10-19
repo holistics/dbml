@@ -135,7 +135,7 @@ function getDbdefault (columnDefault: string | null, defaultType: string): Defau
 
 // Field type utils
 
-// These datatypes are never qualified: data size, data scale and data precision are all ignore.
+// These datatypes are never qualified: data size, data scale and data precision
 // Ref: https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/Data-Types.html
 const UNQUALIFIED_DATA_TYPES = new Set([
   // datetime

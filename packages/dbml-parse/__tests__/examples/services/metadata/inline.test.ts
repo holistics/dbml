@@ -31,12 +31,12 @@ describe('[example] Inline custom metadata (settings list)', () => {
       const t = table(source)!;
       expect(t.headerColor).toBe('#fff');
       expect(t.note?.value).toBe('n');
-      // Builtins are NOT duplicated into metadata; only the custom key is.
+      // Builtins are NOT duplicated into metadata, only the custom key is
       expect(t.metadata).toEqual({ owner: 'x' });
     });
 
     it('treats a key that is a builtin on another kind as free-form metadata', () => {
-      // `color` is a builtin on TableGroup/Note, but NOT on Table.
+      // `color` is a builtin on TableGroup/Note, but NOT on Table
       const source = `Table users [color: #abc] {
   id int
 }`;
@@ -116,8 +116,8 @@ TableGroup g1 [color: #123, note: "gn", team: "growth"] {
     });
 
     it('harvests inline metadata on a TablePartial column', () => {
-      // At the @dbml/parse layer, an injected partial column is surfaced via the
-      // emitted TablePartial's fields; dbml-core expands it into the host table.
+      // At the @dbml/parse layer, an injected partial column is surfaced via the emitted TablePartial's fields
+      // dbml-core expands it into the host table
       const source = `TablePartial Base {
   id int [pk, owner: "data-team"]
 }
@@ -147,7 +147,7 @@ Metadata Table public.users {
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
-      // block overrides owner; inline-only `region` survives; block adds `sla`.
+      // block overrides owner, inline-only `region` survives, block adds `sla`
       expect(t.metadata).toMatchObject({ owner: 'from-block', region: 'us', sla: '24' });
     });
 
@@ -161,7 +161,7 @@ Metadata Table public.users {
     });
 
     it('promotes an inline-only overlap key from a block onto the typed field, over the inline metadata base', () => {
-      // headercolor inline-as-setting is the base; block headercolor overrides it.
+      // headercolor inline-as-setting is the base, block headercolor overrides it
       const source = `
 Table users [headercolor: #111, owner: "x"] {
   id int

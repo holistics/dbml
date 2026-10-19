@@ -17,8 +17,7 @@ const TERMINAL_KIND: Record<MetadataTargetKind, SymbolKind> = {
 
 const targetKindArbitrary = fc.constantFrom(...Object.values(MetadataTargetKind));
 
-// Bias generation toward the schema name and short arrays: those exercise the
-// Column single-part branch and the `public` handling downstream.
+// Bias generation toward the schema name and short arrays to exercise the Column single-part branch and the `public` handling downstream
 const namePartArbitrary = fc.oneof(
   { weight: 3, arbitrary: fc.constant(DEFAULT_SCHEMA_NAME) },
   { weight: 1, arbitrary: fc.string({ minLength: 1, maxLength: 8 }) },
@@ -76,7 +75,7 @@ describe('[property] mapNamePartToSymbolKind', () => {
   });
 
   it('assigns a defined SymbolKind to every part', () => {
-    // Guards the positional `kindParts[idx]` indexing against length mismatches.
+    // Guards the positional `kindParts[idx]` indexing against length mismatches
     fc.assert(
       fc.property(namePartsArbitrary, targetKindArbitrary, (nameParts, targetKind) => {
         const res = mapNamePartToSymbolKind(nameParts, targetKind);

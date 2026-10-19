@@ -106,7 +106,7 @@ export function scanNonListNodeForBinding (node?: SyntaxNode): { variables: (Pri
 }
 
 // For a node that is the right side of an access expression (a.b),
-// resolve the left side via compiler.nodeReferee and return its symbol.
+// resolve the left side via compiler.nodeReferee and return its symbol
 export function nodeRefereeOfLeftExpression (compiler: Compiler, node: SyntaxNode): NodeSymbol | undefined {
   const parent = node.parentNode;
   if (!parent || !isAccessExpression(parent) || parent.rightExpression !== node) return undefined;

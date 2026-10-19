@@ -1,8 +1,6 @@
 import { Filepath } from '@/core/types/filepath';
 
-// A read-only view of the project layout.
-// Consumers mutate the concrete class directly. The compiler detects
-// content changes automatically when `getSource` or `getEntrypoints` is called.
+// Read-only view of the project layout, the compiler detects content changes automatically via `getSource` or `getEntrypoints`
 export interface DbmlProjectLayout {
   // Resolve an import specifier from a current file, MUST BE deterministic
   // For example:

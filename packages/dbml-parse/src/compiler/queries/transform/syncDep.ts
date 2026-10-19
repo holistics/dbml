@@ -123,7 +123,7 @@ function computeCreateEdit (dbml: string, operation: DepSyncOperation, definitio
   const newBlock = generateDepBlock(operation.edge, operation.color ?? '');
   const createEdit: TextEdit = { start: dbml.length, end: dbml.length, newText: '\n\n' + newBlock + '\n' };
 
-  // If the edge is authored inline, strip the inline setting to avoid duplication.
+  // If the edge is authored inline, strip the inline setting to avoid duplication
   if (definition?.kind === 'inline') {
     return [
       { start: definition.fullStart, end: definition.fullEnd, newText: '' },

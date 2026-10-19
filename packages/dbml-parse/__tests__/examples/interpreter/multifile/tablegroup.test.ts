@@ -51,8 +51,7 @@ use { tablegroup content } from './base.dbml'
 });
 
 describe('[example] multifile interpreter - TableGroup: member table data preserved', () => {
-  // Importing a tablegroup auto-expands member tables. Those tables must appear
-  // in the exported schema with their full field and index definitions intact.
+  // Importing a tablegroup auto-expands member tables, which must appear in the exported schema with their full field and index definitions intact
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table users {
@@ -113,9 +112,8 @@ use { tablegroup social } from './base.dbml'
 });
 
 describe('[example] multifile interpreter - tablegroup pulls tables that use tablepartials', () => {
-  // base.dbml defines a partial, tables using it, and a tablegroup.
-  // consumer imports the tablegroup. The pulled tables should have
-  // their injected partial columns.
+  // base.dbml defines a partial, tables using it, and a tablegroup
+  // consumer imports the tablegroup, pulled tables should have their injected partial columns
   const { compiler } = setupCompiler({
     '/base.dbml': `
 TablePartial timestamps {
@@ -166,8 +164,8 @@ use { tablegroup content } from './base.dbml'
 });
 
 describe('[example] multifile interpreter - tablegroup pulls tables with inline refs to non-imported tables', () => {
-  // base.dbml: Table a has inline ref to Table b. TableGroup g contains only a.
-  // consumer imports tablegroup g. Table a is pulled, but b is not imported.
+  // base.dbml: Table a has inline ref to Table b, TableGroup g contains only a
+  // consumer imports tablegroup g, Table a is pulled but b is not imported
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table categories {

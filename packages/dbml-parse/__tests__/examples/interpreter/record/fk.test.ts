@@ -105,10 +105,10 @@ describe('[example - record] composite foreign key constraints', () => {
     const infos = result.getInfos().filter((i) => i.diagnostic.includes('FK') || i.diagnostic.includes('Duplicate') || i.diagnostic.includes('NULL in') || i.diagnostic.includes('missing from record'));
 
     expect(infos.length).toBe(4);
-    // orders → merchants: (1, "UK") doesn't exist in merchants
+    // orders to merchants: (1, "UK") doesn't exist in merchants
     expect(infos[0].diagnostic).toBe('FK violation: `(orders.merchant_id, orders.country)` = `(1, "UK")` does not exist in `(merchants.id, merchants.country_code)`');
     expect(infos[1].diagnostic).toBe('FK violation: `(orders.merchant_id, orders.country)` = `(1, "UK")` does not exist in `(merchants.id, merchants.country_code)`');
-    // merchants → orders: (2, "UK") doesn't exist in orders
+    // merchants to orders: (2, "UK") doesn't exist in orders
     expect(infos[2].diagnostic).toBe('FK violation: `(merchants.id, merchants.country_code)` = `(2, "UK")` does not exist in `(orders.merchant_id, orders.country)`');
     expect(infos[3].diagnostic).toBe('FK violation: `(merchants.id, merchants.country_code)` = `(2, "UK")` does not exist in `(orders.merchant_id, orders.country)`');
   });
@@ -1004,7 +1004,7 @@ describe('[example - record] many-to-many FK constraints', () => {
     `;
     const result = interpret(source);
     const infos = result.getInfos();
-    // students 1,2,3 don't exist in courses; courses 10,20 don't exist in students
+    // students 1,2,3 don't exist in courses, courses 10,20 don't exist in students
     expect(infos.some((i) => i.diagnostic.includes('does not exist in `courses.id`'))).toBe(true);
     expect(infos.some((i) => i.diagnostic.includes('does not exist in `students.id`'))).toBe(true);
   });

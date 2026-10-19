@@ -9,8 +9,8 @@ import { Uri } from '../types';
 import { Filepath } from '@/core/types/filepath';
 import { getEditorRange } from '../utils';
 
-// Provides quick fixes for diagnostics that have attached QuickFix data.
-// Monaco calls this when the user hovers over or clicks on a marker.
+// Provides quick fixes for diagnostics that have attached QuickFix data
+// Monaco calls this when the user hovers over or clicks on a marker
 export default class DBMLCodeActionProvider implements CodeActionProvider {
   private compiler: Compiler;
 
@@ -24,17 +24,16 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     context: CodeActionContext,
     _token: CancellationToken,
   ): CodeActionList | undefined {
-    // Only proceed if Monaco passed markers at the cursor position.
+    // Only proceed if Monaco passed markers at the cursor position
     if (!context.markers.length) return undefined;
 
-    // Collect infos for the current file that have quick fixes attached.
+    // Collect infos for the current file that have quick fixes attached
     const filepath = Filepath.fromUri(String(model.uri));
     const infos = this.compiler.interpretProject().getInfos()
       .filter((h) => h.quickFixes?.length && h.filepath.equals(filepath));
     if (!infos.length) return undefined;
 
-    // Match each marker to its corresponding hint by exact position,
-    // then collect the quick fixes.
+    // Match each marker to its corresponding hint by exact position, then collect the quick fixes
     const actions: CodeAction[] = [];
 
     for (const marker of context.markers) {
@@ -52,7 +51,7 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
       }
     }
 
-    // Deduplicate by title + marker position.
+    // Deduplicate by title + marker position
     const unique = uniqBy(actions, (a) => {
       const d = a.diagnostics?.[0] as MarkerData | undefined;
       return `${a.title}@${d?.startLineNumber}:${d?.startColumn}`;
@@ -61,8 +60,8 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
     return { actions: unique, dispose () {} };
   }
 
-  // Convert a QuickFix (offset-based) to a Monaco CodeAction (line/column-based).
-  // Returns undefined for cross-file fixes (offsets can't be resolved against the current model).
+  // Convert a QuickFix (offset-based) to a Monaco CodeAction (line/column-based)
+  // Returns undefined for cross-file fixes (offsets can't be resolved against the current model)
   private quickFixToCodeAction (fix: QuickFix, model: TextModel, marker: MarkerData): CodeAction | undefined {
     const filepath = Filepath.fromUri(String(model.uri));
 
@@ -90,7 +89,7 @@ export default class DBMLCodeActionProvider implements CodeActionProvider {
       }),
     };
 
-    // Link the action to the marker so Monaco shows it as a quick fix.
+    // Link the action to the marker so Monaco shows it as a quick fix
     return {
       title: fix.title,
       kind: 'quickfix', // required for Monaco to show it in the diagnostic hover dropdown

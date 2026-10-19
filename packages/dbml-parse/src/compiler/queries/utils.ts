@@ -57,7 +57,7 @@ export function addDoubleQuoteIfNeeded (identifier: string): string {
   return `"${escapeString(identifier)}"`;
 }
 
-// Build a quoted qualified name string from name parts.
+// Build a quoted qualified name string from name parts
 export function normalizeQualifiedName (...parts: string[]): string {
   return parts.map(addDoubleQuoteIfNeeded).join('.');
 }
@@ -323,9 +323,9 @@ export function collectTransitiveDependencies (
   return result;
 }
 
-// Canonical enumeration of visible symbols, rooted at each file's programSymbol.
+// Canonical enumeration of visible symbols, rooted at each file's programSymbol
 //
-// WARNING: always go through `compiler.symbolMembers` - never use usableMembers in this function
+// WARNING: always go through `compiler.symbolMembers`, never use usableMembers in this function
 export function allVisibleMembers (compiler: Compiler): Report<NodeSymbol[]> {
   const members: NodeSymbol[] = [];
   const errors: any[] = [];

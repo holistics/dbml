@@ -2,7 +2,7 @@ import type Compiler from '@/compiler/index';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 
 // BFS-walk the dependency graph from the given roots using fileDependencies
-// (a local query). Returns all reachable files in discovery order.
+// Returns all reachable files in discovery order
 export function walkDependencies (compiler: Compiler, roots: Filepath[]): Filepath[] {
   const visited = new Set<FilepathId>();
   const results: Filepath[] = [];
