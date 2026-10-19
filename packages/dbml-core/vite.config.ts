@@ -20,8 +20,6 @@ export default defineConfig({
     rollupOptions: {
       external: [
         '@dbml/parse', // Do not bundle @dbml/parse to allow @dbml/core's peerDeps & consumers to sync
-        'antlr4',
-        'luxon',
       ],
       output: {
         preserveModules: true, /// preserve module structure instead of bundling everything in 1 file to enable file-based tree-shaking

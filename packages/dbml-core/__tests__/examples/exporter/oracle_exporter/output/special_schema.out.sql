@@ -27,7 +27,7 @@ CREATE TABLE "products" (
   PRIMARY KEY ("product_id", "supplier_id")
 );
 
-CREATE INDEX "IDX_USERS" ON "users" (LOWER("fullname"), "username");
+CREATE INDEX "IDX_USERS" ON "users" ("username", LOWER("fullname"));
 
 CREATE UNIQUE INDEX "IDX_ORDER_USER" ON "orders" ("id", "user_id");
 

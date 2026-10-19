@@ -305,6 +305,51 @@ describe('[example] parser', () => {
       expect(partialNode).toBeInstanceOf(PrimaryExpressionNode);
       expect((partialNode.expression as VariableNode).variable?.value).toBe('timestamps');
     });
+
+    test('should parse a line starting with an operator as its own expression', () => {
+      const source = `
+        Test t {
+          1
+          -2
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+
+      expect(body.body).toHaveLength(2);
+      expect((body.body[0] as FunctionApplicationNode).callee).toBeInstanceOf(PrimaryExpressionNode);
+      const negative = (body.body[1] as FunctionApplicationNode).callee as PrefixExpressionNode;
+      expect(negative).toBeInstanceOf(PrefixExpressionNode);
+      expect(negative.op?.value).toBe('-');
+    });
+
+    test('should continue an expression onto a line starting with an operator inside parentheses', () => {
+      const source = `
+        Test t {
+          (1
+          - 2)
+        }
+      `;
+      const elements = getElements(source);
+      const body = elements[0].body as BlockExpressionNode;
+
+      expect(body.body).toHaveLength(1);
+      const group = (body.body[0] as FunctionApplicationNode).callee as TupleExpressionNode;
+      expect(group.elementList[0]).toBeInstanceOf(InfixExpressionNode);
+    });
+
+    test('should continue a ref outside a block onto a line starting with its operator', () => {
+      const source = `
+        Ref: users.id
+          < posts.user_id
+      `;
+      const elements = getElements(source);
+
+      expect(elements).toHaveLength(1);
+      const ref = (elements[0].body as FunctionApplicationNode).callee as InfixExpressionNode;
+      expect(ref).toBeInstanceOf(InfixExpressionNode);
+      expect(ref.op?.value).toBe('<');
+    });
   });
 
   describe('expression parsing', () => {

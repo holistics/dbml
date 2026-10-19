@@ -54,7 +54,9 @@ const getFieldType = (data_type: string, udt_name: string, character_maximum_len
 };
 
 const getDbdefault = (data_type: string, column_default: string, default_type: DefaultType): DefaultInfo => {
-  if (data_type === 'ARRAY') {
+  // Only a non-empty ARRAY[...] constructor is rewritten here. Other array defaults, such as
+  // '{a,b}'::text[], ARRAY[]::text[] or a function call, are handled below like any other default
+  if (data_type === 'ARRAY' && column_default.startsWith('ARRAY[') && !column_default.startsWith('ARRAY[]')) {
     const values = column_default.slice(6, -1).split(',').map((value) => {
       return value.split('::')[0];
     });
@@ -228,40 +230,59 @@ const generateRawRefs = async (client: Client, schemas: string[]): Promise<Ref[]
 
   const refsListSql = `
     SELECT
-      tc.table_schema,
-      tc.table_name,
-      tc.constraint_name as fk_constraint_name,
-      STRING_AGG(DISTINCT kcu.column_name, ',') AS column_names,
-      ccu.table_schema AS foreign_table_schema,
-      ccu.table_name AS foreign_table_name,
-      STRING_AGG(DISTINCT ccu.column_name, ',') AS foreign_column_names,
-      tc.constraint_type,
-      rc.delete_rule AS on_delete,
-      rc.update_rule AS on_update
-    FROM information_schema.table_constraints AS tc
-    JOIN information_schema.key_column_usage AS kcu
-      ON tc.constraint_name = kcu.constraint_name
-      AND tc.table_schema = kcu.table_schema
-    JOIN information_schema.constraint_column_usage AS ccu
-      ON ccu.constraint_name = tc.constraint_name
-    JOIN information_schema.referential_constraints AS rc
-      ON tc.constraint_name = rc.constraint_name
-      AND tc.table_schema = rc.constraint_schema
-    WHERE tc.constraint_type = 'FOREIGN KEY'
-      AND tc.table_schema NOT IN ('pg_catalog', 'information_schema')
-      ${buildSchemaQuery('tc.table_schema', schemas)}
+      source_ns.nspname AS table_schema,
+      source_table.relname AS table_name,
+      constraint_row.conname AS fk_constraint_name,
+      STRING_AGG(source_column.attname, ',' ORDER BY key_column.ordinality) AS column_names,
+      target_ns.nspname AS foreign_table_schema,
+      target_table.relname AS foreign_table_name,
+      STRING_AGG(target_column.attname, ',' ORDER BY key_column.ordinality) AS foreign_column_names,
+      CASE constraint_row.confdeltype
+        WHEN 'a' THEN 'NO ACTION'
+        WHEN 'r' THEN 'RESTRICT'
+        WHEN 'c' THEN 'CASCADE'
+        WHEN 'n' THEN 'SET NULL'
+        WHEN 'd' THEN 'SET DEFAULT'
+      END AS on_delete,
+      CASE constraint_row.confupdtype
+        WHEN 'a' THEN 'NO ACTION'
+        WHEN 'r' THEN 'RESTRICT'
+        WHEN 'c' THEN 'CASCADE'
+        WHEN 'n' THEN 'SET NULL'
+        WHEN 'd' THEN 'SET DEFAULT'
+      END AS on_update
+    FROM pg_constraint AS constraint_row
+    JOIN pg_class AS source_table
+      ON constraint_row.conrelid = source_table.oid
+    JOIN pg_namespace AS source_ns
+      ON source_table.relnamespace = source_ns.oid
+    JOIN pg_class AS target_table
+      ON constraint_row.confrelid = target_table.oid
+    JOIN pg_namespace AS target_ns
+      ON target_table.relnamespace = target_ns.oid
+    JOIN LATERAL unnest(constraint_row.conkey, constraint_row.confkey)
+      WITH ORDINALITY AS key_column(source_attnum, target_attnum, ordinality)
+      ON TRUE
+    JOIN pg_attribute AS source_column
+      ON source_column.attrelid = source_table.oid
+      AND source_column.attnum = key_column.source_attnum
+    JOIN pg_attribute AS target_column
+      ON target_column.attrelid = target_table.oid
+      AND target_column.attnum = key_column.target_attnum
+    WHERE constraint_row.contype = 'f'
+      AND source_ns.nspname NOT IN ('pg_catalog', 'information_schema')
+      ${buildSchemaQuery('source_ns.nspname', schemas)}
     GROUP BY
-      tc.table_schema,
-      tc.table_name,
-      tc.constraint_name,
-      ccu.table_schema,
-      ccu.table_name,
-      tc.constraint_type,
-      rc.delete_rule,
-      rc.update_rule
+      source_ns.nspname,
+      source_table.relname,
+      constraint_row.conname,
+      target_ns.nspname,
+      target_table.relname,
+      constraint_row.confdeltype,
+      constraint_row.confupdtype
     ORDER BY
-      tc.table_schema,
-      tc.table_name;
+      source_ns.nspname,
+      source_table.relname;
   `;
 
   const refsQueryResult = await client.query(refsListSql);

@@ -96,20 +96,24 @@ export default class IndexesInterpreter {
       for (const arg of flatArgs) {
         const result = destructureIndexNode(arg);
         if (!result) continue;
+        const argColumns: Index['columns'] = [];
         for (const s of result.functional) {
-          columns.push({
+          argColumns.push({
             value: s.value?.value ?? '',
             type: 'expression',
             token: getTokenPosition(s),
           });
         }
         for (const s of result.nonFunctional) {
-          columns.push({
+          argColumns.push({
             value: extractVarNameFromPrimaryVariable(s) ?? '',
             type: 'column',
             token: getTokenPosition(s),
           });
         }
+        // Keep the written order of columns and expressions
+        argColumns.sort((a, b) => a.token.start.offset - b.token.start.offset);
+        columns.push(...argColumns);
       }
 
       const idx: Index = {
