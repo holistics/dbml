@@ -3,184 +3,594 @@
   "tables": [
     {
       "name": "data_types",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "c1_char",
           "type": {
-            "type_name": "CHAR(10)"
+            "type_name": "char(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 30,
+              "line": 2,
+              "column": 11
+            },
+            "end": {
+              "offset": 36,
+              "line": 2,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c2_varchar2",
           "type": {
-            "type_name": "VARCHAR2(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 52,
+              "line": 3,
+              "column": 15
+            },
+            "end": {
+              "offset": 62,
+              "line": 3,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c3_varchar",
           "type": {
-            "type_name": "VARCHAR(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 82,
+              "line": 4,
+              "column": 14
+            },
+            "end": {
+              "offset": 91,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c4_nchar",
           "type": {
-            "type_name": "NCHAR(20)"
+            "type_name": "nchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 110,
+              "line": 5,
+              "column": 12
+            },
+            "end": {
+              "offset": 117,
+              "line": 5,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c5_nvarchar2",
           "type": {
-            "type_name": "NVARCHAR2(100)"
+            "type_name": "nvarchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 134,
+              "line": 6,
+              "column": 16
+            },
+            "end": {
+              "offset": 145,
+              "line": 6,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c6_number",
           "type": {
-            "type_name": "NUMBER(10, 2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 167,
+              "line": 7,
+              "column": 13
+            },
+            "end": {
+              "offset": 175,
+              "line": 7,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c7_long",
           "type": {
-            "type_name": "LONG"
+            "type_name": "bigint",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 196,
+              "line": 8,
+              "column": 11
+            },
+            "end": {
+              "offset": 202,
+              "line": 8,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c8_date",
           "type": {
-            "type_name": "DATE"
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 214,
+              "line": 9,
+              "column": 11
+            },
+            "end": {
+              "offset": 220,
+              "line": 9,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c9_binary_float",
           "type": {
-            "type_name": "BINARY_FLOAT"
+            "type_name": "float",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 232,
+              "line": 10,
+              "column": 19
+            },
+            "end": {
+              "offset": 246,
+              "line": 10,
+              "column": 19
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c10_binary_double",
           "type": {
-            "type_name": "BINARY_DOUBLE"
+            "type_name": "double",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 266,
+              "line": 11,
+              "column": 21
+            },
+            "end": {
+              "offset": 282,
+              "line": 11,
+              "column": 21
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c11_timestamp",
           "type": {
-            "type_name": "TIMESTAMP(6)"
+            "type_name": "timestamp(6)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 303,
+              "line": 12,
+              "column": 17
+            },
+            "end": {
+              "offset": 315,
+              "line": 12,
+              "column": 17
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c12_timestamp_with_tz",
           "type": {
-            "type_name": "TIMESTAMP(6) WITH TIME ZONE"
+            "type_name": "timestamptz(6)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 335,
+              "line": 13,
+              "column": 25
+            },
+            "end": {
+              "offset": 355,
+              "line": 13,
+              "column": 25
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c13_timestamp_with_local_tz",
           "type": {
-            "type_name": "TIMESTAMP(6) WITH LOCAL TIME ZONE"
+            "type_name": "timestampltz(6)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 390,
+              "line": 14,
+              "column": 31
+            },
+            "end": {
+              "offset": 416,
+              "line": 14,
+              "column": 31
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c14_interval_ytm",
           "type": {
-            "type_name": "INTERVAL YEAR(2) TO MONTH"
+            "type_name": "INTERVAL YEAR (2) TO MONTH",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 457,
+              "line": 15,
+              "column": 20
+            },
+            "end": {
+              "offset": 472,
+              "line": 15,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c15_interval_dts",
           "type": {
-            "type_name": "INTERVAL DAY(2) TO SECOND(6)"
+            "type_name": "INTERVAL DAY (2) TO SECOND (6)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 505,
+              "line": 16,
+              "column": 20
+            },
+            "end": {
+              "offset": 520,
+              "line": 16,
+              "column": 20
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c16_raw",
           "type": {
-            "type_name": "RAW(1000)"
+            "type_name": "RAW(1000)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 556,
+              "line": 17,
+              "column": 11
+            },
+            "end": {
+              "offset": 562,
+              "line": 17,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c17_long_raw",
           "type": {
-            "type_name": "LONG RAW"
+            "type_name": "LONG RAW",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 579,
+              "line": 18,
+              "column": 16
+            },
+            "end": {
+              "offset": 590,
+              "line": 18,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c18_rowid",
           "type": {
-            "type_name": "ROWID"
+            "type_name": "ROWID",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 606,
+              "line": 19,
+              "column": 13
+            },
+            "end": {
+              "offset": 614,
+              "line": 19,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c19_urowid",
           "type": {
-            "type_name": "UROWID(4000)"
+            "type_name": "UROWID(4000)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 627,
+              "line": 20,
+              "column": 14
+            },
+            "end": {
+              "offset": 636,
+              "line": 20,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c20_clob",
           "type": {
-            "type_name": "CLOB"
+            "type_name": "text",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 656,
+              "line": 21,
+              "column": 12
+            },
+            "end": {
+              "offset": 663,
+              "line": 21,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c21_nclob",
           "type": {
-            "type_name": "NCLOB"
+            "type_name": "NCLOB",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 675,
+              "line": 22,
+              "column": 13
+            },
+            "end": {
+              "offset": 683,
+              "line": 22,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c22_blob",
           "type": {
-            "type_name": "BLOB"
+            "type_name": "varbinary",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 696,
+              "line": 23,
+              "column": 12
+            },
+            "end": {
+              "offset": 703,
+              "line": 23,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c23_bfile",
           "type": {
-            "type_name": "BFILE"
+            "type_name": "BFILE",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 715,
+              "line": 24,
+              "column": 13
+            },
+            "end": {
+              "offset": 723,
+              "line": 24,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "c24_xmltype",
           "type": {
-            "type_name": "XMLTYPE"
+            "type_name": "XMLTYPE",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 736,
+              "line": 25,
+              "column": 15
+            },
+            "end": {
+              "offset": 746,
+              "line": 25,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

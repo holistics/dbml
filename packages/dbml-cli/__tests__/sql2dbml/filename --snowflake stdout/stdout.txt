@@ -1,91 +1,85 @@
-Table "HP_TEST"."CUSTOMERS" {
-  "CUSTOMER_ID" "NUMBER(38, 0)" [pk, not null, increment]
-  "FIRST_NAME" VARCHAR(50) [not null, default: 'John']
-  "LAST_NAME" VARCHAR(50) [not null, default: 'Doe']
-  "EMAIL" VARCHAR(100)
-  "SECOND_EMAIL" VARCHAR(100)
-  "UNIQUE_NAME" VARCHAR(100) [unique, not null, default: `CONCAT(FIRST_NAME, LAST_NAME, EMAIL)`]
-  "IS_VIP" BOOLEAN [default: FALSE]
-  "IS_SOMETHING" BOOLEAN
-  "CREATED_AT" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
+Table "TEST_DB.HP_TEST"."CUSTOMERS" {
+  "CUSTOMER_ID" decimal(38,0) [pk, not null, increment]
+  "FIRST_NAME" varchar(50) [not null, default: 'John']
+  "LAST_NAME" varchar(50) [not null, default: 'Doe']
+  "EMAIL" varchar(100)
+  "SECOND_EMAIL" varchar(100)
+  "UNIQUE_NAME" varchar(100) [unique, not null, default: `CONCAT(FIRST_NAME, LAST_NAME, EMAIL)`]
+  "IS_VIP" boolean [default: false]
+  "IS_SOMETHING" boolean
+  "CREATED_AT" timestampntz(9) [default: `CURRENT_TIMESTAMP()`]
 
   Indexes {
     (EMAIL, SECOND_EMAIL) [unique]
   }
 }
 
-Table "HP_TEST"."ORDERS" {
-  "ORDER_ID" "NUMBER(38, 0)" [pk, not null, increment]
-  "CUSTOMER_ID" "NUMBER(38, 0)"
-  "ORDER_DATE" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
-  "TOTAL_AMOUNT" "NUMBER(10, 2)" [default: 0.0]
+Table "TEST_DB.HP_TEST"."ORDERS" {
+  "ORDER_ID" decimal(38,0) [pk, not null, increment]
+  "CUSTOMER_ID" decimal(38,0)
+  "ORDER_DATE" timestampntz(9) [default: `CURRENT_TIMESTAMP()`]
+  "TOTAL_AMOUNT" decimal(10,2) [default: 0]
 }
 
-Table "HP_TEST"."ORDER_ITEMS" {
-  "ORDER_ITEM_ID" "NUMBER(38, 0)" [unique, pk, not null, increment]
-  "ORDER_ID" "NUMBER(38, 0)"
-  "PRODUCT_ID" "NUMBER(38, 0)"
-  "QUANTITY" "NUMBER(38, 0)" [default: 1]
-  "PRICE" "NUMBER(10, 2)"
+Table "TEST_DB.HP_TEST"."ORDER_ITEMS" {
+  "ORDER_ITEM_ID" decimal(38,0) [unique, pk, not null, increment]
+  "ORDER_ID" decimal(38,0)
+  "PRODUCT_ID" decimal(38,0)
+  "QUANTITY" decimal(38,0) [default: 1]
+  "PRICE" decimal(10,2)
 }
 
-Table "HP_TEST"."PRODUCTS" {
-  "PRODUCT_ID" "NUMBER(38, 0)" [pk, not null, increment]
-  "PRODUCT_NAME" VARCHAR(100)
-  "DESCRIPTION" VARCHAR(16777216)
-  "PRICE" "NUMBER(10, 2)"
-  "STOCK_QUANTITY" "NUMBER(38, 0)"
+Table "TEST_DB.HP_TEST"."PRODUCTS" {
+  "PRODUCT_ID" decimal(38,0) [pk, not null, increment]
+  "PRODUCT_NAME" varchar(100)
+  "DESCRIPTION" varchar(16777216)
+  "PRICE" decimal(10,2)
+  "STOCK_QUANTITY" decimal(38,0)
 }
 
-Table "HP_TEST"."COMPOSITE_PK_TABLE" {
-  "COLUMN1" NUMBER(38,0) [not null]
-  "COLUMN2" VARCHAR(16777216) [not null]
-  "COLUMN3" DATE
+Table "TEST_DB.HP_TEST"."COMPOSITE_PK_TABLE" {
+  "COLUMN1" decimal(38,0) [not null]
+  "COLUMN2" varchar(16777216) [not null]
+  "COLUMN3" date
 
   Indexes {
     (COLUMN1, COLUMN2) [pk, name: "PK_COMPOSITE"]
   }
 }
 
-Table "HP_TEST"."CLONE_ORDERS" {
-  "ORDER_ID" "NUMBER(38, 0)" [pk, not null, increment]
-  "CUSTOMER_ID" "NUMBER(38, 0)"
-  "ORDER_DATE" TIMESTAMP_NTZ(9) [default: `CURRENT_TIMESTAMP()`]
-  "TOTAL_AMOUNT" "NUMBER(10, 2)" [default: 0.0]
+Table "TEST_DB.HP_TEST"."employees" {
+  "employee_id" int [pk, increment]
+  "first_name" varchar(50) [not null]
+  "last_name" varchar(50) [not null]
+  "email" varchar(100)
+  "hire_date" date [default: `CURRENT_DATE`]
 }
 
-Table "HP_TEST"."employees" {
-  "employee_id" INT [pk, increment]
-  "first_name" VARCHAR(50) [not null]
-  "last_name" VARCHAR(50) [not null]
-  "email" VARCHAR(100)
-  "hire_date" DATE [default: `CURRENT_DATE()`]
+Table "TEST_DB.TEST"."_holistics_persisted_test_20240703094645" {
+  "a" decimal(1,0)
+  "b" decimal(1,0)
+  "c" decimal(1,0)
 }
 
-Table "TEST"."_holistics_persisted_test_20240703094645" {
-  "a" "NUMBER(1, 0)"
-  "b" "NUMBER(1, 0)"
-  "c" "NUMBER(1, 0)"
-}
-
-Table "TEST_2024_06_28_10_01_ZQMIMY"."ONE" {
-  "FOO" VARCHAR(16777216) [pk]
-  "BAR" VARCHAR(16777216)
+Table "TEST_DB.TEST_2024_06_28_10_01_ZQMIMY"."ONE" {
+  "FOO" varchar(16777216)
+  "BAR" varchar(16777216)
 
   Indexes {
-    BAR [unique]
-    (FOO, BAR) [unique]
-    (BAR, FOO) [unique]
+    FOO [pk, name: "PKEY_FOO"]
+    BAR [unique, name: "UNIQUE_BAR"]
+    (FOO, BAR) [unique, name: "UNIQUE_FOO_BAR"]
+    (BAR, FOO) [unique, name: "UNIQUE_BAR_FOO"]
   }
 }
 
-Table "TEST_2024_06_28_10_01_ZQMIMY"."TWO" {
-  "ABC" VARCHAR(16777216)
-  "XYZ" VARCHAR(16777216)
-  "QWE" VARCHAR(16777216)
+Table "TEST_DB.TEST_2024_06_28_10_01_ZQMIMY"."TWO" {
+  "ABC" varchar(16777216)
+  "XYZ" varchar(16777216)
+  "QWE" varchar(16777216)
 
   Indexes {
-    (QWE, ABC) [unique]
+    (QWE, ABC) [unique, name: "UNIQUE_QWE_ABC"]
   }
 }
 
@@ -111,6 +105,10 @@ Table "t1" {
   "v" varchar(16777216)
 }
 
+Table "t2" {
+  "i" int
+}
+
 Table "t4" {
   "v" varchar(16777216) [note: 'hello world']
 }
@@ -124,59 +122,59 @@ Table "t6" {
 }
 
 Table "t7" {
-  "i" integer [default: 1, note: 'hello world']
+  "i" int [default: 1, note: 'hello world']
 }
 
 Table "t8" {
-  "i" integer
+  "i" int
 }
 
 Table "t9" {
-  "i" integer
+  "i" int
 }
 
 Table "t10" {
-  "i" integer
+  "i" int
 }
 
 Table "t_default_1" {
-  "i" integer [not null]
+  "i" int [not null]
 }
 
 Table "t_default_2" {
-  "i" integer [unique, not null]
+  "i" int [unique, not null]
 }
 
 Table "t_default_3" {
-  "i" integer [unique, not null]
+  "i" int [unique, not null]
 }
 
 Table "t_default_4" {
-  "i" integer [pk, not null]
+  "i" int [pk, not null]
 }
 
 Table "t_default_5" {
-  "i" integer [unique, pk, not null]
+  "i" int [unique, pk, not null]
 }
 
 Table "t_default_6" {
-  "i" integer [unique, pk, not null]
+  "i" int [unique, pk, not null]
 }
 
 Table "t_default_7" {
-  "i" integer [not null, default: 1]
+  "i" int [not null, default: 1]
 }
 
 Table "t_default_8" {
-  "i" integer [not null, default: 1]
+  "i" int [not null, default: 1]
 }
 
 Table "t_default_9" {
-  "i" integer [not null, increment]
+  "i" int [not null, increment]
 }
 
 Table "t_default_10" {
-  "i" integer [not null, increment]
+  "i" int [not null, increment]
 }
 
 Table "t_default_11" {
@@ -212,63 +210,47 @@ Table "t_default_18" {
 }
 
 Table "t_masking_1" {
-  "i" integer
+  "i" int
 }
 
 Table "t_masking_2" {
-  "i" integer
+  "i" int
 }
 
 Table "t_policy_1" {
-  "i" integer [unique, not null, default: 1, note: 'hello world']
+  "i" int [unique, not null, default: 1, note: 'hello world']
 }
 
 Table "t_policy_2" {
   "v" varchar [unique, not null, note: 'hello world']
 }
 
-Table "public" {
-  "public" int
-}
-
 Table "T" {
-  "Source" string [not null]
-  "Query_Id" string
-  "State" string [not null]
-  "Procedure_Name" string
+  "Source" text [not null]
+  "Query_Id" text
+  "State" text [not null]
+  "Procedure_Name" text
 }
 
 Table "t_not_exist_1" {
   "v" varchar(16777216)
 }
 
-Table "t_not_exist_2" {
-  "v" varchar(16777216)
+Table "t_not_exist_3" {
+  "i" int
 }
 
 Table "TESTSEED1" {
   "IDENT" int [default: `SEQID.NEXTVAL`]
-  "mycol" string
+  "mycol" text
 }
 
 Table "TESTSEED2" {
   "IDENT" int [default: `SCHEM.SEQID.NEXTVAL`]
-  "mycol" string
+  "mycol" text
 }
 
 Table "TESTSEED3" {
-  "ident" int [increment]
-}
-
-Table "TESTSEED4" {
-  "ident" int [increment]
-}
-
-Table "TESTSEED5" {
-  "ident" int [increment]
-}
-
-Table "TESTSEED6" {
   "ident" int [increment]
 }
 
@@ -277,13 +259,13 @@ Table "t_date_time_1" {
 }
 
 Table "T_DATE_TIME_2" {
-  "TIMESTAMP" DATETIME
-  "VALUE" STRING
-  "NAME" STRING
+  "TIMESTAMP" datetime
+  "VALUE" text
+  "NAME" text
 }
 
 Table "T_OUT_1" {
-  "C1" STRING
+  "C1" text
 
   Indexes {
     C1 [unique]
@@ -291,87 +273,71 @@ Table "T_OUT_1" {
 }
 
 Table "T_OUT_2" {
-  "C2" STRING [pk]
+  "C2" text [pk]
 }
 
 Table "T_OUT_3" {
-  "C3" STRING
+  "C3" text
 }
 
 Table "T_OUT_4" {
-  "C1" STRING
+  "C1" text
 
   Indexes {
-    C1 [unique]
+    C1 [unique, name: "ANAME"]
   }
 }
 
 Table "T_OUT_5" {
-  "C2" STRING [pk]
+  "C2" text
+
+  Indexes {
+    C2 [pk, name: "BNAME"]
+  }
 }
 
 Table "T_OUT_6" {
-  "C3" STRING
-}
-
-Table "T_CONSTRAINT_1" {
-  "C1" STRING
-
-  Indexes {
-    C1 [unique]
-  }
-}
-
-Table "T_CONSTRAINT_2" {
-  "C1" STRING
-
-  Indexes {
-    C1 [unique]
-  }
+  "C3" text
 }
 
 Table "T_CONSTRAINT_3" {
-  "C3" STRING
+  "C3" text
 }
 
 Table "T_CONSTRAINT_4" {
-  "C3" STRING
+  "C3" text
 }
 
 Table "T_CONSTRAINT_5" {
-  "C3" STRING
+  "C3" text
 }
 
 Table "T_CONSTRAINT_6" {
-  "C3" STRING
-}
-
-Table "T_CONSTRAINT_7" {
-  "C1" STRING [unique]
+  "C3" text
 }
 
 Table "T_CONSTRAINT_8" {
-  "C3" STRING
+  "C3" text
 }
 
 Table "T_CONSTRAINT_9" {
-  "C3" STRING
+  "C3" text
 }
 
 Table "T_CONSTRAINT_10" {
-  "C3" STRING
+  "C3" text
 }
 
 Table "TestK" {
-  "NVL2" string
-  "FIRST_VALUE" string
+  "NVL2" text
+  "FIRST_VALUE" text
   "RESTRICT" int
   "NVL" int
   "RESPECT" int
 }
 
 Table "T_TAG_1" {
-  "C1" string
+  "C1" text
 }
 
 Table "tpk" {
@@ -388,57 +354,50 @@ Table "tc2" {
 
 Table "tc3" {
   "c" char(4)
-  "c2" character(2)
+  "c2" char(2)
 }
 
 Table "tz1" {
-  "i" TIMESTAMPLTZ
+  "i" timestampltz
 }
 
 Table "tz2" {
-  "i" TIMESTAMPNTZ
+  "i" timestampntz
 }
 
 Table "tz3" {
-  "i" TIMESTAMPTZ
-}
-
-Table "TESTSEED7" {
-  "ident" int [increment]
-}
-
-Table "TESTSEED8" {
-  "ident" int [increment]
+  "i" timestamptz
 }
 
 Table "DIRECTION" {
-  "LENGTH" INT
-  "LANGUAGE" INT
+  "LENGTH" int
+  "LANGUAGE" int
 }
 
 Table "t_comment" {
   "i" int
+  Note: '''\'test\''''
 }
 
 Table "T_NULL_NOT_NULL" {
-  "C_NULL" INT [not null]
+  "C_NULL" int [not null]
 }
 
 Table "t_cluster" {
   "f1" varchar
-  "f2" number
+  "f2" decimal(38,0)
 }
 
 Table "t_virtual_1" {
-  "f1" number
-  "f2" number
-  "f3" number
+  "f1" decimal(38,0)
+  "f2" decimal(38,0)
+  "f3" decimal(38,0)
 }
 
 Table "t_virtual_2" {
-  "f1" number
-  "f2" number
-  "f3" number
+  "f1" decimal(38,0)
+  "f2" decimal(38,0)
+  "f3" decimal(38,0)
 }
 
 Table "floor" {
@@ -446,29 +405,35 @@ Table "floor" {
   "getdate" int
 }
 
-Ref:"HP_TEST"."CUSTOMERS"."CUSTOMER_ID" < "HP_TEST"."ORDERS"."CUSTOMER_ID"
+Ref:"TEST_DB.HP_TEST"."CUSTOMERS"."CUSTOMER_ID" ?<? "TEST_DB.HP_TEST"."ORDERS"."CUSTOMER_ID"
 
-Ref:"HP_TEST"."ORDERS"."ORDER_ID" ?<? "HP_TEST"."ORDER_ITEMS"."ORDER_ID"
+Ref:"TEST_DB.HP_TEST"."ORDERS"."ORDER_ID" ?<? "TEST_DB.HP_TEST"."ORDER_ITEMS"."ORDER_ID"
 
-Ref:"HP_TEST"."PRODUCTS"."PRODUCT_ID" < "HP_TEST"."ORDER_ITEMS"."PRODUCT_ID"
+Ref:"TEST_DB.HP_TEST"."PRODUCTS"."PRODUCT_ID" ?<? "TEST_DB.HP_TEST"."ORDER_ITEMS"."PRODUCT_ID"
 
-Ref:"TEST_2024_06_28_10_01_ZQMIMY"."ONE".("BAR", "FOO") < "TEST_2024_06_28_10_01_ZQMIMY"."TWO".("XYZ", "ABC")
+Ref "FKEY_ABC_XYZ":"TEST_DB.TEST_2024_06_28_10_01_ZQMIMY"."ONE".("BAR", "FOO") ?<? "TEST_DB.TEST_2024_06_28_10_01_ZQMIMY"."TWO".("XYZ", "ABC")
 
-Ref:"TEST_2024_06_28_10_01_ZQMIMY"."ONE"."FOO" < "TEST_2024_06_28_10_01_ZQMIMY"."TWO"."QWE"
+Ref "FKEY_QWE":"TEST_DB.TEST_2024_06_28_10_01_ZQMIMY"."ONE"."FOO" ?<? "TEST_DB.TEST_2024_06_28_10_01_ZQMIMY"."TWO"."QWE"
 
-Ref:"T_OUT_2"."C2" < "T_OUT_3"."C3"
+Ref:"T_OUT_2"."C2" ?<? "T_OUT_3"."C3"
 
-Ref:"T_OUT_5"."C2" < "T_OUT_6"."C3"
+Ref "CNAME":"T_OUT_5"."C2" ?<? "T_OUT_6"."C3"
 
-Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_3"."C3"
+Ref "CNAME":"T_OUT_5"."C2" ?<? "T_CONSTRAINT_3"."C3" [update: cascade, delete: cascade]
 
-Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_4"."C3"
+Ref "CNAME":"T_OUT_5"."C2" ?<? "T_CONSTRAINT_4"."C3" [update: set null, delete: restrict]
 
-Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_5"."C3"
+Ref "CNAME":"T_OUT_5"."C2" ?<? "T_CONSTRAINT_5"."C3" [update: no action]
 
-Ref:"T_OUT_5"."C2" < "T_CONSTRAINT_6"."C3"
+Ref "CNAME":"T_OUT_5"."C2" ?<? "T_CONSTRAINT_6"."C3"
 
 Ref:"T_OUT_5"."C2" ?<? "T_CONSTRAINT_8"."C3"
 
-Ref:"T_OUT_5"."C2" ?<? "T_CONSTRAINT_9"."C3"
+Ref:"T_OUT_5"."C2" ?<? "T_CONSTRAINT_9"."C3" [update: no action]
+
+Ref:"T_OUT_5"."C2" ?<? "T_CONSTRAINT_10"."C3" [update: set null, delete: restrict]
+
+Table "public.public"."public" {
+  "public" int
+}
 

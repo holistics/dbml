@@ -1,14 +1,18 @@
 {
   "schemas": [],
   "tables": [],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
+  "tablePartials": [],
   "records": [
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -18,26 +22,87 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 66,
+                "line": 3,
+                "column": 9
+              },
+              "end": {
+                "offset": 66,
+                "line": 3,
+                "column": 9
+              }
+            }
           },
           {
             "value": "Alice Johnson",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 69,
+                "line": 3,
+                "column": 26
+              },
+              "end": {
+                "offset": 83,
+                "line": 3,
+                "column": 26
+              }
+            }
           },
           {
             "value": "alice@example.com",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 86,
+                "line": 3,
+                "column": 47
+              },
+              "end": {
+                "offset": 104,
+                "line": 3,
+                "column": 47
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 107,
+                "line": 3,
+                "column": 52
+              },
+              "end": {
+                "offset": 109,
+                "line": 3,
+                "column": 52
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "users",
+      "schemaName": null,
       "columns": [
         "id",
         "name",
@@ -47,41 +112,149 @@
       "values": [
         [
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 82,
+                "line": 6,
+                "column": 4
+              },
+              "end": {
+                "offset": 82,
+                "line": 6,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Bob Smith",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 85,
+                "line": 6,
+                "column": 17
+              },
+              "end": {
+                "offset": 95,
+                "line": 6,
+                "column": 17
+              }
+            }
           },
           {
             "value": "bob@example.com",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 98,
+                "line": 6,
+                "column": 36
+              },
+              "end": {
+                "offset": 114,
+                "line": 6,
+                "column": 36
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 117,
+                "line": 6,
+                "column": 41
+              },
+              "end": {
+                "offset": 119,
+                "line": 6,
+                "column": 41
+              }
+            }
           }
         ],
         [
           {
-            "value": "3",
-            "type": "number"
+            "value": 3,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 128,
+                "line": 7,
+                "column": 4
+              },
+              "end": {
+                "offset": 128,
+                "line": 7,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Charlie Davis",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 131,
+                "line": 7,
+                "column": 21
+              },
+              "end": {
+                "offset": 145,
+                "line": 7,
+                "column": 21
+              }
+            }
           },
           {
             "value": "charlie@example.com",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 148,
+                "line": 7,
+                "column": 44
+              },
+              "end": {
+                "offset": 168,
+                "line": 7,
+                "column": 44
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 171,
+                "line": 7,
+                "column": 49
+              },
+              "end": {
+                "offset": 173,
+                "line": 7,
+                "column": 49
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "posts",
@@ -96,71 +269,263 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 83,
+                "line": 5,
+                "column": 4
+              },
+              "end": {
+                "offset": 83,
+                "line": 5,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Getting Started with PostgreSQL",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 86,
+                "line": 5,
+                "column": 39
+              },
+              "end": {
+                "offset": 118,
+                "line": 5,
+                "column": 39
+              }
+            }
           },
           {
             "value": "This post covers the basics of PostgreSQL...",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 121,
+                "line": 5,
+                "column": 87
+              },
+              "end": {
+                "offset": 166,
+                "line": 5,
+                "column": 87
+              }
+            }
           },
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 169,
+                "line": 5,
+                "column": 90
+              },
+              "end": {
+                "offset": 169,
+                "line": 5,
+                "column": 90
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 172,
+                "line": 5,
+                "column": 95
+              },
+              "end": {
+                "offset": 174,
+                "line": 5,
+                "column": 95
+              }
+            }
           }
         ],
         [
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 183,
+                "line": 6,
+                "column": 4
+              },
+              "end": {
+                "offset": 183,
+                "line": 6,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Understanding Indexing in Databases",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 186,
+                "line": 6,
+                "column": 43
+              },
+              "end": {
+                "offset": 222,
+                "line": 6,
+                "column": 43
+              }
+            }
           },
           {
             "value": "Indexes help speed up queries by...",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 225,
+                "line": 6,
+                "column": 82
+              },
+              "end": {
+                "offset": 261,
+                "line": 6,
+                "column": 82
+              }
+            }
           },
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 264,
+                "line": 6,
+                "column": 85
+              },
+              "end": {
+                "offset": 264,
+                "line": 6,
+                "column": 85
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 267,
+                "line": 6,
+                "column": 90
+              },
+              "end": {
+                "offset": 269,
+                "line": 6,
+                "column": 90
+              }
+            }
           }
         ],
         [
           {
-            "value": "3",
-            "type": "number"
+            "value": 3,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 278,
+                "line": 7,
+                "column": 4
+              },
+              "end": {
+                "offset": 278,
+                "line": 7,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Best Practices for SQL Queries",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 281,
+                "line": 7,
+                "column": 38
+              },
+              "end": {
+                "offset": 312,
+                "line": 7,
+                "column": 38
+              }
+            }
           },
           {
             "value": "Writing efficient SQL queries is crucial for...",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 315,
+                "line": 7,
+                "column": 89
+              },
+              "end": {
+                "offset": 363,
+                "line": 7,
+                "column": 89
+              }
+            }
           },
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 366,
+                "line": 7,
+                "column": 92
+              },
+              "end": {
+                "offset": 366,
+                "line": 7,
+                "column": 92
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 369,
+                "line": 7,
+                "column": 97
+              },
+              "end": {
+                "offset": 371,
+                "line": 7,
+                "column": 97
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "posts",
@@ -175,71 +540,263 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 81,
+                "line": 5,
+                "column": 4
+              },
+              "end": {
+                "offset": 81,
+                "line": 5,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Getting Started with PostgreSQL",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 84,
+                "line": 5,
+                "column": 39
+              },
+              "end": {
+                "offset": 116,
+                "line": 5,
+                "column": 39
+              }
+            }
           },
           {
             "value": "This post covers the basics of PostgreSQL...",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 119,
+                "line": 5,
+                "column": 87
+              },
+              "end": {
+                "offset": 164,
+                "line": 5,
+                "column": 87
+              }
+            }
           },
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 167,
+                "line": 5,
+                "column": 90
+              },
+              "end": {
+                "offset": 167,
+                "line": 5,
+                "column": 90
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 170,
+                "line": 5,
+                "column": 95
+              },
+              "end": {
+                "offset": 172,
+                "line": 5,
+                "column": 95
+              }
+            }
           }
         ],
         [
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 181,
+                "line": 6,
+                "column": 4
+              },
+              "end": {
+                "offset": 181,
+                "line": 6,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Understanding Indexing in Databases",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 184,
+                "line": 6,
+                "column": 43
+              },
+              "end": {
+                "offset": 220,
+                "line": 6,
+                "column": 43
+              }
+            }
           },
           {
             "value": "Indexes help speed up queries by...",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 223,
+                "line": 6,
+                "column": 82
+              },
+              "end": {
+                "offset": 259,
+                "line": 6,
+                "column": 82
+              }
+            }
           },
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 262,
+                "line": 6,
+                "column": 85
+              },
+              "end": {
+                "offset": 262,
+                "line": 6,
+                "column": 85
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 265,
+                "line": 6,
+                "column": 90
+              },
+              "end": {
+                "offset": 267,
+                "line": 6,
+                "column": 90
+              }
+            }
           }
         ],
         [
           {
-            "value": "3",
-            "type": "number"
+            "value": 3,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 276,
+                "line": 7,
+                "column": 4
+              },
+              "end": {
+                "offset": 276,
+                "line": 7,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Best Practices for SQL Queries",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 279,
+                "line": 7,
+                "column": 38
+              },
+              "end": {
+                "offset": 310,
+                "line": 7,
+                "column": 38
+              }
+            }
           },
           {
             "value": "Writing efficient SQL queries is crucial for...",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 313,
+                "line": 7,
+                "column": 89
+              },
+              "end": {
+                "offset": 361,
+                "line": 7,
+                "column": 89
+              }
+            }
           },
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 364,
+                "line": 7,
+                "column": 92
+              },
+              "end": {
+                "offset": 364,
+                "line": 7,
+                "column": 92
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 367,
+                "line": 7,
+                "column": 97
+              },
+              "end": {
+                "offset": 369,
+                "line": 7,
+                "column": 97
+              }
+            }
           }
         ]
-      ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "tableName": "products",
@@ -256,132 +813,367 @@
       "values": [
         [
           {
-            "value": "1",
-            "type": "number"
+            "value": 1,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 94,
+                "line": 5,
+                "column": 4
+              },
+              "end": {
+                "offset": 94,
+                "line": 5,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Laptop",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 97,
+                "line": 5,
+                "column": 14
+              },
+              "end": {
+                "offset": 104,
+                "line": 5,
+                "column": 14
+              }
+            }
           },
           {
-            "value": "{\"brand\": \"Dell\", \"specs\": {\"ram\": \"16GB\", \"storage\": \"512GB SSD\"}}",
-            "type": "string"
+            "value": "CAST('{\"brand\": \"Dell\", \"specs\": {\"ram\": \"16GB\", \"storage\": \"512GB SSD\"}}' AS JSON)",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "ARRAY['electronics','computer']",
-            "type": "expression"
+            "value": "ARRAY('electronics', 'computer')",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "true",
-            "type": "boolean"
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "1299.99",
-            "type": "number"
+            "value": 1299.99,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 224,
+                "line": 5,
+                "column": 140
+              },
+              "end": {
+                "offset": 230,
+                "line": 5,
+                "column": 140
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 233,
+                "line": 5,
+                "column": 145
+              },
+              "end": {
+                "offset": 235,
+                "line": 5,
+                "column": 145
+              }
+            }
           }
         ],
         [
           {
-            "value": "2",
-            "type": "number"
+            "value": 2,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 244,
+                "line": 6,
+                "column": 4
+              },
+              "end": {
+                "offset": 244,
+                "line": 6,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Smartphone",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 247,
+                "line": 6,
+                "column": 18
+              },
+              "end": {
+                "offset": 258,
+                "line": 6,
+                "column": 18
+              }
+            }
           },
           {
-            "value": "{\"brand\": \"Samsung\", \"specs\": {\"ram\": \"8GB\", \"storage\": \"256GB\"}}",
-            "type": "string"
+            "value": "CAST('{\"brand\": \"Samsung\", \"specs\": {\"ram\": \"8GB\", \"storage\": \"256GB\"}}' AS JSON)",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "ARRAY['electronics','mobile']",
-            "type": "expression"
+            "value": "ARRAY('electronics', 'mobile')",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "true",
-            "type": "boolean"
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "899.99",
-            "type": "number"
+            "value": 899.99,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 374,
+                "line": 6,
+                "column": 139
+              },
+              "end": {
+                "offset": 379,
+                "line": 6,
+                "column": 139
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 382,
+                "line": 6,
+                "column": 144
+              },
+              "end": {
+                "offset": 384,
+                "line": 6,
+                "column": 144
+              }
+            }
           }
         ],
         [
           {
-            "value": "3",
-            "type": "number"
+            "value": 3,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 393,
+                "line": 7,
+                "column": 4
+              },
+              "end": {
+                "offset": 393,
+                "line": 7,
+                "column": 4
+              }
+            }
           },
           {
             "value": "Headphones",
-            "type": "string"
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 396,
+                "line": 7,
+                "column": 18
+              },
+              "end": {
+                "offset": 407,
+                "line": 7,
+                "column": 18
+              }
+            }
           },
           {
-            "value": "{\"brand\": \"Sony\", \"specs\": {\"type\": \"Wireless\", \"battery_life\": \"30 hours\"}}",
-            "type": "string"
+            "value": "CAST('{\"brand\": \"Sony\", \"specs\": {\"type\": \"Wireless\", \"battery_life\": \"30 hours\"}}' AS JSON)",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "ARRAY['electronics','audio']",
-            "type": "expression"
+            "value": "ARRAY('electronics', 'audio')",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
             "value": "false",
-            "type": "boolean"
+            "type": "boolean",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
           },
           {
-            "value": "199.99",
-            "type": "number"
+            "value": 199.99,
+            "type": "number",
+            "token": {
+              "start": {
+                "offset": 534,
+                "line": 7,
+                "column": 150
+              },
+              "end": {
+                "offset": 539,
+                "line": 7,
+                "column": 150
+              }
+            }
           },
           {
-            "value": "NOW()",
-            "type": "expression"
+            "value": "CURRENT_TIMESTAMP()",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 542,
+                "line": 7,
+                "column": 155
+              },
+              "end": {
+                "offset": 544,
+                "line": 7,
+                "column": 155
+              }
+            }
           }
         ]
-      ]
-    },
-    {
-      "tableName": "users",
-      "schemaName": "ignore_1",
-      "columns": [],
-      "values": [
-        [
-          {
-            "value": "1",
-            "type": "number"
-          },
-          {
-            "value": "Alice Johnson",
-            "type": "string"
-          },
-          {
-            "value": "alice@example.com",
-            "type": "string"
-          },
-          {
-            "value": "NOW()",
-            "type": "expression"
-          }
-        ]
-      ]
-    },
-    {
-      "tableName": "users",
-      "schemaName": "ignore_2",
-      "columns": [
-        "id",
-        "name",
-        "email",
-        "preferences",
-        "created_at"
       ],
-      "values": []
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
-  ]
+  ],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

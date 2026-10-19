@@ -3,116 +3,409 @@
   "tables": [
     {
       "name": "jobs",
-      "fields": [
-        {
-          "name": "id",
-          "type": {
-            "type_name": "integer",
-            "schemaName": null
-          },
-          "pk": true,
-          "checks": []
-        },
-        {
-          "name": "status",
-          "type": {
-            "type_name": "job_status",
-            "schemaName": null
-          },
-          "checks": []
-        }
-      ],
-      "indexes": [],
-      "checks": []
-    },
-    {
-      "name": "orders",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
             "type_name": "int",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
-          "pk": true,
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 4,
+              "column": 6
+            },
+            "end": {
+              "offset": 29,
+              "line": 4,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
+        },
+        {
+          "name": "status",
+          "type": {
+            "type_name": "job_status",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 54,
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "offset": 61,
+              "line": 5,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "name": "orders",
+      "schemaName": null,
+      "alias": null,
+      "fields": [
+        {
+          "name": "id",
+          "type": {
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
+          },
+          "token": {
+            "start": {
+              "offset": 40,
+              "line": 4,
+              "column": 4
+            },
+            "end": {
+              "offset": 41,
+              "line": 4,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "pk": true
         },
         {
           "name": "created_at",
           "type": {
             "type_name": "varchar",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 62,
+              "line": 5,
+              "column": 12
+            },
+            "end": {
+              "offset": 71,
+              "line": 5,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "priority",
           "type": {
             "type_name": "priority enum",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 84,
+              "line": 6,
+              "column": 10
+            },
+            "end": {
+              "offset": 91,
+              "line": 6,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "status",
           "type": {
             "type_name": "order_status",
-            "schemaName": null
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 112,
+              "line": 7,
+              "column": 10
+            },
+            "end": {
+              "offset": 119,
+              "line": 7,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [
     {
       "name": "job_status",
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "values": [
         {
-          "name": "created"
+          "name": "created",
+          "token": {
+            "start": {
+              "offset": 37,
+              "line": 2,
+              "column": 11
+            },
+            "end": {
+              "offset": 45,
+              "line": 2,
+              "column": 11
+            }
+          }
         },
         {
-          "name": "running"
+          "name": "running",
+          "token": {
+            "start": {
+              "offset": 50,
+              "line": 3,
+              "column": 11
+            },
+            "end": {
+              "offset": 58,
+              "line": 3,
+              "column": 11
+            }
+          }
         },
         {
-          "name": "done"
+          "name": "done",
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 4,
+              "column": 8
+            },
+            "end": {
+              "offset": 68,
+              "line": 4,
+              "column": 8
+            }
+          }
         },
         {
-          "name": "failed"
+          "name": "failed",
+          "token": {
+            "start": {
+              "offset": 73,
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "offset": 80,
+              "line": 5,
+              "column": 10
+            }
+          }
         },
         {
-          "name": "wait for validation"
+          "name": "wait for validation",
+          "token": {
+            "start": {
+              "offset": 85,
+              "line": 6,
+              "column": 23
+            },
+            "end": {
+              "offset": 105,
+              "line": 6,
+              "column": 23
+            }
+          }
         }
       ]
     },
     {
       "name": "order_status",
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "values": [
         {
-          "name": "pending"
+          "name": "pending",
+          "token": {
+            "start": {
+              "offset": 38,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 46,
+              "line": 4,
+              "column": 11
+            }
+          }
         },
         {
-          "name": "processing"
+          "name": "processing",
+          "token": {
+            "start": {
+              "offset": 51,
+              "line": 5,
+              "column": 14
+            },
+            "end": {
+              "offset": 62,
+              "line": 5,
+              "column": 14
+            }
+          }
         },
         {
-          "name": "done"
+          "name": "done",
+          "token": {
+            "start": {
+              "offset": 67,
+              "line": 6,
+              "column": 8
+            },
+            "end": {
+              "offset": 72,
+              "line": 6,
+              "column": 8
+            }
+          }
         }
       ]
     },
     {
       "name": "priority enum",
+      "schemaName": null,
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      },
       "values": [
         {
-          "name": "low"
+          "name": "low",
+          "token": {
+            "start": {
+              "offset": 42,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 46,
+              "line": 4,
+              "column": 7
+            }
+          }
         },
         {
-          "name": "medium"
+          "name": "medium",
+          "token": {
+            "start": {
+              "offset": 51,
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "offset": 58,
+              "line": 5,
+              "column": 10
+            }
+          }
         },
         {
-          "name": "high"
+          "name": "high",
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 6,
+              "column": 8
+            },
+            "end": {
+              "offset": 68,
+              "line": 6,
+              "column": 8
+            }
+          }
         }
       ]
     }
@@ -120,5 +413,14 @@
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

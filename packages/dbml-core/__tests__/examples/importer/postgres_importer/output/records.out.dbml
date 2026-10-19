@@ -1,13 +1,13 @@
 Table "users" {
-  "id" integer [pk]
+  "id" int [pk]
   "name" varchar(255)
   "email" varchar(255)
   "active" boolean
 }
 
 Table "comments" {
-  "id" integer [pk]
-  "user_id" integer
+  "id" int [pk]
+  "user_id" int
   "content" text
 }
 

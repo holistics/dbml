@@ -1,14 +1,14 @@
 Table "products" {
-  "id" NUMBER [pk]
-  "name" VARCHAR2(100) [not null]
-  "category" VARCHAR2(50)
-  "price" "NUMBER(10, 2)"
+  "id" decimal [pk]
+  "name" varchar(100) [not null]
+  "category" varchar(50)
+  "price" decimal(10,2)
 }
 
 Table "suppliers" {
-  "id" NUMBER [pk]
-  "name" VARCHAR2(100) [not null]
-  "country" VARCHAR2(50)
+  "id" decimal [pk]
+  "name" varchar(100) [not null]
+  "country" varchar(50)
 }
 
 Records products(id, name, category, price) {

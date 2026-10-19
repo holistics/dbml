@@ -1,28 +1,28 @@
 Table "customers" {
-  "customer_id" INT
-  "first_name" VARCHAR(50)
-  "last_name" VARCHAR(50)
-  "email" VARCHAR(100)
-  "registration_date" DATE
+  "customer_id" int [pk, not null]
+  "first_name" varchar(50)
+  "last_name" varchar(50)
+  "email" varchar(100)
+  "registration_date" date
 
   Indexes {
-    email [unique]
+    email [unique, name: "uq_customer_email"]
   }
 }
 
 Table "orders" {
-  "order_id" INT
-  "customer_id" INT
-  "order_date" DATE
-  "total_amount" DECIMAL(10,2)
+  "order_id" int [pk, not null]
+  "customer_id" int
+  "order_date" date
+  "total_amount" decimal(10,2)
 }
 
 Table "employees" {
-  "employee_id" INT
-  "first_name" VARCHAR(50)
-  "last_name" VARCHAR(50)
-  "hire_date" DATE
-  "department" VARCHAR(50)
+  "employee_id" int [pk, not null]
+  "first_name" varchar(50)
+  "last_name" varchar(50)
+  "hire_date" date
+  "department" varchar(50)
 }
 
-Ref:"customers"."customer_id" < "orders"."customer_id"
+Ref "fk_order_customer":"customers"."customer_id" ?<? "orders"."customer_id"

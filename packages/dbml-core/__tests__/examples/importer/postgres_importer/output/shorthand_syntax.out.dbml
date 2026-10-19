@@ -1,7 +1,7 @@
 Table "booking_reference" {
-  "reference_id" NVARCHAR(10) [not null]
-  "cust_id" NUMBER(10) [not null]
-  "status" NVARCHAR(1) [not null]
+  "reference_id" nvarchar(10) [not null]
+  "cust_id" decimal(10) [not null]
+  "status" nvarchar(1) [not null]
 
   Indexes {
     (reference_id, cust_id) [pk]
@@ -9,9 +9,9 @@ Table "booking_reference" {
 }
 
 Table "br_flight" {
-  "reference_id" NVARCHAR(10) [not null]
-  "cust_id" NUMBER(10) [not null]
-  "flight_id" NVARCHAR(10) [not null]
+  "reference_id" nvarchar(10) [not null]
+  "cust_id" decimal(10) [not null]
+  "flight_id" nvarchar(10) [not null]
 
   Indexes {
     (reference_id, flight_id) [pk]

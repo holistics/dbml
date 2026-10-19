@@ -3,481 +3,1295 @@
   "tables": [
     {
       "name": "customers",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "cust_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 201,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 207,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "cust_name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 254,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 262,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Unknown",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 301,
+              "line": 6,
+              "column": 9
+            },
+            "end": {
+              "offset": 305,
+              "line": 6,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "noemail@example.com",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "phone",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 356,
+              "line": 7,
+              "column": 9
+            },
+            "end": {
+              "offset": 360,
+              "line": 7,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "N/A",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "inventory",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "item_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 31,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 37,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "item_name",
           "type": {
-            "type_name": "VARCHAR2(200)"
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 116,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 124,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Default Item",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "price",
           "type": {
-            "type_name": "NUMBER(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 168,
+              "line": 6,
+              "column": 9
+            },
+            "end": {
+              "offset": 172,
+              "line": 6,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 0,
             "type": "number"
-          },
-          "checks": []
+          }
         },
         {
           "name": "category",
           "type": {
-            "type_name": "VARCHAR2(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 205,
+              "line": 7,
+              "column": 12
+            },
+            "end": {
+              "offset": 212,
+              "line": 7,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Misc",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "shipments",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "ship_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 31,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 37,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "customer_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 118,
+              "line": 5,
+              "column": 15
+            },
+            "end": {
+              "offset": 128,
+              "line": 5,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 1,
             "type": "number"
-          },
-          "checks": []
+          }
         },
         {
           "name": "ship_date",
           "type": {
-            "type_name": "DATE"
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 156,
+              "line": 6,
+              "column": 13
+            },
+            "end": {
+              "offset": 164,
+              "line": 6,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
-            "value": "SYSDATE",
+            "value": "CURRENT_TIMESTAMP()",
             "type": "expression"
-          },
-          "checks": []
+          }
         },
         {
           "name": "total_amount",
           "type": {
-            "type_name": "NUMBER(12,2)"
+            "type_name": "decimal(12,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 192,
+              "line": 7,
+              "column": 16
+            },
+            "end": {
+              "offset": 203,
+              "line": 7,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 0,
             "type": "number"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "departments",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "dept_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 33,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 39,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "dept_name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 116,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 124,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "General",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "manager_id",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 163,
+              "line": 6,
+              "column": 14
+            },
+            "end": {
+              "offset": 172,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 0,
             "type": "number"
-          },
-          "checks": []
+          }
         },
         {
           "name": "budget",
           "type": {
-            "type_name": "NUMBER(12,2)"
+            "type_name": "decimal(12,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 200,
+              "line": 7,
+              "column": 10
+            },
+            "end": {
+              "offset": 205,
+              "line": 7,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 10000,
             "type": "number"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "suppliers",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "supp_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 31,
+              "line": 4,
+              "column": 11
+            },
+            "end": {
+              "offset": 37,
+              "line": 4,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "supp_name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 116,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 124,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Anonymous",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "contact",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 165,
+              "line": 6,
+              "column": 11
+            },
+            "end": {
+              "offset": 171,
+              "line": 6,
+              "column": 11
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Contact",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "credit_limit",
           "type": {
-            "type_name": "NUMBER(10,2)"
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 210,
+              "line": 7,
+              "column": 16
+            },
+            "end": {
+              "offset": 221,
+              "line": 7,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 5000,
             "type": "number"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "test_datatypes",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "col_number",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 36,
+              "line": 4,
+              "column": 14
+            },
+            "end": {
+              "offset": 45,
+              "line": 4,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "col_varchar2",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 123,
+              "line": 5,
+              "column": 16
+            },
+            "end": {
+              "offset": 134,
+              "line": 5,
+              "column": 16
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Default Text",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "col_char",
           "type": {
-            "type_name": "CHAR(10)"
+            "type_name": "char(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 178,
+              "line": 6,
+              "column": 12
+            },
+            "end": {
+              "offset": 185,
+              "line": 6,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "DEFAULT   ",
             "type": "string"
-          },
-          "checks": []
+          }
         },
         {
           "name": "col_date",
           "type": {
-            "type_name": "DATE"
+            "type_name": "date",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 222,
+              "line": 7,
+              "column": 12
+            },
+            "end": {
+              "offset": 229,
+              "line": 7,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
-            "value": "SYSDATE",
+            "value": "CURRENT_TIMESTAMP()",
             "type": "expression"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "test_basic",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 209,
+              "line": 9,
+              "column": 6
+            },
+            "end": {
+              "offset": 210,
+              "line": 9,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "value",
           "type": {
-            "type_name": "NUMBER(10)"
+            "type_name": "decimal(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 257,
+              "line": 10,
+              "column": 9
+            },
+            "end": {
+              "offset": 261,
+              "line": 10,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": 100,
             "type": "number"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "test_status",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "status_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 67,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 75,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "status",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 122,
+              "line": 6,
+              "column": 10
+            },
+            "end": {
+              "offset": 127,
+              "line": 6,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "OPEN",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "test_not_null",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "record_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
+          "token": {
+            "start": {
+              "offset": 61,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 69,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "increment": true,
-          "checks": []
+          "not_null": true
         },
         {
           "name": "description",
           "type": {
-            "type_name": "VARCHAR2(200)"
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
-          "not_null": true,
+          "token": {
+            "start": {
+              "offset": 125,
+              "line": 6,
+              "column": 15
+            },
+            "end": {
+              "offset": 135,
+              "line": 6,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "No description",
             "type": "string"
           },
-          "checks": []
+          "not_null": true
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "test_start_with",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "order_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 194,
+              "line": 9,
+              "column": 12
+            },
+            "end": {
+              "offset": 201,
+              "line": 9,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "order_code",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 266,
+              "line": 10,
+              "column": 14
+            },
+            "end": {
+              "offset": 275,
+              "line": 10,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "ORD000",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "test_increment",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "ticket_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 66,
+              "line": 5,
+              "column": 13
+            },
+            "end": {
+              "offset": 74,
+              "line": 5,
+              "column": 13
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "ticket_type",
           "type": {
-            "type_name": "VARCHAR2(20)"
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 138,
+              "line": 6,
+              "column": 15
+            },
+            "end": {
+              "offset": 148,
+              "line": 6,
+              "column": 15
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "STANDARD",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "test_maxvalue",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "ref_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 61,
+              "line": 5,
+              "column": 10
+            },
+            "end": {
+              "offset": 66,
+              "line": 5,
+              "column": 10
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "ref_name",
           "type": {
-            "type_name": "VARCHAR2(100)"
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 130,
+              "line": 6,
+              "column": 12
+            },
+            "end": {
+              "offset": 137,
+              "line": 6,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Reference",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "test_minvalue",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "batch_id",
           "type": {
-            "type_name": "NUMBER"
+            "type_name": "decimal",
+            "schemaName": null,
+            "args": null
           },
-          "increment": true,
-          "checks": []
+          "token": {
+            "start": {
+              "offset": 61,
+              "line": 5,
+              "column": 12
+            },
+            "end": {
+              "offset": 68,
+              "line": 5,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
+          "increment": true
         },
         {
           "name": "batch_name",
           "type": {
-            "type_name": "VARCHAR2(50)"
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 128,
+              "line": 6,
+              "column": 14
+            },
+            "end": {
+              "offset": 137,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
             "value": "Batch",
             "type": "string"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

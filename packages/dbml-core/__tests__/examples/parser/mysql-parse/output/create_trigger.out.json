@@ -3,168 +3,942 @@
   "tables": [
     {
       "name": "audit_log",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 115,
+              "line": 5,
+              "column": 4
+            },
+            "end": {
+              "offset": 116,
+              "line": 5,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "increment": true,
-          "pk": true,
-          "checks": []
+          "pk": true
         },
         {
           "name": "table_name",
           "type": {
-            "type_name": "VARCHAR(50)",
-            "schemaName": null
+            "type_name": "varchar(50)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 152,
+              "line": 6,
+              "column": 12
+            },
+            "end": {
+              "offset": 161,
+              "line": 6,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "action",
           "type": {
-            "type_name": "VARCHAR(10)",
-            "schemaName": null
+            "type_name": "varchar(10)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 178,
+              "line": 7,
+              "column": 8
+            },
+            "end": {
+              "offset": 183,
+              "line": 7,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "user_id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 200,
+              "line": 8,
+              "column": 9
+            },
+            "end": {
+              "offset": 206,
+              "line": 8,
+              "column": 9
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "changed_at",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 215,
+              "line": 9,
+              "column": 12
+            },
+            "end": {
+              "offset": 224,
+              "line": 9,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "dbdefault": {
-            "value": "CURRENT_TIMESTAMP",
+            "value": "CURRENT_TIMESTAMP()",
             "type": "expression"
-          },
-          "checks": []
+          }
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "users",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 23,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 24,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "increment": true,
-          "pk": true,
-          "checks": []
+          "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 60,
+              "line": 3,
+              "column": 6
+            },
+            "end": {
+              "offset": 63,
+              "line": 3,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "email",
           "type": {
-            "type_name": "VARCHAR(100)",
-            "schemaName": null
+            "type_name": "varchar(100)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 81,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 85,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "status",
           "type": {
-            "type_name": "VARCHAR(20)",
-            "schemaName": null
+            "type_name": "varchar(20)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 103,
+              "line": 5,
+              "column": 8
+            },
+            "end": {
+              "offset": 108,
+              "line": 5,
+              "column": 8
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "created_at",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 125,
+              "line": 6,
+              "column": 12
+            },
+            "end": {
+              "offset": 134,
+              "line": 6,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "updated_at",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 149,
+              "line": 7,
+              "column": 12
+            },
+            "end": {
+              "offset": 158,
+              "line": 7,
+              "column": 12
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     },
     {
       "name": "products",
+      "schemaName": null,
+      "alias": null,
       "fields": [
         {
           "name": "id",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 26,
+              "line": 2,
+              "column": 4
+            },
+            "end": {
+              "offset": 27,
+              "line": 2,
+              "column": 4
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
+          "checks": [],
           "increment": true,
-          "pk": true,
-          "checks": []
+          "pk": true
         },
         {
           "name": "name",
           "type": {
-            "type_name": "VARCHAR(200)",
-            "schemaName": null
+            "type_name": "varchar(200)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 63,
+              "line": 3,
+              "column": 6
+            },
+            "end": {
+              "offset": 66,
+              "line": 3,
+              "column": 6
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "price",
           "type": {
-            "type_name": "DECIMAL(10,2)",
-            "schemaName": null
+            "type_name": "decimal(10,2)",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 84,
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "offset": 88,
+              "line": 4,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "stock",
           "type": {
-            "type_name": "INT",
-            "schemaName": null
+            "type_name": "int",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 107,
+              "line": 5,
+              "column": 7
+            },
+            "end": {
+              "offset": 111,
+              "line": 5,
+              "column": 7
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         },
         {
           "name": "last_updated",
           "type": {
-            "type_name": "TIMESTAMP",
-            "schemaName": null
+            "type_name": "timestamptz",
+            "schemaName": null,
+            "args": null
           },
+          "token": {
+            "start": {
+              "offset": 120,
+              "line": 6,
+              "column": 14
+            },
+            "end": {
+              "offset": 131,
+              "line": 6,
+              "column": 14
+            }
+          },
+          "inline_refs": [],
+          "inline_deps": [],
           "checks": []
         }
       ],
       "indexes": [],
-      "checks": []
+      "checks": [],
+      "partials": [],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
     }
   ],
+  "notes": [],
   "refs": [],
+  "deps": [],
   "enums": [],
   "tableGroups": [],
   "aliases": [],
   "project": {},
-  "records": []
+  "tablePartials": [],
+  "records": [
+    {
+      "tableName": "audit_log",
+      "schemaName": null,
+      "columns": [
+        "table_name",
+        "action",
+        "user_id"
+      ],
+      "values": [
+        [
+          {
+            "value": "users",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 159,
+                "line": 6,
+                "column": 15
+              },
+              "end": {
+                "offset": 165,
+                "line": 6,
+                "column": 15
+              }
+            }
+          },
+          {
+            "value": "INSERT",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 168,
+                "line": 6,
+                "column": 25
+              },
+              "end": {
+                "offset": 175,
+                "line": 6,
+                "column": 25
+              }
+            }
+          },
+          {
+            "value": "NEW.id",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "audit_log",
+      "schemaName": null,
+      "columns": [
+        "table_name",
+        "action",
+        "user_id"
+      ],
+      "values": [
+        [
+          {
+            "value": "users",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 152,
+                "line": 6,
+                "column": 15
+              },
+              "end": {
+                "offset": 158,
+                "line": 6,
+                "column": 15
+              }
+            }
+          },
+          {
+            "value": "UPDATE",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 161,
+                "line": 6,
+                "column": 25
+              },
+              "end": {
+                "offset": 168,
+                "line": 6,
+                "column": 25
+              }
+            }
+          },
+          {
+            "value": "NEW.id",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "audit_log",
+      "schemaName": null,
+      "columns": [
+        "table_name",
+        "action",
+        "user_id"
+      ],
+      "values": [
+        [
+          {
+            "value": "users",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 155,
+                "line": 6,
+                "column": 15
+              },
+              "end": {
+                "offset": 161,
+                "line": 6,
+                "column": 15
+              }
+            }
+          },
+          {
+            "value": "DELETE",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 164,
+                "line": 6,
+                "column": 25
+              },
+              "end": {
+                "offset": 171,
+                "line": 6,
+                "column": 25
+              }
+            }
+          },
+          {
+            "value": "OLD.id",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "audit_log",
+      "schemaName": null,
+      "columns": [
+        "table_name",
+        "action",
+        "user_id"
+      ],
+      "values": [
+        [
+          {
+            "value": "users",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 196,
+                "line": 6,
+                "column": 69
+              },
+              "end": {
+                "offset": 202,
+                "line": 6,
+                "column": 69
+              }
+            }
+          },
+          {
+            "value": "INSERT",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 205,
+                "line": 6,
+                "column": 79
+              },
+              "end": {
+                "offset": 212,
+                "line": 6,
+                "column": 79
+              }
+            }
+          },
+          {
+            "value": "NEW.id",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "audit_log",
+      "schemaName": null,
+      "columns": [
+        "table_name",
+        "action",
+        "user_id"
+      ],
+      "values": [
+        [
+          {
+            "value": "users",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 196,
+                "line": 7,
+                "column": 71
+              },
+              "end": {
+                "offset": 202,
+                "line": 7,
+                "column": 71
+              }
+            }
+          },
+          {
+            "value": "DEACTIVATED",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 205,
+                "line": 7,
+                "column": 86
+              },
+              "end": {
+                "offset": 217,
+                "line": 7,
+                "column": 86
+              }
+            }
+          },
+          {
+            "value": "NEW.id",
+            "type": "expression",
+            "token": {
+              "start": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              },
+              "end": {
+                "offset": 0,
+                "line": 1,
+                "column": 1
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "audit_log",
+      "schemaName": null,
+      "columns": [
+        "table_name",
+        "action"
+      ],
+      "values": [
+        [
+          {
+            "value": "products",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 78,
+                "line": 2,
+                "column": 65
+              },
+              "end": {
+                "offset": 87,
+                "line": 2,
+                "column": 65
+              }
+            }
+          },
+          {
+            "value": "PRICE_INCREASE",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 90,
+                "line": 2,
+                "column": 83
+              },
+              "end": {
+                "offset": 105,
+                "line": 2,
+                "column": 83
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    },
+    {
+      "tableName": "audit_log",
+      "schemaName": null,
+      "columns": [
+        "table_name",
+        "action"
+      ],
+      "values": [
+        [
+          {
+            "value": "products",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 201,
+                "line": 7,
+                "column": 65
+              },
+              "end": {
+                "offset": 210,
+                "line": 7,
+                "column": 65
+              }
+            }
+          },
+          {
+            "value": "STOCK_CHANGED",
+            "type": "string",
+            "token": {
+              "start": {
+                "offset": 213,
+                "line": 7,
+                "column": 82
+              },
+              "end": {
+                "offset": 227,
+                "line": 7,
+                "column": 82
+              }
+            }
+          }
+        ]
+      ],
+      "token": {
+        "start": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        },
+        "end": {
+          "offset": 0,
+          "line": 1,
+          "column": 1
+        }
+      }
+    }
+  ],
+  "externals": {
+    "tables": [],
+    "enums": [],
+    "tableGroups": [],
+    "tablePartials": [],
+    "notes": []
+  },
+  "diagramViews": []
 }

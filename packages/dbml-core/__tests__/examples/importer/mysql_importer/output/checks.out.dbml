@@ -1,14 +1,14 @@
 Table "products" {
-  "id" INT [pk]
-  "price" DECIMAL(10,2) [check: `price > 0`]
-  "quantity" INT [check: `quantity >= 0`]
-  "discount" DECIMAL(5,2) [check: `discount >= 0 AND discount <= 100`]
+  "id" int [pk]
+  "price" decimal(10,2) [check: `price > 0`]
+  "quantity" int [check: `quantity >= 0`]
+  "discount" decimal(5,2) [check: `discount >= 0 AND discount <= 100`]
 }
 
 Table "employees" {
-  "emp_id" INT [pk]
-  "age" INT
-  "salary" DECIMAL(10,2)
+  "emp_id" int [pk]
+  "age" int
+  "salary" decimal(10,2)
 
   Checks {
     `age >= 18 AND age <= 65` [name: 'chk_age']
@@ -17,10 +17,10 @@ Table "employees" {
 }
 
 Table "transactions" {
-  "txn_id" INT [pk]
-  "amount" DECIMAL(10,2)
-  "fee" DECIMAL(10,2)
-  "total" DECIMAL(10,2)
+  "txn_id" int [pk]
+  "amount" decimal(10,2)
+  "fee" decimal(10,2)
+  "total" decimal(10,2)
 
   Checks {
     `total = amount + fee`
@@ -29,26 +29,26 @@ Table "transactions" {
 }
 
 Table "contacts" {
-  "contact_id" INT [pk]
-  "email" VARCHAR(100) [check: `email LIKE '%@%'`]
-  "phone" VARCHAR(20) [check: `phone REGEXP '^[0-9]{3}-[0-9]{3}-[0-9]{4}$'`]
+  "contact_id" int [pk]
+  "email" varchar(100) [check: `email LIKE '%@%'`]
+  "phone" varchar(20) [check: `REGEXP_LIKE(phone, '^[0-9]{3}-[0-9]{3}-[0-9]{4}$')`]
 }
 
 Table "orders" {
-  "order_id" INT [pk]
-  "status" VARCHAR(20) [check: `status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')`]
-  "priority" INT [check: `priority IN (1, 2, 3, 4, 5)`]
+  "order_id" int [pk]
+  "status" varchar(20) [check: `status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')`]
+  "priority" int [check: `priority IN (1, 2, 3, 4, 5)`]
 }
 
 Table "users" {
-  "user_id" INT [pk]
-  "role" VARCHAR(20) [check: `role NOT IN ('banned', 'deleted', 'suspended')`]
+  "user_id" int [pk]
+  "role" varchar(20) [check: `NOT role IN ('banned', 'deleted', 'suspended')`]
 }
 
 Table "ranges" {
-  "range_id" INT [pk]
-  "min_val" INT
-  "max_val" INT
+  "range_id" int [pk]
+  "min_val" int
+  "max_val" int
 
   Checks {
     `(min_val >= 0) AND (max_val <= 100) AND (min_val < max_val)`
@@ -56,23 +56,19 @@ Table "ranges" {
 }
 
 Table "inventory" {
-  "item_id" INT [pk]
-  "stock" INT
-  "status" VARCHAR(20)
+  "item_id" int [pk]
+  "stock" int
+  "status" varchar(20)
 
   Checks {
-    `CASE
-      WHEN status = 'active' THEN stock >= 0
-      WHEN status = 'discontinued' THEN stock = 0
-      ELSE TRUE
-    END`
+    `CASE WHEN status = 'active' THEN stock >= 0 WHEN status = 'discontinued' THEN stock = 0 ELSE TRUE END`
   }
 }
 
 Table "accounts" {
-  "account_id" INT [pk]
-  "balance" DECIMAL(15,2) [check: `balance >= 0`]
-  "overdraft_limit" DECIMAL(15,2) [check: `overdraft_limit >= 0`]
+  "account_id" int [pk]
+  "balance" decimal(15,2) [check: `balance >= 0`]
+  "overdraft_limit" decimal(15,2) [check: `overdraft_limit >= 0`]
 
   Checks {
     `balance + overdraft_limit >= 0` [name: 'chk_balance_overdraft']
@@ -80,9 +76,9 @@ Table "accounts" {
 }
 
 Table "shipments" {
-  "shipment_id" INT [pk]
-  "weight" DECIMAL(10,2)
-  "cost" DECIMAL(10,2)
+  "shipment_id" int [pk]
+  "weight" decimal(10,2)
+  "cost" decimal(10,2)
 
   Checks {
     `weight > 0` [name: 'chk_weight']
@@ -91,8 +87,8 @@ Table "shipments" {
 }
 
 Table "payments" {
-  "payment_id" INT [pk]
-  "amount" DECIMAL(10,2)
+  "payment_id" int [pk]
+  "amount" decimal(10,2)
 
   Checks {
     `amount > 0`
@@ -100,52 +96,52 @@ Table "payments" {
 }
 
 Table "pricing" {
-  "price_id" INT [pk]
-  "base_price" DECIMAL(10,2)
-  "discount_pct" DECIMAL(5,2)
-  "final_price" DECIMAL(10,2)
+  "price_id" int [pk]
+  "base_price" decimal(10,2)
+  "discount_pct" decimal(5,2)
+  "final_price" decimal(10,2)
 
   Checks {
-    `final_price = base_price * (1 - discount_pct / 100)`
+    `final_price = base_price * (1 - discount_pct / NULLIF(100, 0))`
   }
 }
 
 Table "settings" {
-  "setting_id" INT [pk]
-  "value" VARCHAR(100)
-  "default_value" VARCHAR(100)
+  "setting_id" int [pk]
+  "value" varchar(100)
+  "default_value" varchar(100)
 
   Checks {
-    `COALESCE(value, default_value) IS NOT NULL`
+    `NOT COALESCE(value, default_value) IS NULL`
   }
 }
 
 Table "bookings" {
-  "booking_id" INT [pk]
-  "check_in" DATE
-  "check_out" DATE
+  "booking_id" int [pk]
+  "check_in" date
+  "check_out" date
 
   Checks {
     `check_out > check_in`
-    `check_in >= CURDATE()`
+    `check_in >= CURRENT_DATE`
   }
 }
 
 Table "documents" {
-  "doc_id" INT [pk]
-  "title" VARCHAR(200)
-  "content" TEXT
+  "doc_id" int [pk]
+  "title" varchar(200)
+  "content" text
 
   Checks {
-    `CHAR_LENGTH(title) > 0`
-    `CHAR_LENGTH(content) >= 10`
+    `LENGTH(title) > 0`
+    `LENGTH(content) >= 10`
   }
 }
 
 Table "events" {
-  "event_id" INT [pk]
-  "status" VARCHAR(20)
-  "cancelled" BOOLEAN
+  "event_id" int [pk]
+  "status" varchar(20)
+  "cancelled" boolean
 
   Checks {
     `status = 'active' OR status = 'completed' OR cancelled = TRUE`
@@ -153,8 +149,8 @@ Table "events" {
 }
 
 Table "grades" {
-  "grade_id" INT [pk]
-  "score" INT
+  "grade_id" int [pk]
+  "score" int
 
   Checks {
     `score BETWEEN 0 AND 100`
@@ -162,18 +158,18 @@ Table "grades" {
 }
 
 Table "products_special" {
-  "product_id" INT [pk]
-  "code" VARCHAR(50)
+  "product_id" int [pk]
+  "code" varchar(50)
 
   Checks {
-    `code REGEXP '^[A-Z]{3}-[0-9]{4}$'` [name: 'chk_code_format']
+    `REGEXP_LIKE(code, '^[A-Z]{3}-[0-9]{4}$')` [name: 'chk_code_format']
   }
 }
 
 Table "features" {
-  "feature_id" INT [pk]
-  "is_enabled" BOOLEAN
-  "is_premium" BOOLEAN
+  "feature_id" int [pk]
+  "is_enabled" boolean
+  "is_premium" boolean
 
   Checks {
     `is_enabled = TRUE OR is_premium = FALSE`
@@ -181,8 +177,8 @@ Table "features" {
 }
 
 Table "configs" {
-  "config_id" INT [pk]
-  "settings" JSON
+  "config_id" int [pk]
+  "settings" json
 
   Checks {
     `JSON_VALID(settings)`
@@ -190,21 +186,21 @@ Table "configs" {
 }
 
 Table "audit_log" {
-  "log_id" INT [pk]
-  "severity" INT
-  "message" TEXT
+  "log_id" int [pk]
+  "severity" int
+  "message" text
 
   Checks {
     `severity BETWEEN 1 AND 5` [name: 'chk_severity_range']
-    `CHAR_LENGTH(message) > 0` [name: 'chk_message_length']
+    `LENGTH(message) > 0` [name: 'chk_message_length']
     `severity > 0`
   }
 }
 
 Table "limits" {
-  "limit_id" INT [pk]
-  "min_value" INT
-  "max_value" INT
+  "limit_id" int [pk]
+  "min_value" int
+  "max_value" int
 
   Checks {
     `max_value > min_value`
@@ -214,38 +210,38 @@ Table "limits" {
 }
 
 Table "statuses" {
-  "status_id" INT [pk]
-  "current_status" VARCHAR(20)
-  "previous_status" VARCHAR(20)
+  "status_id" int [pk]
+  "current_status" varchar(20)
+  "previous_status" varchar(20)
 
   Checks {
-    `current_status != previous_status`
+    `current_status <> previous_status`
     `current_status <> ''`
   }
 }
 
 Table "defaults" {
-  "default_id" INT [pk]
-  "value1" INT
-  "value2" INT
+  "default_id" int [pk]
+  "value1" int
+  "value2" int
 
   Checks {
-    `IFNULL(value1, 0) + IFNULL(value2, 0) > 0`
+    `COALESCE(value1, 0) + COALESCE(value2, 0) > 0`
   }
 }
 
 Table "sequences" {
-  "seq_id" INT [pk]
-  "value" INT
+  "seq_id" int [pk]
+  "value" int
 
   Checks {
-    `MOD(value, 2) = 0`
+    `value % 2 = 0`
   }
 }
 
 Table "temperatures" {
-  "temp_id" INT [pk]
-  "celsius" DECIMAL(5,2)
+  "temp_id" int [pk]
+  "celsius" decimal(5,2)
 
   Checks {
     `ABS(celsius) < 100`
