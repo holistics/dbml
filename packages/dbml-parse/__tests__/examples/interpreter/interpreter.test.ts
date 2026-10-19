@@ -1068,6 +1068,24 @@ describe('[example] interpreter', () => {
       expect(index.columns[1].type).toBe('column');
     });
 
+    test('should keep the written order when an expression follows a column', () => {
+      const source = `
+        Table t {
+          a varchar
+          b varchar
+          c varchar
+          indexes {
+            (a, \`lower(b)\`, c, \`upper(c)\`)
+          }
+        }
+      `;
+      const db = interpret(source).getValue()!;
+      const index = db.tables[0].indexes[0];
+
+      expect(index.columns.map((c) => c.value)).toEqual(['a', 'lower(b)', 'c', 'upper(c)']);
+      expect(index.columns.map((c) => c.type)).toEqual(['column', 'expression', 'column', 'expression']);
+    });
+
     test('should interpret index with all settings', () => {
       const source = `
         Table t {
