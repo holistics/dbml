@@ -12,8 +12,8 @@ import {
 } from './compileArch';
 import type { NetworkModel } from './compileArch';
 
-// @dbml/arch's compiler tests, run through @dbml/parse. Its tests of its own string helpers and editor
-// highlighting stay in @dbml/arch. Where this pipeline differs on purpose, the case says which change.
+// The original architecture compiler's tests, run through @dbml/parse. Where this pipeline differs on
+// purpose, the case says which change.
 
 const one = (src: string) => compileArch({ '/main.arch.dbml': src });
 const codes = (src: string) => one(src).diagnostics.map((d) => d.code);

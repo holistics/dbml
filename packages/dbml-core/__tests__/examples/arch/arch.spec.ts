@@ -1,7 +1,8 @@
+import path from 'path';
 import { describe, expect, test } from 'vitest';
 import {
-  BOOK_FILE, EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE, SELF_FILE, compileArch,
-} from '@dbml/arch';
+  BOOK_FILE, EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE, SELF_FILE,
+} from './samples';
 import Parser from '../../../src/parse/Parser';
 import DbmlExporter from '../../../src/export/DbmlExporter';
 import type { NormalizedModel } from '../../../types/model_structure/database';
@@ -22,32 +23,22 @@ describe('@dbml/core - architecture files', () => {
     estate: { files: EXAMPLE_FILES, entry: EXAMPLE_ENTRY },
   };
 
-  // @dbml/arch's own compiler reads the same sample, so the two models are compared element by element
-  test.each(Object.entries(samples))('%s sample normalizes to what @dbml/arch draws', (_name, { files, entry }) => {
+  // Elements are listed by handle, so the saved output does not change when ids are numbered differently
+  test.each(Object.entries(samples))('%s sample normalizes to the saved elements', async (name, { files, entry }) => {
     const model = normalizeProject(files, entry);
-    const arch = compileArch(files, entry).model;
-    const elements = [...arch.elements.values()];
-
     const nodes = Object.values(model.nodes ?? {});
     const groups = Object.values(model.groups ?? {});
     const noteBoxes = Object.values(model.noteBoxes ?? {});
-    expect(nodes.map(handleOf).sort()).toEqual(elements.filter((e) => e.sort === 'node').map((e) => e.id).sort());
-    expect(groups.map(handleOf).sort()).toEqual(elements.filter((e) => e.sort === 'group').map((e) => e.id).sort());
-    expect(noteBoxes.map(handleOf).sort()).toEqual(elements.filter((e) => e.sort === 'note').map((e) => e.id).sort());
-    expect(Object.keys(model.links ?? {})).toHaveLength(arch.links.length);
-
     const byId = new Map([...nodes, ...groups, ...noteBoxes].map((e) => [e.id, handleOf(e)]));
-    for (const node of nodes) {
-      const drawn = arch.elements.get(handleOf(node));
-      expect(model.kinds![node.kindId!].name).toBe(drawn?.sort === 'node' && drawn.kind);
-    }
-    for (const group of groups) {
-      const drawn = arch.elements.get(handleOf(group));
-      expect(group.childIds.map((id) => byId.get(id))).toEqual(drawn?.sort === 'group' && drawn.children);
-    }
-    expect(Object.values(model.links ?? {}).map((l) => [byId.get(l.fromId), byId.get(l.toId), l.op]))
-      .toEqual(arch.links.map((l) => [l.from, l.to, l.op]));
-    expect(model.database[1].diagramType).toBe('arch');
+
+    const summary = {
+      diagramType: model.database[1].diagramType,
+      nodes: nodes.map((node) => [handleOf(node), model.kinds![node.kindId!].name]),
+      groups: groups.map((group) => [handleOf(group), group.childIds.map((id) => byId.get(id))]),
+      noteBoxes: noteBoxes.map(handleOf),
+      links: Object.values(model.links ?? {}).map((l) => [byId.get(l.fromId), byId.get(l.toId), l.op]),
+    };
+    await expect(JSON.stringify(summary, null, 2)).toMatchFileSnapshot(path.resolve(__dirname, `${name}.out.json`));
   });
 
   test('a DBML file and an architecture file import each other, each read as its own kind', () => {

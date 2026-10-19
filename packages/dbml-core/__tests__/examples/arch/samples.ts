@@ -584,7 +584,7 @@ Shape "Tokens" as tokens
 Shape "Syntax tree" as ast
 Words "DBML's 16 elements" as dbmlwords
 
-// ── @dbml/arch: the architecture dialect ──────────────────────────────────────
+// ── the architecture dialect ──────────────────────────────────────────────────
 Stage "Three dialect switches" as dialect {
   Note: '''
   **Three switches, all off for DBML.**
@@ -738,7 +738,7 @@ Group "DBML's own vocabulary" as vocabulary_dbml {
   '''
 }
 
-Group "@dbml/arch — open, the new language" as archpkg {
+Group "The architecture dialect: open, the new language" as archpkg {
   dialect
   bind
   archvocab

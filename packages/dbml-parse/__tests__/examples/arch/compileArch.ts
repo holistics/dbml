@@ -1,4 +1,4 @@
-// The result shape `@dbml/arch`'s own compiler gives, built from @dbml/parse, so its tests run against this pipeline
+// The result shape the original architecture compiler gave, built from @dbml/parse, so its ported tests run against this pipeline
 import Compiler from '@/compiler';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { isArchDiagramType } from '@/compiler/queries/files/fileKind';
@@ -83,7 +83,7 @@ export interface ArchResult {
 export const isNode = (e: Element | undefined): e is NodeElement => !!e && e.sort === 'node';
 export const isGroup = (e: Element | undefined): e is GroupElement => !!e && e.sort === 'group';
 
-// `@dbml/arch` names its codes; anything else came from the parser or DBML's binder, which it reported as `parse-<code>`
+// The codes the original compiler named; anything else came from the parser or DBML's binder, which it reported as `parse-<code>`
 const CODE_NAMES: Partial<Record<number, string>> = {
   [CompileErrorCode.UNKNOWN_KIND]: 'unknown-kind',
   [CompileErrorCode.MISSING_NAME]: 'missing-name',
