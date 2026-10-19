@@ -3,6 +3,7 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
+import { configDefaults } from 'vitest/config';
 
 export default defineConfig({
   plugins: [
@@ -33,6 +34,8 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    // Spec conformance tests run separately via vitest.conformance.config.ts
+    exclude: [...configDefaults.exclude, '__tests__/conformance/**'],
     coverage: {
       provider: 'v8',
       reporter: ['json-summary', 'text'],

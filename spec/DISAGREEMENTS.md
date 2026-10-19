@@ -1,0 +1,58 @@
+# Disagreements between the spec and the reference parser
+
+Every case where the spec grammar and `@dbml/parse` disagree, with a verdict. The spec exists in two notations (`spec/dbml-syntax.peggy` and `spec/antlr/*.g4`); both are checked and both produce the same outcomes below. Entries are pinned by `packages/dbml-parse/__tests__/conformance/syntax.test.ts` for each notation, so a change on any side fails a test and forces this file to be updated.
+
+Verdicts: **spec bug** (fix the spec), **parser bug** (fix the parser; entry stays until then), **intentional leniency** (parser accepts more on purpose; the spec documents the strict form).
+
+## Summary
+
+| ID | Input | Reference | Spec | Verdict |
+| --- | --- | --- | --- | --- |
+| D1 | `Note: 12.` with no trailing newline | reject (`Invalid number`) | accept | parser bug |
+| D2 | `Note: 1a` with no trailing newline | accept, `1a` is a number literal | accept, `1a` is an identifier | parser bug |
+| D3 | `Note: 1.a` with no trailing newline | accept, `1.a` is a number literal | reject | parser bug |
+| D4 | `'\uzzzz'` (four non-hex alphanumerics after `\u`) | accept | reject | parser bug |
+| D5 | Identifier containing a letter outside the Basic Multilingual Plane, e.g. `Table 𠀋 {}` | reject (`Unexpected token`) | accept | parser bug |
+
+The snapshot corpus exercises D1 only (`snapshots/parser/last_invalid_number`). D2 to D5 are pinned with inline inputs in the same test file.
+
+## D1 to D3: digit-leading token at end of input
+
+`Lexer.numericLiteralOrIdentifier()` has two end-of-input special cases that disagree with its behaviour everywhere else in the file:
+
+- When the text ends right after a trailing dot (`12.`), the scanning loop exits at end of input with `nDots > 0` and reports `Invalid number`. The same token followed by a space, newline or bracket is a valid number, and the property generators in `__tests__/utils/arbitraries/tokens.ts` produce `\d+\.` deliberately.
+- When the character after the digits is the last character of the file (`1a`, `1.a`), the branch `this.current.offset === this.text.length - 1` consumes it and emits a number literal, even though it is a letter. Anywhere else `1a` is an identifier and `1.a` is an invalid number.
+
+The spec follows the mid-file behaviour: `digits . digits?` is a number, `digits letters` is an identifier, `digits . letters` is an error.
+
+Status: open. Fix belongs in `lexer.ts`; the `last_invalid_number` snapshot output will change when it lands.
+
+## D4: `\u` escape accepts non-hex characters
+
+`Lexer.escapedString()` reads four characters after `\u` and only checks `isAlphaNumeric`, then calls `parseInt(hex, 16)` which yields `NaN` for `zzzz` and silently produces a U+0000 character. The error message in the same function says the form must be `\uHHHH` with hexadecimal `H`, which is what the spec requires.
+
+Status: open. The generators only produce hex escapes, so no existing test depends on the lenient form.
+
+## D5: letters outside the Basic Multilingual Plane
+
+The lexer walks UTF-16 code units (`this.text[offset]`) and tests each unit against `/\p{L}|\p{M}|_/u`. A supplementary-plane letter such as `𠀋` (U+2000B) is two surrogate code units, neither of which matches, so the lexer reports two `Unexpected token` errors. `isAlphaOrUnderscore()` clearly intends to accept every Unicode letter, so the spec is written over code points and accepts these identifiers.
+
+Status: open. The `unicode_identifiers` snapshot contains only BMP characters and is unaffected.
+
+## Agreed, but worth knowing
+
+These are not disagreements. Both parsers behave the same way, and the behaviour is surprising enough that a spec reader should be warned. The grammar reproduces each one deliberately.
+
+- A line that starts with an infix operator continues the expression on the previous line. In a table body, `(a, b) [pk]` followed by a line `-2()` parses as the single expression `[pk] - 2()`.
+- A `[` at the start of a line with no space before the preceding line break is array indexing of the previous expression (`int` newline `[note: 1]` is `int[note: 1]`). A trailing space before the line break turns it into a new item.
+- A semicolon is a token but is never valid anywhere; any `;` is a syntax error.
+- Comments do not separate function-application arguments. `a/**/int` is an error (missing space); `a /**/int` is fine.
+- A carriage return is dropped by the lexer and is neither whitespace nor a line break. `a<CR>int` is an error (missing space).
+- Colour literals are `#` followed by any alphanumerics at this layer; `#zzz` and a bare `#` are syntactically valid. Hex validation happens in Layer 2.
+- A statement starting with the identifier `use` or `reuse` is always parsed as a use declaration; `use x {}` is an error, not an element named `x`.
+- A top-level simple body swallows the rest of its line. `Note: 'x' Table y {}` is one `Note` element whose body is the function application `'x' Table y {}`.
+
+## Harness limitations
+
+- The peggy-generated parser overflows the JavaScript stack at roughly 1000 nested parentheses; the reference parser copes with about twice that. `extremeNestingArbitrary` is therefore excluded from the property test. This is a limitation of the executable spec, not a statement about the language.
+- The ANTLR parser reports the position of the first error only, because it runs with a bail-out error strategy; the reference reports every error it can recover from. Only accept/reject and the tree are compared, so this does not affect conformance.
