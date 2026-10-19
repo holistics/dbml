@@ -14,6 +14,7 @@ import {
 import Report from '@/core/types/report';
 import { type NodeSymbol, SchemaSymbol } from '@/core/types/symbol';
 import { SyntaxToken } from '@/core/types/tokens';
+import type { Filepath } from '@/core/types/filepath';
 import {
   isRelationshipOp,
   isBinaryRelationship,
@@ -135,6 +136,10 @@ export default class Binder {
     return new Report(undefined, errors);
   }
 
+  private isArchFile (filepath: Filepath): boolean {
+    return !this.compiler.explicitModules && this.compiler.parsedFileKind(filepath) === 'arch';
+  }
+
   private checkDuplicateRefs (): CompileError[] {
     const errors: CompileError[] = [];
     const seenRefIds = new Map<string, SyntaxNode>();
@@ -142,6 +147,8 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
+      // In an architecture file `Ref:` is a link, checked by the architecture modules
+      if (this.isArchFile(filepath)) continue;
       const parseResult = this.compiler.parseFile(filepath).getFiltered(UNHANDLED);
       if (!parseResult) continue;
       const {
@@ -259,6 +266,8 @@ export default class Binder {
     const reachableFiles = this.compiler.reachableFiles(this.ast.filepath);
 
     for (const filepath of reachableFiles) {
+      // In an architecture file `Ref:` is a link, checked by the architecture modules
+      if (this.isArchFile(filepath)) continue;
       const parseResult = this.compiler.parseFile(filepath).getFiltered(UNHANDLED);
       if (!parseResult) continue;
       const {

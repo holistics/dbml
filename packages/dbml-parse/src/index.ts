@@ -88,7 +88,25 @@ export {
   type FilterConfig,
   type DiagramView,
   type CustomMetadata,
+  type Node,
+  type Group,
+  type NoteBox,
+  type Link,
+  type LinkOp,
+  type Kind,
+  type KindCategory,
+  type ArchSettings,
+  type ArchSettingValue,
 } from '@/core/types/schemaJson';
+
+// Architecture files
+export { type FileKind, ARCH_DIAGRAM_TYPES, isArchDiagramType } from '@/compiler/queries/files/fileKind';
+export {
+  BUILTIN_KINDS, RESERVED, isReserved, suggestKind, suggestIcon, type KindSpec,
+} from '@/core/arch/vocabulary';
+export {
+  ICON_ALIAS, ICON_NAMES, isIconName, resolveIcon,
+} from '@/core/arch/icons';
 
 export {
   type RelationCardinality,
@@ -132,6 +150,8 @@ export type {
   DepIdentifier,
   NoteIdentifier,
   TableGroupIdentifier,
+  ArchElementIdentifier,
+  ArchLinkIdentifier,
 } from '@/compiler/queries/transform';
 
 export {

@@ -1,7 +1,7 @@
 import Lexer from '@/core/lexer/lexer';
 import Parser from '@/core/parser/parser';
 import type { Filepath } from '@/core/types/filepath';
-import type { ProgramNode } from '@/core/types/nodes';
+import { type ProgramNode, UseDeclarationNode, UseSpecifierListNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SyntaxToken } from '@/core/types/tokens';
 import type Compiler from '../../index';
@@ -14,10 +14,19 @@ export type FileParseIndex = {
 };
 
 export function parseFile (this: Compiler, filepath: Filepath): Report<FileParseIndex> {
-  const source = this.getSource(filepath);
-  return new Lexer(source ?? '', filepath, this.dialect.lexer)
+  const source = this.getSource(filepath) ?? '';
+  const lexerOptions = this.lexerOptions();
+  return new Lexer(source, filepath, lexerOptions)
     .lex()
-    .chain((lexedTokens) => new Parser(source ?? '', lexedTokens, this.nodeIdGenerator, filepath, this.dialect.parser).parse())
+    .chain((lexedTokens) => {
+      // The kind is read from the tokens before the parser attaches invalid tokens to them
+      const kind = this.fileKindForParse(filepath, lexerOptions.allowFrontMatter ? lexedTokens : undefined);
+      return new Parser(source, lexedTokens, this.nodeIdGenerator, filepath, this.parserOptions(kind)).parse()
+        .map((parsed) => {
+          if (kind === 'arch' && !this.explicitModules) markArchImports(parsed.ast);
+          return parsed;
+        });
+    })
     .map(({
       ast, tokens,
     }) => ({
@@ -25,6 +34,14 @@ export function parseFile (this: Compiler, filepath: Filepath): Report<FileParse
       tokens,
       path: filepath,
     }));
+}
+
+// The kind words in an architecture file's `use` lines are read in that file's language
+function markArchImports (ast: ProgramNode): void {
+  for (const node of ast.body) {
+    if (!(node instanceof UseDeclarationNode) || !(node.specifiers instanceof UseSpecifierListNode)) continue;
+    for (const specifier of node.specifiers.specifiers) specifier.archImport = true;
+  }
 }
 
 export function parseProject (this: Compiler): Map<string, Report<FileParseIndex>> {

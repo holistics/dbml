@@ -35,6 +35,11 @@ export interface DatabaseExternals {
   tableGroups: ElementRef[];
   tablePartials: ElementRef[];
   notes: ElementRef[];
+  // Architecture elements, present only when the file imports some
+  nodes?: ElementRef[];
+  groups?: ElementRef[];
+  noteBoxes?: ElementRef[];
+  kinds?: ElementRef[];
 }
 
 /**
@@ -78,6 +83,82 @@ export interface Database {
   externals: DatabaseExternals;
   diagramViews: DiagramView[];
   token?: TokenPosition;
+  // Architecture entries, present only for an architecture file or when the file imports some
+  nodes?: Node[];
+  groups?: Group[];
+  noteBoxes?: NoteBox[];
+  links?: Link[];
+  kinds?: Kind[];
+  // The `---` block at the top of the file, present only when it has keys
+  frontMatter?: Record<string, string>;
+  // 'arch' for a file read as an architecture diagram; absent for a DBML file
+  diagramType?: 'arch';
+}
+
+export type ArchSettingValue = string | number | boolean;
+export type ArchSettings = Record<string, ArchSettingValue>;
+
+export type KindCategory = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops' | 'custom';
+
+// `Server "API 1" as api1 { ... }`. The handle (`alias`, or `name` when there is none) is unique.
+export interface Node {
+  name: string;
+  alias: string | null;
+  // The role's declared spelling
+  kind: string;
+  // The brand, resolved to an icon name
+  type: string | null;
+  // A picture URL given in `type`
+  image: string | null;
+  settings: ArchSettings;
+  note: {
+    value: string;
+    token: TokenPosition;
+  } | null;
+  token: TokenPosition;
+}
+
+export interface Group {
+  name: string;
+  alias: string | null;
+  // Handles of the members this group owns, in written order
+  children: string[];
+  settings: ArchSettings;
+  note: {
+    value: string;
+    token: TokenPosition;
+  } | null;
+  token: TokenPosition;
+}
+
+// A top-level `Note` in an architecture file: a box on the canvas
+export interface NoteBox {
+  name: string;
+  alias: string | null;
+  content: string;
+  token: TokenPosition;
+}
+
+export type LinkOp = '>' | '<' | '<>' | '-';
+
+export interface Link {
+  // Handles of the two endpoints
+  from: string;
+  to: string;
+  op: LinkOp;
+  settings: ArchSettings;
+  token: TokenPosition;
+}
+
+export interface Kind {
+  name: string;
+  icon: string;
+  glyph: string[] | null;
+  image: string | null;
+  category: KindCategory;
+  color: string | null;
+  builtin: boolean;
+  token: TokenPosition | null;
 }
 
 // Multifile project
@@ -362,4 +443,10 @@ export type SchemaElement =
   | TablePartialInjection
   | TableRecord
   | RecordValue
-  | MetadataValues;
+  | MetadataValues
+  | Node
+  | Group
+  | NoteBox
+  | Link
+  | Kind
+  | ArchSettings;

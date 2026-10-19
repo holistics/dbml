@@ -12,6 +12,8 @@ export type ElementIdentifier = (
   | DepIdentifier
   | NoteIdentifier
   | TableGroupIdentifier
+  | ArchElementIdentifier
+  | ArchLinkIdentifier
 ) & { kind: string };
 
 export interface SchemaIdentifier {
@@ -66,4 +68,17 @@ export interface TableGroupIdentifier {
   kind?: typeof SymbolKind.TableGroup;
   schema?: string;
   name: string;
+}
+
+// An architecture node, group or note box, by its handle
+export interface ArchElementIdentifier {
+  kind?: typeof SymbolKind.Element;
+  name: string;
+}
+
+// An architecture link, matched in either direction
+export interface ArchLinkIdentifier {
+  kind?: 'Link';
+  from: string;
+  to: string;
 }

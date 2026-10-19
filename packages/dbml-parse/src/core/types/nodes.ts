@@ -322,6 +322,9 @@ export class UseSpecifierNode extends SyntaxNode {
     this.alias = alias;
   }
 
+  // Set on specifiers in an architecture file, whose kind words are roles, `Kind`, `Group` and `Note`
+  declare archImport?: boolean;
+
   isKind (...importKinds: ImportKind[]): boolean {
     return this.importKind?.value !== undefined && importKinds.map((k) => k.toLowerCase()).includes(this.importKind.value.toLowerCase());
   }
@@ -329,6 +332,12 @@ export class UseSpecifierNode extends SyntaxNode {
   getSymbolKind (): SymbolKind | undefined {
     const value = this.importKind?.value?.toLowerCase();
     if (value === undefined) return undefined;
+    if (this.archImport) {
+      if (value === 'kind') return SymbolKind.Kind;
+      if (value === 'note') return SymbolKind.Element;
+      // DBML's own kind words still import DBML elements
+      return Object.values(ImportKind).find((k) => k.toLowerCase() === value) ?? SymbolKind.Element;
+    }
     return Object.values(SymbolKind).find((k) => k.toLowerCase() === value);
   }
 }

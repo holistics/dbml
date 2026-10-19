@@ -121,10 +121,12 @@ export const schemaModule: GlobalModule = {
       if (existing) {
         // Schemas with the same name merge (e.g. two schema aliases to the same name)
         if (member.isKind(SymbolKind.Schema)) continue;
+        // A `Kind` declared again overrules the earlier one
+        if (member.isKind(SymbolKind.Kind)) continue;
         // Error points at the use specifier in the current file, not the original declaration
         const errorNode = member instanceof UseSymbol
           ? (member.useSpecifierDeclaration ?? member.declaration)
-          : (member.declaration instanceof ElementDeclarationNode && member.declaration.name
+          : (member.declaration instanceof ElementDeclarationNode && member.declaration.name && !member.isKind(SymbolKind.Element)
               ? member.declaration.name
               : member.declaration);
         if (errorNode && member.name !== undefined) {
@@ -151,6 +153,8 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
       return tableGroupUtils.getDuplicateError(name, schemaLabel, errorNode);
     case SymbolKind.DiagramView:
       return diagramViewUtils.getDuplicateError(name, schemaLabel, errorNode);
+    case SymbolKind.Element:
+      return new CompileError(CompileErrorCode.DUPLICATE_NAME, `${name} is already declared`, errorNode);
     default:
       return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate ${kind} '${name}' in schema '${schemaLabel}'`, errorNode);
   }

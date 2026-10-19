@@ -52,6 +52,10 @@ export enum SymbolKind {
 
   Metadata = 'Metadata',
 
+  // Architecture nodes, groups and note boxes share one kind, so their handles share one namespace
+  Element = 'Element',
+  Kind = 'Kind',
+
   Program = 'Program',
 }
 
@@ -749,6 +753,64 @@ export class TableGroupFieldSymbol extends NodeSymbol {
 
   override get canBeImported (): boolean {
     return false;
+  }
+
+  override get originalSymbol (): NodeSymbol {
+    return this;
+  }
+}
+
+// An architecture node, group or note box
+export class ElementSymbol extends NodeSymbol {
+  constructor (
+    {
+      declaration,
+      name,
+    }: {
+      declaration?: SyntaxNode;
+      name?: string;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Element,
+      declaration,
+      name,
+    }, id, filepath);
+  }
+
+  override get canBeImported (): boolean {
+    return true;
+  }
+
+  override get originalSymbol (): NodeSymbol {
+    return this;
+  }
+}
+
+// An architecture `Kind` declaration: a role
+export class KindSymbol extends NodeSymbol {
+  constructor (
+    {
+      declaration,
+      name,
+    }: {
+      declaration?: SyntaxNode;
+      name?: string;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Kind,
+      declaration,
+      name,
+    }, id, filepath);
+  }
+
+  override get canBeImported (): boolean {
+    return true;
   }
 
   override get originalSymbol (): NodeSymbol {

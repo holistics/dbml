@@ -4,11 +4,15 @@ import { SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { applyTextEdits, type TextEdit } from './applyTextEdits';
 import { updateSettingEdit } from '@/core/utils/setting';
-import type { ElementIdentifier, DepIdentifier, RefIdentifier } from './types';
+import type {
+  ElementIdentifier, DepIdentifier, RefIdentifier, ArchElementIdentifier, ArchLinkIdentifier,
+} from './types';
 import {
   lookupElementSymbol,
   formatEndpoint, formatSetting, findRefDefinition, findDepDefinition,
 } from './utils';
+import { findArchElement, findArchLink } from './utils/arch';
+import { bodyOf, linkPartsOf } from '@/core/arch/read';
 import { FunctionApplicationNode, type SyntaxNode } from '@/core/types/nodes';
 
 export function updateElementSettingEdit (
@@ -24,6 +28,14 @@ export function updateElementSettingEdit (
 
   if (target.kind === 'ref') {
     return updateRefSettingEdit(this, filepath, target, settingName, value);
+  }
+
+  if (target.kind === SymbolKind.Element) {
+    return updateArchElementSettingEdit(this, filepath, target, settingName, value);
+  }
+
+  if (target.kind === 'Link') {
+    return updateArchLinkSettingEdit(this, filepath, target, settingName, value);
   }
 
   const declaration = findNamedElementDeclaration(this, filepath, target);
@@ -137,6 +149,33 @@ function updateRefSettingEdit (compiler: Compiler, filepath: Filepath, target: R
   }
 
   const edit = updateSettingEdit(result.node, settingName, value, source);
+  return edit
+    ? [
+        edit,
+      ]
+    : [];
+}
+
+function updateArchElementSettingEdit (compiler: Compiler, filepath: Filepath, target: ArchElementIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
+  const declaration = findArchElement(compiler, filepath, target.name);
+  if (!declaration) return [];
+
+  const edit = updateSettingEdit(declaration, settingName, value, compiler.getSource(filepath) ?? '');
+  return edit
+    ? [
+        edit,
+      ]
+    : [];
+}
+
+function updateArchLinkSettingEdit (compiler: Compiler, filepath: Filepath, target: ArchLinkIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
+  const declaration = findArchLink(compiler, filepath, target.from, target.to);
+  if (!declaration) return [];
+
+  // The list after `a > b` is read before the header's, so the header is written only when it is the link's only list
+  const useHeader = !linkPartsOf(declaration)?.row?.settings && !!declaration.attributeList;
+  const node = useHeader ? declaration : bodyOf(declaration)[0];
+  const edit = updateSettingEdit(node, settingName, value, compiler.getSource(filepath) ?? '');
   return edit
     ? [
         edit,

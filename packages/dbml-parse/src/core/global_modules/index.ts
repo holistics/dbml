@@ -25,6 +25,7 @@ import { tableGroupModule } from './tableGroup';
 import { tablePartialModule } from './tablePartial';
 import type { GlobalModule } from './types';
 import { useModule } from './use';
+import { archModule } from './arch';
 
 /**
  * The DBML vocabulary: the modules a Compiler uses when nobody says otherwise.
@@ -60,13 +61,29 @@ export const dbmlModules: GlobalModule[] = [
   programModule,
 ];
 
-// Chain-of-responsibility: iterate the compiler's modules until one handles the node
+// The modules of an architecture file. `use`, schema and program are shared with DBML.
+export const archModules: GlobalModule[] = [
+  archModule,
+  useModule,
+  schemaModule,
+  programModule,
+];
+
+// A node, symbol or metadata is handled by the modules of the file that declares it
+function modulesFor (compiler: Compiler, target: unknown): GlobalModule[] {
+  if (compiler.explicitModules) return compiler.explicitModules;
+  const filepath = (target as { filepath?: Filepath }).filepath
+    ?? (target as { declaration?: SyntaxNode }).declaration?.filepath;
+  return filepath && compiler.parsedFileKind(filepath) === 'arch' ? archModules : dbmlModules;
+}
+
+// Chain-of-responsibility: iterate the modules until one handles the node
 function dispatch<K extends keyof GlobalModule> (
   compiler: Compiler,
   method: K,
   ...args: Parameters<NonNullable<GlobalModule[K]>>
 ): ReturnType<NonNullable<GlobalModule[K]>> | Report<PassThrough> {
-  for (const module of compiler.modules) {
+  for (const module of modulesFor(compiler, args[1])) {
     const fn = module[method] as any;
     if (fn) {
       const result = fn(...args);

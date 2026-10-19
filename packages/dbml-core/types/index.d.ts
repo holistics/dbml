@@ -4,6 +4,7 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  renameElement,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -12,6 +13,7 @@ import {
 } from './transform';
 export {
   renameTable,
+  renameElement,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -87,6 +89,8 @@ export type {
   DepIdentifier,
   NoteIdentifier,
   TableGroupIdentifier,
+  ArchElementIdentifier,
+  ArchLinkIdentifier,
   CustomMetadata,
   RelationCardinality,
   RelationshipOp,

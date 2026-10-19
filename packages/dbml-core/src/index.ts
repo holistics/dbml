@@ -5,6 +5,7 @@ import importer from './import';
 import exporter from './export';
 import {
   renameTable,
+  renameElement,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -17,6 +18,7 @@ export {
   importer,
   exporter,
   renameTable,
+  renameElement,
   updateElementSetting,
   updateElementSettingEdit,
   syncDiagramView,
@@ -89,6 +91,8 @@ export type {
   DepIdentifier,
   NoteIdentifier,
   TableGroupIdentifier,
+  ArchElementIdentifier,
+  ArchLinkIdentifier,
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,

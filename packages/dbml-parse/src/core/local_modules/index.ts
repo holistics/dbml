@@ -21,6 +21,7 @@ import { tableGroupModule } from './tableGroup';
 import { tablePartialModule } from './tablePartial';
 import type { LocalModule, Settings } from './types';
 import { useModule } from './use';
+import { archModule } from './arch';
 
 // Each time you add a new element, register its module here.
 export const modules: LocalModule[] = [
@@ -42,12 +43,24 @@ export const modules: LocalModule[] = [
   customModule,
 ];
 
-// Chain-of-responsibility: iterate modules until one handles the node (returns non-PASS_THROUGH)
+// The local modules of an architecture file
+export const archModules: LocalModule[] = [
+  archModule,
+  programModule,
+  useModule,
+];
+
+// Chain-of-responsibility: iterate the node's file's modules until one handles the node (returns non-PASS_THROUGH)
 function dispatch<K extends keyof LocalModule> (
   method: K,
   ...args: Parameters<NonNullable<LocalModule[K]>>
 ): ReturnType<NonNullable<LocalModule[K]>> | Report<PassThrough> {
-  for (const module of modules) {
+  const [
+    compiler,
+    node,
+  ] = args as unknown as [Compiler, SyntaxNode];
+  const list = !compiler.explicitModules && compiler.parsedFileKind(node.filepath) === 'arch' ? archModules : modules;
+  for (const module of list) {
     const fn = module[method] as any;
     if (fn) {
       const result = fn(...args);
