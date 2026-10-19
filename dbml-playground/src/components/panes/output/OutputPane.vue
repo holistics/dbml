@@ -4,7 +4,7 @@
       class="flex-shrink-0 border-b border-gray-200 bg-white flex items-center px-1 h-[33px] overflow-hidden @container/tabbar"
     >
       <VTooltip
-        v-for="tab in visibleTabs"
+        v-for="tab in TABS"
         :key="tab.id"
         placement="bottom"
         :distance="6"
@@ -69,10 +69,6 @@
         :show-decoration="isDecorationEnabled(activeTab)"
         @toggle-decoration="toggleDecoration(activeTab)"
       />
-      <ArchitectureTab
-        v-if="activeTab === OutputTabId.Architecture"
-        class="h-full"
-      />
     </div>
   </div>
 </template>
@@ -86,18 +82,15 @@ import {
   PhTreeStructure,
   PhAt,
   PhDatabase,
-  PhGraph,
 } from '@phosphor-icons/vue';
 import TokensTab from './tabs/TokensTab.vue';
 import AstTreeView from './ast/AstTreeView.vue';
 import SymbolsTab from './tabs/SymbolsTab.vue';
 import DatabaseTab from './tabs/DatabaseTab.vue';
-import ArchitectureTab from './tabs/ArchitectureTab.vue';
 import type { AstNode } from './ast/AstTreeNode.vue';
 import type { SymbolInfo } from '@/stores/parserStore';
 import { useParserStore } from '@/stores/parserStore';
 import { useProjectStore } from '@/stores/projectStore';
-import { useArchStore } from '@/stores/archStore';
 import { Filepath } from '@dbml/parse';
 import { useUserStore, OutputTabId } from '@/stores/userStore';
 import logger from '@/utils/logger';
@@ -117,7 +110,6 @@ import {
 const parser = useParserStore();
 const project = useProjectStore();
 const user = useUserStore();
-const arch = useArchStore();
 
 interface Tab {
   id: OutputTabId;
@@ -146,53 +138,12 @@ const TABS: Tab[] = [
     label: 'Database',
     icon: PhDatabase,
   },
-  {
-    // The same file read with a different vocabulary. See ArchitectureTab.vue.
-    id: OutputTabId.Architecture,
-    label: 'Architecture',
-    icon: PhGraph,
-  },
 ];
-
-/**
- * The Database tab already hides itself when a document has no tables. The Architecture tab
- * does the same, and for the same reason: a tab that is empty for every DBML document on the
- * public playground is a half-built feature on display. It appears when a document declares a
- * vocabulary and draws on it, or when it says outright that is what it is.
- */
-const visibleTabs = computed(() => TABS.filter((tab) => (
-  tab.id === OutputTabId.Architecture ? arch.hasArchitecture : true
-)));
 
 const activeTab = computed({
   get: () => user.prefs.activeOutputTab,
   set: (v: OutputTabId) => { user.set('activeOutputTab', v); },
 });
-
-/**
- * One nudge, not a mode. A document that says it is architecture should not open on the
- * Database tab, which will be empty for it. Any other tab the reader chose is left alone.
- */
-watch(() => arch.diagramType, (type) => {
-  if (type === 'architecture' && activeTab.value === OutputTabId.Database) {
-    activeTab.value = OutputTabId.Architecture;
-  }
-}, { immediate: true });
-
-/**
- * The active tab has to follow the visible ones.
- *
- * Hiding a tab from the strip does not deselect it, and the choice is remembered across files
- * and across sessions. Open an architecture document, then a DBML schema, and the Architecture
- * tab vanishes from the strip while its pane keeps rendering underneath: a panel the reader
- * cannot see the tab for, reporting that their perfectly good schema is not a kind.
- */
-watch(visibleTabs, (tabs) => {
-  if (tabs.some((tab) => tab.id === activeTab.value)) return;
-  // leaving an architecture document means landing on a schema, and Database is its answer
-  const database = tabs.find((tab) => tab.id === OutputTabId.Database);
-  activeTab.value = database?.id ?? tabs[0]?.id ?? OutputTabId.Tokens;
-}, { immediate: true });
 const DECOR_STORAGE_KEY = 'playground:showDecorations';
 
 function loadDecorPrefs (): Record<string, boolean> {

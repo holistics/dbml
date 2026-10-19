@@ -112,7 +112,8 @@ export default class ProgramInterpreter {
     for (const kind of this.arch.importedKinds) {
       if (!kinds.has(kind.name.toLowerCase())) kinds.set(kind.name.toLowerCase(), kind);
     }
-    if (isArch) {
+    // a DBML file that imports nodes needs the built-in roles to draw them
+    if (isArch || this.arch.nodes.length) {
       for (const kind of builtinKinds()) {
         if (!kinds.has(kind.name.toLowerCase())) kinds.set(kind.name.toLowerCase(), kind);
       }

@@ -13,8 +13,7 @@
     "lint": "npx lerna run lint",
     "lint:all": "npx lerna run lint:all",
     "lint:fix": "npx lerna run lint:fix",
-    "coverage": "npx lerna run coverage",
-    "playground": "yarn --cwd dbml-playground dev"
+    "coverage": "npx lerna run coverage"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.5.0",

@@ -108,15 +108,7 @@
     </div>
 
     <main class="flex-1 overflow-hidden p-2">
-      <!--
-        The default layout is [15, 42, 43] and the splitter's own default floor is 20, so the
-        file pane shipped narrower than it could ever be dragged back to: one drag snapped it to
-        20 and it could never return. The floor belongs below the default, not above it.
-      -->
-      <SplitPanel
-        v-model="user.prefs.panelSizes"
-        :min-size="8"
-      >
+      <SplitPanel v-model="user.prefs.panelSizes">
         <template #panel-0>
           <FilesPane />
         </template>

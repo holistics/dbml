@@ -1,9 +1,8 @@
 <template>
   <div class="flex flex-col h-full bg-white rounded border border-gray-200 overflow-hidden select-none">
     <div class="flex items-center justify-between pl-[22px] pr-1 h-[33px] border-b border-gray-200 flex-shrink-0">
-      <!-- the label gives way first: four buttons at a narrow pane must not wrap or clip -->
-      <span class="text-xs font-medium text-gray-500 uppercase tracking-wide truncate min-w-0">Files</span>
-      <div class="flex items-center flex-shrink-0">
+      <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Files</span>
+      <div class="flex items-center">
         <VTooltip
           placement="bottom"
           :distance="6"
@@ -32,41 +31,6 @@
             <span class="text-xs">New folder</span>
           </template>
         </VTooltip>
-        <!--
-          The samples existed as data with nothing reading them. A sample nobody can open is a
-          sample nobody maintains, which is how the architecture one would have rotted too.
-        -->
-        <VDropdown
-          :distance="6"
-          placement="bottom-end"
-          no-auto-focus
-        >
-          <VTooltip
-            placement="bottom"
-            :distance="6"
-          >
-            <button class="p-1.5 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer">
-              <PhBookOpen class="w-3.5 h-3.5" />
-            </button>
-            <template #popper>
-              <span class="text-xs">New file from a sample</span>
-            </template>
-          </VTooltip>
-          <template #popper>
-            <div class="py-1 min-w-[18rem]">
-              <button
-                v-for="sample in samples"
-                :key="sample.name"
-                v-close-popper
-                class="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 cursor-pointer"
-                @click="createFromSample(sample)"
-              >
-                <span class="font-medium">{{ sample.name }}</span>
-                <span class="block text-[11px] text-gray-500">{{ sample.description }}</span>
-              </button>
-            </div>
-          </template>
-        </VDropdown>
         <div>
           <VTooltip
             placement="bottom"
@@ -133,10 +97,7 @@
 import {
   ref, computed, provide, onMounted, onUnmounted,
 } from 'vue';
-import {
-  PhFilePlus, PhFolderPlus, PhArrowClockwise, PhBookOpen,
-} from '@phosphor-icons/vue';
-import { getSampleCategories, type SampleCategory } from '@/services/sample-content';
+import { PhFilePlus, PhFolderPlus, PhArrowClockwise } from '@phosphor-icons/vue';
 import { useProjectStore } from '@/stores/projectStore';
 import { Filepath } from '@dbml/parse';
 import FileTreeNode from './FileTreeNode.vue';
@@ -247,23 +208,6 @@ function createFile () {
   const path = uniquePath('/untitled', '.dbml');
   project.addFile(path, '');
   editingPath.value = path;
-}
-
-const samples = getSampleCategories();
-
-/**
- * A sample becomes a file, not a replacement for the one you are looking at.
- *
- * The naming is the convention, not a requirement: the compiler never reads a file's name, and
- * an architecture document is one that declares a vocabulary and draws on it. `.arch.dbml` is
- * here so a file tree reads at a glance, and so the language still goes last for every tool
- * that keys on the final extension.
- */
-function createFromSample (sample: SampleCategory) {
-  const architecture = sample.content.includes('\nKind ') || sample.content.startsWith('Kind ');
-  const base = `/${sample.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-  const path = uniquePath(base, architecture ? '.arch.dbml' : '.dbml');
-  project.addFile(path, sample.content);
 }
 
 function createFolder () {

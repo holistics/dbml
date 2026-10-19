@@ -35,6 +35,17 @@ describe('[example] architecture rules', () => {
     ]);
   });
 
+  test('a DBML file that imports nodes gets the built-in roles to draw them', () => {
+    const { errors, db } = project({
+      '/infra.dbml': `${ARCH}Server api`,
+      '/main.dbml': "use * from './infra'\nTable users {\n  id int\n}",
+    });
+    expect(errors).toHaveLength(0);
+    expect(db?.diagramType).toBeUndefined();
+    expect(db?.nodes?.map((n) => n.kind)).toEqual(['Server']);
+    expect(db?.kinds?.some((k) => k.name === 'Server' && k.builtin)).toBe(true);
+  });
+
   test('a Kind declared in the importing file overrules the imported one', () => {
     const { errors, db } = project({
       '/pack.dbml': 'Kind Lakehouse [icon: graph]',

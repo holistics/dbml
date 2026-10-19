@@ -108,32 +108,14 @@ file moves and nothing else does.
 ## The renderer
 
 `@holistics/dbx-graph-renderer` draws the result. It knows nothing about DBML or about any parser: it declares
-its own input contract in `src/model.ts` and draws anything that satisfies it. That is why the
-playground tab is thirty lines of wiring rather than a port.
+its own input contract in `src/model.ts` and draws anything that satisfies it.
 
 It lives in `holistics/dbx-graph-renderer`, which is closed, and **this repository does not depend
 on it**: `@dbml/arch` owns the model (`src/model.ts`) and the icon names (`src/icons.ts`), so
-the language works without the drawing. The only thing that needs it is the playground's
-Architecture tab, through one alias in `dbml-playground/vite.config.ts`, and the playground is
-not published.
+the language works without the drawing.
 
 ## Running it
 
 ```bash
 yarn vitest run                       # 16 tests
-yarn --cwd ../../dbml-playground dev  # the Architecture tab, http://localhost:3001
 ```
-
-`@holistics/dbx-graph-renderer` is closed and is not on the registry yet, so link it:
-
-```bash
-cd ~/<wherever>/dbx-graph-renderer && yarn link
-cd ~/<wherever>/dbml/dbml-playground && yarn link @holistics/dbx-graph-renderer
-```
-
-Without it everything works except the Architecture tab.
-
-The playground resolves `@dbml/arch` and the renderer from source, so edits to either are live.
-`@dbml/parse` is the exception: its own sources use `@/` to mean its own `src`, which collides
-with the playground's `@` alias, so it runs from `dist`. Run `yarn build` in
-`packages/dbml-parse` after touching the kernel.

@@ -1,5 +1,3 @@
-import { BOOK_FILE, INLINE_FILE, SELF_FILE } from '@dbml/arch';
-
 export const DEFAULT_SAMPLE_CONTENT = `Table users {
   id int [pk]
   username varchar [not null]
@@ -86,32 +84,11 @@ Table mart_orders [dep: <- fct_orders] {
   total decimal
 }`;
 
-export const ARCHITECTURE_SAMPLE_CONTENT = INLINE_FILE;
-
-export const SELF_SAMPLE_CONTENT = SELF_FILE;
-
-export const BOOK_SAMPLE_CONTENT = BOOK_FILE;
-
 export const SAMPLE_CATEGORIES: readonly SampleCategory[] = [
   {
     name: 'Basic Example',
     description: 'Simple tables with relationships',
     content: DEFAULT_SAMPLE_CONTENT,
-  },
-  {
-    name: 'Architecture',
-    description: 'A network diagram: Kind opens the vocabulary, Group nests, Link draws',
-    content: ARCHITECTURE_SAMPLE_CONTENT,
-  },
-  {
-    name: 'DBML itself',
-    description: 'The architecture dialect drawn in its own language: stages, not files',
-    content: SELF_SAMPLE_CONTENT,
-  },
-  {
-    name: 'Dám bị ghét',
-    description: 'A book as an argument: five nights of Adler, drawn in Vietnamese',
-    content: BOOK_SAMPLE_CONTENT,
   },
   {
     name: 'Data Lineage',
