@@ -2,6 +2,7 @@ import {
   describe, it, expect, beforeEach,
 } from 'vitest';
 import Compiler from '@/compiler';
+import DBMLCompletionItemProvider from '@/services/suggestions/provider';
 import DBMLDefinitionProvider from '@/services/definition/provider';
 import DBMLReferencesProvider from '@/services/references/provider';
 import { MockTextModel, createPosition } from '../../../utils';
@@ -45,49 +46,33 @@ describe('[advanced] multifile edge cases', () => {
       expect(filepath2.absolute).toBe(original);
     });
 
-    it('should handle special characters in file paths', () => {
-      const pathWithSpecialChars = '/home/user/project-2024/[test]/models.dbml';
-      const encoded = '/home/user/project-2024/%5Btest%5D/models.dbml';
-      const filepath = new Filepath(pathWithSpecialChars);
-
-      expect(filepath.absolute).toBe(encoded);
-      expect(Filepath.fromUri(filepath.toUri()).absolute).toBe(encoded);
+    it('should preserve special characters in file paths from from()', () => {
+      const filepath = new Filepath('/home/user/project-2024/[test]/models.dbml');
+      // from() treats input literally, no encoding
+      expect(filepath.absolute).toBe('/home/user/project-2024/[test]/models.dbml');
     });
 
-    it('should not double-encode already-encoded paths', () => {
-      const encoded = '/home/user/%5Btest%5D/file.dbml';
-      const filepath = new Filepath(encoded);
-
-      expect(filepath.absolute).toBe(encoded);
+    it('should round-trip special characters through toUri/fromUri', () => {
+      const filepath = new Filepath('/home/user/[test]/file.dbml');
+      const roundTripped = Filepath.fromUri(filepath.toUri({ protocol: 'file' }));
+      expect(roundTripped.absolute).toBe(filepath.absolute);
     });
 
-    it('should normalize partially-encoded paths', () => {
-      const partial = '/home/user/[test]/%5Bother%5D/file.dbml';
-      const filepath = new Filepath(partial);
-
-      expect(filepath.absolute).toBe('/home/user/%5Btest%5D/%5Bother%5D/file.dbml');
+    it('should treat %XX as literal characters in from()', () => {
+      // from() is for filesystem paths, %5B is literal
+      const filepath = new Filepath('/home/user/%5Btest%5D/file.dbml');
+      expect(filepath.absolute).toBe('/home/user/%5Btest%5D/file.dbml');
     });
 
-    it('should encode spaces in path segments', () => {
-      const path = '/home/user/my project/file.dbml';
-      const filepath = new Filepath(path);
-
-      expect(filepath.absolute).toBe('/home/user/my%20project/file.dbml');
+    it('should preserve spaces in path segments', () => {
+      const filepath = new Filepath('/home/user/my project/file.dbml');
+      expect(filepath.absolute).toBe('/home/user/my project/file.dbml');
     });
 
     it('should handle unicode in path segments', () => {
-      const path = '/home/user/日本語/file.dbml';
-      const filepath = new Filepath(path);
+      const filepath = new Filepath('/home/user/日本語/file.dbml');
       const filepath2 = new Filepath(filepath.absolute);
-
       expect(filepath.absolute).toBe(filepath2.absolute);
-    });
-
-    it('should produce equal filepaths from encoded and unencoded input', () => {
-      const a = new Filepath('/home/user/[test]/file.dbml');
-      const b = new Filepath('/home/user/%5Btest%5D/file.dbml');
-
-      expect(a.equals(b)).toBe(true);
     });
   });
 
@@ -225,6 +210,17 @@ Ref: nodes.parent_id > nodes.id`;
         this.files.set(filePath.absolute, content);
       }
 
+      getFileSpecifierInfo (_currentFilepath: Filepath, targetFilepath: Filepath): { specifier: string } | undefined {
+        // Check if it's an @id import
+        if (targetFilepath.absolute.startsWith('/@imports/')) {
+          const id = targetFilepath.absolute.slice('/@imports/'.length).replace('.dbml', '');
+          return { specifier: `@${id}` };
+        }
+        let specifier = targetFilepath.relativeTo(_currentFilepath.dirname);
+        if (specifier.endsWith('.dbml')) specifier = specifier.slice(0, -'.dbml'.length);
+        return { specifier };
+      }
+
       resolveFileSpecifier (_currentFilepath: Filepath, specifier: string): Filepath | undefined {
         if (specifier.startsWith('@')) {
           const id = specifier.slice(1);
@@ -272,6 +268,14 @@ Ref: nodes.parent_id > nodes.id`;
 
       getEntrypoints (): Filepath[] {
         return [...this.files.keys()].map(Filepath.from).sort((a, b) => a.absolute.localeCompare(b.absolute));
+      }
+
+      getSpecifierForFile (_currentFilepath: Filepath, targetFilepath: Filepath): string | undefined {
+        const match = targetFilepath.fsPath.match(/^\/@imports\/(.+)\.dbml$/);
+        if (match) return `@${match[1]}`;
+        let specifier = targetFilepath.relativeTo(_currentFilepath.dirname);
+        if (specifier.endsWith('.dbml')) specifier = specifier.slice(0, -'.dbml'.length);
+        return specifier;
       }
     }
 
@@ -323,6 +327,62 @@ Table orders {
       const errors2 = compiler.interpretFile(file2).getErrors();
       expect(errors1).toHaveLength(0);
       expect(errors2).toHaveLength(0);
+    });
+
+    describe('use filepath suggestion with @id layout', () => {
+      function setupIdLayout (files: Record<string, string>) {
+        const layout = new IdImportLayout();
+        for (const [path, content] of Object.entries(files)) {
+          layout.setSource(Filepath.from(path), content);
+        }
+        const compiler = new Compiler(layout);
+        compiler.bindProject();
+        return compiler;
+      }
+
+      it('specifier mode: suggests @id specifiers', () => {
+        const compiler = setupIdLayout({
+          '/@imports/shared-users.dbml': 'Table users { id int }',
+          '/main.dbml': 'use * from ',
+        });
+        const program = 'use * from ';
+        const model = new MockTextModel(program, Filepath.from('/main.dbml').toUri()) as any;
+        const provider = new DBMLCompletionItemProvider(compiler);
+        const result = provider.provideCompletionItems(model, createPosition(1, 12));
+        const labels = result.suggestions.map((s: any) => String(s.label));
+        expect(labels).toContain('@shared-users');
+      });
+
+      it('specifier mode: filters @id specifiers by prefix', () => {
+        const compiler = setupIdLayout({
+          '/@imports/shared-users.dbml': 'Table users { id int }',
+          '/@imports/shared-orders.dbml': 'Table orders { id int }',
+          '/@imports/other.dbml': 'Table other { id int }',
+          '/main.dbml': "use * from '@shared'",
+        });
+        const program = "use * from '@shared'";
+        const model = new MockTextModel(program, Filepath.from('/main.dbml').toUri()) as any;
+        const provider = new DBMLCompletionItemProvider(compiler);
+        const result = provider.provideCompletionItems(model, createPosition(1, 20));
+        const labels = result.suggestions.map((s: any) => String(s.label));
+        expect(labels).toContain('@shared-users');
+        expect(labels).toContain('@shared-orders');
+        expect(labels).not.toContain('@other');
+      });
+
+      it('filepath browse mode: suggests files and inserts @id specifier', () => {
+        const compiler = setupIdLayout({
+          '/@imports/shared-users.dbml': 'Table users { id int }',
+          '/main.dbml': "use * from '/@imports/'",
+        });
+        const program = "use * from '/@imports/'";
+        const model = new MockTextModel(program, Filepath.from('/main.dbml').toUri()) as any;
+        const provider = new DBMLCompletionItemProvider(compiler);
+        const result = provider.provideCompletionItems(model, createPosition(1, 22));
+        const item = result.suggestions.find((s: any) => String(s.label) === '/@imports/shared-users.dbml');
+        expect(item).toBeDefined();
+        expect(item!.insertText).toBe('@shared-users');
+      });
     });
 
     it('should not conflict when @id and relative path resolve to the same file', () => {

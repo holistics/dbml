@@ -915,6 +915,16 @@ export default class Parser {
           if (opInfixPower.left === null || opInfixPower.left <= mbp) {
             break;
           }
+          // A line of a block body that starts with an operator able to start an expression,
+          // such as `-2, 7` in Records, is an expression of its own rather than
+          // the rest of the line above
+          if (
+            prefixBp(op).right !== null
+            && isAtStartOfLine(this.previous(), op)
+            && this.contextStack.top() === ParsingContext.BlockExpression
+          ) {
+            break;
+          }
           this.advance();
           try {
             leftExpression = this.nodeFactory.create(InfixExpressionNode, {

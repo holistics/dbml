@@ -45,6 +45,34 @@ describe('[example - record] data type interpretation', () => {
     });
   });
 
+  test('should interpret a row that starts with a negative number after another row', () => {
+    const source = `
+      Table scores {
+        id int
+        delta int
+      }
+      records scores(id, delta) {
+        1, 5
+        -2, 7
+      }
+    `;
+    const result = interpret(source);
+    const errors = result.getErrors();
+
+    expect(errors.length).toBe(0);
+
+    const db = result.getValue()!;
+    expect(db.records[0].values).toHaveLength(2);
+    expect(db.records[0].values[0][1]).toMatchObject({
+      type: 'integer',
+      value: 5,
+    });
+    expect(db.records[0].values[1][0]).toMatchObject({
+      type: 'integer',
+      value: -2,
+    });
+  });
+
   test('should interpret float and decimal values correctly', () => {
     const source = `
       Table data {

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/connector",
-  "version": "10.4.0-metadata-ref-type.0",
+  "version": "10.4.0-alpha.2",
   "description": "This package was created to fetch the schema JSON from many kind of databases.",
   "author": "huy.phung.sw@gmail.com",
   "license": "MIT",
@@ -17,7 +17,7 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "build": "rm -rf ./dist && vite build",
+    "build": "rimraf ./dist && vite build",
     "dev": "vite build --watch",
     "start": "node dist/index.js",
     "test:watch": "vitest watch",

@@ -26,10 +26,14 @@ export type { ExportFormat, ExportOptions } from './export/index';
 export type { DbmlExporterOptions } from './export/DbmlExporter';
 export type { JsonExporterOptions } from './export/JsonExporter';
 export type { ImportFormat, ImportOptions } from './import/index';
-export { CompilerDiagnostic, CompilerError, CompilerError as CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel } from './parse/error';
+export { CompilerDiagnostic, CompilerDiagnostics, EditorPosition, ErrorCode, WarningLevel } from './parse/error';
 export * from './model_structure';
 
 export {
+  CompileError,
+  CompileWarning,
+  CompileInfo,
+  CompileErrorCode,
   isIntegerType,
   isFloatType,
   isNumericType,
@@ -68,6 +72,8 @@ export { inferMultiplicitiesFromColumns } from './transform/relations';
 
 // Re-export types
 export type {
+  Diagnostic,
+  DiagnosticQuickFix,
   ElementRef,
   DiagramView,
   FilterConfig,
@@ -92,4 +98,5 @@ export type {
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,
+  FileSpecifierInfo,
 } from '@dbml/parse';
