@@ -1,13 +1,14 @@
 import type Compiler from '@/compiler';
 import {
-  archSort, bodyOf, declarationWord, endpointNode, handleOf, isTopLevel, linkPartsOf, nameOf, topLevelDeclaration,
+  archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isInlineLink, isTopLevel, linkPartsOf,
+  nameOf, topLevelDeclaration,
 } from '@/core/arch/read';
 import { suggestKind } from '@/core/arch/vocabulary';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, type SyntaxNode, UseSpecifierNode,
+  AttributeNode, BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, type SyntaxNode, UseSpecifierNode,
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
@@ -34,7 +35,13 @@ function isLinkEndpoint (node: SyntaxNode, link: ElementDeclarationNode): boolea
   return !!parts && (endpointNode(parts.infix.left) === node || endpointNode(parts.infix.right) === node);
 }
 
-const notDeclared = (code: CompileErrorCode, name: string, declaration: ElementDeclarationNode) => new CompileError(code, `${name} is not declared anywhere`, declaration);
+const isElementSort = (declaration: ElementDeclarationNode): boolean => ['node', 'group', 'note'].includes(archSort(declaration) ?? '');
+
+function isInlineLinkTarget (node: SyntaxNode, declaration: ElementDeclarationNode): boolean {
+  return inlineLinksOf(declaration).some((attribute) => inlineLinkOf(attribute)?.target === node);
+}
+
+const notDeclared = (code: CompileErrorCode, name: string, at: SyntaxNode) => new CompileError(code, `${name} is not declared anywhere`, at);
 
 // A table visible under that name, which a link or a group cannot use
 function tableError (compiler: Compiler, node: SyntaxNode, name: string, rule: string): CompileError | undefined {
@@ -42,9 +49,22 @@ function tableError (compiler: Compiler, node: SyntaxNode, name: string, rule: s
   return new CompileError(CompileErrorCode.BINDING_ERROR, `${name} is a table; ${rule}`, node);
 }
 
+// A link end, written in `Link: a > b` or after the operator of an inline `[link: > b]`
+function linkEndpointReferee (compiler: Compiler, node: SyntaxNode, name: string, at: SyntaxNode): Report<NodeSymbol | undefined> {
+  const found = lookupVisible(compiler, node.filepath, SymbolKind.Element, name);
+  if (found) return new Report(found);
+  return new Report(undefined, [
+    tableError(compiler, node, name, 'a link joins elements') ?? notDeclared(CompileErrorCode.UNKNOWN_ENDPOINT, name, at),
+  ]);
+}
+
 function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declaration: ElementDeclarationNode): Report<NodeSymbol | undefined> {
   const name = nameOf(node);
   if (name === undefined) return new Report(undefined);
+
+  if (isElementSort(declaration) && isInlineLinkTarget(node, declaration)) {
+    return linkEndpointReferee(compiler, node, name, node);
+  }
 
   switch (archSort(declaration)) {
     case 'group': {
@@ -55,14 +75,9 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
       return new Report(found, table ? [table] : []);
     }
 
-    case 'link': {
+    case 'link':
       if (!isLinkEndpoint(node, declaration)) return new Report(undefined);
-      const found = lookupVisible(compiler, node.filepath, SymbolKind.Element, name);
-      if (found) return new Report(found);
-      return new Report(undefined, [
-        tableError(compiler, node, name, 'a link joins elements') ?? notDeclared(CompileErrorCode.UNKNOWN_ENDPOINT, name, declaration),
-      ]);
-    }
+      return linkEndpointReferee(compiler, node, name, declaration);
 
     case 'metadata': {
       if (!declaration.name?.containsEq(node)) return new Report(undefined);
@@ -82,6 +97,13 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
 function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNode): Report<void> {
   const errors: CompileError[] = [];
   const word = declarationWord(declaration)!;
+
+  if (isElementSort(declaration)) {
+    for (const attribute of inlineLinksOf(declaration)) {
+      const target = inlineLinkOf(attribute)?.target;
+      if (target && isExpressionAVariableNode(target)) errors.push(...compiler.nodeReferee(target).getErrors());
+    }
+  }
 
   switch (archSort(declaration)) {
     case 'node':
@@ -198,6 +220,12 @@ export const archModule: GlobalModule = {
   },
 
   nodeMetadata (compiler: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<PassThrough> {
+    // An inline `[link: > b]` on an element, the way DBML reads an inline `[ref: > b]` on a column
+    if (node instanceof AttributeNode) {
+      const element = node.parentOfKind(ElementDeclarationNode);
+      if (!element || !isTopLevel(element) || !isElementSort(element) || !isInlineLink(node)) return Report.create(PASS_THROUGH);
+      return new Report(new LinkMetadata(node));
+    }
     if (!isTopLevel(node)) return Report.create(PASS_THROUGH);
     switch (archSort(node)) {
       case 'link':

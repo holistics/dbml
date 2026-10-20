@@ -7,6 +7,7 @@ import {
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
+  PrefixExpressionNode,
   PrimaryExpressionNode,
   ProgramNode,
   type SyntaxNode,
@@ -83,13 +84,19 @@ export function valueOf (node: SyntaxNode): ArchSettingValue | undefined {
   return text;
 }
 
-// `[style: dashed, inactive]`: a setting with no value is true
+// `Server api [link: > db]`: a link from the element to `db`. `ref` is the same word, as `Ref:` is `Link:`.
+const INLINE_LINK_KEYS = new Set([
+  'link',
+  'ref',
+]);
+
+// `[style: dashed, inactive]`: a setting with no value is true. An inline link is a link, not a setting.
 export function settingsOf (list?: ListExpressionNode): ArchSettings {
   const out: ArchSettings = {};
   for (const attribute of list?.elementList ?? []) {
     if (!(attribute instanceof AttributeNode)) continue;
     const key = nameOf(attribute.name)?.toLowerCase();
-    if (!key) continue;
+    if (!key || INLINE_LINK_KEYS.has(key)) continue;
     out[key] = attribute.value === undefined ? true : (valueOf(attribute.value) ?? true);
   }
   return out;
@@ -173,6 +180,32 @@ export function linkPartsOf (declaration: ElementDeclarationNode): LinkParts | u
   return {
     row,
     infix,
+  };
+}
+
+export function isInlineLink (attribute: AttributeNode): boolean {
+  return INLINE_LINK_KEYS.has(nameOf(attribute.name)?.toLowerCase() ?? '');
+}
+
+export function inlineLinksOf (declaration: ElementDeclarationNode): AttributeNode[] {
+  return (declaration.attributeList?.elementList ?? [])
+    .filter((attribute): attribute is AttributeNode => attribute instanceof AttributeNode && isInlineLink(attribute));
+}
+
+export interface InlineLink {
+  op: string;
+  target: SyntaxNode;
+}
+
+// undefined when the value is not one of the four operators followed by a name
+export function inlineLinkOf (attribute: AttributeNode): InlineLink | undefined {
+  const { value } = attribute;
+  if (!(value instanceof PrefixExpressionNode) || !value.expression) return undefined;
+  const op = value.op?.value;
+  if (!op || !LINK_OPS.has(op)) return undefined;
+  return {
+    op,
+    target: endpointNode(value.expression),
   };
 }
 

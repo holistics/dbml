@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import {
-  archSort, bodyOf, declarationWord, endpointNode, handleOf, isTopLevel, linkPartsOf, nameOf,
+  archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, linkPartsOf, nameOf,
   propertyOf, readBody, rowOf, settingsOf,
 } from '@/core/arch/read';
 import { isReserved } from '@/core/arch/vocabulary';
@@ -24,6 +24,15 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
       if (!nameOf(declaration.name)) {
         errors.push(new CompileError(CompileErrorCode.MISSING_NAME, `A ${word} needs a name`, declaration));
         break;
+      }
+      for (const attribute of inlineLinksOf(declaration)) {
+        if (attribute.value === undefined) {
+          errors.push(new CompileError(CompileErrorCode.EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]', attribute));
+          continue;
+        }
+        if (!nameOf(inlineLinkOf(attribute)?.target)) {
+          errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'An inline link reads  [link: > b],  [link: < b],  [link: <> b]  or  [link: - b]', attribute));
+        }
       }
       if (sort === 'note') break;
       for (const problem of readBody(declaration, settingsOf(declaration.attributeList), sort === 'node').problems) {

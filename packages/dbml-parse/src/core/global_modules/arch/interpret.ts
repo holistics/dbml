@@ -201,17 +201,22 @@ export function builtinKinds (): Kind[] {
 }
 
 export function interpretLink (compiler: Compiler, metadata: LinkMetadata): Report<Link | undefined> {
-  const parts = linkPartsOf(metadata.declaration);
+  const { declaration } = metadata;
+  const op = metadata.op();
   const [from, to] = metadata.endpoints(compiler);
   const fromHandle = from && originalHandle(from);
   const toHandle = to && originalHandle(to);
-  if (!parts || fromHandle === undefined || toHandle === undefined) return new Report(undefined);
+  if (!op || fromHandle === undefined || toHandle === undefined) return new Report(undefined);
+  // an inline link has no settings list of its own: the brackets it sits in are the element's
+  const settings = declaration instanceof ElementDeclarationNode
+    ? settingsOf(linkPartsOf(declaration)?.row?.settings ?? declaration.attributeList)
+    : {};
   return new Report({
     from: fromHandle,
     to: toHandle,
-    op: parts.infix.op as LinkOp,
-    settings: settingsOf(parts.row?.settings ?? metadata.declaration.attributeList),
-    token: getTokenPosition(metadata.declaration),
+    op: op as LinkOp,
+    settings,
+    token: getTokenPosition(declaration),
   });
 }
 

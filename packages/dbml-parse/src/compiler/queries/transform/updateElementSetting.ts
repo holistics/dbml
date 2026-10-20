@@ -11,9 +11,10 @@ import {
   lookupElementSymbol,
   formatEndpoint, formatSetting, findRefDefinition, findDepDefinition,
 } from './utils';
-import { findArchElement, findArchLink } from './utils/arch';
-import { bodyOf, linkPartsOf } from '@/core/arch/read';
-import { FunctionApplicationNode, type SyntaxNode } from '@/core/types/nodes';
+import { findArchElement, findArchLink, removeAttributeEdit } from './utils/arch';
+import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
+import { bodyOf, handleOf, linkPartsOf } from '@/core/arch/read';
+import { FunctionApplicationNode, type PrefixExpressionNode, type SyntaxNode } from '@/core/types/nodes';
 
 export function updateElementSettingEdit (
   this: Compiler,
@@ -169,9 +170,23 @@ function updateArchElementSettingEdit (compiler: Compiler, filepath: Filepath, t
 }
 
 function updateArchLinkSettingEdit (compiler: Compiler, filepath: Filepath, target: ArchLinkIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
-  const declaration = findArchLink(compiler, filepath, target.from, target.to);
-  if (!declaration) return [];
+  const source = compiler.getSource(filepath) ?? '';
+  const definition = findArchLink(compiler, filepath, target.from, target.to);
+  if (!definition) return [];
 
+  // An inline link has no list of its own, so it moves out to a `Link:` that can carry the setting, as an inline ref does
+  if (definition.kind === 'inline') {
+    const written = (definition.attribute.value as PrefixExpressionNode | undefined)?.expression;
+    if (value === null || !definition.element.attributeList || !written) return [];
+    const setting = formatSetting(settingName, value);
+    const line = `Link: ${addDoubleQuoteIfNeeded(handleOf(definition.element) ?? '')} ${definition.op} ${source.substring(written.start, written.end)}`;
+    return [
+      removeAttributeEdit(definition.element.attributeList, definition.attribute, source),
+      { start: source.length, end: source.length, newText: `\n\n${setting ? `${line} [${setting}]` : line}\n` },
+    ];
+  }
+
+  const { declaration } = definition;
   // The list after `a > b` is read before the header's, so the header is written only when it is the link's only list
   const useHeader = !linkPartsOf(declaration)?.row?.settings && !!declaration.attributeList;
   const node = useHeader ? declaration : bodyOf(declaration)[0];

@@ -80,6 +80,14 @@ describe('@dbml/core - architecture files', () => {
     expect(exported.noteBoxes).toHaveLength(1);
   });
 
+  test('an inline link normalizes like a Link: its ends become the two elements\' ids', () => {
+    const model = normalizeProject({ '/d.dbml': 'Server api [link: > main]\nDatabase main' }, '/d.dbml');
+    const [api, main] = Object.values(model.nodes!);
+    const [link] = Object.values(model.links!);
+    expect(link).toMatchObject({ fromId: api.id, toId: main.id, op: '>' });
+    expect(api.settings).toEqual({});
+  });
+
   test('a DBML file normalizes and exports with no architecture keys', () => {
     const model = normalizeProject({ '/main.dbml': 'Table users {\n  id int [pk]\n}' }, '/main.dbml');
     expect(Object.keys(model)).not.toContain('nodes');

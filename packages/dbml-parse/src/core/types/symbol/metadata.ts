@@ -30,7 +30,7 @@ import {
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
 import { lookupVisible } from '@/core/global_modules/arch/utils';
-import { endpointNode, linkPartsOf } from '@/core/arch/read';
+import { endpointNode, inlineLinkOf, linkPartsOf } from '@/core/arch/read';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { getRightmostVariable } from '@/core/utils/validate';
 
@@ -623,25 +623,46 @@ export class MetadataElementMetadata extends NodeMetadata {
 }
 
 // Architecture `Link: a > b` (or `Ref:` in an architecture file)
+// `Link: a > b`, or an inline `[link: > b]` on the element `a`
 export class LinkMetadata extends NodeMetadata {
-  declare declaration: ElementDeclarationNode;
+  declare declaration: ElementDeclarationNode | AttributeNode;
 
   readonly kind = MetadataKind.Link;
 
-  constructor (declaration: ElementDeclarationNode) {
+  constructor (declaration: ElementDeclarationNode | AttributeNode) {
     super(declaration);
   }
 
+  op (): string | undefined {
+    return this.declaration instanceof AttributeNode
+      ? inlineLinkOf(this.declaration)?.op
+      : linkPartsOf(this.declaration)?.infix.op;
+  }
+
   endpoints (compiler: Compiler): [NodeSymbol | undefined, NodeSymbol | undefined] {
+    const resolve = (side: SyntaxNode) => {
+      const node = endpointNode(side);
+      return isExpressionAVariableNode(node) ? compiler.nodeReferee(node).getFiltered(UNHANDLED)?.originalSymbol : undefined;
+    };
+
+    if (this.declaration instanceof AttributeNode) {
+      const inline = inlineLinkOf(this.declaration);
+      const element = this.declaration.parentOfKind(ElementDeclarationNode);
+      if (!inline || !element) return [
+        undefined,
+        undefined,
+      ];
+      return [
+        compiler.nodeSymbol(element).getFiltered(UNHANDLED)?.originalSymbol,
+        resolve(inline.target),
+      ];
+    }
+
     const parts = linkPartsOf(this.declaration);
     if (!parts) return [
       undefined,
       undefined,
     ];
-    const resolve = (side: SyntaxNode) => {
-      const node = endpointNode(side);
-      return isExpressionAVariableNode(node) ? compiler.nodeReferee(node).getFiltered(UNHANDLED)?.originalSymbol : undefined;
-    };
     return [
       resolve(parts.infix.left),
       resolve(parts.infix.right),

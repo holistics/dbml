@@ -1,6 +1,6 @@
 import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
-  archSort, bodyOf, declarationWord, endpointNode, linkPartsOf, nameOf,
+  archSort, bodyOf, declarationWord, endpointNode, inlineLinkOf, inlineLinksOf, linkPartsOf, nameOf,
 } from '@/core/arch/read';
 import { lookupVisible } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
@@ -72,6 +72,9 @@ function handleReferences (declarations: ElementDeclarationNode[], handle: strin
   const refs: (SyntaxNode | SyntaxToken)[] = [];
 
   for (const declaration of declarations) {
+    // `[link: > api]` on any element names `api` too
+    refs.push(...inlineLinksOf(declaration).map((attribute) => inlineLinkOf(attribute)?.target).filter(names));
+
     switch (archSort(declaration)) {
       case 'link': {
         const parts = linkPartsOf(declaration);
