@@ -29,12 +29,12 @@ export default class MetadataBinder {
 
     const targets = this.compiler.metadataTargets(metadataBlock);
 
-    // Refs are not imported, so two visible files may each define a ref with the same name
+    // Refs and Deps are not imported, so two visible files may each define one with the same name
     if (targets.length > 1) {
       return [
         new CompileError(
           CompileErrorCode.BINDING_ERROR,
-          `Ref '${nameParts.join('.')}' is ambiguous: it has multiple definitions`,
+          `${targetKind} '${nameParts.join('.')}' is ambiguous: it has multiple definitions`,
           nameNode ?? this.declarationNode,
         ),
       ];

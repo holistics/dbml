@@ -31,10 +31,12 @@ export function metadataTargets (this: Compiler, block: MetadataElementMetadata)
   const nameParts = destructureComplexVariable(metadataNode.name);
   if (!nameParts?.length || !targetKind) return [];
 
-  if (targetKind === MetadataTargetKind.Ref) {
+  // Refs and Deps are not imported: simple name only, resolved among the symbols visible from this program
+  if (targetKind === MetadataTargetKind.Ref || targetKind === MetadataTargetKind.Dep) {
     if (nameParts.length !== 1) return [];
 
-    return this.visibleSymbols(programSymbol, SymbolKind.Ref).filter((ref) => ref.name === nameParts[0]);
+    const symbolKind = targetKind === MetadataTargetKind.Ref ? SymbolKind.Ref : SymbolKind.Dep;
+    return this.visibleSymbols(programSymbol, symbolKind).filter((symbol) => symbol.name === nameParts[0]);
   }
 
   const namePartAndSymbolKind = mapNamePartToSymbolKind(nameParts, targetKind);

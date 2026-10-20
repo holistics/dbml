@@ -18,6 +18,7 @@ import { tablePartialUtils } from '../tablePartial';
 import type { GlobalModule } from '../types';
 import { diagramViewUtils } from '../diagramView';
 import { refUtils } from '../ref';
+import { depUtils } from '../dep';
 import { useUtils } from '../use';
 
 export const schemaModule: GlobalModule = {
@@ -154,6 +155,8 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
       return diagramViewUtils.getDuplicateError(name, schemaLabel, errorNode);
     case SymbolKind.Ref:
       return refUtils.getDuplicateError(name, schemaLabel, errorNode);
+    case SymbolKind.Dep:
+      return depUtils.getDuplicateError(name, schemaLabel, errorNode);
     default:
       return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate ${kind} '${name}' in schema '${schemaLabel}'`, errorNode);
   }

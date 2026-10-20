@@ -1,13 +1,13 @@
 import { UNHANDLED } from '@/core/types/module';
-import { type ProgramSymbol, type RefSymbol, SymbolKind } from '@/core/types/symbol';
+import { type NodeSymbol, type ProgramSymbol, SymbolKind } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { getProgramSymbol } from '@/core/global_modules/utils';
 
 /**
-  * Named refs usable from `program`: refs are not imported via `use`, a named ref is visible
-  * wherever it shows up in the output (see isSymbolVisible).
+  * Non-importable symbols (named refs, named deps) of `kind` usable from `program`: they are not imported via `use`,
+  * such a symbol is visible wherever it shows up in the output (see isSymbolVisible).
   */
-export function visibleSymbols (this: Compiler, program: ProgramSymbol, kind: SymbolKind): RefSymbol[] {
+export function visibleSymbols (this: Compiler, program: ProgramSymbol, kind: SymbolKind): NodeSymbol[] {
   return this.reachableFiles(program.filepath).flatMap((filepath) => {
     const programSymbol = getProgramSymbol(this, filepath);
     if (!programSymbol) return [];

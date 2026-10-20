@@ -1108,9 +1108,12 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
   [MetadataTargetKind.Note]: [
     SymbolKind.StickyNote,
   ],
-  // Refs are not scope members of the files they appear in, see suggestRefNamesForMetadata
+  // Refs and Deps are not scope members of the files they appear in, see suggestUnimportableNamesForMetadata
   [MetadataTargetKind.Ref]: [
     SymbolKind.Ref,
+  ],
+  [MetadataTargetKind.Dep]: [
+    SymbolKind.Dep,
   ],
 };
 
@@ -1121,6 +1124,7 @@ const METADATA_TARGET_KIND_LABELS: Record<MetadataTargetKind, (typeof SUGGESTION
   [MetadataTargetKind.TableGroup]: SUGGESTION_LABEL.TableGroup,
   [MetadataTargetKind.Note]: SUGGESTION_LABEL.Note,
   [MetadataTargetKind.Ref]: SUGGESTION_LABEL.Ref,
+  [MetadataTargetKind.Dep]: SUGGESTION_LABEL.Dep,
 };
 
 function suggestMetadataTargetKinds (): CompletionList {
@@ -1152,7 +1156,8 @@ function suggestInMetadataHeader (
   }
 
   // After the targetKind -> suggest names of the chosen target kind.
-  if (kind === MetadataTargetKind.Ref) return suggestRefNamesForMetadata(compiler, filepath);
+  if (kind === MetadataTargetKind.Ref) return suggestUnimportableNamesForMetadata(compiler, filepath, SymbolKind.Ref);
+  if (kind === MetadataTargetKind.Dep) return suggestUnimportableNamesForMetadata(compiler, filepath, SymbolKind.Dep);
 
   const symbolKinds = METADATA_TARGET_SYMBOL_KINDS[kind];
   if (!symbolKinds) return noSuggestions();
@@ -1160,13 +1165,13 @@ function suggestInMetadataHeader (
   return suggestNamesInScope(compiler, filepath, offset, container.parent, symbolKinds);
 }
 
-// Refs are not imported, so they are suggested by the same visibility rule used to resolve `Metadata Ref <name>`
-function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): CompletionList {
+// Refs and Deps are not imported, so they are suggested by the same visibility rule used to resolve `Metadata <Ref|Dep> <name>`
+function suggestUnimportableNamesForMetadata (compiler: Compiler, filepath: Filepath, symbolKind: SymbolKind): CompletionList {
   const programSymbol = getProgramSymbol(compiler, filepath);
   if (!programSymbol) return noSuggestions();
 
   const seen = new Set<string>();
-  const suggestions = compiler.visibleSymbols(programSymbol, SymbolKind.Ref).flatMap((ref) => {
+  const suggestions = compiler.visibleSymbols(programSymbol, symbolKind).flatMap((ref) => {
     const name = ref.name;
     if (name === undefined || seen.has(name)) return [];
     seen.add(name);

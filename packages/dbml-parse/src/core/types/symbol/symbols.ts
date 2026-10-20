@@ -42,6 +42,8 @@ export enum SymbolKind {
 
   Ref = 'Ref',
 
+  Dep = 'Dep',
+
   TablePartial = 'TablePartial',
   PartialInjection = 'PartialInjection',
 
@@ -75,6 +77,7 @@ export enum MetadataTargetKind {
   TableGroup = SymbolKind.TableGroup,
   Note = SymbolKind.StickyNote,
   Ref = SymbolKind.Ref,
+  Dep = SymbolKind.Dep,
 }
 
 declare const __nodeSymbolBrand: unique symbol;
@@ -802,6 +805,35 @@ export class RefSymbol extends NodeSymbol {
   ) {
     super({
       kind: SymbolKind.Ref,
+      declaration,
+      name,
+    }, id, filepath);
+  }
+
+  override get canBeImported (): boolean {
+    return false;
+  }
+
+  override get originalSymbol (): NodeSymbol {
+    return this;
+  }
+}
+
+// Named top-level Dep: `Dep name { a -> b }`. Not importable - a dep is visible wherever every endpoint table of its edges is.
+export class DepSymbol extends NodeSymbol {
+  constructor (
+    {
+      declaration,
+      name,
+    }: {
+      declaration?: SyntaxNode;
+      name?: string;
+    },
+    id: NodeSymbolId,
+    filepath: Filepath,
+  ) {
+    super({
+      kind: SymbolKind.Dep,
       declaration,
       name,
     }, id, filepath);
