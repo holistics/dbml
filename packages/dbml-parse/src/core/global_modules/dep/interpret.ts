@@ -17,11 +17,32 @@ import {
   IdentifierStreamNode,
   ListExpressionNode,
 } from '@/core/types/nodes';
-import type { Dep, DepEdge } from '@/core/types/schemaJson';
+import type { Color, Dep, DepEdge } from '@/core/types/schemaJson';
 import { DepMetadata, type Filepath } from '@/core/types';
 import type Compiler from '@/compiler';
 import { extractColor, getTokenPosition, normalizeNote } from '@/core/utils/interpret';
+import { UNHANDLED } from '@/core/types/module';
+import { DepSymbol } from '@/core/types/symbol';
+import { isExpressionAQuotedString, isValidHexColor } from '@/core/utils/validate';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
 import Report from '@/core/types/report';
+
+export const DEP_METADATA_FIELDS: MetadataFieldRegistry<Dep, SettingName.Color | SettingName.Note> = {
+  [SettingName.Color]: {
+    isValidBuiltinFieldValue: isValidHexColor,
+    message: "'color' must be a color literal",
+    assignBuiltinField (element, value) {
+      element.color = value as Color;
+    },
+  },
+  [SettingName.Note]: {
+    isValidBuiltinFieldValue: isExpressionAQuotedString,
+    message: "'note' must be a string literal",
+    assignBuiltinField (element, value, token) {
+      element.note = { value, token };
+    },
+  },
+};
 
 export class DepInterpreter {
   private compiler: Compiler;
@@ -45,6 +66,14 @@ export class DepInterpreter {
       ...this.interpretEdges(),
       ...this.interpretSettings(),
     ];
+
+    // Only named top-level deps have a symbol, so only they can be targeted by Metadata blocks
+    if (this.declarationNode instanceof ElementDeclarationNode) {
+      const symbol = this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
+      if (symbol instanceof DepSymbol) {
+        attachCustomMetadata(this.compiler, this.dep, symbol, DEP_METADATA_FIELDS, this.filepath);
+      }
+    }
     return Report.create(this.dep as Dep, errors);
   }
 

@@ -15,6 +15,7 @@ import { COLUMN_METADATA_FIELDS, TABLE_METADATA_FIELDS } from '@/core/global_mod
 import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
 import { REF_METADATA_FIELDS } from '@/core/global_modules/ref/interpret';
+import { DEP_METADATA_FIELDS } from '@/core/global_modules/dep/interpret';
 import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/utils';
 import { getMetadataTargetKind } from './utils';
 
@@ -24,6 +25,7 @@ const METADATA_FIELDS_BY_KIND: Record<MetadataTargetKind, MetadataFieldRegistry<
   [MetadataTargetKind.TableGroup]: TABLEGROUP_METADATA_FIELDS,
   [MetadataTargetKind.Note]: NOTE_METADATA_FIELDS,
   [MetadataTargetKind.Ref]: REF_METADATA_FIELDS,
+  [MetadataTargetKind.Dep]: DEP_METADATA_FIELDS,
 };
 
 export default class MetadataValidator {
@@ -70,13 +72,15 @@ export default class MetadataValidator {
         ),
       ];
     }
-    // Refs can only be targeted by their (simple) name. Unnamed refs, e.g. by their endpoints, are not supported
-    if (getMetadataTargetKind(this.declarationNode) === MetadataTargetKind.Ref) {
+    // Refs and Deps can only be targeted by their (simple) name. Unnamed ones, e.g. by their endpoints, are not supported
+    const targetKind = getMetadataTargetKind(this.declarationNode);
+    if (targetKind === MetadataTargetKind.Ref || targetKind === MetadataTargetKind.Dep) {
       if (!isSimpleName(nameNode)) {
+        const label = targetKind === MetadataTargetKind.Ref ? 'ref' : 'dep';
         return [
           new CompileError(
             CompileErrorCode.INVALID_NAME,
-            'A Metadata Ref target must be a ref name (an identifier or a quoted identifier)',
+            `A Metadata ${targetKind} target must be a ${label} name (an identifier or a quoted identifier)`,
             nameNode,
           ),
         ];

@@ -11,11 +11,12 @@ import {
   FunctionApplicationNode,
   IdentifierStreamNode,
   InfixExpressionNode,
+  ProgramNode,
 } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import { SymbolKind, type NodeSymbol } from '@/core/types/symbol';
+import { DepSymbol, SymbolKind, type NodeSymbol } from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import { extractStringFromIdentifierStream, extractVarNameFromPrimaryVariable, getBody } from '@/core/utils/expression';
 import { isAccessExpression, isElementNode, isExpressionAVariableNode } from '@/core/utils/validate';
@@ -36,7 +37,32 @@ function isInsideDepBody (node: SyntaxNode): boolean {
   return false;
 }
 
+export const depUtils = {
+  getDuplicateError (name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
+    return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Dep '${name}' already exists in schema '${schemaLabel}'`, errorNode);
+  },
+};
+
 export const depModule: GlobalModule = {
+  // Only named top-level deps get a symbol - unnamed deps and inline `[dep: ...]` cannot be targeted by name
+  nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
+    if (!isElementNode(node, ElementKind.Dep) || !(node.parentNode instanceof ProgramNode)) return Report.create(PASS_THROUGH);
+
+    const name = compiler.nodeFullname(node).getFiltered(UNHANDLED)?.at(-1);
+    if (name === undefined) return Report.create(PASS_THROUGH);
+
+    return new Report(compiler.symbolFactory.create(DepSymbol, {
+      declaration: node,
+      name,
+    }, node.filepath));
+  },
+
+  symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
+    if (!symbol.isKind(SymbolKind.Dep)) return Report.create(PASS_THROUGH);
+
+    return new Report([]);
+  },
+
   nodeReferee (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol | undefined> | Report<PassThrough> {
     if (!isExpressionAVariableNode(node) && !isAccessExpression(node)) return Report.create(PASS_THROUGH);
     if (!isInsideDepBody(node)) return Report.create(PASS_THROUGH);

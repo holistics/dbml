@@ -3,7 +3,7 @@ import {
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
-  Column, MetadataValues, Note, Ref, Table, TableGroup, TokenPosition,
+  Column, Dep, MetadataValues, Note, Ref, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
 import type { SyntaxNode } from '@/core/types/nodes';
 import {
@@ -11,7 +11,7 @@ import {
 } from '@/core/types/symbol';
 import { getProgramSymbol } from '../utils';
 
-export type MetadataTarget = Table | TableGroup | Note | Column | Ref;
+export type MetadataTarget = Table | TableGroup | Note | Column | Ref | Dep;
 
 /**
   * Specs for builtin metadata (table's note, tablegroup's color, .etc) for different element types. Does 2 things:
@@ -36,7 +36,7 @@ export type NameWithSymbolKind = {
 };
 
 /** @internal Exported for testing only. */
-export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Exclude<MetadataTargetKind, MetadataTargetKind.Ref>): NameWithSymbolKind[] {
+export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Exclude<MetadataTargetKind, MetadataTargetKind.Ref | MetadataTargetKind.Dep>): NameWithSymbolKind[] {
   if (nameParts.length === 0) return [];
 
   let kindParts: SymbolKind[];

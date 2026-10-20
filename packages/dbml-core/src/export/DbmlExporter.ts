@@ -374,15 +374,22 @@ class DbmlExporter {
       const dep = model.deps[depId];
       const edges = dep.edgeIds.map((eid) => model.depEdges[eid]);
 
+      const depName = dep.name
+        ? ` ${shouldPrintSchema(model.schemas[dep.schemaId], model)
+          ? `"${model.schemas[dep.schemaId].name}".`
+          : ''}"${dep.name}"`
+        : '';
+
       const hasNote = !!dep.note;
+      const hasColor = !!dep.color;
       const customEntries = dep.metadata ? Object.entries(dep.metadata) : [];
-      const hasAttrs = hasNote || customEntries.length > 0;
+      const hasAttrs = hasNote || hasColor || customEntries.length > 0;
 
       if (edges.length === 1 && !hasAttrs) {
-        return `Dep: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
+        return `Dep${depName}: ${DbmlExporter.formatDepEndpoint(edges[0].upstream)} -> ${DbmlExporter.formatDepEndpoint(edges[0].downstream)}\n`;
       }
 
-      let str = 'Dep {\n';
+      let str = `Dep${depName} {\n`;
       edges.forEach((edge) => {
         str += `  ${DbmlExporter.formatDepEndpoint(edge.upstream)} -> ${DbmlExporter.formatDepEndpoint(edge.downstream)}\n`;
       });
@@ -390,6 +397,7 @@ class DbmlExporter {
       if (hasAttrs) {
         str += '\n';
         if (hasNote) str += `  note: ${DbmlExporter.escapeNote(dep.note)}\n`;
+        if (hasColor) str += `  color: ${dep.color}\n`;
         customEntries.forEach(([key, value]) => {
           str += `  ${key}: ${DbmlExporter.formatDepCustomValue(value)}\n`;
         });

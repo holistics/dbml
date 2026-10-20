@@ -263,3 +263,69 @@ Metadata Ref user_posts {
     expect(refs.find((r) => !r.name)!.note).toBe('it\'s the author');
   });
 });
+
+const DEP_METADATA_DBML = `
+Table raw_orders {
+  id int [pk]
+}
+
+Table stg_orders {
+  id int [pk]
+}
+
+Table fct_orders {
+  id int [pk]
+}
+
+Dep orders_pipeline {
+  raw_orders -> stg_orders
+  owner: 'inline'
+  color: #111111
+}
+
+Dep nightly: stg_orders -> fct_orders
+
+Metadata Dep orders_pipeline {
+  color: #e67e22
+  note: 'Nightly'
+  owner: 'block'
+}
+`.trim();
+
+describe('@dbml/core - Dep metadata', () => {
+  test('the Dep model carries merged metadata and the promoted color and note', () => {
+    const database = parse(DEP_METADATA_DBML);
+    const deps = database.schemas.find((s) => s.name === 'public')!.deps;
+    const named = deps.find((d) => d.name === 'orders_pipeline')!;
+    expect(named.color).toBe('#e67e22');
+    expect(named.note).toBe('Nightly');
+    expect(named.metadata).toEqual({ owner: 'block' });
+
+    const model = database.normalize();
+    expect(model.deps[named.id].color).toBe('#e67e22');
+    expect(model.deps[named.id].metadata).toEqual({ owner: 'block' });
+  });
+
+  test('the DBML exporter writes the dep name, color and merged metadata inline', () => {
+    const out = exporter.export(DEP_METADATA_DBML, 'dbml');
+    expect(out).toContain(`Dep "orders_pipeline" {
+  "raw_orders" -> "stg_orders"
+
+  note: 'Nightly'
+  color: #e67e22
+  owner: 'block'
+}`);
+    expect(out).toContain('Dep "nightly": "stg_orders" -> "fct_orders"');
+    expect(out).not.toContain('Metadata Dep');
+  });
+
+  test('exported DBML round-trips a named dep', () => {
+    const exported = exporter.export(DEP_METADATA_DBML, 'dbml');
+    const deps = parse(exported).schemas.find((s) => s.name === 'public')!.deps;
+    const named = deps.find((d) => d.name === 'orders_pipeline')!;
+    expect(named.color).toBe('#e67e22');
+    expect(named.note).toBe('Nightly');
+    expect(named.metadata).toEqual({ owner: 'block' });
+    expect(deps.find((d) => d.name === 'nightly')).toBeDefined();
+  });
+});
