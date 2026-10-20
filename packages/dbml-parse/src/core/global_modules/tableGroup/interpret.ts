@@ -42,6 +42,7 @@ export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, Setti
     isValidBuiltinFieldValue: isExpressionAQuotedString,
     message: "'note' must be a string literal",
     assignBuiltinField (element, value, token) {
+      if (typeof value !== 'string') return;
       element.note = { value, token };
     },
   },
@@ -49,6 +50,7 @@ export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, Setti
     isValidBuiltinFieldValue: isValidHexColor,
     message: "'color' must be a color literal",
     assignBuiltinField (element, value) {
+      if (typeof value !== 'string') return;
       element.color = value as Color;
     },
   },

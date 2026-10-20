@@ -196,9 +196,10 @@ describe('[example] Ref inline custom metadata', () => {
     expect(errorCodes(source)).toContain(CompileErrorCode.DUPLICATE_REF_SETTING);
   });
 
-  it('reports a custom setting whose value is not a string or color', () => {
-    const source = 'Ref r: posts.user_id > users.id [owner: 42]';
-    expect(errorCodes(source)).toContain(CompileErrorCode.INVALID_REF_SETTING_VALUE);
+  it('stores a custom setting whose value is a boolean', () => {
+    const source = 'Ref r: posts.user_id > users.id [has_owner: false]';
+    expect(errorCodes(source)).toEqual([]);
+    expect(refs(source)[0].metadata).toEqual({ has_owner: false });
   });
 
   it('lets a Metadata block override an inline custom setting', () => {

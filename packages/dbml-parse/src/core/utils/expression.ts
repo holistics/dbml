@@ -1,6 +1,7 @@
 import { last } from 'lodash-es';
 import {
   isAccessExpression,
+  isExpressionAnIdentifierNode,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isTupleOfVariables,
@@ -175,6 +176,15 @@ export function extractNumericLiteral (node?: SyntaxNode): number | null {
     if (node.expression.literal?.kind === SyntaxTokenKind.NUMERIC_LITERAL) {
       return Number(node.expression.literal.value);
     }
+  }
+  return null;
+}
+
+export function extractBooleanLiteral (node?: SyntaxNode): boolean | null {
+  if (isExpressionAnIdentifierNode(node)) {
+    const value = node.expression.variable.value.toLowerCase();
+    if (value === 'true') return true;
+    if (value === 'false') return false;
   }
   return null;
 }

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import type { Database } from '@/index';
+import type { CustomMetadataValue, Database } from '@/index';
 import { CompileErrorCode } from '@/index';
 import { fp, getDatabase, setupCompiler } from './utils';
 
@@ -25,7 +25,7 @@ Ref r: posts.user_id > users.id
 interface TargetCase {
   kind: string;
   header: string;
-  metadataOf: (db: Database) => Record<string, string> | undefined;
+  metadataOf: (db: Database) => Record<string, CustomMetadataValue> | undefined;
 }
 
 const TARGETS: TargetCase[] = [

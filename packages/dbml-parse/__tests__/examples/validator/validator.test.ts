@@ -85,12 +85,11 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
-    test('rejects a non-string and non-color custom metadata value on a table', () => {
+    test('accepts a boolean custom metadata value on a table', () => {
       const source = 'Table users [pii: true] { id int }';
       const errors = analyze(source).getErrors();
 
-      expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_TABLE_SETTING_VALUE);
+      expect(errors).toHaveLength(0);
     });
 
     test('rejects a duplicate custom metadata key on a table', () => {
@@ -205,12 +204,11 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
-    test('should reject a custom column setting with a non-string value', () => {
+    test('should accept a custom column setting with a boolean value', () => {
       const source = 'Table users { id int [pii: true] }';
       const errors = analyze(source).getErrors();
 
-      expect(errors).toHaveLength(1);
-      expect(errors[0].code).toBe(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE);
+      expect(errors).toHaveLength(0);
     });
 
     test('should accept column with null setting', () => {

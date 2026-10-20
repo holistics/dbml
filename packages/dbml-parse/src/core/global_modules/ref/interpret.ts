@@ -37,6 +37,7 @@ export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, SettingName.Color |
     isValidBuiltinFieldValue: isValidHexColor,
     message: "'color' must be a color literal",
     assignBuiltinField (element, value) {
+      if (typeof value !== 'string') return;
       element.color = value as Color;
     },
   },
@@ -44,6 +45,7 @@ export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, SettingName.Color |
     isValidBuiltinFieldValue: isExpressionAQuotedString,
     message: "'note' must be a string literal",
     assignBuiltinField (element, value, token) {
+      if (typeof value !== 'string') return;
       element.note = { value, token };
     },
   },
