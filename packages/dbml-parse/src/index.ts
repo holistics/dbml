@@ -161,14 +161,6 @@ export {
 
 export * from '@/compiler/projectLayout/layout';
 
-/**
- * The dialect seam.
- *
- * A Compiler takes the element vocabulary and the grammar switches it should run with. Pass a
- * different module list and the same lexer, parser, file graph, caching and diagnostics bind a
- * different language. Nothing below this line changes DBML: `dbmlModules` is what a Compiler
- * uses when nobody says otherwise, and every switch in `ParserOptions` is off by default.
- */
 export { dbmlModules } from '@/core/global_modules';
 export type { GlobalModule } from '@/core/global_modules/types';
 export type { ParserOptions } from '@/core/parser/parser';

@@ -5,7 +5,7 @@ import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
 import type { Kind as RawKind, KindCategory } from '@dbml/parse';
 
-// An architecture role: built-in, or declared with `Kind`
+// Built-in, or declared with `Kind`
 class Kind extends Element {
   declare id: number;
   name: string;

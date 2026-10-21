@@ -87,7 +87,6 @@ export const ICON_NAMES: string[] = [
   'haproxy',
 ];
 
-/** what people actually type; an alias costs one line and saves a diagnostic */
 export const ICON_ALIAS: Record<string, string> = {
   k8s: 'kubernetes',
   k9s: 'kubernetes',

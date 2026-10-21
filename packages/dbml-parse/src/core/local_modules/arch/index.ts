@@ -104,7 +104,6 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
   return new Report(undefined, errors);
 }
 
-// Top-level declarations of an architecture file
 export const archModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (!isTopLevel(node)) return Report.create(PASS_THROUGH);

@@ -621,8 +621,7 @@ export class MetadataElementMetadata extends NodeMetadata {
   }
 }
 
-// Architecture `Link: a > b` (or `Ref:` in an architecture file)
-// `Link: a > b`, or an inline `[link: > b]` on the element `a`
+// Architecture `Link: a > b` (or `Ref:` in an architecture file), or an inline `[link: > b]` on the element `a`
 export class LinkMetadata extends NodeMetadata {
   declare declaration: ElementDeclarationNode | AttributeNode;
 

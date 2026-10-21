@@ -12,8 +12,7 @@ import {
 } from './compileArch';
 import type { NetworkModel } from './compileArch';
 
-// The original architecture compiler's tests, run through @dbml/parse. Where this pipeline differs on
-// purpose, the case says which change.
+// The original architecture compiler's tests, run through @dbml/parse
 
 const one = (src: string) => compileArch({ '/main.arch.dbml': src });
 const codes = (src: string) => one(src).diagnostics.map((d) => d.code);
@@ -25,11 +24,6 @@ describe('the architecture dialect on DBML\'s grammar', () => {
     expect(model.elements.get('mongo1')?.sort).toBe('node');
   });
 
-  /**
-   * THE NAME IS THE NAME, which is DBML's design and not one worth improving on. A caption
-   * used to be a `name:` setting while the declared word was the handle; both halves are now
-   * in the one place DBML puts them.
-   */
   it('draws the declared name, and takes the alias as the handle', () => {
     const { model, diagnostics } = compileArch(
       { '/d': '---\ndiagram_type: arch\n---\n\nServer "dbdiagram API1" as api1\nServer api2' },
@@ -38,14 +32,9 @@ describe('the architecture dialect on DBML\'s grammar', () => {
     expect(diagnostics).toEqual([]);
 
     expect(model.elements.get('api1')).toMatchObject({ id: 'api1', alias: 'api1', label: 'dbdiagram API1' });
-    // no alias, so the name is both
     expect(model.elements.get('api2')).toMatchObject({ id: 'api2', alias: null, label: 'api2' });
   });
 
-  /**
-   * One step past DBML, and a canvas forces it: two boxes legitimately read `Internet`, where
-   * two tables called `users` would be a mistake. The handle is unique; the caption need not be.
-   */
   it('lets two boxes share a caption when their handles differ', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
@@ -96,8 +85,6 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   });
 
   it('puts the protocol and the host on the line, where they describe something', () => {
-    // a node carries an icon and a name; the conversation is what the arrow is for, and the
-    // same server answers on more than one of them
     const { model } = one("Server a\nServer b\nLink: a > b [proto: HTTPS, host: 'api.dbdiagram.com']");
     expect(model.links[0].settings).toEqual({ proto: 'HTTPS', host: 'api.dbdiagram.com' });
   });
@@ -127,7 +114,7 @@ describe('the architecture dialect on DBML\'s grammar', () => {
   });
 
   it('opens the vocabulary with Kind, and closes it against anything else', () => {
-    // C5: with no marker and no known role the file is DBML, so DBML's parser reports it
+    // With no diagram_type and no known kind word the file is DBML, so DBML's parser reports it
     expect(codes('Microservice x').every((code) => code.startsWith('parse-'))).toBe(true);
     expect(codes('Kind Microservice [icon: chip]\nMicroservice x')).toEqual([]);
   });
@@ -166,7 +153,7 @@ describe('the worked example', () => {
     const { model, diagnostics } = compileArch(EXAMPLE_FILES, EXAMPLE_ENTRY);
     expect(diagnostics).toEqual([]);
     expect(model.files).toContain('/packs/devops.arch.dbml');
-    // the roles came from the pack, the elements and their brands from the entry
+    // the kinds came from the imported file, the elements and their types from the entry file
     expect(model.kinds.get('Lakehouse')?.icon).toBe('graph');
     expect(isNode(model.elements.get('mongo1')) && model.elements.get('mongo1'))
       .toMatchObject({ kind: 'Database', type: 'mongodb' });
@@ -181,8 +168,6 @@ describe('the worked example', () => {
   });
 
   it('produces a model that is complete enough to draw', () => {
-    // the drawing itself is tested where the drawing lives; what this package owes is a model
-    // whose every link names two things that exist
     const { model } = compileArch(EXAMPLE_FILES, EXAMPLE_ENTRY);
     for (const link of model.links) {
       expect(model.elements.has(link.from), link.id).toBe(true);
@@ -208,33 +193,16 @@ describe('what decides the dialect', () => {
     }
   });
 
-  /**
-   * THE MARKER LIVES IN FRONT MATTER, and `Project` is not an alternative to it.
-   *
-   * `database_type: 'PostgreSQL'` is a property of the DATABASE: it changes the SQL that
-   * comes out and nothing about how the file is read. A diagram type describes the DOCUMENT
-   * and says which pipeline should pick it up, which is a different kind of statement.
-   *
-   * It is also the only placement that can ever work. Finding a `Project` block means parsing
-   * the file, and parsing is the thing being chosen; front matter is fenced, first, and comes
-   * back from the lexer as one trivia token, so a host can read it without parsing anything.
-   */
   it('reads diagram_type off front matter, and treats it as advice', () => {
     const marked = compileArch({ '/d.dbml': '---\ndiagram_type: arch\n---\n\nServer a' }, '/d.dbml');
     expect(marked.diagramType).toBe('arch');
     expect(marked.diagnostics).toEqual([]);
 
-    // advice, not a mode: the drawing is identical without it
     const bare = compileArch({ '/d.dbml': 'Server a' }, '/d.dbml');
     expect(bare.diagramType).toBeNull();
     expect(bare.model.elements.size).toBe(marked.model.elements.size);
   });
 
-  /**
-   * NOT read from `Project`, and that is the point rather than an omission. Honouring it
-   * there would produce a file that compiles here and cannot be routed by the host that has
-   * to decide which compiler to call, which is worse than not working.
-   */
   it('refuses to honour it inside Project, because a host cannot reach it there', () => {
     const misplaced = compileArch(
       { '/d.dbml': "Project x {\n  diagram_type: 'arch'\n}\nServer a" },
@@ -244,7 +212,7 @@ describe('what decides the dialect', () => {
     expect(misplaced.diagnostics.map((d) => d.code)).toEqual(['diagram-type-not-here']);
     expect(misplaced.diagnostics[0].severity).toBe('error');
     expect(misplaced.diagnostics[0].message).toContain('diagram_type: arch');
-    // C1: a file with an error gives no model, as a DBML file does
+    // A file with an error gives no model, as a DBML file does
     expect(isArchitecture(misplaced)).toBe(false);
   });
 
@@ -266,8 +234,8 @@ describe('what decides the dialect', () => {
   });
 
   it('answers for a document that declares a vocabulary and has drawn nothing yet', () => {
-    // inference says "unknown" here and the marker says "architecture". That gap is the whole
-    // reason the marker exists: a canvas must not flicker while somebody is still typing.
+    // with nothing drawn, only diagram_type says "architecture"; it exists so a canvas does not
+    // flicker while somebody is still typing
     const { model, diagramType } = compileArch(
       { '/d.dbml': '---\ndiagram_type: arch\n---\nKind Mongo [icon: mongodb]' },
       '/d.dbml',
@@ -313,11 +281,6 @@ describe('the inline sample', () => {
 });
 
 describe('the self-portrait', () => {
-  /**
-   * A codebase is not a network, and this is the cheapest test of whether the twelve words
-   * stretch that far: if the drawing of this package stops compiling, the language moved
-   * under a diagram somebody is reading.
-   */
   it('compiles with no diagnostics, drawing packages and imports rather than hosts', () => {
     const { model, diagnostics, diagramType } = compileArch({ '/self': SELF_FILE }, '/self');
     expect(diagnostics).toEqual([]);
@@ -325,11 +288,6 @@ describe('the self-portrait', () => {
     expect(model.elements.size).toBeGreaterThan(20);
   });
 
-  /**
-   * Not one of the thirty-one built-in words fits a package or a source file, so the drawing
-   * opens the vocabulary eight times and uses nothing it was given. That is the vocabulary
-   * working as designed, and also the clearest argument for a second pack.
-   */
   it('draws itself entirely out of kinds it declared, using no built-in word', () => {
     const { model, diagnostics } = compileArch({ '/self': SELF_FILE }, '/self');
     expect(diagnostics).toEqual([]);
@@ -347,12 +305,6 @@ describe('the self-portrait', () => {
     expect(builtinsUsed).toEqual([]);
   });
 
-  /**
-   * A box per file was unreadable and a sticky note per listing was worse, so the listing is
-   * a note ON the container, written as markdown. Two things have to hold for that: a group
-   * has to carry a note at all (it silently dropped one until this was written), and the line
-   * breaks have to survive, because a file list flattened to one line is a paragraph.
-   */
   it('hangs a markdown listing off every container, line breaks intact', () => {
     const { model } = compileArch({ '/self': SELF_FILE }, '/self');
     const groups = [...model.elements.values()].filter(isGroup);
@@ -364,15 +316,9 @@ describe('the self-portrait', () => {
       expect(group.note, `${group.id} lists nothing`).toContain('- `');
     }
 
-    // the stickies are gone: the drawing is stages and containers, nothing else
     expect([...model.elements.values()].filter((e) => e.sort === 'note')).toEqual([]);
   });
 
-  /**
-   * A note is not a container feature. The same body works on a node, which matters because
-   * the question a reader has about a box is usually about THAT box, not about the room it
-   * is standing in.
-   */
   it('takes the same note on a node, with no change to the syntax', () => {
     const { model, diagnostics } = compileArch({ '/self': SELF_FILE }, '/self');
     expect(diagnostics).toEqual([]);
@@ -383,7 +329,6 @@ describe('the self-portrait', () => {
     expect(lexer?.note).toContain('- `allowFrontMatter`');
     expect(lexer?.note!.split('\n').length).toBeGreaterThan(3);
 
-    // most of the stages carry one: the drawing is the pipeline, the notes are the detail
     const noted = [...model.elements.values()].filter((e) => isNode(e) && e.note);
     expect(noted.length).toBeGreaterThan(8);
     for (const node of noted) {
@@ -435,8 +380,6 @@ describe('reading one document out of a project', () => {
       '/main.dbml': 'Table users {\n  id int [pk]\n}\nEnum status { draft }',
       '/infra.arch.dbml': 'Server api1\nDatabase db1\nLink: api1 > db1',
     }, '/infra.arch.dbml');
-    // the schema is not this dialect's business, and reporting `Table is not a kind` against a
-    // file nobody asked it to read is worse than useless: it buries the real diagnostics
     expect(diagnostics).toEqual([]);
     expect(model.files).toEqual(['/infra.arch.dbml']);
     expect(model.elements.size).toBe(2);
@@ -478,7 +421,7 @@ Link: api1 > db1
 
   it('does not move the lines after it, which is the only hard part', () => {
     const { diagnostics } = compileArch({ '/d.dbml': '---\ntitle: x\n---\nMicroservice bad' }, '/d.dbml');
-    // C5: no diagram_type and no known role, so DBML's parser reports it; still on line 4, not line 1
+    // no diagram_type and no known kind word, so DBML's parser reports it; still on line 4, not line 1
     expect(diagnostics.length).toBeGreaterThan(0);
     expect(diagnostics.every((d) => d.line === 4)).toBe(true);
   });
@@ -496,7 +439,6 @@ describe('the example carries both kinds of metadata', () => {
     expect(diagnostics).toEqual([]);
     expect(model.frontMatter.title).toBe('DBX network diagram');
     expect(model.frontMatter.owner).toBe('platform-team');
-    // Project is for what the editor needs to know, front matter is for whoever reads the file
     expect(diagramType).toBe('arch');
   });
 });
@@ -558,14 +500,6 @@ Metadata Table users {
   });
 });
 
-/**
- * EVIDENCE THAT THE DESIGN GENERALISES, OR THE PLACE WHERE IT DOES NOT.
- *
- * Every other sample in this package describes software, which is the domain the language was
- * lifted from, so none of them can tell us whether `Kind`, `Group` and `Link` are a general
- * shape or a shape fitted to its own examples. A book is the cheapest way to ask, and the
- * useful part of the answer is the part that does not work.
- */
 describe('a book, drawn with a vocabulary meant for servers', () => {
   it('compiles an argument with no diagnostics, in Vietnamese', () => {
     const { model, diagnostics, diagramType } = compileArch({ '/b': BOOK_FILE }, '/b');
@@ -575,14 +509,10 @@ describe('a book, drawn with a vocabulary meant for servers', () => {
     expect(model.links.length).toBeGreaterThan(30);
   });
 
-  /**
-   * Diacritics are the part people assume will break. They do not: the lexer asks whether a
-   * character can start or continue an identifier, not whether it is ASCII.
-   */
+  // the lexer asks whether a character can start or continue an identifier, not whether it is ASCII
   it('lexes Vietnamese as identifiers, so a name and a kind can be written in it', () => {
     const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
     expect(model.elements.has('mục_đích_luận')).toBe(true);
-    // the name is drawn and the alias is the handle, so a Vietnamese caption keeps its spaces
     expect(model.elements.get('mục_đích_luận')?.label).toBe('Mục đích luận');
 
     const declared = [...model.kinds.values()].filter((k) => !k.builtin).map((k) => k.name);
@@ -591,24 +521,12 @@ describe('a book, drawn with a vocabulary meant for servers', () => {
     expect(declared.length).toBe(6);
   });
 
-  /**
-   * Not one built-in word survives the move off infrastructure, and the vocabulary opens six
-   * times without complaint. That is `Kind` doing its job on a domain nobody designed it for.
-   */
   it('uses no built-in kind, because none of the thirty-one describes an argument', () => {
     const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
     const used = new Set([...model.elements.values()].filter(isNode).map((n) => n.kind));
     expect([...used].filter((name) => model.kinds.get(name)?.builtin)).toEqual([]);
   });
 
-  /**
-   * THE PART THAT DID NOT GENERALISE, asserted so it cannot be quietly forgotten.
-   *
-   * An argument's edges are `refutes`, `leads to` and `requires`. The language has four
-   * operators and one label slot, and that slot is called `proto`. Every edge below is a
-   * relation between ideas wearing a network word, which is the strongest evidence in this
-   * package that the LINE's vocabulary is still shaped by where it was lifted from.
-   */
   it('spells every relation as proto, which is a network word on an argument', () => {
     const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
 
@@ -616,20 +534,11 @@ describe('a book, drawn with a vocabulary meant for servers', () => {
     expect(labelled.length).toBeGreaterThan(10);
     expect(labelled.some((link) => link.settings.proto === 'bác bỏ')).toBe(true);
 
-    // nothing on any of these lines is a protocol or a host
     expect(model.links.some((link) => link.settings.host !== undefined)).toBe(false);
     expect(new Set(model.links.map((link) => link.op))).toEqual(new Set(['>', '-']));
   });
 });
 
-/**
- * THE DEVOPS CASE, WHICH IS THE CASE.
- *
- * Every estate diagram in the wild is mostly brands. They were keywords for a while, which was
- * the wrong shape: DBML does not have a `PostgresTable`, it has `Table` and a setting. So the
- * keyword is the ROLE and `type` is the BRAND, and the vocabulary a reader learns went from 73
- * words back to 31.
- */
 describe('a brand is a setting, not a keyword', () => {
   const draw = (line: string) => compileArch(
     { '/d': `---\ndiagram_type: arch\n---\n\n${line}` },
@@ -644,10 +553,6 @@ describe('a brand is a setting, not a keyword', () => {
     expect(isNode(lb) && lb).toMatchObject({ kind: 'Proxy', type: 'haproxy', label: 'ha 1' });
   });
 
-  /**
-   * The point of keeping both. A drawing can be asked which of its boxes are databases, which
-   * it could not be when the box simply said `Postgres` and the role had been thrown away.
-   */
   it('can still be asked which boxes are databases, whatever vendor they run', () => {
     const { model } = draw([
       "Database users_db [type: 'postgres']",
@@ -661,10 +566,6 @@ describe('a brand is a setting, not a keyword', () => {
     expect(databases.map((n) => n.type)).toEqual(['postgres', 'mongodb']);
   });
 
-  /**
-   * The spelling problem evaporated with the keywords. `pg`, `postgres` and `postgresql` were
-   * going to be three keywords each; they are already one alias table in the icon pack.
-   */
   it('resolves the spellings people type through the pack aliases', () => {
     for (const [typed, resolved] of [['pg', 'postgres'],
       ['postgresql', 'postgres'],
@@ -695,10 +596,6 @@ describe('a brand is a setting, not a keyword', () => {
       .toEqual(['cloudflare', 'haproxy', 'docker', 'postgres', 'redis', 'prometheus']);
   });
 
-  /**
-   * Anyone who wrote the brand as a keyword gets told where it went, not "declare it", which
-   * would send them off to write a `Kind` line for something the language already handles.
-   */
   it('tells a brand used as a keyword which setting it belongs in', () => {
     const { diagnostics } = draw('Postgres users_db');
     expect(diagnostics.map((d) => d.code)).toEqual(['unknown-kind']);
@@ -718,10 +615,6 @@ describe('a brand is a setting, not a keyword', () => {
     expect(isNode(model.elements.get('d')) && model.elements.get('d')).toMatchObject({ type: null });
   });
 
-  /**
-   * THE ANSWER TO "a brand the pack has never drawn". It is the same setting: no second word
-   * to learn, and nothing else about the declaration changes.
-   */
   it('takes a URL in the same slot, for a brand the pack has never drawn', () => {
     const { model, diagnostics } = draw("Database d [type: 'https://example.com/acme.svg']");
     expect(diagnostics).toEqual([]);
@@ -753,13 +646,6 @@ describe('a brand is a setting, not a keyword', () => {
   });
 });
 
-/**
- * A PICTURE GOES IN THE SLOT THAT ALREADY NAMES THE MARK.
- *
- * There is no `image` setting and there should not be one: an element's picture is its
- * `type`, a kind's is its `icon`, and which you write is decided by what you are describing
- * rather than by whether you have a name or a URL in hand.
- */
 describe('a picture, in the slot that already names the mark', () => {
   const draw = (body: string) => compileArch(
     { '/d': `---\ndiagram_type: arch\n---\n\n${body}` },
@@ -777,7 +663,7 @@ describe('a picture, in the slot that already names the mark', () => {
     ].join('\n'));
     expect(diagnostics).toEqual([]);
     expect(model.kinds.get('Vendor')?.image).toBe('https://example.com/vendor.svg');
-    // the mark falls back to a box, so a failed fetch still leaves something to draw
+    // the icon falls back to a box, so a failed fetch still leaves something to draw
     expect(model.kinds.get('Vendor')?.icon).toBe('box');
   });
 
@@ -787,11 +673,8 @@ describe('a picture, in the slot that already names the mark', () => {
     expect(pictureOf(model, 'd')).toContain('data:image/png');
   });
 
-  /**
-   * NOT A FORMALITY. The string becomes an `href` inside an SVG in somebody else's page, and
-   * a `javascript:` href there executes. The author of a diagram is not always the person
-   * opening it: a file arrives in a pull request, a document is shared from another team.
-   */
+  // The string becomes an `href` inside an SVG in somebody else's page, and a `javascript:` href
+  // there executes. The author of a diagram is not always the person opening it.
   it('refuses a scheme that would execute, or break on a TLS page, in both slots', () => {
     for (const bad of ['javascript:alert(1)',
       'http://example.com/a.png',
@@ -828,13 +711,6 @@ describe('a picture, in the slot that already names the mark', () => {
   });
 });
 
-/**
- * A KIND WORD SITS WHERE `Table` SITS, so it behaves the way `Table` behaves.
- *
- * DBML matches every keyword on `value.toLowerCase()`. This dialect did not, and the result
- * was the worst kind of inconsistency: `database api` reported that `database` is not a kind,
- * while `Database api` on the next line worked. Nothing in the language explained why.
- */
 describe('a kind word is case-insensitive, because Table is', () => {
   const draw = (line: string) => compileArch(
     { '/d': `---\ndiagram_type: arch\n---\n${line}` },
@@ -853,11 +729,8 @@ describe('a kind word is case-insensitive, because Table is', () => {
     }
   });
 
-  /**
-   * The author's casing is NOT kept. Everything downstream looks a kind up by name — the
-   * renderer's icon, a tooltip, a host reading the model — and two spellings of one word
-   * would be two kinds to all of them.
-   */
+  // The author's casing is not kept: everything downstream (the renderer's icon, a tooltip, a
+  // host reading the model) looks a kind up by name, and two spellings would be two kinds.
   it('records the canonical spelling, whatever was typed', () => {
     const { model } = draw('loadbalancer a');
     expect(isNode(model.elements.get('a')) && model.elements.get('a')).toMatchObject({ kind: 'LoadBalancer' });
@@ -871,10 +744,6 @@ describe('a kind word is case-insensitive, because Table is', () => {
     }
   });
 
-  /**
-   * Overruling a built-in is what a pack is for, and it has to work however the author spells
-   * it. One entry per word, not two differing only in case.
-   */
   it('overrules a built-in word declared in another case, instead of sitting beside it', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
@@ -899,23 +768,6 @@ describe('a kind word is case-insensitive, because Table is', () => {
   });
 });
 
-/**
- * ROUTING A DOCUMENT BEFORE PARSING IT.
- *
- * A host holding a string has to answer one question first: database schema, or architecture
- * diagram? The two want different parser options, a different module list and a different
- * renderer, so the answer must arrive BEFORE any of those are chosen. That is possible only
- * because the marker is in front matter: the block is fenced, it is first, and reading it is a
- * regular expression over the head of a string.
- */
-/**
- * A VERSION IS A STRING THAT HAPPENS TO BE DIGITS.
- *
- * `numberOf` called `Number()` on any literal it found, so `engine_version: '16.3'` arrived
- * as the number 16.3 and `'16.30'` arrived as 16.3 as well. Harmless on a drawing; fatal to
- * anything generating configuration out of the model, where a version, a zero-padded zone and
- * an account id are all strings made of digits.
- */
 describe('quotes mean what they say', () => {
   const settingsOf = (line: string): Record<string, unknown> => {
     const { model, diagnostics } = compileArch(
@@ -943,11 +795,6 @@ describe('quotes mean what they say', () => {
     expect(settingsOf('multi_az')).toEqual({ multi_az: true });
   });
 
-  /**
-   * Everything an infrastructure tool would want already parses, on elements, on links and on
-   * containers, with no change to the grammar at all. Whether any of it should be there is a
-   * separate question; that it survives is what makes the question worth asking.
-   */
   it('carries free-form settings through to the model, wherever they are written', () => {
     const { model, diagnostics } = compileArch({
       '/d': [
@@ -975,14 +822,6 @@ describe('quotes mean what they say', () => {
   });
 });
 
-/**
- * METADATA, SPELLED THE WAY DBML SPELLS IT.
- *
- * Four divergences had crept in, and every one of them punished a reader for following DBML's
- * own documentation: the colon was not accepted, the kind-qualified target was not read, a
- * valueless key was swallowed and a repeated key quietly took the last value. DBML errors on
- * the last two by name.
- */
 describe('metadata follows DBML', () => {
   const draw = (src: string) => compileArch(
     { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
@@ -995,11 +834,8 @@ describe('metadata follows DBML', () => {
     expect(model.elements.get('api')?.settings).toMatchObject({ owner: 'scott' });
   });
 
-  /**
-   * The reason this matters: a real name has a dash in it, and the parser only accepts a bare
-   * identifier in the slot the short form reads from. The kind-qualified form is DBML's, and
-   * it is the one that takes a quoted name.
-   */
+  // The parser only accepts a bare identifier in the slot the short form reads from, so a name
+  // with a dash needs this form.
   it('takes the kind-qualified target, which is the only form that accepts a quoted name', () => {
     const { model, diagnostics } = draw([
       "Database \"dbdocs-dev\" [type: 'postgres']",
@@ -1019,10 +855,6 @@ describe('metadata follows DBML', () => {
     expect(diagnostics[0].message).toContain('Server');
   });
 
-  /**
-   * Measured against DBML itself, which refuses all three and whose wording is reused: a
-   * reader who hits this has almost certainly arrived from DBML's own documentation.
-   */
   it('refuses what DBML refuses, in the words DBML uses', () => {
     for (const body of ['oncall', "owner 'scott'"]) {
       const { diagnostics } = draw(`Server api\nMetadata api {\n  ${body}\n}`);
@@ -1035,11 +867,7 @@ describe('metadata follows DBML', () => {
     expect(dup.diagnostics[0].message).toBe('Duplicate Metadata fields are defined');
   });
 
-  /**
-   * ONE BAG. There were two stores of free-form properties with no rule for choosing between
-   * them. DBML has one, with a precedence: inline lowest, then `Metadata` from imported files,
-   * then `Metadata` here.
-   */
+  // Precedence, as in DBML: inline lowest, then `Metadata` from imported files, then `Metadata` here
   it('layers a block over the inline settings, later and louder', () => {
     const { model, diagnostics } = draw([
       "Server api [type: 'docker', tier: 'two']",
@@ -1051,9 +879,9 @@ describe('metadata follows DBML', () => {
 
     expect(diagnostics).toEqual([]);
     expect(model.elements.get('api')?.settings).toMatchObject({
-      type: 'docker', // inline, untouched
-      tier: 'one', // inline said two, the block wins
-      owner: 'platform-team', // only the block said it
+      type: 'docker',
+      tier: 'one',
+      owner: 'platform-team',
     });
   });
 
@@ -1067,7 +895,7 @@ describe('metadata follows DBML', () => {
         "use * from './ops.arch'",
         'Server api',
       ].join('\n'),
-      // C5: a file of only Metadata blocks says what it is. C2: it imports what it annotates.
+      // a file of only Metadata blocks needs its own diagram_type, and imports what it annotates
       '/ops.arch.dbml': "---\ndiagram_type: arch\n---\nuse { Server api } from './main.arch'\nMetadata api {\n  owner: 'ops-team'\n}",
     }, '/main.arch.dbml');
 
@@ -1076,14 +904,6 @@ describe('metadata follows DBML', () => {
   });
 });
 
-/**
- * `[ ]` IS FOR THE DRAWING. THE BODY IS FOR EVERYTHING ELSE.
- *
- * This is the split DBML makes on a TABLE, which is what an architecture element actually
- * resembles: a DBML table takes two settings — `headercolor` and `note` — and everything that
- * describes it lives in its body. Constraints in brackets are a COLUMN thing, and a column is
- * not what we are.
- */
 describe('the body carries the properties', () => {
   const draw = (src: string) => compileArch(
     { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
@@ -1139,10 +959,6 @@ describe('the body carries the properties', () => {
     expect(diagnostics.map((x) => x.code)).toEqual(['duplicate-property']);
   });
 
-  /**
-   * The samples are the check that the split is liveable: if every element needed a body, the
-   * rule would be wrong. They do not — a box with a name and a product stays on one line.
-   */
   it('leaves a simple box on one line, which is most boxes', () => {
     const { model, diagnostics } = draw("Cache sessions [name: 'Session cache', type: 'redis']");
     expect(diagnostics).toEqual([]);
@@ -1152,11 +968,6 @@ describe('the body carries the properties', () => {
   });
 });
 
-/**
- * A BARE WORD IS A FLAG IN A BODY, the way `[pk]` is a flag in a settings list — except in a
- * container, where a bare word is a member name and always will be, because listing names is
- * what a container's body is for.
- */
 describe('flags in a body', () => {
   const draw = (src: string) => compileArch(
     { '/d': `---\ndiagram_type: arch\n---\n\n${src}` },
@@ -1196,15 +1007,3 @@ describe('flags in a body', () => {
     expect(isGroup(group) && group.children).toEqual(['a']);
   });
 });
-
-/**
- * THE HIGHLIGHTER READS THE SAME LISTS THE COMPILER DOES.
- *
- * DBML's own tokenizer cannot colour this dialect: it knows `table`, `ref`, `pk` and a hundred
- * SQL type names, none of which appear here, and it knows a few of them loosely — `text`,
- * `set` and `image` are DBML data types and ordinary words in an architecture file, so what
- * did light up lit up wrongly.
- *
- * The grammar lives beside the vocabulary so that adding a role or a mark needs no second
- * edit. These assert the wiring, which is the part a refactor can quietly break.
- */

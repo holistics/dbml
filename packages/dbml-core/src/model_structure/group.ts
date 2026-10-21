@@ -5,7 +5,7 @@ import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
 import type { ArchSettings, Group as RawGroup } from '@dbml/parse';
 
-// An architecture group. Its members are resolved once every element exists (`Database.processArch`).
+// Members are resolved once every element exists (`Database.processArch`).
 class Group extends Element {
   declare id: number;
   name: string;

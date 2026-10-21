@@ -8,17 +8,9 @@ import {
 } from '@/core/types/tokens';
 import { isAlphaNumeric, isAlphaOrUnderscore, isDigit } from '@/core/utils/chars';
 
-/**
- * Grammar switches the lexer offers a dialect. Off by default, so DBML is untouched.
- */
+// Every switch is off by default
 export interface LexerOptions {
-  /**
-   * Read a `---` fenced block at the very top of a file as one trivia token.
-   *
-   * It is Markdown's convention and people expect it for file-level metadata. DBML has no use
-   * for it, because `Project { ... }` already carries that and its interpreter files any
-   * unrecognised field as a free-form property. A dialect that wants both says so here.
-   */
+  // Read a `---` fenced block at the very top of a file as one trivia token
   allowFrontMatter?: boolean;
 }
 
@@ -51,13 +43,8 @@ export default class Lexer {
     this.options = options;
   }
 
-  /**
-   * Only at offset zero, and only up to the closing fence.
-   *
-   * It is consumed character by character like everything else, so `line` and `column` keep
-   * counting and every token after it still reports where it really is. Lifting the block out
-   * of the text instead would shift every diagnostic in the file by however many lines it had.
-   */
+  // Consumed character by character so `line` and `column` keep counting. Cutting the block out
+  // of the text instead would shift every diagnostic in the file by however many lines it had.
   private scanFrontMatter (): void {
     if (!this.options.allowFrontMatter) return;
     if (!this.text.startsWith('---')) return;
@@ -519,16 +506,9 @@ export default class Lexer {
       }
 
       // The first way to return a numeric literal without error:
-      // a digit is encountered as the last character.
-      //
-      // THE DIGIT TEST IS NOT OPTIONAL. Without it this branch consumes whatever the last
-      // character happens to be, so a file ending in `100]` lexed as one NUMERIC_LITERAL
-      // spelling `100]`, the closing bracket never reached the parser, and the error was
-      // "Expect a closing bracket ']'" pointing at a bracket that is plainly there.
-      //
-      // DBML never saw it because its elements always have a body, so a `]` is never the last
-      // character of a file. A dialect with bodyless elements makes `Table t [note: 100]` a
-      // whole document, and then it is.
+      // a digit is encountered as the last character
+      // Without the digit check, a file ending in `[note: 100]` (an element with no body)
+      // lexes `100]` as one NUMERIC_LITERAL and the `]` never reaches the parser.
       if (!isDot && this.current.offset === this.text.length - 1 && isDigit(this.peek()!)) {
         this.advance();
 

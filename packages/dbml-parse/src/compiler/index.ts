@@ -20,10 +20,7 @@ const FILE_KIND_LEXER: LexerOptions = {
   allowFrontMatter: true,
 };
 
-/**
- * Grammar switches a dialect asks for, gathered in one place so the Compiler does not grow a
- * parameter per stage. Every switch inside is off by default, so DBML is exactly what it was.
- */
+// Every switch inside is off by default
 export interface DialectOptions {
   lexer?: LexerOptions;
   parser?: ParserOptions;
@@ -91,17 +88,12 @@ export default class Compiler {
   readonly symbolIdGenerator = new NodeSymbolIdGenerator();
   readonly symbolFactory = new SymbolFactory(this.symbolIdGenerator);
 
-  // Set when the caller passed its own module list or switches, which then apply to every file
   readonly explicitModules: GlobalModule[] | undefined;
   private readonly explicitDialect: DialectOptions | undefined;
   readonly dialect: DialectOptions;
 
-  /**
-   * @param layout the structure of the DbmlProject
-   * @param modules the element vocabulary for every file. When omitted, each file uses the
-   *   modules of its own kind (DBML or architecture).
-   * @param dialect grammar switches for every file. When omitted, each file gets its kind's switches.
-   */
+  // `layout`: the structure of the DbmlProject
+  // `modules` and `dialect`, when given, apply to every file. When omitted, each file uses the ones of its own kind (DBML or architecture).
   constructor (
     public layout: DbmlProjectLayout,
     modules?: GlobalModule[],
@@ -132,7 +124,6 @@ export default class Compiler {
   // The kind each cached parse used
   private fileKinds = new Map<FilepathId, { filepath: Filepath } & FileKindResult>();
 
-  // The tokens a file's kind is read from, cached by the file's text
   scanFile (filepath: Filepath, tokens?: readonly SyntaxToken[]): FileScan {
     const source = this.layout.getSource(filepath) ?? '';
     const id = filepath.intern();
@@ -147,7 +138,7 @@ export default class Compiler {
     return scan;
   }
 
-  // Whether a file is read as DBML or as an architecture diagram. Never parses.
+  // Never parses
   fileKind (filepath: Filepath): FileKind {
     return this.decideKind(filepath).kind;
   }

@@ -43,7 +43,6 @@ export const modules: LocalModule[] = [
   customModule,
 ];
 
-// The local modules of an architecture file
 export const archModules: LocalModule[] = [
   archModule,
   programModule,

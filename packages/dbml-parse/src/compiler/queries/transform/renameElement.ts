@@ -13,14 +13,9 @@ import { TextEdit, applyTextEdits } from './applyTextEdits';
 import { archDeclarations, findArchElement } from './utils/arch';
 
 /**
- * Renames an architecture element (node, group or note box) in `filepath`.
- *
- * With an `as` alias, links, groups and metadata name the element by its alias, so only the
- * name changes. Without one the name is the handle, so every link endpoint, group member and
+ * With an `as` alias only the name changes. Without one, every link endpoint, group member and
  * metadata target in the same file that names it is renamed too.
- *
- * Returns a map of absolute file paths to new source content. An empty map indicates a no-op
- * (lookup miss or name collision).
+ * An empty map means no change (lookup miss or name collision).
  */
 export function renameElement (
   this: Compiler,

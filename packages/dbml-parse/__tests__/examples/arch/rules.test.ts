@@ -59,7 +59,6 @@ describe('[example] architecture rules', () => {
   test('the planned changes C3, C6, C7, C8, front matter in DBML and a.port hold', () => {
     const base = `${ARCH.replace('---\n', '---\ntitle: base\n')}Server api`;
 
-    // C3: metadata from imported files applies in import order, a later import over an earlier one
     const metadata = (order: string[]) => project({
       '/base.dbml': base,
       '/a.dbml': `${ARCH}use * from './base'\nMetadata api {\n  tier: 'a'\n}`,
@@ -69,24 +68,20 @@ describe('[example] architecture rules', () => {
     expect(metadata(['a', 'b'])).toBe('b');
     expect(metadata(['b', 'a'])).toBe('a');
 
-    // C6 and C8: an imported file's front matter stays its own, and the file's own elements come first
     const own = project({ '/base.dbml': base, '/main.dbml': `${ARCH}use * from './base'\nServer web` });
     expect(own.db?.frontMatter).toEqual({ diagram_type: 'arch' });
     expect(own.db?.nodes?.map((n) => n.name)).toEqual(['web', 'api']);
 
-    // C7: a file with an error reports no warnings
     const broken = project({ '/main.dbml': `${ARCH}Server a [type: 'postgress']\nLink: a > ghost` });
     expect(broken.interpreted.getErrors().map((e) => e.code)).toContain(CompileErrorCode.UNKNOWN_ENDPOINT);
     expect(broken.interpreted.getWarnings()).toHaveLength(0);
 
-    // Front matter in a DBML file
     const dbml = project({ '/main.dbml': '---\ntitle: Schema\n---\nTable users {\n  id int\n}' });
     expect(dbml.compiler.fileKind(Filepath.from('/main.dbml'))).toBe('dbml');
     expect(dbml.errors).toHaveLength(0);
     expect(dbml.db?.frontMatter).toEqual({ title: 'Schema' });
     expect(dbml.db?.diagramType).toBeUndefined();
 
-    // `a.web` is the endpoint `a`
     const port = project({ '/main.dbml': `${ARCH}Server a\nServer b\nLink: a.web > b` });
     expect(port.db?.links?.map((l) => [l.from, l.to])).toEqual([['a', 'b']]);
   });

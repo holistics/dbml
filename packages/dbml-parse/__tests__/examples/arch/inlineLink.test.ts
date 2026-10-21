@@ -87,7 +87,6 @@ describe('[example] inline links', () => {
       .toBe(`${ARCH}Server api\nDatabase db\n\nLink: api > db [color: #ff0000]\n`);
     expect(color('Server api [color: #00ff00, link: > db]\nDatabase db', '#ff0000'))
       .toBe(`${ARCH}Server api [color: #00ff00]\nDatabase db\n\nLink: api > db [color: #ff0000]\n`);
-    // clearing a color an inline link never had changes nothing
     expect(color('Server api [link: > db]\nDatabase db', null)).toBe(`${ARCH}Server api [link: > db]\nDatabase db`);
   });
 });

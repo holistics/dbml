@@ -49,7 +49,6 @@ export const dbmlModules: GlobalModule[] = [
   programModule,
 ];
 
-// The modules of an architecture file. `use`, schema and program are shared with DBML.
 export const archModules: GlobalModule[] = [
   archModule,
   useModule,
@@ -65,7 +64,7 @@ function modulesFor (compiler: Compiler, target: unknown): GlobalModule[] {
   return filepath && compiler.parsedFileKind(filepath) === 'arch' ? archModules : dbmlModules;
 }
 
-// Chain-of-responsibility: iterate the modules until one handles the node
+// Chain-of-responsibility: iterate modules until one handles the node (returns non-PASS_THROUGH)
 function dispatch<K extends keyof GlobalModule> (
   compiler: Compiler,
   method: K,

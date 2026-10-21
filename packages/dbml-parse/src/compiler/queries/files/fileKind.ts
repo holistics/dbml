@@ -105,8 +105,7 @@ export interface FileKindResult {
   dependsOnImports: boolean;
 }
 
-// The syntax doc's "Document Type" and "Without a marker" rules.
-// `importedScans` is only called when the file's own text cannot decide.
+// `importedScans` is only called when the file's own text cannot decide
 export function decideFileKind (scan: FileScan, importedScans: () => FileScan[]): FileKindResult {
   if (scan.frontMatter.diagram_type !== undefined) {
     return {

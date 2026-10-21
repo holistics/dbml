@@ -5,7 +5,6 @@ import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
 import type { ArchSettings, LinkOp, Link as RawLink } from '@dbml/parse';
 
-// An architecture link between two elements, by their ids
 class Link extends Element {
   declare id: number;
   fromId: number;

@@ -127,7 +127,6 @@ class Database extends Element {
     groups.forEach((group) => this.groups.push(new Group({ ...group, database: this })));
     noteBoxes.forEach((box) => this.noteBoxes.push(new NoteBox({ ...box, database: this })));
 
-    // An element is named by its handle: the alias, or the name when there is none. The first one wins.
     const byHandle = new Map<string, Node | Group | NoteBox>();
     [...this.nodes, ...this.groups, ...this.noteBoxes].forEach((element) => {
       const handle = element.alias ?? element.name;

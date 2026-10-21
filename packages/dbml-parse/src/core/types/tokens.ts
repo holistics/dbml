@@ -31,7 +31,7 @@ export enum SyntaxTokenKind {
 
   SINGLE_LINE_COMMENT = '<single-line-comment>',
   MULTILINE_COMMENT = '<multiline-comment>',
-  /** a `---` fenced block at the very top of a file; only a dialect that asks for it gets one */
+  // A `---` fenced block at the very top of a file, only lexed when `allowFrontMatter` is on
   FRONT_MATTER = '<front-matter>',
   WILDCARD = '<wildcard>',
 }

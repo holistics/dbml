@@ -68,20 +68,9 @@ class PartialParsingError<T extends SyntaxNode> {
 //   3. If it can, call `synchronizeParseMethod`
 //      INVARIANT: `synchronizeParseMethod` must consume at least one token in most cases to avoid infinite loops
 
-/**
- * Grammar switches a dialect may ask for. Every one of these is off by default, so the DBML
- * grammar is exactly what it was; a dialect that wants a different shape says so, and the
- * difference is one flag rather than a forked parser.
- */
+// Every switch is off by default
 export interface ParserOptions {
-  /**
-   * Allow an element declaration with no body: `Database mongo1` as a complete statement.
-   *
-   * DBML has nothing that reads that way, because every DBML element carries something: a Table
-   * has columns, a Ref has endpoints. An architecture file is the opposite, mostly bare nouns
-   * with the occasional body, and writing `Database mongo1 { }` on every line to satisfy a
-   * grammar rule that exists for a different language would be the tail wagging the dog.
-   */
+  // Allow an element declaration with no body: `Database mongo1` as a complete statement
   allowBodylessElement?: boolean;
 }
 
@@ -581,9 +570,7 @@ export default class Parser {
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
     }
 
-    // A dialect that allows bodyless elements stops here rather than hunting for a body that
-    // was never going to come. The check is deliberately narrow: only when the next token could
-    // not open a body at all, so `Server api1 [x] {` still parses its block.
+    // Stop only when the next token cannot open a body, so `Server api1 [x] {` still parses its block
     if (this.options.allowBodylessElement && !this.check(SyntaxTokenKind.LBRACE, SyntaxTokenKind.COLON)) {
       return buildElement();
     }

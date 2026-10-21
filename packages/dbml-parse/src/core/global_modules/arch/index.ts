@@ -179,7 +179,6 @@ function bindUseSpecifier (compiler: Compiler, specifier: UseSpecifierNode): Rep
   return new Report(undefined, errors);
 }
 
-// Top-level declarations of an architecture file
 export const archModule: GlobalModule = {
   nodeSymbol (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough> {
     if (!isTopLevel(node)) return Report.create(PASS_THROUGH);

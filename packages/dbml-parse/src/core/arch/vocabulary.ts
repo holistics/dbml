@@ -7,7 +7,7 @@ export interface KindSpec {
   category: Category;
 }
 
-// The 31 built-in roles. A `Kind` declaration adds a role or overrules one of these.
+// The built-in roles. A `Kind` declaration adds a role or overrules one of these.
 export const BUILTIN_KINDS: Record<string, KindSpec> = {
   Server: { icon: 'server', category: 'compute' },
   Function: { icon: 'function', category: 'compute' },
@@ -50,7 +50,6 @@ export const builtinKindName = (typed: string): string | undefined => BUILTIN_BY
 export function suggestKind (typed: string): string {
   const needle = typed.toLowerCase();
 
-  // A brand typed where the role goes is pointed at the setting it belongs in
   if (isIconName(needle)) {
     return `${typed} is a brand, and a brand is a setting:  Database name [type: '${needle}']`;
   }
