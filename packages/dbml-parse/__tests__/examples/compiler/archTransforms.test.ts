@@ -67,7 +67,7 @@ Database db`);
     expect(update(source, { kind: SymbolKind.Element, name: 'api' }, 'color', null)).toBe('Server api');
   });
 
-  it('finds a group and a note box by handle', () => {
+  it('finds a group and a note by handle', () => {
     const source = `Server api
 Group "Prod" as prod {
   api
@@ -252,7 +252,7 @@ Metadata web {
 }`);
   });
 
-  it('renames a group and a note box', () => {
+  it('renames a group and a note', () => {
     const source = `Server api
 Group prod {
   api

@@ -38,7 +38,6 @@ export interface DatabaseExternals {
   // Architecture elements, present only when the file imports some
   nodes?: ElementRef[];
   groups?: ElementRef[];
-  noteBoxes?: ElementRef[];
   kinds?: ElementRef[];
 }
 
@@ -86,7 +85,6 @@ export interface Database {
   // Architecture entries, present only for an architecture file or when the file imports some
   nodes?: Node[];
   groups?: Group[];
-  noteBoxes?: NoteBox[];
   links?: Link[];
   kinds?: Kind[];
   // The `---` block at the top of the file, present only when it has keys
@@ -128,14 +126,6 @@ export interface Group {
     value: string;
     token: TokenPosition;
   } | null;
-  token: TokenPosition;
-}
-
-// A top-level `Note` in an architecture file: a box on the canvas
-export interface NoteBox {
-  name: string;
-  alias: string | null;
-  content: string;
   token: TokenPosition;
 }
 
@@ -445,7 +435,6 @@ export type SchemaElement =
   | MetadataValues
   | Node
   | Group
-  | NoteBox
   | Link
   | Kind
   | ArchSettings;

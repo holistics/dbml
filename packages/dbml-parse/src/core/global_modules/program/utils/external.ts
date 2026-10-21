@@ -12,7 +12,6 @@ export function pushExternal (db: Database, member: NodeSymbol, ref: ElementRef)
   else if (member.isKind(SymbolKind.Element)) {
     const sort = archSort(member.originalSymbol.declaration!);
     if (sort === 'group') (db.externals.groups ??= []).push(ref);
-    else if (sort === 'note') (db.externals.noteBoxes ??= []).push(ref);
     else (db.externals.nodes ??= []).push(ref);
   }
 }

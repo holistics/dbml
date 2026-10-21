@@ -3,6 +3,7 @@ import type { Token } from '../../types/model_structure/element';
 import type { NormalizedModel } from '../../types/model_structure/database';
 import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
+import type { ArchElementType } from '../../types/model_structure/link';
 import type { ArchSettings, Group as RawGroup } from '@dbml/parse';
 
 // Members are resolved once every element exists (`Database.processArch`).
@@ -10,9 +11,10 @@ class Group extends Element {
   declare id: number;
   name: string;
   alias: string | null;
-  // Handles as written; `childIds` holds the elements they name
+  // Handles as written; `childIds` and `childTypes` hold the elements they name, in the same order
   children: string[];
   childIds: number[];
+  childTypes: ArchElementType[];
   settings: ArchSettings;
   note: string | null;
   noteToken: Token | null;
@@ -28,6 +30,7 @@ class Group extends Element {
     this.alias = alias;
     this.children = children;
     this.childIds = [];
+    this.childTypes = [];
     this.settings = settings;
     this.note = note?.value ?? null;
     this.noteToken = (note?.token as Token) ?? null;
@@ -38,7 +41,7 @@ class Group extends Element {
   }
 
   generateId () {
-    this.id = this.dbState.generateId('elementId');
+    this.id = this.dbState.generateId('groupId');
   }
 
   export () {
@@ -55,6 +58,7 @@ class Group extends Element {
       id: this.id,
       ...this.export(),
       childIds: this.childIds,
+      childTypes: this.childTypes,
       groupId: this.groupId,
     };
   }

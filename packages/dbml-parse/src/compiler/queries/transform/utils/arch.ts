@@ -1,5 +1,5 @@
 import {
-  archSort, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, linkPartsOf, nameOf,
+  archSort, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, isTopLevelNote, linkPartsOf, nameOf,
 } from '@/core/arch/read';
 import { Filepath } from '@/core/types/filepath';
 import type { AttributeNode, ElementDeclarationNode, ListExpressionNode } from '@/core/types/nodes';
@@ -13,9 +13,10 @@ export function archDeclarations (compiler: Compiler, filepath: Filepath): Eleme
   return ast.body.filter(isTopLevel);
 }
 
+// A node, a group or a sticky note: what links and groups name
 const isElement = (declaration: ElementDeclarationNode): boolean => {
   const sort = archSort(declaration);
-  return sort === 'node' || sort === 'group' || sort === 'note';
+  return sort === 'node' || sort === 'group' || isTopLevelNote(declaration);
 };
 
 export function findArchElement (compiler: Compiler, filepath: Filepath, handle: string): ElementDeclarationNode | undefined {

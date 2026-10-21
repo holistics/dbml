@@ -17,11 +17,10 @@ import { SyntaxTokenKind } from '@/core/types/tokens';
 import type { ArchSettingValue, ArchSettings } from '@/core/types/schemaJson';
 
 // What a top-level declaration in an architecture file is, from its first word
-export type ArchSort = 'node' | 'group' | 'note' | 'kind' | 'link' | 'metadata' | 'project';
+export type ArchSort = 'node' | 'group' | 'kind' | 'link' | 'metadata' | 'project';
 
 const SORT_BY_WORD: Record<string, ArchSort> = {
   group: 'group',
-  note: 'note',
   kind: 'kind',
   link: 'link',
   ref: 'link',
@@ -35,11 +34,16 @@ export function isTopLevel (node: SyntaxNode): node is ElementDeclarationNode {
   return node instanceof ElementDeclarationNode && node.parentNode instanceof ProgramNode && !!node.type;
 }
 
-// Any word that is not a reserved one is a role, so the declaration is a node
+// Any word that is not a reserved one is a role, so the declaration is a node.
+// A top-level `Note` is a DBML sticky note, read by DBML's note module.
 export function archSort (node: SyntaxNode): ArchSort | undefined {
   if (!isTopLevel(node)) return undefined;
-  return SORT_BY_WORD[node.type!.value.toLowerCase()] ?? 'node';
+  const word = node.type!.value.toLowerCase();
+  if (word === 'note') return undefined;
+  return SORT_BY_WORD[word] ?? 'node';
 }
+
+export const isTopLevelNote = (node: SyntaxNode): boolean => isTopLevel(node) && node.type!.value.toLowerCase() === 'note';
 
 export function topLevelDeclaration (node: SyntaxNode): ElementDeclarationNode | undefined {
   let current: SyntaxNode | undefined = node;
@@ -89,6 +93,8 @@ const INLINE_LINK_KEYS = new Set([
   'link',
   'ref',
 ]);
+
+export const isInlineLinkKey = (key: string): boolean => INLINE_LINK_KEYS.has(key.toLowerCase());
 
 // `[style: dashed, inactive]`: a setting with no value is true. An inline link is a link, not a setting.
 export function settingsOf (list?: ListExpressionNode): ArchSettings {
@@ -251,11 +257,6 @@ export function noteDeclarationOf (declaration: ElementDeclarationNode): Element
 
 export function noteTextOf (note: ElementDeclarationNode): string {
   return dedent(bodyOf(note).map((n) => nameOf(rowOf(n)?.callee) ?? '').join(' '));
-}
-
-// The text of a top-level `Note name { '...' }`
-export function noteBoxTextOf (declaration: ElementDeclarationNode): string {
-  return bodyOf(declaration).map((row) => nameOf(rowOf(row)?.callee) ?? '').join(' ').trim();
 }
 
 // The common left margin is the author indenting their source, not part of the note

@@ -41,8 +41,11 @@ export function resolveRole (compiler: Compiler, filepath: Filepath, word: strin
   return builtinKindName(word);
 }
 
-// The handle an element was declared with, which is how links and groups name it in the model
-export function originalHandle (symbol: NodeSymbol): string | undefined {
-  const declaration = symbol.originalSymbol.declaration;
+// How links and groups name an element in the model: the handle it was declared with. A sticky note
+// is named in the model by its name in this file (`use { Note memo as m }` gives `m`), so it is named the same way here.
+export function originalHandle (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): string | undefined {
+  const original = symbol.originalSymbol;
+  if (original.isKind(SymbolKind.StickyNote)) return original.interpretedName(compiler, filepath).name;
+  const declaration = original.declaration;
   return declaration instanceof ElementDeclarationNode ? handleOf(declaration) : undefined;
 }

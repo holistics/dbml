@@ -17,11 +17,10 @@ import { NormalizedCheckIdMap } from './check';
 import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
 import { TokenPosition, DiagramView } from '@dbml/parse';
 import type {
-  Group as RawGroup, Kind as RawKind, Link as RawLink, Node as RawNode, NoteBox as RawNoteBox,
+  Group as RawGroup, Kind as RawKind, Link as RawLink, Node as RawNode,
 } from '@dbml/parse';
 import Node, { NormalizedNodeIdMap } from './node';
 import Group, { NormalizedGroupIdMap } from './group';
-import NoteBox, { NormalizedNoteBoxIdMap } from './noteBox';
 import Link, { NormalizedLinkIdMap } from './link';
 import Kind, { NormalizedKindIdMap } from './kind';
 export interface Project {
@@ -76,7 +75,6 @@ export interface RawDatabase {
     diagramViews: DiagramView[];
     nodes?: RawNode[];
     groups?: RawGroup[];
-    noteBoxes?: RawNoteBox[];
     links?: RawLink[];
     kinds?: RawKind[];
     frontMatter?: Record<string, string>;
@@ -96,7 +94,6 @@ declare class Database extends Element {
     diagramViews: DiagramView[];
     nodes: Node[];
     groups: Group[];
-    noteBoxes: NoteBox[];
     links: Link[];
     kinds: Kind[];
     frontMatter: Record<string, string> | null;
@@ -333,7 +330,6 @@ export interface NormalizedDatabase {
     // Present only for a file with architecture content
     nodeIds?: number[];
     groupIds?: number[];
-    noteBoxIds?: number[];
     linkIds?: number[];
     kindIds?: number[];
     frontMatter?: Record<string, string>;
@@ -365,7 +361,6 @@ export interface NormalizedModel {
     // Present only when non-empty
     nodes?: NormalizedNodeIdMap;
     groups?: NormalizedGroupIdMap;
-    noteBoxes?: NormalizedNoteBoxIdMap;
     links?: NormalizedLinkIdMap;
     kinds?: NormalizedKindIdMap;
 }

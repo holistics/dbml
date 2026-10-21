@@ -52,7 +52,7 @@ export enum SymbolKind {
 
   Metadata = 'Metadata',
 
-  // Architecture nodes, groups and note boxes share one kind, so their handles share one namespace
+  // Architecture nodes and groups share one kind, so their handles share one namespace
   Element = 'Element',
   Kind = 'Kind',
 
@@ -760,7 +760,7 @@ export class TableGroupFieldSymbol extends NodeSymbol {
   }
 }
 
-// An architecture node, group or note box
+// An architecture node or group
 export class ElementSymbol extends NodeSymbol {
   constructor (
     {

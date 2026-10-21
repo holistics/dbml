@@ -16,8 +16,8 @@ export default class DbState {
     indexColumnId: number;
     recordId: number;
     tablePartialId: number;
-    // Nodes, groups and note boxes share one counter, so an id names one of them
-    elementId: number;
+    nodeId: number;
+    groupId: number;
     linkId: number;
     kindId: number;
     generateId(el: Exclude<keyof DbState, 'generateId'>): number;

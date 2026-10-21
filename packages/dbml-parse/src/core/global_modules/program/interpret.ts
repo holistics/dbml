@@ -8,7 +8,7 @@ import { ElementDeclarationNode, ProgramNode, type SyntaxNode } from '@/core/typ
 import Report from '@/core/types/report';
 import type {
   Alias, Database, Dep, DiagramView, Enum,
-  Group, Kind, Link, Node, Note, NoteBox, Project, Ref,
+  Group, Kind, Link, Node, Note, Project, Ref,
   RefEndpoint, SchemaElement, Table,
   TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
@@ -94,7 +94,6 @@ export default class ProgramInterpreter {
   private arch = {
     nodes: [] as Node[],
     groups: [] as Group[],
-    noteBoxes: [] as NoteBox[],
     links: [] as {
       link: Link;
       declaration: SyntaxNode;
@@ -121,10 +120,12 @@ export default class ProgramInterpreter {
 
     // The first group to list an element owns it
     const handles = new Set([
-      ...this.arch.nodes,
-      ...this.arch.groups,
-      ...this.arch.noteBoxes,
-    ].map((e) => e.alias ?? e.name));
+      ...[
+        ...this.arch.nodes,
+        ...this.arch.groups,
+      ].map((e) => e.alias ?? e.name),
+      ...this.db.notes.map((note) => note.name),
+    ]);
     const parent = new Map<string, string>();
     for (const group of this.arch.groups) {
       const handle = group.alias ?? group.name;
@@ -156,7 +157,6 @@ export default class ProgramInterpreter {
     const entries = {
       nodes: this.arch.nodes,
       groups: this.arch.groups,
-      noteBoxes: this.arch.noteBoxes,
       links: this.arch.links.map(({ link }) => link),
       kinds: [
         ...kinds.values(),
@@ -548,7 +548,6 @@ export default class ProgramInterpreter {
       case SymbolKind.Element: {
         const sort = archSort(symbol.originalSymbol.declaration!);
         if (sort === 'group') this.arch.groups.push(value as Group);
-        else if (sort === 'note') this.arch.noteBoxes.push(value as NoteBox);
         else this.arch.nodes.push(value as Node);
         break;
       }

@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import { isIconName, resolveIcon } from '@/core/arch/icons';
 import {
-  IMAGE_REFUSED, IMAGE_URL, archSort, bodyOf, declarationWord, linkPartsOf, nameOf, noteBoxTextOf, noteDeclarationOf,
+  IMAGE_REFUSED, IMAGE_URL, archSort, bodyOf, declarationWord, linkPartsOf, nameOf, noteDeclarationOf,
   noteTextOf, propertyOf, readBody, settingsOf,
 } from '@/core/arch/read';
 import { BUILTIN_KINDS, suggestIcon } from '@/core/arch/vocabulary';
@@ -11,7 +11,7 @@ import { UNHANDLED } from '@/core/types/module';
 import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  ArchSettings, Group, Kind, Link, LinkOp, Node, NoteBox,
+  ArchSettings, Group, Kind, Link, LinkOp, Node,
 } from '@/core/types/schemaJson';
 import type { ElementSymbol, KindSymbol } from '@/core/types/symbol';
 import { ArchMetadataElementMetadata, type LinkMetadata } from '@/core/types/symbol/metadata';
@@ -63,21 +63,12 @@ function noteOf (declaration: ElementDeclarationNode): Node['note'] {
     : null;
 }
 
-export function interpretElement (compiler: Compiler, symbol: ElementSymbol, filepath: Filepath): Report<Node | Group | NoteBox | undefined> {
+export function interpretElement (compiler: Compiler, symbol: ElementSymbol, filepath: Filepath): Report<Node | Group | undefined> {
   const declaration = symbol.declaration;
   if (!(declaration instanceof ElementDeclarationNode)) return new Report(undefined);
   const sort = archSort(declaration);
   const name = nameOf(declaration.name) ?? '';
   const token = getTokenPosition(declaration);
-
-  if (sort === 'note') {
-    return new Report({
-      name,
-      alias: null,
-      content: noteBoxTextOf(declaration),
-      token,
-    });
-  }
 
   const alias = nameOf(declaration.alias) ?? null;
   const settings = settingsOf(declaration.attributeList);
@@ -93,7 +84,7 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
       ]) {
         if (!isExpressionAVariableNode(part)) continue;
         const member = compiler.nodeReferee(part).getFiltered(UNHANDLED);
-        const handle = member && originalHandle(member);
+        const handle = member && originalHandle(compiler, member, filepath);
         if (handle !== undefined && !children.includes(handle)) children.push(handle);
       }
     }
@@ -200,12 +191,12 @@ export function builtinKinds (): Kind[] {
   }));
 }
 
-export function interpretLink (compiler: Compiler, metadata: LinkMetadata): Report<Link | undefined> {
+export function interpretLink (compiler: Compiler, metadata: LinkMetadata, filepath: Filepath): Report<Link | undefined> {
   const { declaration } = metadata;
   const op = metadata.op();
   const [from, to] = metadata.endpoints(compiler);
-  const fromHandle = from && originalHandle(from);
-  const toHandle = to && originalHandle(to);
+  const fromHandle = from && originalHandle(compiler, from, filepath);
+  const toHandle = to && originalHandle(compiler, to, filepath);
   if (!op || fromHandle === undefined || toHandle === undefined) return new Report(undefined);
   // an inline link has no settings list of its own: the brackets it sits in are the element's
   const settings = declaration instanceof ElementDeclarationNode

@@ -43,7 +43,7 @@ describe('[example] inline links', () => {
     expect(db?.nodes?.[0].settings).toEqual({ color: '#ff0000' });
   });
 
-  test('a group and a note box take inline links too, and a quoted name works as the target', () => {
+  test('a group and a note take inline links too, and a quoted name works as the target', () => {
     const { errors, db } = compile("Server a\nServer \"API 2\"\nGroup g [link: > \"API 2\"] { a }\nNote memo [link: - a] { 'x' }");
     expect(errors).toEqual([]);
     expect(linksOf(db)).toEqual([

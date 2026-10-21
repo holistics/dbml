@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import {
-  archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isInlineLink, isTopLevel, linkPartsOf,
-  nameOf, topLevelDeclaration,
+  archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isInlineLink, isTopLevel, isTopLevelNote,
+  linkPartsOf, nameOf, topLevelDeclaration,
 } from '@/core/arch/read';
 import { suggestKind } from '@/core/arch/vocabulary';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
@@ -35,7 +35,12 @@ function isLinkEndpoint (node: SyntaxNode, link: ElementDeclarationNode): boolea
   return !!parts && (endpointNode(parts.infix.left) === node || endpointNode(parts.infix.right) === node);
 }
 
-const isElementSort = (declaration: ElementDeclarationNode): boolean => ['node', 'group', 'note'].includes(archSort(declaration) ?? '');
+// Nodes, groups and notes take `[link: > b]`
+const takesInlineLinks = (declaration: ElementDeclarationNode): boolean => ['node', 'group'].includes(archSort(declaration) ?? '') || isTopLevelNote(declaration);
+
+// A name an arch element or a sticky note answers to. Two lookups: one lookup over both kinds returns whichever was declared first.
+const lookupElementOrNote = (compiler: Compiler, node: SyntaxNode, name: string): NodeSymbol | undefined => lookupVisible(compiler, node.filepath, SymbolKind.Element, name)
+  ?? lookupVisible(compiler, node.filepath, SymbolKind.StickyNote, name);
 
 function isInlineLinkTarget (node: SyntaxNode, declaration: ElementDeclarationNode): boolean {
   return inlineLinksOf(declaration).some((attribute) => inlineLinkOf(attribute)?.target === node);
@@ -51,7 +56,7 @@ function tableError (compiler: Compiler, node: SyntaxNode, name: string, rule: s
 
 // A link end, written in `Link: a > b` or after the operator of an inline `[link: > b]`
 function linkEndpointReferee (compiler: Compiler, node: SyntaxNode, name: string, at: SyntaxNode): Report<NodeSymbol | undefined> {
-  const found = lookupVisible(compiler, node.filepath, SymbolKind.Element, name);
+  const found = lookupElementOrNote(compiler, node, name);
   if (found) return new Report(found);
   return new Report(undefined, [
     tableError(compiler, node, name, 'a link joins elements') ?? notDeclared(CompileErrorCode.UNKNOWN_ENDPOINT, name, at),
@@ -62,7 +67,7 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
   const name = nameOf(node);
   if (name === undefined) return new Report(undefined);
 
-  if (isElementSort(declaration) && isInlineLinkTarget(node, declaration)) {
+  if (takesInlineLinks(declaration) && isInlineLinkTarget(node, declaration)) {
     return linkEndpointReferee(compiler, node, name, node);
   }
 
@@ -70,7 +75,7 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
     case 'group': {
       // A name never declared is left out of the group, not reported; a table is reported
       if (!isGroupMember(node, declaration)) return new Report(undefined);
-      const found = lookupVisible(compiler, node.filepath, SymbolKind.Element, name);
+      const found = lookupElementOrNote(compiler, node, name);
       const table = found ? undefined : tableError(compiler, node, name, 'a group lists elements and groups');
       return new Report(found, table ? [table] : []);
     }
@@ -98,7 +103,7 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
   const errors: CompileError[] = [];
   const word = declarationWord(declaration)!;
 
-  if (isElementSort(declaration)) {
+  if (takesInlineLinks(declaration)) {
     for (const attribute of inlineLinksOf(declaration)) {
       const target = inlineLinkOf(attribute)?.target;
       if (target && isExpressionAVariableNode(target)) errors.push(...compiler.nodeReferee(target).getErrors());
@@ -185,7 +190,6 @@ export const archModule: GlobalModule = {
     switch (archSort(node)) {
       case 'node':
       case 'group':
-      case 'note':
         return new Report(compiler.symbolFactory.create(ElementSymbol, {
           declaration: node,
           name: handleOf(node),
@@ -212,6 +216,7 @@ export const archModule: GlobalModule = {
     return nodeRefereeOfDeclaration(compiler, node, declaration);
   },
 
+  // Claims top-level notes too: their only references are inline links, and DBML's note binder binds nothing for them
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
     if (node instanceof UseSpecifierNode && node.archImport) return bindUseSpecifier(compiler, node);
     if (!isTopLevel(node)) return Report.create(PASS_THROUGH);
@@ -222,7 +227,7 @@ export const archModule: GlobalModule = {
     // An inline `[link: > b]` on an element, the way DBML reads an inline `[ref: > b]` on a column
     if (node instanceof AttributeNode) {
       const element = node.parentOfKind(ElementDeclarationNode);
-      if (!element || !isTopLevel(element) || !isElementSort(element) || !isInlineLink(node)) return Report.create(PASS_THROUGH);
+      if (!element || !isTopLevel(element) || !takesInlineLinks(element) || !isInlineLink(node)) return Report.create(PASS_THROUGH);
       return new Report(new LinkMetadata(node));
     }
     if (!isTopLevel(node)) return Report.create(PASS_THROUGH);
@@ -242,8 +247,8 @@ export const archModule: GlobalModule = {
     return Report.create(PASS_THROUGH);
   },
 
-  interpretMetadata (compiler: Compiler, metadata: NodeMetadata): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
-    if (metadata instanceof LinkMetadata) return interpretLink(compiler, metadata);
+  interpretMetadata (compiler: Compiler, metadata: NodeMetadata, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
+    if (metadata instanceof LinkMetadata) return interpretLink(compiler, metadata, filepath);
     if (metadata instanceof ArchMetadataElementMetadata) return interpretArchMetadata(metadata);
     return Report.create(PASS_THROUGH);
   },

@@ -230,18 +230,18 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
       at: locate(group.token),
     });
   }
-  for (const box of db.noteBoxes ?? []) {
-    const id = box.alias ?? box.name;
+  for (const note of db.notes ?? []) {
+    const id = note.name;
     model.elements.set(id, {
       sort: 'note',
       id,
       alias: null,
-      label: box.name,
-      text: box.content,
+      label: note.name,
+      text: note.content,
       settings: {},
       note: null,
       parent: parent.get(id) ?? null,
-      at: locate(box.token),
+      at: locate(note.token),
     });
   }
 

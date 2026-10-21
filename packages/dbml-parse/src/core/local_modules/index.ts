@@ -45,6 +45,7 @@ export const modules: LocalModule[] = [
 
 export const archModules: LocalModule[] = [
   archModule,
+  noteModule,
   programModule,
   useModule,
 ];

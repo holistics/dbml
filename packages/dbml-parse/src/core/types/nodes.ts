@@ -334,8 +334,7 @@ export class UseSpecifierNode extends SyntaxNode {
     if (value === undefined) return undefined;
     if (this.archImport) {
       if (value === 'kind') return SymbolKind.Kind;
-      if (value === 'note') return SymbolKind.Element;
-      // DBML's own kind words still import DBML elements
+      // DBML's own kind words still import DBML elements; `note` imports a sticky note
       return Object.values(ImportKind).find((k) => k.toLowerCase() === value) ?? SymbolKind.Element;
     }
     return Object.values(SymbolKind).find((k) => k.toLowerCase() === value);

@@ -70,7 +70,7 @@ export interface TableGroupIdentifier {
   name: string;
 }
 
-// An architecture node, group or note box, by its handle
+// An architecture node, group or sticky note, by its handle (a note's handle is its name)
 export interface ArchElementIdentifier {
   kind?: typeof SymbolKind.Element;
   name: string;

@@ -3,6 +3,7 @@ import Element, { Token } from './element';
 import Database from './database';
 import DbState from './dbState';
 import type { NormalizedModel } from './database';
+import type { ArchElementType } from './link';
 
 declare class Group extends Element {
     id: number;
@@ -10,6 +11,7 @@ declare class Group extends Element {
     alias: string | null;
     children: string[];
     childIds: number[];
+    childTypes: ArchElementType[];
     settings: ArchSettings;
     note: string | null;
     noteToken: Token | null;
@@ -18,7 +20,7 @@ declare class Group extends Element {
     dbState: DbState;
     constructor(raw: RawGroup & { database: Database });
     generateId(): void;
-    export(): Omit<NormalizedGroup, 'id' | 'childIds' | 'groupId'>;
+    export(): Omit<NormalizedGroup, 'id' | 'childIds' | 'childTypes' | 'groupId'>;
     normalize(model: NormalizedModel): void;
 }
 export interface NormalizedGroup {
@@ -26,6 +28,7 @@ export interface NormalizedGroup {
     name: string;
     alias: string | null;
     childIds: number[];
+    childTypes: ArchElementType[];
     settings: ArchSettings;
     note: string | null;
     groupId: number | null;

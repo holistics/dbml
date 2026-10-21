@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import {
-  archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, linkPartsOf, nameOf,
+  archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, isTopLevelNote, linkPartsOf, nameOf,
   propertyOf, readBody, rowOf, settingsOf,
 } from '@/core/arch/read';
 import { isReserved } from '@/core/arch/vocabulary';
@@ -9,7 +9,22 @@ import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
 import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { Settings } from '@/core/utils/validate';
+import NoteValidator from '../note/validate';
 import type { LocalModule } from '../types';
+
+function inlineLinkErrors (declaration: ElementDeclarationNode): CompileError[] {
+  const errors: CompileError[] = [];
+  for (const attribute of inlineLinksOf(declaration)) {
+    if (attribute.value === undefined) {
+      errors.push(new CompileError(CompileErrorCode.EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]', attribute));
+      continue;
+    }
+    if (!nameOf(inlineLinkOf(attribute)?.target)) {
+      errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'An inline link reads  [link: > b],  [link: < b],  [link: <> b]  or  [link: - b]', attribute));
+    }
+  }
+  return errors;
+}
 
 // The errors a declaration shows on its own. Warnings come from the interpreter, where DBML collects them.
 function validate (declaration: ElementDeclarationNode): Report<void> {
@@ -19,22 +34,12 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
 
   switch (sort) {
     case 'node':
-    case 'group':
-    case 'note': {
+    case 'group': {
       if (!nameOf(declaration.name)) {
         errors.push(new CompileError(CompileErrorCode.MISSING_NAME, `A ${word} needs a name`, declaration));
         break;
       }
-      for (const attribute of inlineLinksOf(declaration)) {
-        if (attribute.value === undefined) {
-          errors.push(new CompileError(CompileErrorCode.EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]', attribute));
-          continue;
-        }
-        if (!nameOf(inlineLinkOf(attribute)?.target)) {
-          errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'An inline link reads  [link: > b],  [link: < b],  [link: <> b]  or  [link: - b]', attribute));
-        }
-      }
-      if (sort === 'note') break;
+      errors.push(...inlineLinkErrors(declaration));
       for (const problem of readBody(declaration, settingsOf(declaration.attributeList), sort === 'node').problems) {
         errors.push(new CompileError(
           problem.code === 'bad' ? CompileErrorCode.BAD_PROPERTY : CompileErrorCode.DUPLICATE_PROPERTY,
@@ -106,16 +111,24 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
 
 export const archModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
+    // A note is a sticky note, but one that can carry inline links
+    if (isTopLevelNote(node)) {
+      const note = node as ElementDeclarationNode;
+      return new Report(undefined, [
+        ...inlineLinkErrors(note),
+        ...new NoteValidator(compiler, note).validate(),
+      ]);
+    }
     if (!isTopLevel(node)) return Report.create(PASS_THROUGH);
     return validate(node);
   },
 
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
-    if (!isTopLevel(node)) return Report.create(PASS_THROUGH);
+    if (!isTopLevel(node) || isTopLevelNote(node)) return Report.create(PASS_THROUGH);
     const sort = archSort(node);
     const name = sort === 'kind'
       ? nameOf(node.name)
-      : sort === 'node' || sort === 'group' || sort === 'note'
+      : sort === 'node' || sort === 'group'
         ? handleOf(node)
         : undefined;
     return new Report(name === undefined
@@ -127,12 +140,12 @@ export const archModule: LocalModule = {
 
   // The `as` word is the element's name for lookup, so there is no separate alias symbol
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
-    if (!isTopLevel(node)) return Report.create(PASS_THROUGH);
+    if (!isTopLevel(node) || isTopLevelNote(node)) return Report.create(PASS_THROUGH);
     return new Report(undefined);
   },
 
   nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
-    if (!isTopLevel(node)) return Report.create(PASS_THROUGH);
+    if (!isTopLevel(node) || isTopLevelNote(node)) return Report.create(PASS_THROUGH);
     return new Report({});
   },
 };

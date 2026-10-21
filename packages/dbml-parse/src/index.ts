@@ -90,7 +90,6 @@ export {
   type CustomMetadata,
   type Node,
   type Group,
-  type NoteBox,
   type Link,
   type LinkOp,
   type Kind,

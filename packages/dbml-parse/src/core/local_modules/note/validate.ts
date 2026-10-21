@@ -7,6 +7,7 @@ import {
 } from '@/core/types/nodes';
 import { aggregateSettingList, isExpressionAQuotedString } from '@/core/utils/validate';
 import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
+import { isInlineLinkKey } from '@/core/arch/read';
 import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class NoteValidator {
@@ -85,8 +86,11 @@ export default class NoteValidator {
     const aggReport = aggregateSettingList(settingList);
     const errors = aggReport.getErrors();
     const settingMap = aggReport.getValue();
+    // An architecture file's note carries inline links; the arch module checks those
+    const isArch = this.compiler.parsedFileKind(this.declarationNode.filepath) === 'arch';
 
     forIn(settingMap, (attrs, name) => {
+      if (isArch && isInlineLinkKey(name)) return;
       switch (name) {
         // Sticky note color
         case SettingName.Color: {

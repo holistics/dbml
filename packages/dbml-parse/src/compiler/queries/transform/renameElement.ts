@@ -27,7 +27,8 @@ export function renameElement (
   if (!declaration?.name) return new Map();
 
   const renamesHandle = !declaration.alias;
-  if (renamesHandle && newName !== oldHandle && lookupVisible(this, filepath, SymbolKind.Element, newName)) {
+  const taken = lookupVisible(this, filepath, SymbolKind.Element, newName) ?? lookupVisible(this, filepath, SymbolKind.StickyNote, newName);
+  if (renamesHandle && newName !== oldHandle && taken) {
     return new Map();
   }
 

@@ -39,7 +39,7 @@ class Node extends Element {
   }
 
   generateId () {
-    this.id = this.dbState.generateId('elementId');
+    this.id = this.dbState.generateId('nodeId');
   }
 
   export () {
