@@ -92,6 +92,21 @@ describe('[example] validator', () => {
       expect(errors).toHaveLength(0);
     });
 
+    test('accepts a signed number custom metadata value on a table', () => {
+      const source = 'Table users [priority: -1, weight: +5] { id int }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('rejects a custom metadata number with more than one sign on a table', () => {
+      const source = 'Table users [priority: --1] { id int }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_TABLE_SETTING_VALUE);
+    });
+
     test('rejects a duplicate custom metadata key on a table', () => {
       const source = 'Table users [owner: "a", owner: "b"] { id int }';
       const errors = analyze(source).getErrors();
@@ -206,6 +221,13 @@ describe('[example] validator', () => {
 
     test('should accept a custom column setting with a boolean value', () => {
       const source = 'Table users { id int [pii: true] }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept a custom column setting with a signed number value', () => {
+      const source = 'Table users { id int [rank: -1, weight: +2.5] }';
       const errors = analyze(source).getErrors();
 
       expect(errors).toHaveLength(0);

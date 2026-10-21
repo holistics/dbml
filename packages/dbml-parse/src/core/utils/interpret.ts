@@ -7,7 +7,7 @@ import { ArrayNode, CallExpressionNode, FunctionExpressionNode } from '@/core/ty
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  destructureComplexVariable, destructureMemberAccessExpression, extractBooleanLiteral, extractNumericLiteral, extractQuotedStringToken, extractVariableFromExpression,
+  destructureComplexVariable, destructureMemberAccessExpression, extractBooleanLiteral, extractQuotedStringToken, extractSignedNumber, extractVariableFromExpression,
 } from './expression';
 import {
   isExpressionASignedNumberExpression, isDotDelimitedIdentifier, isExpressionAQuotedString, isExpressionAnIdentifierNode, isValidHexColor,
@@ -193,14 +193,14 @@ export function extractCustomInlineMetadata (settingMap: Settings, builtinSettin
 }
 
 // Best-effort scalar extraction for a free-form metadata value node.
-// Tries: quoted string -> color.
+// Tries: boolean -> signed number -> quoted string -> color.
 export function extractMetadataValue (node?: SyntaxNode): CustomMetadataValue | undefined {
   if (!node) return undefined;
 
   const boolean = extractBooleanLiteral(node);
   if (boolean !== null) return boolean;
 
-  const number = extractNumericLiteral(node);
+  const number = extractSignedNumber(node);
   if (number !== null) return number;
 
   const quoted = extractQuotedStringToken(node);

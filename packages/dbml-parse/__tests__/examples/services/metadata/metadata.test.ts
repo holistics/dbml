@@ -90,6 +90,20 @@ describe('[example] Metadata field value grammar', () => {
       }`)).toMatchObject({ count: 42 });
     });
 
+    it('accepts signed number values (negative and explicit positive)', () => {
+      const source = `Metadata Table public.users {
+        offset: -1
+        boost: +5
+        delta: -1.5
+        scale: +0.25
+      }`;
+      const result = interpret(TABLE + source);
+      expect(result.getErrors()).toHaveLength(0);
+      expect(metadataValues(source)).toMatchObject({
+        offset: -1, boost: 5, delta: -1.5, scale: 0.25,
+      });
+    });
+
     it('accepts boolean values (true and false)', () => {
       const result = interpret(`${TABLE}Metadata Table public.users {
         pii: true
@@ -113,6 +127,19 @@ describe('[example] Metadata field value grammar', () => {
       expect(metadataValues(`Metadata Table public.users {
         masking: partial
       }`)).not.toHaveProperty('masking');
+    });
+
+    it('rejects a number with more than one sign', () => {
+      const source = `Metadata Table public.users {
+        a: --1
+        b: +-1
+      }`;
+      const result = interpret(TABLE + source);
+      const codes = result.getErrors().map((e) => e.code);
+      expect(codes.filter((c) => c === CompileErrorCode.INVALID_METADATA_FIELD)).toHaveLength(2);
+      const values = metadataValues(source);
+      expect(values).not.toHaveProperty('a');
+      expect(values).not.toHaveProperty('b');
     });
   });
 

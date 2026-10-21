@@ -211,3 +211,38 @@ Metadata Table users {
   expect(reparsed.schemas[0].tables[0].metadata).toEqual(users.metadata);
   expect(reparsed.schemas[0].tables[0].fields[0].metadata).toEqual({ rank: 3, pii: true });
 });
+
+test('@dbml/core - exporter metadata blocks with signed number values', () => {
+  const dbml = `
+Table users {
+  id int [rank: -3, weight: +2]
+}
+
+Metadata Table users {
+  offset: -1
+  boost: +5
+  delta: -1.5
+}
+`.trim();
+
+  const database = (new Parser()).parse(dbml, 'dbmlv2');
+  const users = database.schemas[0].tables[0];
+  expect(users.metadata).toEqual({ offset: -1, boost: 5, delta: -1.5 });
+  expect(users.fields[0].metadata).toEqual({ rank: -3, weight: 2 });
+
+  // A redundant `+` is not preserved: values are exported as plain numbers
+  const out = exporter.export(dbml, 'dbml');
+  expect(out).toContain(`Metadata Table "users" {
+  offset: -1
+  boost: 5
+  delta: -1.5
+}`);
+  expect(out).toContain(`Metadata Column "users"."id" {
+  rank: -3
+  weight: 2
+}`);
+
+  const reparsed = (new Parser()).parse(out, 'dbmlv2');
+  expect(reparsed.schemas[0].tables[0].metadata).toEqual(users.metadata);
+  expect(reparsed.schemas[0].tables[0].fields[0].metadata).toEqual({ rank: -3, weight: 2 });
+});
