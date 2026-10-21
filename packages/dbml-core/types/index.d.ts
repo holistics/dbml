@@ -45,7 +45,7 @@ export {
   tryExtractDateTime,
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
-  formatRecordValue,
+  formatTypedValue,
   dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,
   Filepath,

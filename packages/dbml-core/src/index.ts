@@ -45,7 +45,7 @@ export {
   tryExtractDateTime,
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
-  formatRecordValue,
+  formatTypedValue,
   // Monaco editor syntax highlighting
   dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,

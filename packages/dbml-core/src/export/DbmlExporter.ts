@@ -1,6 +1,6 @@
 import { groupBy, isEmpty, reduce } from 'lodash-es';
 import {
-  addDoubleQuoteIfNeeded, escapeString, formatRecordValue, getRelationshipOp, normalizeQualifiedName, parseCardinality,
+  addDoubleQuoteIfNeeded, escapeString, formatTypedValue, getRelationshipOp, normalizeQualifiedName, parseCardinality,
 } from '@dbml/parse';
 import type { CustomMetadata } from '@dbml/parse';
 import { shouldPrintSchema } from './utils';
@@ -464,7 +464,7 @@ class DbmlExporter {
       });
 
       // Build data rows
-      const rowStrs = allRows.map((row) => `  ${row.map(formatRecordValue).join(', ')}`,
+      const rowStrs = allRows.map((row) => `  ${row.map(formatTypedValue).join(', ')}`,
       );
 
       const exampleFlag = groupRecords.some((r) => r.example) ? ' [example]' : '';
