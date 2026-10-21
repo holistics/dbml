@@ -23,14 +23,13 @@ import {
   extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
+import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
 import {
-  aggregateSettingList, isExpressionAQuotedString, isValidHexColor, isValidPartialInjection,
-} from '@/core/utils/validate';
-import {
-  extractColor, extractElementName, getTokenPosition, normalizeNote, processColumnType,
+  extractElementName, extractHexColor, extractNote, getTokenPosition, normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
-import { extractCustomInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
+import { assignInlineMetadata, extractCustomInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata, defineField, type MetadataFieldRegistry } from '../metadata/utils';
+import { getProgramSymbol } from '../utils';
 
 export class TableInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -167,19 +166,7 @@ export class TableInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    this.table.headerColor = settingMap[SettingName.HeaderColor]?.length
-      ? extractColor(settingMap[SettingName.HeaderColor]?.at(0)?.value)
-      : undefined;
-
-    const [
-      noteNode,
-    ] = settingMap[SettingName.Note] || [];
-    this.table.note = noteNode && {
-      value: normalizeNote(extractQuotedStringToken(noteNode?.value)!),
-      token: getTokenPosition(noteNode),
-    };
-
-    this.table.metadata = extractCustomInlineMetadata(settingMap, Object.keys(TABLE_METADATA_FIELDS) as SettingName[]);
+    assignInlineMetadata(this.table, settingMap, TABLE_METADATA_FIELDS);
 
     return [];
   }
@@ -302,8 +289,7 @@ export class TableInterpreter {
 
     column.metadata = extractCustomInlineMetadata(settingMap, RECOGNIZED_COLUMN_SETTINGS);
 
-    const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
-    const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
+    const programSymbol = getProgramSymbol(this.compiler, this.filepath);
 
     const refs = settingMap[SettingName.Ref] || [];
     column.inline_refs = refs.flatMap((ref) => {
@@ -427,31 +413,28 @@ export const RECOGNIZED_COLUMN_SETTINGS: readonly SettingName[] = [
 ];
 
 export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, SettingName.Note | SettingName.HeaderColor> = {
-  [SettingName.Note]: {
-    isValidBuiltinFieldValue: isExpressionAQuotedString,
+  [SettingName.Note]: defineField<Table, string>({
+    parse: extractNote,
     message: "'note' must be a string literal",
-    assignBuiltinField (element, value, token) {
-      if (typeof value !== 'string') return;
+    assign (element, value, token) {
       element.note = { value, token };
     },
-  },
-  [SettingName.HeaderColor]: {
-    isValidBuiltinFieldValue: isValidHexColor,
+  }),
+  [SettingName.HeaderColor]: defineField<Table, Color>({
+    parse: extractHexColor,
     message: "'headercolor' must be a color literal",
-    assignBuiltinField (element, value) {
-      if (typeof value !== 'string') return;
-      element.headerColor = value as Color;
+    assign (element, value) {
+      element.headerColor = value;
     },
-  },
+  }),
 };
 
 export const COLUMN_METADATA_FIELDS: MetadataFieldRegistry<Column, SettingName.Note> = {
-  [SettingName.Note]: {
-    isValidBuiltinFieldValue: isExpressionAQuotedString,
+  [SettingName.Note]: defineField<Column, string>({
+    parse: extractNote,
     message: "'note' must be a quoted string",
-    assignBuiltinField (element, value, token) {
-      if (typeof value !== 'string') return;
+    assign (element, value, token) {
       element.note = { value, token };
     },
-  },
+  }),
 };

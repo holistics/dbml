@@ -159,7 +159,7 @@ export function validateSettingList (settingList?: ListExpressionNode): Report<S
           )));
         }
         attrs.forEach((attr) => {
-          if (!specs.isValidBuiltinFieldValue(attr.value)) {
+          if (specs.parse(attr.value) === undefined) {
             errors.push(new CompileError(
               CompileErrorCode.INVALID_TABLE_SETTING_VALUE,
               specs.message,

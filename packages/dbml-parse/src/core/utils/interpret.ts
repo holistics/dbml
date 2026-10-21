@@ -16,6 +16,7 @@ import {
 import { extractNumber, getNumberTextFromExpression } from './numbers';
 import { NONE_COLOR } from '@/constants';
 import { SettingName } from '../types';
+import type { MetadataFieldRegistry, MetadataTarget } from '@/core/global_modules/metadata/utils';
 
 export function getTokenPosition (node: SyntaxNode): TokenPosition {
   return {
@@ -58,6 +59,16 @@ export function extractElementName (nameNode: SyntaxNode): {
     name,
     schemaName: fragments.slice(0, -1),
   };
+}
+
+// A quoted string normalized as note content
+export function extractNote (node?: SyntaxNode): string | undefined {
+  const content = extractQuotedStringToken(node);
+  return content === undefined ? undefined : normalizeNote(content);
+}
+
+export function extractHexColor (node?: SyntaxNode): Color | undefined {
+  return isValidHexColor(node) ? node.expression.literal.value as Color : undefined;
 }
 
 export function extractColor (node?: SyntaxNode): Color | undefined {
@@ -173,8 +184,8 @@ export function processColumnType (
 }
 
 /**
-  * Extract inline custom metadata from an aggregated setting list,
-  * excluding keys that are natively attached to the element (headercolor and note in `table`, color in `tablegroup`, .etc).
+  * Extract inline custom metadata from an aggregated setting list, excluding the given recognized settings.
+  * Used for columns, whose recognized settings (pk, ref, note, .etc) are interpreted by the column symbol rather than field specs.
   *
   * NOTE: This is used during interpret phase, so no need to validate values, just extract them
   */
@@ -190,6 +201,36 @@ export function extractCustomInlineMetadata (settingMap: Settings, builtinSettin
   }
 
   return values;
+}
+
+/**
+  * Interpret an element's aggregated setting list as metadata:
+  * - Builtin fields (headercolor and note in `table`, color in `tablegroup`, .etc) are parsed and assigned onto the element by their field spec
+  * - Every other key becomes free-form custom metadata on `element.metadata`
+  *
+  * Invalid values are skipped (reported at validate phase).
+  */
+export function assignInlineMetadata<T extends MetadataTarget> (
+  element: Partial<T>,
+  settingMap: Settings,
+  registry: MetadataFieldRegistry<T, any>,
+): void {
+  const metadata: CustomMetadata = {};
+
+  for (const [name, attrs] of Object.entries(settingMap)) {
+    const attr = attrs[0];
+    const field = registry[name];
+    if (field) {
+      const value = field.parse(attr.value);
+      if (value !== undefined) field.assign(element, value, getTokenPosition(attr));
+      continue;
+    }
+
+    const value = extractMetadataValue(attr.value);
+    if (value !== undefined) metadata[name] = value;
+  }
+
+  element.metadata = metadata;
 }
 
 // Best-effort scalar extraction for a free-form metadata value node.

@@ -138,7 +138,7 @@ export default class MetadataValidator {
       // If a key matches a builtin setting for the target element, validate with the element's specs
       const builtinSpecs = targetKind ? METADATA_FIELDS_BY_KIND[targetKind][key as SettingName] : undefined;
       if (builtinSpecs) {
-        if (!builtinSpecs.isValidBuiltinFieldValue(sub.body?.callee)) {
+        if (builtinSpecs.parse(sub.body?.callee) === undefined) {
           return [
             new CompileError(
               CompileErrorCode.INVALID_METADATA_FIELD,

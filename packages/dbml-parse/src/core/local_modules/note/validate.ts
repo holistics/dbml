@@ -95,7 +95,7 @@ export default class NoteValidator {
             errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_NOTE_SETTING, '\'color\' can only appear once', attr)));
           }
           attrs.forEach((attr) => {
-            if (!field.isValidBuiltinFieldValue(attr.value)) {
+            if (field.parse(attr.value) === undefined) {
               errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, field.message, attr.value || attr.name!));
             }
           });

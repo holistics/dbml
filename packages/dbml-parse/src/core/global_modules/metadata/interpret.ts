@@ -9,8 +9,7 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { MetadataValues } from '@/core/types/schemaJson';
-import { getTokenPosition, normalizeNote } from '@/core/utils/interpret';
-import { extractMetadataValue } from '../../utils/interpret';
+import { getTokenPosition } from '@/core/utils/interpret';
 
 export default class MetadataInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -25,7 +24,7 @@ export default class MetadataInterpreter {
     this.values = {};
   }
 
-  // Interpret a single metadata block body into its key/value pairs
+  // Interpret a single metadata block body into its key/value-node pairs
   // target is resolved separately via the resolution index
   interpret (): Report<MetadataValues> {
     const errors = this.interpretValues(this.declarationNode.body);
@@ -44,11 +43,11 @@ export default class MetadataInterpreter {
         ? stmt.body.callee
         : undefined;
 
-      const value = extractMetadataValue(valueNode);
-      if (value === undefined) continue;
+      if (!valueNode) continue;
 
+      // Values are parsed when attached, once the target's builtin fields are known
       this.values[key] = {
-        value: (key === 'note' && typeof value === 'string') ? normalizeNote(value) : value,
+        node: valueNode,
         token: getTokenPosition(stmt),
       };
     }

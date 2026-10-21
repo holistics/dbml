@@ -209,7 +209,7 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
         }
         attrs.forEach((attr) => {
           const field = TABLE_METADATA_FIELDS[SettingName.HeaderColor];
-          if (!field.isValidBuiltinFieldValue(attr.value)) {
+          if (field.parse(attr.value) === undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, field.message, attr.value || attr.name!));
           }
         });
@@ -220,7 +220,7 @@ export function validateTableSettings (settingList?: ListExpressionNode): Report
         }
         attrs.forEach((attr) => {
           const field = TABLE_METADATA_FIELDS[SettingName.Note];
-          if (!field.isValidBuiltinFieldValue(attr.value)) {
+          if (field.parse(attr.value) === undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, field.message, attr.value || attr.name!));
           }
         });
@@ -298,7 +298,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         }
         attrs.forEach((attr) => {
           const field = COLUMN_METADATA_FIELDS[SettingName.Note];
-          if (!field.isValidBuiltinFieldValue(attr.value)) {
+          if (field.parse(attr.value) === undefined) {
             errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, field.message, attr.value || attr.name!));
           }
         });

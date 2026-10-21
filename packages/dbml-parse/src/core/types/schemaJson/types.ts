@@ -2,6 +2,7 @@ import { NONE_COLOR } from '@/constants';
 import type { Filepath } from '../filepath';
 import type { Position } from '../position';
 import type { RelationshipOp, RelationCardinality } from '../relation';
+import type { SyntaxNode } from '../nodes';
 
 export type CustomMetadataValue = string | Color | number | boolean;
 export type CustomMetadata = Record<string, CustomMetadataValue>;
@@ -315,11 +316,12 @@ export interface TableRecord {
   token: TokenPosition;
 }
 
-// Intermediate, per-block interpreted form of a Metadata declaration: the key/value pairs from one `Metadata` block body, with each value's source token.
+// Intermediate, per-block interpreted form of a Metadata declaration: the key/value-node pairs from one `Metadata` block body, with each value's source token.
 // NOT part of the emitted Database.
-// The interpreter looks the block up by its target symbol, merges every block targeting the same element, and attaches the merged values onto that element's `metadata` field (Table/Column/TableGroup/Note).
+// Values stay as source nodes: the element interpreter merges every block targeting the same element and parses each value
+// against the field it lands in (a builtin field spec or free-form custom metadata) before attaching it.
 // Only lives inside the metadata pass.
-export type MetadataValues = Record<string, { value: CustomMetadataValue; token: TokenPosition }>;
+export type MetadataValues = Record<string, { node: SyntaxNode; token: TokenPosition }>;
 
 export type Project =
   | Record<string, never>
