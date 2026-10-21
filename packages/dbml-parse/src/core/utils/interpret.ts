@@ -192,8 +192,7 @@ export function extractCustomInlineMetadata (settingMap: Settings, builtinSettin
   return values;
 }
 
-// Best-effort scalar extraction for a free-form metadata value node.
-// Tries: quoted string -> color.
+// Best-effort scalar extraction for a free-form metadata value node, tries quoted string then color
 export function extractMetadataValue (node?: SyntaxNode): string | Color | undefined {
   if (!node) return undefined;
 

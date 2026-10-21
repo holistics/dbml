@@ -80,9 +80,7 @@ export {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
 };
 
-// Sentinel placed in the cache while a query is being computed.
-// If a the compiler reads `COMPUTING` from the cache
-// it means we have a cycle.
+// Sentinel placed in the cache while a query is being computed, indicating a cycle
 const COMPUTING = Symbol('COMPUTING');
 
 // The unique identifier for a query
@@ -328,7 +326,7 @@ export default class Compiler {
       ] = args;
       const filepath = firstArg instanceof SyntaxNode ? firstArg.filepath : firstArg;
 
-      // Detect source changes before cache lookup.
+      // Detect source changes before cache lookup
       this.cleanStaleLocalCache(filepath);
 
       const filepathId = filepath.intern();
@@ -371,139 +369,42 @@ export default class Compiler {
     }) as (...args: Args) => Return;
   }
 
-  // A local query
-  // Lex + parse a single file into an AST
-  // Signature: (filepath: Filepath) => Report<FileParseIndex>
   parseFile = this.localQuery(parseFile);
-  // A global query
-  // Lex + parse all entry-point files
-  // Returns a map from the file's absolute path to FileParseIndex
-  // Signature: () => Map<string, Report<FileParseIndex>>
   parseProject = this.globalQuery(parseProject);
 
-  // A local query
-  // Validate an AST node and return any compile errors
-  // Signature: (node: SyntaxNode) => Report<void> | Report<Unhandled>
   validateNode = this.localQuery(validateNode);
-  // A local query
-  // Validate a single file's AST
-  // Signature: (filepath: Filepath) => Report<void>
   validateFile = this.localQuery(validateFile);
-  // A local query
-  // Return the fully-qualified name segments of an AST node (e.g. ['public', 'users'])
-  // Signature: (node: SyntaxNode) => Report<string[] | undefined> | Report<Unhandled>
   nodeFullname = this.localQuery(nodeFullname);
-  // A local query
-  // Return the alias string of an AST node if one is declared
-  // Signature: (node: SyntaxNode) => Report<string | undefined> | Report<Unhandled>
   nodeAlias = this.localQuery(nodeAlias);
-  // A local query
-  // Return the settings/options map of an AST node
-  // Signature: (node: SyntaxNode) => Report<Settings> | Report<Unhandled>
   nodeSettings = this.localQuery(nodeSettings);
-  // A global query
-  // Canonical name of a symbol as seen from a file (real name > use alias > alias > original)
-  // Signature: (filepath: Filepath, symbol: NodeSymbol) => Report<{ schema: string; name: string } | undefined>
   canonicalName = this.globalQuery(canonicalName);
 
-  // A global query
-  // Run the binder on a single AST node
-  // Signature: (node: SyntaxNode) => Report<void> | Report<Unhandled>
   bindNode = this.globalQuery(bindNode);
-  // A global query
-  // Bind a single file's AST (calls bindNode on the root)
-  // Signature: (filepath: Filepath) => Report<void>
   bindFile = this.globalQuery(bindFile);
-  // A global query
-  // Bind all entry-point files in dependency order
-  // Returns a map from the file's absolute path to bind errors
-  // Signature: () => Map<string, Report<void>>
   bindProject = this.globalQuery(bindProject);
 
-  // A global query
-  // Interpret a symbol into a SchemaElement using enriched symbol API
-  // Signature: (symbol: NodeSymbol, filepath?: Filepath) => Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled>
   interpretSymbol = this.globalQuery(interpretSymbol);
-  // A global query
-  // Interpret metadata (ref, check, index, record) into a SchemaElement
-  // Signature: (metadata: SymbolMetadata) => Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled>
   interpretMetadata = this.globalQuery(interpretMetadata);
-  // A global query
-  // Interpret a single file's AST into a raw Database
-  // Signature: (filepath: Filepath) => Report<Readonly<Database> | undefined>
   interpretFile = this.globalQuery(interpretFile);
 
-  // A global query
-  // Interpret all reachable files and merge into a MasterDatabase (A database but for multifile)
-  // Signature: () => Report<MasterDatabase>
   interpretProject = this.globalQuery(interpretProject);
-  // A global query
-  // Return the NodeSymbol for a single SyntaxNode
-  // Signature: (node: SyntaxNode) => Report<NodeSymbol> | Report<Unhandled>
   nodeSymbol = this.globalQuery(nodeSymbol);
-  // A global query
-  // Return the NodeMetadata for a single SyntaxNode
-  // Signature: (node: SyntaxNode) => Report<NodeMetadata> | Report<Unhandled>
   nodeMetadata = this.globalQuery(nodeMetadata);
-  // A global query
-  // Return all direct child symbols of a symbol
-  // Signature: (symbol: NodeSymbol) => Report<NodeSymbol[]> | Report<Unhandled>
   symbolMembers = this.globalQuery(symbolMembers);
-  // (Internal) global query
-  // Build a name-indexed lookup map for a symbol's members (used by lookupMembers)
-  // This is for pure performance purposes
-  // Signature: (symbol: NodeSymbol) => Map<string, NodeSymbol[]>
-  // @internal
   symbolMembersLookupMap = this.globalQuery(symbolMembersLookupMap);
-  // A global query
-  // Look up a member by kind and name inside a symbol or node scope
-  // Signature: (symbolOrNode: NodeSymbol | SyntaxNode, targetKind: SymbolKind, targetName: string) => NodeSymbol | undefined
   lookupMembers = this.globalQuery(lookupMembers);
-  // A global query
-  // Resolve what symbol a reference node points to. Related: nodeSymbol, symbolReferences.
-  // Signature: (node: SyntaxNode) => Report<NodeSymbol | undefined> | Report<Unhandled>
   nodeReferee = this.globalQuery(nodeReferee);
-  // A global query
-  // Build an index for fast symbol references and symbol metadata lookup.
-  // Signature: () => Report<ResolutionIndex> | Report<Unhandled>
   resolutionIndex = this.globalQuery(resolutionIndex);
-  // A global query
-  // Return all nodes that refer to this symbol.
-  // Signature: (symbol: NodeSymbol) => Report<SyntaxNode[]> | Report<Unhandled>
   symbolReferences = this.globalQuery(symbolReferences);
-  // Return parent symbols that contain this symbol as a member.
-  // Signature: (symbol: NodeSymbol) => NodeSymbol[]
   symbolParent = this.globalQuery(symbolParent);
-  // A global query
-  // Return all metadata that attaches to this symbol.
-  // Signature: (symbol: NodeSymbol) => Report<NodeMetadata[]> | Report<Unhandled>
   symbolMetadata = this.globalQuery(symbolMetadata);
-  // A global query
-  // Return all AliasSymbols across the project whose originalSymbol is the given symbol (transitive).
-  // Signature: (symbol: NodeSymbol) => Report<AliasSymbol[]>
   symbolAliases = this.globalQuery(symbolAliases);
-  // A global query
-  // Return all UseSymbols across the project whose originalSymbol is the given symbol (transitive).
-  // Signature: (symbol: NodeSymbol) => Report<UseSymbol[]>
   symbolUses = this.globalQuery(symbolUses);
 
-  // A local query
-  // Return the direct import filepath IDs declared by use statements in a file. Related: reachableFiles.
-  // Signature: (filepath: Filepath) => Filepath[]
   fileDependencies = this.localQuery(fileDependencies);
-  // A global query
-  // BFS-traverse imports from an entry filepath and return all reachable files. Related: fileDependencies.
-  // Signature: (entry: Filepath) => Filepath[]
   reachableFiles = this.globalQuery(reachableFiles);
-  // A global query
-  // Return the importable members (non-schema, schema, reuses, uses) of a schema symbol, program symbol, or file.
-  // Filepath delegates to ProgramSymbol for canonical schema ownership.
-  // Signature: (symbolOrFilepath: SchemaSymbol | ProgramSymbol | Filepath) => Report<{ nonSchemaMembers, schemaMembers, reuses, uses }>
   usableMembers = this.globalQuery(usableMembers);
 
-  // A local query
-  // Given a file and an offset, return the deepest AST node or token containing that position.
-  // Signature: (filepath: Filepath, offset: number) => SyntaxNode | SyntaxToken | undefined
   nodeAtPosition = this.localQuery(nodeAtPosition);
 
   // transform queries

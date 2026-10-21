@@ -218,7 +218,7 @@ describe('[inline] multifile language services', () => {
   });
 
   describe('circular-ref project', () => {
-    // Circular structures must not crash or infinite-loop in language services.
+    // Circular structures must not crash or infinite-loop in language services
     it('should handle circular references gracefully', () => {
       const { compiler, files } = setupCompiler(CIRCULAR_REF);
       const definitionProvider = new DBMLDefinitionProvider(compiler);
@@ -269,9 +269,8 @@ describe('[inline] multifile language services', () => {
   });
 
   describe('robustness sweep across representative projects', () => {
-    // Per-project describes already exercise binding; this loop only adds the
-    // (line=2, col=5) probe across multiple files of each project to catch
-    // any provider that crashes when invoked at a non-trivial position.
+    // Per-project describes already exercise binding
+    // this loop adds a (line=2, col=5) probe to catch providers that crash at non-trivial positions
     const PROJECTS: ProjectFiles[] = [ENUM_IMPORTS, ALIAS_AND_SCHEMA_STRIP, TRANSITIVE_REF_CHAIN];
 
     it('language services do not throw at probe positions', () => {

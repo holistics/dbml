@@ -112,7 +112,7 @@ function collectPartialRefs (
         if (!multiplicities) continue;
 
         // When rightTable is the partial itself (inline self-reference),
-        // resolve it to the concrete table being expanded.
+        // resolve it to the concrete table being expanded
         const rightTable = rightTableOrPartial instanceof TablePartialSymbol
           && rightTableOrPartial.originalSymbol === partialSymbol.originalSymbol
           ? tableSymbol

@@ -93,8 +93,7 @@ describe('[example - record] composite primary key constraints', () => {
     const result = interpret(source);
     const infos = result.getInfos();
 
-    // One info per PK column per duplicate row -> 2 rows × 2 columns = 4,
-    // each anchored on the offending row's column cell.
+    // One info per PK column per duplicate row: 2 rows x 2 columns = 4, each anchored on the offending row's column cell
     expect(infos.length).toBe(4);
     for (const info of infos) {
       expect(info.diagnostic).toBe('Duplicate Composite PK: `(order_items.order_id, order_items.product_id)` = `(1, 100)`');

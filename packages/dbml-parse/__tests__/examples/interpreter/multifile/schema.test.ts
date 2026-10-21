@@ -104,8 +104,8 @@ Table orders {
 });
 
 describe('[example] multifile interpreter - schema merging: tables under same named schema', () => {
-  // File A contributes auth.users; File B contributes auth.posts.
-  // Consumer imports from both and both should appear under the auth schema.
+  // File A contributes auth.users, File B contributes auth.posts
+  // Consumer imports from both, both should appear under the auth schema
   const { compiler } = setupCompiler({
     '/users-db.dbml': `
 Table auth.users {
@@ -543,10 +543,10 @@ use { schema public as nested } from './nested.dbml'
 });
 
 describe('[example] use { schema public } merges wildcard-reused tables transitively', () => {
-  // a.dbml imports schema public from b.
-  // b.dbml has `reuse * from './c'` (wildcard) and `use * from './a'`, plus Table T.
-  // c.dbml defines Table E.
-  // Ref T.id > E.id in a.dbml should resolve because E is reused into b via wildcard.
+  // a.dbml imports schema public from b
+  // b.dbml has `reuse * from './c'` (wildcard) and `use * from './a'`, plus Table T
+  // c.dbml defines Table E
+  // Ref T.id > E.id in a.dbml should resolve because E is reused into b via wildcard
   const { compiler } = setupCompiler({
     '/a.dbml': `
 use { schema public } from './b'
@@ -585,10 +585,10 @@ Table E {
 });
 
 describe('[example] chained wildcard reuse through schema merge (a -> b -> c -> d)', () => {
-  // d.dbml defines Table T3.
-  // c.dbml wildcard-reuses d.
-  // b.dbml wildcard-reuses c, defines Table T2.
-  // a.dbml imports schema public from b - should pull in T2 and T3 transitively.
+  // d.dbml defines Table T3
+  // c.dbml wildcard-reuses d
+  // b.dbml wildcard-reuses c, defines Table T2
+  // a.dbml imports schema public from b, should pull in T2 and T3 transitively
   const { compiler } = setupCompiler({
     '/d.dbml': `
 Table T3 {
@@ -629,9 +629,9 @@ Ref: T2.id > T3.id
 });
 
 describe('[example] non-public schema with wildcard reuse through schema merge', () => {
-  // c.dbml defines Table auth.roles.
-  // b.dbml wildcard-reuses c, defines Table auth.users.
-  // a.dbml imports schema auth from b - should pull both auth.users and auth.roles.
+  // c.dbml defines Table auth.roles
+  // b.dbml wildcard-reuses c, defines Table auth.users
+  // a.dbml imports schema auth from b, should pull both auth.users and auth.roles
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table auth.roles {
@@ -669,10 +669,10 @@ Ref: auth.users.id > auth.roles.id
 });
 
 describe('[example] wildcard reuse from multiple files through schema merge', () => {
-  // c.dbml defines Table T1.
-  // d.dbml defines Table T2.
-  // b.dbml wildcard-reuses both c and d.
-  // a.dbml imports schema public from b - should pull T1 and T2.
+  // c.dbml defines Table T1
+  // d.dbml defines Table T2
+  // b.dbml wildcard-reuses both c and d
+  // a.dbml imports schema public from b, should pull T1 and T2
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table T1 {
@@ -712,10 +712,10 @@ Ref: T1.id > T2.id
 });
 
 describe('[example] mixed selective and wildcard reuses through schema merge', () => {
-  // c.dbml defines Table T_wild.
-  // d.dbml defines Table T_sel.
-  // b.dbml has `reuse * from './c'` (wildcard) and `reuse { table T_sel } from './d'` (selective).
-  // a.dbml imports schema public from b - should pull both.
+  // c.dbml defines Table T_wild
+  // d.dbml defines Table T_sel
+  // b.dbml has `reuse * from './c'` (wildcard) and `reuse { table T_sel } from './d'` (selective)
+  // a.dbml imports schema public from b, should pull both
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table T_wild {
@@ -755,9 +755,9 @@ Ref: T_wild.id > T_sel.id
 });
 
 describe('[example] use-only wildcard is NOT transitive through schema merge', () => {
-  // c.dbml defines Table E.
-  // b.dbml has `use * from './c'` (NOT reuse), defines Table T.
-  // a.dbml imports schema public from b - should see T but NOT E.
+  // c.dbml defines Table E
+  // b.dbml has `use * from './c'` (NOT reuse), defines Table T
+  // a.dbml imports schema public from b, should see T but NOT E
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table E {
@@ -788,8 +788,8 @@ use { schema public } from './b'
 });
 
 describe('[example] nested schema import places members under correct schema', () => {
-  // base.dbml defines Table x.y.t1.
-  // main.dbml imports schema x.y from base - t1 should be under schema x.y, not x.
+  // base.dbml defines Table x.y.t1
+  // main.dbml imports schema x.y from base, t1 should be under schema x.y not x
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.y.t1 {
@@ -815,8 +815,8 @@ use { schema x.y } from './base'
 });
 
 describe('[example] nested schema import with ref resolution', () => {
-  // base.dbml defines Table x.y.users and Table x.y.orders.
-  // main.dbml imports schema x.y from base, then uses a ref between them.
+  // base.dbml defines Table x.y.users and Table x.y.orders
+  // main.dbml imports schema x.y from base then uses a ref between them
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.y.users {
@@ -846,9 +846,9 @@ Ref: x.y.orders.user_id > x.y.users.id
 });
 
 describe('[example] nested schema with wildcard reuse through schema merge', () => {
-  // c.dbml defines Table x.y.deep.
-  // b.dbml wildcard-reuses c, defines Table x.y.local.
-  // a.dbml imports schema x.y from b - should pull both.
+  // c.dbml defines Table x.y.deep
+  // b.dbml wildcard-reuses c, defines Table x.y.local
+  // a.dbml imports schema x.y from b, should pull both
   const { compiler } = setupCompiler({
     '/c.dbml': `
 Table x.y.deep {
@@ -886,9 +886,9 @@ Ref: x.y.local.id > x.y.deep.id
 });
 
 describe('[example] reuse * from file with reuse { schema x as y } merges to aliased schema', () => {
-  // base.dbml has Table x.t1 and Table x.t2.
-  // mid.dbml reuses schema x aliased as y.
-  // consumer.dbml does reuse * from mid - should see t1 and t2 under schema y.
+  // base.dbml has Table x.t1 and Table x.t2
+  // mid.dbml reuses schema x aliased as y
+  // consumer.dbml does reuse * from mid, should see t1 and t2 under schema y
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.t1 {
@@ -931,7 +931,7 @@ Ref: y.t2.t1_id > y.t1.id
 });
 
 describe('[example] reuse * from file with use { schema x as y } does NOT merge (use is local-only)', () => {
-  // mid.dbml uses `use` (not reuse), so the alias is local - not transitively visible.
+  // mid.dbml uses `use` (not reuse), so the alias is local and not transitively visible
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table x.t1 {

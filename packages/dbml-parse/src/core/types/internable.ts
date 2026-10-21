@@ -1,6 +1,5 @@
-// An entity that can be interned , i.e. reduced to a stable, opaque identity
-// suitable for use as a map key or cache key.
-// Id must be a primitive type so it can serve as a reliable Map key.
+// An entity that can be interned, i.e. reduced to a stable, opaque identity suitable for use as a map key or cache key
+// Id must be a primitive type so it can serve as a reliable Map key
 export interface Internable<Id extends Primitive> {
   intern (): Id;
 }

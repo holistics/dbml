@@ -93,8 +93,8 @@ export const useModule: GlobalModule = {
     if (!useSpecifier) return Report.create(PASS_THROUGH);
 
     // `node` is the terminal name fragment when it IS the specifier name,
-    // or is the rightmost part of a qualified name (e.g. `table` in `public.table`).
-    // Otherwise it's a schema prefix -> always resolved as Schema.
+    // or is the rightmost part of a qualified name (e.g. `table` in `public.table`)
+    // Otherwise it's a schema prefix, always resolved as Schema
     const isTerminalFragment = useSpecifier.name === node
       || (isAccessExpression(useSpecifier.name) && useSpecifier.name.rightExpression === node);
     const symbolKind = isTerminalFragment ? useSpecifier.getSymbolKind() : SymbolKind.Schema;
@@ -179,8 +179,8 @@ export const useModule: GlobalModule = {
     }
 
     if (isUseSpecifier(node)) {
-      // Call nodeReferee on the name expression (not the specifier itself) so that
-      // kind-mismatch and nonexistent-name errors are produced during binding.
+      // Call nodeReferee on the name expression (not the specifier itself)
+      // so that kind-mismatch and nonexistent-name errors are produced during binding
       if (!node.name) return new Report(undefined);
       const errors = compiler.nodeReferee(node.name).getErrors();
 

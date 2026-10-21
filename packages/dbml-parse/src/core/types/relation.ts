@@ -185,7 +185,7 @@ export function makeRelationshipRequired (op: RelationshipOp): BaseRelationshipO
   return op.replace(/\?/g, '') as BaseRelationshipOp;
 }
 
-// Reverse of getMultiplicities: cardinality pair -> operator.
+// Reverse of getMultiplicities: cardinality pair -> operator
 export function getRelationshipOp (
   left: RelationCardinality,
   right: RelationCardinality,
@@ -193,8 +193,8 @@ export function getRelationshipOp (
   return CARDINALITY_TO_OP.get(`${left}-${right}`) ?? '<>';
 }
 
-// Cardinality transforms: adjust min or max while preserving the other.
-// Used by code actions to suggest operator changes.
+// Cardinality transforms: adjust min or max while preserving the other
+// Used by code actions to suggest operator changes
 
 // Set min to 0 (allow null): 1 -> 0..1, * -> 0..*
 export function makeCardinalityOptional (rel: RelationCardinality): RelationCardinality {

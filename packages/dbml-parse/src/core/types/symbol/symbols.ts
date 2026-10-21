@@ -140,7 +140,7 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     return compiler.canonicalName(filepath, this).getValue();
   }
 
-  // Return the interpreted name: canonical name with DEFAULT_SCHEMA_NAME converted to null.
+  // Return the interpreted name: canonical name with DEFAULT_SCHEMA_NAME converted to null
   interpretedName (compiler: Compiler, filepath: Filepath): {
     schema: string | null;
     name: string;
@@ -160,7 +160,7 @@ export abstract class NodeSymbol implements Internable<InternedNodeSymbol> {
     };
   }
 
-  // Return parsed settings for this symbol's declaration node.
+  // Return parsed settings for this symbol's declaration node
   settings (compiler: Compiler): Settings | undefined {
     if (!this.declaration) return undefined;
     return compiler.nodeSettings(this.declaration).getFiltered(UNHANDLED);

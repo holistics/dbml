@@ -112,12 +112,12 @@ function validateForeignKey (
   ];
 }
 
-// Validate left records against the right cardinality.
-//   - right min = 0  -> left allows NULL
-//   - right min >= 1 -> left must not be NULL
-//   - right max = 1  -> left must map to exactly 1 right row (FK existence)
-//   - right max = * and left min >= 1 -> left must exist in right
-//   - right max = * and left min = 0 and left max = * -> no FK existence constraint
+// Validate left records against the right cardinality
+//   right min = 0  -> left allows NULL
+//   right min >= 1 -> left must not be NULL
+//   right max = 1  -> left must map to exactly 1 right row (FK existence)
+//   right max = *, left min >= 1 -> left must exist in right
+//   right max = *, left min = 0, left max = * -> no FK existence constraint
 function validateEndpoint (
   compiler: Compiler,
   leftTable: TableInfo,

@@ -10,8 +10,8 @@ export interface CanonicalName {
   name: string;
 }
 
-// Canonical name of a symbol as seen from a specific file.
-// Priority: real name (if declared in that file) > first use alias > first alias > original name.
+// Canonical name of a symbol as seen from a specific file
+// Priority: real name (if declared in that file) > first use alias > first alias > original name
 export function canonicalName (this: Compiler, filepath: Filepath, symbol: NodeSymbol): Report<CanonicalName | undefined> {
   const original = symbol.originalSymbol;
 

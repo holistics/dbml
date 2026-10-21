@@ -25,9 +25,8 @@ export default class MetadataInterpreter {
     this.values = {};
   }
 
-  // Interpret a single metadata block body into its key/value pairs. The target this
-  // block annotates is resolved separately (via the target-keyed resolution index), so
-  // it is not part of the returned value.
+  // Interpret a single metadata block body into its key/value pairs
+  // target is resolved separately via the resolution index
   interpret (): Report<MetadataValues> {
     const errors = this.interpretValues(this.declarationNode.body);
     return new Report(this.values, errors);

@@ -1,8 +1,8 @@
 import { SymbolKind } from '@/core/types/symbol';
 import { MetadataKind } from '@/core/types/symbol/metadata';
 
-// Identifies any DBML element. `kind` is required to discriminate variants.
-// Individual interfaces allow `kind` to be optional for standalone use (e.g. renameTable).
+// Identifies any DBML element, `kind` is required to discriminate variants
+// Individual interfaces allow `kind` to be optional for standalone use (e.g. renameTable)
 export type ElementIdentifier = (
   SchemaIdentifier
   | TableIdentifier
@@ -40,8 +40,8 @@ export interface EnumIdentifier {
   name: string;
 }
 
-// A table endpoint, optionally narrowed to specific fields.
-// Shared by RefIdentifier and DepIdentifier.
+// A table endpoint, optionally narrowed to specific fields
+// Shared by RefIdentifier and DepIdentifier
 export interface EndpointRef {
   schemaName?: string | null;
   tableName: string;

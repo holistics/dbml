@@ -189,9 +189,8 @@ export default class ProgramInterpreter {
       if (value) this.pushElement(symbol, value);
     }
 
-    // 1b. UseSymbols (imports) from schema members.
-    // The same original symbol can appear in multiple schemas (e.g. imported via
-    // wildcard and also via aliased schema). Only interpret each original once.
+    // 1b UseSymbols (imports) from schema members
+    // The same original symbol may appear in multiple schemas, only interpret each original once
     const interpretedOriginals = new Set<string>();
     const schemas = this.compiler.symbolMembers(this.programSymbol).getFiltered(UNHANDLED) ?? [];
 
@@ -321,9 +320,9 @@ export default class ProgramInterpreter {
         }
         case MetadataKind.Dep: {
           const dep = value as Dep;
-          // Per-edge `a -> b` nodes, index-aligned with dep.edges, for a precise error location.
+          // Per-edge nodes aligned with dep.edges, for precise error location
           const edgeNodes = meta instanceof DepMetadata ? meta.edgeExpressions() : [];
-          // Directed src-target uniqueness: a -> b and b -> a are distinct, so no reverse key.
+          // a -> b and b -> a are distinct (directed), so no reverse key
           let duplicateEdgeIndex = -1;
           (dep.edges ?? []).some((edge, i) => {
             const { upstream: up, downstream: down } = edge;
@@ -343,7 +342,7 @@ export default class ProgramInterpreter {
             return false;
           });
           if (duplicateEdgeIndex >= 0) {
-            // Point at the duplicate `a -> b` line; fall back to the whole declaration (inline form).
+            // Point at the duplicate edge node, fall back to the whole declaration for inline form
             const errorNode = edgeNodes[duplicateEdgeIndex] ?? meta.declaration;
             this.errors.push(new CompileError(CompileErrorCode.SAME_ENDPOINT, 'Dep with same endpoints already exists', errorNode));
             break;
@@ -507,7 +506,7 @@ export default class ProgramInterpreter {
           if (!multiplicities) continue;
 
           // When rightTable is the partial itself (inline self-reference with bare column and no table prefix),
-          // resolve it to the concrete table being expanded.
+          // resolve it to the concrete table being expanded
           const rightTable = rightTableOrPartial instanceof TablePartialSymbol
             && rightTableOrPartial.originalSymbol === partialSymbol.originalSymbol
             ? tableSymbol

@@ -11,7 +11,7 @@ function isComplexDep (meta: NodeMetadata): boolean {
     && meta.declaration.body instanceof BlockExpressionNode;
 }
 
-// A complex Dep block must have all edges targeting the same downstream table.
+// A complex Dep block must have all edges targeting the same downstream table
 export function validateDepBlocks (
   dep: Dep,
   meta: NodeMetadata,

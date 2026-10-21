@@ -183,10 +183,8 @@ export class DiagramViewInterpreter {
     for (const field of body.body) {
       if (!(field instanceof FunctionApplicationNode)) continue;
 
-      // If the field was bound to a symbol (e.g., alias "U" -> Table "users"),
-      // resolve the real name from the referee's declaration.
-      // For access expressions (e.g. ecommerce.merchants), extract the rightmost
-      // variable node since nodeReferee expects a PrimaryExpressionNode.
+      // If bound to a symbol (e.g., alias "U" -> Table "users"), resolve the real name from the referee's declaration
+      // For access expressions (e.g. ecommerce.merchants), extract the rightmost variable node since nodeReferee expects a PrimaryExpressionNode
       const refereeNode = field.callee && getRightmostVariable(field.callee);
       const referee = refereeNode && this.compiler.nodeReferee(refereeNode).getFiltered(UNHANDLED);
       if (referee?.declaration instanceof ElementDeclarationNode) {

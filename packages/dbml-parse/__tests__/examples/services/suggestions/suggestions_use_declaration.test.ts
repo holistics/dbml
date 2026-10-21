@@ -213,8 +213,8 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
       const labels = result.suggestions.map((s) => String(s.label));
-      // Only the first directory segment under `./` is surfaced; the
-      // leaf `./sub/deeper/a` stays hidden until the user descends.
+      // Only the first directory segment under `./` is surfaced
+      // leaf `./sub/deeper/a` stays hidden until the user descends
       expect(labels).toContain('./sub');
       expect(labels).not.toContain('./sub/deeper/a');
     });
@@ -247,8 +247,7 @@ Enum color { red blue }
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
       const schemaItem = result.suggestions.find((s) => String(s.label) === './schema');
       expect(schemaItem).toBeDefined();
-      // Bare insertText (no surrounding quotes) since the range targets
-      // content-between-quotes only.
+      // Bare insertText (no surrounding quotes) since the range targets content-between-quotes only
       expect(schemaItem!.insertText).toBe('./schema');
     });
   });
@@ -263,7 +262,7 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor after 'as '
       const result = provider.provideCompletionItems(model, createPosition(1, 22));
-      // alias is user-defined; may return import kinds but not element names
+      // alias is user-defined, may return import kinds but not element names
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).not.toContain('users');
     });

@@ -11,10 +11,8 @@ import {
   pickCompletionItemKind,
 } from './utils';
 
-// Cross-file completion suggestions - when the cursor is at a global-scope
-// lookup point, surface symbols declared in other project files. Accepted
-// suggestions insert a matching `use { ... } from './...'` via
-// additionalTextEdits.
+// Cross-file completion suggestions: surface symbols declared in other project files
+// Accepted suggestions insert a matching `use { ... } from './...'` via additionalTextEdits
 export function collectCrossFileSuggestions (
   compiler: Compiler,
   acceptedKinds: SymbolKind[],
@@ -100,7 +98,7 @@ export function buildCrossFileCompletionItem (
     insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
     kind: pickCompletionItemKind(symbolKind),
     detail: `from ${sourceFilepath.basename}`,
-    // Sort cross-file suggestions after local ones.
+    // Sort cross-file suggestions after local ones
     sortText: `zzz_${pickCompletionItemKind(symbolKind).toString().padStart(2, '0')}_${symbolName}`,
     range: undefined as any,
     additionalTextEdits,

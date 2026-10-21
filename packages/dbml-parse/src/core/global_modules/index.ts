@@ -27,22 +27,10 @@ import type { GlobalModule } from './types';
 import { useModule } from './use';
 import { archModule } from './arch';
 
-/**
- * The DBML vocabulary: the modules a Compiler uses when nobody says otherwise.
- *
- * The dispatcher tries each in order until one claims the node, so order is meaningful. Each
- * time you add a new DBML element, register its module here.
- *
- * A Compiler may also be built with a different list (see `Compiler`'s second argument). The
- * lexer and the parser do not know this vocabulary at all: `parser.ts` has one generic
- * `elementDeclaration()` and never mentions `ElementKind`, so another dialect is a different
- * array, not a different grammar. Pass a different list and the same front end binds a
- * different language, which is how the architecture dialect reuses all of this without forking
- * it or widening DBML's own vocabulary by a single word.
- */
+// Registry of all DBML element modules, dispatcher tries each in order until one claims the node
+// Register each new element module here
 export const dbmlModules: GlobalModule[] = [
-  // UseSymbol doesn't have dedicated SymbolKind but use kinds like Table, TableGroup, ...
-  // so make it the first module to claim the UseSymbol
+  // UseSymbol doesn't have a dedicated SymbolKind but uses kinds like Table, TableGroup, so it must be first
   useModule,
   tableModule,
   enumModule,

@@ -21,7 +21,7 @@ export interface ResolutionIndex {
   parents: Map<InternedNodeSymbol, NodeSymbol[]>;
 }
 
-// Build full resolution index: references + metadata + symbol parent. One scan of all files.
+// Build full resolution index: references + metadata + symbol parent, one scan of all files
 export function resolutionIndex (this: Compiler): ResolutionIndex {
   const references = new Map<InternedNodeSymbol, SyntaxNode[]>();
   const metadata = new Map<InternedNodeSymbol, NodeMetadata[]>();

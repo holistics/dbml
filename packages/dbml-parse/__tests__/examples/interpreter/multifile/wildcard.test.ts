@@ -2,11 +2,8 @@ import { describe, expect, test } from 'vitest';
 import { fp, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - mixed selective + wildcard from same file', () => {
-  // `use { table users } from './shared.dbml'` followed by `use * from
-  // './shared.dbml'` exposes the same underlying `users` table twice via two
-  // distinct UseSymbol wrappers. schemaModule.symbolMembers dedupes them by
-  // (originalSymbol, locally-visible name), so the consumer sees a single
-  // entry per name and interpretation runs cleanly.
+  // Selective + wildcard from the same file exposes the same `users` table twice via two distinct UseSymbol wrappers
+  // schemaModule.symbolMembers dedupes by (originalSymbol, locally-visible name), so the consumer sees a single entry per name
   const { compiler } = setupCompiler({
     '/shared.dbml': `
 Table users {
@@ -39,8 +36,8 @@ Table memberships {
 });
 
 describe('[example] multifile interpreter - wildcard import from file with multiple schemas', () => {
-  // source has tables in public and auth schemas.
-  // consumer does use * - both schemas should merge into consumer.
+  // source has tables in public and auth schemas
+  // consumer does use *, both schemas should merge into consumer
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table users {

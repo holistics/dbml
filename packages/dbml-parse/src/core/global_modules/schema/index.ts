@@ -73,9 +73,9 @@ export const schemaModule: GlobalModule = {
     // 3. Add child schemas discovered during import processing
     members.push(...childSchemas.values());
 
-    // 4. Expand TableGroups (inject member tables belonging to current schema).
-    // TableGroups live in public schema but can reference tables in other schemas (e.g. v.G).
-    // Non-public schemas also process public schema's TableGroups (both declared and imported).
+    // 4. Expand TableGroups (inject member tables belonging to current schema)
+    // TableGroups live in public schema but can reference tables in other schemas (e.g. v.G)
+    // Non-public schemas also process public schema's TableGroups (both declared and imported)
     const membersWithExpansions: NodeSymbol[] = [
       ...members,
     ];
@@ -83,8 +83,8 @@ export const schemaModule: GlobalModule = {
       // Collect TableGroups: from current schema's members + public schema's raw members and imports
       const tableGroups = members.filter((m) => m.isKind(SymbolKind.TableGroup));
       if (!symbol.isPublicSchema()) {
-        // Public schema's symbolMembers includes all TableGroups (declared + imported).
-        // It's safe to call here because public schema is always computed first by the program module.
+        // Public schema's symbolMembers includes all TableGroups (declared + imported)
+        // Safe to call here because public schema is always computed first by the program module
         const publicSchema = compiler.usableMembers(symbol.filepath).getFiltered(UNHANDLED)
           ?.schemaMembers.find((s) => s.isPublicSchema());
         if (publicSchema) {
@@ -99,7 +99,7 @@ export const schemaModule: GlobalModule = {
       }
     }
 
-    // 5. Dedup by (originalSymbol, localName); reuse wins (added first in 2a.)
+    // 5 Dedup by (originalSymbol, localName), reuse wins (added first in 2a)
     const dedupKeys = new Set<string>();
     const uniqueExpandedMembers = membersWithExpansions.filter((m) => {
       // Filter out UseSymbols wrapping schemas, as schemas are merged, not "imported" technically
@@ -186,11 +186,8 @@ function handleMemberSelectiveUses (compiler: Compiler, symbol: SchemaSymbol, sp
   return Report.create(undefined);
 }
 
-// Merge importable members of an imported schema into the current scope.
-// Only activates for schema-kind specifiers. Uses usableMembers to avoid circular queries.
-// - Public schema: skip (schemas are file-level members, not public schema members)
-// - Schema x: find external schema x matching by name and merge its direct members
-// - Schema x.y: find external schema x.y and merge its direct members (nested schemas)
+// Merge importable members of an imported schema into the current scope
+// Only activates for schema-kind specifiers, uses usableMembers to avoid circular queries
 function mergeImportedSchema (
   compiler: Compiler,
   symbol: SchemaSymbol,
@@ -204,9 +201,9 @@ function mergeImportedSchema (
   const externalSchema = compiler.nodeReferee(specifier.name).getFiltered(UNHANDLED) as SchemaSymbol;
   if (!externalSchema || !externalSchema.isKind(SymbolKind.Schema)) return [];
 
-  // Only merge if the specifier targets this schema.
-  // For `use { schema auth as a }`, visibleName is ['a'] - matches schema ['a'].
-  // For `use { schema x.y }`, visibleName is ['x', 'y'] - matches schema ['x', 'y'].
+  // Only merge if the specifier targets this schema
+  // e.g. `use { schema auth as a }` -> visibleName ['a'] matches schema ['a']
+  // e.g. `use { schema x.y }` -> visibleName ['x', 'y'] matches schema ['x', 'y']
   const visibleName = useUtils.visibleName(compiler, specifier);
   const qualifiedName = symbol.qualifiedName;
   if (!visibleName || visibleName.length !== qualifiedName.length
@@ -215,8 +212,8 @@ function mergeImportedSchema (
   return mergeSchemaMembers(compiler, symbol, specifier, externalSchema, visited);
 }
 
-// Core logic for merging an external schema's members into the current schema.
-// Shared by both selective (`use { schema x }`) and wildcard (`reuse *`) paths.
+// Core logic for merging an external schema's members into the current schema
+// Shared by both selective (`use { schema x }`) and wildcard (`reuse *`) paths
 function mergeSchemaMembers (
   compiler: Compiler,
   symbol: SchemaSymbol,
@@ -231,7 +228,7 @@ function mergeSchemaMembers (
   const usable = compiler.usableMembers(externalSchema).getFiltered(UNHANDLED);
   if (!usable) return [];
 
-  // Wrap directly declared importable members as UseSymbols.
+  // Wrap directly declared importable members as UseSymbols
   const members: NodeSymbol[] = usable.nonSchemaMembers
     .filter((m) => m.canBeImported)
     .map((m) => compiler.symbolFactory.create(UseSymbol, {
@@ -282,8 +279,8 @@ function mergeSchemaMembers (
 }
 
 // Resolve a wildcard use/reuse (e.g. `use * from './base.dbml'`)
-// Wraps importable members as UseSymbols, registers child schemas, recursively follows reuse chains.
-// `visited` guards against circular reuse paths.
+// Wraps importable members as UseSymbols, registers child schemas, recursively follows reuse chains
+// `visited` guards against circular reuse paths
 function handleMemberWildcardUses (
   compiler: Compiler,
   symbol: SchemaSymbol,
@@ -380,9 +377,8 @@ function findSchemaSymbolInFilepath (compiler: Compiler, filepath: Filepath, sch
   return currentSchema;
 }
 
-// Expand an imported TableGroup's member tables that belong to the given schema.
-// TableGroups can only reference tables in the same file, so we look up each
-// field in the source file via usableMembers (not nodeReferee, to avoid cycles).
+// Expand an imported TableGroup's member tables that belong to the given schema
+// Looks up each field in the source file via usableMembers (not nodeReferee, to avoid cycles)
 function expandTableGroup (compiler: Compiler, currentSchema: SchemaSymbol, tableGroupSymbol: NodeSymbol): NodeSymbol[] {
   if (!tableGroupSymbol.isKind(SymbolKind.TableGroup)) return [];
   if (!(tableGroupSymbol instanceof UseSymbol)) return [];
@@ -428,8 +424,7 @@ function expandTableGroup (compiler: Compiler, currentSchema: SchemaSymbol, tabl
   return extraSymbols;
 }
 
-// Look up a table by qualified name from a file's raw declarations.
-// Uses usableMembers to avoid cycles.
+// Look up a table by qualified name from a file's raw declarations, uses usableMembers to avoid cycles
 function lookupTableInFile (compiler: Compiler, filepath: Filepath, nameParts: string[]): NodeSymbol | undefined {
   if (nameParts.length === 1) {
     const usable = compiler.usableMembers(filepath).getFiltered(UNHANDLED);
