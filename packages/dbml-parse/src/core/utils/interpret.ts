@@ -6,6 +6,8 @@ import type {
 import { ArrayNode, CallExpressionNode, FunctionExpressionNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
+import { UNHANDLED } from '@/core/types/module';
+import { AliasSymbol, SymbolKind } from '@/core/types/symbol';
 import {
   destructureComplexVariable, destructureMemberAccessExpression, extractQuotedStringToken, extractVariableFromExpression,
 } from './expression';
@@ -147,6 +149,17 @@ export function processColumnType (
       if (!typeNode.array) break;
       typeNode = typeNode.array;
     }
+  }
+
+  // An enum alias (e.g. `Enum users.sex as Sex`) resolves to the original enum's name and schema
+  const referee = compiler.nodeReferee(typeNode).getFiltered(UNHANDLED);
+  if (referee instanceof AliasSymbol && referee.isKind(SymbolKind.Enum)) {
+    const { name, schema } = referee.originalSymbol.interpretedName(compiler, typeNode.filepath);
+    return new Report({
+      schemaName: schema,
+      type_name: `${name}${typeSuffix}`,
+      args: typeArgs,
+    });
   }
 
   const {

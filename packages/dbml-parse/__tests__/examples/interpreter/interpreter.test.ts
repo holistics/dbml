@@ -291,6 +291,69 @@ describe('[example] interpreter', () => {
       expect(db.enums[0].values[1].name).toBe('active');
       expect(db.enums[0].values[2].name).toBe('inactive');
     });
+
+    test('should resolve enum alias in column type to the original enum', () => {
+      const source = `
+        Enum users.status as S {
+          active
+        }
+        Table jobs {
+          status S
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.tables[0].fields[0].type).toEqual({
+        schemaName: 'users',
+        type_name: 'status',
+        args: null,
+      });
+    });
+
+    test('should resolve enum alias in the public schema', () => {
+      const source = `
+        Enum status as S {
+          active
+        }
+        Table jobs {
+          status S
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.tables[0].fields[0].type.schemaName).toBeNull();
+      expect(db.tables[0].fields[0].type.type_name).toBe('status');
+    });
+
+    test('should keep array suffix when resolving enum alias', () => {
+      const source = `
+        Enum users.status as S {
+          active
+        }
+        Table jobs {
+          statuses S[]
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.tables[0].fields[0].type.schemaName).toBe('users');
+      expect(db.tables[0].fields[0].type.type_name).toBe('status[]');
+    });
+
+    test('should interpret column typed with enum full name the same as with its alias', () => {
+      const source = `
+        Enum users.status as S {
+          active
+        }
+        Table jobs {
+          by_alias S
+          by_name users.status
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.tables[0].fields[0].type).toEqual(db.tables[0].fields[1].type);
+    });
   });
 
   describe('project interpretation', () => {
