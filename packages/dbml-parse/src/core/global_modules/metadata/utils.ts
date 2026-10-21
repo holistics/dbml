@@ -1,6 +1,7 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '@/compiler/index';
 import {
+  CompileErrorCode,
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
@@ -21,22 +22,23 @@ export type MetadataTarget = Table | TableGroup | Note | Column;
   * - `parse`: Read the field's own value from a source node, `undefined` means the value is invalid
   * - `assign`: Write the parsed value to the element builtin props (e.g. write `table.note` instead of `table.metadata`)
   */
-export interface MetadataField<T extends MetadataTarget, V extends CustomMetadataValue> {
+type MetadataField<T, V> = {
   /** Parse the source node into the field's value, `undefined` if the node is not a valid value for this field */
   parse (node?: SyntaxNode): V | undefined;
+  /** Whether the source node is a valid value for this field */
+  isValid (node?: SyntaxNode): boolean;
+  invalidError: { code: CompileErrorCode; message: string };
+  /** Whether the field may appear more than once in an inline settings list */
+  allowDuplicate: boolean;
+  duplicateError?: { code: CompileErrorCode; message: string };
   message: string;
 
   /** Write the parsed value to the element builtin props (e.g. write to `table.note`) */
   assign (element: Partial<T>, value: V, token: TokenPosition): void;
-}
-
-// Infer V per field so `assign` receives exactly what `parse` returns
-export function defineField<T extends MetadataTarget, V extends CustomMetadataValue> (field: MetadataField<T, V>): MetadataField<T, V> {
-  return field;
-}
+};
 
 // A per-kind registry: exactly the promotable settings for that kind, each carrying its own parse + assign. K is tightened per kind.
-export type MetadataFieldRegistry<T extends MetadataTarget, K extends SettingName> = Record<K, MetadataField<T, any>>;
+export type MetadataFieldRegistry<T extends MetadataTarget, R extends { [K in SettingName]?: CustomMetadataValue }> = { [K in keyof R]: MetadataField<T, R[K]> };
 
 type NameWithSymbolKind = {
   name: string;

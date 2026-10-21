@@ -5,7 +5,7 @@ import {
 } from '@/core/utils/expression';
 import { UNHANDLED } from '@/core/types/module';
 import { SymbolKind } from '@/core/types/symbol';
-import { aggregateSettingList } from '@/core/utils/validate';
+import { aggregateSettingList, isValidHexColor } from '@/core/utils/validate';
 import {
   CompileError,
   CompileErrorCode,
@@ -35,23 +35,31 @@ import {
   normalizeNote,
 } from '@/core/utils/interpret';
 import { assignInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata, defineField, type MetadataFieldRegistry } from '../metadata/utils';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
 
-export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, SettingName.Note | SettingName.Color> = {
-  [SettingName.Note]: defineField<TableGroup, string>({
+export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, { [SettingName.Note]: string; [SettingName.Color]: Color }> = {
+  [SettingName.Note]: {
     parse: extractNote,
+    isValid: (node) => extractNote(node) !== undefined,
+    invalidError: { code: CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, message: "'note' must be a string literal" },
+    allowDuplicate: false,
+    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, message: "'note' can only appear once" },
     message: "'note' must be a string literal",
     assign (element, value, token) {
       element.note = { value, token };
     },
-  }),
-  [SettingName.Color]: defineField<TableGroup, Color>({
+  },
+  [SettingName.Color]: {
     parse: extractHexColor,
+    isValid: isValidHexColor,
+    invalidError: { code: CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, message: "'color' must be a color literal" },
+    allowDuplicate: false,
+    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, message: "'color' can only appear once" },
     message: "'color' must be a color literal",
     assign (element, value) {
       element.color = value;
     },
-  }),
+  },
 };
 
 export class TableGroupInterpreter {

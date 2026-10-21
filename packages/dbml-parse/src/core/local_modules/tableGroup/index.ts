@@ -1,16 +1,19 @@
+import { forIn } from 'lodash-es';
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ElementKind } from '@/core/types/keywords';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
-import { SyntaxNode } from '@/core/types/nodes';
+import { ListExpressionNode, SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import {
-  Settings, isElementFieldNode, isElementNode, isSimpleName,
+  Settings, aggregateSettingList, isElementFieldNode, isElementNode, isSimpleName,
 } from '@/core/utils/validate';
 import { type LocalModule } from '../types';
-import TableGroupValidator, { validateSettingList } from './validate';
+import TableGroupValidator from './validate';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
+import { validateCustomInlineMetadata } from '../metadata/utils';
+import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
 
 export const tableGroupModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {
@@ -72,7 +75,7 @@ export const tableGroupModule: LocalModule = {
 
   nodeSettings (compiler: Compiler, node: SyntaxNode): Report<Settings> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.TableGroup)) {
-      return validateSettingList(node.attributeList);
+      return validateTableGroupSettings(node.attributeList);
     }
     if (isElementFieldNode(node, ElementKind.TableGroup)) {
       return new Report({});
@@ -80,3 +83,36 @@ export const tableGroupModule: LocalModule = {
     return Report.create(PASS_THROUGH);
   },
 };
+
+function validateTableGroupSettings (settingList?: ListExpressionNode): Report<Settings> {
+  const aggReport = aggregateSettingList(settingList);
+  const errors = aggReport.getErrors();
+  const settingMap = aggReport.getValue();
+
+  forIn(settingMap, (attrs, name) => {
+    switch (name) {
+      case SettingName.Note:
+      case SettingName.Color: {
+        const field = TABLEGROUP_METADATA_FIELDS[name];
+        if (attrs.length > 1) {
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, `'${name}' can only appear once`, attr)));
+        }
+
+        attrs.forEach((attr) => {
+          if (field.parse(attr.value) === undefined) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, field.invalidError.message, attr.value || attr.name || attr));
+          }
+        });
+        break; }
+      default:
+        // Any non-builtin key is free-form inline custom metadata
+        errors.push(
+          ...validateCustomInlineMetadata(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING,
+            invalidValue: CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE,
+          }),
+        );
+    }
+  });
+  return new Report(settingMap, errors);
+}

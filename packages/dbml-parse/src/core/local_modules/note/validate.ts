@@ -1,13 +1,11 @@
-import { partition, forIn } from 'lodash-es';
+import { partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ElementKind, SettingName } from '@/core/types/keywords';
+import { ElementKind } from '@/core/types/keywords';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode, ProgramNode, SyntaxNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ProgramNode, SyntaxNode,
 } from '@/core/types/nodes';
-import { aggregateSettingList, isExpressionAQuotedString } from '@/core/utils/validate';
-import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
-import { validateCustomInlineMetadata } from '../metadata/utils';
+import { isExpressionAQuotedString } from '@/core/utils/validate';
 
 export default class NoteValidator {
   private compiler: Compiler;
@@ -23,7 +21,7 @@ export default class NoteValidator {
       ...this.validateContext(),
       ...this.validateName(this.declarationNode.name),
       ...this.validateAlias(this.declarationNode.alias),
-      ...this.validateSettingList(this.declarationNode.attributeList),
+      ...this.compiler.nodeSettings(this.declarationNode).getErrors(),
       ...this.validateBody(this.declarationNode.body),
     ];
   }
@@ -64,55 +62,6 @@ export default class NoteValidator {
     }
 
     return [];
-  }
-
-  // A note is a StickyNote if it appears top-level
-  // A note is not a StickyNote if it appear nested
-  private isStickyNote (): boolean {
-    return this.declarationNode.parent instanceof ProgramNode;
-  }
-
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
-    if (!settingList) return [];
-
-    // Normal note (non-sticky) cannot have settings
-    if (!this.isStickyNote()) {
-      return [
-        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'A Note shouldn\'t have a setting list', settingList),
-      ];
-    }
-
-    const aggReport = aggregateSettingList(settingList);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-
-    forIn(settingMap, (attrs, name) => {
-      switch (name) {
-        // Sticky note color
-        case SettingName.Color: {
-          const field = NOTE_METADATA_FIELDS[SettingName.Color];
-          if (attrs.length > 1) {
-            errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_NOTE_SETTING, '\'color\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (field.parse(attr.value) === undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, field.message, attr.value || attr.name!));
-            }
-          });
-          break;
-        }
-        default:
-          // Any non-builtin key is free-form inline custom metadata
-          errors.push(
-            ...validateCustomInlineMetadata(name, attrs, {
-              duplicate: CompileErrorCode.DUPLICATE_NOTE_SETTING,
-              invalidValue: CompileErrorCode.INVALID_NOTE_SETTING_VALUE,
-            }),
-          );
-      }
-    });
-
-    return errors;
   }
 
   validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {

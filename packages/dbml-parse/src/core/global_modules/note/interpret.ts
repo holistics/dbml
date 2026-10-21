@@ -1,5 +1,5 @@
 import { partition } from 'lodash-es';
-import { aggregateSettingList } from '@/core/utils/validate';
+import { aggregateSettingList, isValidColorOrNone } from '@/core/utils/validate';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
   type BlockExpressionNode,
@@ -23,16 +23,20 @@ import {
 import type { Color } from '@/core/types/schemaJson';
 import Report from '@/core/types/report';
 import { assignInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata, defineField, type MetadataFieldRegistry } from '../metadata/utils';
+import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
 
-export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color> = {
-  [SettingName.Color]: defineField<Note, Color>({
+export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, { [SettingName.Color]: Color }> = {
+  [SettingName.Color]: {
     parse: extractColor,
+    isValid: isValidColorOrNone,
+    invalidError: { code: CompileErrorCode.INVALID_NOTE_SETTING_VALUE, message: "'color' must be a color literal or 'none'" },
+    allowDuplicate: false,
+    duplicateError: { code: CompileErrorCode.DUPLICATE_NOTE_SETTING, message: "'color' can only appear once" },
     message: "'color' must be a color literal or 'none'",
     assign (element, value) {
       element.color = value;
     },
-  }),
+  },
 };
 
 export class StickyNoteInterpreter {
