@@ -50,6 +50,8 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatTypedValue,
+  applyTextEdits,
+  syncElementMetadata,
   dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,
   Filepath,

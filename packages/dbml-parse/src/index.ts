@@ -120,7 +120,7 @@ export type {
   TextEdit,
 } from '@/compiler/queries/transform';
 
-export { findDiagramViewBlocks } from '@/compiler/queries/transform';
+export { findDiagramViewBlocks, syncElementMetadata, applyTextEdits } from '@/compiler/queries/transform';
 
 // Dep transform types
 export type { DepSyncOperation, DepSyncEdge, DepEndpointRef } from '@/compiler/queries/transform';

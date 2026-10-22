@@ -1,6 +1,6 @@
 export { renameTable } from './renameTable';
 export { updateElementSetting, updateElementSettingEdit } from './updateElementSetting';
-export { findMetadataBlock, updateElementMetadata, updateElementMetadataEdit } from './updateElementMetadata';
+export { findMetadataBlock, updateElementMetadata, updateElementMetadataEdit, syncElementMetadata } from './updateElementMetadata';
 export {
   syncDiagramView,
   findDiagramViewBlocks,

@@ -193,6 +193,7 @@ export function escapeString (str: string): string {
  * formatTypedValue({ value: 'Alice', type: 'string' }) => "'Alice'"
  * formatTypedValue({ value: true, type: 'bool' }) => 'true'
  * formatTypedValue({ value: null, type: 'string' }) => 'null'
+ * formatTypedValue({ value: '#ff0000', type: 'color' }) => '#ff0000'
  * formatTypedValue(undefined) => 'null'
  * formatTypedValue(null) => 'null'
  * formatTypedValue('Alice') => "'Alice'"
@@ -233,6 +234,11 @@ export function formatTypedValue (recordValue: TypedValue): string {
   // Handle expressions (backtick strings)
   if (type === 'expression') {
     return typeof value === 'string' && value.toLowerCase().trim() === 'null' ? 'null' : `\`${value}\``;
+  }
+
+  // Handle color literals (e.g. #fff, #aabbcc) - output as-is without quotes
+  if (type === 'color') {
+    return String(value);
   }
 
   // Try to extract typed values using tryExtract functions

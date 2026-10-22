@@ -45,7 +45,7 @@ import {
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
   renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
-  findMetadataBlock, updateElementMetadata, updateElementMetadataEdit,
+  findMetadataBlock, updateElementMetadata, updateElementMetadataEdit, syncElementMetadata,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatTypedValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString, type TypedValue,

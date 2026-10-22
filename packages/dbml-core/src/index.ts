@@ -50,6 +50,8 @@ export {
   tryExtractEnum,
   addDoubleQuoteIfNeeded,
   formatTypedValue,
+  applyTextEdits,
+  syncElementMetadata,
   // Monaco editor syntax highlighting
   dbmlMonarchTokensProvider,
   DEFAULT_ENTRY,

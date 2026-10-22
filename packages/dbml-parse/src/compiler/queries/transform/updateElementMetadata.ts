@@ -1,6 +1,9 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type { Filepath } from '@/core/types/filepath';
-import { BlockExpressionNode, ElementDeclarationNode } from '@/core/types/nodes';
+import {
+  BlockExpressionNode,
+  ElementDeclarationNode,
+} from '@/core/types/nodes';
 import { SymbolKind } from '@/core/types/symbol';
 import { MetadataTargetKind } from '@/core/types/symbol/symbols';
 import { ElementKind } from '@/core/types';
@@ -126,6 +129,7 @@ function getMetadataTargetKindLabel (targetKind: MetadataTargetKind): string {
 // Returns TextEdit[] to add/update/remove a single key in the Metadata block for `target`
 // - value is non-null: upsert the key (creates the Metadata block if missing), formatted via formatTypedValue
 // - value is null: remove the key, removes the entire block if it was the last key
+// Returns edits sorted descending by start position (tail-first), safe to apply in order.
 export function updateElementMetadataEdit (
   this: Compiler,
   filepath: Filepath,
@@ -162,7 +166,8 @@ export function updateElementMetadataEdit (
   }
 
   // Find existing key entry inside the block body
-  const children = block.body instanceof BlockExpressionNode ? block.body.body : [];
+  const children =
+    block.body instanceof BlockExpressionNode ? block.body.body : [];
   const existing = children.find(
     (child): child is ElementDeclarationNode =>
       child instanceof ElementDeclarationNode
@@ -224,5 +229,26 @@ export function updateElementMetadata (
     value,
   );
   if (edits.length === 0) return source;
-  return applyTextEdits(source, edits);
+  return applyTextEdits(source, edits, true);
+}
+
+// Convenience function mirroring the syncDep pattern: returns both the new source and the pre-sorted edits so callers can hand both to writer.applyEdits()
+export function syncElementMetadata (
+  source: string,
+  compiler: Compiler,
+  filepath: Filepath,
+  target: ElementIdentifier,
+  key: string,
+  value: TypedValue | null,
+): { newDbml: string; edits: TextEdit[] } {
+  const edits = updateElementMetadataEdit.call(
+    compiler,
+    filepath,
+    target,
+    key,
+    value,
+  );
+  if (edits.length === 0) return { newDbml: source, edits: [] };
+  const newDbml = applyTextEdits(source, edits, true);
+  return { newDbml, edits };
 }
