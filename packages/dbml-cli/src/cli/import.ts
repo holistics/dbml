@@ -1,8 +1,9 @@
 import path from 'path';
 import {
-  CompilerError, importer,
+  CompilerDiagnostics, importer,
 } from '@dbml/core';
 import type {
+  CompilerDiagnostic,
   ImportFormat,
 } from '@dbml/core';
 import chalk from 'chalk';
@@ -45,10 +46,8 @@ export default async function importHandler (program: Command) {
       console.log(`  ${chalk.green(figures.main.tick)} Generated DBML file from SQL file (${config[format].name}): ${path.basename(opts.outFile)}`);
     }
   } catch (error) {
-    if (error instanceof CompilerError) {
-      const msg = `\n    ${error.diags.map((diag) => new SyntaxError(diag.filepath ?? '', diag)).map(({
-        message,
-      }) => message).join('\n    ')}`;
+    if (error instanceof CompilerDiagnostics) {
+      const msg = `\n    ${error.diags.map((diag: CompilerDiagnostic) => new SyntaxError(diag.filepath ?? '', diag)).map((e: SyntaxError) => e.message).join('\n    ')}`;
       consoleLogger.error(msg);
       fileLogger.error(msg);
       return;

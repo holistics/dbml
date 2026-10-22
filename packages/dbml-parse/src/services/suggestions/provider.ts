@@ -259,6 +259,8 @@ export const PROJECT_FIELD_SUGGESTION_LABELS = [
 
 export interface DBMLCompletionItemProviderOptions {
   triggerCharacters?: string[];
+  // Maximum directory depth to traverse when listing files for import path completions (default: 2)
+  fileListDepth?: number;
 }
 
 export default class DBMLCompletionItemProvider implements CompletionItemProvider {
@@ -266,9 +268,12 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
 
   triggerCharacters: string[];
 
+  fileListDepth: number;
+
   constructor (compiler: Compiler, options: DBMLCompletionItemProviderOptions = {}) {
     this.compiler = compiler;
     this.triggerCharacters = options.triggerCharacters ?? [];
+    this.fileListDepth = options.fileListDepth ?? 2;
   }
 
   provideCompletionItems (model: TextModel, position: Position): CompletionList {
@@ -304,8 +309,8 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return suggestTopLevelElementType();
     }
 
-    // Use declaration completions take priority over string-literal detection (which would swallow importPath completions)
-    const useSuggestion = suggestUseCompletion(this.compiler, filepath, offset, bOcToken, model);
+    // Use declaration completions take priority over string-literal detection below which would swallow importPath completions.
+    const useSuggestion = suggestUseCompletion(this.compiler, filepath, offset, bOcToken, model, { fileListDepth: this.fileListDepth });
     if (useSuggestion !== null) return useSuggestion;
 
     // Check if we're inside a string
@@ -466,7 +471,7 @@ function suggestMembersOfSymbol (
         // `this file` for local symbols, `from <basename>` for imports
         const originFp = member.originalFilepath;
         const detail = originFp && !originFp.equals(symbol.filepath)
-          ? `from ${originFp.basename}`
+          ? `from ${compiler.layout.getFileSpecifierInfo(symbol.filepath, originFp)?.label ?? originFp.basename}`
           : 'this file';
         return {
           label: name,

@@ -1,6 +1,6 @@
 import ModelExporter from './export/ModelExporter';
 import Parser from './parse/Parser';
-import { CompilerError } from './parse/error';
+import { CompilerDiagnostics } from './parse/error';
 import importer from './import';
 import exporter from './export';
 import {
@@ -23,13 +23,17 @@ export {
   findDiagramViewBlocks,
   syncDep,
   ModelExporter,
-  CompilerError,
+  CompilerDiagnostics,
   Parser,
   VERSION,
 };
 
 // Re-export types and utilities from @dbml/parse
 export {
+  CompileError,
+  CompileWarning,
+  CompileInfo,
+  CompileErrorCode,
   isIntegerType,
   isFloatType,
   isNumericType,
@@ -70,6 +74,8 @@ export { inferMultiplicitiesFromColumns } from './transform/relations';
 
 // Re-export types
 export type {
+  Diagnostic,
+  DiagnosticQuickFix,
   ElementRef,
   DiagramView,
   FilterConfig,
@@ -92,4 +98,5 @@ export type {
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,
+  FileSpecifierInfo,
 } from '@dbml/parse';

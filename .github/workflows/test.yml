@@ -114,6 +114,28 @@ jobs:
         path: ./coverage-report.md
         include-hidden-files: true
 
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 22.x
+        cache: "yarn"
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+    - name: Build packages
+      run: |
+        yarn workspace @dbml/parse build
+        yarn workspace @dbml/core build
+        yarn workspace @dbml/connector build
+        yarn workspace @dbml/cli build
+    - name: Run dbml-cli Windows path tests
+      working-directory: packages/dbml-cli
+      run: npx vitest run __tests__/windows.test.ts
+
   comment-coverage:
     runs-on: blacksmith-2vcpu-ubuntu-2204
     timeout-minutes: 5

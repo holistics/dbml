@@ -41,7 +41,7 @@
     "bench": "vitest bench",
     "build:parser": "node src/parse/deprecated/buildParser.cjs",
     "build:lib": "vite build",
-    "build": "rm -rf ./lib && npm run build:parser && npm run build:lib",
+    "build": "rimraf ./lib && npm run build:parser && npm run build:lib",
     "prepublish": "npm run build",
     "lint": "eslint $(git diff --relative --name-only --diff-filter=ACMRTUXB master -- . | grep -E '\\.(js|ts)$')",
     "lint:all": "eslint .",

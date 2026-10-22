@@ -198,9 +198,9 @@ Enum color { red blue }
       // cursor after `./sub/`
       const result = provider.provideCompletionItems(model, createPosition(1, 19));
       const labels = result.suggestions.map((s) => String(s.label));
-      expect(labels).toContain('./sub/a');
-      expect(labels).toContain('./sub/b');
-      expect(labels).not.toContain('./other');
+      expect(labels).toContain('./sub/a.dbml');
+      expect(labels).toContain('./sub/b.dbml');
+      expect(labels).not.toContain('./other.dbml');
     });
 
     it('collapses nested files into folder entries at the current prefix', () => {
@@ -213,10 +213,9 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
       const labels = result.suggestions.map((s) => String(s.label));
-      // Only the first directory segment under `./` is surfaced
-      // leaf `./sub/deeper/a` stays hidden until the user descends
-      expect(labels).toContain('./sub');
-      expect(labels).not.toContain('./sub/deeper/a');
+      // listDirectory shows direct children only; deeper files hidden until user descends
+      expect(labels).toContain('./sub/');
+      expect(labels).not.toContain('./sub/deeper/a.dbml');
     });
 
     it('tags folders as Folder and files as File', () => {
@@ -229,13 +228,13 @@ Enum color { red blue }
       const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
-      const folder = result.suggestions.find((s) => String(s.label) === './sub');
-      const file = result.suggestions.find((s) => String(s.label) === './other');
+      const folder = result.suggestions.find((s) => String(s.label) === './sub/');
+      const file = result.suggestions.find((s) => String(s.label) === './other.dbml');
       expect(folder?.kind).toBe(CompletionItemKind.Folder);
       expect(file?.kind).toBe(CompletionItemKind.File);
     });
 
-    it('replaces content between quotes without re-inserting them', () => {
+    it('inserts specifier when selecting a file via relative browse', () => {
       const compiler = setupMultiFile({
         '/schema.dbml': 'Table users { id int [pk] }',
         '/main.dbml': "use * from './'",
@@ -245,10 +244,100 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor inside the `'./'` literal
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
-      const schemaItem = result.suggestions.find((s) => String(s.label) === './schema');
+      const schemaItem = result.suggestions.find((s) => String(s.label) === './schema.dbml');
       expect(schemaItem).toBeDefined();
-      // Bare insertText (no surrounding quotes) since the range targets content-between-quotes only
+      // insertText is the specifier (without .dbml), not the raw filename
       expect(schemaItem!.insertText).toBe('./schema');
+    });
+
+    it('browses with ../ prefix and inserts specifier', () => {
+      const compiler = setupMultiFile({
+        '/shared/types.dbml': 'Table types { id int }',
+        '/sub/main.dbml': "use * from '../shared/'",
+      });
+      const program = "use * from '../shared/'";
+      const model = createMockTextModel(program, Filepath.from('/sub/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 23));
+      const item = result.suggestions.find((s) => String(s.label) === '../shared/types.dbml');
+      expect(item).toBeDefined();
+      expect(item!.insertText).toBe('../shared/types');
+    });
+
+    it('does not suggest current file in browse mode', () => {
+      const compiler = setupMultiFile({
+        '/schema.dbml': 'Table users { id int }',
+        '/main.dbml': "use * from './'",
+      });
+      const program = "use * from './'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 15));
+      const labels = result.suggestions.map((s) => String(s.label));
+      expect(labels).not.toContain('./main.dbml');
+      expect(labels).toContain('./schema.dbml');
+    });
+  });
+
+  describe('filepath browse mode (user types absolute path starting with /)', () => {
+    it('suggests directory entries when user types /', () => {
+      const compiler = setupMultiFile({
+        '/schemas/users.dbml': 'Table users { id int }',
+        '/schemas/orders.dbml': 'Table orders { id int }',
+        '/main.dbml': "use * from '/schemas/'",
+      });
+      const program = "use * from '/schemas/'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 21));
+      const labels = result.suggestions.map((s) => String(s.label));
+      expect(labels).toContain('/schemas/users.dbml');
+      expect(labels).toContain('/schemas/orders.dbml');
+    });
+
+    it('inserts specifier (not filepath) when selecting a file', () => {
+      const compiler = setupMultiFile({
+        '/schemas/users.dbml': 'Table users { id int }',
+        '/main.dbml': "use * from '/schemas/'",
+      });
+      const program = "use * from '/schemas/'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 21));
+      const item = result.suggestions.find((s) => String(s.label) === '/schemas/users.dbml');
+      expect(item).toBeDefined();
+      // main.dbml is at /, so relative specifier is ./schemas/users
+      expect(item!.insertText).toBe('./schemas/users');
+    });
+
+    it('inserts directory path for continued browsing', () => {
+      const compiler = setupMultiFile({
+        '/schemas/sub/a.dbml': 'Table a { id int }',
+        '/main.dbml': "use * from '/schemas/'",
+      });
+      const program = "use * from '/schemas/'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 21));
+      const item = result.suggestions.find((s) => String(s.label) === '/schemas/sub/');
+      expect(item).toBeDefined();
+      expect(item!.insertText).toBe('/schemas/sub/');
+      expect(item!.kind).toBe(CompletionItemKind.Folder);
+    });
+
+    it('filters entries by typed prefix', () => {
+      const compiler = setupMultiFile({
+        '/schemas/users.dbml': 'Table users { id int }',
+        '/other/orders.dbml': 'Table orders { id int }',
+        '/main.dbml': "use * from '/schemas/us'",
+      });
+      const program = "use * from '/schemas/us'";
+      const model = createMockTextModel(program, Filepath.from('/main.dbml').toUri());
+      const provider = new DBMLCompletionItemProvider(compiler);
+      const result = provider.provideCompletionItems(model, createPosition(1, 23));
+      const labels = result.suggestions.map((s) => String(s.label));
+      expect(labels).toContain('/schemas/users.dbml');
+      expect(labels).not.toContain('/other/orders.dbml');
     });
   });
 

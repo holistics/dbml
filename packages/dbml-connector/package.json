@@ -17,7 +17,7 @@
     "ts-node": "^10.9.2"
   },
   "scripts": {
-    "build": "rm -rf ./dist && vite build",
+    "build": "rimraf ./dist && vite build",
     "dev": "vite build --watch",
     "start": "node dist/index.js",
     "test:watch": "vitest watch",
