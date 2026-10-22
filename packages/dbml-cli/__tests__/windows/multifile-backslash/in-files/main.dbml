@@ -1,0 +1,2 @@
+use { table users } from './types'
+use { table orders } from './sub/orders'

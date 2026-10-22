@@ -19,26 +19,26 @@ export interface CompilerDiagnostic {
   readonly code?: ErrorCode;
 }
 
-type DiagInput = CompilerDiagnostic | CompilerError | DiagInput[];
+type DiagInput = CompilerDiagnostic | CompilerDiagnostics | DiagInput[];
 
-export class CompilerError {
+export class CompilerDiagnostics {
   diags: CompilerDiagnostic[];
 
   constructor (diags: CompilerDiagnostic[]) {
     this.diags = diags;
   }
 
-  static create (nestedDiags: DiagInput): CompilerError {
-    return new CompilerError(flattenDiag(nestedDiags));
+  static create (nestedDiags: DiagInput): CompilerDiagnostics {
+    return new CompilerDiagnostics(flattenDiag(nestedDiags));
   }
 
-  map (callback: (diag: CompilerDiagnostic) => CompilerDiagnostic): CompilerError {
-    return CompilerError.create(this.diags.map(callback));
+  map (callback: (diag: CompilerDiagnostic) => CompilerDiagnostic): CompilerDiagnostics {
+    return CompilerDiagnostics.create(this.diags.map(callback));
   }
 }
 
 function flattenDiag (diag: DiagInput): CompilerDiagnostic[] {
   if (Array.isArray(diag)) return diag.flatMap(flattenDiag);
-  if (diag instanceof CompilerError) return diag.diags;
+  if (diag instanceof CompilerDiagnostics) return diag.diags;
   return [diag];
 }

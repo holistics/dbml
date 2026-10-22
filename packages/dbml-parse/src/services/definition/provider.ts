@@ -2,11 +2,12 @@ import { Uri } from '@/services/types';
 import Compiler from '@/compiler';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { SyntaxNode, SyntaxNodeKind } from '@/core/types/nodes';
+import { SyntaxNode, SyntaxNodeKind, UseDeclarationNode } from '@/core/types/nodes';
 import {
   Definition, DefinitionProvider, Position, TextModel,
 } from '@/services/types';
 import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { isOffsetWithinSpan } from '@/core/utils/span';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
   private compiler: Compiler;
@@ -21,6 +22,11 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     } = model;
     const filepath = Filepath.fromUri(String(model.uri));
     const offset = getOffsetFromMonacoPosition(model, position);
+
+    // Go-to-definition on import path: jump to the imported file
+    const importDef = this.resolveImportPath(filepath, offset, uri);
+    if (importDef) return importDef;
+
     const containers = [
       ...this.compiler.container.stack(filepath, offset),
     ];
@@ -69,5 +75,29 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
     }
 
     return [];
+  }
+
+  private resolveImportPath (filepath: Filepath, offset: number, uri: any): Definition | undefined {
+    const ast = this.compiler.parse.ast(filepath);
+    for (const node of ast.body) {
+      if (!(node instanceof UseDeclarationNode)) continue;
+      if (!node.importPath || !isOffsetWithinSpan(offset, node.importPath)) continue;
+
+      const specifier = node.importPath.value;
+      if (!specifier) continue;
+
+      const targetFilepath = this.compiler.layout.resolveFileSpecifier(filepath, specifier);
+      if (!targetFilepath || !this.compiler.layout.exists(targetFilepath)) continue;
+
+      const targetUri = uri
+        ? Uri.parse(targetFilepath.toUri({ protocol: uri.scheme }))
+        : uri;
+
+      return [{
+        range: { startColumn: 1, startLineNumber: 1, endColumn: 1, endLineNumber: 1 },
+        uri: targetUri,
+      }];
+    }
+    return undefined;
   }
 }

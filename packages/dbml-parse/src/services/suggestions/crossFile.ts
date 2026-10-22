@@ -97,8 +97,8 @@ export function buildCrossFileCompletionItem (
     insertText: symbolName,
     insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
     kind: pickCompletionItemKind(symbolKind),
-    detail: `from ${sourceFilepath.basename}`,
-    // Sort cross-file suggestions after local ones
+    detail: `from ${compiler.layout.getFileSpecifierInfo(currentFilepath, sourceFilepath)?.label ?? sourceFilepath.basename}`,
+    // Sort cross-file suggestions after local ones.
     sortText: `zzz_${pickCompletionItemKind(symbolKind).toString().padStart(2, '0')}_${symbolName}`,
     range: undefined as any,
     additionalTextEdits,

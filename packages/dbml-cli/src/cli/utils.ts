@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import {
-  CompilerError,
+  CompilerDiagnostics,
+  type CompilerDiagnostic,
   type ExportFormat,
 } from '@dbml/core';
 import {
@@ -88,8 +89,8 @@ function generate (
       const content = transform(source);
       outputPlugin.write(content);
     } catch (e) {
-      if (e instanceof CompilerError) {
-        throw e.map((diag) => ({
+      if (e instanceof CompilerDiagnostics) {
+        throw e.map((diag: CompilerDiagnostic) => ({
           ...diag,
           message: diag.message,
           filepath: path.basename(_path),
