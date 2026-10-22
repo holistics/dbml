@@ -13,11 +13,18 @@ import StickyNote from './stickyNote';
 import Table from './table';
 import TableGroup from './tableGroup';
 import TablePartial from './tablePartial';
+import Node from './node';
+import Group from './group';
+import Link from './link';
+import Kind from './kind';
 import type {
   RawDatabase, TableRecord, RawTableRecord, NormalizedModel,
 } from '../../types/model_structure/database';
 import type { Token } from '../../types/model_structure/element';
-import type { DiagramView } from '@dbml/parse';
+import type { ArchElementType } from '../../types/model_structure/link';
+import type {
+  DiagramView, Group as RawGroup, Kind as RawKind, Link as RawLink, Node as RawNode,
+} from '@dbml/parse';
 
 class Database extends Element {
   dbState: DbState;
@@ -33,6 +40,12 @@ class Database extends Element {
   diagramViews: DiagramView[];
   aliases: any[];
   injectedRawRefs: any[];
+  nodes: Node[];
+  groups: Group[];
+  links: Link[];
+  kinds: Kind[];
+  frontMatter: Record<string, string> | null;
+  diagramType: 'arch' | null;
   id!: number;
 
   constructor ({
@@ -48,6 +61,12 @@ class Database extends Element {
     records = [],
     tablePartials = [],
     diagramViews = [],
+    nodes = [],
+    groups = [],
+    links = [],
+    kinds = [],
+    frontMatter,
+    diagramType,
   }: Partial<RawDatabase> & { aliases?: any[] } = {} as any) {
     super();
     this.dbState = new DbState();
@@ -88,6 +107,59 @@ class Database extends Element {
       if (schema.refs.some((r) => r.equals(ref as any))) return;
       schema.pushRef(ref);
     });
+
+    this.nodes = [];
+    this.groups = [];
+    this.links = [];
+    this.kinds = [];
+    this.frontMatter = frontMatter ?? null;
+    this.diagramType = diagramType ?? null;
+    this.processArch(kinds, nodes, groups, links);
+  }
+
+  // Kinds first so nodes can point at them; members and link ends once every element exists.
+  // Sticky notes are processed first of all, so a note can be a member or a link end.
+  private processArch (kinds: RawKind[], nodes: RawNode[], groups: RawGroup[], links: RawLink[]): void {
+    kinds.forEach((kind) => this.kinds.push(new Kind({ ...kind, database: this })));
+    nodes.forEach((node) => this.nodes.push(new Node({ ...node, database: this })));
+    groups.forEach((group) => this.groups.push(new Group({ ...group, database: this })));
+
+    // Nodes and groups by handle (alias, else name), notes by name
+    const byHandle = new Map<string, { type: ArchElementType; element: Node | Group | StickyNote }>();
+    const add = (handle: string, type: ArchElementType, element: Node | Group | StickyNote) => {
+      if (!byHandle.has(handle)) byHandle.set(handle, { type, element });
+    };
+    this.nodes.forEach((node) => add(node.alias ?? node.name, 'node', node));
+    this.groups.forEach((group) => add(group.alias ?? group.name, 'group', group));
+    this.notes.forEach((note) => add(note.name, 'note', note));
+
+    this.groups.forEach((group) => {
+      group.children.forEach((handle) => {
+        const child = byHandle.get(handle);
+        if (!child) return;
+        group.childIds.push(child.element.id);
+        group.childTypes.push(child.type);
+        if (child.element instanceof Node || child.element instanceof Group) child.element.groupId = group.id;
+      });
+    });
+
+    links.forEach(({ from, to, ...link }) => {
+      const fromElement = byHandle.get(from);
+      const toElement = byHandle.get(to);
+      if (!fromElement || !toElement) return;
+      this.links.push(new Link({
+        ...link,
+        fromId: fromElement.element.id,
+        fromType: fromElement.type,
+        toId: toElement.element.id,
+        toType: toElement.type,
+        database: this,
+      }));
+    });
+  }
+
+  findKind (name: string): Kind | undefined {
+    return this.kinds.find((kind) => kind.name === name);
   }
 
   private generateId (): void {
@@ -325,6 +397,7 @@ class Database extends Element {
       schemas: this.schemas.map((s) => s.export()),
       notes: this.notes.map((n) => n.export()),
       records: this.records.map((r) => ({ ...r })),
+      ...this.archEntries((list) => list.map((e) => e.export())),
     };
   }
 
@@ -332,6 +405,31 @@ class Database extends Element {
     return {
       schemaIds: this.schemas.map((s) => s.id),
       noteIds: this.notes.map((n) => n.id),
+      ...this.archIds(),
+      ...(this.frontMatter ? { frontMatter: this.frontMatter } : {}),
+      ...(this.diagramType ? { diagramType: this.diagramType } : {}),
+    };
+  }
+
+  // Architecture entries go into exports only when they have content, so DBML output is unchanged
+  private archEntries<T> (map: (_list: (Node | Group | Link | Kind)[]) => T): Partial<Record<'nodes' | 'groups' | 'links' | 'kinds', T>> {
+    const out: Partial<Record<'nodes' | 'groups' | 'links' | 'kinds', T>> = {};
+    const lists = {
+      nodes: this.nodes, groups: this.groups, links: this.links, kinds: this.kinds,
+    };
+    Object.entries(lists).forEach(([key, list]) => {
+      if (list.length) out[key as keyof typeof lists] = map(list);
+    });
+    return out;
+  }
+
+  private archIds () {
+    const ids = this.archEntries((list) => list.map((e) => e.id));
+    return {
+      ...(ids.nodes ? { nodeIds: ids.nodes } : {}),
+      ...(ids.groups ? { groupIds: ids.groups } : {}),
+      ...(ids.links ? { linkIds: ids.links } : {}),
+      ...(ids.kinds ? { kindIds: ids.kinds } : {}),
     };
   }
 
@@ -366,6 +464,10 @@ class Database extends Element {
     this.notes.forEach((note) => note.normalize(normalizedModel));
     this.records.forEach((record) => { (normalizedModel.records as any)[record.id] = { ...record }; });
     this.tablePartials.forEach((tablePartial) => tablePartial.normalize(normalizedModel));
+    Object.entries(this.archEntries((list) => list)).forEach(([key, list]) => {
+      (normalizedModel as unknown as Record<string, object>)[key] = {};
+      list!.forEach((element) => element.normalize(normalizedModel));
+    });
     return normalizedModel;
   }
 }

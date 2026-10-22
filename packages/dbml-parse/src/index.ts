@@ -92,7 +92,24 @@ export {
   type FilterConfig,
   type DiagramView,
   type CustomMetadata,
+  type Node,
+  type Group,
+  type Link,
+  type LinkOp,
+  type Kind,
+  type KindCategory,
+  type ArchSettings,
+  type ArchSettingValue,
 } from '@/core/types/schemaJson';
+
+// Architecture files
+export { type FileKind, ARCH_DIAGRAM_TYPES, isArchDiagramType } from '@/compiler/queries/files/fileKind';
+export {
+  BUILTIN_KINDS, RESERVED, isReserved, suggestKind, suggestIcon, type KindSpec,
+} from '@/core/arch/vocabulary';
+export {
+  ICON_ALIAS, ICON_NAMES, isIconName, resolveIcon,
+} from '@/core/arch/icons';
 
 export {
   type RelationCardinality,
@@ -136,6 +153,8 @@ export type {
   DepIdentifier,
   NoteIdentifier,
   TableGroupIdentifier,
+  ArchElementIdentifier,
+  ArchLinkIdentifier,
 } from '@/compiler/queries/transform';
 
 export {
@@ -144,6 +163,12 @@ export {
 } from '@/services/monarch';
 
 export * from '@/compiler/projectLayout/layout';
+
+export { dbmlModules } from '@/core/global_modules';
+export type { GlobalModule } from '@/core/global_modules/types';
+export type { ParserOptions } from '@/core/parser/parser';
+export type { LexerOptions } from '@/core/lexer/lexer';
+export type { DialectOptions } from '@/compiler/index';
 
 export { Compiler };
 

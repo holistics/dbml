@@ -99,7 +99,7 @@ export function resolveMetadataTarget (compiler: Compiler, metadataNode: Element
 }
 
 /** Get precedence score of files in import tree, lower score means lower precedence */
-function metadataFilePrecedence (compiler: Compiler, root: Filepath): Map<FilepathId, number> {
+export function metadataFilePrecedence (compiler: Compiler, root: Filepath): Map<FilepathId, number> {
   const sequence: Filepath[] = [];
   const visited = new Set<FilepathId>();
 

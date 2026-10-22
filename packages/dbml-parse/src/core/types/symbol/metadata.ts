@@ -29,6 +29,9 @@ import {
   destructureCallExpression,
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
+import { lookupVisible } from '@/core/global_modules/arch/utils';
+import { endpointNode, inlineLinkOf, linkPartsOf } from '@/core/arch/read';
+import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { getRightmostVariable } from '@/core/utils/validate';
 
 export enum MetadataKind {
@@ -40,6 +43,7 @@ export enum MetadataKind {
   Records = 'records',
   Project = 'project',
   MetadataElement = 'metadata element',
+  Link = 'link',
 }
 
 declare const __nodeMetadataBrand: unique symbol;
@@ -614,6 +618,72 @@ export class MetadataElementMetadata extends NodeMetadata {
     }
 
     return this.resolveOwnerPrograms(compiler, [target]);
+  }
+}
+
+// Architecture `Link: a > b` (or `Ref:` in an architecture file), or an inline `[link: > b]` on the element `a`
+export class LinkMetadata extends NodeMetadata {
+  declare declaration: ElementDeclarationNode | AttributeNode;
+
+  readonly kind = MetadataKind.Link;
+
+  constructor (declaration: ElementDeclarationNode | AttributeNode) {
+    super(declaration);
+  }
+
+  op (): string | undefined {
+    return this.declaration instanceof AttributeNode
+      ? inlineLinkOf(this.declaration)?.op
+      : linkPartsOf(this.declaration)?.infix.op;
+  }
+
+  endpoints (compiler: Compiler): [NodeSymbol | undefined, NodeSymbol | undefined] {
+    const resolve = (side: SyntaxNode) => {
+      const node = endpointNode(side);
+      return isExpressionAVariableNode(node) ? compiler.nodeReferee(node).getFiltered(UNHANDLED)?.originalSymbol : undefined;
+    };
+
+    if (this.declaration instanceof AttributeNode) {
+      const inline = inlineLinkOf(this.declaration);
+      const element = this.declaration.parentOfKind(ElementDeclarationNode);
+      if (!inline || !element) return [
+        undefined,
+        undefined,
+      ];
+      return [
+        compiler.nodeSymbol(element).getFiltered(UNHANDLED)?.originalSymbol,
+        resolve(inline.target),
+      ];
+    }
+
+    const parts = linkPartsOf(this.declaration);
+    if (!parts) return [
+      undefined,
+      undefined,
+    ];
+    return [
+      resolve(parts.infix.left),
+      resolve(parts.infix.right),
+    ];
+  }
+
+  override owners (compiler: Compiler): NodeSymbol[] {
+    const [from, to] = this.endpoints(compiler);
+    if (!from || !to) return [];
+    return this.resolveOwnerPrograms(compiler, [
+      from,
+      to,
+    ]);
+  }
+}
+
+// Architecture `Metadata Server api1 { ... }`, or `Metadata api1 { ... }` with the role left out
+export class ArchMetadataElementMetadata extends MetadataElementMetadata {
+  override target (compiler: Compiler): NodeSymbol | undefined {
+    if (this.declaration.name) return super.target(compiler);
+    const name = this.declaration.targetKind?.value;
+    if (!name) return undefined;
+    return lookupVisible(compiler, this.declaration.filepath, SymbolKind.Element, name)?.originalSymbol;
   }
 }
 

@@ -1,4 +1,5 @@
 export { renameTable } from './renameTable';
+export { renameElement } from './renameElement';
 export { updateElementSetting, updateElementSettingEdit } from './updateElementSetting';
 export {
   syncDiagramView,
@@ -25,4 +26,6 @@ export type {
   DepIdentifier,
   NoteIdentifier,
   TableGroupIdentifier,
+  ArchElementIdentifier,
+  ArchLinkIdentifier,
 } from './types';

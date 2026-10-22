@@ -1,13 +1,14 @@
 import Compiler from '@/compiler/index';
-import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import type { CompileWarning, CompileInfo } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, CompileWarning, type CompileInfo,
+} from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ProgramNode } from '@/core/types/nodes';
+import { ElementDeclarationNode, ProgramNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
   Alias, Database, Dep, DiagramView, Enum,
-  Note, Project, Ref,
+  Group, Kind, Link, Node, Note, Project, Ref,
   RefEndpoint, SchemaElement, Table,
   TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
@@ -30,6 +31,10 @@ import {
   UseSymbol,
 } from '@/core/types/symbol/symbols';
 import { pushExternal, validateDepBlocks } from './utils';
+import {
+  archSort, bodyOf, declarationWord, isTopLevel, nameOf, rowOf,
+} from '@/core/arch/read';
+import { builtinKinds } from '../arch/interpret';
 import type { ElementRef } from '@/core/types/schemaJson';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '@/core/types/relation';
@@ -81,7 +86,92 @@ export default class ProgramInterpreter {
     this.interpretAllAliases();
     this.validatePartialRefs();
     this.infos.push(...this.validateRecords());
+    this.finishArch();
     return new Report(this.db, this.errors, this.warnings, this.infos);
+  }
+
+  // Architecture entries, filled while interpreting and written to `db` at the end
+  private arch = {
+    nodes: [] as Node[],
+    groups: [] as Group[],
+    links: [] as {
+      link: Link;
+      declaration: SyntaxNode;
+    }[],
+    kinds: [] as Kind[],
+    importedKinds: [] as Kind[],
+  };
+
+  private finishArch () {
+    const isArch = this.compiler.parsedFileKind(this.filepath) === 'arch';
+
+    // A `Kind` in this file overrules an imported one and a built-in; a later one overrules an earlier one
+    const kinds = new Map<string, Kind>();
+    for (const kind of this.arch.kinds) kinds.set(kind.name.toLowerCase(), kind);
+    for (const kind of this.arch.importedKinds) {
+      if (!kinds.has(kind.name.toLowerCase())) kinds.set(kind.name.toLowerCase(), kind);
+    }
+    // a DBML file that imports nodes needs the built-in roles to draw them
+    if (isArch || this.arch.nodes.length) {
+      for (const kind of builtinKinds()) {
+        if (!kinds.has(kind.name.toLowerCase())) kinds.set(kind.name.toLowerCase(), kind);
+      }
+    }
+
+    // The first group to list an element owns it
+    const handles = new Set([
+      ...[
+        ...this.arch.nodes,
+        ...this.arch.groups,
+      ].map((e) => e.alias ?? e.name),
+      ...this.db.notes.map((note) => note.name),
+    ]);
+    const parent = new Map<string, string>();
+    for (const group of this.arch.groups) {
+      const handle = group.alias ?? group.name;
+      for (const child of group.children) {
+        if (handles.has(child) && !parent.has(child)) parent.set(child, handle);
+      }
+    }
+    for (const group of this.arch.groups) {
+      const handle = group.alias ?? group.name;
+      group.children = group.children.filter((child) => parent.get(child) === handle);
+    }
+
+    // A repeated link, or a link into its own container, still draws, with a warning
+    const seen = new Set<string>();
+    for (const { link, declaration } of this.arch.links) {
+      const key = [
+        link.from,
+        link.to,
+      ].sort().join('\u0000');
+      if (seen.has(key)) {
+        this.warnings.push(new CompileWarning(CompileErrorCode.DUPLICATE_LINK, `${link.from} and ${link.to} are already connected`, declaration));
+      }
+      seen.add(key);
+      if (parent.get(link.from) === link.to || parent.get(link.to) === link.from) {
+        this.warnings.push(new CompileWarning(CompileErrorCode.NESTED_ENDPOINTS, `${link.from} is already inside ${link.to}`, declaration));
+      }
+    }
+
+    const entries = {
+      nodes: this.arch.nodes,
+      groups: this.arch.groups,
+      links: this.arch.links.map(({ link }) => link),
+      kinds: [
+        ...kinds.values(),
+      ],
+    };
+    for (const [key, value] of Object.entries(entries) as [keyof typeof entries, never[]][]) {
+      if (isArch || value.length) this.db[key] = value;
+    }
+
+    const frontMatter = {
+      ...this.compiler.scanFile(this.filepath).frontMatter,
+      ...(isArch ? projectRowsOf(this.programNode) : {}),
+    };
+    if (Object.keys(frontMatter).length) this.db.frontMatter = frontMatter;
+    if (isArch) this.db.diagramType = 'arch';
   }
 
   private interpretAllSymbols () {
@@ -285,6 +375,12 @@ export default class ProgramInterpreter {
         case MetadataKind.Project:
           this.db.project = value as Project;
           break;
+        case MetadataKind.Link:
+          this.arch.links.push({
+            link: value as Link,
+            declaration: meta.declaration,
+          });
+          break;
 
         // Handled inside each element
         case MetadataKind.MetadataElement:
@@ -449,6 +545,16 @@ export default class ProgramInterpreter {
   private pushElement (symbol: NodeSymbol, value: SchemaElement | SchemaElement[]) {
     if (Array.isArray(value)) return;
     switch (symbol.kind) {
+      case SymbolKind.Element: {
+        const sort = archSort(symbol.originalSymbol.declaration!);
+        if (sort === 'group') this.arch.groups.push(value as Group);
+        else this.arch.nodes.push(value as Node);
+        break;
+      }
+      case SymbolKind.Kind:
+        if (symbol instanceof UseSymbol) this.arch.importedKinds.push(value as Kind);
+        else this.arch.kinds.push(value as Kind);
+        break;
       case SymbolKind.Table:
         this.db.tables.push(value as Table);
         break;
@@ -470,4 +576,27 @@ export default class ProgramInterpreter {
       default: break;
     }
   }
+}
+
+// An architecture file's `Project` rows join its front matter keys; `diagram_type` there is an error, not a key
+function projectRowsOf (program: ProgramNode): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const declaration of program.body) {
+    if (!isTopLevel(declaration) || archSort(declaration) !== 'project') continue;
+    for (const row of bodyOf(declaration)) {
+      let key: string | undefined;
+      let value: string | undefined;
+      if (row instanceof ElementDeclarationNode) {
+        key = declarationWord(row)?.toLowerCase();
+        value = nameOf(rowOf(bodyOf(row)[0])?.callee);
+      } else {
+        const parsed = rowOf(row);
+        key = nameOf(parsed?.callee)?.toLowerCase();
+        value = nameOf(parsed?.args[0]);
+      }
+      if (!key || key === 'diagram_type' || value === undefined) continue;
+      out[key] = value;
+    }
+  }
+  return out;
 }

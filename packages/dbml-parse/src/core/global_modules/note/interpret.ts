@@ -36,6 +36,11 @@ export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color
   },
 };
 
+const INLINE_LINK_SETTINGS = [
+  'link',
+  'ref',
+];
+
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
   private symbol: NoteSymbol;
@@ -61,7 +66,7 @@ export class StickyNoteInterpreter {
     const errors = [
       ...this.interpretName(),
       ...this.interpretSettingList(this.declarationNode.attributeList),
-      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode),
+      ...this.interpretBody(this.declarationNode.body as BlockExpressionNode | undefined),
     ];
 
     attachCustomMetadata(this.compiler, this.note, this.symbol, NOTE_METADATA_FIELDS, this.filepath);
@@ -86,12 +91,23 @@ export class StickyNoteInterpreter {
       this.note.color = extractColor(settingMap.color.at(0)?.value);
     }
 
-    this.note.metadata = extractCustomInlineMetadata(settingMap, Object.keys(NOTE_METADATA_FIELDS) as SettingName[]);
+    // An architecture file's note may carry inline links, which are links, not metadata
+    const isArch = this.compiler.parsedFileKind(this.declarationNode.filepath) === 'arch';
+    const excluded = [
+      ...Object.keys(NOTE_METADATA_FIELDS),
+      ...(isArch ? INLINE_LINK_SETTINGS : []),
+    ];
+    this.note.metadata = extractCustomInlineMetadata(settingMap, excluded as SettingName[]);
 
     return [];
   }
 
-  private interpretBody (body: BlockExpressionNode): CompileError[] {
+  private interpretBody (body?: BlockExpressionNode): CompileError[] {
+    // An architecture file allows `Note memo` with no body
+    if (!body) {
+      this.note.content = '';
+      return [];
+    }
     const [
       fields,
       subs,

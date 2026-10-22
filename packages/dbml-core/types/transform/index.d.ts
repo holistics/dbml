@@ -9,6 +9,12 @@ export function renameTable(
   dbmlCode: string
 ): string;
 
+export function renameElement(
+  oldHandle: string,
+  newName: string,
+  dbmlCode: string
+): string;
+
 export function updateElementSettingEdit(
   dbmlCode: string,
   target: ElementIdentifier,

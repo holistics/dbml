@@ -114,21 +114,27 @@ export const schemaModule: GlobalModule = {
     });
 
     // 6. Duplicate checking
+    // Links and groups in an architecture file name elements and notes alike, so a note can't reuse an element's name
+    const isArch = compiler.parsedFileKind(symbol.filepath) === 'arch';
+    const keyKind = (member: NodeSymbol) => (isArch && member.isKind(SymbolKind.StickyNote) ? SymbolKind.Element : member.kind);
     const seen = new Map<string, NodeSymbol>();
     for (const member of uniqueExpandedMembers) {
-      const key = `${member.kind}:${member.name}`;
+      const key = `${keyKind(member)}:${member.name}`;
       const existing = seen.get(key);
       if (existing) {
         // Schemas with the same name merge (e.g. two schema aliases to the same name)
         if (member.isKind(SymbolKind.Schema)) continue;
+        // A `Kind` declared again overrules the earlier one
+        if (member.isKind(SymbolKind.Kind)) continue;
+        const kind = keyKind(member);
         // Error points at the use specifier in the current file, not the original declaration
         const errorNode = member instanceof UseSymbol
           ? (member.useSpecifierDeclaration ?? member.declaration)
-          : (member.declaration instanceof ElementDeclarationNode && member.declaration.name
+          : (member.declaration instanceof ElementDeclarationNode && member.declaration.name && kind !== SymbolKind.Element
               ? member.declaration.name
               : member.declaration);
         if (errorNode && member.name !== undefined) {
-          errors.push(getDuplicateSchemaMemberError(member.kind, member.name, qualifiedName.join('.'), errorNode));
+          errors.push(getDuplicateSchemaMemberError(kind, member.name, qualifiedName.join('.'), errorNode));
         }
       } else {
         seen.set(key, member);
@@ -151,6 +157,8 @@ function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLa
       return tableGroupUtils.getDuplicateError(name, schemaLabel, errorNode);
     case SymbolKind.DiagramView:
       return diagramViewUtils.getDuplicateError(name, schemaLabel, errorNode);
+    case SymbolKind.Element:
+      return new CompileError(CompileErrorCode.DUPLICATE_NAME, `${name} is already declared`, errorNode);
     default:
       return new CompileError(CompileErrorCode.DUPLICATE_NAME, `Duplicate ${kind} '${name}' in schema '${schemaLabel}'`, errorNode);
   }

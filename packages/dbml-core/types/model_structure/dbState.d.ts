@@ -16,5 +16,9 @@ export default class DbState {
     indexColumnId: number;
     recordId: number;
     tablePartialId: number;
+    nodeId: number;
+    groupId: number;
+    linkId: number;
+    kindId: number;
     generateId(el: Exclude<keyof DbState, 'generateId'>): number;
 }

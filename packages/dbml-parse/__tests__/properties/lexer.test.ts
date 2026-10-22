@@ -411,3 +411,32 @@ describe('[property] lexer - negative tests', () => {
     );
   });
 });
+
+describe('[regression] a number at the end of a document', () => {
+  const kinds = (source: string): string[] =>
+    lex(source).getValue().map((token) => token.kind).filter((kind) => kind !== SyntaxTokenKind.EOF);
+
+  const values = (source: string): string[] =>
+    lex(source).getValue().map((token) => token.value).filter(Boolean);
+
+  it('stops at a terminator that happens to be the last character', () => {
+    for (const terminator of [']', '}', ')', ',']) {
+      const source = `x: 100${terminator}`;
+      expect(values(source), source).toContain('100');
+      expect(values(source), source).toContain(terminator);
+      expect(values(source), source).not.toContain(`100${terminator}`);
+    }
+  });
+
+  it('still reads a number that really does end the document', () => {
+    for (const source of ['100', 'x: 100', '0.5', '1e3', 'x: 42']) {
+      expect(values(source), source).toContain(source.endsWith('42') ? '42' : source.split(' ').pop());
+    }
+    expect(kinds('100')).toEqual([SyntaxTokenKind.NUMERIC_LITERAL]);
+  });
+
+  it('is unaffected by what follows when the document does not end there', () => {
+    expect(values('x: 100]\n')).toContain('100');
+    expect(values('x: 100]\n')).toContain(']');
+  });
+});

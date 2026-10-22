@@ -67,6 +67,13 @@ class PartialParsingError<T extends SyntaxNode> {
 //   2. If it can't, throw a new PartialParsingError with the partially built node
 //   3. If it can, call `synchronizeParseMethod`
 //      INVARIANT: `synchronizeParseMethod` must consume at least one token in most cases to avoid infinite loops
+
+// Every switch is off by default
+export interface ParserOptions {
+  // Allow an element declaration with no body: `Database mongo1` as a complete statement
+  allowBodylessElement?: boolean;
+}
+
 export default class Parser {
   private tokens: SyntaxToken[];
 
@@ -83,11 +90,20 @@ export default class Parser {
 
   private filepath: Filepath;
 
-  constructor (source: string, tokens: SyntaxToken[], nodeIdGenerator: SyntaxNodeIdGenerator, filepath: Filepath) {
+  private readonly options: ParserOptions;
+
+  constructor (
+    source: string,
+    tokens: SyntaxToken[],
+    nodeIdGenerator: SyntaxNodeIdGenerator,
+    filepath: Filepath,
+    options: ParserOptions = {},
+  ) {
     this.source = source;
     this.tokens = tokens;
     this.nodeFactory = new NodeFactory(nodeIdGenerator, filepath);
     this.filepath = filepath;
+    this.options = options;
   }
 
   private isAtEnd (): boolean {
@@ -552,6 +568,11 @@ export default class Parser {
       }
       args.attributeList = e.partialNode;
       throw new PartialParsingError(e.token, buildElement(), e.handlerContext);
+    }
+
+    // Stop only when the next token cannot open a body, so `Server api1 [x] {` still parses its block
+    if (this.options.allowBodylessElement && !this.check(SyntaxTokenKind.LBRACE, SyntaxTokenKind.COLON)) {
+      return buildElement();
     }
 
     if (

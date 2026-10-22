@@ -16,6 +16,10 @@ export default class DbState {
   indexColumnId = 1;
   recordId = 1;
   tablePartialId = 1;
+  nodeId = 1;
+  groupId = 1;
+  linkId = 1;
+  kindId = 1;
 
   generateId (el: Exclude<keyof DbState, 'generateId'>): number {
     const id = this[el] as number;
