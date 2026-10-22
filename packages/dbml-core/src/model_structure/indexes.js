@@ -44,7 +44,10 @@ class Index extends Element {
    */
   processIndexColumns (rawColumns) {
     rawColumns.forEach((column) => {
-      this.pushIndexColumn(new IndexColumn({ ...column, index: this }));
+      // DBML rejects a descending primary key column, as PostgreSQL and Oracle do, so an imported
+      // `PRIMARY KEY (a DESC)` keeps its columns without the sort order
+      const sortOrder = this.pk ? undefined : column.sortOrder;
+      this.pushIndexColumn(new IndexColumn({ ...column, sortOrder, index: this }));
     });
   }
 

@@ -114,25 +114,45 @@ export default class IndexesValidator {
         field.callee,
         ...field.args,
       ];
+      let isPk = false;
       if (last(args) instanceof ListExpressionNode) {
-        errors.push(...this.validateFieldSetting(args.pop() as ListExpressionNode));
+        const settings = args.pop() as ListExpressionNode;
+        isPk = !!aggregateSettingList(settings).getValue().pk;
+        errors.push(...this.validateFieldSetting(settings));
       }
 
+      const names: ReturnType<typeof destructureIndexNode>[] = [];
       args.forEach((sub) => {
         // This is to deal with inline indexes field such as
         // (id, name) (age, weight)
         // which is parsed as a call expression
         while (sub instanceof CallExpressionNode) {
-          if (sub.argumentList && destructureIndexNode(sub.argumentList) === undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
+          if (sub.argumentList) {
+            const fragment = destructureIndexNode(sub.argumentList);
+            names.push(fragment);
+            if (fragment === undefined) {
+              errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
+            }
           }
           sub = sub.callee!;
         }
 
-        if (destructureIndexNode(sub) === undefined) {
+        const fragment = destructureIndexNode(sub);
+        names.push(fragment);
+        if (fragment === undefined) {
           errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
         }
       });
+
+      // PostgreSQL and Oracle take no sort order in a PRIMARY KEY constraint
+      if (isPk) {
+        names.flatMap((fragment) => [
+          ...fragment?.functional ?? [],
+          ...fragment?.nonFunctional ?? [],
+        ])
+          .filter(({ descending }) => descending)
+          .forEach(({ name }) => errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'A primary key index field cannot be descending', name)));
+      }
 
       return errors;
     });

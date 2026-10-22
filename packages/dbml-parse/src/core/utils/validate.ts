@@ -502,6 +502,13 @@ export function isValidIndexName (
   );
 }
 
+// `-name` marks a descending index column
+export function isDescendingIndexName (
+  value?: SyntaxNode,
+): value is PrefixExpressionNode & { op: { value: '-' } } {
+  return value instanceof PrefixExpressionNode && value.op?.value === '-';
+}
+
 // Extracts the rightmost variable node from an expression
 // For a simple variable node, returns itself
 // For an access expression (e.g. `ecommerce.merchants`), returns the rightmost fragment if it is a variable node

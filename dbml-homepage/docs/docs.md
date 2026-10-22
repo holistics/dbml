@@ -17,6 +17,7 @@ This part covers all constructs that define database structure and map directly 
 - [Check Definition](#check-definition)
   - [Check Settings](#check-settings)
 - [Index Definition](#index-definition)
+  - [Descending Index Columns](#descending-index-columns)
   - [Index Settings](#index-settings)
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
   - [Relationship Settings](#relationship-settings)
@@ -198,6 +199,26 @@ There are 4 types of index definitions:
 - Index with multiple columns (composite index): `CREATE INDEX on users (created_at, country)`
 - Index with an expression: `CREATE INDEX ON films ( first_name + last_name )`
 - (bonus) Composite index with expression: `CREATE INDEX ON users ( country, (lower(name)) )`
+
+### Descending Index Columns
+
+Put `-` before a column or an expression to sort it in descending order. Columns without it keep the database default, ascending.
+
+```text
+Table bookings {
+  id integer
+  country varchar
+  created_at timestamp
+
+  indexes {
+    -created_at // CREATE INDEX ON bookings (created_at DESC)
+    (country, -created_at) // CREATE INDEX ON bookings (country, created_at DESC)
+    -`lower(country)` // CREATE INDEX ON bookings ((lower(country)) DESC)
+  }
+}
+```
+
+A primary key index cannot have a descending column: `(id, -country) [pk]` is an error.
 
 ### Index Settings
 

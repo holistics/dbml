@@ -1,0 +1,13 @@
+Table "orders" {
+  "id" int
+  "customer_id" int
+  "status" nvarchar(20)
+  "created_at" datetime
+
+  Indexes {
+    (customer_id, -created_at) [name: "orders_customer_recent"]
+    id [pk, name: "PK_orders"]
+    -created_at [name: "orders_created"]
+    (-status, id) [unique, name: "orders_status_id"]
+  }
+}

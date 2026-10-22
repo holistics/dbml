@@ -1105,6 +1105,79 @@ describe('[example] interpreter', () => {
       expect(index.columns[0].value).toBe('email');
       expect(index.columns[0].type).toBe('column');
     });
+
+    test('should interpret descending index columns on any line', () => {
+      const source = `
+        Table t {
+          a int
+          b int
+          indexes {
+            a
+            -b
+            (a, -b, -\`lower(b)\`)
+          }
+        }
+      `;
+      const report = interpret(source);
+      const indexes = report.getValue()!.tables[0].indexes;
+
+      expect(report.getErrors()).toHaveLength(0);
+      expect(indexes).toHaveLength(3);
+      expect(indexes[0].columns[0].sortOrder).toBeUndefined();
+      expect(indexes[1].columns[0]).toMatchObject({ value: 'b', type: 'column', sortOrder: 'desc' });
+      expect(indexes[2].columns.map((c) => c.value)).toEqual(['a', 'b', 'lower(b)']);
+      expect(indexes[2].columns.map((c) => c.sortOrder)).toEqual([undefined, 'desc', 'desc']);
+    });
+
+    test('should report error for descending primary key column', () => {
+      const source = `
+        Table t {
+          a int
+          b int
+          indexes {
+            (a, -b) [pk]
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe('A primary key index field cannot be descending');
+    });
+
+    test('should report error for other prefix operators on index columns', () => {
+      const source = `
+        Table t {
+          a int
+          indexes {
+            +a
+            --a
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(2);
+      expect(errors.map((e) => e.diagnostic)).toEqual([
+        'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such',
+        'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such',
+      ]);
+    });
+
+    test('should report error for non-existent descending index column', () => {
+      const source = `
+        Table t {
+          a int
+          indexes {
+            -missing
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'missing' inside Table 't'");
+    });
   });
 
   describe('detailed enum verification', () => {

@@ -1,0 +1,13 @@
+Table "orders" {
+  "id" integer [pk]
+  "customer_id" integer
+  "status" varchar2(20)
+  "created_at" timestamp
+
+  Indexes {
+    -created_at [name: "orders_created"]
+    (customer_id, -created_at) [name: "orders_customer_recent"]
+    (-status, id) [unique, name: "orders_status_id"]
+    -`LOWER("status")` [name: "orders_lower_status"]
+  }
+}

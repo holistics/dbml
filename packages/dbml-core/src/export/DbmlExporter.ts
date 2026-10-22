@@ -142,19 +142,17 @@ class DbmlExporter {
       let line = '';
       const index = model.indexes[indexId];
 
-      if (index.columnIds.length > 1) {
-        line = `(${index.columnIds.map((columnId) => {
-          const column = model.indexColumns[columnId];
-          if (column.type === 'expression') {
-            return `\`${column.value}\``;
-          }
-          return column.value;
-        }).join(', ')})`;
-      } else if (index.columnIds.length === 1) {
-        const column = model.indexColumns[index.columnIds[0]];
-        line = column.type === 'expression'
+      const columnLines = index.columnIds.map((columnId) => {
+        const column = model.indexColumns[columnId];
+        const name = column.type === 'expression'
           ? `\`${column.value}\``
           : column.value;
+        return column.sortOrder === 'desc' ? `-${name}` : name;
+      });
+      if (columnLines.length > 1) {
+        line = `(${columnLines.join(', ')})`;
+      } else if (columnLines.length === 1) {
+        line = columnLines[0];
       }
 
       const indexSettings: string[] = [];
