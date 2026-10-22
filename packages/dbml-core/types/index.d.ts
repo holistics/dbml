@@ -95,6 +95,7 @@ export type {
   TableGroupIdentifier,
   CustomMetadata,
   CustomMetadataValue,
+  CustomMetadataValueType,
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,

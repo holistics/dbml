@@ -11,19 +11,9 @@ import {
 import { isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
 import { MetadataTargetKind } from '@/core/types/symbol';
-import { COLUMN_METADATA_FIELDS, TABLE_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
-import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
-import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
-import type { MetadataFieldRegistry } from '@/core/global_modules/metadata/utils';
+import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/registries';
 import { getMetadataTargetKind } from './utils';
 import { extractMetadataValue } from '@/core/utils/interpret';
-
-const METADATA_FIELDS_BY_KIND: Record<MetadataTargetKind, MetadataFieldRegistry<any, any>> = {
-  [MetadataTargetKind.Table]: TABLE_METADATA_FIELDS,
-  [MetadataTargetKind.Column]: COLUMN_METADATA_FIELDS,
-  [MetadataTargetKind.TableGroup]: TABLEGROUP_METADATA_FIELDS,
-  [MetadataTargetKind.Note]: NOTE_METADATA_FIELDS,
-};
 
 export default class MetadataValidator {
   constructor (private compiler: Compiler, private declarationNode: ElementDeclarationNode) {}

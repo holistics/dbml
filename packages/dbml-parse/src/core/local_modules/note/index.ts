@@ -10,7 +10,7 @@ import { destructureComplexVariable } from '@/core/utils/expression';
 import { type LocalModule, type Settings } from '../types';
 import NoteValidator from './validate';
 import { validateCustomInlineMetadata } from '../metadata/utils';
-import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
+import { NOTE_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 
 export const noteModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

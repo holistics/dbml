@@ -13,7 +13,7 @@ import { type LocalModule } from '../types';
 import TableGroupValidator from './validate';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { validateCustomInlineMetadata } from '../metadata/utils';
-import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
+import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 
 export const tableGroupModule: LocalModule = {
   validateNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

@@ -18,7 +18,7 @@ import {
   Settings, aggregateSettingList, isElementFieldNode, isElementNode, isExpressionAnIdentifierNode,
   isUnaryDependency, isUnaryRelationship, isValidAlias, isValidDefaultValue, isValidPartialInjection,
 } from '@/core/utils/validate';
-import { TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
+import { TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS } from '@/core/global_modules/metadata/registries';
 import type { LocalModule } from '../types';
 import TableValidator from './validate';
 import { validateCustomInlineMetadata } from '../metadata/utils';

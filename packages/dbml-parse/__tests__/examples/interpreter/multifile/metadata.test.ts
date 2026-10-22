@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { getDatabase, setupCompiler, fp } from './utils';
+import { plainMetadata } from '../../../utils';
 
 describe('[example] multifile interpreter - auto-imported metadata', () => {
   const { compiler } = setupCompiler({
@@ -19,13 +20,13 @@ use { table users } from './base.dbml'
   test('metadata travels with its targetwithout an explicit metadata import', () => {
     const db = getDatabase(compiler, '/main.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'scott' });
+    expect(plainMetadata(users?.metadata)).toMatchObject({ owner: 'scott' });
   });
 
   test('metadata is still attached in the file that declares it', () => {
     const db = getDatabase(compiler, '/base.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'scott' });
+    expect(plainMetadata(users?.metadata)).toMatchObject({ owner: 'scott' });
   });
 });
 
@@ -55,7 +56,7 @@ Metadata Table users {
 
     const db = result.getValue()!;
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ color: '#f00' });
+    expect(plainMetadata(users?.metadata)).toMatchObject({ color: '#f00' });
   });
 });
 
@@ -101,7 +102,7 @@ Metadata Table users {
 
     const db = getDatabase(compiler, '/entry.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'b', a: 'a', b: 'b', shared_a_c: 'a', shared_b_c: 'b' });
+    expect(plainMetadata(users?.metadata)).toMatchObject({ owner: 'b', a: 'a', b: 'b', shared_a_c: 'a', shared_b_c: 'b' });
   });
 
   // entry <- a
@@ -140,7 +141,7 @@ Metadata Table users {
 
     const db = getDatabase(compiler, '/entry.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'b', shared_a_c: 'c' });
+    expect(plainMetadata(users?.metadata)).toMatchObject({ owner: 'b', shared_a_c: 'c' });
   });
 
   // entry <- a <- c
@@ -184,7 +185,7 @@ Metadata Table users {
 
     const db = getDatabase(compiler, '/entry.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'b', shared_a_b: 'b', shared_a_c: 'a', shared_b_c: 'b' });
+    expect(plainMetadata(users?.metadata)).toMatchObject({ owner: 'b', shared_a_b: 'b', shared_a_c: 'a', shared_b_c: 'b' });
   });
 
   // entry <- a <- b
@@ -215,7 +216,7 @@ Metadata Table users {
 
     const db = getDatabase(compiler, '/entry.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'a' });
+    expect(plainMetadata(users?.metadata)).toMatchObject({ owner: 'a' });
   });
 });
 
@@ -240,12 +241,12 @@ use { table users } from './base.dbml'
   test('metadata declared in an unreachable file is excluded', () => {
     const db = getDatabase(compiler, '/main.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toEqual({});
+    expect(plainMetadata(users?.metadata)).toEqual({});
   });
 
   test('the file declaring them still has metadata', () => {
     const db = getDatabase(compiler, '/extra.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'extra' });
+    expect(plainMetadata(users?.metadata)).toMatchObject({ owner: 'extra' });
   });
 });

@@ -5,7 +5,7 @@ import {
 } from '@/core/utils/expression';
 import { UNHANDLED } from '@/core/types/module';
 import { SymbolKind } from '@/core/types/symbol';
-import { aggregateSettingList, isValidHexColor } from '@/core/utils/validate';
+import { aggregateSettingList } from '@/core/utils/validate';
 import {
   CompileError,
   CompileErrorCode,
@@ -21,46 +21,18 @@ import type { TableGroup } from '@/core/types/schemaJson';
 import type Compiler from '@/compiler';
 import {
   ElementKind,
-  SettingName,
   type Filepath,
   type TableGroupSymbol,
 } from '@/core/types';
-import type { Color } from '@/core/types/schemaJson';
 import Report from '@/core/types/report';
 import {
   extractElementName,
-  extractHexColor,
-  extractNote,
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
 import { assignInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
-
-export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, { [SettingName.Note]: string; [SettingName.Color]: Color }> = {
-  [SettingName.Note]: {
-    parse: extractNote,
-    isValid: (node) => extractNote(node) !== undefined,
-    invalidError: { code: CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, message: "'note' must be a string literal" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, message: "'note' can only appear once" },
-    message: "'note' must be a string literal",
-    assign (element, value, token) {
-      element.note = { value, token };
-    },
-  },
-  [SettingName.Color]: {
-    parse: extractHexColor,
-    isValid: isValidHexColor,
-    invalidError: { code: CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, message: "'color' must be a color literal" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, message: "'color' can only appear once" },
-    message: "'color' must be a color literal",
-    assign (element, value) {
-      element.color = value;
-    },
-  },
-};
+import { attachCustomMetadata } from '../metadata/utils';
+import { TABLEGROUP_METADATA_FIELDS } from '../metadata/registries';
 
 export class TableGroupInterpreter {
   private compiler: Compiler;

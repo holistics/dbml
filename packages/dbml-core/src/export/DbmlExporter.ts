@@ -474,9 +474,10 @@ class DbmlExporter {
     return recordStrs.join('\n');
   }
 
-  static formatMetadataValue (value: CustomMetadataValue): string {
-    if (typeof value === 'string') return DbmlExporter.escapeNote(value);
-    return String(value);
+  static formatMetadataValue (entry: CustomMetadataValue): string {
+    // A color is a string value too, so switch on the type to write it back unquoted
+    if (entry.type === 'string') return DbmlExporter.escapeNote(String(entry.value));
+    return String(entry.value);
   }
 
   static exportMetadata (model: NormalizedModel): string {

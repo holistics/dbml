@@ -10,7 +10,7 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import {
-  Check, Color, Column, DEP_DOWNSTREAM, DEP_UPSTREAM, Dep, Index, InlineDep, InlineRef, Ref,
+  Check, Column, DEP_DOWNSTREAM, DEP_UPSTREAM, Dep, Index, InlineDep, InlineRef, Ref,
   Table, TablePartialInjection,
   type DepDirection,
 } from '@/core/types/schemaJson';
@@ -23,12 +23,13 @@ import {
   extractQuotedStringToken, extractVarNameFromPrimaryVariable,
   extractVariableFromExpression,
 } from '@/core/utils/expression';
-import { aggregateSettingList, isValidHexColor, isValidPartialInjection } from '@/core/utils/validate';
+import { aggregateSettingList, isValidPartialInjection } from '@/core/utils/validate';
 import {
-  extractElementName, extractHexColor, extractNote, getTokenPosition, normalizeNote, processColumnType,
+  extractElementName, getTokenPosition, normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
 import { assignInlineMetadata, extractCustomInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
+import { attachCustomMetadata } from '../metadata/utils';
+import { COLUMN_METADATA_FIELDS, TABLE_METADATA_FIELDS } from '../metadata/registries';
 import { getProgramSymbol } from '../utils';
 
 export class TableInterpreter {
@@ -411,42 +412,3 @@ export const RECOGNIZED_COLUMN_SETTINGS: readonly SettingName[] = [
   SettingName.Default,
   SettingName.Check,
 ];
-
-export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, { [SettingName.Note]: string; [SettingName.HeaderColor]: Color }> = {
-  [SettingName.Note]: {
-    parse: extractNote,
-    isValid: (node) => extractNote(node) !== undefined,
-    invalidError: { code: CompileErrorCode.INVALID_TABLE_SETTING_VALUE, message: "'note' must be a string literal" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLE_SETTING, message: "'note' can only appear once" },
-    message: "'note' must be a string literal",
-    assign (element, value, token) {
-      element.note = { value, token };
-    },
-  },
-  [SettingName.HeaderColor]: {
-    parse: extractHexColor,
-    isValid: isValidHexColor,
-    invalidError: { code: CompileErrorCode.INVALID_TABLE_SETTING_VALUE, message: "'headercolor' must be a color literal" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLE_SETTING, message: "'headercolor' can only appear once" },
-    message: "'headercolor' must be a color literal",
-    assign (element, value) {
-      element.headerColor = value;
-    },
-  },
-};
-
-export const COLUMN_METADATA_FIELDS: MetadataFieldRegistry<Column, { [SettingName.Note]: string }> = {
-  [SettingName.Note]: {
-    parse: extractNote,
-    isValid: (node) => extractNote(node) !== undefined,
-    invalidError: { code: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, message: "'note' must be a quoted string" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_COLUMN_SETTING, message: "'note' can only appear once" },
-    message: "'note' must be a quoted string",
-    assign (element, value, token) {
-      element.note = { value, token };
-    },
-  },
-};

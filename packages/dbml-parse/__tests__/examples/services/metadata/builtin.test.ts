@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { CompileErrorCode } from '@/index';
 import { SettingName } from '@/core/types';
 import { NONE_COLOR } from '@/constants';
-import { TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS } from '@/core/global_modules/table/interpret';
-import { TABLEGROUP_METADATA_FIELDS } from '@/core/global_modules/tableGroup/interpret';
-import { NOTE_METADATA_FIELDS } from '@/core/global_modules/note/interpret';
+import {
+  TABLE_METADATA_FIELDS, COLUMN_METADATA_FIELDS, TABLEGROUP_METADATA_FIELDS, NOTE_METADATA_FIELDS,
+} from '@/core/global_modules/metadata/registries';
 import {
   BlockExpressionNode,
   ElementDeclarationNode,
@@ -15,7 +15,7 @@ import {
 import {
   Column, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
-import { interpret, parse } from '../../../utils';
+import { interpret, parse, plainMetadata } from '../../../utils';
 
 function db (source: string) {
   return interpret(source).getValue();
@@ -44,7 +44,7 @@ Metadata Table public.users {
       // The note token points at the metadata key/value pair, not the inline declaration (line 7 is the `note: 'from metadata'` line)
       expect(t.note?.token.start.line).toBe(7);
       // Still remaining in the raw metadata (additive)
-      expect(t.metadata).toMatchObject({});
+      expect(plainMetadata(t.metadata)).toMatchObject({});
     });
 
     it('writes headercolor onto headerColor, overriding the inline value', () => {
@@ -59,7 +59,7 @@ Metadata Table public.users {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect(t.headerColor).toBe('#000');
-      expect(t.metadata).toMatchObject({});
+      expect(plainMetadata(t.metadata)).toMatchObject({});
     });
 
     it('treats headercolor case-insensitively', () => {
@@ -100,7 +100,7 @@ Metadata Table public.users {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect((t as any).color).toBeUndefined();
-      expect(t.metadata).toMatchObject({ color: '#aaa' });
+      expect(plainMetadata(t.metadata)).toMatchObject({ color: '#aaa' });
     });
 
     it('only overrides keys present in metadata, leaving absent inline values intact', () => {
@@ -165,7 +165,7 @@ Metadata TableGroup g1 {
       const g = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1');
       expect(g?.note?.value).toBe('group note');
       expect(g?.color).toBe('#123');
-      expect(g?.metadata).toMatchObject({});
+      expect(plainMetadata(g?.metadata)).toMatchObject({});
     });
   });
 
@@ -185,7 +185,7 @@ Metadata Note overview {
       expect(n?.color).toBe('#456');
       // content is unchanged, `note` is just custom metadata
       expect(n?.content).toBe('the note body');
-      expect(n?.metadata).toMatchObject({ note: 'should stay custom' });
+      expect(plainMetadata(n?.metadata)).toMatchObject({ note: 'should stay custom' });
     });
 
     it('keeps a custom `note` value raw, without note normalization', () => {
@@ -201,7 +201,7 @@ Metadata Note overview {
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const n = result.getValue()?.notes?.find((note) => note.name === 'overview');
-      expect(n?.metadata?.note).toBe('\n    indented\n  ');
+      expect(n?.metadata?.note?.value).toBe('\n    indented\n  ');
     });
   });
 
@@ -221,7 +221,7 @@ Metadata Column public.users.id {
       expect(col.note?.value).toBe('col note from metadata');
       // color is not a column builtin key: free-form, not written, no error
       expect((col as any).color).toBeUndefined();
-      expect(col.metadata).toMatchObject({ color: '#999' });
+      expect(plainMetadata(col.metadata)).toMatchObject({ color: '#999' });
       expect(col.note?.value).toBe('col note from metadata');
     });
 
@@ -241,7 +241,7 @@ Metadata Column public.users.id {
       // pk is NOT promoted onto the typed field
       expect(col.pk).toBe(false);
       // pk IS stored in the free-form metadata bag
-      expect(col.metadata).toMatchObject({ pk: 'true' });
+      expect(plainMetadata(col.metadata)).toMatchObject({ pk: 'true' });
     });
 
     it('inline [pk] still populates col.pk = true and is NOT in the bag', () => {

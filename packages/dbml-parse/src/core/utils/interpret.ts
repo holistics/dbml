@@ -197,7 +197,7 @@ export function extractCustomInlineMetadata (settingMap: Settings, builtinSettin
     if (builtins.has(name.toLowerCase())) continue;
     const attr = attrs[0];
     const value = extractMetadataValue(attr.value);
-    if (value !== undefined) values[name] = value;
+    if (value !== undefined) values[name] = { ...value, token: getTokenPosition(attr) };
   }
 
   return values;
@@ -227,7 +227,7 @@ export function assignInlineMetadata<T extends MetadataTarget> (
     }
 
     const value = extractMetadataValue(attr.value);
-    if (value !== undefined) metadata[name] = value;
+    if (value !== undefined) metadata[name] = { ...value, token: getTokenPosition(attr) };
   }
 
   element.metadata = metadata;
@@ -235,20 +235,20 @@ export function assignInlineMetadata<T extends MetadataTarget> (
 
 // Best-effort scalar extraction for a free-form metadata value node.
 // Tries: boolean -> signed number -> quoted string -> color.
-export function extractMetadataValue (node?: SyntaxNode): CustomMetadataValue | undefined {
+export function extractMetadataValue (node?: SyntaxNode): Omit<CustomMetadataValue, 'token'> | undefined {
   if (!node) return undefined;
 
   const boolean = extractBooleanLiteral(node);
-  if (boolean !== null) return boolean;
+  if (boolean !== null) return { value: boolean, type: 'bool' };
 
   const number = extractSignedNumber(node);
-  if (number !== null) return number;
+  if (number !== null) return { value: number, type: 'number' };
 
   const quoted = extractQuotedStringToken(node);
-  if (quoted !== undefined) return quoted;
+  if (quoted !== undefined) return { value: quoted, type: 'string' };
 
   const color = extractColor(node);
-  if (color !== undefined) return color;
+  if (color !== undefined) return { value: color, type: 'color' };
 
   return undefined;
 }

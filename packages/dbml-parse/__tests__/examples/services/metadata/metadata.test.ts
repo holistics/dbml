@@ -4,7 +4,9 @@ import DBMLDefinitionProvider from '@/services/definition/provider';
 import { DEFAULT_ENTRY } from '@/constants';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/index';
-import { createMockTextModel, createPosition, interpret } from '../../../utils';
+import {
+  createMockTextModel, createPosition, interpret, plainMetadata,
+} from '../../../utils';
 
 const TABLE = `Table users {
   id int
@@ -16,13 +18,13 @@ function metadataValues (source: string) {
   const result = interpret(TABLE + source);
   const db = result.getValue();
   // Metadata is merged by the compiler and attached onto the target element.
-  return db?.tables?.find((t) => t.name === 'users')?.metadata || {};
+  return plainMetadata(db?.tables?.find((t) => t.name === 'users')?.metadata) || {};
 }
 
 function usersTableMetadata (source: string) {
   const result = interpret(TABLE + source);
   const db = result.getValue();
-  return db?.tables?.find((t) => t.name === 'users')?.metadata;
+  return plainMetadata(db?.tables?.find((t) => t.name === 'users')?.metadata);
 }
 
 function usersTable (source: string) {
@@ -258,5 +260,37 @@ describe('[example] Metadata field value grammar', () => {
           owner:
         }`)).not.toHaveProperty('owner');
     });
+  });
+});
+
+describe('[example] Metadata value shape', () => {
+  it('reports each block entry with its type and the token of the whole `key: value` field', () => {
+    const source = `Table users {
+  id int
+}
+
+Metadata Table users {
+  owner: 'alice'
+  tier: -1
+  active: true
+  accent: #abc
+}`;
+    const metadata = interpret(source).getValue()?.tables[0].metadata;
+    expect(metadata?.owner).toMatchObject({ value: 'alice', type: 'string' });
+    expect(metadata?.tier).toMatchObject({ value: -1, type: 'number' });
+    expect(metadata?.active).toMatchObject({ value: true, type: 'bool' });
+    expect(metadata?.accent).toMatchObject({ value: '#abc', type: 'color' });
+    const { start, end } = metadata!.owner.token;
+    expect(source.slice(start.offset, end.offset)).toBe("owner: 'alice'");
+  });
+
+  it('reports each inline entry with its type and the token of the whole setting', () => {
+    const source = `Table users [owner: 'alice', tier: 2] {
+  id int
+}`;
+    const metadata = interpret(source).getValue()?.tables[0].metadata;
+    expect(metadata?.tier).toMatchObject({ value: 2, type: 'number' });
+    const { start, end } = metadata!.owner.token;
+    expect(source.slice(start.offset, end.offset)).toBe("owner: 'alice'");
   });
 });
