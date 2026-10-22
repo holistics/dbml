@@ -5,7 +5,7 @@ import { DEFAULT_ENTRY } from '@/constants';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/index';
 import {
-  createMockTextModel, createPosition, interpret, plainMetadata,
+  createMockTextModel, createPosition, interpret, excludeMetadataValueToken,
 } from '../../../utils';
 
 const TABLE = `Table users {
@@ -14,17 +14,10 @@ const TABLE = `Table users {
 
 `;
 
-function metadataValues (source: string) {
-  const result = interpret(TABLE + source);
-  const db = result.getValue();
-  // Metadata is merged by the compiler and attached onto the target element.
-  return plainMetadata(db?.tables?.find((t) => t.name === 'users')?.metadata) || {};
-}
-
 function usersTableMetadata (source: string) {
   const result = interpret(TABLE + source);
   const db = result.getValue();
-  return plainMetadata(db?.tables?.find((t) => t.name === 'users')?.metadata);
+  return excludeMetadataValueToken(db?.tables?.find((t) => t.name === 'users')?.metadata);
 }
 
 function usersTable (source: string) {
@@ -67,9 +60,11 @@ describe('[example] Metadata field value grammar', () => {
         owner: 'scott'
       }`);
       expect(result.getErrors()).toHaveLength(0);
-      expect(metadataValues(`Metadata Table public.users {
+      expect(usersTableMetadata(`Metadata Table public.users {
         owner: 'scott'
-      }`)).toMatchObject({ owner: 'scott' });
+      }`)).toMatchObject({
+        owner: { value: 'scott', type: 'string' },
+      });
     });
 
     it('accepts a color value', () => {
@@ -77,9 +72,11 @@ describe('[example] Metadata field value grammar', () => {
         color: #aaa
       }`);
       expect(result.getErrors()).toHaveLength(0);
-      expect(metadataValues(`Metadata Table public.users {
+      expect(usersTableMetadata(`Metadata Table public.users {
         color: #aaa
-      }`)).toMatchObject({ color: '#aaa' });
+      }`)).toMatchObject({
+        color: { value: '#aaa', type: 'color' },
+      });
     });
 
     it('accepts a number value', () => {
@@ -87,9 +84,11 @@ describe('[example] Metadata field value grammar', () => {
         count: 42
       }`);
       expect(result.getErrors()).toHaveLength(0);
-      expect(metadataValues(`Metadata Table public.users {
+      expect(usersTableMetadata(`Metadata Table public.users {
         count: 42
-      }`)).toMatchObject({ count: 42 });
+      }`)).toMatchObject({
+        count: { value: 42, type: 'number' },
+      });
     });
 
     it('accepts signed number values (negative and explicit positive)', () => {
@@ -101,8 +100,11 @@ describe('[example] Metadata field value grammar', () => {
       }`;
       const result = interpret(TABLE + source);
       expect(result.getErrors()).toHaveLength(0);
-      expect(metadataValues(source)).toMatchObject({
-        offset: -1, boost: 5, delta: -1.5, scale: 0.25,
+      expect(usersTableMetadata(source)).toMatchObject({
+        offset: { value: -1, type: 'number' },
+        boost: { value: 5, type: 'number' },
+        delta: { value: -1.5, type: 'number' },
+        scale: { value: 0.25, type: 'number' },
       });
     });
 
@@ -112,23 +114,26 @@ describe('[example] Metadata field value grammar', () => {
         archived: false
       }`);
       expect(result.getErrors()).toHaveLength(0);
-      expect(metadataValues(`Metadata Table public.users {
+      expect(usersTableMetadata(`Metadata Table public.users {
         pii: true
         archived: false
-      }`)).toMatchObject({ pii: true, archived: false });
+      }`)).toMatchObject({
+        pii: { value: true, type: 'bool' },
+        archived: { value: false, type: 'bool' },
+      });
     });
   });
 
-  describe('rejects values that are not a string or color literal', () => {
+  describe('rejects values that are not: a string, a color literal, a boolean literal, or a number literal', () => {
     it('rejects a bare identifier value', () => {
       const result = interpret(`${TABLE}Metadata Table public.users {
         masking: partial
       }`);
       const codes = result.getErrors().map((e) => e.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
-      expect(metadataValues(`Metadata Table public.users {
+      expect(usersTableMetadata(`Metadata Table public.users {
         masking: partial
-      }`)).not.toHaveProperty('masking');
+      }`)).toBeUndefined();
     });
 
     it('rejects a number with more than one sign', () => {
@@ -139,9 +144,8 @@ describe('[example] Metadata field value grammar', () => {
       const result = interpret(TABLE + source);
       const codes = result.getErrors().map((e) => e.code);
       expect(codes.filter((c) => c === CompileErrorCode.INVALID_METADATA_FIELD)).toHaveLength(2);
-      const values = metadataValues(source);
-      expect(values).not.toHaveProperty('a');
-      expect(values).not.toHaveProperty('b');
+      const values = usersTableMetadata(source);
+      expect(values).toBeUndefined();
     });
   });
 
@@ -161,7 +165,9 @@ describe('[example] Metadata field value grammar', () => {
 
       expect(result.getWarnings()).toHaveLength(0);
       expect(result.getErrors()).toHaveLength(0);
-      expect(usersTableMetadata(source)).toMatchObject({ color: '#aaa' });
+      expect(usersTableMetadata(source)).toMatchObject({
+        color: { value: '#aaa', type: 'color' },
+      });
     });
 
     it('merges last-write-wins when two blocks set the same key with DIFFERENT values', () => {
@@ -177,7 +183,9 @@ describe('[example] Metadata field value grammar', () => {
       expect(result.getWarnings()).toHaveLength(0);
       expect(result.getErrors()).toHaveLength(0);
       // Last block wins: the merged value is #f00
-      expect(usersTableMetadata(source)).toMatchObject({ color: '#f00' });
+      expect(usersTableMetadata(source)).toMatchObject({
+        color: { value: '#f00', type: 'color' },
+      });
     });
 
     // Regression guard: duplicate key WITHIN a single block stays a hard ERROR
@@ -203,7 +211,9 @@ describe('[example] Metadata field value grammar', () => {
       const result = interpret(`${TABLE}${source}`);
 
       expect(result.getWarnings()).toHaveLength(0);
-      expect(usersTableMetadata(source)).toMatchObject({ color: '#f00' });
+      expect(usersTableMetadata(source)).toMatchObject({
+        color: { value: '#f00', type: 'color' },
+      });
     });
 
     it('merges DIFFERENT keys from two blocks onto the same target', () => {
@@ -218,7 +228,9 @@ describe('[example] Metadata field value grammar', () => {
 
       expect(result.getWarnings()).toHaveLength(0);
       expect(result.getErrors()).toHaveLength(0);
-      expect(usersTableMetadata(source)).toMatchObject({ color: '#aaa' });
+      expect(usersTableMetadata(source)).toMatchObject({
+        color: { value: '#aaa', type: 'color' },
+      });
       expect(usersTable(source)?.note?.value).toBe('hello');
     });
   });
@@ -241,9 +253,9 @@ describe('[example] Metadata field value grammar', () => {
       const codes = result.getErrors().map((e) => e.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
       // The invalid value must never be silently dropped
-      expect(metadataValues(`Metadata Table public.users {
+      expect(usersTableMetadata(`Metadata Table public.users {
         tags: ['a', 'b']
-      }`)).not.toHaveProperty('tags');
+      }`)).toBeUndefined();
     });
 
     it('does not silently accept an empty value (key with no value)', () => {
@@ -256,9 +268,9 @@ describe('[example] Metadata field value grammar', () => {
         // code here would be brittle.
       expect(result.getErrors().length).toBeGreaterThan(0);
       // The bogus empty key/value must not be silently captured
-      expect(metadataValues(`Metadata Table public.users {
+      expect(usersTableMetadata(`Metadata Table public.users {
           owner:
-        }`)).not.toHaveProperty('owner');
+        }`)).toBeUndefined();
     });
   });
 });

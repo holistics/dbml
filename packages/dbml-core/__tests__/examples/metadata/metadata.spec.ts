@@ -30,7 +30,7 @@ Metadata Table users {
 }
 
 Metadata Column users.id {
-  pii: 'true'
+  pii: true
   masking: 'partial'
 }
 
@@ -41,8 +41,8 @@ Metadata TableGroup g1 {
 `;
 
 // Strip metadata entries ({ value, type, token }) down to their values
-function values (metadata?: CustomMetadata) {
-  return metadata && Object.fromEntries(Object.entries(metadata).map(([key, entry]) => [key, entry.value]));
+function excludeMetadataValueToken (metadata?: CustomMetadata) {
+  return metadata && Object.fromEntries(Object.entries(metadata).map(([key, entry]) => [key, { value: entry.value, type: entry.type }]));
 }
 
 function parse (dbml: string): Database {
@@ -60,9 +60,9 @@ describe('@dbml/core - metadata element', () => {
     const schema = database.schemas.find((s) => s.name === 'public');
     const users = schema!.tables.find((t) => t.name === 'users');
     expect(users?.note).toBe('this will override');
-    expect(values(users!.metadata)).toEqual({
-      owner: 'scott',
-      color: '#aaa',
+    expect(excludeMetadataValueToken(users!.metadata)).toEqual({
+      owner: { value: 'scott', type: 'string' },
+      color: { value: '#aaa', type: 'color' },
     });
   });
 
@@ -70,13 +70,18 @@ describe('@dbml/core - metadata element', () => {
     const schema = database.schemas.find((s) => s.name === 'public');
     const users = schema!.tables.find((t) => t.name === 'users');
     const idField = users!.fields.find((f) => f.name === 'id');
-    expect(values(idField!.metadata)).toEqual({ pii: 'true', masking: 'partial' });
+    expect(excludeMetadataValueToken(idField!.metadata)).toEqual({
+      pii: { value: true, type: 'bool' },
+      masking: { value: 'partial', type: 'string' },
+    });
   });
 
   test('attaches metadata to a TableGroup', () => {
     const schema = database.schemas.find((s) => s.name === 'public');
     const g1 = schema!.tableGroups.find((tg) => tg.name === 'g1');
-    expect(values(g1!.metadata)).toEqual({ team: 'data' });
+    expect(excludeMetadataValueToken(g1!.metadata)).toEqual({
+      team: { value: 'data', type: 'string' },
+    });
   });
 
   test('normalize() exposes merged metadata on each element', () => {
@@ -84,9 +89,9 @@ describe('@dbml/core - metadata element', () => {
 
     const usersId = (Object.values(model.tables).find((t: any) => t.name === 'users')! as Table).id;
     expect(model.tables[usersId]?.note).toBe('this will override');
-    expect(values(model.tables[usersId].metadata)).toEqual({
-      owner: 'scott',
-      color: '#aaa',
+    expect(excludeMetadataValueToken(model.tables[usersId].metadata)).toEqual({
+      owner: { value: 'scott', type: 'string' },
+      color: { value: '#aaa', type: 'color' },
     });
   });
 
@@ -95,9 +100,9 @@ describe('@dbml/core - metadata element', () => {
     const publicSchema = out.schemas.find((s: any) => s.name === 'public');
     const users = publicSchema.tables.find((t: any) => t.name === 'users');
     expect(users.note).toBe('this will override');
-    expect(values(users.metadata)).toEqual({
-      owner: 'scott',
-      color: '#aaa',
+    expect(excludeMetadataValueToken(users.metadata)).toEqual({
+      owner: { value: 'scott', type: 'string' },
+      color: { value: '#aaa', type: 'color' },
     });
   });
 
@@ -193,12 +198,19 @@ Metadata Table users {
 }
 `.trim();
 
-  const database = (new Parser()).parse(dbml, 'dbmlv2');
+  const database = parse(dbml)
+
   const users = database.schemas[0].tables[0];
-  expect(values(users.metadata)).toEqual({
-    count: 42, ratio: 1.5, active: false, owner: 'scott',
+  expect(excludeMetadataValueToken(users.metadata)).toEqual({
+    count: { value: 42, type: 'number' },
+    ratio: { value: 1.5, type: 'number' },
+    active: { value: false, type: 'bool' },
+    owner: { value: 'scott', type: 'string' },
   });
-  expect(values(users.fields[0].metadata)).toEqual({ rank: 3, pii: true });
+  expect(excludeMetadataValueToken(users.fields[0].metadata)).toEqual({
+    rank: { value: 3, type: 'number' },
+    pii: { value: true, type: 'bool' },
+  });
 
   const out = exporter.export(dbml, 'dbml');
   expect(out).toContain(`Metadata Table "users" {
@@ -213,9 +225,12 @@ Metadata Table users {
 }`);
 
   // Exported DBML re-parses to the same typed values
-  const reparsed = (new Parser()).parse(out, 'dbmlv2');
-  expect(values(reparsed.schemas[0].tables[0].metadata)).toEqual(values(users.metadata));
-  expect(values(reparsed.schemas[0].tables[0].fields[0].metadata)).toEqual({ rank: 3, pii: true });
+  const reparsed = parse(out)
+  expect(excludeMetadataValueToken(reparsed.schemas[0].tables[0].metadata)).toEqual(excludeMetadataValueToken(users.metadata));
+  expect(excludeMetadataValueToken(reparsed.schemas[0].tables[0].fields[0].metadata)).toEqual({
+    rank: { value: 3, type: 'number' },
+    pii: { value: true, type: 'bool' },
+  });
 });
 
 test('@dbml/core - exporter metadata blocks with signed number values', () => {
@@ -231,10 +246,17 @@ Metadata Table users {
 }
 `.trim();
 
-  const database = (new Parser()).parse(dbml, 'dbmlv2');
+  const database = parse(dbml)
   const users = database.schemas[0].tables[0];
-  expect(values(users.metadata)).toEqual({ offset: -1, boost: 5, delta: -1.5 });
-  expect(values(users.fields[0].metadata)).toEqual({ rank: -3, weight: 2 });
+  expect(excludeMetadataValueToken(users.metadata)).toEqual({
+    offset: { value: -1, type: 'number' },
+    boost: { value: 5, type: 'number' },
+    delta: { value: -1.5, type: 'number' },
+  });
+  expect(excludeMetadataValueToken(users.fields[0].metadata)).toEqual({
+    rank: { value: -3, type: 'number' },
+    weight: { value: 2, type: 'number' },
+  });
 
   // A redundant `+` is not preserved: values are exported as plain numbers
   const out = exporter.export(dbml, 'dbml');
@@ -248,9 +270,12 @@ Metadata Table users {
   weight: 2
 }`);
 
-  const reparsed = (new Parser()).parse(out, 'dbmlv2');
-  expect(values(reparsed.schemas[0].tables[0].metadata)).toEqual(values(users.metadata));
-  expect(values(reparsed.schemas[0].tables[0].fields[0].metadata)).toEqual({ rank: -3, weight: 2 });
+  const reparsed = parse(out)
+  expect(excludeMetadataValueToken(reparsed.schemas[0].tables[0].metadata)).toEqual(excludeMetadataValueToken(users.metadata));
+  expect(excludeMetadataValueToken(reparsed.schemas[0].tables[0].fields[0].metadata)).toEqual({
+    rank: { value: -3, type: 'number' },
+    weight: { value: 2, type: 'number' },
+  });
 });
 
 test('@dbml/core - exporter metadata blocks keep color values unquoted', () => {
@@ -265,7 +290,7 @@ Metadata Table users {
 }
 `.trim();
 
-  const database = (new Parser()).parse(dbml, 'dbmlv2');
+  const database = parse(dbml)
   const users = database.schemas[0].tables[0];
   expect(users.metadata.accent).toMatchObject({ value: '#00ff00', type: 'color' });
   expect(users.metadata.label).toMatchObject({ value: '#00ff00', type: 'string' });
@@ -279,7 +304,7 @@ Metadata Table users {
   accent: #abc
 }`);
 
-  const reparsed = (new Parser()).parse(out, 'dbmlv2').schemas[0].tables[0];
+  const reparsed = parse(out).schemas[0].tables[0];
   expect(reparsed.metadata.accent).toMatchObject({ value: '#00ff00', type: 'color' });
   expect(reparsed.metadata.label).toMatchObject({ value: '#00ff00', type: 'string' });
 });

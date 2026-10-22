@@ -15,7 +15,7 @@ import {
 import {
   Column, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
-import { interpret, parse, plainMetadata } from '../../../utils';
+import { interpret, parse, excludeMetadataValueToken } from '../../../utils';
 
 function db (source: string) {
   return interpret(source).getValue();
@@ -44,7 +44,7 @@ Metadata Table public.users {
       // The note token points at the metadata key/value pair, not the inline declaration (line 7 is the `note: 'from metadata'` line)
       expect(t.note?.token.start.line).toBe(7);
       // Still remaining in the raw metadata (additive)
-      expect(plainMetadata(t.metadata)).toMatchObject({});
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({});
     });
 
     it('writes headercolor onto headerColor, overriding the inline value', () => {
@@ -59,7 +59,7 @@ Metadata Table public.users {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect(t.headerColor).toBe('#000');
-      expect(plainMetadata(t.metadata)).toMatchObject({});
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({});
     });
 
     it('treats headercolor case-insensitively', () => {
@@ -100,7 +100,9 @@ Metadata Table public.users {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect((t as any).color).toBeUndefined();
-      expect(plainMetadata(t.metadata)).toMatchObject({ color: '#aaa' });
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+        color: { value: '#aaa', type: 'color' },
+      });
     });
 
     it('only overrides keys present in metadata, leaving absent inline values intact', () => {
@@ -165,7 +167,7 @@ Metadata TableGroup g1 {
       const g = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1');
       expect(g?.note?.value).toBe('group note');
       expect(g?.color).toBe('#123');
-      expect(plainMetadata(g?.metadata)).toMatchObject({});
+      expect(excludeMetadataValueToken(g?.metadata)).toMatchObject({});
     });
   });
 
@@ -185,7 +187,9 @@ Metadata Note overview {
       expect(n?.color).toBe('#456');
       // content is unchanged, `note` is just custom metadata
       expect(n?.content).toBe('the note body');
-      expect(plainMetadata(n?.metadata)).toMatchObject({ note: 'should stay custom' });
+      expect(excludeMetadataValueToken(n?.metadata)).toMatchObject({
+        note: { value: 'should stay custom', type: 'string' },
+      });
     });
 
     it('keeps a custom `note` value raw, without note normalization', () => {
@@ -221,7 +225,9 @@ Metadata Column public.users.id {
       expect(col.note?.value).toBe('col note from metadata');
       // color is not a column builtin key: free-form, not written, no error
       expect((col as any).color).toBeUndefined();
-      expect(plainMetadata(col.metadata)).toMatchObject({ color: '#999' });
+      expect(excludeMetadataValueToken(col.metadata)).toMatchObject({
+        color: { value: '#999', type: 'color' },
+      });
       expect(col.note?.value).toBe('col note from metadata');
     });
 
@@ -233,7 +239,7 @@ Metadata Column public.users.id {
 }
 
 Metadata Column public.users.id {
-  pk: 'true'
+  pk: true
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
@@ -241,7 +247,9 @@ Metadata Column public.users.id {
       // pk is NOT promoted onto the typed field
       expect(col.pk).toBe(false);
       // pk IS stored in the free-form metadata bag
-      expect(plainMetadata(col.metadata)).toMatchObject({ pk: 'true' });
+      expect(excludeMetadataValueToken(col.metadata)).toMatchObject({
+        pk: { value: true, type: 'bool' },
+      });
     });
 
     it('inline [pk] still populates col.pk = true and is NOT in the bag', () => {
