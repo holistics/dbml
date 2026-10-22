@@ -213,9 +213,16 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
       const labels = result.suggestions.map((s) => String(s.label));
+<<<<<<< HEAD
       // listDirectory shows direct children only; deeper files hidden until user descends
       expect(labels).toContain('./sub/');
       expect(labels).not.toContain('./sub/deeper/a.dbml');
+=======
+      // Only the first directory segment under `./` is surfaced
+      // leaf `./sub/deeper/a` stays hidden until the user descends
+      expect(labels).toContain('./sub');
+      expect(labels).not.toContain('./sub/deeper/a');
+>>>>>>> master
     });
 
     it('tags folders as Folder and files as File', () => {
@@ -246,7 +253,11 @@ Enum color { red blue }
       const result = provider.provideCompletionItems(model, createPosition(1, 15));
       const schemaItem = result.suggestions.find((s) => String(s.label) === './schema.dbml');
       expect(schemaItem).toBeDefined();
+<<<<<<< HEAD
       // insertText is the specifier (without .dbml), not the raw filename
+=======
+      // Bare insertText (no surrounding quotes) since the range targets content-between-quotes only
+>>>>>>> master
       expect(schemaItem!.insertText).toBe('./schema');
     });
 
@@ -351,7 +362,7 @@ Enum color { red blue }
       const provider = new DBMLCompletionItemProvider(compiler);
       // cursor after 'as '
       const result = provider.provideCompletionItems(model, createPosition(1, 22));
-      // alias is user-defined; may return import kinds but not element names
+      // alias is user-defined, may return import kinds but not element names
       const labels = result.suggestions.map((s) => s.label);
       expect(labels).not.toContain('users');
     });

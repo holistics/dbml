@@ -28,7 +28,7 @@ interface MetadataField<T extends MetadataTarget> {
   assignBuiltinField (element: Partial<T>, value: string, token: TokenPosition): void;
 }
 
-// A per-kind registry: exactly the promotable settings for that kind, each carrying its own validate + assign. K is tightened per kind.
+// Per-kind registry of promotable settings, each with its own validate + assign
 export type MetadataFieldRegistry<T extends MetadataTarget, K extends SettingName = SettingName> = Record<K, MetadataField<T>>;
 
 type NameWithSymbolKind = {

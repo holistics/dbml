@@ -15,7 +15,7 @@ const TABLE = `Table users {
 function metadataValues (source: string) {
   const result = interpret(TABLE + source);
   const db = result.getValue();
-  // Metadata is merged by the compiler and attached onto the target element.
+  // Metadata is merged by the compiler and attached onto the target element
   return db?.tables?.find((t) => t.name === 'users')?.metadata;
 }
 
@@ -53,15 +53,14 @@ Metadata Table public.users {
 
     const locations = Array.isArray(definition) ? definition : [definition];
     expect(locations.length).toBe(1);
-    // Definition should point at the `users` table declaration (line 1).
+    // Definition should point at the `users` table declaration (line 1)
     expect(locations[0].range.startLineNumber).toBe(1);
   });
 });
 
 describe('[example] Metadata field value grammar', () => {
-  // A Metadata field value must be a string or a color literal. Numbers,
-  // booleans, and bare identifiers are NOT accepted (see `isValidMetadataValue`
-  // in src/core/utils/validate.ts).
+  // A Metadata field value must be a string or a color literal
+  // Numbers, booleans, and bare identifiers are NOT accepted (see `isValidMetadataValue` in src/core/utils/validate.ts)
   describe('accepts string and color values and stores them', () => {
     it('accepts a quoted string value', () => {
       const result = interpret(`${TABLE}Metadata Table public.users {
@@ -91,7 +90,7 @@ describe('[example] Metadata field value grammar', () => {
 }`);
       const codes = result.getErrors().map((e) => e.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
-      // The invalid value must never be silently captured.
+      // The invalid value must never be silently captured
       expect(metadataValues(`Metadata Table public.users {
   count: 42
 }`) ?? {}).not.toHaveProperty('count');
@@ -125,10 +124,8 @@ describe('[example] Metadata field value grammar', () => {
   });
 
   describe('duplicate key across two Metadata blocks on the same target', () => {
-    // The compiler owns the merge: multiple blocks targeting the same element
-    // merge per-key, last-write-wins (Object.assign). Cross-block override is a
-    // documented feature, so it is silent (no warning). The merged values are
-    // attached onto the target element.
+    // The compiler owns the merge: multiple blocks targeting the same element merge per-key, last-write-wins
+    // Cross-block override is a documented feature, so it is silent (no warning), and merged values are attached onto the target element
 
     it('merges silently when two blocks set the same key with the SAME value', () => {
       const source = `Metadata Table public.users {
@@ -157,11 +154,11 @@ Metadata Table public.users {
 
       expect(result.getWarnings()).toHaveLength(0);
       expect(result.getErrors()).toHaveLength(0);
-      // Last block wins: the merged value is #f00.
+      // Last block wins: the merged value is #f00
       expect(usersTableMetadata(source)).toMatchObject({ color: '#f00' });
     });
 
-    // Regression guard: duplicate key WITHIN a single block stays a hard ERROR.
+    // Regression guard: duplicate key WITHIN a single block stays a hard ERROR
     it('still raises DUPLICATE_METADATA_FIELD for a duplicate key WITHIN one block', () => {
       const source = `Metadata Table public.users {
   color: #aaa
@@ -172,7 +169,7 @@ Metadata Table public.users {
       expect(errorCodes).toContain(CompileErrorCode.DUPLICATE_METADATA_FIELD);
     });
 
-    // Bare `users` and `public.users` resolve to the SAME target, so they merge.
+    // Bare `users` and `public.users` resolve to the SAME target, so they merge
     it('treats bare vs public-qualified target as the SAME object (merges last-wins)', () => {
       const source = `Metadata Table users {
   color: #aaa
@@ -221,7 +218,7 @@ Metadata Table public.users {
 }`);
       const codes = result.getErrors().map((e) => e.code);
       expect(codes).toContain(CompileErrorCode.INVALID_METADATA_FIELD);
-      // The invalid value must never be silently dropped.
+      // The invalid value must never be silently dropped
       expect(metadataValues(`Metadata Table public.users {
   tags: ['a', 'b']
 }`) ?? {}).not.toHaveProperty('tags');
@@ -233,10 +230,9 @@ Metadata Table public.users {
 }`);
       // The empty value must surface some compile error (it must not be
       // silently accepted). We intentionally do not assert a specific code:
-      // an empty value already fails at parse level, and pinning the exact
-      // code here would be brittle.
+      // an empty value already fails at parse level and pinning the exact code here would be brittle
       expect(result.getErrors().length).toBeGreaterThan(0);
-      // The bogus empty key/value must not be silently captured.
+      // The bogus empty key/value must not be silently captured
       expect(metadataValues(`Metadata Table public.users {
   owner:
 }`) ?? {}).not.toHaveProperty('owner');

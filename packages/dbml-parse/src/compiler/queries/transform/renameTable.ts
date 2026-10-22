@@ -27,7 +27,7 @@ function checkIfDeclarationUsesQuotes (declarationNode: SyntaxNode | undefined, 
   const nameNode = declarationNode.name;
   if (!nameNode) return false;
   const nameText = source.substring(nameNode.start, nameNode.end);
-  // FIXME: This check is fragile but matches the original heuristic.
+  // FIXME: This check is fragile but matches the original heuristic
   return nameText.includes('"');
 }
 
@@ -127,10 +127,7 @@ function findReplacements (
   const newText = buildReplacementText(newFormatted);
 
   for (const node of nodes) {
-    // Skip refs whose source text is not the renamed table - handles inline
-    // table aliases (`Table users as U`) where `symbolReferences` returns both
-    // `users.id` and `U.id` against the same underlying symbol but only
-    // `users.id` should be rewritten when renaming the source name.
+    // Skip refs not matching the renamed table's source text, handles inline aliases where symbolReferences returns both `users.id` and `U.id` but only the source name should be rewritten
     const refText = source.substring(node.start, node.end);
     if (stripQuotes(refText) !== oldTable) continue;
 
@@ -192,16 +189,15 @@ export function renameTable (
   const tableSymbol = lookupElementSymbol(this, filepath, oldSchema, oldTable);
   if (!tableSymbol) return new Map();
 
-  // Inline table aliases (e.g. `Table users as U`) resolve to an AliasSymbol.
-  // Renaming via the alias name is a no-op - aliases are not renameable handles;
-  // only the direct declaration name (or a use-specifier alias) can be renamed.
+  // Inline table aliases (e.g., `Table users as U`) resolve to an AliasSymbol
+  // Renaming via the alias name is a no-op, only the direct declaration name can be renamed
   if (tableSymbol instanceof AliasSymbol) return new Map();
 
   if (checkForNameCollision(this, filepath, oldSchema, oldTable, newSchema, newTable)) {
     return new Map();
   }
 
-  // Alias rename: the resolved symbol is a UseSymbol whose alias text matches oldTable.
+  // Alias rename: the resolved symbol is a UseSymbol whose alias text matches oldTable
   if (
     tableSymbol instanceof UseSymbol
     && tableSymbol.useSpecifierDeclaration instanceof UseSpecifierNode
@@ -229,7 +225,7 @@ function renameAlias (
   if (!spec.alias) return new Map();
   const aliasText = source.substring(spec.alias.start, spec.alias.end);
   const usedQuotes = aliasText.includes('"');
-  // Aliases live in the default schema - schema prefix is ignored for the alias text itself.
+  // Aliases live in the default schema, schema prefix is ignored for the alias text itself
   const newFormatted = formatTableName(newSchema, newTable, usedQuotes);
 
   const edits: TextEdit[] = [];
@@ -294,7 +290,7 @@ function renameRealDeclaration (
     bucket.edits.push(edit);
   };
 
-  // 1. Declaration name token in the declaring file.
+  // 1. Declaration name token in the declaring file
   const declNameNode = declNode.name;
   if (declNameNode) {
     addEdit(declFp, {
@@ -304,12 +300,8 @@ function renameRealDeclaration (
     });
   }
 
-  // 2. All references to the original symbol across the project. symbolReferences
-  //    is transitive: it unions refs to `original`, to any AliasSymbol wrapping it,
-  //    and to any UseSymbol importing it. findReplacements then filters by source
-  //    text - alias-side refs (e.g. `u.id` when `oldTable === 'users'`) are
-  //    skipped automatically, while source-name refs (inside use specifiers and
-  //    unaliased importers) are rewritten.
+  // 2. All references across the project: symbolReferences is transitive, unions refs to the original, any AliasSymbol, and any UseSymbol
+  //    findReplacements filters by source text, skipping alias-side refs and rewriting source-name refs in use specifiers and unaliased importers
   const directRefs = compiler.symbolReferences(original);
   for (const ref of directRefs) {
     if (ref === declNameNode) continue; // already handled above

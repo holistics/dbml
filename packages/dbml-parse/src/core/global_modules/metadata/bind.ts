@@ -18,7 +18,7 @@ export default class MetadataBinder {
   }
 
   private bindTargetElement (nameNode?: SyntaxNode): CompileError[] {
-    // The target kind must be valid (table/tablegroup/... - handled at validator) before we attempt to resolve the target.
+    // Target kind must be valid (validator handles this) before resolving the target
     const targetKind = getMetadataTargetKind(this.declarationNode);
     const nameParts = destructureComplexVariable(nameNode);
     if (!nameParts?.length || !targetKind) return [];

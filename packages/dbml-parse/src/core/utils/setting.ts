@@ -61,9 +61,8 @@ export function findSetting (declaration: SyntaxNode, settingName: string): Sett
   return undefined;
 }
 
-// Adds a setting to a declaration that doesn't have it yet.
-// If the declaration has a [...] list, appends to it.
-// Otherwise inserts a new [...] block.
+// Adds a setting to a declaration that doesn't have it yet
+// If the declaration has a [...] list, appends to it, otherwise inserts a new [...] block
 export function addSettingEdit (declaration: SyntaxNode, setting: string): TextEdit | undefined {
   const settingsList = findSettingsList(declaration);
   if (settingsList) {
@@ -82,11 +81,8 @@ export function addSettingEdit (declaration: SyntaxNode, setting: string): TextE
   return { start: declaration.end, end: declaration.end, newText: ` [${setting}]` };
 }
 
-// Updates, creates, or removes a setting on a declaration.
-// - value: string -> update or create with "name: value"
-// - value: undefined -> name-only setting (e.g. [pk])
-// - value: null -> remove the setting
-// If the setting does not exist, adds it.
+// Updates, creates, or removes a setting on a declaration
+// value: string -> update or create with "name: value", value: undefined -> name-only (e.g. [pk]), value: null -> remove
 export function updateSettingEdit (
   declaration: SyntaxNode,
   settingName: string,
@@ -112,8 +108,7 @@ export function updateSettingEdit (
   return addSettingEdit(declaration, settingText);
 }
 
-// Removes a setting from a declaration.
-// If it's the only setting in a [...] list, removes the entire list.
+// Removes a setting from a declaration, removing the entire [...] list if it was the only one
 export function removeSettingEdit (
   declaration: SyntaxNode,
   settingName: string,

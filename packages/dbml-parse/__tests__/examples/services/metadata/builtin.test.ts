@@ -38,12 +38,11 @@ Metadata Table public.users {
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
-      // Written onto the typed inline field...
+      // Written onto the typed inline field
       expect(t.note?.value).toBe('from metadata');
-      // ...and the note token points at the metadata key/value pair, not the
-      // inline declaration (line 7 is the `note: 'from metadata'` line).
+      // The note token points at the metadata key/value pair, not the inline declaration (line 7 is the `note: 'from metadata'` line)
       expect(t.note?.token.start.line).toBe(7);
-      // ...while still remaining in the raw metadata (additive).
+      // Still remaining in the raw metadata (additive)
       expect(t.metadata).toMatchObject({});
     });
 
@@ -96,7 +95,7 @@ Metadata Table public.users {
   color: #aaa
 }`;
       const result = interpret(source);
-      // `color` is free-form custom metadata for a Table: no validation, not written.
+      // `color` is free-form custom metadata for a Table: no validation, not written
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect((t as any).color).toBeUndefined();
@@ -115,9 +114,9 @@ Metadata Table public.users {
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
-      // headercolor was overridden...
+      // headercolor was overridden
       expect(t.headerColor).toBe('#000');
-      // ...but the inline note (absent from metadata) is untouched.
+      // The inline note (absent from metadata) is untouched
       expect(t.note?.value).toBe('inline note');
     });
 
@@ -183,7 +182,7 @@ Metadata Note overview {
       expect(result.getErrors()).toHaveLength(0);
       const n = result.getValue()?.notes?.find((note) => note.name === 'overview');
       expect(n?.color).toBe('#456');
-      // content is unchanged; `note` is just custom metadata.
+      // content is unchanged, `note` is just custom metadata
       expect(n?.content).toBe('the note body');
       expect(n?.metadata).toMatchObject({ note: 'should stay custom' });
     });
@@ -203,15 +202,15 @@ Metadata Column public.users.id {
       expect(result.getErrors()).toHaveLength(0);
       const col = table(source)!.fields.find((f) => f.name === 'id')!;
       expect(col.note?.value).toBe('col note from metadata');
-      // color is not a column builtin key: free-form, not written, no error.
+      // color is not a column builtin key: free-form, not written, no error
       expect((col as any).color).toBeUndefined();
       expect(col.metadata).toMatchObject({ color: '#999' });
       expect(col.note?.value).toBe('col note from metadata');
     });
 
     it('block-form pk stays in the metadata bag (not promoted to the typed field)', () => {
-      // Column block-promotion is note-only. pk/unique/increment in the block
-      // form are now free-form custom metadata — intentional behaviour change.
+      // Column block-promotion is note-only
+      // pk/unique/increment in block form are now free-form custom metadata
       const source = `Table users {
   id int
 }
@@ -222,9 +221,9 @@ Metadata Column public.users.id {
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const col = table(source)!.fields.find((f) => f.name === 'id')!;
-      // pk is NOT promoted onto the typed field.
+      // pk is NOT promoted onto the typed field
       expect(col.pk).toBe(false);
-      // pk IS stored in the free-form metadata bag.
+      // pk IS stored in the free-form metadata bag
       expect(col.metadata).toMatchObject({ pk: 'true' });
     });
 
@@ -236,16 +235,15 @@ Metadata Column public.users.id {
       expect(result.getErrors()).toHaveLength(0);
       const col = table(source)!.fields.find((f) => f.name === 'id')!;
       expect(col.pk).toBe(true);
-      // inline [pk] is a recognized column setting; it must not appear in the bag.
+      // inline [pk] is a recognized column setting, it must not appear in the bag
       expect(col.metadata?.pk).toBeUndefined();
     });
   });
 });
 
-// Pluck the inline value node of the first `key: value` field inside the body
-// of the first element in `source` — i.e. exactly the `sub.body?.callee` that
-// the validation pass feeds to a MetadataField's validate function. Parsing a
-// real snippet (rather than fabricating AST) keeps this test honest about input type.
+// Pluck the inline value node of the first `key: value` field in the first element of `source`
+// i.e. the `sub.body?.callee` fed to a MetadataField's validate
+// Parsing a real snippet keeps this test honest about input type
 function fieldValueNode (source: string): SyntaxNode | undefined {
   const ast = (parse(source).getValue() as { ast: ProgramNode }).ast;
   const element = ast.body[0] as ElementDeclarationNode;

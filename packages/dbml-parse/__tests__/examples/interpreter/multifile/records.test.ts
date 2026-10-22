@@ -115,8 +115,8 @@ records users(id, name, created_at, updated_at) {
 });
 
 describe('[example] multifile interpreter - records on table with external partial-injected columns', () => {
-  // Partial is in a separate file from the table. Table imports and injects it.
-  // Consumer imports the table and writes records referencing injected columns.
+  // Partial is in a separate file from the table, table imports and injects it
+  // Consumer imports the table and writes records referencing injected columns
   const { compiler } = setupCompiler({
     '/partials.dbml': `
 TablePartial audit {
@@ -155,8 +155,8 @@ records orders(id, total, created_by, modified_by) {
 });
 
 describe('[example] multifile interpreter - records defined in source file auto-pulled with imported table', () => {
-  // source defines table + records. Consumer imports table.
-  // Records should be auto-pulled as metadata on the table symbol.
+  // source defines table + records, consumer imports table
+  // Records should be auto-pulled as metadata on the table symbol
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table users {
@@ -189,8 +189,8 @@ use { table users } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - records auto-pulled with aliased table', () => {
-  // source defines table + records. Consumer imports table with alias.
-  // Records should appear under the alias name.
+  // source defines table + records, consumer imports table with alias
+  // Records should appear under the alias name
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table users {
@@ -242,7 +242,7 @@ use { table orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - nested records inside imported table definition', () => {
-  // Records nested inside the table block (not standalone).
+  // Records nested inside the table block (not standalone)
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table users {

@@ -358,7 +358,7 @@ export default class TablePartialValidator {
           break;
 
         default:
-          // Any non-builtin key is free-form inline custom metadata.
+          // Any non-builtin key is free-form inline custom metadata
           errors.push(...validateCustomInlineMetadata(name, attrs, {
             duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
             invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,
@@ -598,7 +598,7 @@ export function validateFieldSetting (parts: ExpressionNode[]): Report<Settings>
         break;
 
       default:
-        // Any non-builtin key is free-form inline custom metadata.
+        // Any non-builtin key is free-form inline custom metadata
         errors.push(...validateCustomInlineMetadata(name, attrs, {
           duplicate: CompileErrorCode.DUPLICATE_COLUMN_SETTING,
           invalidValue: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE,

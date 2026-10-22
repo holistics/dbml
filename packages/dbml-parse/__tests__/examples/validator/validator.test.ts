@@ -190,7 +190,7 @@ describe('[example] validator', () => {
     });
 
     test('should reject a valueless custom column setting', () => {
-      // A non-builtin key is now custom metadata, but it requires a value.
+      // A non-builtin key is now custom metadata but it requires a value
       const source = 'Table users { id int [unknown_setting] }';
       const errors = analyze(source).getErrors();
 
@@ -738,7 +738,7 @@ describe('[example] validator', () => {
     });
 
     test('accepts unknown setting on sticky note as custom metadata', () => {
-      // A non-builtin key on a sticky note is now free-form custom metadata.
+      // A non-builtin key on a sticky note is now free-form custom metadata
       const source = `
         Note my_note [unknown: "value"] {
           'A note'

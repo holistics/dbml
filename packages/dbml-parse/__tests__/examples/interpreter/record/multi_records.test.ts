@@ -2,8 +2,7 @@ import { CompileErrorCode } from '@/index';
 import { interpret } from '@tests/utils';
 
 describe('[example - record] multiple records blocks', () => {
-  // NOTE: Multiple records blocks for the same table are currently disallowed.
-  // We're weighing ideas if records should be merged in the future.
+  // Multiple records blocks for the same table are currently disallowed
   test('should report error for multiple records blocks for the same table', () => {
     const source = `
       Table users {

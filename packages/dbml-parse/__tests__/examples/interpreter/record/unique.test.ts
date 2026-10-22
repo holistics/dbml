@@ -93,7 +93,7 @@ describe('[example - record] composite unique constraints', () => {
     const result = interpret(source);
     const infos = result.getInfos();
 
-    // One info per UNIQUE column per duplicate row -> 2 rows × 2 columns = 4.
+    // One info per UNIQUE column per duplicate row: 2 rows x 2 columns = 4
     expect(infos.length).toBe(4);
     for (const info of infos) {
       expect(info.diagnostic).toBe('Duplicate Composite UNIQUE: `(user_profiles.user_id, user_profiles.profile_type)` = `(1, "work")`');

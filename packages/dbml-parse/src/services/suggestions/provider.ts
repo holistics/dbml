@@ -70,8 +70,8 @@ const SUGGESTION_LABEL = {
   DiagramView: 'DiagramView',
   Note: 'Note',
   Metadata: 'Metadata',
-  Indexes: 'indexes', // lowercase by design — matches DBML `indexes` block keyword
-  Checks: 'checks', // lowercase by design — matches DBML `checks` block keyword
+  Indexes: 'indexes', // lowercase, matches DBML `indexes` block keyword
+  Checks: 'checks', // lowercase, matches DBML `checks` block keyword
   Tables: 'Tables',
   TableGroups: 'TableGroups',
   Notes: 'Notes',
@@ -79,8 +79,7 @@ const SUGGESTION_LABEL = {
   Column: 'Column',
 } as const;
 
-// Column data types suggested when completing a column definition.
-// Labels and insert texts are identical.
+// Column data types suggested when completing a column definition, labels and insert texts are identical
 export const COLUMN_TYPE_SUGGESTION_LABELS = [
   'integer',
   'int',
@@ -140,7 +139,7 @@ export const COLUMN_TYPE_SUGGESTION_LABELS = [
   'RAW',
 ] as const;
 
-// Settings suggested in a Table/TablePartial header setting list (`Table T [ ... ]`).
+// Settings suggested in a Table/TablePartial header setting list (`Table T [ ... ]`)
 export const TABLE_SETTING_SUGGESTION_LABELS = [
   SettingName.HeaderColor,
   SettingName.Note,
@@ -148,8 +147,8 @@ export const TABLE_SETTING_SUGGESTION_LABELS = [
 export const TABLE_SETTING_SUGGESTION_TEXT_INSERTS = TABLE_SETTING_SUGGESTION_LABELS
   .map((name) => `${name}: `);
 
-// Settings suggested in a column setting list (`id int [ ... ]`). Bare settings
-// insert as-is; colon settings insert with a trailing `: `.
+// Settings suggested in a column setting list (`id int [ ... ]`)
+// bare settings insert as-is, colon settings insert with a trailing `: `
 const COLUMN_BARE_SETTINGS = [
   SettingName.PK,
   SettingName.PrimaryKey,
@@ -174,7 +173,7 @@ export const COLUMN_SUGGESTION_TEXT_INSERTS = [
   ...COLUMN_COLON_SETTINGS.map((name) => `${name}: `),
 ];
 
-// Settings suggested in an index setting list (`id [ ... ]` inside `indexes`).
+// Settings suggested in an index setting list (`id [ ... ]` inside `indexes`)
 const INDEX_BARE_SETTINGS = [
   SettingName.Unique,
   SettingName.PK,
@@ -193,7 +192,7 @@ export const INDEX_SETTING_SUGGESTION_TEXT_INSERTS = [
   ...INDEX_COLON_SETTINGS.map((name) => `${name}: `),
 ];
 
-// Settings suggested in a Ref setting list (`Ref: ... [ ... ]`).
+// Settings suggested in a Ref setting list (`Ref: ... [ ... ]`)
 const REF_BARE_SETTINGS = [
   SettingName.Inactive,
 ] as const;
@@ -211,21 +210,21 @@ export const REF_SETTING_SUGGESTION_TEXT_INSERTS = [
   ...REF_COLON_SETTINGS.map((name) => `${name}: `),
 ];
 
-// Settings suggested in an enum-field setting list (`active [ ... ]`).
+// Settings suggested in an enum-field setting list (`active [ ... ]`)
 export const ENUM_SETTING_SUGGESTION_LABELS = [
   SettingName.Note,
 ] as const;
 export const ENUM_SETTING_SUGGESTION_TEXT_INSERTS = ENUM_SETTING_SUGGESTION_LABELS
   .map((name) => `${name}: `);
 
-// Settings suggested in a check setting list (`age > 0 [ ... ]`).
+// Settings suggested in a check setting list (`age > 0 [ ... ]`)
 export const CHECK_SETTING_SUGGESTION_LABELS = [
   SettingName.Name,
 ] as const;
 export const CHECK_SETTING_SUGGESTION_TEXT_INSERTS = CHECK_SETTING_SUGGESTION_LABELS
   .map((name) => `${name}: `);
 
-// Values suggested for a Ref `update`/`delete` setting. Labels === insert texts.
+// Values suggested for a Ref `update`/`delete` setting, labels === insert texts
 export const REF_ACTION_VALUE_SUGGESTIONS = [
   'cascade',
   'set default',
@@ -233,13 +232,13 @@ export const REF_ACTION_VALUE_SUGGESTIONS = [
   'restrict',
 ] as const;
 
-// Values suggested for an index `type` setting. Labels === insert texts.
+// Values suggested for an index `type` setting, labels === insert texts
 export const INDEX_TYPE_VALUE_SUGGESTIONS = [
   'btree',
   'hash',
 ] as const;
 
-// Sub-element keywords suggested inside a Table/TablePartial body.
+// Sub-element keywords suggested inside a Table/TablePartial body
 export const TABLE_BODY_SUGGESTION_LABELS = [
   SUGGESTION_LABEL.Note,
   SUGGESTION_LABEL.Indexes,
@@ -247,7 +246,7 @@ export const TABLE_BODY_SUGGESTION_LABELS = [
   SUGGESTION_LABEL.Records,
 ];
 
-// Element keywords suggested inside a Project body.
+// Element keywords suggested inside a Project body
 export const PROJECT_FIELD_SUGGESTION_LABELS = [
   SUGGESTION_LABEL.Table,
   SUGGESTION_LABEL.TableGroup,
@@ -310,8 +309,7 @@ export default class DBMLCompletionItemProvider implements CompletionItemProvide
       return suggestTopLevelElementType();
     }
 
-    // Use declaration completions take priority over string-literal detection
-    // below which would swallow importPath completions.
+    // Use declaration completions take priority over string-literal detection below which would swallow importPath completions.
     const useSuggestion = suggestUseCompletion(this.compiler, filepath, offset, bOcToken, model, { fileListDepth: this.fileListDepth });
     if (useSuggestion !== null) return useSuggestion;
 
@@ -462,16 +460,15 @@ function suggestMembersOfSymbol (
     suggestions: members
       .filter((member) => acceptedKinds.includes(member.kind))
       .filter((member) => {
-        // Also exclude the default 'public' schema since it's implicit.
+        // Also exclude the default 'public' schema since it's implicit
         if (member instanceof SchemaSymbol && member.isPublicSchema()) return false;
         return true;
       })
       .flatMap((member) => {
         const name = member.name;
         if (name === undefined) return [];
-        // Every suggestion shows where it comes from so users can tell
-        // local vs imported names apart. `this file` for symbols declared
-        // in the currently-open file; `from <basename>` for imports.
+        // Every suggestion shows where it comes from
+        // `this file` for local symbols, `from <basename>` for imports
         const originFp = member.originalFilepath;
         const detail = originFp && !originFp.equals(symbol.filepath)
           ? `from ${compiler.layout.getFileSpecifierInfo(symbol.filepath, originFp)?.label ?? originFp.basename}`
@@ -528,9 +525,8 @@ function suggestNamesInScope (
       : undefined;
   }
 
-  // Global-scope lookups should also surface symbols that live in other
-  // project files. They come back with an additionalTextEdit that inserts the
-  // matching `use { ... }` statement when the suggestion is accepted.
+  // Global-scope lookups also surface symbols from other project files
+  // They come with an additionalTextEdit that inserts a matching `use { ... }` statement when accepted
   if (programNode?.filepath) {
     const fp = programNode.filepath;
     const seen = new Set(res.suggestions.map((s) => typeof s.label === 'string' ? s.label : s.label.label));
@@ -774,7 +770,7 @@ function suggestAttributeName (compiler: Compiler, filepath: Filepath, offset: n
   return noSuggestions();
 }
 
-// Build setting-name completion items from parallel label/insert-text arrays.
+// Build setting-name completion items from parallel label/insert-text arrays
 function buildSettingSuggestions (
   labels: readonly string[],
   insertTexts: readonly string[],
@@ -1094,8 +1090,7 @@ function suggestInRefField (compiler: Compiler, filepath: Filepath, offset: numb
   ]);
 }
 
-// Map a metadata target-kind keyword to the symbol kinds whose names should be
-// suggested for the target identifier.
+// Map a metadata target-kind keyword to the symbol kinds whose names should be suggested for the target identifier
 const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
   [MetadataTargetKind.Table]: [
     SymbolKind.Schema,
@@ -1114,7 +1109,7 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
   ],
 };
 
-// Canonical display labels for metadata target kinds.
+// Canonical display labels for metadata target kinds
 const METADATA_TARGET_KIND_LABELS: Record<MetadataTargetKind, (typeof SUGGESTION_LABEL)[keyof typeof SUGGESTION_LABEL]> = {
   [MetadataTargetKind.Table]: SUGGESTION_LABEL.Table,
   [MetadataTargetKind.Column]: SUGGESTION_LABEL.Column,
@@ -1143,14 +1138,13 @@ function suggestInMetadataHeader (
   offset: number,
   container: ElementDeclarationNode,
 ): CompletionList {
-  // Before/at the targetKind position -> suggest the allowed target kinds.
-  // (No targetKind yet, an empty placeholder, or cursor still within the targetKind.)
+  // Before/at the targetKind position -> suggest the allowed target kinds
   const kind = getMetadataTargetKind(container);
   if (!kind || (offset <= container.targetKind!.end && offset >= container.targetKind!.start)) {
     return suggestMetadataTargetKinds();
   }
 
-  // After the targetKind -> suggest names of the chosen target kind.
+  // After the targetKind -> suggest names of the chosen target kind
   const symbolKinds = METADATA_TARGET_SYMBOL_KINDS[kind];
   if (!symbolKinds) return noSuggestions();
 

@@ -22,7 +22,7 @@ import { tablePartialModule } from './tablePartial';
 import type { LocalModule, Settings } from './types';
 import { useModule } from './use';
 
-// Each time you add a new element, register its module here.
+// Each time you add a new element, register its module here
 export const modules: LocalModule[] = [
   tableModule,
   enumModule,

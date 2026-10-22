@@ -41,9 +41,8 @@ export const programModule: GlobalModule = {
     const ast = symbol.declaration;
     if (!(ast instanceof ProgramNode)) return Report.create([]);
 
-    // Collect schemas from all reachable files (including entry file).
-    // Reuse the canonical SchemaSymbol instances from usableMembers to ensure
-    // a single schema identity per name - symbolMembers results are memoized per instance.
+    // Collect schemas from all reachable files (including entry file)
+    // Reuse canonical SchemaSymbol instances for a single schema identity per name
     const schemaMembers = new Map<string, SchemaSymbol>();
 
     for (const filepath of compiler.reachableFiles(symbol.filepath)) {

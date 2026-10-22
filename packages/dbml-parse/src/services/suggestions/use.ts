@@ -33,7 +33,7 @@ export interface SuggestUseCompletionOptions {
   fileListDepth?: number;
 }
 
-// Use-declaration completions. Returns null if cursor not inside a use statement.
+// Use-declaration completions, returns null if cursor is not inside a use statement
 export function suggestUseCompletion (
   compiler: Compiler,
   filepath: Filepath,
@@ -257,8 +257,7 @@ function suggestUseFilepath (
   useDeclaration: UseDeclarationNode,
   { fileListDepth = 2 }: SuggestUseCompletionOptions,
 ): CompletionList {
-  // Default to empty string so all specifiers/paths pass the prefix filter
-  // when the user hasn't started the string yet.
+  // Default to empty string so all specifiers/paths pass the prefix filter when the user hasn't started the string yet.
   const existingIncompleteImportPath = importPath ? importPath.value : '';
   // If the import path hasn't been typed out, we need to quote it
   const shouldInsertQuoteToImportPath = importPath === undefined;
@@ -315,7 +314,11 @@ function suggestUseFilepath (
     }
   } else {
     // Specifier mode: collect all files by traversing directories up to fileListDepth levels
-    const allFilepaths = listFilesRecursive(compiler.layout, Filepath.from('/'), fileListDepth);
+    const allFilepaths = listFilesRecursive(
+      compiler.layout,
+      Filepath.from('/'),
+      fileListDepth,
+    );
 
     for (const filepath of allFilepaths) {
       if (filepath.equals(currentFilepath)) continue;
@@ -420,7 +423,7 @@ function listFilesRecursive (
   return result;
 }
 
-// Extract { name, kind } pairs from the use declaration's specifier list.
+// Extract { name, kind } pairs from the use declaration's specifier list
 function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{
   name: string;
   kind: SymbolKind;
@@ -440,7 +443,7 @@ function extractRequiredSymbols (useDeclaration: UseDeclarationNode): Array<{
   });
 }
 
-// True when file provides every required specifier by name + kind.
+// True when file provides every required specifier by name + kind
 function doesFileProvideAllSpecifiers (
   compiler: Compiler,
   filepath: Filepath,

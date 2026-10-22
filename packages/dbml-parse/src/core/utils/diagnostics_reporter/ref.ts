@@ -21,7 +21,7 @@ function qualifiedColumnNames (compiler: Compiler, columns: ColumnSymbol[]): str
   return columns.map((c) => c.qualifiedName(compiler).join('.')).join(', ');
 }
 
-// Column is nullable but the ref operator requires NOT NULL.
+// Column is nullable but the ref operator requires NOT NULL
 // e.g. `user_id integer` with `Ref: posts.user_id > users.id`
 export function refNullableMismatch (
   compiler: Compiler,
@@ -59,7 +59,7 @@ export function refNullableMismatch (
   );
 }
 
-// Column is NOT NULL but the ref operator marks it as optional.
+// Column is NOT NULL but the ref operator marks it as optional
 // e.g. `user_id integer [not null]` with `Ref: posts.user_id >? users.id`
 export function refNotNullMismatch (
   compiler: Compiler,
@@ -98,7 +98,7 @@ export function refNotNullMismatch (
   );
 }
 
-// Column has a unique/pk constraint but the ref operator allows many.
+// Column has a unique/pk constraint but the ref operator allows many
 // e.g. `id integer [pk]` with `Ref: users.id <> posts.user_id`
 export function refUniqueMismatch (
   compiler: Compiler,
@@ -132,7 +132,7 @@ export function refUniqueMismatch (
   );
 }
 
-// Ref operator implies one-to-one but column has no unique/pk constraint.
+// Ref operator implies one-to-one but column has no unique/pk constraint
 // e.g. `user_id integer` with `Ref: profiles.user_id - users.id`
 export function refNonUniqueMismatch (
   compiler: Compiler,

@@ -1923,9 +1923,8 @@ Table users {
   });
 
   test('renaming the table from the consumer file cascades to both files', () => {
-    // base.dbml defines 'users'; consumer.dbml imports it (no alias) and adds a ref.
-    // Cross-file rename: invoking renameTable through the consumer's UseSymbol
-    // resolves to the original declaration and rewrites every file that touches it.
+    // base.dbml defines 'users', consumer.dbml imports it (no alias) and adds a ref
+    // Cross-file rename via consumer's UseSymbol resolves to the original declaration and rewrites every file that touches it
     const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
       '/consumer.dbml': 'use { table users } from \'./base.dbml\'\nTable orders { user_id int [ref: > users.id] }',
@@ -1964,7 +1963,7 @@ Table posts {
     expect(baseAfter).toContain('accounts.id'); // ref in same file updated
     expect(baseAfter).not.toContain('Table users');
 
-    // Cascade reaches the importer: both the use specifier and the inline ref are rewritten.
+    // Cascade reaches the importer: both the use specifier and the inline ref are rewritten
     expect(mainAfter).toContain('use { table accounts }');
     expect(mainAfter).toContain('ref: > accounts.id');
     expect(mainAfter).not.toContain('users');
@@ -2025,7 +2024,7 @@ Table posts {
     const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
     const mainAfter = changes.get(fp('/main.dbml').absolute)!;
 
-    // Original declaration left alone - alias rename never touches the source file.
+    // Original declaration left alone, alias rename never touches the source file
     expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
     expect(mainAfter).toContain('use { table users as member }');
     expect(mainAfter).toContain('ref: > member.id');
@@ -2034,14 +2033,14 @@ Table posts {
   });
 
   test('renaming the source name from the alias-introducing file is a lookup miss', () => {
-    // Only the alias 'u' is visible in main.dbml - 'users' is not in scope there.
+    // Only the alias 'u' is visible in main.dbml, 'users' is not in scope there
     const { compiler } = setupCompiler({
       '/base.dbml': 'Table users { id int [pk] }',
       '/main.dbml': 'use { table users as u } from \'./base.dbml\'\nTable orders { user_id int [ref: > u.id] }',
     });
 
     const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
-    // Lookup miss - nothing changed.
+    // Lookup miss, nothing changed
     expect(changes.size).toBe(0);
   });
 
@@ -2054,8 +2053,8 @@ Table posts {
     const changes = compiler.renameTable(fp('/base.dbml'), 'users', 'accounts');
     const mainAfter = changes.get(fp('/main.dbml').absolute)!;
 
-    // The source-side token gets the new name; the local alias `u` is preserved
-    // because alias-side refs do not resolve to the original symbol.
+    // The source-side token gets the new name, the local alias `u` is preserved
+    // alias-side refs do not resolve to the original symbol
     expect(mainAfter).toContain('use { table accounts as u }');
     expect(mainAfter).toContain('ref: > u.id');
   });
@@ -2147,9 +2146,9 @@ Ref: U.id < U.id
       const changes = compiler.renameTable(fp('/main.dbml'), 'u', 'member');
       const mainAfter = changes.get(fp('/main.dbml').absolute)!;
 
-      // Base file untouched - alias rename never propagates to the source.
+      // Base file untouched, alias rename never propagates to the source
       expect(changes.has(fp('/base.dbml').absolute)).toBe(false);
-      // Only the alias token and its refs change; source-side `users` stays.
+      // Only the alias token and its refs change, source-side 'users' stays
       expect(mainAfter).toContain('use { table users as member }');
       expect(mainAfter).toContain('ref: > member.id');
     });
@@ -2165,23 +2164,23 @@ Ref: U.id < U.id
       const aliasedAfter = changes.get(fp('/aliased.dbml').absolute)!;
       const unaliasedAfter = changes.get(fp('/unaliased.dbml').absolute)!;
 
-      // Aliased importer: source-name token in specifier flips, alias + refs preserved.
+      // Aliased importer: source-name token in specifier flips, alias + refs preserved
       expect(aliasedAfter).toContain('use { table accounts as u }');
       expect(aliasedAfter).toContain('ref: > u.id');
-      // Unaliased importer: fully cascaded.
+      // Unaliased importer: fully cascaded
       expect(unaliasedAfter).toContain('use { table accounts }');
       expect(unaliasedAfter).toContain('ref: > accounts.id');
     });
 
     test('renaming the source name from an alias-introducing file is a lookup miss', () => {
-      // Only `u` is visible in main - `users` is not in scope.
+      // Only `u` is visible in main, `users` is not in scope
       const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
         '/main.dbml': 'use { table users as u } from \'./base.dbml\'\nTable orders { user_id int [ref: > u.id] }',
       });
 
       const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');
-      // Lookup miss - nothing changed.
+      // Lookup miss, nothing changed
       expect(changes.size).toBe(0);
     });
   });

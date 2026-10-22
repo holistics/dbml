@@ -15,13 +15,10 @@ function syncDiagramView (dbml: string, operations: DiagramViewSyncOperation[]) 
   return compiler.syncDiagramView(DEFAULT_ENTRY, operations);
 }
 
-// Round-trip helper: emit DBML for a visibleEntities input, then parse it back
-// and return the visibleEntities the interpreter produced. Asserts emit→parse
-// equals the input (the property the writer must preserve).
-//
-// `prelude` supplies entity definitions (Tables, StickyNotes, TableGroups) that
-// the DiagramView block references. Without these, the interpreter's bind step
-// drops the whole project (referenced symbols missing).
+// Round-trip helper: emit DBML for a visibleEntities input, parse it back, and return the visibleEntities the interpreter produced
+// Asserts emit-parse equals the input (the property the writer must preserve)
+// `prelude` supplies entity definitions (Tables, StickyNotes, TableGroups) that the DiagramView block references
+// Without these, the interpreter's bind step drops the whole project (referenced symbols missing)
 function roundTripVisibleEntities (
   visibleEntities: NonNullable<DiagramViewSyncOperation['visibleEntities']>,
   prelude = '',
@@ -807,9 +804,8 @@ DiagramView my_view {
   });
 });
 
-// Round-trip semantics: writer output must parse back to the same visibleEntities.
-// These tests pin the contract that null = hide-all and [] = show-all survive
-// a write → parse cycle.
+// Round-trip semantics: writer output must parse back to the same visibleEntities
+// These tests pin the contract that null = hide-all and [] = show-all survive a write-parse cycle
 
 describe('syncDiagramView - round-trip preserves null vs [] semantics', () => {
   it('hide all sticky notes alone (trinity show-all, notes null) round-trips', () => {

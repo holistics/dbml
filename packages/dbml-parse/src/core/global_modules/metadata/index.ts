@@ -31,7 +31,7 @@ export const metadataModule: GlobalModule = {
     const metadataNode = node.parentOfKind(ElementDeclarationNode);
     if (!metadataNode || !isElementNode(metadataNode, ElementKind.Metadata)) return new Report(PASS_THROUGH);
 
-    // Only the header target name, not anything inside the body.
+    // Only the header target name, not anything inside the body
     if (!metadataNode.name?.containsEq(node)) return new Report(PASS_THROUGH);
 
     const nameParts = destructureComplexVariable(metadataNode.name);

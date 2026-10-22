@@ -102,7 +102,7 @@ export default class NoteValidator {
           break;
         }
         default:
-          // Any non-builtin key is free-form inline custom metadata.
+          // Any non-builtin key is free-form inline custom metadata
           errors.push(
             ...validateCustomInlineMetadata(name, attrs, {
               duplicate: CompileErrorCode.DUPLICATE_NOTE_SETTING,

@@ -6,8 +6,8 @@ import type { Settings } from '@/core/utils/validate';
 
 export type { Settings };
 
-// Local modules handle syntax-level queries (validation, naming, settings) for each DBML element kind.
-// All methods are optional, missing methods are treated as returning PASS_THROUGH.
+// Local modules handle syntax-level queries (validation, naming, settings) for each DBML element kind
+// All methods are optional, missing methods are treated as returning PASS_THROUGH
 export interface LocalModule extends Module {
   // Validate the syntax of this node, return errors in Report
   validateNode? (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough>;

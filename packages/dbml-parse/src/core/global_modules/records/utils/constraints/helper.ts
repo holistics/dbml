@@ -84,7 +84,7 @@ export function formatFullColumnNames (
 // e.g. 1 -> '1'
 // e.g. 'a' -> '"a"'
 // e.g. 1, 'a' -> '(1, "a")'
-// Falls back to column default when the column is unspecified in the row.
+// Falls back to column default when the column is unspecified in the row
 export function formatValues (
   compiler: Compiler,
   row: Record<string, RecordValue>,
@@ -98,8 +98,8 @@ export function formatValues (
   return columns.length === 1 ? values : `(${values})`;
 }
 
-// Get anchor values for a warning from a row.
-// Tries the specified columns first; falls back to all columns in the row.
+// Get anchor values for a warning from a row
+// Tries the specified columns first, falls back to all columns in the row
 export function getDiagnosticAnchorValues (
   row: Record<string, RecordValue>,
   columnNames: string[],
@@ -108,7 +108,7 @@ export function getDiagnosticAnchorValues (
   return present.length > 0 ? present : Object.values(row).filter(Boolean);
 }
 
-// Resolve the AST node for a record value's position.
+// Resolve the AST node for a record value's position
 export function resolveRecordValueNode (
   compiler: Compiler,
   recordValue: RecordValue,

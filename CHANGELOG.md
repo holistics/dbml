@@ -15,16 +15,16 @@
 
 #### :running_woman: Performance
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
-  * [#990](https://github.com/holistics/dbml/pull/990) Perf/enable tree shaking ([@huydo862003](https://github.com/huydo862003))
+  * [#990](https://github.com/holistics/dbml/pull/990) Enable tree shaking ([@huydo862003](https://github.com/huydo862003))
 
 #### :rocket: New Feature
 * `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
-  * [#983](https://github.com/holistics/dbml/pull/983) Chore: Expose diagnostic filepath ([@xuantho573](https://github.com/xuantho573))
+  * [#983](https://github.com/holistics/dbml/pull/983) Expose diagnostic filepath ([@xuantho573](https://github.com/xuantho573))
 * `dbml-cli`, `dbml-parse`
-  * [#984](https://github.com/holistics/dbml/pull/984) Feat/absolute file import ([@huydo862003](https://github.com/huydo862003))
+  * [#984](https://github.com/holistics/dbml/pull/984) Support absolute file import ([@huydo862003](https://github.com/huydo862003))
 
 #### :memo: Documentation
-* [#971](https://github.com/holistics/dbml/pull/971) Chore(docs): update copywriting for metadata to custom properties ([@xuantho573](https://github.com/xuantho573))
+* [#971](https://github.com/holistics/dbml/pull/971) chore(docs): update copywriting for metadata to custom properties ([@xuantho573](https://github.com/xuantho573))
 
 #### :robot: Dependencies Update
 * [#818](https://github.com/holistics/dbml/pull/818) chore(deps): bump webpack from 5.94.0 to 5.111.1 in /dbml-homepage ([@dependabot[bot]](https://github.com/apps/dependabot))

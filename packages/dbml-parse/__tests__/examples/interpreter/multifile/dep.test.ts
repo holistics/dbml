@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import { fp, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - cross-file standalone Dep with column-level endpoints', () => {
-  // Dep is declared in the consumer, both endpoint tables come from the import.
+  // Dep is declared in the consumer, both endpoint tables come from the import
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table raw_orders {
@@ -44,8 +44,7 @@ Dep: raw_orders.user_id -> stg_orders.user_id
 });
 
 describe('[example] multifile interpreter - cross-file standalone Dep with bare-table endpoints', () => {
-  // Bare-table endpoints (no .col). Verifies my 11.12 nodeRefereeOfDepEndpoint
-  // and 11.18 extractTableFromDepEndpoint work across files.
+  // Bare-table endpoints (no .col), verifies nodeRefereeOfDepEndpoint and extractTableFromDepEndpoint work across files
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table raw_orders {
@@ -81,8 +80,7 @@ Dep: raw_orders -> stg_orders
 });
 
 describe('[example] multifile interpreter - <- reverse-direction Dep normalizes across files', () => {
-  // Consumer writes `Dep: stg_orders <- raw_orders`. Interpreter should swap so
-  // canonical shape is upstream=raw_orders, downstream=stg_orders.
+  // Consumer writes `Dep: stg_orders <- raw_orders`, interpreter swaps so canonical shape is upstream=raw_orders, downstream=stg_orders
   const { compiler } = setupCompiler({
     '/base.dbml': `
 Table raw_orders {
@@ -115,8 +113,7 @@ Dep: stg_orders <- raw_orders
 });
 
 describe('[example] multifile interpreter - inline dep on imported column carried to consumer', () => {
-  // Inline `[dep: -> ...]` on a column of an imported table must survive in the
-  // consumer's exported schema.
+  // Inline `[dep: -> ...]` on a column of an imported table must survive in the consumer's exported schema
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table accounts {
@@ -151,8 +148,7 @@ use { table users } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - inline dep on imported table header pulled to db.deps', () => {
-  // Inline `[dep: <- source]` on a Table header creates a table-level Dep that
-  // lands in db.deps[].
+  // Inline `[dep: <- source]` on a Table header creates a table-level Dep that lands in db.deps[]
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table raw_orders {
@@ -184,8 +180,8 @@ use { table fct_orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - standalone Dep between two imported tables auto-pulled', () => {
-  // Source declares Dep; consumer imports both tables. Dep should auto-pull
-  // (parallel to Ref auto-pull behavior).
+  // Source declares Dep, consumer imports both tables
+  // Dep should auto-pull (parallel to Ref auto-pull behavior)
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table raw_orders {
@@ -219,7 +215,7 @@ use { table stg_orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - Dep NOT pulled when one endpoint missing', () => {
-  // Only one table imported; the Dep should be filtered out.
+  // Only one table imported, the Dep should be filtered out
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table raw_orders {
@@ -244,7 +240,7 @@ use { table stg_orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - Dep with custom + note auto-pulled across files', () => {
-  // Custom attrs and note attached to a Dep block must survive auto-pull.
+  // Custom attrs and note attached to a Dep block must survive auto-pull
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table raw_orders {
@@ -287,8 +283,8 @@ use { table fct_orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - aliased table referenced in cross-file Dep endpoints', () => {
-  // Source declares Dep; consumer imports one table with alias.
-  // The pulled Dep's endpoints must be rewritten to use the alias.
+  // Source declares Dep, consumer imports one table with alias
+  // The pulled Dep's endpoints must be rewritten to use the alias
   const { compiler } = setupCompiler({
     '/source.dbml': `
 Table raw_orders {
@@ -322,8 +318,8 @@ use { table stg_orders } from './source.dbml'
 });
 
 describe('[example] multifile interpreter - Dep between tables from different imported files', () => {
-  // file-a defines raw_orders; file-b defines stg_orders + Dep targeting raw_orders.
-  // Consumer imports both; the Dep in file-b must auto-pull.
+  // file-a defines raw_orders, file-b defines stg_orders + Dep targeting raw_orders
+  // Consumer imports both, the Dep in file-b must auto-pull
   const { compiler } = setupCompiler({
     '/file-a.dbml': `
 Table raw_orders {

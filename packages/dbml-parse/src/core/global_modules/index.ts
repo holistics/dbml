@@ -26,11 +26,10 @@ import { tablePartialModule } from './tablePartial';
 import type { GlobalModule } from './types';
 import { useModule } from './use';
 
-// Registry of all element modules; the dispatcher tries each in order until one claims the node.
-// Each time you add a new element, register its module here.
+// Registry of all element modules, dispatcher tries each in order until one claims the node
+// Register each new element module here
 export const modules: GlobalModule[] = [
-  // UseSymbol doesn't have dedicated SymbolKind but use kinds like Table, TableGroup, ...
-  // so make it the first module to claim the UseSymbol
+  // UseSymbol doesn't have a dedicated SymbolKind but uses kinds like Table, TableGroup, so it must be first
   useModule,
   tableModule,
   enumModule,
