@@ -218,7 +218,7 @@ export function formatTypedValue (recordValue: TypedValue): string {
   }
 
   if (typeof recordValue === 'string') {
-    return `'${escapeString(recordValue)}'`;
+    return quoteNoteValue(recordValue);
   }
 
   // Handle object format { value, type }
@@ -274,7 +274,7 @@ export function formatTypedValue (recordValue: TypedValue): string {
   // Default: string types and others
   const extracted = tryExtractString(value);
   if (extracted !== null) {
-    return `'${escapeString(extracted)}'`;
+    return quoteNoteValue(extracted);
   }
 
   // If all extractions failed, wrap in function expression
