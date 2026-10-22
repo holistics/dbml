@@ -189,20 +189,20 @@ export function escapeString (str: string): string {
  * @returns The formatted string representation for DBML
  *
  * @example
- * formatRecordValue({ value: 1, type: 'integer' }) => '1'
- * formatRecordValue({ value: 'Alice', type: 'string' }) => "'Alice'"
- * formatRecordValue({ value: true, type: 'bool' }) => 'true'
- * formatRecordValue({ value: null, type: 'string' }) => 'null'
- * formatRecordValue(undefined) => 'null'
- * formatRecordValue(null) => 'null'
- * formatRecordValue('Alice') => "'Alice'"
- * formatRecordValue(42) => '42'
- * formatRecordValue(true) => 'true'
+ * formatTypedValue({ value: 1, type: 'integer' }) => '1'
+ * formatTypedValue({ value: 'Alice', type: 'string' }) => "'Alice'"
+ * formatTypedValue({ value: true, type: 'bool' }) => 'true'
+ * formatTypedValue({ value: null, type: 'string' }) => 'null'
+ * formatTypedValue({ value: '#ff0000', type: 'color' }) => '#ff0000'
+ * formatTypedValue(undefined) => 'null'
+ * formatTypedValue(null) => 'null'
+ * formatTypedValue('Alice') => "'Alice'"
+ * formatTypedValue(42) => '42'
+ * formatTypedValue(true) => 'true'
  */
-export function formatRecordValue (recordValue: {
-  value: any;
-  type: string;
-} | string | number | boolean | null | undefined): string {
+export type TypedValue = { value: any; type: string } | string | number | boolean | null | undefined;
+
+export function formatTypedValue (recordValue: TypedValue): string {
   // Handle undefined and null primitives
   if (recordValue === undefined || recordValue === null) {
     return 'null';
@@ -218,7 +218,7 @@ export function formatRecordValue (recordValue: {
   }
 
   if (typeof recordValue === 'string') {
-    return `'${escapeString(recordValue)}'`;
+    return quoteNoteValue(recordValue);
   }
 
   // Handle object format { value, type }
@@ -234,6 +234,11 @@ export function formatRecordValue (recordValue: {
   // Handle expressions (backtick strings)
   if (type === 'expression') {
     return typeof value === 'string' && value.toLowerCase().trim() === 'null' ? 'null' : `\`${value}\``;
+  }
+
+  // Handle color literals (e.g. #fff, #aabbcc) - output as-is without quotes
+  if (type === 'color') {
+    return String(value);
   }
 
   // Try to extract typed values using tryExtract functions
@@ -269,7 +274,7 @@ export function formatRecordValue (recordValue: {
   // Default: string types and others
   const extracted = tryExtractString(value);
   if (extracted !== null) {
-    return `'${escapeString(extracted)}'`;
+    return quoteNoteValue(extracted);
   }
 
   // If all extractions failed, wrap in function expression
