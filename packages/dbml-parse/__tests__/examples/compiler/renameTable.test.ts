@@ -2123,7 +2123,6 @@ Table orders { user_id int [ref: > users.id] }`,
       expect(mainAfter).toContain('ref: > accounts.id');
       expect(mainAfter).not.toContain('ref: > users.id');
     });
-
   });
 
   describe('use without alias - rename from declaring file cascades to importers', () => {
@@ -2183,7 +2182,7 @@ Table orders { user_id int [ref: > users.id] }`,
     test('renaming a wildcard-imported table with no in-file refs still inserts the specifier', () => {
       const { compiler } = setupCompiler({
         '/base.dbml': 'Table users { id int [pk] }',
-        '/main.dbml': `use * from './base.dbml'`,
+        '/main.dbml': 'use * from \'./base.dbml\'',
       });
 
       const changes = compiler.renameTable(fp('/main.dbml'), 'users', 'accounts');

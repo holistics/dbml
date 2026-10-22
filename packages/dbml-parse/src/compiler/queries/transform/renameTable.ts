@@ -2,7 +2,9 @@ import { isValidIdentifier } from '@/compiler/queries/utils';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ElementDeclarationNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, WildcardNode } from '@/core/types/nodes';
+import {
+  ElementDeclarationNode, SyntaxNode, UseDeclarationNode, UseSpecifierNode, WildcardNode,
+} from '@/core/types/nodes';
 import { AliasSymbol, NodeSymbol, UseSymbol } from '@/core/types/symbol';
 import type Compiler from '../../index';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
