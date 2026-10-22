@@ -101,6 +101,73 @@ Table jobs {
   });
 });
 
+describe('[example] multifile interpreter - enum declared with an inline alias', () => {
+  // types.dbml:  Enum users.status as S { active inactive }
+  //              Table jobs { id int [pk]; status S }
+  const types = `
+Enum users.status as S {
+  active
+  inactive
+}
+
+Table jobs {
+  id int [pk]
+  status S
+}
+`;
+
+  test('pulled table column resolves the alias to the original enum', () => {
+    const { compiler } = setupCompiler({
+      '/types.dbml': types,
+      '/main.dbml': `
+use { table jobs } from './types.dbml'
+`,
+    });
+    const db = getDatabase(compiler, '/main.dbml');
+    const jobs = db.tables.find((t) => t.name === 'jobs')!;
+    const statusField = jobs.fields.find((f) => f.name === 'status')!;
+    // expect: the column type is the original enum, not the alias
+    expect(statusField.type.schemaName).toBe('users');
+    expect(statusField.type.type_name).toBe('status');
+  });
+
+  test('enum imported by its full name keeps the original name', () => {
+    const { compiler } = setupCompiler({
+      '/types.dbml': types,
+      '/main.dbml': `
+use { enum users.status } from './types.dbml'
+
+Table tasks {
+  status users.status
+}
+`,
+    });
+    const db = getDatabase(compiler, '/main.dbml');
+    const tasks = db.tables.find((t) => t.name === 'tasks')!;
+    const statusField = tasks.fields.find((f) => f.name === 'status')!;
+    expect(statusField.type.schemaName).toBe('users');
+    expect(statusField.type.type_name).toBe('status');
+  });
+
+  test('enum imported by its alias behaves like a renamed import', () => {
+    const { compiler } = setupCompiler({
+      '/types.dbml': types,
+      '/main.dbml': `
+use { enum S } from './types.dbml'
+
+Table tasks {
+  status S
+}
+`,
+    });
+    const db = getDatabase(compiler, '/main.dbml');
+    // expect: same as `use { enum users.status as S }`, so the consumer sees the name S
+    expect(db.enums.find((e) => e.name === 'S')).toBeDefined();
+    const tasks = db.tables.find((t) => t.name === 'tasks')!;
+    expect(tasks.fields.find((f) => f.name === 'status')!.type.type_name).toBe('S');
+  });
+});
+
 describe('[example] multifile interpreter - tablegroup pulls tables that reference enums', () => {
   // base.dbml defines an enum, tables using it, and a tablegroup
   // consumer imports the tablegroup and the enum should also appear in schema since the pulled table references it

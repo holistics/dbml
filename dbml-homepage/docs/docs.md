@@ -22,6 +22,7 @@ This part covers all constructs that define database structure and map directly 
   - [Relationship Settings](#relationship-settings)
   - [Many-to-many relationship](#many-to-many-relationship)
 - [Enum Definition](#enum-definition)
+  - [Enum Alias](#enum-alias)
 - [TablePartial](#tablepartial)
 - [Data Sample](#data-sample)
   - [Data Types](#data-types)
@@ -366,6 +367,25 @@ enum grade {
   "Not Yet Set"
 }
 ```
+
+### Enum Alias
+
+You can alias the enum and use the alias as a column type.
+
+```text
+enum v2.job_status as JobStatus {
+  created
+  running
+  done
+}
+
+Table jobs {
+  id integer
+  status JobStatus
+}
+```
+
+The alias refers to the original enum, so `status JobStatus` is the same as `status v2.job_status`. When you export to SQL, the column uses the original enum's name.
 
 ## TablePartial
 

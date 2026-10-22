@@ -285,6 +285,29 @@ describe('[example] validator', () => {
 
       expect(errors).toHaveLength(0);
     });
+
+    test('should accept valid enum alias', () => {
+      const source = 'Enum users.status as S { active }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should accept quoted enum alias', () => {
+      const source = 'Enum status as "job status" { active }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(0);
+    });
+
+    test('should reject invalid enum alias', () => {
+      const source = 'Enum status as a.b { active }';
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].code).toBe(CompileErrorCode.INVALID_ALIAS);
+      expect(errors[0].diagnostic).toBe('Enum aliases can only contain alphanumeric and underscore unless surrounded by double quotes');
+    });
   });
 
   describe('ref validation', () => {
