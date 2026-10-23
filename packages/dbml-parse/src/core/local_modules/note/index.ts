@@ -1,4 +1,3 @@
-import { forIn } from 'lodash-es';
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -83,7 +82,7 @@ export const noteModule: LocalModule = {
 
           attrs.forEach((attr) => {
             if (field.parse(attr.value) === undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, field.invalidError.message, attr.value || attr.name || attr));
+              errors.push(new CompileError(CompileErrorCode.INVALID_NOTE_SETTING_VALUE, field.message, attr.value || attr.name || attr));
             }
           });
           break; }

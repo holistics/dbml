@@ -1,4 +1,3 @@
-import { forIn } from 'lodash-es';
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -89,7 +88,7 @@ function validateTableGroupSettings (settingList?: ListExpressionNode): Report<S
   const errors = aggReport.getErrors();
   const settingMap = aggReport.getValue();
 
-  forIn(settingMap, (attrs, name) => {
+  for (const [name, attrs] of Object.entries(settingMap)) {
     switch (name) {
       case SettingName.Note:
       case SettingName.Color: {
@@ -100,7 +99,7 @@ function validateTableGroupSettings (settingList?: ListExpressionNode): Report<S
 
         attrs.forEach((attr) => {
           if (field.parse(attr.value) === undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, field.invalidError.message, attr.value || attr.name || attr));
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, field.message, attr.value || attr.name || attr));
           }
         });
         break; }
@@ -113,6 +112,6 @@ function validateTableGroupSettings (settingList?: ListExpressionNode): Report<S
           }),
         );
     }
-  });
+  }
   return new Report(settingMap, errors);
 }

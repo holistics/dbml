@@ -1,7 +1,6 @@
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '@/compiler/index';
 import {
-  CompileErrorCode,
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
@@ -26,12 +25,6 @@ type MetadataField<T, V> = {
   type: CustomMetadataValueType;
   /** Parse the source node into the field's value, `undefined` if the node is not a valid value for this field */
   parse (node?: SyntaxNode): V | undefined;
-  /** Whether the source node is a valid value for this field */
-  isValid (node?: SyntaxNode): boolean;
-  invalidError: { code: CompileErrorCode; message: string };
-  /** Whether the field may appear more than once in an inline settings list */
-  allowDuplicate: boolean;
-  duplicateError?: { code: CompileErrorCode; message: string };
   message: string;
 
   /** Write the parsed value to the element builtin props (e.g. write to `table.note`) */

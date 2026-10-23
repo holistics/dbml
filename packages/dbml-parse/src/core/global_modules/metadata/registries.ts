@@ -1,11 +1,9 @@
-import { CompileErrorCode } from '@/core/types/errors';
 import { SettingName } from '@/core/types/keywords';
 import type {
   Color, Column, Note, Table, TableGroup,
 } from '@/core/types/schemaJson';
 import { MetadataTargetKind } from '@/core/types/symbol';
 import { extractColor, extractHexColor, extractNote } from '@/core/utils/interpret';
-import { isValidColorOrNone, isValidHexColor } from '@/core/utils/validate';
 import type { MetadataFieldRegistry } from './utils';
 
 // Builtin metadata fields of every Metadata target kind.
@@ -15,10 +13,6 @@ export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, { [SettingName.
   [SettingName.Note]: {
     type: 'string',
     parse: extractNote,
-    isValid: (node) => extractNote(node) !== undefined,
-    invalidError: { code: CompileErrorCode.INVALID_TABLE_SETTING_VALUE, message: "'note' must be a string literal" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLE_SETTING, message: "'note' can only appear once" },
     message: "'note' must be a string literal",
     assign (element, value, token) {
       element.note = { value, token };
@@ -27,10 +21,6 @@ export const TABLE_METADATA_FIELDS: MetadataFieldRegistry<Table, { [SettingName.
   [SettingName.HeaderColor]: {
     type: 'color',
     parse: extractHexColor,
-    isValid: isValidHexColor,
-    invalidError: { code: CompileErrorCode.INVALID_TABLE_SETTING_VALUE, message: "'headercolor' must be a color literal" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLE_SETTING, message: "'headercolor' can only appear once" },
     message: "'headercolor' must be a color literal",
     assign (element, value) {
       element.headerColor = value;
@@ -42,10 +32,6 @@ export const COLUMN_METADATA_FIELDS: MetadataFieldRegistry<Column, { [SettingNam
   [SettingName.Note]: {
     type: 'string',
     parse: extractNote,
-    isValid: (node) => extractNote(node) !== undefined,
-    invalidError: { code: CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, message: "'note' must be a quoted string" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_COLUMN_SETTING, message: "'note' can only appear once" },
     message: "'note' must be a quoted string",
     assign (element, value, token) {
       element.note = { value, token };
@@ -57,10 +43,6 @@ export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, { [Se
   [SettingName.Note]: {
     type: 'string',
     parse: extractNote,
-    isValid: (node) => extractNote(node) !== undefined,
-    invalidError: { code: CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, message: "'note' must be a string literal" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, message: "'note' can only appear once" },
     message: "'note' must be a string literal",
     assign (element, value, token) {
       element.note = { value, token };
@@ -69,10 +51,6 @@ export const TABLEGROUP_METADATA_FIELDS: MetadataFieldRegistry<TableGroup, { [Se
   [SettingName.Color]: {
     type: 'color',
     parse: extractHexColor,
-    isValid: isValidHexColor,
-    invalidError: { code: CompileErrorCode.INVALID_TABLEGROUP_SETTING_VALUE, message: "'color' must be a color literal" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_TABLEGROUP_SETTING, message: "'color' can only appear once" },
     message: "'color' must be a color literal",
     assign (element, value) {
       element.color = value;
@@ -84,10 +62,6 @@ export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, { [SettingName.Co
   [SettingName.Color]: {
     type: 'color',
     parse: extractColor,
-    isValid: isValidColorOrNone,
-    invalidError: { code: CompileErrorCode.INVALID_NOTE_SETTING_VALUE, message: "'color' must be a color literal or 'none'" },
-    allowDuplicate: false,
-    duplicateError: { code: CompileErrorCode.DUPLICATE_NOTE_SETTING, message: "'color' can only appear once" },
     message: "'color' must be a color literal or 'none'",
     assign (element, value) {
       element.color = value;

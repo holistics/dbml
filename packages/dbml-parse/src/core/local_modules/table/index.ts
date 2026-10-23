@@ -1,4 +1,4 @@
-import { forIn, last } from 'lodash-es';
+import { last } from 'lodash-es';
 import type Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind, SettingName } from '@/core/types/keywords';
@@ -101,7 +101,7 @@ function validateTableSettings (settingList?: ListExpressionNode): Report<Settin
   const errors = aggReport.getErrors();
   const settingMap = aggReport.getValue();
 
-  forIn(settingMap, (attrs, name) => {
+  for (const [name, attrs] of Object.entries(settingMap)) {
     switch (name) {
       case SettingName.HeaderColor:
       case SettingName.Note: {
@@ -112,7 +112,7 @@ function validateTableSettings (settingList?: ListExpressionNode): Report<Settin
 
         attrs.forEach((attr) => {
           if (field.parse(attr.value) === undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, field.invalidError.message, attr.value || attr.name || attr));
+            errors.push(new CompileError(CompileErrorCode.INVALID_TABLE_SETTING_VALUE, field.message, attr.value || attr.name || attr));
           }
         });
         break; }
@@ -132,7 +132,7 @@ function validateTableSettings (settingList?: ListExpressionNode): Report<Settin
           }),
         );
     }
-  });
+  }
   return new Report(settingMap, errors);
 }
 
@@ -182,7 +182,7 @@ function validateFieldSetting (parts: ExpressionNode[]): Report<Settings> {
     );
   }
 
-  forIn(settingMap, (attrs, name) => {
+  for (const [name, attrs] of Object.entries(settingMap)) {
     switch (name) {
       case SettingName.Note: {
         const field = COLUMN_METADATA_FIELDS[name];
@@ -192,7 +192,7 @@ function validateFieldSetting (parts: ExpressionNode[]): Report<Settings> {
 
         attrs.forEach((attr) => {
           if (field.parse(attr.value) === undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, field.invalidError.message, attr.value || attr.name || attr));
+            errors.push(new CompileError(CompileErrorCode.INVALID_COLUMN_SETTING_VALUE, field.message, attr.value || attr.name || attr));
           }
         });
         break; }
@@ -312,6 +312,6 @@ function validateFieldSetting (parts: ExpressionNode[]): Report<Settings> {
           }),
         );
     }
-  });
+  }
   return new Report(settingMap, errors);
 }
