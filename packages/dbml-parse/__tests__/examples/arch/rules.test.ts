@@ -35,25 +35,35 @@ describe('[example] architecture rules', () => {
     ]);
   });
 
-  test('a DBML file that imports nodes gets the built-in roles to draw them', () => {
+  test('a DBML file that imports nodes gets them with their roles', () => {
     const { errors, db } = project({
       '/infra.dbml': `${ARCH}Server api`,
       '/main.dbml': "use * from './infra'\nTable users {\n  id int\n}",
     });
     expect(errors).toHaveLength(0);
     expect(db?.diagramType).toBeUndefined();
-    expect(db?.nodes?.map((n) => n.kind)).toEqual(['Server']);
-    expect(db?.kinds?.some((k) => k.name === 'Server' && k.builtin)).toBe(true);
+    expect(db?.nodes?.map((n) => n.role)).toEqual(['Server']);
   });
 
-  test('a Kind declared in the importing file overrules the imported one', () => {
-    const { errors, db } = project({
-      '/pack.dbml': 'Kind Lakehouse [icon: graph]',
-      '/main.dbml': `${ARCH}use * from './pack'\nKind Lakehouse [icon: database]\nLakehouse lake`,
-    });
+  test('a node carries its role in the declared spelling', () => {
+    const { errors, db } = project({ '/main.dbml': `${ARCH}loadbalancer lb` });
     expect(errors).toHaveLength(0);
-    expect(db?.kinds?.filter((k) => k.name === 'Lakehouse').map((k) => k.icon)).toEqual(['database']);
-    expect(db?.nodes?.[0].kind).toBe('Lakehouse');
+    expect(db?.nodes?.map((n) => n.role)).toEqual(['LoadBalancer']);
+  });
+
+  test('a Kind declaration is refused, since there are no custom roles', () => {
+    const { compiler } = project({ '/main.dbml': `${ARCH}Kind Lakehouse [color: '#4a7c59']\nServer api` });
+    expect(compiler.validateFile(Filepath.from('/main.dbml')).getErrors().map((e) => e.code)).toEqual([
+      CompileErrorCode.NO_CUSTOM_ROLE,
+    ]);
+  });
+
+  test('a word that is not a role is an error that names the nearest roles', () => {
+    const { errors } = project({ '/main.dbml': `${ARCH}Sever api\nLakehouse lake` });
+    expect(errors.map((e) => [e.code, e.diagnostic])).toEqual([
+      [CompileErrorCode.UNKNOWN_ROLE, 'Sever is not a role. Did you mean: Server?'],
+      [CompileErrorCode.UNKNOWN_ROLE, expect.stringMatching(/^Lakehouse is not a role\. /)],
+    ]);
   });
 
   test('the planned changes C3, C6, C7, C8, front matter in DBML and a.port hold', () => {

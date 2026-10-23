@@ -17,12 +17,11 @@ import { NormalizedCheckIdMap } from './check';
 import TablePartial, { NormalizedTablePartialIdMap } from './tablePartial';
 import { TokenPosition, DiagramView } from '@dbml/parse';
 import type {
-  Group as RawGroup, Kind as RawKind, Link as RawLink, Node as RawNode,
+  Group as RawGroup, Link as RawLink, Node as RawNode,
 } from '@dbml/parse';
 import Node, { NormalizedNodeIdMap } from './node';
 import Group, { NormalizedGroupIdMap } from './group';
 import Link, { NormalizedLinkIdMap } from './link';
-import Kind, { NormalizedKindIdMap } from './kind';
 export interface Project {
     note: RawNote;
     database_type: string;
@@ -76,7 +75,6 @@ export interface RawDatabase {
     nodes?: RawNode[];
     groups?: RawGroup[];
     links?: RawLink[];
-    kinds?: RawKind[];
     frontMatter?: Record<string, string>;
     diagramType?: 'arch';
 }
@@ -95,7 +93,6 @@ declare class Database extends Element {
     nodes: Node[];
     groups: Group[];
     links: Link[];
-    kinds: Kind[];
     frontMatter: Record<string, string> | null;
     diagramType: 'arch' | null;
     id: number;
@@ -110,7 +107,6 @@ declare class Database extends Element {
     findTable(schemaName: string | null, tableName: string): Table;
     processTablePartials(rawTablePartials: any[]): TablePartial[];
     findTablePartial(partialName: string): TablePartial;
-    findKind(name: string): Kind | undefined;
     export(): {
         schemas: {
             tables: {
@@ -331,7 +327,6 @@ export interface NormalizedDatabase {
     nodeIds?: number[];
     groupIds?: number[];
     linkIds?: number[];
-    kindIds?: number[];
     frontMatter?: Record<string, string>;
     diagramType?: 'arch';
 }
@@ -362,6 +357,5 @@ export interface NormalizedModel {
     nodes?: NormalizedNodeIdMap;
     groups?: NormalizedGroupIdMap;
     links?: NormalizedLinkIdMap;
-    kinds?: NormalizedKindIdMap;
 }
 export default Database;

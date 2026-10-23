@@ -18,7 +18,6 @@ diagram_type: arch
 - [Element Definition](#element-definition)
 - [Element Settings](#element-settings)
 - [Built-in Roles](#built-in-roles)
-- [Custom Roles](#custom-roles)
 - [Group Definition](#group-definition)
 - [Link Definition](#link-definition)
 - [Note Definition](#note-definition)
@@ -55,8 +54,8 @@ Database "Master" as pg_master {
 }
 ```
 
-Any key you write is kept and shown in the inspector. `type`, `icon`, `color`, `glyph` and
-`Note` have meaning to the renderer; everything else is yours.
+Any key you write is kept and shown in the inspector. `type`, `color` and `Note` have meaning to
+the renderer; everything else is yours.
 
 ## Element Settings
 
@@ -69,8 +68,8 @@ Cache sessions   [type: 'redis']
 Proxy edge       [type: 'nginx']
 ```
 
-`type` draws that company's mark in that company's colour. For a product the icon pack does not
-carry, point at a picture instead:
+`type` draws that company's mark in that company's colour. For a product with no built-in mark,
+point at a picture instead:
 
 ```text
 Pipeline "Airbyte ETL" as airbyte [type: 'https://example.com/airbyte.png']
@@ -79,9 +78,7 @@ Pipeline "Airbyte ETL" as airbyte [type: 'https://example.com/airbyte.png']
 | Setting | Value | What it does |
 |---|---|---|
 | `type` | brand name, or an image URL | draws the product's mark, in its own colour |
-| `icon` | icon name | draws a plain mark, when the thing has no brand |
 | `color` | `'#rrggbb'` | overrules the colour the role or brand would use |
-| `glyph` | `'M...'` | your own SVG path, for a mark nothing else has |
 | `style: dashed` | — | draws the box dashed |
 | `inactive` | — | same as `style: dashed`; marks something not in service |
 
@@ -98,7 +95,9 @@ Database orders_db {
 
 ## Built-in Roles
 
-31 roles ship with the language.
+31 roles ship with the language, and they are the only roles. A diagram maps one to one to
+infrastructure code, so there are no custom roles. A word that is not a role is an error that
+names the nearest roles.
 
 | Category | Roles |
 |---|---|
@@ -108,22 +107,6 @@ Database orders_db {
 | edge | `CDN` `Internet` |
 | people | `Client` `Browser` `Mobile` `Team` |
 | operations | `Monitoring` `Logging` `Alerting` `Scheduler` `Pipeline` |
-
-## Custom Roles
-
-`Kind` names a role the built-ins do not have, or overrules one they do.
-
-```text
-// a role the built-ins lack
-Kind Lakehouse [icon: graph, color: '#4a7c59']
-
-// a house style for a role that already exists
-Kind Firewall [icon: firewall, color: '#c0453a']
-
-Lakehouse "Iceberg on S3" as lake
-```
-
-A brand needs no `Kind`. `Kind` is for roles.
 
 ## Group Definition
 
@@ -239,14 +222,30 @@ diagram_type: arch
 
 ## Modules
 
-A **pack** is a file of vocabulary: the roles your house uses. Import it like any other module.
+Elements can live in their own file and be imported like any other module. A diagram that
+imports them can group them and link to them.
 
 ```text
-use * from './packs/devops.arch'
+// monitoring.arch.dbml
+Monitoring "Grafana" as grafana [type: 'grafana']
+Monitoring "Prometheus" as prometheus [type: 'prometheus']
 ```
 
-Ship one per cloud, per team, or per house style, and every diagram that imports it draws the
-same way.
+```text
+// main.arch.dbml
+use * from './monitoring.arch'
+
+Group "Monitoring system" as monitoring { grafana prometheus }
+Link: prometheus > grafana
+```
+
+To import only some of them, name each one with its role:
+
+```text
+use {
+  Monitoring grafana
+} from './monitoring.arch'
+```
 
 ## Syntax Consistency
 

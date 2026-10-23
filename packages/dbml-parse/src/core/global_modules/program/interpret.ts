@@ -8,7 +8,7 @@ import { ElementDeclarationNode, ProgramNode, type SyntaxNode } from '@/core/typ
 import Report from '@/core/types/report';
 import type {
   Alias, Database, Dep, DiagramView, Enum,
-  Group, Kind, Link, Node, Note, Project, Ref,
+  Group, Link, Node, Note, Project, Ref,
   RefEndpoint, SchemaElement, Table,
   TableGroup, TablePartial, TableRecord,
 } from '@/core/types/schemaJson';
@@ -34,7 +34,6 @@ import { pushExternal, validateDepBlocks } from './utils';
 import {
   archSort, bodyOf, declarationWord, isTopLevel, nameOf, rowOf,
 } from '@/core/arch/read';
-import { builtinKinds } from '../arch/interpret';
 import type { ElementRef } from '@/core/types/schemaJson';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { getMultiplicities } from '@/core/types/relation';
@@ -98,25 +97,10 @@ export default class ProgramInterpreter {
       link: Link;
       declaration: SyntaxNode;
     }[],
-    kinds: [] as Kind[],
-    importedKinds: [] as Kind[],
   };
 
   private finishArch () {
     const isArch = this.compiler.parsedFileKind(this.filepath) === 'arch';
-
-    // A `Kind` in this file overrules an imported one and a built-in; a later one overrules an earlier one
-    const kinds = new Map<string, Kind>();
-    for (const kind of this.arch.kinds) kinds.set(kind.name.toLowerCase(), kind);
-    for (const kind of this.arch.importedKinds) {
-      if (!kinds.has(kind.name.toLowerCase())) kinds.set(kind.name.toLowerCase(), kind);
-    }
-    // a DBML file that imports nodes needs the built-in roles to draw them
-    if (isArch || this.arch.nodes.length) {
-      for (const kind of builtinKinds()) {
-        if (!kinds.has(kind.name.toLowerCase())) kinds.set(kind.name.toLowerCase(), kind);
-      }
-    }
 
     // The first group to list an element owns it
     const handles = new Set([
@@ -158,9 +142,6 @@ export default class ProgramInterpreter {
       nodes: this.arch.nodes,
       groups: this.arch.groups,
       links: this.arch.links.map(({ link }) => link),
-      kinds: [
-        ...kinds.values(),
-      ],
     };
     for (const [key, value] of Object.entries(entries) as [keyof typeof entries, never[]][]) {
       if (isArch || value.length) this.db[key] = value;
@@ -551,10 +532,6 @@ export default class ProgramInterpreter {
         else this.arch.nodes.push(value as Node);
         break;
       }
-      case SymbolKind.Kind:
-        if (symbol instanceof UseSymbol) this.arch.importedKinds.push(value as Kind);
-        else this.arch.kinds.push(value as Kind);
-        break;
       case SymbolKind.Table:
         this.db.tables.push(value as Table);
         break;

@@ -1,4 +1,5 @@
 import type Compiler from '@/compiler';
+import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch/vocabulary';
 import { ImportKind } from '@/core/types';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
@@ -54,6 +55,8 @@ export default class UseDeclarationValidator {
       errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, 'A use specifier must have a type (e.g. table, enum)', specifier));
     } else if (!specifier.archImport && !specifier.isKind(...Object.values(ImportKind))) {
       errors.push(new CompileError(CompileErrorCode.INVALID_USE_SPECIFIER_KIND, `'${specifier.importKind.value}' is not a valid specifier type`, specifier.importKind));
+    } else if (specifier.archImport && specifier.importKind.value.toLowerCase() === 'kind') {
+      errors.push(new CompileError(CompileErrorCode.NO_CUSTOM_ROLE, NO_CUSTOM_ROLE_MESSAGE, specifier.importKind));
     }
 
     return [

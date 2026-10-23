@@ -14,17 +14,6 @@ export interface Located {
   };
 }
 
-export interface KindDef {
-  name: string;
-  icon: string;
-  glyph: string[] | null;
-  image: string | null;
-  category: string;
-  color: string | null;
-  builtin: boolean;
-  at: Located | null;
-}
-
 interface ElementBase {
   id: string;
   alias: string | null;
@@ -37,7 +26,7 @@ interface ElementBase {
 
 export interface NodeElement extends ElementBase {
   sort: 'node';
-  kind: string;
+  role: string;
   type: string | null;
   image: string | null;
 }
@@ -56,7 +45,6 @@ export type Element = NodeElement | GroupElement | NoteElement;
 
 export interface NetworkModel {
   frontMatter: Record<string, string>;
-  kinds: Map<string, KindDef>;
   elements: Map<string, Element>;
   links: { id: string; from: string; to: string; op: string; settings: ArchSettings; at: Located }[];
   roots: string[];
@@ -85,10 +73,10 @@ export const isGroup = (e: Element | undefined): e is GroupElement => !!e && e.s
 
 // The codes the original compiler named; anything else came from the parser or DBML's binder, which it reported as `parse-<code>`
 const CODE_NAMES: Partial<Record<number, string>> = {
-  [CompileErrorCode.UNKNOWN_KIND]: 'unknown-kind',
+  [CompileErrorCode.UNKNOWN_ROLE]: 'unknown-role',
   [CompileErrorCode.MISSING_NAME]: 'missing-name',
   [CompileErrorCode.DUPLICATE_NAME]: 'duplicate-name',
-  [CompileErrorCode.RESERVED_KIND]: 'reserved-kind',
+  [CompileErrorCode.NO_CUSTOM_ROLE]: 'no-custom-role',
   [CompileErrorCode.UNKNOWN_ENDPOINT]: 'unknown-endpoint',
   [CompileErrorCode.EMPTY_LINK]: 'empty-link',
   [CompileErrorCode.BAD_LINK]: 'bad-link',
@@ -96,7 +84,7 @@ const CODE_NAMES: Partial<Record<number, string>> = {
   [CompileErrorCode.BAD_PROPERTY]: 'bad-property',
   [CompileErrorCode.DUPLICATE_PROPERTY]: 'duplicate-property',
   [CompileErrorCode.DIAGRAM_TYPE_NOT_HERE]: 'diagram-type-not-here',
-  [CompileErrorCode.METADATA_KIND_MISMATCH]: 'metadata-kind-mismatch',
+  [CompileErrorCode.METADATA_ROLE_MISMATCH]: 'metadata-role-mismatch',
   [CompileErrorCode.UNKNOWN_TYPE]: 'unknown-type',
   [CompileErrorCode.UNKNOWN_ICON]: 'unknown-icon',
   [CompileErrorCode.BAD_IMAGE]: 'bad-image',
@@ -176,26 +164,12 @@ export function compileArch (files: Record<string, string>, entry = '/main.arch.
 function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel {
   const model: NetworkModel = {
     frontMatter: db?.frontMatter ?? {},
-    kinds: new Map(),
     elements: new Map(),
     links: [],
     roots: [],
     files: reachable.map((f) => f.absolute),
   };
   if (!db) return model;
-
-  for (const kind of db.kinds ?? []) {
-    model.kinds.set(kind.name, {
-      name: kind.name,
-      icon: kind.icon,
-      glyph: kind.glyph,
-      image: kind.image,
-      category: kind.category,
-      color: kind.color,
-      builtin: kind.builtin,
-      at: kind.token ? locate(kind.token) : null,
-    });
-  }
 
   const parent = new Map<string, string>();
   for (const group of db.groups ?? []) for (const child of group.children) parent.set(child, group.alias ?? group.name);
@@ -207,7 +181,7 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
       id,
       alias: node.alias,
       label: node.name,
-      kind: node.kind,
+      role: node.role,
       type: node.type,
       image: node.image,
       settings: node.settings,
@@ -261,9 +235,7 @@ function modelOf (db: Database | undefined, reachable: Filepath[]): NetworkModel
 
 export function isArchitecture (result: ArchResult): boolean {
   if (isArchDiagramType(result.diagramType)) return true;
-  const { model } = result;
-  if (!model.kinds.size) return false;
   return [
-    ...model.elements.values(),
+    ...result.model.elements.values(),
   ].some((element) => element.sort !== 'note');
 }

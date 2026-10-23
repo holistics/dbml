@@ -8,7 +8,6 @@ export function pushExternal (db: Database, member: NodeSymbol, ref: ElementRef)
   else if (member.isKind(SymbolKind.TableGroup)) db.externals.tableGroups.push(ref);
   else if (member.isKind(SymbolKind.TablePartial)) db.externals.tablePartials.push(ref);
   else if (member.isKind(SymbolKind.StickyNote)) db.externals.notes.push(ref);
-  else if (member.isKind(SymbolKind.Kind)) (db.externals.kinds ??= []).push(ref);
   else if (member.isKind(SymbolKind.Element)) {
     const sort = archSort(member.originalSymbol.declaration!);
     if (sort === 'group') (db.externals.groups ??= []).push(ref);

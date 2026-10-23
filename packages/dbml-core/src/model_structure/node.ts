@@ -10,7 +10,8 @@ class Node extends Element {
   declare id: number;
   name: string;
   alias: string | null;
-  kindId: number | null;
+  // The built-in role, in its declared spelling
+  role: string;
   type: string | null;
   image: string | null;
   settings: ArchSettings;
@@ -21,12 +22,12 @@ class Node extends Element {
   dbState: DbStateType;
 
   constructor ({
-    name, alias, kind, type, image, settings, note, token, database,
+    name, alias, role, type, image, settings, note, token, database,
   }: RawNode & { database: any }) {
     super(token as Token);
     this.name = name;
     this.alias = alias;
-    this.kindId = database.findKind(kind)?.id ?? null;
+    this.role = role;
     this.type = type;
     this.image = image;
     this.settings = settings;
@@ -46,6 +47,7 @@ class Node extends Element {
     return {
       name: this.name,
       alias: this.alias,
+      role: this.role,
       type: this.type,
       image: this.image,
       settings: this.settings,
@@ -57,7 +59,6 @@ class Node extends Element {
     model.nodes![this.id] = {
       id: this.id,
       ...this.export(),
-      kindId: this.kindId,
       groupId: this.groupId,
     };
   }

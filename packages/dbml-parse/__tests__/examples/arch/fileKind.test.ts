@@ -29,17 +29,17 @@ describe('[example] file kind', () => {
     expect(kindOf('loadbalancer lb')).toBe('arch');
   });
 
-  test('without a marker, Group or Kind lines are architecture', () => {
+  test('without a marker, Group lines are architecture, and so are Kind lines, so they can be reported', () => {
     expect(kindOf('Group g { a }')).toBe('arch');
-    expect(kindOf("Kind Lakehouse [icon: graph, color: '#4a7c59']")).toBe('arch');
+    expect(kindOf("Kind Lakehouse [color: '#4a7c59']")).toBe('arch');
   });
 
-  test('without a marker, a role declared in an imported file is architecture', () => {
+  test('an imported file does not decide the kind', () => {
     const { compiler } = setup({
-      '/pack.dbml': 'Kind Lakehouse [icon: graph]',
+      '/pack.dbml': 'Server api',
       '/main.dbml': "use * from './pack'\nLakehouse lake",
     });
-    expect(compiler.fileKind(Filepath.from('/main.dbml'))).toBe('arch');
+    expect(compiler.fileKind(Filepath.from('/main.dbml'))).toBe('dbml');
   });
 
   test('words inside bodies and words both languages share do not count', () => {
@@ -62,21 +62,5 @@ describe('[example] file kind', () => {
     expect(compiler.parseFile(Filepath.from('/schema.dbml')).getErrors()).toHaveLength(0);
     expect(setup({ '/main.dbml': '---\ndiagram_type: dbml\n---\nServer api' })
       .compiler.parseFile(Filepath.from('/main.dbml')).getErrors().length).toBeGreaterThan(0);
-  });
-
-  test('a kind change caused by an imported file drops the cached parse', () => {
-    const { layout, compiler } = setup({
-      '/pack.dbml': 'Kind Lakehouse [icon: graph]',
-      '/main.dbml': "use * from './pack'\nLakehouse lake",
-    });
-    const main = Filepath.from('/main.dbml');
-    expect(compiler.parseFile(main).getErrors()).toHaveLength(0);
-
-    layout.setSource(Filepath.from('/pack.dbml'), 'Table t { id int }');
-    expect(compiler.fileKind(main)).toBe('dbml');
-    expect(compiler.parseFile(main).getErrors().length).toBeGreaterThan(0);
-
-    layout.setSource(Filepath.from('/pack.dbml'), 'Kind Lakehouse [icon: graph]');
-    expect(compiler.parseFile(main).getErrors()).toHaveLength(0);
   });
 });

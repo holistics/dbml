@@ -8,7 +8,7 @@ declare class Node extends Element {
     id: number;
     name: string;
     alias: string | null;
-    kindId: number | null;
+    role: string;
     type: string | null;
     image: string | null;
     settings: ArchSettings;
@@ -19,14 +19,14 @@ declare class Node extends Element {
     dbState: DbState;
     constructor(raw: RawNode & { database: Database });
     generateId(): void;
-    export(): Omit<NormalizedNode, 'id' | 'kindId' | 'groupId'>;
+    export(): Omit<NormalizedNode, 'id' | 'groupId'>;
     normalize(model: NormalizedModel): void;
 }
 export interface NormalizedNode {
     id: number;
     name: string;
     alias: string | null;
-    kindId: number | null;
+    role: string;
     type: string | null;
     image: string | null;
     settings: ArchSettings;

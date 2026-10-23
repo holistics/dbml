@@ -36,7 +36,7 @@ export function parseFile (this: Compiler, filepath: Filepath): Report<FileParse
     }));
 }
 
-// The kind words in an architecture file's `use` lines are read as architecture kinds
+// The kind words in an architecture file's `use` lines are read as roles
 function markArchImports (ast: ProgramNode): void {
   for (const node of ast.body) {
     if (!(node instanceof UseDeclarationNode) || !(node.specifiers instanceof UseSpecifierListNode)) continue;

@@ -38,7 +38,6 @@ export interface DatabaseExternals {
   // Architecture elements, present only when the file imports some
   nodes?: ElementRef[];
   groups?: ElementRef[];
-  kinds?: ElementRef[];
 }
 
 /**
@@ -86,7 +85,6 @@ export interface Database {
   nodes?: Node[];
   groups?: Group[];
   links?: Link[];
-  kinds?: Kind[];
   // The `---` block at the top of the file, present only when it has keys
   frontMatter?: Record<string, string>;
   // 'arch' for a file read as an architecture diagram; absent for a DBML file
@@ -96,14 +94,12 @@ export interface Database {
 export type ArchSettingValue = string | number | boolean;
 export type ArchSettings = Record<string, ArchSettingValue>;
 
-export type KindCategory = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops' | 'custom';
-
 // `Server "API 1" as api1 { ... }`. The handle (`alias`, or `name` when there is none) is unique.
 export interface Node {
   name: string;
   alias: string | null;
   // The role's declared spelling
-  kind: string;
+  role: string;
   // The brand, resolved to an icon name
   type: string | null;
   // A picture URL given in `type`
@@ -138,17 +134,6 @@ export interface Link {
   op: LinkOp;
   settings: ArchSettings;
   token: TokenPosition;
-}
-
-export interface Kind {
-  name: string;
-  icon: string;
-  glyph: string[] | null;
-  image: string | null;
-  category: KindCategory;
-  color: string | null;
-  builtin: boolean;
-  token: TokenPosition | null;
 }
 
 // Multifile project
@@ -436,5 +421,4 @@ export type SchemaElement =
   | Node
   | Group
   | Link
-  | Kind
   | ArchSettings;

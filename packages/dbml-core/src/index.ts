@@ -66,6 +66,7 @@ export {
   isEndpointRequired,
   isEndpointOptional,
   makeRelationshipRequired,
+  BUILTIN_ROLES,
 } from '@dbml/parse';
 
 export { inferMultiplicitiesFromColumns } from './transform/relations';
@@ -96,4 +97,5 @@ export type {
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,
+  RoleSpec,
 } from '@dbml/parse';

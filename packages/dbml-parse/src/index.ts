@@ -92,8 +92,6 @@ export {
   type Group,
   type Link,
   type LinkOp,
-  type Kind,
-  type KindCategory,
   type ArchSettings,
   type ArchSettingValue,
 } from '@/core/types/schemaJson';
@@ -101,7 +99,7 @@ export {
 // Architecture files
 export { type FileKind, ARCH_DIAGRAM_TYPES, isArchDiagramType } from '@/compiler/queries/files/fileKind';
 export {
-  BUILTIN_KINDS, RESERVED, isReserved, suggestKind, suggestIcon, type KindSpec,
+  BUILTIN_ROLES, suggestRole, suggestIcon, type RoleSpec,
 } from '@/core/arch/vocabulary';
 export {
   ICON_ALIAS, ICON_NAMES, isIconName, resolveIcon,

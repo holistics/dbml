@@ -3,7 +3,7 @@ import {
   archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isInlineLink, isTopLevel, isTopLevelNote,
   linkPartsOf, nameOf, topLevelDeclaration,
 } from '@/core/arch/read';
-import { suggestKind } from '@/core/arch/vocabulary';
+import { roleName, suggestRole } from '@/core/arch/vocabulary';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
@@ -12,16 +12,12 @@ import {
 } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import {
-  ElementSymbol, KindSymbol, type NodeSymbol, SymbolKind,
-} from '@/core/types/symbol';
+import { ElementSymbol, type NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { ArchMetadataElementMetadata, LinkMetadata, type NodeMetadata } from '@/core/types/symbol/metadata';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import type { GlobalModule } from '../types';
-import {
-  interpretArchMetadata, interpretElement, interpretKind, interpretLink,
-} from './interpret';
-import { lookupVisible, resolveRole } from './utils';
+import { interpretArchMetadata, interpretElement, interpretLink } from './interpret';
+import { lookupVisible } from './utils';
 
 // A member name in a group's body: a word of a row directly in the body
 function isGroupMember (node: SyntaxNode, group: ElementDeclarationNode): boolean {
@@ -112,8 +108,8 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
 
   switch (archSort(declaration)) {
     case 'node':
-      if (nameOf(declaration.name) !== undefined && !resolveRole(compiler, declaration.filepath, word)) {
-        errors.push(new CompileError(CompileErrorCode.UNKNOWN_KIND, `${word} is not a kind. ${suggestKind(word)}`, declaration));
+      if (nameOf(declaration.name) !== undefined && !roleName(word)) {
+        errors.push(new CompileError(CompileErrorCode.UNKNOWN_ROLE, `${word} is not a role. ${suggestRole(word)}`, declaration));
       }
       break;
 
@@ -170,9 +166,7 @@ function bindUseSpecifier (compiler: Compiler, specifier: UseSpecifierNode): Rep
   const declaration = found?.declaration;
   if (word && found?.isKind(SymbolKind.Element) && declaration instanceof ElementDeclarationNode) {
     const declaredWord = declarationWord(declaration)!;
-    const expected = archSort(declaration) === 'node'
-      ? resolveRole(compiler, declaration.filepath, declaredWord) ?? declaredWord
-      : declaredWord;
+    const expected = archSort(declaration) === 'node' ? roleName(declaredWord) ?? declaredWord : declaredWord;
     if (expected.toLowerCase() !== word.toLowerCase()) {
       errors.push(new CompileError(
         CompileErrorCode.BINDING_ERROR,
@@ -194,18 +188,13 @@ export const archModule: GlobalModule = {
           declaration: node,
           name: handleOf(node),
         }, node.filepath));
-      case 'kind':
-        return new Report(compiler.symbolFactory.create(KindSymbol, {
-          declaration: node,
-          name: nameOf(node.name),
-        }, node.filepath));
       default:
         return Report.create(PASS_THROUGH);
     }
   },
 
   symbolMembers (compiler: Compiler, symbol: NodeSymbol): Report<NodeSymbol[]> | Report<PassThrough> {
-    if (symbol instanceof ElementSymbol || symbol instanceof KindSymbol) return new Report([]);
+    if (symbol instanceof ElementSymbol) return new Report([]);
     return Report.create(PASS_THROUGH);
   },
 
@@ -243,7 +232,6 @@ export const archModule: GlobalModule = {
 
   interpretSymbol (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough> {
     if (symbol instanceof ElementSymbol) return interpretElement(compiler, symbol, filepath);
-    if (symbol instanceof KindSymbol) return interpretKind(symbol);
     return Report.create(PASS_THROUGH);
   },
 

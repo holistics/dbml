@@ -2,11 +2,8 @@ import { describe, expect, it } from 'vitest';
 import Compiler from '@/compiler';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { Filepath } from '@/core/types/filepath';
-import { isIconName } from '@/core/arch/icons';
-import { BUILTIN_KINDS, suggestKind } from '@/core/arch/vocabulary';
-import {
-  BOOK_FILE, EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE, SELF_FILE,
-} from './samples';
+import { BUILTIN_ROLES } from '@/core/arch/vocabulary';
+import { EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE } from './samples';
 import {
   compileArch, isArchitecture, isGroup, isNode,
 } from './compileArch';
@@ -113,24 +110,16 @@ describe('the architecture dialect on DBML\'s grammar', () => {
     expect(model.elements.get('a')?.note).toBe('the only thing a body carries now');
   });
 
-  it('opens the vocabulary with Kind, and closes it against anything else', () => {
-    // With no diagram_type and no known kind word the file is DBML, so DBML's parser reports it
+  it('closes the vocabulary against any word that is not a role', () => {
+    // With no diagram_type and no role word the file is DBML, so DBML's parser reports it
     expect(codes('Microservice x').every((code) => code.startsWith('parse-'))).toBe(true);
-    expect(codes('Kind Microservice [icon: chip]\nMicroservice x')).toEqual([]);
+    expect(codes('---\ndiagram_type: arch\n---\nMicroservice x')).toEqual(['unknown-role']);
   });
 
-  it('warns on an icon nobody can draw, and still draws the box', () => {
-    const { model, diagnostics } = one('Kind Weird [icon: sparkle]\nWeird w');
-    expect(diagnostics.map((d) => d.code)).toEqual(['unknown-icon']);
-    expect(diagnostics[0].message).toContain('draw your own');
-    expect(model.elements.has('w')).toBe(true);
-    expect(model.kinds.get('Weird')?.icon).toBe('box');
-  });
-
-  it('takes a mark the pack never had', () => {
-    const { model } = one("Kind Snowflake [glyph: 'M12 3v18;M4 8l16 8', color: '#29b5e8']\nSnowflake dw");
-    expect(model.kinds.get('Snowflake')?.glyph).toEqual(['M12 3v18', 'M4 8l16 8']);
-    expect(model.kinds.get('Snowflake')?.color).toBe('#29b5e8');
+  it('refuses a Kind, since there are no custom roles', () => {
+    const { diagnostics } = one("Kind Microservice [color: '#29b5e8']\nServer x");
+    expect(diagnostics.map((d) => d.code)).toEqual(['no-custom-role']);
+    expect(diagnostics[0].message).toContain('built-in role');
   });
 
   it('warns rather than fails on an opinion', () => {
@@ -153,10 +142,11 @@ describe('the worked example', () => {
     const { model, diagnostics } = compileArch(EXAMPLE_FILES, EXAMPLE_ENTRY);
     expect(diagnostics).toEqual([]);
     expect(model.files).toContain('/packs/devops.arch.dbml');
-    // the kinds came from the imported file, the elements and their types from the entry file
-    expect(model.kinds.get('Lakehouse')?.icon).toBe('graph');
+    // the monitoring elements came from the imported file, and a group here lists them
+    expect(isNode(model.elements.get('grafana')) && model.elements.get('grafana'))
+      .toMatchObject({ role: 'Monitoring', type: 'grafana', parent: 'monitoring' });
     expect(isNode(model.elements.get('mongo1')) && model.elements.get('mongo1'))
-      .toMatchObject({ kind: 'Database', type: 'mongodb' });
+      .toMatchObject({ role: 'Database', type: 'mongodb' });
     expect(model.elements.get('mongo1')?.parent).toBe('mongo_rs');
     expect(model.elements.get('mongo_rs')?.parent).toBe('production');
     expect(model.elements.get('production')?.parent).toBe('private_net');
@@ -181,7 +171,7 @@ describe('the worked example', () => {
 
 describe('what decides the dialect', () => {
   it('never reads the file name, which is what makes a cloud document work', () => {
-    const source = 'Kind Mongo [icon: mongodb]\nMongo m1\nServer a\nLink: a > m1';
+    const source = "Database m1 [type: 'mongodb']\nServer a\nLink: a > m1";
     const named = compileArch({ '/infra.arch.dbml': source }, '/infra.arch.dbml');
     const plain = compileArch({ '/untitled.dbml': source }, '/untitled.dbml');
     // dbdiagram's cloud documents have no path at all, so a name can never be the signal
@@ -233,11 +223,11 @@ describe('what decides the dialect', () => {
     }
   });
 
-  it('answers for a document that declares a vocabulary and has drawn nothing yet', () => {
+  it('answers for a document that has drawn nothing yet', () => {
     // with nothing drawn, only diagram_type says "architecture"; it exists so a canvas does not
     // flicker while somebody is still typing
     const { model, diagramType } = compileArch(
-      { '/d.dbml': '---\ndiagram_type: arch\n---\nKind Mongo [icon: mongodb]' },
+      { '/d.dbml': '---\ndiagram_type: arch\n---\n' },
       '/d.dbml',
     );
     expect(model.elements.size).toBe(0);
@@ -251,13 +241,13 @@ describe('what decides the dialect', () => {
 });
 
 describe('the naming convention', () => {
-  it('resolves a .arch.dbml pack through the stock dbml resolver', () => {
+  it('resolves a .arch.dbml file through the stock dbml resolver', () => {
     const { model, diagnostics } = compileArch({
-      '/main.arch.dbml': "use * from './packs/devops.arch'\nMongo m1",
-      '/packs/devops.arch.dbml': 'Kind Mongo [icon: mongodb]',
+      '/main.arch.dbml': "use * from './packs/devops.arch'\nGroup g { m1 }",
+      '/packs/devops.arch.dbml': 'Database m1',
     }, '/main.arch.dbml');
     expect(diagnostics).toEqual([]);
-    expect(model.kinds.get('Mongo')?.icon).toBe('mongodb');
+    expect(model.elements.get('m1')?.parent).toBe('g');
   });
 });
 
@@ -271,78 +261,61 @@ describe('the inline sample', () => {
     expect(model.links.length).toBeGreaterThan(14);
   });
 
-  it('names an icon the renderer can be expected to have, for every kind it declares', () => {
+  it('gives every node a built-in role', () => {
     const { model } = compileArch({ '/d': INLINE_FILE }, '/d');
-    for (const kind of model.kinds.values()) {
-      if (kind.glyph) continue;
-      expect(isIconName(kind.icon), `${kind.name} -> ${kind.icon}`).toBe(true);
+    for (const node of [...model.elements.values()].filter(isNode)) {
+      expect(BUILTIN_ROLES[node.role], `${node.id} -> ${node.role}`).toBeDefined();
     }
   });
 });
 
-describe('the self-portrait', () => {
-  it('compiles with no diagnostics, drawing packages and imports rather than hosts', () => {
-    const { model, diagnostics, diagramType } = compileArch({ '/self': SELF_FILE }, '/self');
+describe('a note written as markdown', () => {
+  const SOURCE = [
+    '---',
+    'diagram_type: arch',
+    '---',
+    'Server "Lexer" as lex {',
+    "  Note: '''",
+    '  **642 lines, and not one DBML word in them.**',
+    '',
+    '  - `allowFrontMatter` is the one switch',
+    '    - nested under it',
+    "  '''",
+    '}',
+    'Server parse',
+    'Group "@dbml/parse" as pkg {',
+    '  lex parse',
+    "  Note: '''",
+    '  **The front end**',
+    '',
+    '  - `lexer.ts`',
+    '  - `parser.ts`',
+    "  '''",
+    '}',
+  ].join('\n');
+
+  it('hangs a markdown listing off a container, line breaks intact', () => {
+    const { model, diagnostics } = compileArch({ '/d': SOURCE }, '/d');
     expect(diagnostics).toEqual([]);
-    expect(diagramType).toBe('arch');
-    expect(model.elements.size).toBeGreaterThan(20);
-  });
-
-  it('draws itself entirely out of kinds it declared, using no built-in word', () => {
-    const { model, diagnostics } = compileArch({ '/self': SELF_FILE }, '/self');
-    expect(diagnostics).toEqual([]);
-
-    const declared = [...model.kinds.values()].filter((k) => !k.builtin);
-    expect(declared.map((k) => k.name).sort()).toEqual(
-      ['Author', 'Canvas', 'Closed', 'Lib', 'Shape', 'Stage', 'Words'],
-    );
-    for (const kind of declared) {
-      expect(isIconName(kind.icon), `${kind.name} -> ${kind.icon}`).toBe(true);
-    }
-
-    const used = new Set([...model.elements.values()].filter(isNode).map((n) => n.kind));
-    const builtinsUsed = [...used].filter((name) => model.kinds.get(name)?.builtin);
-    expect(builtinsUsed).toEqual([]);
-  });
-
-  it('hangs a markdown listing off every container, line breaks intact', () => {
-    const { model } = compileArch({ '/self': SELF_FILE }, '/self');
-    const groups = [...model.elements.values()].filter(isGroup);
-    expect(groups.length).toBeGreaterThan(3);
-
-    for (const group of groups) {
-      expect(group.note, `${group.id} has no note`).toBeTruthy();
-      expect(group.note!.split('\n').length, `${group.id} is one line`).toBeGreaterThan(2);
-      expect(group.note, `${group.id} lists nothing`).toContain('- `');
-    }
-
+    const group = model.elements.get('pkg');
+    expect(group?.note?.split('\n').length).toBeGreaterThan(2);
+    expect(group?.note).toContain('- `lexer.ts`');
     expect([...model.elements.values()].filter((e) => e.sort === 'note')).toEqual([]);
   });
 
   it('takes the same note on a node, with no change to the syntax', () => {
-    const { model, diagnostics } = compileArch({ '/self': SELF_FILE }, '/self');
-    expect(diagnostics).toEqual([]);
-
+    const { model } = compileArch({ '/d': SOURCE }, '/d');
     const lexer = model.elements.get('lex');
     expect(lexer?.sort).toBe('node');
     expect(lexer?.note).toContain('642 lines');
     expect(lexer?.note).toContain('- `allowFrontMatter`');
-    expect(lexer?.note!.split('\n').length).toBeGreaterThan(3);
-
-    const noted = [...model.elements.values()].filter((e) => isNode(e) && e.note);
-    expect(noted.length).toBeGreaterThan(8);
-    for (const node of noted) {
-      expect(node.note!.split('\n').length, node.id).toBeGreaterThan(2);
-    }
   });
 
   it('strips the indentation the author used, so the markdown starts at column one', () => {
-    const { model } = compileArch({ '/self': SELF_FILE }, '/self');
-    const note = model.elements.get('archpkg')?.note ?? '';
+    const { model } = compileArch({ '/d': SOURCE }, '/d');
+    const note = model.elements.get('lex')?.note ?? '';
     expect(note.startsWith('**')).toBe(true);
-    for (const line of note.split('\n')) {
-      expect(line === line.trimStart() || line.startsWith('  '), line).toBe(true);
-    }
+    expect(note).toContain('\n  - nested under it');
   });
 });
 
@@ -355,9 +328,9 @@ describe('deciding whether to show an architecture canvas', () => {
     expect(asks('')).toBe(false);
   });
 
-  it('says no to a vocabulary with nothing drawn on it, unless the author said otherwise', () => {
-    expect(asks('Kind Mongo [icon: mongodb]')).toBe(false);
-    expect(asks('---\ndiagram_type: arch\n---\nKind Mongo [icon: mongodb]')).toBe(true);
+  it('says no to a document with nothing drawn on it, unless the author said otherwise', () => {
+    expect(asks('Project p { }')).toBe(false);
+    expect(asks('---\ndiagram_type: arch\n---\n')).toBe(true);
   });
 
   it('says no to notes alone, which a half-written file collects by accident', () => {
@@ -366,7 +339,7 @@ describe('deciding whether to show an architecture canvas', () => {
 
   it('says yes once something is drawn, with no marker and no filename', () => {
     expect(asks('Server api1')).toBe(true);
-    expect(asks('Kind Mongo [icon: mongodb]\nMongo m1')).toBe(true);
+    expect(asks('loadbalancer lb')).toBe(true);
   });
 
   it('says yes to the sample, which is the one a reader will actually open', () => {
@@ -388,8 +361,8 @@ describe('reading one document out of a project', () => {
   it('still follows what the entry point imports', () => {
     const { model, diagnostics } = compileArch({
       '/main.dbml': 'Table users {\n  id int [pk]\n}',
-      '/infra.arch.dbml': "use * from './packs/devops.arch'\nMongo m1",
-      '/packs/devops.arch.dbml': 'Kind Mongo [icon: mongodb]',
+      '/infra.arch.dbml': "use * from './packs/devops.arch'\nGroup g { m1 }",
+      '/packs/devops.arch.dbml': 'Database m1',
     }, '/infra.arch.dbml');
     expect(diagnostics).toEqual([]);
     expect(model.files).toContain('/packs/devops.arch.dbml');
@@ -500,45 +473,6 @@ Metadata Table users {
   });
 });
 
-describe('a book, drawn with a vocabulary meant for servers', () => {
-  it('compiles an argument with no diagnostics, in Vietnamese', () => {
-    const { model, diagnostics, diagramType } = compileArch({ '/b': BOOK_FILE }, '/b');
-    expect(diagnostics).toEqual([]);
-    expect(diagramType).toBe('arch');
-    expect(model.elements.size).toBeGreaterThan(30);
-    expect(model.links.length).toBeGreaterThan(30);
-  });
-
-  // the lexer asks whether a character can start or continue an identifier, not whether it is ASCII
-  it('lexes Vietnamese as identifiers, so a name and a kind can be written in it', () => {
-    const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
-    expect(model.elements.has('mục_đích_luận')).toBe(true);
-    expect(model.elements.get('mục_đích_luận')?.label).toBe('Mục đích luận');
-
-    const declared = [...model.kinds.values()].filter((k) => !k.builtin).map((k) => k.name);
-    expect(declared).toContain('Tiền_đề');
-    expect(declared).toContain('Luận_điểm');
-    expect(declared.length).toBe(6);
-  });
-
-  it('uses no built-in kind, because none of the thirty-one describes an argument', () => {
-    const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
-    const used = new Set([...model.elements.values()].filter(isNode).map((n) => n.kind));
-    expect([...used].filter((name) => model.kinds.get(name)?.builtin)).toEqual([]);
-  });
-
-  it('spells every relation as proto, which is a network word on an argument', () => {
-    const { model } = compileArch({ '/b': BOOK_FILE }, '/b');
-
-    const labelled = model.links.filter((link) => link.settings.proto !== undefined);
-    expect(labelled.length).toBeGreaterThan(10);
-    expect(labelled.some((link) => link.settings.proto === 'bác bỏ')).toBe(true);
-
-    expect(model.links.some((link) => link.settings.host !== undefined)).toBe(false);
-    expect(new Set(model.links.map((link) => link.op))).toEqual(new Set(['>', '-']));
-  });
-});
-
 describe('a brand is a setting, not a keyword', () => {
   const draw = (line: string) => compileArch(
     { '/d': `---\ndiagram_type: arch\n---\n\n${line}` },
@@ -550,7 +484,7 @@ describe('a brand is a setting, not a keyword', () => {
     expect(diagnostics).toEqual([]);
 
     const lb = model.elements.get('lb1');
-    expect(isNode(lb) && lb).toMatchObject({ kind: 'Proxy', type: 'haproxy', label: 'ha 1' });
+    expect(isNode(lb) && lb).toMatchObject({ role: 'Proxy', type: 'haproxy', label: 'ha 1' });
   });
 
   it('can still be asked which boxes are databases, whatever vendor they run', () => {
@@ -561,7 +495,7 @@ describe('a brand is a setting, not a keyword', () => {
       "Proxy lb [type: 'haproxy']",
     ].join('\n'));
 
-    const databases = [...model.elements.values()].filter(isNode).filter((n) => n.kind === 'Database');
+    const databases = [...model.elements.values()].filter(isNode).filter((n) => n.role === 'Database');
     expect(databases.map((n) => n.id)).toEqual(['users_db', 'events']);
     expect(databases.map((n) => n.type)).toEqual(['postgres', 'mongodb']);
   });
@@ -598,14 +532,14 @@ describe('a brand is a setting, not a keyword', () => {
 
   it('tells a brand used as a keyword which setting it belongs in', () => {
     const { diagnostics } = draw('Postgres users_db');
-    expect(diagnostics.map((d) => d.code)).toEqual(['unknown-kind']);
+    expect(diagnostics.map((d) => d.code)).toEqual(['unknown-role']);
     expect(diagnostics[0].message).toContain("Database name [type: 'postgres']");
   });
 
   it('still suggests the near role for a word that is neither', () => {
-    const { diagnostics } = draw('Databse d');
-    expect(diagnostics[0].message).toContain('Database');
-    expect(suggestKind('Zarf')).toContain('Kind Zarf');
+    expect(draw('Databse d').diagnostics[0].message).toBe('Databse is not a role. Did you mean: Database?');
+    // with nothing near, it lists the roles rather than inviting a custom one
+    expect(draw('Zarf z').diagnostics[0].message).toContain('The roles are: Server, Function');
   });
 
   it('warns on a type nobody can draw, and keeps the box', () => {
@@ -627,21 +561,10 @@ describe('a brand is a setting, not a keyword', () => {
     expect(diagnostics.map((d) => d.code)).toEqual(['bad-image']);
   });
 
-  it('leaves the pack for what only a pack can do', () => {
-    const { model, diagnostics } = compileArch(EXAMPLE_FILES, EXAMPLE_ENTRY);
-    expect(diagnostics).toEqual([]);
-
-    const declared = [...model.kinds.values()].filter((k) => !k.builtin).map((k) => k.name);
-    expect(declared.sort()).toEqual(['Firewall', 'Lakehouse']);
-    // one overrules a built-in role, the other names a role the built-ins lack
-    expect(model.kinds.get('Firewall')?.color).toBe('#c0453a');
-    expect(model.kinds.get('Lakehouse')?.builtin).toBe(false);
-  });
-
   it('has 31 roles and no brands among them', () => {
-    expect(Object.keys(BUILTIN_KINDS)).toHaveLength(31);
+    expect(Object.keys(BUILTIN_ROLES)).toHaveLength(31);
     for (const brand of ['Postgres', 'Mongo', 'Redis', 'HAProxy', 'Docker', 'Kubernetes']) {
-      expect(BUILTIN_KINDS[brand], brand).toBeUndefined();
+      expect(BUILTIN_ROLES[brand], brand).toBeUndefined();
     }
   });
 });
@@ -656,17 +579,6 @@ describe('a picture, in the slot that already names the mark', () => {
     return isNode(element) ? element.image : null;
   };
 
-  it('takes a URL where a kind names its mark', () => {
-    const { model, diagnostics } = draw([
-      "Kind Vendor [icon: 'https://example.com/vendor.svg']",
-      'Vendor billing',
-    ].join('\n'));
-    expect(diagnostics).toEqual([]);
-    expect(model.kinds.get('Vendor')?.image).toBe('https://example.com/vendor.svg');
-    // the icon falls back to a box, so a failed fetch still leaves something to draw
-    expect(model.kinds.get('Vendor')?.icon).toBe('box');
-  });
-
   it('takes a data URI as readily as a URL', () => {
     const { diagnostics, model } = draw("Database d [type: 'data:image/png;base64,iVBORw0KGgo=']");
     expect(diagnostics).toEqual([]);
@@ -675,7 +587,7 @@ describe('a picture, in the slot that already names the mark', () => {
 
   // The string becomes an `href` inside an SVG in somebody else's page, and a `javascript:` href
   // there executes. The author of a diagram is not always the person opening it.
-  it('refuses a scheme that would execute, or break on a TLS page, in both slots', () => {
+  it('refuses a scheme that would execute, or break on a TLS page', () => {
     for (const bad of ['javascript:alert(1)',
       'http://example.com/a.png',
       'file:///etc/passwd',
@@ -683,23 +595,7 @@ describe('a picture, in the slot that already names the mark', () => {
       const onType = draw(`Database d [type: '${bad}']`);
       expect(pictureOf(onType.model, 'd'), bad).toBe(null);
       expect(onType.diagnostics.map((d) => d.code), bad).toEqual(['bad-image']);
-
-      const onKind = draw(`Kind Vendor [icon: '${bad}']\nVendor v`);
-      expect(onKind.model.kinds.get('Vendor')?.image, bad).toBe(null);
-      expect(onKind.diagnostics.map((d) => d.code), bad).toEqual(['bad-image']);
     }
-  });
-
-  it('lets an element overrule the picture its kind carries', () => {
-    const { model, diagnostics } = draw([
-      "Kind Vendor [icon: 'https://example.com/vendor.svg']",
-      'Vendor a',
-      "Vendor b [type: 'https://example.com/other.svg']",
-    ].join('\n'));
-    expect(diagnostics).toEqual([]);
-    expect(pictureOf(model, 'a')).toBe(null);
-    expect(model.kinds.get('Vendor')?.image).toBe('https://example.com/vendor.svg');
-    expect(pictureOf(model, 'b')).toBe('https://example.com/other.svg');
   });
 
   it('has no image setting at all, which is the point', () => {
@@ -709,9 +605,16 @@ describe('a picture, in the slot that already names the mark', () => {
     // it survives as a free-form property, the way any unknown setting does
     expect(model.elements.get('d')?.settings.image).toBe('https://example.com/a.svg');
   });
+
+  it('keeps icon and glyph as ordinary properties, since a role carries the mark', () => {
+    const { model, diagnostics } = draw("Server s [icon: chip, glyph: 'M12 3v18']\nGroup g [icon: lock] { s }");
+    expect(diagnostics).toEqual([]);
+    expect(model.elements.get('s')?.settings).toMatchObject({ icon: 'chip', glyph: 'M12 3v18' });
+    expect(model.elements.get('g')?.settings).toMatchObject({ icon: 'lock' });
+  });
 });
 
-describe('a kind word is case-insensitive, because Table is', () => {
+describe('a role word is case-insensitive, because Table is', () => {
   const draw = (line: string) => compileArch(
     { '/d': `---\ndiagram_type: arch\n---\n${line}` },
     '/d',
@@ -730,40 +633,14 @@ describe('a kind word is case-insensitive, because Table is', () => {
   });
 
   // The author's casing is not kept: everything downstream (the renderer's icon, a tooltip, a
-  // host reading the model) looks a kind up by name, and two spellings would be two kinds.
+  // host reading the model) looks a role up by name, and two spellings would be two roles.
   it('records the canonical spelling, whatever was typed', () => {
     const { model } = draw('loadbalancer a');
-    expect(isNode(model.elements.get('a')) && model.elements.get('a')).toMatchObject({ kind: 'LoadBalancer' });
-    expect(model.kinds.get('LoadBalancer')?.icon).toBe('balancer');
-  });
-
-  it('refuses a reserved word in any casing, the way it refuses the capital one', () => {
-    for (const spelling of ['Group', 'group', 'GROUP', 'note', 'link']) {
-      const { diagnostics } = draw(`Kind ${spelling} [icon: box]`);
-      expect(diagnostics.map((d) => d.code), spelling).toEqual(['reserved-kind']);
-    }
-  });
-
-  it('overrules a built-in word declared in another case, instead of sitting beside it', () => {
-    const { model, diagnostics } = compileArch({
-      '/d': [
-        '---',
-        'diagram_type: arch',
-        '---',
-        "Kind database [icon: database, color: '#c0453a']",
-        'Database a',
-      ].join('\n'),
-    }, '/d');
-
-    expect(diagnostics).toEqual([]);
-    const entries = [...model.kinds.values()].filter((k) => k.name.toLowerCase() === 'database');
-    expect(entries).toHaveLength(1);
-    expect(entries[0].color).toBe('#c0453a');
-    expect(isNode(model.elements.get('a')) && model.elements.get('a')).toMatchObject({ kind: 'database' });
+    expect(isNode(model.elements.get('a')) && model.elements.get('a')).toMatchObject({ role: 'LoadBalancer' });
   });
 
   it('has no two built-in words differing only in case, which would make the table ambiguous', () => {
-    const lowered = Object.keys(BUILTIN_KINDS).map((name) => name.toLowerCase());
+    const lowered = Object.keys(BUILTIN_ROLES).map((name) => name.toLowerCase());
     expect(new Set(lowered).size).toBe(lowered.length);
   });
 });
@@ -848,9 +725,9 @@ describe('metadata follows DBML', () => {
     expect(model.elements.get('dbdocs-dev')?.settings).toMatchObject({ owner: 'platform-team' });
   });
 
-  it('says so when the stated kind is not what that thing is', () => {
+  it('says so when the stated role is not what that thing is', () => {
     const { diagnostics } = draw("Server api\nMetadata Database api {\n  owner: 'x'\n}");
-    expect(diagnostics.map((d) => d.code)).toEqual(['metadata-kind-mismatch']);
+    expect(diagnostics.map((d) => d.code)).toEqual(['metadata-role-mismatch']);
     expect(diagnostics[0].severity).toBe('warning');
     expect(diagnostics[0].message).toContain('Server');
   });

@@ -3,7 +3,7 @@ import {
   archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, isTopLevelNote, linkPartsOf, nameOf,
   propertyOf, readBody, rowOf, settingsOf,
 } from '@/core/arch/read';
-import { isReserved } from '@/core/arch/vocabulary';
+import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch/vocabulary';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { PASS_THROUGH, type PassThrough } from '@/core/types/module';
 import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
@@ -51,10 +51,7 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
     }
 
     case 'kind': {
-      const name = nameOf(declaration.name);
-      if (name && isReserved(name)) {
-        errors.push(new CompileError(CompileErrorCode.RESERVED_KIND, `${name} opens a declaration, so it cannot also be the name of a kind`, declaration));
-      }
+      errors.push(new CompileError(CompileErrorCode.NO_CUSTOM_ROLE, NO_CUSTOM_ROLE_MESSAGE, declaration));
       break;
     }
 
@@ -126,11 +123,7 @@ export const archModule: LocalModule = {
   nodeFullname (compiler: Compiler, node: SyntaxNode): Report<string[] | undefined> | Report<PassThrough> {
     if (!isTopLevel(node) || isTopLevelNote(node)) return Report.create(PASS_THROUGH);
     const sort = archSort(node);
-    const name = sort === 'kind'
-      ? nameOf(node.name)
-      : sort === 'node' || sort === 'group'
-        ? handleOf(node)
-        : undefined;
+    const name = sort === 'node' || sort === 'group' ? handleOf(node) : undefined;
     return new Report(name === undefined
       ? undefined
       : [

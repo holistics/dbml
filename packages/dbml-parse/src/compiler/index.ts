@@ -12,7 +12,7 @@ import type { ParserOptions } from '@/core/parser/parser';
 import Lexer, { type LexerOptions } from '@/core/lexer/lexer';
 import type { SyntaxToken } from '@/core/types/tokens';
 import {
-  type FileKind, type FileKindResult, type FileScan, decideFileKind, scanTokens,
+  type FileKind, type FileScan, decideFileKind, scanTokens,
 } from './queries/files/fileKind';
 
 // Front matter is read in every file, so each file can say what it is
@@ -122,7 +122,7 @@ export default class Compiler {
 
   private fileScans = new Map<FilepathId, { source: string; scan: FileScan }>();
   // The kind each cached parse used
-  private fileKinds = new Map<FilepathId, { filepath: Filepath } & FileKindResult>();
+  private fileKinds = new Map<FilepathId, FileKind>();
 
   scanFile (filepath: Filepath, tokens?: readonly SyntaxToken[]): FileScan {
     const source = this.layout.getSource(filepath) ?? '';
@@ -140,49 +140,19 @@ export default class Compiler {
 
   // Never parses
   fileKind (filepath: Filepath): FileKind {
-    return this.decideKind(filepath).kind;
+    return decideFileKind(this.scanFile(filepath));
   }
 
   // The kind a parse of this file uses, remembered so the parse is dropped when the kind changes
   fileKindForParse (filepath: Filepath, tokens?: readonly SyntaxToken[]): FileKind {
-    const result = this.decideKind(filepath, tokens);
-    this.fileKinds.set(filepath.intern(), {
-      filepath,
-      ...result,
-    });
-    return result.kind;
+    const kind = decideFileKind(this.scanFile(filepath, tokens));
+    this.fileKinds.set(filepath.intern(), kind);
+    return kind;
   }
 
   // The kind a file was parsed as, which picks its modules
   parsedFileKind (filepath: Filepath): FileKind {
-    return this.fileKinds.get(filepath.intern())?.kind ?? this.fileKind(filepath);
-  }
-
-  private decideKind (filepath: Filepath, tokens?: readonly SyntaxToken[]): FileKindResult {
-    const scan = this.scanFile(filepath, tokens);
-    return decideFileKind(scan, () => scan.usePaths.flatMap((path) => {
-      const dep = this.layout.resolveFileSpecifier(filepath, path);
-      return dep
-        ? [
-            this.scanFile(dep),
-          ]
-        : [];
-    }));
-  }
-
-  // Drop a file's cached results when its kind changed without its text changing
-  private refreshFileKind (filepath: Filepath): void {
-    const id = filepath.intern();
-    const remembered = this.fileKinds.get(id);
-    if (!remembered) return;
-    const result = this.decideKind(filepath);
-    if (result.kind === remembered.kind) return;
-    this.localCache.delete(id);
-    this.globalCache.clear();
-    this.fileKinds.set(id, {
-      filepath,
-      ...result,
-    });
+    return this.fileKinds.get(filepath.intern()) ?? this.fileKind(filepath);
   }
 
   private sourceSnapshot = new Map<string, string | undefined>();
@@ -198,13 +168,6 @@ export default class Compiler {
         this.globalCache.clear();
 
         this.sourceSnapshot.set(key, content); // reset snapshot on change
-
-        // Any file's kind may come from `Kind` names in this one
-        for (const { filepath: other } of [
-          ...this.fileKinds.values(),
-        ]) this.refreshFileKind(other);
-      } else if (this.fileKinds.get(filepath.intern())?.dependsOnImports) {
-        this.refreshFileKind(filepath);
       }
     } else {
       this.sourceSnapshot.set(key, content); // reset snapshot if not set yet

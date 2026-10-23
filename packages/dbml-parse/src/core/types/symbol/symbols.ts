@@ -54,7 +54,6 @@ export enum SymbolKind {
 
   // Architecture nodes and groups share one kind, so their handles share one namespace
   Element = 'Element',
-  Kind = 'Kind',
 
   Program = 'Program',
 }
@@ -775,35 +774,6 @@ export class ElementSymbol extends NodeSymbol {
   ) {
     super({
       kind: SymbolKind.Element,
-      declaration,
-      name,
-    }, id, filepath);
-  }
-
-  override get canBeImported (): boolean {
-    return true;
-  }
-
-  override get originalSymbol (): NodeSymbol {
-    return this;
-  }
-}
-
-// An architecture `Kind` declaration: a role
-export class KindSymbol extends NodeSymbol {
-  constructor (
-    {
-      declaration,
-      name,
-    }: {
-      declaration?: SyntaxNode;
-      name?: string;
-    },
-    id: NodeSymbolId,
-    filepath: Filepath,
-  ) {
-    super({
-      kind: SymbolKind.Kind,
       declaration,
       name,
     }, id, filepath);

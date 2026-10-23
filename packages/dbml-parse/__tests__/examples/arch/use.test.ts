@@ -33,14 +33,22 @@ describe('[example] selective imports in an architecture file', () => {
     expect(db?.nodes?.map((n) => n.name)).toEqual(['api']);
   });
 
-  test('Group and Kind import a group and a role', () => {
-    const { errors, db } = compile(
-      'Server api\nGroup g { api }\nKind Lakehouse [icon: graph]',
-      "use {\n  Group g\n  Kind Lakehouse\n} from './x'",
-    );
+  test('Group imports a group', () => {
+    const { errors, db } = compile('Server api\nGroup g { api }', "use { Group g } from './x'");
     expect(errors).toHaveLength(0);
     expect(db?.groups?.map((g) => g.name)).toEqual(['g']);
-    expect(db?.kinds?.some((k) => k.name === 'Lakehouse' && !k.builtin)).toBe(true);
+  });
+
+  test('Kind imports nothing and is refused, since there are no custom roles', () => {
+    const layout = new MemoryProjectLayout();
+    layout.setSource(Filepath.from('/x.dbml'), 'Server api');
+    layout.setSource(Filepath.from('/main.dbml'), `${ARCH}use { Kind Lakehouse } from './x'`);
+    const compiler = new Compiler(layout);
+    const entry = Filepath.from('/main.dbml');
+    expect(compiler.validateFile(entry).getErrors().map((e) => e.code)).toEqual([
+      CompileErrorCode.NO_CUSTOM_ROLE,
+    ]);
+    expect(compiler.bindFile(entry).getErrors().filter((e) => e.code !== CompileErrorCode.NO_CUSTOM_ROLE)).toHaveLength(0);
   });
 
   test('a role word on a group is an error', () => {

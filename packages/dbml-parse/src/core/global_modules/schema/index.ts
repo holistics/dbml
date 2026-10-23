@@ -124,8 +124,6 @@ export const schemaModule: GlobalModule = {
       if (existing) {
         // Schemas with the same name merge (e.g. two schema aliases to the same name)
         if (member.isKind(SymbolKind.Schema)) continue;
-        // A `Kind` declared again overrules the earlier one
-        if (member.isKind(SymbolKind.Kind)) continue;
         const kind = keyKind(member);
         // Error points at the use specifier in the current file, not the original declaration
         const errorNode = member instanceof UseSymbol

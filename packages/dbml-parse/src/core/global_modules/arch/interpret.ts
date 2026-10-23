@@ -4,22 +4,22 @@ import {
   IMAGE_REFUSED, IMAGE_URL, archSort, bodyOf, declarationWord, linkPartsOf, nameOf, noteDeclarationOf,
   noteTextOf, propertyOf, readBody, settingsOf,
 } from '@/core/arch/read';
-import { BUILTIN_KINDS, suggestIcon } from '@/core/arch/vocabulary';
+import { roleName, suggestIcon } from '@/core/arch/vocabulary';
 import { CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
 import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  ArchSettings, Group, Kind, Link, LinkOp, Node,
+  ArchSettings, Group, Link, LinkOp, Node,
 } from '@/core/types/schemaJson';
-import type { ElementSymbol, KindSymbol } from '@/core/types/symbol';
+import type { ElementSymbol } from '@/core/types/symbol';
 import { ArchMetadataElementMetadata, type LinkMetadata } from '@/core/types/symbol/metadata';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { metadataFilePrecedence } from '../metadata/utils';
 import { getProgramSymbol } from '../utils';
-import { originalHandle, resolveRole } from './utils';
+import { originalHandle } from './utils';
 
 // Warnings are raised here because DBML's validator and binder pass on errors only
 
@@ -42,7 +42,7 @@ function applyMetadata (compiler: Compiler, symbol: ElementSymbol, filepath: Fil
     const stated = block.declaration.name ? block.declaration.targetKind?.value : undefined;
     if (role && stated && role.toLowerCase() !== stated.toLowerCase()) {
       warnings.push(new CompileWarning(
-        CompileErrorCode.METADATA_KIND_MISMATCH,
+        CompileErrorCode.METADATA_ROLE_MISMATCH,
         `${nameOf(block.declaration.name)} is a ${role}, not a ${stated}`,
         block.declaration,
       ));
@@ -103,12 +103,12 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
   const { type, image } = brandOf(settings.type);
   const warnings = brandWarnings(settings.type, declaration);
   const word = declarationWord(declaration)!;
-  const kind = resolveRole(compiler, declaration.filepath, word) ?? word;
-  warnings.push(...applyMetadata(compiler, symbol, filepath, settings, kind));
+  const role = roleName(word) ?? word;
+  warnings.push(...applyMetadata(compiler, symbol, filepath, settings, role));
   return new Report({
     name,
     alias,
-    kind,
+    role,
     type,
     image,
     settings,
@@ -144,51 +144,6 @@ function brandWarnings (raw: unknown, declaration: ElementDeclarationNode): Comp
   return [
     new CompileWarning(CompileErrorCode.UNKNOWN_TYPE, `There is no type called ${value}. ${suggestIcon(value)}`, declaration),
   ];
-}
-
-export function interpretKind (symbol: KindSymbol): Report<Kind | undefined> {
-  const declaration = symbol.declaration;
-  if (!(declaration instanceof ElementDeclarationNode)) return new Report(undefined);
-  const settings = settingsOf(declaration.attributeList);
-  const typed = typeof settings.icon === 'string' ? settings.icon : 'box';
-  const image = IMAGE_URL.test(typed) ? typed : null;
-  const glyph = typeof settings.glyph === 'string'
-    ? settings.glyph.split(';').map((d) => d.trim()).filter(Boolean)
-    : null;
-
-  const warnings: CompileWarning[] = [];
-  if (typeof settings.icon === 'string' && !image && !isIconName(typed)) {
-    const scheme = /^[a-z][a-z0-9+.-]*:/i.test(typed);
-    warnings.push(new CompileWarning(
-      scheme ? CompileErrorCode.BAD_IMAGE : CompileErrorCode.UNKNOWN_ICON,
-      scheme ? `${IMAGE_REFUSED} Got: ${typed}` : `There is no icon called ${typed}. ${suggestIcon(typed)}`,
-      declaration,
-    ));
-  }
-
-  return new Report({
-    name: nameOf(declaration.name) ?? '',
-    icon: !image && isIconName(typed) ? resolveIcon(typed) : 'box',
-    glyph: glyph?.length ? glyph : null,
-    image,
-    category: 'custom',
-    color: typeof settings.color === 'string' ? settings.color : null,
-    builtin: false,
-    token: getTokenPosition(declaration),
-  }, [], warnings);
-}
-
-export function builtinKinds (): Kind[] {
-  return Object.entries(BUILTIN_KINDS).map(([name, spec]) => ({
-    name,
-    icon: spec.icon,
-    glyph: null,
-    image: null,
-    category: spec.category,
-    color: null,
-    builtin: true,
-    token: null,
-  }));
 }
 
 export function interpretLink (compiler: Compiler, metadata: LinkMetadata, filepath: Filepath): Report<Link | undefined> {

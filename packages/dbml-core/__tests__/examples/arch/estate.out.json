@@ -158,6 +158,10 @@
       "Pipeline"
     ],
     [
+      "deploy",
+      "Server"
+    ],
+    [
       "grafana",
       "Monitoring"
     ],
@@ -172,10 +176,6 @@
     [
       "ossec",
       "Firewall"
-    ],
-    [
-      "deploy",
-      "Server"
     ]
   ],
   "groups": [

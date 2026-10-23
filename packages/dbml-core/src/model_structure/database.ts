@@ -16,14 +16,13 @@ import TablePartial from './tablePartial';
 import Node from './node';
 import Group from './group';
 import Link from './link';
-import Kind from './kind';
 import type {
   RawDatabase, TableRecord, RawTableRecord, NormalizedModel,
 } from '../../types/model_structure/database';
 import type { Token } from '../../types/model_structure/element';
 import type { ArchElementType } from '../../types/model_structure/link';
 import type {
-  DiagramView, Group as RawGroup, Kind as RawKind, Link as RawLink, Node as RawNode,
+  DiagramView, Group as RawGroup, Link as RawLink, Node as RawNode,
 } from '@dbml/parse';
 
 class Database extends Element {
@@ -43,7 +42,6 @@ class Database extends Element {
   nodes: Node[];
   groups: Group[];
   links: Link[];
-  kinds: Kind[];
   frontMatter: Record<string, string> | null;
   diagramType: 'arch' | null;
   id!: number;
@@ -64,7 +62,6 @@ class Database extends Element {
     nodes = [],
     groups = [],
     links = [],
-    kinds = [],
     frontMatter,
     diagramType,
   }: Partial<RawDatabase> & { aliases?: any[] } = {} as any) {
@@ -111,16 +108,14 @@ class Database extends Element {
     this.nodes = [];
     this.groups = [];
     this.links = [];
-    this.kinds = [];
     this.frontMatter = frontMatter ?? null;
     this.diagramType = diagramType ?? null;
-    this.processArch(kinds, nodes, groups, links);
+    this.processArch(nodes, groups, links);
   }
 
-  // Kinds first so nodes can point at them; members and link ends once every element exists.
+  // Members and link ends once every element exists.
   // Sticky notes are processed first of all, so a note can be a member or a link end.
-  private processArch (kinds: RawKind[], nodes: RawNode[], groups: RawGroup[], links: RawLink[]): void {
-    kinds.forEach((kind) => this.kinds.push(new Kind({ ...kind, database: this })));
+  private processArch (nodes: RawNode[], groups: RawGroup[], links: RawLink[]): void {
     nodes.forEach((node) => this.nodes.push(new Node({ ...node, database: this })));
     groups.forEach((group) => this.groups.push(new Group({ ...group, database: this })));
 
@@ -156,10 +151,6 @@ class Database extends Element {
         database: this,
       }));
     });
-  }
-
-  findKind (name: string): Kind | undefined {
-    return this.kinds.find((kind) => kind.name === name);
   }
 
   private generateId (): void {
@@ -412,10 +403,10 @@ class Database extends Element {
   }
 
   // Architecture entries go into exports only when they have content, so DBML output is unchanged
-  private archEntries<T> (map: (_list: (Node | Group | Link | Kind)[]) => T): Partial<Record<'nodes' | 'groups' | 'links' | 'kinds', T>> {
-    const out: Partial<Record<'nodes' | 'groups' | 'links' | 'kinds', T>> = {};
+  private archEntries<T> (map: (_list: (Node | Group | Link)[]) => T): Partial<Record<'nodes' | 'groups' | 'links', T>> {
+    const out: Partial<Record<'nodes' | 'groups' | 'links', T>> = {};
     const lists = {
-      nodes: this.nodes, groups: this.groups, links: this.links, kinds: this.kinds,
+      nodes: this.nodes, groups: this.groups, links: this.links,
     };
     Object.entries(lists).forEach(([key, list]) => {
       if (list.length) out[key as keyof typeof lists] = map(list);
@@ -429,7 +420,6 @@ class Database extends Element {
       ...(ids.nodes ? { nodeIds: ids.nodes } : {}),
       ...(ids.groups ? { groupIds: ids.groups } : {}),
       ...(ids.links ? { linkIds: ids.links } : {}),
-      ...(ids.kinds ? { kindIds: ids.kinds } : {}),
     };
   }
 

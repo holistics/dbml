@@ -1,8 +1,6 @@
 import path from 'path';
 import { describe, expect, test } from 'vitest';
-import {
-  BOOK_FILE, EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE, SELF_FILE,
-} from './samples';
+import { EXAMPLE_ENTRY, EXAMPLE_FILES, INLINE_FILE } from './samples';
 import Parser from '../../../src/parse/Parser';
 import DbmlExporter from '../../../src/export/DbmlExporter';
 import type { NormalizedModel } from '../../../types/model_structure/database';
@@ -18,8 +16,6 @@ const handleOf = (e: { alias: string | null; name: string }) => e.alias ?? e.nam
 describe('@dbml/core - architecture files', () => {
   const samples: Record<string, { files: Record<string, string>; entry: string }> = {
     inline: { files: { '/d.dbml': INLINE_FILE }, entry: '/d.dbml' },
-    self: { files: { '/self.dbml': SELF_FILE }, entry: '/self.dbml' },
-    book: { files: { '/book.dbml': BOOK_FILE }, entry: '/book.dbml' },
     estate: { files: EXAMPLE_FILES, entry: EXAMPLE_ENTRY },
   };
 
@@ -39,7 +35,7 @@ describe('@dbml/core - architecture files', () => {
 
     const summary = {
       diagramType: model.database[1].diagramType,
-      nodes: nodes.map((node) => [handleOf(node), model.kinds![node.kindId!].name]),
+      nodes: nodes.map((node) => [handleOf(node), node.role]),
       groups: groups.map((group) => [handleOf(group), group.childIds.map((id, i) => at(group.childTypes[i]!, id))]),
       notes: notes.map((note) => note.name),
       links: Object.values(model.links ?? {}).map((l) => [at(l.fromType, l.fromId), at(l.toType, l.toId), l.op]),

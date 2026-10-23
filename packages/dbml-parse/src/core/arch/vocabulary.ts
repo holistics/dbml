@@ -1,14 +1,14 @@
 import { ICON_ALIAS, ICON_NAMES, isIconName } from './icons';
 
-export type Category = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops' | 'custom';
+export type RoleCategory = 'compute' | 'data' | 'net' | 'edge' | 'people' | 'ops';
 
-export interface KindSpec {
+export interface RoleSpec {
   icon: string;
-  category: Category;
+  category: RoleCategory;
 }
 
-// The built-in roles. A `Kind` declaration adds a role or overrules one of these.
-export const BUILTIN_KINDS: Record<string, KindSpec> = {
+// The roles an element can have. There are no others, so diagrams map one to one to infrastructure code.
+export const BUILTIN_ROLES: Record<string, RoleSpec> = {
   Server: { icon: 'server', category: 'compute' },
   Function: { icon: 'function', category: 'compute' },
   Container: { icon: 'container', category: 'compute' },
@@ -42,19 +42,21 @@ export const BUILTIN_KINDS: Record<string, KindSpec> = {
   Pipeline: { icon: 'pipeline', category: 'ops' },
 };
 
-const BUILTIN_BY_LOWER = new Map(Object.keys(BUILTIN_KINDS).map((name) => [name.toLowerCase(), name]));
+const ROLE_BY_LOWER = new Map(Object.keys(BUILTIN_ROLES).map((name) => [name.toLowerCase(), name]));
 
-// The built-in role's declared spelling, whatever case was typed
-export const builtinKindName = (typed: string): string | undefined => BUILTIN_BY_LOWER.get(typed.toLowerCase());
+// The role's declared spelling, whatever case was typed
+export const roleName = (typed: string): string | undefined => ROLE_BY_LOWER.get(typed.toLowerCase());
 
-export function suggestKind (typed: string): string {
+export const NO_CUSTOM_ROLE_MESSAGE = 'Custom roles are not supported. Use a built-in role; `type` sets the mark (a mark name or an image URL) and `color` the colour.';
+
+export function suggestRole (typed: string): string {
   const needle = typed.toLowerCase();
 
   if (isIconName(needle)) {
     return `${typed} is a brand, and a brand is a setting:  Database name [type: '${needle}']`;
   }
 
-  const near = Object.keys(BUILTIN_KINDS)
+  const near = Object.keys(BUILTIN_ROLES)
     .filter((name) => {
       const known = name.toLowerCase();
       if (known.startsWith(needle) || needle.startsWith(known) || known.includes(needle)) return true;
@@ -62,7 +64,7 @@ export function suggestKind (typed: string): string {
     })
     .slice(0, 6);
   if (near.length) return `Did you mean: ${near.join(', ')}?`;
-  return `Declare it:  Kind ${typed} [icon: box]`;
+  return `The roles are: ${Object.keys(BUILTIN_ROLES).join(', ')}.`;
 }
 
 // Edit distance, stopped as soon as it exceeds the budget
@@ -85,18 +87,11 @@ function within (a: string, b: string, budget: number): boolean {
   return previous[b.length] <= budget;
 }
 
-// Words that open a declaration in an architecture file, so they cannot name a role
-export const RESERVED = new Set(['Kind', 'Group', 'Note', 'Metadata', 'Link', 'Ref', 'use', 'Project']);
-
-const RESERVED_LOWER = new Set([...RESERVED].map((word) => word.toLowerCase()));
-
-export const isReserved = (word: string): boolean => RESERVED_LOWER.has(word.toLowerCase());
-
 export function suggestIcon (typed: string): string {
   const needle = typed.toLowerCase();
   const near = [...ICON_NAMES, ...Object.keys(ICON_ALIAS)]
     .filter((n) => n.startsWith(needle) || needle.startsWith(n) || n.includes(needle))
     .slice(0, 6);
   if (near.length) return `Did you mean: ${near.join(', ')}?`;
-  return `The pack has ${ICON_NAMES.length} marks; draw your own with [glyph: 'M...'].`;
+  return `The pack has ${ICON_NAMES.length} marks; any other picture can be given as an image URL.`;
 }
