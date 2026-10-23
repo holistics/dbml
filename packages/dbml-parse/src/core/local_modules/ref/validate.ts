@@ -9,8 +9,10 @@ import Report from '@/core/types/report';
 import { SyntaxTokenKind } from '@/core/types/tokens';
 import { destructureComplexVariableTuple, extractStringFromIdentifierStream } from '@/core/utils/expression';
 import {
-  Settings, aggregateSettingList, isSimpleName, isValidHexColor, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
+  Settings, aggregateSettingList, isSimpleName, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
 } from '@/core/utils/validate';
+import { REF_METADATA_FIELDS } from '@/core/global_modules/ref/interpret';
+import { validateCustomInlineMetadata } from '../metadata/utils';
 
 export default class RefValidator {
   private declarationNode: ElementDeclarationNode;
@@ -231,16 +233,19 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
         clean[name] = attrs;
         break;
       case SettingName.Color:
+      case SettingName.Note: {
         if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'color\' can only appear once', attr)));
+          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
         }
+        const field = REF_METADATA_FIELDS[name];
         attrs.forEach((attr) => {
-          if (!isValidHexColor(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'color\' must be a color literal', attr!));
+          if (!field.isValidBuiltinFieldValue(attr.value)) {
+            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, field.message, attr!));
           }
         });
         clean[name] = attrs;
         break;
+      }
       case SettingName.Inactive:
         if (attrs.length > 1) {
           errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'inactive\' can only appear once', attr)));
@@ -253,7 +258,14 @@ export function validateFieldSettings (settings: ListExpressionNode): Report<Set
         clean[name] = attrs;
         break;
       default:
-        attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_REF_SETTING, `Unknown ref setting '${name}'`, attr)));
+        // Any non-builtin key is free-form inline custom metadata
+        errors.push(
+          ...validateCustomInlineMetadata(name, attrs, {
+            duplicate: CompileErrorCode.DUPLICATE_REF_SETTING,
+            invalidValue: CompileErrorCode.INVALID_REF_SETTING_VALUE,
+          }));
+        clean[name] = attrs;
+        break;
     }
   }
   return new Report(clean, errors);

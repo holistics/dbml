@@ -8,7 +8,7 @@ import {
   SyntaxNode,
   WildcardNode,
 } from '@/core/types/nodes';
-import { isValidName } from '@/core/utils/validate';
+import { isSimpleName, isValidName } from '@/core/utils/validate';
 import { SettingName } from '@/core/types';
 import { MetadataTargetKind } from '@/core/types/symbol';
 import { METADATA_FIELDS_BY_KIND } from '@/core/global_modules/metadata/registries';
@@ -58,6 +58,20 @@ export default class MetadataValidator {
           nameNode,
         ),
       ];
+    }
+    // Refs can only be targeted by their (simple) name. Unnamed refs, e.g. by their endpoints, are not supported
+    if (getMetadataTargetKind(this.declarationNode) === MetadataTargetKind.Ref) {
+      if (!isSimpleName(nameNode)) {
+        return [
+          new CompileError(
+            CompileErrorCode.INVALID_NAME,
+            'A Metadata Ref target must be a ref name (an identifier or a quoted identifier)',
+            nameNode,
+          ),
+        ];
+      }
+
+      return [];
     }
     if (!isValidName(nameNode)) {
       return [

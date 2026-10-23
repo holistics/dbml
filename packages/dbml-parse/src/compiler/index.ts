@@ -43,6 +43,9 @@ import {
   resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
+import { visibleSymbols } from './queries/symbol/visibleSymbols';
+import { metadataTargets } from './queries/metadata/metadataTargets';
+import { isSymbolVisible } from './queries/metadata/isSymbolVisible';
 import {
   renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
@@ -276,6 +279,21 @@ export default class Compiler {
   symbolMetadata = this.globalQuery(symbolMetadata);
   symbolAliases = this.globalQuery(symbolAliases);
   symbolUses = this.globalQuery(symbolUses);
+  /**
+    * A global query
+    * Return the named refs visible from a program (refs are not imported via `use`).
+    */
+  visibleSymbols = this.globalQuery(visibleSymbols);
+  /**
+    * A global query
+    * Whether a symbol is visible from a program
+    */
+  isSymbolVisible = this.globalQuery(isSymbolVisible);
+  /**
+    * A global query
+    * Resolve all candidates that a metadata block can target
+    */
+  metadataTargets = this.globalQuery(metadataTargets);
 
   fileDependencies = this.localQuery(fileDependencies);
   reachableFiles = this.globalQuery(reachableFiles);

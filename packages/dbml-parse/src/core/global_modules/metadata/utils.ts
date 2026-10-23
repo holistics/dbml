@@ -1,18 +1,17 @@
-import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import type Compiler from '@/compiler/index';
 import {
   Filepath, FilepathId, SettingName, UNHANDLED,
 } from '@/core/types';
 import type {
-  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, Note, Table, TableGroup, TokenPosition,
+  Column, CustomMetadata, CustomMetadataValue, CustomMetadataValueType, Note, Ref, Table, TableGroup, TokenPosition,
 } from '@/core/types/schemaJson';
-import { ElementDeclarationNode, SyntaxNode } from '@/core/types/nodes';
-import { NodeSymbol, SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
-import { destructureComplexVariable } from '@/core/utils/expression';
-import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
-import { getDefaultSchemaSymbol, getProgramSymbol } from '../utils';
+import type { SyntaxNode } from '@/core/types/nodes';
+import {
+  NodeSymbol, SymbolKind, MetadataTargetKind, ProgramSymbol, MetadataElementMetadata,
+} from '@/core/types/symbol';
+import { getProgramSymbol } from '../utils';
 
-export type MetadataTarget = Table | TableGroup | Note | Column;
+export type MetadataTarget = Table | TableGroup | Note | Column | Ref;
 
 /**
   * Spec for one builtin metadata field (table's note, tablegroup's color, .etc) of an element kind.
@@ -34,24 +33,13 @@ type MetadataField<T, V> = {
 // A per-kind registry: exactly the promotable settings for that kind, each carrying its own parse + assign. K is tightened per kind.
 export type MetadataFieldRegistry<T extends MetadataTarget, R extends { [K in SettingName]?: CustomMetadataValue['value'] }> = { [K in keyof R]: MetadataField<T, R[K]> };
 
-type NameWithSymbolKind = {
+export type NameWithSymbolKind = {
   name: string;
   symbolKind: SymbolKind;
 };
 
-function lookupSymbol (compiler: Compiler, startSymbol: NodeSymbol, namePartAndSymbolKind: NameWithSymbolKind[]): NodeSymbol | undefined {
-  if (!namePartAndSymbolKind.length) return undefined;
-
-  const { name, symbolKind } = namePartAndSymbolKind[0];
-  const symbol = compiler.lookupMembers(startSymbol, symbolKind, name);
-
-  if (namePartAndSymbolKind.length > 1 && symbol) return lookupSymbol(compiler, symbol, namePartAndSymbolKind.slice(1));
-
-  return symbol;
-}
-
 /** @internal Exported for testing only. */
-export function mapNamePartToSymbolKind (nameParts: string[], targetKind: MetadataTargetKind): NameWithSymbolKind[] {
+export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Exclude<MetadataTargetKind, MetadataTargetKind.Ref>): NameWithSymbolKind[] {
   if (nameParts.length === 0) return [];
 
   let kindParts: SymbolKind[];
@@ -80,27 +68,6 @@ export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Metada
   return nameParts.map((namePart, idx) => ({ name: namePart, symbolKind: kindParts[idx] }));
 }
 
-// Resolve the target element a Metadata declaration annotates, from its `<target-kind> <name>` header
-export function resolveMetadataTarget (compiler: Compiler, metadataNode: ElementDeclarationNode): NodeSymbol | undefined {
-  const globalSymbol = getProgramSymbol(compiler, metadataNode.filepath);
-  if (!globalSymbol) return undefined;
-
-  const targetKind = getMetadataTargetKind(metadataNode);
-  const nameParts = destructureComplexVariable(metadataNode.name);
-  if (!nameParts?.length || !targetKind) return undefined;
-
-  const namePartAndSymbolKind = mapNamePartToSymbolKind(nameParts, targetKind);
-
-  const { name: startName, symbolKind: startSymbolKind } = namePartAndSymbolKind[0];
-
-  if (startName === DEFAULT_SCHEMA_NAME && startSymbolKind === SymbolKind.Schema) {
-    const defaultSchema = getDefaultSchemaSymbol(compiler, globalSymbol);
-    if (defaultSchema) return lookupSymbol(compiler, defaultSchema, namePartAndSymbolKind.slice(1));
-  }
-
-  return lookupSymbol(compiler, globalSymbol, namePartAndSymbolKind);
-}
-
 /** Get precedence score of files in import tree, lower score means lower precedence */
 function metadataFilePrecedence (compiler: Compiler, root: Filepath): Map<FilepathId, number> {
   const sequence: Filepath[] = [];
@@ -121,7 +88,10 @@ function metadataFilePrecedence (compiler: Compiler, root: Filepath): Map<Filepa
   return ranks;
 }
 
-/** Merge every custom-metadata block, reachable from the current program, targeting element to it's `metadata` and other builtin (note/headercolor/...) fields */
+/**
+  * Merge every custom-metadata block applying to the target in the current program (in precedence order) to its `metadata` and other builtin (note/headercolor/...) fields
+  * NOTE: Only run during interpret phase
+  */
 export function attachCustomMetadata<T extends MetadataTarget> (
   compiler: Compiler,
   targetElement: Partial<T>,
@@ -132,7 +102,14 @@ export function attachCustomMetadata<T extends MetadataTarget> (
   const programSymbol = getProgramSymbol(compiler, filepath);
   if (!programSymbol) return;
 
-  const metas = compiler.symbolMetadata(targetSymbol).filter((m) => m.owners(compiler).includes(programSymbol));
+  if (!compiler.isSymbolVisible(programSymbol, targetSymbol)) return;
+
+  const reachableFiles = new Set(compiler.reachableFiles(programSymbol.filepath).map((f) => f.absolute));
+
+  const metas = compiler
+    .symbolMetadata(targetSymbol)
+    .filter((m): m is MetadataElementMetadata => m instanceof MetadataElementMetadata)
+    .filter((m) => reachableFiles.has(m.declaration.filepath.absolute));
   if (!metas.length) return;
 
   const precedence = metadataFilePrecedence(compiler, filepath);
