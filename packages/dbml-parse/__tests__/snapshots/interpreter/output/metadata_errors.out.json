@@ -78,7 +78,7 @@
     },
     {
       "code": "INVALID_METADATA_FIELD",
-      "diagnostic": "A Metadata field value must be a string or a color literal",
+      "diagnostic": "A Metadata field value must be a string, a color literal, a number literal, or a boolean literal",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -104,7 +104,7 @@
     },
     {
       "code": "INVALID_METADATA_FIELD",
-      "diagnostic": "A Metadata field value must be a string or a color literal",
+      "diagnostic": "A Metadata field value must be a string, a color literal, a number literal, or a boolean literal",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

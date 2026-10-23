@@ -40,17 +40,18 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { PhCode, PhCaretRight } from '@phosphor-icons/vue';
+import type { CustomMetadata } from '@dbml/parse';
 
 const { metadata = {}, indent = 40 } = defineProps<{
-  metadata?: { [key: string]: unknown };
+  metadata?: CustomMetadata;
   indent?: number;
 }>();
 
 const open = ref(false);
 
-const entries = computed(() => Object.entries(metadata ?? {}).map(([key, value]) => ({
+const entries = computed(() => Object.entries(metadata ?? {}).map(([key, entry]) => ({
   key,
-  value: typeof value === 'string' ? value : JSON.stringify(value),
-  valueType: typeof value,
+  value: typeof entry.value === 'string' ? entry.value : JSON.stringify(entry.value),
+  valueType: entry.type,
 })));
 </script>

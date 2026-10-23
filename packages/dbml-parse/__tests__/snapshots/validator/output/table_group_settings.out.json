@@ -1,7 +1,7 @@
 {
   "errors": [
     {
-      "code": "DUPLICATE_TABLE_SETTING",
+      "code": "DUPLICATE_TABLEGROUP_SETTING",
       "diagnostic": "'note' can only appear once",
       "filepath": "/main.dbml",
       "level": "error",
@@ -13,7 +13,7 @@
       }
     },
     {
-      "code": "DUPLICATE_TABLE_SETTING",
+      "code": "DUPLICATE_TABLEGROUP_SETTING",
       "diagnostic": "'note' can only appear once",
       "filepath": "/main.dbml",
       "level": "error",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "code": "INVALID_TABLE_SETTING_VALUE",
+      "code": "INVALID_TABLEGROUP_SETTING_VALUE",
       "diagnostic": "'color' must be a color literal",
       "filepath": "/main.dbml",
       "level": "error",
