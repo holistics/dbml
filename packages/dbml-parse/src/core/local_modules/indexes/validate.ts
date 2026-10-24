@@ -3,6 +3,7 @@ import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind } from '@/core/types/keywords';
 import {
+  ArrayNode,
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
@@ -11,9 +12,10 @@ import {
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
+  TupleExpressionNode,
   VariableNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
+import { getIndexColumnSortOrder, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
 import { destructureIndexNode } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 
@@ -131,7 +133,7 @@ export default class IndexesValidator {
             const fragment = destructureIndexNode(sub.argumentList);
             names.push(fragment);
             if (fragment === undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
+              errors.push(invalidIndexField(sub.argumentList));
             }
           }
           sub = sub.callee!;
@@ -140,7 +142,7 @@ export default class IndexesValidator {
         const fragment = destructureIndexNode(sub);
         names.push(fragment);
         if (fragment === undefined) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
+          errors.push(invalidIndexField(sub));
         }
       });
 
@@ -225,4 +227,14 @@ export function isValidIndexesType (value?: SyntaxNode): boolean {
   const str = value.expression.variable?.value;
 
   return str === 'btree' || str === 'hash';
+}
+
+// The error for an index field that `destructureIndexNode` cannot read
+function invalidIndexField (node: SyntaxNode): CompileError {
+  const elements = node instanceof TupleExpressionNode ? node.elementList : [node];
+  const hasBadSetting = elements.some((e) => e instanceof ArrayNode && !getIndexColumnSortOrder(e));
+  const message = hasBadSetting
+    ? 'An index column setting must be [asc] or [desc]'
+    : 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such';
+  return new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, message, node);
 }

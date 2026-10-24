@@ -5,9 +5,9 @@ Table "orders" {
   "created_at" timestamp
 
   Indexes {
-    (customer_id, -created_at) [name: "orders_customer_recent"]
-    -created_at [name: "orders_created"]
-    (-status, id) [unique, name: "orders_status_id"]
-    -`(lower(status))` [name: "orders_lower_status"]
+    (customer_id, created_at [desc]) [name: "orders_customer_recent"]
+    (created_at [desc]) [name: "orders_created"]
+    (status [desc], id) [unique, name: "orders_status_id"]
+    (`(lower(status))` [desc]) [name: "orders_lower_status"]
   }
 }

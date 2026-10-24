@@ -9,6 +9,7 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -502,11 +503,16 @@ export function isValidIndexName (
   );
 }
 
-// `-name` marks a descending index column
-export function isDescendingIndexName (
+// The sort order of an index column written `name [asc]` or `name [desc]`,
+// or undefined when the column has no such setting
+export function getIndexColumnSortOrder (
   value?: SyntaxNode,
-): value is PrefixExpressionNode & { op: { value: '-' } } {
-  return value instanceof PrefixExpressionNode && value.op?.value === '-';
+): 'asc' | 'desc' | undefined {
+  if (!(value instanceof ArrayNode) || value.indexer?.elementList.length !== 1) return undefined;
+  const [setting] = value.indexer.elementList;
+  if (setting.colon || setting.value || !(setting.name instanceof IdentifierStreamNode)) return undefined;
+  const order = extractStringFromIdentifierStream(setting.name)?.toLowerCase();
+  return order === 'asc' || order === 'desc' ? order : undefined;
 }
 
 // Extracts the rightmost variable node from an expression

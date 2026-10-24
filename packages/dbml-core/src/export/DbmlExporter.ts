@@ -147,9 +147,11 @@ class DbmlExporter {
         const name = column.type === 'expression'
           ? `\`${column.value}\``
           : column.value;
-        return column.sortOrder === 'desc' ? `-${name}` : name;
+        return column.sortOrder === 'desc' ? `${name} [desc]` : name;
       });
-      if (columnLines.length > 1) {
+      // A single `name [desc]` outside parentheses would be read as the index's own settings
+      const hasSortOrder = index.columnIds.some((columnId) => model.indexColumns[columnId].sortOrder === 'desc');
+      if (columnLines.length > 1 || hasSortOrder) {
         line = `(${columnLines.join(', ')})`;
       } else if (columnLines.length === 1) {
         line = columnLines[0];

@@ -1,13 +1,14 @@
 import { last } from 'lodash-es';
 import {
   isAccessExpression,
-  isDescendingIndexName,
+  getIndexColumnSortOrder,
   isExpressionAQuotedString,
   isExpressionAVariableNode,
   isTupleOfVariables,
   isValidIndexName,
 } from '@/core/utils/validate';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
@@ -134,9 +135,10 @@ export function destructureIndexNode (node?: SyntaxNode): {
   const nonFunctional: { name: PrimaryExpressionNode & { expression: VariableNode }; descending: boolean }[] = [];
 
   for (const element of node instanceof TupleExpressionNode ? node.elementList : [node]) {
-    const descending = isDescendingIndexName(element);
-    const name = descending ? element.expression : element;
+    const sortOrder = getIndexColumnSortOrder(element);
+    const name = sortOrder ? (element as ArrayNode).array : element;
     if (!isValidIndexName(name)) return undefined;
+    const descending = sortOrder === 'desc';
     if (name instanceof FunctionExpressionNode) {
       functional.push({ name, descending });
     } else {

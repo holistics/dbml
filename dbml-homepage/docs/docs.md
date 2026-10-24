@@ -17,7 +17,7 @@ This part covers all constructs that define database structure and map directly 
 - [Check Definition](#check-definition)
   - [Check Settings](#check-settings)
 - [Index Definition](#index-definition)
-  - [Descending Index Columns](#descending-index-columns)
+  - [Index Column Sort Order](#index-column-sort-order)
   - [Index Settings](#index-settings)
 - [Relationships & Foreign Key Definitions](#relationships--foreign-key-definitions)
   - [Relationship Settings](#relationship-settings)
@@ -200,9 +200,9 @@ There are 4 types of index definitions:
 - Index with an expression: `CREATE INDEX ON films ( first_name + last_name )`
 - (bonus) Composite index with expression: `CREATE INDEX ON users ( country, (lower(name)) )`
 
-### Descending Index Columns
+### Index Column Sort Order
 
-Put `-` before a column or an expression to sort it in descending order. Columns without it keep the database default, ascending.
+Put `[desc]` after a column or an expression to sort it in descending order, or `[asc]` to state the default, ascending. A column with a sort order goes inside parentheses, even on its own.
 
 ```text
 Table bookings {
@@ -211,14 +211,14 @@ Table bookings {
   created_at timestamp
 
   indexes {
-    -created_at // CREATE INDEX ON bookings (created_at DESC)
-    (country, -created_at) // CREATE INDEX ON bookings (country, created_at DESC)
-    -`lower(country)` // CREATE INDEX ON bookings ((lower(country)) DESC)
+    (created_at [desc]) // CREATE INDEX ON bookings (created_at DESC)
+    (country [asc], created_at [desc]) // CREATE INDEX ON bookings (country, created_at DESC)
+    (`lower(country)` [desc]) // CREATE INDEX ON bookings ((lower(country)) DESC)
   }
 }
 ```
 
-A primary key index cannot have a descending column: `(id, -country) [pk]` is an error.
+A primary key index cannot have a descending column: `(id, country [desc]) [pk]` is an error.
 
 ### Index Settings
 
