@@ -3,6 +3,7 @@ import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { ElementKind } from '@/core/types/keywords';
 import {
+  ArrayNode,
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
@@ -11,9 +12,10 @@ import {
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
+  TupleExpressionNode,
   VariableNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
+import { getIndexColumnSortOrder, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
 import { destructureIndexNode } from '@/core/utils/expression';
 import { aggregateSettingList } from '@/core/utils/validate';
 
@@ -114,25 +116,45 @@ export default class IndexesValidator {
         field.callee,
         ...field.args,
       ];
+      let isPk = false;
       if (last(args) instanceof ListExpressionNode) {
-        errors.push(...this.validateFieldSetting(args.pop() as ListExpressionNode));
+        const settings = args.pop() as ListExpressionNode;
+        isPk = !!aggregateSettingList(settings).getValue().pk;
+        errors.push(...this.validateFieldSetting(settings));
       }
 
+      const names: ReturnType<typeof destructureIndexNode>[] = [];
       args.forEach((sub) => {
         // This is to deal with inline indexes field such as
         // (id, name) (age, weight)
         // which is parsed as a call expression
         while (sub instanceof CallExpressionNode) {
-          if (sub.argumentList && destructureIndexNode(sub.argumentList) === undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
+          if (sub.argumentList) {
+            const fragment = destructureIndexNode(sub.argumentList);
+            names.push(fragment);
+            if (fragment === undefined) {
+              errors.push(invalidIndexField(sub.argumentList));
+            }
           }
           sub = sub.callee!;
         }
 
-        if (destructureIndexNode(sub) === undefined) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
+        const fragment = destructureIndexNode(sub);
+        names.push(fragment);
+        if (fragment === undefined) {
+          errors.push(invalidIndexField(sub));
         }
       });
+
+      // PostgreSQL and Oracle take no sort order in a PRIMARY KEY constraint
+      if (isPk) {
+        names.flatMap((fragment) => [
+          ...fragment?.functional ?? [],
+          ...fragment?.nonFunctional ?? [],
+        ])
+          .filter(({ descending }) => descending)
+          .forEach(({ name }) => errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'A primary key index field cannot be descending', name)));
+      }
 
       return errors;
     });
@@ -205,4 +227,14 @@ export function isValidIndexesType (value?: SyntaxNode): boolean {
   const str = value.expression.variable?.value;
 
   return str === 'btree' || str === 'hash';
+}
+
+// The error for an index field that `destructureIndexNode` cannot read
+function invalidIndexField (node: SyntaxNode): CompileError {
+  const elements = node instanceof TupleExpressionNode ? node.elementList : [node];
+  const hasBadSetting = elements.some((e) => e instanceof ArrayNode && !getIndexColumnSortOrder(e));
+  const message = hasBadSetting
+    ? 'An index column setting must be [asc] or [desc]'
+    : 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such';
+  return new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, message, node);
 }

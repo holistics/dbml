@@ -1069,6 +1069,7 @@ export default class MssqlASTGen extends TSqlParserVisitor {
     return ctx.id_().map((id) => ({
       value: id.accept(this),
       type: 'column',
+      ...(ctx.children[ctx.children.indexOf(id) + 1]?.symbol?.type === TSqlParser.DESC && { sortOrder: 'desc' }),
     }));
   }
 

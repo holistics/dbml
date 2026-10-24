@@ -149,6 +149,7 @@ export interface Index {
   columns: {
     value: string;
     type: string;
+    sortOrder?: 'desc';
     token: TokenPosition;
   }[];
   token: TokenPosition;
