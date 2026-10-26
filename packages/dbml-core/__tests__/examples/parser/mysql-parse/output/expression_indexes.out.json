@@ -1585,7 +1585,8 @@
           "columns": [
             {
               "type": "expression",
-              "value": "(YEAR(created_at))"
+              "value": "(YEAR(created_at))",
+              "sortOrder": "desc"
             }
           ]
         }

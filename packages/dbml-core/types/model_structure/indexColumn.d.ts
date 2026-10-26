@@ -6,6 +6,7 @@ import Index from './indexes';
 export interface RawIndexColumn {
     type: any;
     value: any;
+    sortOrder?: 'desc';
     index: Index;
     token: Token;
 }
@@ -13,17 +14,20 @@ export interface RawIndexColumn {
 declare class IndexColumn extends Element {
     type: any;
     value: any;
+    sortOrder?: 'desc';
     index: Index;
     dbState: DbState;
-    constructor({ type, value, index }: {
+    constructor({ type, value, sortOrder, index }: {
         type: any;
         value: any;
+        sortOrder?: 'desc';
         index: any;
     });
     generateId(): void;
     export(): {
         type: any;
         value: any;
+        sortOrder?: 'desc';
     };
     exportParentIds(): {
         indexId: number;
@@ -31,6 +35,7 @@ declare class IndexColumn extends Element {
     shallowExport(): {
         type: any;
         value: any;
+        sortOrder?: 'desc';
     };
     normalize(model: NormalizedModel): void;
 }
@@ -38,6 +43,7 @@ export interface NormalizedIndexColumn {
     id: number;
     type: string;
     value: string;
+    sortOrder?: 'desc';
     indexId: number;
 }
 

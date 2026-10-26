@@ -847,15 +847,18 @@ export default class PostgresASTGen extends PostgreSQLParserVisitor {
    | OPEN_PAREN a_expr CLOSE_PAREN index_elem_options
    */
   visitIndex_elem (ctx) {
+    const sortOrder = ctx.index_elem_options().asc_desc_()?.DESC() ? { sortOrder: 'desc' } : {};
     if (ctx.colid()) {
       return {
         value: ctx.colid().accept(this),
         type: CONSTRAINT_TYPE.STRING,
+        ...sortOrder,
       };
     }
     return {
-      value: ctx.getText(),
+      value: ctx.func_expr_windowless()?.getText() ?? `(${ctx.a_expr().getText()})`,
       type: CONSTRAINT_TYPE.EXPRESSION,
+      ...sortOrder,
     };
   }
 

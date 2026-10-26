@@ -1,8 +1,9 @@
 import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
-import { ElementKind } from '@/core/types/keywords';
+import { ElementKind, SettingName } from '@/core/types/keywords';
 import {
+  ArrayNode,
   BlockExpressionNode,
   CallExpressionNode,
   ElementDeclarationNode,
@@ -11,11 +12,12 @@ import {
   PrimaryExpressionNode,
   ProgramNode,
   SyntaxNode,
+  TupleExpressionNode,
   VariableNode,
 } from '@/core/types/nodes';
-import { isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
+import { getIndexColumnSortOrder } from '@/core/utils/validate';
 import { destructureIndexNode } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
+import { UNHANDLED } from '@/core/types';
 
 export default class IndexesValidator {
   private compiler: Compiler;
@@ -42,21 +44,25 @@ export default class IndexesValidator {
       'An Indexes can only appear inside a Table or a TablePartial',
       this.declarationNode,
     );
-    if (this.declarationNode.parent instanceof ProgramNode) return [
-      invalidContextError,
-    ];
+    if (this.declarationNode.parent instanceof ProgramNode)
+      return [invalidContextError];
 
-    return (this.declarationNode.parent?.isKind(ElementKind.Table, ElementKind.TablePartial))
+    return this.declarationNode.parent?.isKind(
+      ElementKind.Table,
+      ElementKind.TablePartial,
+    )
       ? []
-      : [
-          invalidContextError,
-        ];
+      : [invalidContextError];
   }
 
   private validateName (nameNode?: SyntaxNode): CompileError[] {
     if (nameNode) {
       return [
-        new CompileError(CompileErrorCode.UNEXPECTED_NAME, 'An Indexes shouldn\'t have a name', nameNode),
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_NAME,
+          "An Indexes shouldn't have a name",
+          nameNode,
+        ),
       ];
     }
 
@@ -66,37 +72,53 @@ export default class IndexesValidator {
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
     if (aliasNode) {
       return [
-        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Indexes shouldn\'t have an alias', aliasNode),
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_ALIAS,
+          "An Indexes shouldn't have an alias",
+          aliasNode,
+        ),
       ];
     }
 
     return [];
   }
 
-  private validateSettingList (settingList?: ListExpressionNode): CompileError[] {
+  private validateSettingList (
+    settingList?: ListExpressionNode,
+  ): CompileError[] {
     if (settingList) {
       return [
-        new CompileError(CompileErrorCode.UNEXPECTED_SETTINGS, 'An Indexes shouldn\'t have a setting list', settingList),
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_SETTINGS,
+          "An Indexes shouldn't have a setting list",
+          settingList,
+        ),
       ];
     }
 
     return [];
   }
 
-  private validateBody (body?: FunctionApplicationNode | BlockExpressionNode): CompileError[] {
+  private validateBody (
+    body?: FunctionApplicationNode | BlockExpressionNode,
+  ): CompileError[] {
     if (!body) {
       return [];
     }
     if (body instanceof FunctionApplicationNode) {
       return [
-        new CompileError(CompileErrorCode.UNEXPECTED_SIMPLE_BODY, 'An Indexes must have a complex body', body),
+        new CompileError(
+          CompileErrorCode.UNEXPECTED_SIMPLE_BODY,
+          'An Indexes must have a complex body',
+          body,
+        ),
       ];
     }
 
-    const [
-      fields,
-      subs,
-    ] = partition(body.body, (e) => e instanceof FunctionApplicationNode);
+    const [fields, subs] = partition(
+      body.body,
+      (e) => e instanceof FunctionApplicationNode,
+    );
     return [
       ...this.validateFields(fields as FunctionApplicationNode[]),
       ...this.validateSubElements(subs as ElementDeclarationNode[]),
@@ -110,81 +132,58 @@ export default class IndexesValidator {
       }
 
       const errors: CompileError[] = [];
-      const args = [
-        field.callee,
-        ...field.args,
-      ];
+      const args = [field.callee, ...field.args];
+      const settingsReport = this.compiler.nodeSettings(field);
+      errors.push(...settingsReport.getErrors());
+      const isPk = !!settingsReport.getFiltered(UNHANDLED)?.[SettingName.PK];
       if (last(args) instanceof ListExpressionNode) {
-        errors.push(...this.validateFieldSetting(args.pop() as ListExpressionNode));
+        args.pop();
       }
 
+      const names: ReturnType<typeof destructureIndexNode>[] = [];
       args.forEach((sub) => {
         // This is to deal with inline indexes field such as
         // (id, name) (age, weight)
         // which is parsed as a call expression
         while (sub instanceof CallExpressionNode) {
-          if (sub.argumentList && destructureIndexNode(sub.argumentList) === undefined) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub.argumentList));
+          if (sub.argumentList) {
+            const fragment = destructureIndexNode(sub.argumentList);
+            names.push(fragment);
+            if (fragment === undefined) {
+              errors.push(createInvalidIndexFieldError(sub.argumentList));
+            }
           }
           sub = sub.callee!;
         }
 
-        if (destructureIndexNode(sub) === undefined) {
-          errors.push(new CompileError(CompileErrorCode.INVALID_INDEXES_FIELD, 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such', sub));
+        const fragment = destructureIndexNode(sub);
+        names.push(fragment);
+        if (fragment === undefined) {
+          errors.push(createInvalidIndexFieldError(sub));
         }
       });
 
+      // PostgreSQL and Oracle take no sort order in a PRIMARY KEY constraint
+      if (isPk) {
+        names
+          .flatMap((fragment) => [
+            ...(fragment?.functional ?? []),
+            ...(fragment?.nonFunctional ?? []),
+          ])
+          .filter(({ descending }) => descending)
+          .forEach(({ name }) =>
+            errors.push(
+              new CompileError(
+                CompileErrorCode.INVALID_INDEXES_FIELD,
+                'A primary key index field cannot be descending',
+                name,
+              ),
+            ),
+          );
+      }
+
       return errors;
     });
-  }
-
-  private validateFieldSetting (settings: ListExpressionNode): CompileError[] {
-    const aggReport = aggregateSettingList(settings);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-
-    for (const [
-      name,
-      attrs,
-    ] of Object.entries(settingMap)) {
-      switch (name) {
-        case 'note':
-        case 'name':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must be a string`, attr));
-            }
-          });
-          break;
-        case 'unique':
-        case 'pk':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
-            }
-          });
-          break;
-        case 'type':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isExpressionAVariableNode(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
-            }
-          });
-          break;
-        default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attr)));
-      }
-    }
-    return errors;
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -198,11 +197,31 @@ export default class IndexesValidator {
 }
 
 export function isValidIndexesType (value?: SyntaxNode): boolean {
-  if (!(value instanceof PrimaryExpressionNode) || !(value.expression instanceof VariableNode)) {
+  if (
+    !(value instanceof PrimaryExpressionNode)
+    || !(value.expression instanceof VariableNode)
+  ) {
     return false;
   }
 
   const str = value.expression.variable?.value;
 
   return str === 'btree' || str === 'hash';
+}
+
+// The error for an index field that `destructureIndexNode` cannot read
+function createInvalidIndexFieldError (node: SyntaxNode): CompileError {
+  const elements =
+    node instanceof TupleExpressionNode ? node.elementList : [node];
+  const hasBadSetting = elements.some(
+    (e) => e instanceof ArrayNode && !getIndexColumnSortOrder(e),
+  );
+  const message = hasBadSetting
+    ? 'An index column setting must be [asc] or [desc]'
+    : 'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such';
+  return new CompileError(
+    CompileErrorCode.INVALID_INDEXES_FIELD,
+    message,
+    node,
+  );
 }

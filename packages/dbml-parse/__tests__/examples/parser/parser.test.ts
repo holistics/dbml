@@ -384,6 +384,25 @@ describe('[example] parser', () => {
       expect(argList.elementList).toHaveLength(1);
     });
 
+    test('should parse a bracket after a space as indexing directly inside parentheses or brackets', () => {
+      const source = `
+        Table t {
+          id int [note: x [y]]
+          indexes {
+            (a [desc], b)
+          }
+        }
+      `;
+      const body = getElements(source)[0].body as BlockExpressionNode;
+      const column = body.body[0] as FunctionApplicationNode;
+      const settings = column.args.find((arg) => arg.kind === SyntaxNodeKind.LIST_EXPRESSION) as ListExpressionNode;
+      const indexes = (body.body[1] as ElementDeclarationNode).body as BlockExpressionNode;
+      const field = (indexes.body[0] as FunctionApplicationNode).callee as TupleExpressionNode;
+
+      expect(settings.elementList[0].value?.kind).toBe(SyntaxNodeKind.ARRAY);
+      expect(field.elementList.map((e) => e.kind)).toEqual([SyntaxNodeKind.ARRAY, SyntaxNodeKind.PRIMARY_EXPRESSION]);
+    });
+
     test('should parse member access expressions as chained infix', () => {
       const source = 'Ref: users.id > posts.user_id';
       const elements = getElements(source);
