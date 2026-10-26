@@ -182,10 +182,10 @@ export function escapeString (str: string): string {
 }
 
 /**
- * Formats a record value for DBML output.
+ * Formats a typed value for DBML output.
  * Handles different data types and converts them to appropriate DBML syntax.
  *
- * @param recordValue - The record value with type information, or a primitive value
+ * @param typedValue - The record value with type information, or a primitive value
  * @returns The formatted string representation for DBML
  *
  * @example
@@ -202,29 +202,29 @@ export function escapeString (str: string): string {
  */
 export type TypedValue = { value: any; type: string } | string | number | boolean | null | undefined;
 
-export function formatTypedValue (recordValue: TypedValue): string {
+export function formatTypedValue (typedValue: TypedValue): string {
   // Handle undefined and null primitives
-  if (recordValue === undefined || recordValue === null) {
+  if (typedValue === undefined || typedValue === null) {
     return 'null';
   }
 
   // Handle primitive types directly
-  if (typeof recordValue === 'boolean') {
-    return recordValue ? 'true' : 'false';
+  if (typeof typedValue === 'boolean') {
+    return typedValue ? 'true' : 'false';
   }
 
-  if (typeof recordValue === 'number') {
-    return String(recordValue);
+  if (typeof typedValue === 'number') {
+    return String(typedValue);
   }
 
-  if (typeof recordValue === 'string') {
-    return quoteNoteValue(recordValue);
+  if (typeof typedValue === 'string') {
+    return quoteNoteValue(typedValue);
   }
 
   // Handle object format { value, type }
   const {
     value, type,
-  } = recordValue;
+  } = typedValue;
 
   // Handle null/undefined values
   if (value === null || value === undefined || (isBooleanType(type) && typeof value === 'string' && value.toLowerCase() === 'null')) {
