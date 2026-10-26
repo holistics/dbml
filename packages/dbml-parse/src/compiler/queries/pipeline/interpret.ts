@@ -16,33 +16,56 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
   if (!symbol) return Report.create(undefined);
   const result = this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
 
-  // Check each direct import for errors and highlight the import path
-  const importErrors: CompileError[] = [];
-  const seen = new Set<string>();
+  // Check if any errors originate from imported files and highlight the import path
+  const errors = result.getErrors();
+  if (errors.length === 0) return result;
+
+  // Build a map from imported file path -> import path token
+  const importTokenByFile = new Map<string, NonNullable<UseDeclarationNode['importPath']>>();
   for (const node of ast.body) {
     if (!(node instanceof UseDeclarationNode) || !node.importPath) continue;
     const resolvedPath = this.layout.resolveFileSpecifier(filepath, node.importPath.value);
-    if (!resolvedPath || seen.has(resolvedPath.absolute)) continue;
-    seen.add(resolvedPath.absolute);
+    if (!resolvedPath || importTokenByFile.has(resolvedPath.absolute)) continue;
+    importTokenByFile.set(resolvedPath.absolute, node.importPath);
+  }
 
-    const parseResult = this.parseFile(resolvedPath);
-    const importSymbol = this.nodeSymbol(parseResult.getValue().ast).getFiltered(UNHANDLED);
-    const hasErrors = parseResult.getErrors().length > 0
-      || (importSymbol && this.interpretSymbol(importSymbol, resolvedPath).getErrors().length > 0);
-    if (!hasErrors) continue;
+  // Build a reverse map: any reachable file -> which direct import it came from
+  const fileToImport = new Map<string, string>();
+  for (const importFile of importTokenByFile.keys()) {
+    fileToImport.set(importFile, importFile);
+    for (const reachable of this.reachableFiles(Filepath.from(importFile))) {
+      if (!fileToImport.has(reachable.absolute)) {
+        fileToImport.set(reachable.absolute, importFile);
+      }
+    }
+  }
 
+  // Find which imports have errors
+  const importsWithErrors = new Set<string>();
+  for (const error of errors) {
+    const errorFile = error.filepath.absolute;
+    if (errorFile === filepath.absolute) continue;
+    const owningImport = fileToImport.get(errorFile);
+    if (owningImport) {
+      importsWithErrors.add(owningImport);
+    }
+  }
+
+  if (importsWithErrors.size === 0) return result;
+
+  const importErrors: CompileError[] = [];
+  for (const file of importsWithErrors) {
+    const token = importTokenByFile.get(file)!;
     importErrors.push(new CompileError(
       CompileErrorCode.IMPORTED_FILE_HAS_ERRORS,
-      `Imported file '${node.importPath.value}' contains errors`,
-      node.importPath,
+      `Imported file '${token.value}' contains errors`,
+      token,
     ));
   }
 
-  if (importErrors.length === 0) return result;
-
   return new Report(
     result.getValue(),
-    [...result.getErrors(), ...importErrors],
+    [...errors, ...importErrors],
     result.getWarnings(),
     result.getInfos(),
   );
