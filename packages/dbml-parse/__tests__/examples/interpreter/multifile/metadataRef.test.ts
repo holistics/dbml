@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { CompileErrorCode } from '@/index';
 import DBMLCompletionItemProvider from '@/services/suggestions/provider';
-import { createMockTextModel, createPosition } from '../../../utils';
+import { createMockTextModel, createPosition, excludeMetadataValueToken } from '../../../utils';
 import { getDatabase, setupCompiler, fp } from './utils';
 
 const ORDERS = `
@@ -31,7 +31,9 @@ Metadata Ref user_posts {
 
     const reporting = getDatabase(compiler, '/reporting.dbml').refs.find((r) => r.name === 'user_posts');
     expect(reporting?.color).toBe('#e67e22');
-    expect(reporting?.metadata).toEqual({ owner: 'reporting' });
+    expect(excludeMetadataValueToken(reporting?.metadata)).toEqual({
+      owner: { value: 'reporting', type: 'string' },
+    });
 
     const orders = getDatabase(compiler, '/orders.dbml').refs.find((r) => r.name === 'user_posts');
     expect(orders?.color).toBe('#111111');
@@ -62,7 +64,10 @@ Metadata Ref user_posts {
 
     const ref = getDatabase(compiler, '/main.dbml').refs.find((r) => r.name === 'user_posts');
     expect(ref?.color).toBe('#222222');
-    expect(ref?.metadata).toEqual({ owner: 'main', team: 'data' });
+    expect(excludeMetadataValueToken(ref?.metadata)).toEqual({
+      owner: { value: 'main', type: 'string' },
+      team: { value: 'data', type: 'string' },
+    });
   });
 
   test('a ref is not a target where one of its endpoint tables is not visible', () => {

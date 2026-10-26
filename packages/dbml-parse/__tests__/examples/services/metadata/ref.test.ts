@@ -6,7 +6,9 @@ import DBMLReferencesProvider from '@/services/references/provider';
 import { DEFAULT_ENTRY } from '@/constants';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/index';
-import { createMockTextModel, createPosition, interpret } from '../../../utils';
+import {
+  createMockTextModel, createPosition, excludeMetadataValueToken, interpret,
+} from '../../../utils';
 
 const TABLES = `Table users {
   id int [pk]
@@ -86,7 +88,7 @@ Metadata Ref user_posts {
   owner: 'team-a'
 }`;
       expect(errorCodes(source)).toEqual([]);
-      expect(ref(source, 'user_posts')?.metadata).toEqual({ owner: 'team-a' });
+      expect(excludeMetadataValueToken(ref(source, 'user_posts')?.metadata)).toEqual({ owner: { value: 'team-a', type: 'string' } });
     });
 
     it('does not promote inactive: it stays free-form like Column pk', () => {
@@ -98,7 +100,7 @@ Metadata Ref user_posts {
       expect(errorCodes(source)).toEqual([]);
       const r = ref(source, 'user_posts')!;
       expect(r.inactive).toBeUndefined();
-      expect(r.metadata).toEqual({ inactive: 'true' });
+      expect(excludeMetadataValueToken(r.metadata)).toEqual({ inactive: { value: 'true', type: 'string' } });
     });
 
     it('leaves other refs untouched', () => {
@@ -180,7 +182,7 @@ describe('[example] Ref inline custom metadata', () => {
     const source = "Ref r: posts.user_id > users.id [delete: cascade, owner: 'team-a', color: #123456]";
     expect(errorCodes(source)).toEqual([]);
     const r = ref(source, 'r')!;
-    expect(r.metadata).toEqual({ owner: 'team-a' });
+    expect(excludeMetadataValueToken(r.metadata)).toEqual({ owner: { value: 'team-a', type: 'string' } });
     expect(r.color).toBe('#123456');
     expect(r.onDelete).toBe('cascade');
   });
@@ -188,7 +190,10 @@ describe('[example] Ref inline custom metadata', () => {
   it('stores custom settings of an unnamed ref in ref.metadata', () => {
     const source = "Ref: posts.user_id > users.id [owner: 'team-a', accent: #fff]";
     expect(errorCodes(source)).toEqual([]);
-    expect(refs(source)[0].metadata).toEqual({ owner: 'team-a', accent: '#fff' });
+    expect(excludeMetadataValueToken(refs(source)[0].metadata)).toEqual({
+      owner: { value: 'team-a', type: 'string' },
+      accent: { value: '#fff', type: 'color' },
+    });
   });
 
   it('reports a duplicate custom setting', () => {
@@ -196,8 +201,8 @@ describe('[example] Ref inline custom metadata', () => {
     expect(errorCodes(source)).toContain(CompileErrorCode.DUPLICATE_REF_SETTING);
   });
 
-  it('reports a custom setting whose value is not a string or color', () => {
-    const source = 'Ref r: posts.user_id > users.id [owner: 42]';
+  it('reports a valueless custom setting', () => {
+    const source = 'Ref r: posts.user_id > users.id [owner]';
     expect(errorCodes(source)).toContain(CompileErrorCode.INVALID_REF_SETTING_VALUE);
   });
 
@@ -207,7 +212,7 @@ describe('[example] Ref inline custom metadata', () => {
 Metadata Ref r {
   owner: 'block'
 }`;
-    expect(ref(source, 'r')?.metadata).toEqual({ owner: 'block' });
+    expect(excludeMetadataValueToken(ref(source, 'r')?.metadata)).toEqual({ owner: { value: 'block', type: 'string' } });
   });
 });
 

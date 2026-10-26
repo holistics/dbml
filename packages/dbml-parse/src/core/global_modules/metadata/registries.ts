@@ -69,13 +69,21 @@ export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, { [SettingName.Co
   },
 };
 
-export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, { [SettingName.Color]: Color }> = {
+export const REF_METADATA_FIELDS: MetadataFieldRegistry<Ref, { [SettingName.Color]: Color; [SettingName.Note]: string }> = {
   [SettingName.Color]: {
     type: 'color',
     parse: extractHexColor,
     message: "'color' must be a color literal",
     assign (element, value) {
       element.color = value;
+    },
+  },
+  [SettingName.Note]: {
+    type: 'string',
+    parse: extractNote,
+    message: "'note' must be a string literal",
+    assign (element, value, token) {
+      element.note = { value, token };
     },
   },
 };

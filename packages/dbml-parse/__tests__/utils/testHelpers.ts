@@ -516,7 +516,7 @@ export function symbolToSnapshot (
 }
 
 // Strip custom metadata entries down to their values, for asserting on values alone
-export function excludeMetadataValueToken (metadata?: CustomMetadata): Record<string, Pick<CustomMetadataValue, 'value' | 'type'>> | undefined {
-  if (!metadata) return undefined;
+export function excludeMetadataValueToken (metadata?: CustomMetadata): Record<string, Pick<CustomMetadataValue, 'value' | 'type'>> {
+  if (!metadata) return {};
   return Object.fromEntries(Object.entries(metadata).map(([key, entry]) => [key, { value: entry.value, type: entry.type }]));
 }
