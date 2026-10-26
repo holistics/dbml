@@ -18,6 +18,7 @@ export default defineConfig(
       ignores: [
         'node_modules/**',
         'lib/**',
+        'types/**',
         'src/parse/deprecated/**',
         'src/parse/ANTLR/parsers/**',
         '__tests__/**',

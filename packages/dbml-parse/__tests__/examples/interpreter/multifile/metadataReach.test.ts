@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import type { Database } from '@/index';
+import type { CustomMetadata, Database } from '@/index';
 import { CompileErrorCode } from '@/index';
+import { excludeMetadataValueToken } from '../../../utils';
 import { fp, getDatabase, setupCompiler } from './utils';
 
 // A Metadata block applies in program P only when P reaches the block's file and the block's Target is visible from P.
@@ -25,7 +26,7 @@ Ref r: posts.user_id > users.id
 interface TargetCase {
   kind: string;
   header: string;
-  metadataOf: (db: Database) => Record<string, string> | undefined;
+  metadataOf: (db: Database) => CustomMetadata | undefined;
 }
 
 const TARGETS: TargetCase[] = [
@@ -90,7 +91,7 @@ describe('[example] multifile interpreter - Metadata reach', () => {
         test(`block in ${placement.name} ${placement.applied ? 'applies' : 'does not apply'}`, () => {
           const { compiler } = setupCompiler(placement.files(target.header));
           const metadata = target.metadataOf(getDatabase(compiler, '/p.dbml'));
-          expect(metadata ?? {}).toEqual(placement.applied ? { owner: 'x' } : {});
+          expect(excludeMetadataValueToken(metadata)).toEqual(placement.applied ? { owner: { value: 'x', type: 'string' } } : {});
         });
       }
     });

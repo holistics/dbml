@@ -1,18 +1,13 @@
 import { last, partition } from 'lodash-es';
 import Compiler from '@/compiler';
-import { SettingName } from '@/core/types';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import {
-  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, IdentifierStreamNode, ListExpressionNode, ProgramNode, SyntaxNode, WildcardNode,
+  BlockExpressionNode, ElementDeclarationNode, FunctionApplicationNode, ListExpressionNode,
+  ProgramNode, SyntaxNode, WildcardNode,
 } from '@/core/types/nodes';
-import Report from '@/core/types/report';
-import { SyntaxTokenKind } from '@/core/types/tokens';
-import { destructureComplexVariableTuple, extractStringFromIdentifierStream } from '@/core/utils/expression';
-import {
-  Settings, aggregateSettingList, isSimpleName, isBinaryRelationship, isEqualTupleOperands, isExpressionAVariableNode,
-} from '@/core/utils/validate';
-import { REF_METADATA_FIELDS } from '@/core/global_modules/ref/interpret';
-import { validateCustomInlineMetadata } from '../metadata/utils';
+import { destructureComplexVariableTuple } from '@/core/utils/expression';
+import { isSimpleName, isBinaryRelationship, isEqualTupleOperands } from '@/core/utils/validate';
+import { validateFieldSettings } from './index';
 
 export default class RefValidator {
   private declarationNode: ElementDeclarationNode;
@@ -141,29 +136,31 @@ export default class RefValidator {
         errors.push(new CompileError(CompileErrorCode.UNEQUAL_FIELDS_BINARY_REF, 'Unequal fields in ref endpoints', field.callee));
       }
 
-      const args = [
-        ...field.args,
-      ];
-      if (last(args) instanceof ListExpressionNode) {
-        const errs = this.validateFieldSettings(last(args) as ListExpressionNode);
-        errors.push(...errs);
-        args.pop();
-      } else if (args[0] instanceof ListExpressionNode) {
-        errors.push(...this.validateFieldSettings(args[0]));
-        args.shift();
-      }
+      errors.push(...this.compiler.nodeSettings(field).getErrors());
 
-      if (args.length > 0) {
-        errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
-      }
+      // const args = [
+      //   ...field.args,
+      // ];
+      // if (last(args) instanceof ListExpressionNode) {
+      //   const errs = this.validateFieldSettings(last(args) as ListExpressionNode);
+      //   errors.push(...errs);
+      //   args.pop();
+      // } else if (args[0] instanceof ListExpressionNode) {
+      //   errors.push(...this.validateFieldSettings(args[0]));
+      //   args.shift();
+      // }
+      //
+      // if (args.length > 0) {
+      //   errors.push(...args.map((arg) => new CompileError(CompileErrorCode.INVALID_REF_FIELD, 'A Ref field should only have a single binary relationship', arg)));
+      // }
     });
 
     return errors;
   }
 
-  validateFieldSettings (settings: ListExpressionNode): CompileError[] {
-    return validateFieldSettings(settings).getErrors();
-  }
+  // validateFieldSettings (settings: ListExpressionNode): CompileError[] {
+  //   return validateFieldSettings(settings).getErrors();
+  // }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
     return subs.flatMap((sub) => {
@@ -173,100 +170,4 @@ export default class RefValidator {
       return this.compiler.validateNode(sub).getErrors();
     });
   }
-}
-
-function isValidPolicy (value?: SyntaxNode): boolean {
-  if (
-    !(
-      isExpressionAVariableNode(value)
-      && value.expression.variable.kind !== SyntaxTokenKind.QUOTED_STRING
-    )
-    && !(value instanceof IdentifierStreamNode)
-  ) {
-    return false;
-  }
-
-  let extractedString: string | undefined;
-  if (value instanceof IdentifierStreamNode) {
-    extractedString = extractStringFromIdentifierStream(value) || '';
-  } else {
-    extractedString = value.expression.variable.value;
-  }
-
-  if (extractedString) {
-    switch (extractedString.toLowerCase()) {
-      case 'cascade':
-      case 'no action':
-      case 'set null':
-      case 'set default':
-      case 'restrict':
-        return true;
-      default:
-        return false;
-    }
-  }
-
-  return false; // unreachable
-}
-
-export function validateFieldSettings (settings: ListExpressionNode): Report<Settings> {
-  const aggReport = aggregateSettingList(settings);
-  const errors = aggReport.getErrors();
-  const settingMap = aggReport.getValue();
-  const clean: Settings = {};
-
-  for (const [
-    name,
-    attrs,
-  ] of Object.entries(settingMap)) {
-    switch (name) {
-      case SettingName.Delete:
-      case SettingName.Update:
-        if (attrs.length > 1) {
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
-        }
-        attrs.forEach((attr) => {
-          if (!isValidPolicy(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, `'${name}' can only have values "cascade", "no action", "set null", "set default" or "restrict"`, attr));
-          }
-        });
-        clean[name] = attrs;
-        break;
-      case SettingName.Color:
-      case SettingName.Note: {
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, `'${name}' can only appear once`, attr)));
-        }
-        const field = REF_METADATA_FIELDS[name];
-        attrs.forEach((attr) => {
-          if (!field.isValidBuiltinFieldValue(attr.value)) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, field.message, attr!));
-          }
-        });
-        clean[name] = attrs;
-        break;
-      }
-      case SettingName.Inactive:
-        if (attrs.length > 1) {
-          errors.push(...attrs.map((attr) => new CompileError(CompileErrorCode.DUPLICATE_REF_SETTING, '\'inactive\' can only appear once', attr)));
-        }
-        attrs.forEach((attr) => {
-          if (attr.value) {
-            errors.push(new CompileError(CompileErrorCode.INVALID_REF_SETTING_VALUE, '\'inactive\' cannot have a value', attr!));
-          }
-        });
-        clean[name] = attrs;
-        break;
-      default:
-        // Any non-builtin key is free-form inline custom metadata
-        errors.push(
-          ...validateCustomInlineMetadata(name, attrs, {
-            duplicate: CompileErrorCode.DUPLICATE_REF_SETTING,
-            invalidValue: CompileErrorCode.INVALID_REF_SETTING_VALUE,
-          }));
-        clean[name] = attrs;
-        break;
-    }
-  }
-  return new Report(clean, errors);
 }
