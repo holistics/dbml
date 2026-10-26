@@ -94,6 +94,8 @@ export type {
   NoteIdentifier,
   TableGroupIdentifier,
   CustomMetadata,
+  CustomMetadataValue,
+  CustomMetadataValueType,
   RelationCardinality,
   RelationshipOp,
   DbmlProjectLayout,

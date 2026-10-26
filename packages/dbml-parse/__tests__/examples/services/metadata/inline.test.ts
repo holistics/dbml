@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CompileErrorCode } from '@/index';
-import { interpret } from '../../../utils';
+import { interpret, excludeMetadataValueToken } from '../../../utils';
 
 function db (source: string) {
   return interpret(source).getValue();
@@ -13,13 +13,17 @@ function table (source: string, name = 'users') {
 describe('[example] Inline custom metadata (settings list)', () => {
   describe('Table', () => {
     it('harvests non-builtin keys into metadata', () => {
-      const source = `Table users [owner: "data-team", sla_hours: "24", active: "true"] {
+      const source = `Table users [owner: "data-team", sla_hours: 24, active: true] {
   id int
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
-      expect(t.metadata).toMatchObject({ owner: 'data-team', sla_hours: '24', active: 'true' });
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+        owner: { value: 'data-team', type: 'string' },
+        sla_hours: { value: 24, type: 'number' },
+        active: { value: true, type: 'bool' },
+      });
     });
 
     it('keeps builtin headercolor/note typed and out of metadata', () => {
@@ -32,7 +36,9 @@ describe('[example] Inline custom metadata (settings list)', () => {
       expect(t.headerColor).toBe('#fff');
       expect(t.note?.value).toBe('n');
       // Builtins are NOT duplicated into metadata, only the custom key is
-      expect(t.metadata).toEqual({ owner: 'x' });
+      expect(excludeMetadataValueToken(t.metadata)).toEqual({
+        owner: { value: 'x', type: 'string' },
+      });
     });
 
     it('treats a key that is a builtin on another kind as free-form metadata', () => {
@@ -44,7 +50,9 @@ describe('[example] Inline custom metadata (settings list)', () => {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect((t as any).color).toBeUndefined();
-      expect(t.metadata).toMatchObject({ color: '#abc' });
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+        color: { value: '#abc', type: 'color' },
+      });
     });
 
     it('errors on a valueless custom key', () => {
@@ -86,7 +94,9 @@ TableGroup g1 [color: #123, note: "gn", team: "growth"] {
       const g = result.getValue()?.tableGroups?.find((tg) => tg.name === 'g1');
       expect(g?.color).toBe('#123');
       expect(g?.note?.value).toBe('gn');
-      expect(g?.metadata).toEqual({ team: 'growth' });
+      expect(excludeMetadataValueToken(g?.metadata)).toEqual({
+        team: { value: 'growth', type: 'string' },
+      });
     });
   });
 
@@ -99,20 +109,25 @@ TableGroup g1 [color: #123, note: "gn", team: "growth"] {
       expect(result.getErrors()).toHaveLength(0);
       const n = result.getValue()?.notes?.find((note) => note.name === 'overview');
       expect(n?.color).toBe('#456');
-      expect(n?.metadata).toEqual({ author: 'alice' });
+      expect(excludeMetadataValueToken(n?.metadata)).toEqual({
+        author: { value: 'alice', type: 'string' },
+      });
     });
   });
 
   describe('Column', () => {
     it('harvests non-builtin keys into the column metadata', () => {
       const source = `Table users {
-  id int [pk, pii: "true", classification: "internal"]
+  id int [pk, pii: true, classification: "internal"]
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const col = table(source)!.fields.find((f) => f.name === 'id')!;
       expect(col.pk).toBe(true);
-      expect(col.metadata).toMatchObject({ pii: 'true', classification: 'internal' });
+      expect(excludeMetadataValueToken(col.metadata)).toMatchObject({
+        pii: { value: true, type: 'bool' },
+        classification: { value: 'internal', type: 'string' },
+      });
     });
 
     it('harvests inline metadata on a TablePartial column', () => {
@@ -130,7 +145,9 @@ Table users {
       expect(result.getErrors()).toHaveLength(0);
       const partial = result.getValue()?.tablePartials?.find((p) => p.name === 'Base');
       const col = partial?.fields.find((f) => f.name === 'id');
-      expect(col?.metadata).toMatchObject({ owner: 'data-team' });
+      expect(excludeMetadataValueToken(col?.metadata)).toMatchObject({
+        owner: { value: 'data-team', type: 'string' },
+      });
     });
   });
 
@@ -142,13 +159,17 @@ Table users {
 
 Metadata Table public.users {
   owner: "from-block"
-  sla: "24"
+  sla: 24
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       // block overrides owner, inline-only `region` survives, block adds `sla`
-      expect(t.metadata).toMatchObject({ owner: 'from-block', region: 'us', sla: '24' });
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+        owner: { value: 'from-block', type: 'string' },
+        region: { value: 'us', type: 'string' },
+        sla: { value: 24, type: 'number' },
+      });
     });
 
     it('keeps inline metadata when no block targets the element', () => {
@@ -157,7 +178,9 @@ Metadata Table public.users {
 }`;
       const result = interpret(source);
       expect(result.getErrors()).toHaveLength(0);
-      expect(table(source)!.metadata).toEqual({ owner: 'inline-only' });
+      expect(excludeMetadataValueToken(table(source)!.metadata)).toEqual({
+        owner: { value: 'inline-only', type: 'string' },
+      });
     });
 
     it('promotes an inline-only overlap key from a block onto the typed field, over the inline metadata base', () => {
@@ -175,7 +198,9 @@ Metadata Table public.users {
       expect(result.getErrors()).toHaveLength(0);
       const t = table(source)!;
       expect(t.headerColor).toBe('#222');
-      expect(t.metadata).toMatchObject({ owner: 'x' });
+      expect(excludeMetadataValueToken(t.metadata)).toMatchObject({
+        owner: { value: 'x', type: 'string' },
+      });
     });
   });
 });
