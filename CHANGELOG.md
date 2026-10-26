@@ -1,3 +1,12 @@
+## v11.0.0 (2026-10-26)
+
+#### :boom: Breaking Change
+* `dbml-cli`, `dbml-connector`, `dbml-core`, `dbml-parse`
+  * [#1001](https://github.com/holistics/dbml/pull/1001) [DBX-7324] Feat: support data types for metadata ([@xuantho573](https://github.com/xuantho573))
+
+#### Committers: 1
+- Tho Nguyen Xuan ([@xuantho573](https://github.com/xuantho573))
+
 ## v10.3.1 (2026-10-09)
 
 #### :house_with_garden: Internal
