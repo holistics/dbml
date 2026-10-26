@@ -15,9 +15,8 @@ import {
   TupleExpressionNode,
   VariableNode,
 } from '@/core/types/nodes';
-import { getIndexColumnSortOrder, isExpressionAQuotedString, isExpressionAVariableNode } from '@/core/utils/validate';
+import { getIndexColumnSortOrder } from '@/core/utils/validate';
 import { destructureIndexNode } from '@/core/utils/expression';
-import { aggregateSettingList } from '@/core/utils/validate';
 
 export default class IndexesValidator {
   private compiler: Compiler;
@@ -116,11 +115,11 @@ export default class IndexesValidator {
         field.callee,
         ...field.args,
       ];
-      let isPk = false;
+      const settingsReport = this.compiler.nodeSettings(field);
+      errors.push(...settingsReport.getErrors());
+      const isPk = !!settingsReport.getValue().pk;
       if (last(args) instanceof ListExpressionNode) {
-        const settings = args.pop() as ListExpressionNode;
-        isPk = !!aggregateSettingList(settings).getValue().pk;
-        errors.push(...this.validateFieldSetting(settings));
+        args.pop();
       }
 
       const names: ReturnType<typeof destructureIndexNode>[] = [];
@@ -133,7 +132,7 @@ export default class IndexesValidator {
             const fragment = destructureIndexNode(sub.argumentList);
             names.push(fragment);
             if (fragment === undefined) {
-              errors.push(invalidIndexField(sub.argumentList));
+              errors.push(createInvalidIndexFieldError(sub.argumentList));
             }
           }
           sub = sub.callee!;
@@ -142,7 +141,7 @@ export default class IndexesValidator {
         const fragment = destructureIndexNode(sub);
         names.push(fragment);
         if (fragment === undefined) {
-          errors.push(invalidIndexField(sub));
+          errors.push(createInvalidIndexFieldError(sub));
         }
       });
 
@@ -158,55 +157,6 @@ export default class IndexesValidator {
 
       return errors;
     });
-  }
-
-  private validateFieldSetting (settings: ListExpressionNode): CompileError[] {
-    const aggReport = aggregateSettingList(settings);
-    const errors = aggReport.getErrors();
-    const settingMap = aggReport.getValue();
-
-    for (const [
-      name,
-      attrs,
-    ] of Object.entries(settingMap)) {
-      switch (name) {
-        case 'note':
-        case 'name':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isExpressionAQuotedString(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must be a string`, attr));
-            }
-          });
-          break;
-        case 'unique':
-        case 'pk':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, `'${name}' can only appear once`, attr)));
-          }
-          attrs.forEach((attr) => {
-            if (attr.value !== undefined) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, `'${name}' must not have a value`, attr));
-            }
-          });
-          break;
-        case 'type':
-          if (attrs.length > 1) {
-            attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.DUPLICATE_INDEX_SETTING, '\'type\' can only appear once', attr)));
-          }
-          attrs.forEach((attr) => {
-            if (!isExpressionAVariableNode(attr.value)) {
-              errors.push(new CompileError(CompileErrorCode.INVALID_INDEX_SETTING_VALUE, '\'type\' must be "btree" or "hash"', attr));
-            }
-          });
-          break;
-        default:
-          attrs.forEach((attr) => errors.push(new CompileError(CompileErrorCode.UNKNOWN_INDEX_SETTING, `Unknown index setting '${name}'`, attr)));
-      }
-    }
-    return errors;
   }
 
   private validateSubElements (subs: ElementDeclarationNode[]): CompileError[] {
@@ -230,7 +180,7 @@ export function isValidIndexesType (value?: SyntaxNode): boolean {
 }
 
 // The error for an index field that `destructureIndexNode` cannot read
-function invalidIndexField (node: SyntaxNode): CompileError {
+function createInvalidIndexFieldError (node: SyntaxNode): CompileError {
   const elements = node instanceof TupleExpressionNode ? node.elementList : [node];
   const hasBadSetting = elements.some((e) => e instanceof ArrayNode && !getIndexColumnSortOrder(e));
   const message = hasBadSetting
