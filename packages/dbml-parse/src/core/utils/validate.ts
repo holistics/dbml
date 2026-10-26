@@ -261,10 +261,6 @@ export function isValidColumnType (type: SyntaxNode): boolean {
 
 export type Settings = Record<SettingName | string, AttributeNode[]>;
 
-export function isValidMetadataValue (value?: SyntaxNode): boolean {
-  return isExpressionAQuotedString(value) || isValidHexColor(value);
-}
-
 export function aggregateSettingList (settingList?: ListExpressionNode): Report<Settings> {
   const map: Settings = {};
   const errors: CompileError[] = [];

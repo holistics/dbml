@@ -164,6 +164,28 @@ describe('[inline] multifile language services', () => {
       if (defs.length > 0) expect(defs[0].uri).toBeDefined();
     });
 
+    it('should go to definition on import path', () => {
+      const mainFile = pickFile(files, 'consumer-direct-import.dbml');
+      const enumSourceFile = pickFile(files, 'enum-source.dbml');
+      const definitionProvider = new DBMLDefinitionProvider(compiler);
+      const model = createMockTextModel(files.get(mainFile)!, mainFile.toUri());
+
+      // Position on './enum-source.dbml' in "use { enum job_status } from './enum-source.dbml'"
+      // The import path starts around column 30
+      const definitions = definitionProvider.provideDefinition(model, createPosition(2, 40));
+
+      expect(definitions).toBeDefined();
+      const defs = Array.isArray(definitions) ? definitions : (definitions ? [definitions] : []);
+      expect(defs.length).toBe(1);
+      expect(defs[0].range).toEqual({
+        startColumn: 1,
+        startLineNumber: 1,
+        endColumn: 1,
+        endLineNumber: 1,
+      });
+      expect(defs[0].uri.path).toBe(enumSourceFile.absolute);
+    });
+
     it('should find all references to imported enum', () => {
       const typesFile = pickFile(files, 'enum-source.dbml');
       const referencesProvider = new DBMLReferencesProvider(compiler);

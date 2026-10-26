@@ -1,16 +1,16 @@
 import { last } from 'lodash-es';
 import { DateTime } from 'luxon';
-import { destructureComplexVariable, extractNumericLiteral, extractQuotedStringToken } from '@/core/utils/expression';
-import { isExpressionASignedNumberExpression } from '@/core/utils/validate';
+import {
+  destructureComplexVariable, extractBooleanLiteral, extractNumericLiteral, extractQuotedStringToken, extractSignedNumber,
+} from '@/core/utils/expression';
 import { isExpressionAnIdentifierNode } from '@/core/utils/validate';
 import {
   EmptyNode,
   FunctionExpressionNode,
-  PrefixExpressionNode,
   SyntaxNode,
 } from '@/core/types/nodes';
 
-export { extractNumericLiteral } from '@/core/utils/expression';
+export { extractNumericLiteral, extractSignedNumber } from '@/core/utils/expression';
 
 // Check if value is a NULL literal/Empty node
 export function isNullish (value: SyntaxNode): boolean {
@@ -27,27 +27,6 @@ export function isEmptyStringLiteral (value: SyntaxNode): boolean {
 
 export function isFunctionExpression (value: SyntaxNode): value is FunctionExpressionNode {
   return value instanceof FunctionExpressionNode;
-}
-
-// Extract a signed number from a node (e.g., -42, +3.14)
-// Handles prefix operators on numeric literals
-export function extractSignedNumber (node: SyntaxNode): number | null {
-  // Try plain numeric literal first
-  const literal = extractNumericLiteral(node);
-  if (literal !== null) return literal;
-
-  // Try signed number: -42, +3.14
-  if (isExpressionASignedNumberExpression(node)) {
-    if (node instanceof PrefixExpressionNode && node.expression) {
-      const op = node.op?.value;
-      const inner = extractNumericLiteral(node.expression);
-      if (inner !== null) {
-        return op === '-' ? -inner : inner;
-      }
-    }
-  }
-
-  return null;
 }
 
 // Try to extract a numeric value from a syntax node or primitive
@@ -158,11 +137,8 @@ export function tryExtractBoolean (value: SyntaxNode | number | string | boolean
   }
 
   // Identifier: true, false
-  if (isExpressionAnIdentifierNode(value)) {
-    const varName = value.expression.variable?.value?.toLowerCase();
-    if (varName === 'true') return true;
-    if (varName === 'false') return false;
-  }
+  const booleanLiteral = extractBooleanLiteral(value);
+  if (booleanLiteral !== null) return booleanLiteral;
 
   // Numeric literal: 0, 1
   const numVal = extractNumericLiteral(value);

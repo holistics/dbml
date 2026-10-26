@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "name": "@dbml/parse",
-  "version": "10.3.1",
+  "version": "11.0.0",
   "description": "DBML parser v2",
   "author": "Holistics <dev@holistics.io>",
   "license": "Apache-2.0",
@@ -25,7 +25,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf ./dist && tsc --noEmit && vite build",
+    "build": "rimraf ./dist && tsc --noEmit && vite build",
     "dev": "vite build --watch",
     "test": "vitest run",
     "test:watch": "vitest watch",
@@ -50,5 +50,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "gitHead": "abfb18f9b5797966113259cdcd8a6353de88033e"
 }

@@ -26,7 +26,7 @@
     },
     {
       "code": "DUPLICATE_COLUMN_SETTING",
-      "diagnostic": "note can only appear once",
+      "diagnostic": "'note' can only appear once",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -38,7 +38,7 @@
     },
     {
       "code": "DUPLICATE_COLUMN_SETTING",
-      "diagnostic": "note can only appear once",
+      "diagnostic": "'note' can only appear once",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
