@@ -851,7 +851,10 @@ export default class OracleSqlASTGen extends OracleSqlParserVisitor {
   //  ;
   visitTable_index_clause (ctx) {
     const names = ctx.tableview_name().accept(this);
-    const columns = ctx.index_expr().map((i) => i.accept(this));
+    const columns = ctx.index_expr().map((i) => ({
+      ...i.accept(this),
+      ...(ctx.children[ctx.children.indexOf(i) + 1]?.symbol?.type === OracleSqlParser.DESC && { sortOrder: 'desc' }),
+    }));
     return {
       names,
       columns,

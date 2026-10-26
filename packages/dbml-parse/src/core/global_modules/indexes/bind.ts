@@ -3,13 +3,26 @@ import Compiler from '@/compiler';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { UNHANDLED } from '@/core/types/module';
 import {
+  ArrayNode,
   BlockExpressionNode,
   ElementDeclarationNode,
   FunctionApplicationNode,
+  SyntaxNode,
+  TupleExpressionNode,
 } from '@/core/types/nodes';
 import { ElementKind } from '@/core/types/keywords';
 import { destructureComplexVariable, extractVarNameFromPrimaryVariable } from '../../utils/expression';
+import { getIndexColumnSortOrder } from '../../utils/validate';
 import { scanNonListNodeForBinding } from '../utils';
+
+// `name [desc]` refers to the column `name`: take the sort order off before scanning
+function withoutSortOrders (node?: SyntaxNode): (SyntaxNode | undefined)[] {
+  if (node instanceof TupleExpressionNode && node.elementList.some((e) => e instanceof ArrayNode)) {
+    return node.elementList.flatMap(withoutSortOrders);
+  }
+  if (node instanceof ArrayNode && getIndexColumnSortOrder(node)) return [node.array];
+  return [node];
+}
 
 export default class IndexesBinder {
   private compiler: Compiler;
@@ -73,7 +86,7 @@ export default class IndexesBinder {
         field.callee,
         ...field.args,
       ];
-      const bindees = args.flatMap(scanNonListNodeForBinding)
+      const bindees = args.flatMap(withoutSortOrders).flatMap(scanNonListNodeForBinding)
         .flatMap((bindee) => {
           // Indexes can never be schema-qualified (they reference table columns)
           if (bindee.variables.length > 1) {
