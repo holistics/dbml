@@ -1,8 +1,11 @@
 import type Compiler from '@/compiler';
 import type { Database, MasterDatabase } from '@/core/types/schemaJson';
-import type { CompileError, CompileWarning, CompileInfo } from '@/core/types/errors';
+import {
+  CompileError, CompileErrorCode, type CompileWarning, type CompileInfo,
+} from '@/core/types/errors';
 import { Filepath, type FilepathId } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
+import { UseDeclarationNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 
 export function interpretFile (this: Compiler, filepath: Filepath): Report<Readonly<Database> | undefined> {
@@ -11,7 +14,38 @@ export function interpretFile (this: Compiler, filepath: Filepath): Report<Reado
   } = this.parseFile(filepath).getValue();
   const symbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
   if (!symbol) return Report.create(undefined);
-  return this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
+  const result = this.interpretSymbol(symbol, filepath).map((v) => (v === UNHANDLED || !v) ? undefined : v as Database);
+
+  // Check each direct import for errors and highlight the import path
+  const importErrors: CompileError[] = [];
+  const seen = new Set<string>();
+  for (const node of ast.body) {
+    if (!(node instanceof UseDeclarationNode) || !node.importPath) continue;
+    const resolvedPath = this.layout.resolveFileSpecifier(filepath, node.importPath.value);
+    if (!resolvedPath || seen.has(resolvedPath.absolute)) continue;
+    seen.add(resolvedPath.absolute);
+
+    const parseResult = this.parseFile(resolvedPath);
+    const importSymbol = this.nodeSymbol(parseResult.getValue().ast).getFiltered(UNHANDLED);
+    const hasErrors = parseResult.getErrors().length > 0
+      || (importSymbol && this.interpretSymbol(importSymbol, resolvedPath).getErrors().length > 0);
+    if (!hasErrors) continue;
+
+    importErrors.push(new CompileError(
+      CompileErrorCode.IMPORTED_FILE_HAS_ERRORS,
+      `Imported file '${node.importPath.value}' contains errors`,
+      node.importPath,
+    ));
+  }
+
+  if (importErrors.length === 0) return result;
+
+  return new Report(
+    result.getValue(),
+    [...result.getErrors(), ...importErrors],
+    result.getWarnings(),
+    result.getInfos(),
+  );
 }
 
 // Interpret all files. Returns raw MasterDatabase
