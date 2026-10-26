@@ -11,6 +11,7 @@ import {
 import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/core/types/module';
 import { Filepath, SchemaElement, TokenPosition } from '@/core/types';
+import type { CustomMetadata, CustomMetadataValue } from '@/core/types/schemaJson';
 import { isEmpty } from 'lodash-es';
 
 export function scanTestNames (path: string) {
@@ -512,4 +513,10 @@ export function symbolToSnapshot (
       }))),
     }),
   };
+}
+
+// Strip custom metadata entries down to their values, for asserting on values alone
+export function excludeMetadataValueToken (metadata?: CustomMetadata): Record<string, Pick<CustomMetadataValue, 'value' | 'type'>> | undefined {
+  if (!metadata) return undefined;
+  return Object.fromEntries(Object.entries(metadata).map(([key, entry]) => [key, { value: entry.value, type: entry.type }]));
 }

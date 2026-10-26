@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { getDatabase, setupCompiler, fp } from './utils';
+import { excludeMetadataValueToken } from '../../../utils';
 
 describe('[example] multifile interpreter - auto-imported metadata', () => {
   const { compiler } = setupCompiler({
@@ -19,13 +20,17 @@ use { table users } from './base.dbml'
   test('metadata travels with its targetwithout an explicit metadata import', () => {
     const db = getDatabase(compiler, '/main.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'scott' });
+    expect(excludeMetadataValueToken(users?.metadata)).toMatchObject({
+      owner: { value: 'scott', type: 'string' },
+    });
   });
 
   test('metadata is still attached in the file that declares it', () => {
     const db = getDatabase(compiler, '/base.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'scott' });
+    expect(excludeMetadataValueToken(users?.metadata)).toMatchObject({
+      owner: { value: 'scott', type: 'string' },
+    });
   });
 });
 
@@ -55,7 +60,9 @@ Metadata Table users {
 
     const db = result.getValue()!;
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ color: '#f00' });
+    expect(excludeMetadataValueToken(users?.metadata)).toMatchObject({
+      color: { value: '#f00', type: 'color' },
+    });
   });
 });
 
@@ -101,7 +108,13 @@ Metadata Table users {
 
     const db = getDatabase(compiler, '/entry.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'b', a: 'a', b: 'b', shared_a_c: 'a', shared_b_c: 'b' });
+    expect(excludeMetadataValueToken(users?.metadata)).toMatchObject({
+      owner: { value: 'b', type: 'string' },
+      a: { value: 'a', type: 'string' },
+      b: { value: 'b', type: 'string' },
+      shared_a_c: { value: 'a', type: 'string' },
+      shared_b_c: { value: 'b', type: 'string' },
+    });
   });
 
   // entry <- a
@@ -140,7 +153,10 @@ Metadata Table users {
 
     const db = getDatabase(compiler, '/entry.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'b', shared_a_c: 'c' });
+    expect(excludeMetadataValueToken(users?.metadata)).toMatchObject({
+      owner: { value: 'b', type: 'string' },
+      shared_a_c: { value: 'c', type: 'string' },
+    });
   });
 
   // entry <- a <- c
@@ -184,7 +200,12 @@ Metadata Table users {
 
     const db = getDatabase(compiler, '/entry.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'b', shared_a_b: 'b', shared_a_c: 'a', shared_b_c: 'b' });
+    expect(excludeMetadataValueToken(users?.metadata)).toMatchObject({
+      owner: { value: 'b', type: 'string' },
+      shared_a_b: { value: 'b', type: 'string' },
+      shared_a_c: { value: 'a', type: 'string' },
+      shared_b_c: { value: 'b', type: 'string' },
+    });
   });
 
   // entry <- a <- b
@@ -215,7 +236,9 @@ Metadata Table users {
 
     const db = getDatabase(compiler, '/entry.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'a' });
+    expect(excludeMetadataValueToken(users?.metadata)).toMatchObject({
+      owner: { value: 'a', type: 'string' },
+    });
   });
 });
 
@@ -240,12 +263,14 @@ use { table users } from './base.dbml'
   test('metadata declared in an unreachable file is excluded', () => {
     const db = getDatabase(compiler, '/main.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toEqual({});
+    expect(excludeMetadataValueToken(users?.metadata)).toEqual({});
   });
 
   test('the file declaring them still has metadata', () => {
     const db = getDatabase(compiler, '/extra.dbml');
     const users = db.tables.find((t) => t.name === 'users');
-    expect(users?.metadata).toMatchObject({ owner: 'extra' });
+    expect(excludeMetadataValueToken(users?.metadata)).toMatchObject({
+      owner: { value: 'extra', type: 'string' },
+    });
   });
 });

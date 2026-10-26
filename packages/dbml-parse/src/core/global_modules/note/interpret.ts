@@ -10,31 +10,18 @@ import {
 import type { Note } from '@/core/types/schemaJson';
 import type Compiler from '@/compiler';
 import {
-  extractColor,
   getTokenPosition,
   normalizeNote,
 } from '@/core/utils/interpret';
 import { extractQuotedStringToken } from '@/core/utils/expression';
 import {
-  SettingName,
   type Filepath,
   type NoteSymbol,
 } from '@/core/types';
-import type { Color } from '@/core/types/schemaJson';
-import { isValidColorOrNone } from '@/core/utils/validate';
 import Report from '@/core/types/report';
-import { extractCustomInlineMetadata } from '../../utils/interpret';
-import { attachCustomMetadata, type MetadataFieldRegistry } from '../metadata/utils';
-
-export const NOTE_METADATA_FIELDS: MetadataFieldRegistry<Note, SettingName.Color> = {
-  [SettingName.Color]: {
-    isValidBuiltinFieldValue: isValidColorOrNone,
-    message: "'color' must be a color literal or 'none'",
-    assignBuiltinField (element, value) {
-      element.color = value as Color;
-    },
-  },
-};
+import { assignInlineMetadata } from '../../utils/interpret';
+import { attachCustomMetadata } from '../metadata/utils';
+import { NOTE_METADATA_FIELDS } from '../metadata/registries';
 
 export class StickyNoteInterpreter {
   private declarationNode: ElementDeclarationNode;
@@ -82,11 +69,7 @@ export class StickyNoteInterpreter {
   private interpretSettingList (settings?: ListExpressionNode): CompileError[] {
     const settingMap = aggregateSettingList(settings).getValue();
 
-    if (settingMap.color?.length) {
-      this.note.color = extractColor(settingMap.color.at(0)?.value);
-    }
-
-    this.note.metadata = extractCustomInlineMetadata(settingMap, Object.keys(NOTE_METADATA_FIELDS) as SettingName[]);
+    assignInlineMetadata(this.note, settingMap, NOTE_METADATA_FIELDS);
 
     return [];
   }
