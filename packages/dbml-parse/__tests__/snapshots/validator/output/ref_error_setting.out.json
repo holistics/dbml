@@ -26,7 +26,7 @@
     },
     {
       "code": "INVALID_REF_SETTING_VALUE",
-      "diagnostic": "Custom setting 'hello' must be a string or a color literal",
+      "diagnostic": "Custom setting 'hello' must be a string, a color literal, a number literal, or a boolean literal",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {
@@ -62,7 +62,7 @@
     },
     {
       "code": "INVALID_REF_SETTING_VALUE",
-      "diagnostic": "Custom setting 'hello' must be a string or a color literal",
+      "diagnostic": "Custom setting 'hello' must be a string, a color literal, a number literal, or a boolean literal",
       "filepath": "/main.dbml",
       "level": "error",
       "node": {

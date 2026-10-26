@@ -32,7 +32,7 @@ declare class Ref extends Element {
     id: number;
     database: Database;
     injectedPartial?: TablePartial;
-    constructor({ name, endpoints, onDelete, onUpdate, metadata, token, schema }: RawRef);
+    constructor({ name, endpoints, onDelete, onUpdate, note, metadata, token, schema }: RawRef);
     generateId(): void;
     processEndpoints(rawEndpoints: any): void;
     equals(ref: any): any;

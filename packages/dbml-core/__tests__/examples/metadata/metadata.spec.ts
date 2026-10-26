@@ -335,16 +335,24 @@ describe('@dbml/core - Ref metadata', () => {
     const named = refs.find((r) => r.name === 'user_posts')!;
     const unnamed = refs.find((r) => !r.name)!;
     expect(named.color).toBe('#e67e22');
-    expect(named.metadata).toEqual({ owner: 'block' });
-    expect(unnamed.metadata).toEqual({ team: 'data' });
+    expect(excludeMetadataValueToken(named.metadata)).toEqual({
+      owner: { value:'block', type: 'string' },
+    });
+    expect(excludeMetadataValueToken(unnamed.metadata)).toEqual({
+      team: { value:'data', type: 'string' },
+    });
 
     const model = database.normalize();
-    expect(model.refs[named.id!].metadata).toEqual({ owner: 'block' });
+    expect(excludeMetadataValueToken(model.refs[named.id!].metadata)).toEqual({
+      owner: { value: 'block', type: 'string' },
+    });
     expect(model.refs[named.id!].color).toBe('#e67e22');
 
     const out = database.export() as any;
     const exportedRefs = out.schemas.find((s: any) => s.name === 'public').refs;
-    expect(exportedRefs.find((r: any) => r.name === 'user_posts').metadata).toEqual({ owner: 'block' });
+    expect(excludeMetadataValueToken(exportedRefs.find((r: any) => r.name === 'user_posts').metadata)).toEqual({
+      owner: { value: 'block', type: 'string' },
+    });
   });
 
   test('the DBML exporter writes ref color and custom metadata inline', () => {
@@ -360,10 +368,14 @@ describe('@dbml/core - Ref metadata', () => {
     const named = refs.find((r) => r.name === 'user_posts')!;
     const unnamed = refs.find((r) => !r.name)!;
     expect(named.color).toBe('#e67e22');
-    expect(named.metadata).toEqual({ owner: 'block' });
+    expect(excludeMetadataValueToken(named.metadata)).toEqual({
+      owner: { value:'block', type: 'string' },
+    });
     expect(named.onDelete).toBe('cascade');
     expect(unnamed.inactive).toBe(true);
-    expect(unnamed.metadata).toEqual({ team: 'data' });
+    expect(excludeMetadataValueToken(unnamed.metadata)).toEqual({
+      team: { value:'data', type: 'string' },
+    });
   });
 
   const REF_NOTE_DBML = `
