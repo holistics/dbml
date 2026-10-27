@@ -44,7 +44,8 @@ export const metadataModule: GlobalModule = {
     if (!(block instanceof MetadataElementMetadata)) return new Report(undefined);
 
     const targets = compiler.metadataTargets(block);
-    return new Report(targets.length === 1 ? targets[0] : undefined);
+    // A Target that is not a symbol (a named Ref) is not a symbol reference
+    return new Report(targets.length === 1 && !(targets[0] instanceof NodeMetadata) ? targets[0] : undefined);
   },
 
   bindNode (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough> {

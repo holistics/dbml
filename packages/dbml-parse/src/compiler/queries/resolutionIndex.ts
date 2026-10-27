@@ -1,5 +1,5 @@
 import { getMemberChain } from '@/core/parser/utils';
-import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import type { InternedNodeMetadata, NodeMetadata } from '@/core/types/symbol/metadata';
 import { UNHANDLED } from '@/core/types/module';
 import {
   SyntaxNode,
@@ -17,14 +17,14 @@ import type Compiler from '../index';
 
 export interface ResolutionIndex {
   references: Map<InternedNodeSymbol, SyntaxNode[]>;
-  metadata: Map<InternedNodeSymbol, NodeMetadata[]>;
+  metadata: Map<InternedNodeSymbol | InternedNodeMetadata, NodeMetadata[]>;
   parents: Map<InternedNodeSymbol, NodeSymbol[]>;
 }
 
 // Build full resolution index: references + metadata + symbol parent, one scan of all files
 export function resolutionIndex (this: Compiler): ResolutionIndex {
   const references = new Map<InternedNodeSymbol, SyntaxNode[]>();
-  const metadata = new Map<InternedNodeSymbol, NodeMetadata[]>();
+  const metadata = new Map<InternedNodeSymbol | InternedNodeMetadata, NodeMetadata[]>();
 
   const astMap = this.parseProject();
   this.bindProject();
@@ -54,8 +54,8 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
   };
 
   const pushMetadata = (m: NodeMetadata) => {
-    for (const symbol of m.owners(this)) {
-      const key = symbol.intern();
+    for (const owner of m.owners(this)) {
+      const key = owner.intern();
       let arr = metadata.get(key);
       if (!arr) {
         arr = [];
@@ -151,8 +151,8 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): SyntaxNod
   return index.references.get(symbol.intern()) ?? [];
 }
 
-// Lookup metadata for a symbol from the cached index
-export function symbolMetadata (this: Compiler, symbol: NodeSymbol): NodeMetadata[] {
+// Lookup metadata for a symbol, or for a metadata acting as a Target (e.g. a Ref), from the cached index
+export function symbolMetadata (this: Compiler, target: NodeSymbol | NodeMetadata): NodeMetadata[] {
   const index = this.resolutionIndex();
-  return index.metadata.get(symbol.intern()) ?? [];
+  return index.metadata.get(target.intern()) ?? [];
 }

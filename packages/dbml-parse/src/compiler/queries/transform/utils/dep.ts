@@ -1,7 +1,7 @@
 import { SettingName } from '@/core/types/keywords';
 import { ElementDeclarationNode, FunctionApplicationNode, PrefixExpressionNode } from '@/core/types/nodes';
 import { Filepath } from '@/core/types/filepath';
-import { UNHANDLED } from '@/core/types/module';
+import { getProgramSymbol } from '@/core/global_modules/utils';
 import { removeSettingEdit } from '@/core/utils/setting';
 import { DepMetadata } from '@/core/types/symbol/metadata';
 import { SymbolKind } from '@/core/types/symbol';
@@ -75,8 +75,7 @@ export function findDepDefinition (
   filepath: Filepath,
   target: DepIdentifier,
 ): DepDefinition | undefined {
-  const ast = compiler.parseFile(filepath).getValue().ast;
-  const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+  const programSymbol = getProgramSymbol(compiler, filepath);
   if (!programSymbol) return undefined;
 
   const upstream = resolveEndpoint(compiler, filepath, target.upstream);
@@ -85,7 +84,7 @@ export function findDepDefinition (
 
   const source = compiler.getSource(filepath) ?? '';
 
-  for (const meta of compiler.symbolMetadata(programSymbol)) {
+  for (const meta of compiler.appliedMetadata(programSymbol)) {
     if (!(meta instanceof DepMetadata)) continue;
 
     const upstreamTables = meta.upstreamTables(compiler);

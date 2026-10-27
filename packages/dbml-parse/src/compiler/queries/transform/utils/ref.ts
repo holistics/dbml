@@ -1,7 +1,7 @@
 import { SettingName } from '@/core/types/keywords';
 import { AttributeNode, ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
 import { Filepath } from '@/core/types/filepath';
-import { UNHANDLED } from '@/core/types/module';
+import { getProgramSymbol } from '@/core/global_modules/utils';
 import { removeSettingEdit } from '@/core/utils/setting';
 import { getBody } from '@/core/utils/expression';
 import { RefMetadata } from '@/core/types/symbol/metadata';
@@ -22,13 +22,12 @@ export interface StandaloneRef {
 }
 
 export function findRefDefinition (compiler: Compiler, filepath: Filepath, target: RefIdentifier): InlineRef | StandaloneRef | undefined {
-  const ast = compiler.parseFile(filepath).getValue().ast;
-  const programSymbol = compiler.nodeSymbol(ast).getFiltered(UNHANDLED);
+  const programSymbol = getProgramSymbol(compiler, filepath);
   if (!programSymbol) return undefined;
 
   const source = compiler.getSource(filepath) ?? '';
 
-  for (const meta of compiler.symbolMetadata(programSymbol)) {
+  for (const meta of compiler.appliedMetadata(programSymbol)) {
     if (!(meta instanceof RefMetadata)) continue;
     if (!refMetadataMatches(compiler, meta, target)) continue;
 

@@ -4,8 +4,16 @@ import type { NodeMetadata } from '@/core/types/symbol/metadata';
 import type { SyntaxNode } from '@/core/types/nodes';
 import type Report from '@/core/types/report';
 import type { Module, PassThrough } from '../types/module';
-import type { SchemaElement } from '../types/schemaJson';
+import type {
+  Dep, Ref, SchemaElement, TableRecord,
+} from '../types/schemaJson';
 import type { NodeSymbol } from '../types/symbol';
+
+// A declaration interpreted by its Owner, with the metadata it was interpreted from
+export type OwnedElement = {
+  metadata: NodeMetadata;
+  value: SchemaElement | SchemaElement[];
+};
 
 export interface GlobalModule extends Module {
   nodeSymbol? (compiler: Compiler, node: SyntaxNode): Report<NodeSymbol> | Report<PassThrough>;
@@ -14,5 +22,7 @@ export interface GlobalModule extends Module {
   nodeMetadata? (compiler: Compiler, node: SyntaxNode): Report<NodeMetadata> | Report<PassThrough>;
   bindNode? (compiler: Compiler, node: SyntaxNode): Report<void> | Report<PassThrough>;
   interpretSymbol? (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;
+  // Interpret the declarations an Owner is responsible for emitting (e.g. a Table: its Refs, Deps and Records)
+  interpretOwnedMetadata? (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<OwnedElement[]> | Report<PassThrough>;
   interpretMetadata? (compiler: Compiler, metadata: NodeMetadata, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<PassThrough>;
 }

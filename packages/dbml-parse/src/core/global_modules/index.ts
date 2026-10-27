@@ -23,7 +23,7 @@ import { metadataModule } from './metadata';
 import { tableModule } from './table';
 import { tableGroupModule } from './tableGroup';
 import { tablePartialModule } from './tablePartial';
-import type { GlobalModule } from './types';
+import type { GlobalModule, OwnedElement } from './types';
 import { useModule } from './use';
 
 // Registry of all element modules, dispatcher tries each in order until one claims the node
@@ -93,6 +93,11 @@ export function nodeMetadata (this: Compiler, node: SyntaxNode): Report<NodeMeta
 
 export function interpretSymbol (this: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<SchemaElement | SchemaElement[] | undefined> | Report<Unhandled> {
   const res = dispatch('interpretSymbol', this, symbol, filepath);
+  return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
+}
+
+export function interpretOwnedMetadata (this: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<OwnedElement[]> | Report<Unhandled> {
+  const res = dispatch('interpretOwnedMetadata', this, symbol, filepath);
   return res.hasValue(PASS_THROUGH) ? Report.create(UNHANDLED) : res;
 }
 
