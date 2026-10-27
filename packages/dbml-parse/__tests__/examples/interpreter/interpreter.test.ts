@@ -291,6 +291,69 @@ describe('[example] interpreter', () => {
       expect(db.enums[0].values[1].name).toBe('active');
       expect(db.enums[0].values[2].name).toBe('inactive');
     });
+
+    test('should resolve enum alias in column type to the original enum', () => {
+      const source = `
+        Enum users.status as S {
+          active
+        }
+        Table jobs {
+          status S
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.tables[0].fields[0].type).toEqual({
+        schemaName: 'users',
+        type_name: 'status',
+        args: null,
+      });
+    });
+
+    test('should resolve enum alias in the public schema', () => {
+      const source = `
+        Enum status as S {
+          active
+        }
+        Table jobs {
+          status S
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.tables[0].fields[0].type.schemaName).toBeNull();
+      expect(db.tables[0].fields[0].type.type_name).toBe('status');
+    });
+
+    test('should keep array suffix when resolving enum alias', () => {
+      const source = `
+        Enum users.status as S {
+          active
+        }
+        Table jobs {
+          statuses S[]
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.tables[0].fields[0].type.schemaName).toBe('users');
+      expect(db.tables[0].fields[0].type.type_name).toBe('status[]');
+    });
+
+    test('should interpret column typed with enum full name the same as with its alias', () => {
+      const source = `
+        Enum users.status as S {
+          active
+        }
+        Table jobs {
+          by_alias S
+          by_name users.status
+        }
+      `;
+      const db = interpret(source).getValue()!;
+
+      expect(db.tables[0].fields[0].type).toEqual(db.tables[0].fields[1].type);
+    });
   });
 
   describe('project interpretation', () => {
@@ -1104,6 +1167,130 @@ describe('[example] interpreter', () => {
       expect(index.note?.value).toBe('Unique email');
       expect(index.columns[0].value).toBe('email');
       expect(index.columns[0].type).toBe('column');
+    });
+
+    test('should interpret the sort order of index columns', () => {
+      const source = `
+        Table t {
+          a int
+          b int
+          indexes {
+            a
+            (b [desc])
+            (a [asc], b [DESC], \`lower(b)\` [desc])
+            (a[desc], b)
+          }
+        }
+      `;
+      const report = interpret(source);
+      const indexes = report.getValue()!.tables[0].indexes;
+
+      expect(report.getErrors()).toHaveLength(0);
+      expect(indexes).toHaveLength(4);
+      expect(indexes[0].columns[0].sortOrder).toBeUndefined();
+      expect(indexes[1].columns[0]).toMatchObject({ value: 'b', type: 'column', sortOrder: 'desc' });
+      expect(indexes[2].columns.map((c) => c.value)).toEqual(['a', 'b', 'lower(b)']);
+      expect(indexes[2].columns.map((c) => c.sortOrder)).toEqual([undefined, 'desc', 'desc']);
+      expect(indexes[3].columns.map((c) => c.sortOrder)).toEqual(['desc', undefined]);
+    });
+
+    test('should report error for descending primary key column', () => {
+      const source = `
+        Table t {
+          a int
+          b int
+          indexes {
+            (a, b [desc]) [pk]
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe('A primary key index field cannot be descending');
+    });
+
+    test('should accept an ascending primary key column', () => {
+      const source = `
+        Table t {
+          a int
+          b int
+          indexes {
+            (a [asc], b) [pk]
+          }
+        }
+      `;
+
+      expect(analyze(source).getErrors()).toHaveLength(0);
+    });
+
+    test('should report error for an index column setting other than asc or desc', () => {
+      const source = `
+        Table t {
+          a int
+          b int
+          indexes {
+            (a [unique], b)
+            (a [desc, asc])
+            (a [desc: 1])
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.map((e) => e.diagnostic)).toEqual([
+        'An index column setting must be [asc] or [desc]',
+        'An index column setting must be [asc] or [desc]',
+        'An index column setting must be [asc] or [desc]',
+      ]);
+    });
+
+    test('should read a sort order outside parentheses as index settings', () => {
+      const source = `
+        Table t {
+          a int
+          indexes {
+            a [desc]
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("Unknown index setting 'desc'");
+    });
+
+    test('should report error for a prefix operator on an index column', () => {
+      const source = `
+        Table t {
+          a int
+          indexes {
+            -a
+            +a
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors.map((e) => e.diagnostic)).toEqual([
+        'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such',
+        'An index field must be an identifier, a quoted identifier, a functional expression or a tuple of such',
+      ]);
+    });
+
+    test('should report error for non-existent descending index column', () => {
+      const source = `
+        Table t {
+          a int
+          indexes {
+            (missing [desc])
+          }
+        }
+      `;
+      const errors = analyze(source).getErrors();
+
+      expect(errors).toHaveLength(1);
+      expect(errors[0].diagnostic).toBe("No column named 'missing' inside Table 't'");
     });
   });
 

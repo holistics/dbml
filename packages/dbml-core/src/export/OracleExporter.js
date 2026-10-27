@@ -492,6 +492,9 @@ class OracleExporter {
         } else {
           columnStr = `"${column.value}"`;
         }
+        if (column.sortOrder === 'desc') {
+          columnStr += ' DESC';
+        }
         columnArr.push(columnStr);
       });
 
