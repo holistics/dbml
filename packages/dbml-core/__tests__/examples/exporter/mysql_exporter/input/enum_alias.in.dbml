@@ -1,0 +1,11 @@
+enum users.job_status as JobStatus {
+  created
+  running
+  done
+}
+
+Table jobs {
+  id integer
+  status JobStatus
+  status_by_name users.job_status
+}
