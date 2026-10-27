@@ -10,7 +10,7 @@ import {
   extractVariableFromExpression,
 } from '@/core/utils/expression';
 import {
-  aggregateSettingList, isElementFieldNode, isElementNode, isExpressionAQuotedString, isValidName,
+  aggregateSettingList, isElementFieldNode, isElementNode, isExpressionAQuotedString, isValidAlias, isValidName,
 } from '@/core/utils/validate';
 import { type LocalModule, type Settings } from '../types';
 import EnumValidator from './validate';
@@ -53,12 +53,13 @@ export const enumModule: LocalModule = {
 
   nodeAlias (compiler: Compiler, node: SyntaxNode): Report<string | undefined> | Report<PassThrough> {
     if (isElementNode(node, ElementKind.Enum)) {
-      if (node.alias) {
+      if (!node.alias) return new Report(undefined);
+      if (!isValidAlias(node.alias)) {
         return new Report(undefined, [
-          new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Enum shouldn\'t have an alias', node.alias),
+          new CompileError(CompileErrorCode.INVALID_ALIAS, 'Enum aliases can only contain alphanumeric and underscore unless surrounded by double quotes', node.alias),
         ]);
       }
-      return new Report(undefined);
+      return new Report(extractVariableFromExpression(node.alias));
     }
     if (isElementFieldNode(node, ElementKind.Enum)) {
       return new Report(undefined);

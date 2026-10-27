@@ -97,18 +97,20 @@ export default class IndexesInterpreter {
         const result = destructureIndexNode(arg);
         if (!result) continue;
         const argColumns: Index['columns'] = [];
-        for (const s of result.functional) {
+        for (const { name, descending } of result.functional) {
           argColumns.push({
-            value: s.value?.value ?? '',
+            value: name.value?.value ?? '',
             type: 'expression',
-            token: getTokenPosition(s),
+            ...(descending && { sortOrder: 'desc' }),
+            token: getTokenPosition(name),
           });
         }
-        for (const s of result.nonFunctional) {
+        for (const { name, descending } of result.nonFunctional) {
           argColumns.push({
-            value: extractVarNameFromPrimaryVariable(s) ?? '',
+            value: extractVarNameFromPrimaryVariable(name) ?? '',
             type: 'column',
-            token: getTokenPosition(s),
+            ...(descending && { sortOrder: 'desc' }),
+            token: getTokenPosition(name),
           });
         }
         // Keep the written order of columns and expressions

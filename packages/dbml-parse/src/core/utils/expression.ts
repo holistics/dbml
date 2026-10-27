@@ -1,6 +1,7 @@
 import { last } from 'lodash-es';
 import {
   isAccessExpression,
+  getIndexColumnSortOrder,
   isExpressionAnIdentifierNode,
   isExpressionASignedNumberExpression,
   isExpressionAQuotedString,
@@ -9,6 +10,7 @@ import {
   isValidIndexName,
 } from '@/core/utils/validate';
 import {
+  ArrayNode,
   AttributeNode,
   BlockExpressionNode,
   CallExpressionNode,
@@ -129,38 +131,25 @@ export function destructureComplexVariableTuple (
 }
 
 export function destructureIndexNode (node?: SyntaxNode): {
-  functional: FunctionExpressionNode[];
-  nonFunctional: (PrimaryExpressionNode & { expression: VariableNode })[];
+  functional: { name: FunctionExpressionNode; descending: boolean }[];
+  nonFunctional: { name: PrimaryExpressionNode & { expression: VariableNode }; descending: boolean }[];
 } | undefined {
-  if (isValidIndexName(node)) {
-    return node instanceof FunctionExpressionNode
-      ? {
-          functional: [
-            node,
-          ],
-          nonFunctional: [],
-        }
-      : {
-          functional: [],
-          nonFunctional: [
-            node,
-          ],
-        };
+  const functional: { name: FunctionExpressionNode; descending: boolean }[] = [];
+  const nonFunctional: { name: PrimaryExpressionNode & { expression: VariableNode }; descending: boolean }[] = [];
+
+  for (const element of node instanceof TupleExpressionNode ? node.elementList : [node]) {
+    const sortOrder = getIndexColumnSortOrder(element);
+    const name = sortOrder ? (element as ArrayNode).array : element;
+    if (!isValidIndexName(name)) return undefined;
+    const descending = sortOrder === 'desc';
+    if (name instanceof FunctionExpressionNode) {
+      functional.push({ name, descending });
+    } else {
+      nonFunctional.push({ name, descending });
+    }
   }
 
-  if (node instanceof TupleExpressionNode && node.elementList.every(isValidIndexName)) {
-    const functionalIndexName = node.elementList.filter(
-      (e) => e instanceof FunctionExpressionNode,
-    ) as FunctionExpressionNode[];
-    const nonfunctionalIndexName = node.elementList.filter(isExpressionAVariableNode);
-
-    return {
-      functional: functionalIndexName,
-      nonFunctional: nonfunctionalIndexName,
-    };
-  }
-
-  return undefined;
+  return { functional, nonFunctional };
 }
 
 export function extractQuotedStringToken (value?: SyntaxNode): string | undefined {

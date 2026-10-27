@@ -2,9 +2,6 @@ import { describe, expect, test } from 'vitest';
 import { fp, getDatabase, setupCompiler } from './utils';
 
 describe('[example] multifile interpreter - enum across files', () => {
-  // types.dbml:  Enum job_status { pending running done }
-  // main.dbml:   use { enum job_status } from './types.dbml'
-  //              Table jobs { id int [pk]; status job_status }
   const { compiler } = setupCompiler({
     '/types.dbml': `
 Enum job_status {
@@ -48,14 +45,12 @@ Table jobs {
     const jobs = db.tables.find((t) => t.name === 'jobs')!;
     const statusField = jobs.fields.find((f) => f.name === 'status')!;
     // expect: field type resolves to the imported enum name
+    expect(statusField.type.schemaName).toBeNull();
     expect(statusField.type.type_name).toBe('job_status');
   });
 });
 
 describe('[example] multifile interpreter - enum alias', () => {
-  // types.dbml:  Enum job_status { pending running done }
-  // main.dbml:   use { enum job_status as Status } from './types.dbml'
-  //              Table jobs { id int [pk]; status Status }
   const { compiler } = setupCompiler({
     '/types.dbml': `
 Enum job_status {
@@ -98,6 +93,115 @@ Table jobs {
     const statusField = jobs.fields.find((f) => f.name === 'status')!;
     // expect: column type is "Status", the consumer-side alias
     expect(statusField.type.type_name).toBe('Status');
+  });
+});
+
+describe('[example] multifile interpreter - enum declared with an inline alias', () => {
+  const types = `
+Enum users.status as S {
+  active
+  inactive
+}
+
+Table jobs {
+  id int [pk]
+  status S
+}
+`;
+
+  test('pulled table column resolves the alias to the original enum', () => {
+    const { compiler } = setupCompiler({
+      '/types.dbml': types,
+      '/main.dbml': `
+use { table jobs } from './types.dbml'
+`,
+    });
+    const db = getDatabase(compiler, '/main.dbml');
+    const jobs = db.tables.find((t) => t.name === 'jobs')!;
+    const statusField = jobs.fields.find((f) => f.name === 'status')!;
+    // expect: the column type is the original enum, not the alias
+    expect(statusField.type.schemaName).toBe('users');
+    expect(statusField.type.type_name).toBe('status');
+  });
+
+  test('enum imported by its full name keeps the original name', () => {
+    const { compiler } = setupCompiler({
+      '/types.dbml': types,
+      '/main.dbml': `
+use { enum users.status } from './types.dbml'
+
+Table tasks {
+  status users.status
+}
+`,
+    });
+    const db = getDatabase(compiler, '/main.dbml');
+    const tasks = db.tables.find((t) => t.name === 'tasks')!;
+    const statusField = tasks.fields.find((f) => f.name === 'status')!;
+    expect(statusField.type.schemaName).toBe('users');
+    expect(statusField.type.type_name).toBe('status');
+  });
+
+  test('enum imported by full name resolves correctly even when alias is also in scope', () => {
+    const { compiler } = setupCompiler({
+      '/types.dbml': types,
+      '/main.dbml': `
+use { enum users.status } from './types.dbml'
+use { enum S } from './types.dbml'
+
+Table tasks {
+  by_name users.status
+  by_alias S
+}
+`,
+    });
+    const db = getDatabase(compiler, '/main.dbml');
+    expect(db.enums.find((e) => e.name === 'S')).toBeDefined();
+    const tasks = db.tables.find((t) => t.name === 'tasks')!;
+    const byName = tasks.fields.find((f) => f.name === 'by_name')!;
+    const byAlias = tasks.fields.find((f) => f.name === 'by_alias')!;
+    // both reference the same enum, canonical name is consistent
+    expect(byName.type.schemaName).toBeNull();
+    expect(byName.type.type_name).toBe('S');
+    expect(byAlias.type.schemaName).toBeNull();
+    expect(byAlias.type.type_name).toBe('S');
+  });
+
+  test('enum imported with a new alias behaves like a renamed import', () => {
+    const { compiler } = setupCompiler({
+      '/types.dbml': types,
+      '/main.dbml': `
+use { enum users.status as X } from './types.dbml'
+
+Table tasks {
+  status X
+}
+`,
+    });
+    const db = getDatabase(compiler, '/main.dbml');
+    expect(db.enums.find((e) => e.name === 'X')).toBeDefined();
+    const tasks = db.tables.find((t) => t.name === 'tasks')!;
+    const statusField = tasks.fields.find((f) => f.name === 'status')!;
+    expect(statusField.type.schemaName).toBeNull();
+    expect(statusField.type.type_name).toBe('X');
+  });
+
+  test('enum imported by its alias behaves like a renamed import', () => {
+    const { compiler } = setupCompiler({
+      '/types.dbml': types,
+      '/main.dbml': `
+use { enum S } from './types.dbml'
+
+Table tasks {
+  status S
+}
+`,
+    });
+    const db = getDatabase(compiler, '/main.dbml');
+    // expect: same as `use { enum users.status as S }`, so the consumer sees the name S
+    expect(db.enums.find((e) => e.name === 'S')).toBeDefined();
+    const tasks = db.tables.find((t) => t.name === 'tasks')!;
+    expect(tasks.fields.find((f) => f.name === 'status')!.type.type_name).toBe('S');
   });
 });
 
