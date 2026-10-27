@@ -109,7 +109,7 @@ function buildMetadataBlock (
 }
 
 // Get the human-readable target kind keyword (e.g. "Table", "Column")
-function getMetadataTargetKindLabel (targetKind: MetadataTargetKind): string {
+export function getMetadataTargetKindLabel (targetKind: MetadataTargetKind): string {
   switch (targetKind) {
     case MetadataTargetKind.Table:
       return 'Table';
