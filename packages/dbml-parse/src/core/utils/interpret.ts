@@ -6,6 +6,7 @@ import type {
 import { ArrayNode, CallExpressionNode, FunctionExpressionNode } from '@/core/types/nodes';
 import type { SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
+import { UNHANDLED } from '@/core/types/module';
 import {
   destructureComplexVariable, destructureMemberAccessExpression, extractBooleanLiteral, extractQuotedStringToken, extractSignedNumber, extractVariableFromExpression,
 } from './expression';
@@ -158,6 +159,18 @@ export function processColumnType (
       if (!typeNode.array) break;
       typeNode = typeNode.array;
     }
+  }
+
+  // If the type resolves to an imported/aliased symbol, use its canonical name
+  const refereeNode = destructureMemberAccessExpression(typeNode)?.at(-1) ?? typeNode;
+  const referee = compiler.nodeReferee(refereeNode).getFiltered(UNHANDLED);
+  if (referee && referee !== referee.originalSymbol) {
+    const { name, schema } = referee.originalSymbol.interpretedName(compiler, typeNode.filepath);
+    return new Report({
+      schemaName: schema || null,
+      type_name: `${name}${typeSuffix}`,
+      args: typeArgs,
+    });
   }
 
   const {
