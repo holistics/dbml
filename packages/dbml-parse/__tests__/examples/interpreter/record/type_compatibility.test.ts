@@ -788,6 +788,33 @@ describe('[example - record] type compatibility validation', () => {
       expect(infos[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
       expect(infos[0].diagnostic).toBe('Invalid enum value for column `priority`');
     });
+
+    test('- should validate enum through its alias', () => {
+      const source = `
+        Enum users.status as S {
+          active
+          inactive
+        }
+        Table jobs {
+          id int [pk]
+          status S
+        }
+        records jobs(id, status) {
+          1, "active"
+          2, "invalid_status"
+        }
+      `;
+      const result = interpret(source);
+      const errors = result.getErrors();
+      const infos = result.getInfos();
+      const values = result.getValue()!.records[0].values;
+
+      expect(errors.length).toBe(0);
+      expect(values[0][1].type).toBe('string');
+      expect(infos.length).toBe(1);
+      expect(infos[0].code).toBe(CompileErrorCode.INVALID_RECORDS_FIELD);
+      expect(infos[0].diagnostic).toBe('Invalid enum value for column `status`');
+    });
   });
 
   describe('comprehensive edge cases', () => {

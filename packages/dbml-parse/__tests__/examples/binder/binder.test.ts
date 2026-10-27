@@ -138,6 +138,25 @@ describe('[example] binder', () => {
       expect(result.getErrors()).toHaveLength(0);
     });
 
+    test('should handle enum aliases', () => {
+      const source = `
+        Enum users.status as S { active }
+        Table jobs { status S }
+      `;
+      const result = analyze(source);
+      expect(result.getErrors()).toHaveLength(0);
+    });
+
+    test('should detect duplicate enum aliases', () => {
+      const source = `
+        Enum a as S { active }
+        Enum b as S { pending }
+      `;
+      const errors = analyze(source).getErrors();
+      expect(errors.length).toBeGreaterThan(0);
+      expect(errors[0].diagnostic).toBe("Enum 'S' already exists in schema 'public'");
+    });
+
     test('should handle self-referencing table', () => {
       const source = `
         Table employees {
