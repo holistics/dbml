@@ -297,8 +297,7 @@ export class TableInterpreter {
       const meta = this.compiler.nodeMetadata(ref).getFiltered(UNHANDLED);
       if (!meta) return [];
 
-      const owners = meta.owners(this.compiler);
-      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+      if (programSymbol && !meta.isVisibleFrom(this.compiler, programSymbol)) return [];
 
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) return [];
@@ -326,8 +325,7 @@ export class TableInterpreter {
       const meta = this.compiler.nodeMetadata(depAttr).getFiltered(UNHANDLED);
       if (!meta) return [];
 
-      const owners = meta.owners(this.compiler);
-      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+      if (programSymbol && !meta.isVisibleFrom(this.compiler, programSymbol)) return [];
 
       const result = this.compiler.interpretMetadata(meta, this.filepath);
       if (result.hasValue(UNHANDLED)) return [];

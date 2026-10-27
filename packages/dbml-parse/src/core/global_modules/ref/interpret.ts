@@ -14,11 +14,9 @@ import {
 import type { Ref } from '@/core/types/schemaJson';
 import {
   RefMetadata,
-  RefSymbol,
   SettingName,
   type Filepath,
 } from '@/core/types';
-import { UNHANDLED } from '@/core/types/module';
 import type Compiler from '@/compiler';
 import {
   extractColor,
@@ -64,10 +62,9 @@ export class RefInterpreter {
       ...this.interpretBody(),
     ];
 
-    // Only named standalone refs have a symbol, so only they can be targeted by Metadata blocks
-    const symbol = this.compiler.nodeSymbol(this.declarationNode).getFiltered(UNHANDLED);
-    if (symbol instanceof RefSymbol) {
-      attachCustomMetadata(this.compiler, this.ref, symbol, REF_METADATA_FIELDS, this.filepath);
+    // Only named standalone refs can be targeted by Metadata blocks
+    if (this.metadata.name(this.compiler) !== undefined) {
+      attachCustomMetadata(this.compiler, this.ref, this.metadata, REF_METADATA_FIELDS, this.filepath);
     }
 
     const { infos } = this.validateRefConstraints();

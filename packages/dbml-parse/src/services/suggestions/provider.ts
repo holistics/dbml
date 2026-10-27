@@ -57,7 +57,6 @@ import {
 import { getOffsetFromMonacoPosition } from '@/services/utils';
 import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import { getMetadataTargetKindLabel } from '@/compiler/queries/transform/updateElementMetadata';
-import { visibleNamedRefs } from '@/core/global_modules/metadata/utils';
 import { getProgramSymbol } from '@/core/global_modules/utils';
 
 // Display labels for element/keyword suggestions
@@ -1111,9 +1110,7 @@ const METADATA_TARGET_SYMBOL_KINDS: Record<MetadataTargetKind, SymbolKind[]> = {
     SymbolKind.StickyNote,
   ],
   // Refs are not scope members of the files they appear in, see suggestRefNamesForMetadata
-  [MetadataTargetKind.Ref]: [
-    SymbolKind.Ref,
-  ],
+  [MetadataTargetKind.Ref]: [],
 };
 
 function suggestMetadataTargetKinds (): CompletionList {
@@ -1158,8 +1155,9 @@ function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): Co
   if (!programSymbol) return noSuggestions();
 
   const seen = new Set<string>();
-  const suggestions = compiler.visibleSymbols(programSymbol, SymbolKind.Ref).flatMap((ref) => {
-    const name = ref.name;
+  const suggestions = compiler.namedRefsIn(programSymbol).flatMap((ref) => {
+    const name = ref.name(compiler);
+    const refFilepath = ref.declaration.filepath;
     if (name === undefined || seen.has(name)) return [];
     seen.add(name);
     return [
@@ -1167,9 +1165,9 @@ function suggestRefNamesForMetadata (compiler: Compiler, filepath: Filepath): Co
         label: name,
         insertText: name,
         insertTextRules: CompletionItemInsertTextRule.KeepWhitespace,
-        kind: pickCompletionItemKind(ref.kind),
-        sortText: pickCompletionItemKind(ref.kind).toString().padStart(2, '0'),
-        detail: ref.filepath.equals(filepath) ? 'this file' : `from ${ref.filepath.basename}`,
+        kind: CompletionItemKind.Text,
+        sortText: CompletionItemKind.Text.toString().padStart(2, '0'),
+        detail: refFilepath.equals(filepath) ? 'this file' : `from ${refFilepath.basename}`,
         range: undefined as any,
       },
     ];
