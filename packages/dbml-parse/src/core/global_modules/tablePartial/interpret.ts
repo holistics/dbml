@@ -25,6 +25,7 @@ import {
   normalizeNote, processColumnType,
 } from '@/core/utils/interpret';
 import { UNHANDLED } from '@/core/types/module';
+import { getProgramSymbol } from '../utils';
 import { PartialRefMetadata } from '@/core/types/symbol/metadata';
 import { extractCustomInlineMetadata } from '../../utils/interpret';
 
@@ -195,16 +196,14 @@ export class TablePartialInterpreter {
 
     column.metadata = extractCustomInlineMetadata(settingMap, RECOGNIZED_COLUMN_SETTINGS);
 
-    const programNode = this.compiler.parseFile(this.filepath).getValue().ast;
-    const programSymbol = this.compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
+    const programSymbol = getProgramSymbol(this.compiler, this.filepath);
 
     const refs = settingMap[SettingName.Ref] || [];
     column.inline_refs = refs.flatMap((ref) => {
       const meta = this.compiler.nodeMetadata(ref).getFiltered(UNHANDLED);
       if (!(meta instanceof PartialRefMetadata)) return [];
 
-      const owners = meta.owners(this.compiler);
-      if (programSymbol && owners.length > 0 && !owners.some((o) => o === programSymbol)) return [];
+      if (programSymbol && !meta.isVisibleFrom(this.compiler, programSymbol)) return [];
 
       const op = meta.op(this.compiler);
       if (!op) return [];

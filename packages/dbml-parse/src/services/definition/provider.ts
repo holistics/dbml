@@ -6,7 +6,7 @@ import { SyntaxNode, SyntaxNodeKind, UseDeclarationNode } from '@/core/types/nod
 import {
   Definition, DefinitionProvider, Position, TextModel,
 } from '@/services/types';
-import { getOffsetFromMonacoPosition } from '@/services/utils';
+import { getOffsetFromMonacoPosition, namedRefAt } from '@/services/utils';
 import { isOffsetWithinSpan } from '@/core/utils/span';
 
 export default class DBMLDefinitionProvider implements DefinitionProvider {
@@ -35,7 +35,14 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
       if (!node) continue;
 
       const referee = this.compiler.nodeReferee(node).getFiltered(UNHANDLED);
-      if (!referee) continue;
+      if (!referee) {
+        // A named Ref has no symbol: a `Metadata Ref name` header name jumps to the Ref's name
+        if ([SyntaxNodeKind.PRIMARY_EXPRESSION, SyntaxNodeKind.VARIABLE].includes(node.kind)) {
+          const refNameNode = namedRefAt(this.compiler, node)?.declaration.name;
+          if (refNameNode) return this.toDefinition(refNameNode, uri);
+        }
+        continue;
+      }
 
       let declaration: SyntaxNode | undefined;
       if (
@@ -50,31 +57,33 @@ export default class DBMLDefinitionProvider implements DefinitionProvider {
         } = referee);
       }
 
-      if (declaration) {
-        const {
-          startPos, endPos,
-        } = declaration;
-        // Use filepath from declaration if available and in multi-file mode (uri is set)
-        let definitionUri = uri;
-        if (uri && declaration.filepath) {
-          definitionUri = Uri.parse(declaration.filepath.toUri({ protocol: uri.scheme }));
-        }
-
-        return [
-          {
-            range: {
-              startColumn: startPos.column + 1,
-              startLineNumber: startPos.line + 1,
-              endColumn: endPos.column + 1,
-              endLineNumber: endPos.line + 1,
-            },
-            uri: definitionUri,
-          },
-        ];
-      }
+      if (declaration) return this.toDefinition(declaration, uri);
     }
 
     return [];
+  }
+
+  private toDefinition (declaration: SyntaxNode, uri: any): Definition {
+    const {
+      startPos, endPos,
+    } = declaration;
+    // Use filepath from declaration if available and in multi-file mode (uri is set)
+    let definitionUri = uri;
+    if (uri && declaration.filepath) {
+      definitionUri = Uri.parse(declaration.filepath.toUri({ protocol: uri.scheme }));
+    }
+
+    return [
+      {
+        range: {
+          startColumn: startPos.column + 1,
+          startLineNumber: startPos.line + 1,
+          endColumn: endPos.column + 1,
+          endLineNumber: endPos.line + 1,
+        },
+        uri: definitionUri,
+      },
+    ];
   }
 
   private resolveImportPath (filepath: Filepath, offset: number, uri: any): Definition | undefined {

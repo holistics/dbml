@@ -1,16 +1,17 @@
 import { describe, expect, test } from 'vitest';
 import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/core/types/module';
-import { ProgramSymbol, RefSymbol, SymbolKind } from '@/core/types/symbol';
+import { ProgramSymbol } from '@/core/types/symbol';
+import { RefMetadata } from '@/core/types/symbol/metadata';
 import { fp, setupCompiler } from '../interpreter/multifile/utils';
 
-function visible (compiler: Compiler, path: string, kind: SymbolKind.Ref) {
+function visible (compiler: Compiler, path: string) {
   const ast = compiler.parseFile(fp(path)).getValue().ast;
   const program = compiler.nodeSymbol(ast).getFiltered(UNHANDLED) as ProgramSymbol;
-  return compiler.visibleSymbols(program, kind);
+  return compiler.namedRefsIn(program).map((meta) => ({ name: meta.name(compiler), filepath: meta.declaration.filepath, meta }));
 }
 
-describe('[example] compiler - visibleSymbols', () => {
+describe('[example] compiler - namedRefsIn', () => {
   describe('Ref', () => {
     const ORDERS = `
 Table users { id int [pk] }
@@ -25,9 +26,9 @@ Ref: posts.id - users.id
     test('lists named local refs only', () => {
       const { compiler } = setupCompiler({ '/orders.dbml': ORDERS });
 
-      const refs = visible(compiler, '/orders.dbml', SymbolKind.Ref);
+      const refs = visible(compiler, '/orders.dbml');
       expect(refs.map((s) => s.name)).toEqual(['user_posts']);
-      expect(refs[0]).toBeInstanceOf(RefSymbol);
+      expect(refs[0].meta).toBeInstanceOf(RefMetadata);
     });
 
     test('lists refs from a reachable file when both endpoint tables are visible', () => {
@@ -36,7 +37,7 @@ Ref: posts.id - users.id
         '/reporting.dbml': "use * from './orders.dbml'",
       });
 
-      const refs = visible(compiler, '/reporting.dbml', SymbolKind.Ref);
+      const refs = visible(compiler, '/reporting.dbml');
       expect(refs.map((s) => s.name)).toEqual(['user_posts']);
       expect(refs[0].filepath.equals(fp('/orders.dbml'))).toBe(true);
     });
@@ -47,7 +48,7 @@ Ref: posts.id - users.id
         '/reporting.dbml': "use { table users } from './orders.dbml'",
       });
 
-      expect(visible(compiler, '/reporting.dbml', SymbolKind.Ref)).toEqual([]);
+      expect(visible(compiler, '/reporting.dbml')).toEqual([]);
     });
 
     test('lists every same-named ref from different files', () => {
@@ -57,9 +58,9 @@ Ref: posts.id - users.id
         '/main.dbml': "use * from './a.dbml'\nuse * from './b.dbml'",
       });
 
-      const refs = visible(compiler, '/main.dbml', SymbolKind.Ref);
+      const refs = visible(compiler, '/main.dbml');
       expect(refs.map((s) => s.name)).toEqual(['r', 'r']);
-      expect(new Set(refs.map((s) => s.filepath.toKey())).size).toBe(2);
+      expect(new Set(refs.map((s) => s.filepath.absolute)).size).toBe(2);
     });
   });
 });

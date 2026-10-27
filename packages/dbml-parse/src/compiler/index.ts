@@ -1,6 +1,7 @@
 import {
   bindNode,
   interpretMetadata,
+  interpretOwnedMetadata,
   interpretSymbol,
   nodeMetadata,
   nodeReferee,
@@ -43,9 +44,11 @@ import {
   resolutionIndex, symbolMetadata, symbolParent, symbolReferences,
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
-import { visibleSymbols } from './queries/symbol/visibleSymbols';
 import { metadataTargets } from './queries/metadata/metadataTargets';
 import { isSymbolVisible } from './queries/metadata/isSymbolVisible';
+import { namedRefsIn } from './queries/metadata/namedRefsIn';
+import { appliedMetadata } from './queries/metadata/appliedMetadata';
+import { visibleSymbols } from './queries/symbol/visibleSymbols';
 import {
   renameTable, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
   findMetadataBlock, updateElementMetadata, updateElementMetadataEdit, syncElementMetadata,
@@ -265,6 +268,7 @@ export default class Compiler {
   bindProject = this.globalQuery(bindProject);
 
   interpretSymbol = this.globalQuery(interpretSymbol);
+  interpretOwnedMetadata = this.globalQuery(interpretOwnedMetadata);
   interpretMetadata = this.globalQuery(interpretMetadata);
   interpretFile = this.globalQuery(interpretFile);
 
@@ -281,10 +285,6 @@ export default class Compiler {
   symbolMetadata = this.globalQuery(symbolMetadata);
   symbolAliases = this.globalQuery(symbolAliases);
   symbolUses = this.globalQuery(symbolUses);
-  /**
-    * A global query
-    * Return the named refs visible from a program (refs are not imported via `use`).
-    */
   visibleSymbols = this.globalQuery(visibleSymbols);
   /**
     * A global query
@@ -296,6 +296,17 @@ export default class Compiler {
     * Resolve all candidates that a metadata block can target
     */
   metadataTargets = this.globalQuery(metadataTargets);
+  /**
+    * A global query
+    * The metadata declarations that apply in a program, in declaration order
+    */
+  appliedMetadata = this.globalQuery(appliedMetadata);
+  /**
+    * A global query
+    * The named standalone refs usable from a program (refs are not imported via `use`, a named ref is usable
+    * wherever it applies). Does not read the resolution index.
+    */
+  namedRefsIn = this.globalQuery(namedRefsIn);
 
   fileDependencies = this.localQuery(fileDependencies);
   reachableFiles = this.globalQuery(reachableFiles);

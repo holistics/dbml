@@ -119,6 +119,8 @@ export function getMetadataTargetKindLabel (targetKind: MetadataTargetKind): str
       return 'TableGroup';
     case MetadataTargetKind.Note:
       return 'Note';
+    case MetadataTargetKind.Ref:
+      return 'Ref';
     default: {
       const _: never = targetKind;
       return targetKind;

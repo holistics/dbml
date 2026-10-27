@@ -7,7 +7,7 @@ import type {
 } from '@/core/types/schemaJson';
 import type { SyntaxNode } from '@/core/types/nodes';
 import {
-  NodeSymbol, SymbolKind, MetadataTargetKind, ProgramSymbol, MetadataElementMetadata,
+  NodeSymbol, SymbolKind, MetadataTargetKind, MetadataElementMetadata, NodeMetadata,
 } from '@/core/types/symbol';
 import { getProgramSymbol } from '../utils';
 
@@ -95,21 +95,23 @@ function metadataFilePrecedence (compiler: Compiler, root: Filepath): Map<Filepa
 export function attachCustomMetadata<T extends MetadataTarget> (
   compiler: Compiler,
   targetElement: Partial<T>,
-  targetSymbol: NodeSymbol,
+  targetSymbol: NodeSymbol | NodeMetadata,
   fieldsRegistry: MetadataFieldRegistry<T, any>,
   filepath: Filepath,
 ) {
   const programSymbol = getProgramSymbol(compiler, filepath);
   if (!programSymbol) return;
 
-  if (!compiler.isSymbolVisible(programSymbol, targetSymbol)) return;
-
-  const reachableFiles = new Set(compiler.reachableFiles(programSymbol.filepath).map((f) => f.absolute));
+  const visible = targetSymbol instanceof NodeMetadata
+    ? targetSymbol.isVisibleFrom(compiler, programSymbol)
+    : compiler.isSymbolVisible(programSymbol, targetSymbol);
+  if (!visible) return;
 
   const metas = compiler
     .symbolMetadata(targetSymbol)
     .filter((m): m is MetadataElementMetadata => m instanceof MetadataElementMetadata)
-    .filter((m) => reachableFiles.has(m.declaration.filepath.absolute));
+    .filter((m) => m.isVisibleFrom(compiler, programSymbol));
+
   if (!metas.length) return;
 
   const precedence = metadataFilePrecedence(compiler, filepath);

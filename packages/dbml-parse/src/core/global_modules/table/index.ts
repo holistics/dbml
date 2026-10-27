@@ -34,10 +34,11 @@ import {
   isWithinNthArgOfField,
   isValidPartialInjection,
 } from '@/core/utils/validate';
-import type { GlobalModule } from '../types';
+import type { GlobalModule, OwnedElement } from '../types';
 import { nodeRefereeOfEndpoint, nodeRefereeOfLeftExpression } from '../utils';
 import TableBinder from './bind';
 import { TableInterpreter } from './interpret';
+import { interpretOwnedByTable } from './owned';
 
 // Public utils that other modules can use
 export const tableUtils = {
@@ -262,6 +263,13 @@ export const tableModule: GlobalModule = {
     if (!(symbol.declaration instanceof ElementDeclarationNode)) return Report.create(undefined);
 
     return new TableInterpreter(compiler, symbol.declaration, symbol, filepath).interpret();
+  },
+
+  // A Table is the Owner of the Refs, Deps and Records it has an endpoint in
+  interpretOwnedMetadata (compiler: Compiler, symbol: NodeSymbol, filepath: Filepath): Report<OwnedElement[]> | Report<PassThrough> {
+    if (!(symbol instanceof TableSymbol)) return Report.create(PASS_THROUGH);
+
+    return interpretOwnedByTable(compiler, symbol, filepath);
   },
 };
 

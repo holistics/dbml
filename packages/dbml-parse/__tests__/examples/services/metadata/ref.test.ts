@@ -6,6 +6,8 @@ import DBMLReferencesProvider from '@/services/references/provider';
 import { DEFAULT_ENTRY } from '@/constants';
 import { MemoryProjectLayout } from '@/compiler/projectLayout/layout';
 import { CompileErrorCode } from '@/index';
+import { UNHANDLED } from '@/core/types/module';
+import { ElementKind } from '@/core/types/keywords';
 import {
   createMockTextModel, createPosition, excludeMetadataValueToken, interpret,
 } from '../../../utils';
@@ -217,6 +219,14 @@ Metadata Ref r {
 });
 
 describe('[example] Metadata Ref services', () => {
+  it('a named ref has no symbol', () => {
+    const { compiler } = setup(`${TABLES}Ref user_posts: posts.user_id > users.id`);
+    const ast = compiler.parseFile(DEFAULT_ENTRY).getValue().ast;
+    const refNode = ast.declarations.find((d) => d.isKind(ElementKind.Ref))!;
+    expect(refNode).toBeDefined();
+    expect(compiler.nodeSymbol(refNode).getFiltered(UNHANDLED)).toBeUndefined();
+  });
+
   const program = `${TABLES}Ref user_posts: posts.user_id > users.id
 
 Metadata Ref user_posts {

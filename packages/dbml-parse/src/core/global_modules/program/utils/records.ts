@@ -47,7 +47,7 @@ export function validateRecords (
   }
 
   // Fill in records and run PK/unique validation
-  const metadatas = compiler.symbolMetadata(programSymbol);
+  const metadatas = compiler.appliedMetadata(programSymbol);
   for (const meta of metadatas) {
     if (!(meta instanceof RecordsMetadata)) continue;
     const tableSymbol = meta.table(compiler);
@@ -85,7 +85,7 @@ function collectPartialRefs (
   fkTableMap: Map<InternedNodeSymbol, TableInfo>,
   filepath: Filepath,
 ): Ref[] {
-  const partialMetas = compiler.symbolMetadata(programSymbol)
+  const partialMetas = compiler.appliedMetadata(programSymbol)
     .filter((m): m is PartialRefMetadata => m instanceof PartialRefMetadata);
 
   const refs: Ref[] = [];

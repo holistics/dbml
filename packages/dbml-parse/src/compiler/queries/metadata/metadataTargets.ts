@@ -3,7 +3,7 @@ import { getMetadataTargetKind } from '@/core/local_modules/metadata/utils';
 import { mapNamePartToSymbolKind, NameWithSymbolKind } from '@/core/global_modules/metadata/utils';
 import { getDefaultSchemaSymbol, getProgramSymbol } from '@/core/global_modules/utils';
 import { MetadataTargetKind, SymbolKind, type NodeSymbol } from '@/core/types/symbol';
-import type { MetadataElementMetadata } from '@/core/types/symbol/metadata';
+import type { MetadataElementMetadata, NodeMetadata } from '@/core/types/symbol/metadata';
 import { destructureComplexVariable } from '@/core/utils/expression';
 import type Compiler from '../../index';
 
@@ -20,8 +20,10 @@ function lookupSymbol (compiler: Compiler, startSymbol: NodeSymbol, namePartAndS
 
 /**
   * Resolve the candidates a Metadata block targets, from its `<target-kind> <name>` header.
+  * A Target is a symbol, or a named Ref (which has no symbol).
+  * Cycle rule: reachable from NodeMetadata.owners(), so it must not read the resolution index.
   */
-export function metadataTargets (this: Compiler, block: MetadataElementMetadata): NodeSymbol[] {
+export function metadataTargets (this: Compiler, block: MetadataElementMetadata): (NodeSymbol | NodeMetadata)[] {
   const metadataNode = block.declaration;
 
   const programSymbol = getProgramSymbol(this, metadataNode.filepath);
@@ -34,7 +36,7 @@ export function metadataTargets (this: Compiler, block: MetadataElementMetadata)
   if (targetKind === MetadataTargetKind.Ref) {
     if (nameParts.length !== 1) return [];
 
-    return this.visibleSymbols(programSymbol, SymbolKind.Ref).filter((ref) => ref.name === nameParts[0]);
+    return this.namedRefsIn(programSymbol).filter((ref) => ref.name(this) === nameParts[0]);
   }
 
   const namePartAndSymbolKind = mapNamePartToSymbolKind(nameParts, targetKind);
