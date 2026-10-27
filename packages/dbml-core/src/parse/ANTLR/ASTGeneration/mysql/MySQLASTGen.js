@@ -800,10 +800,12 @@ export default class MySQLASTGen extends MySQLParserVisitor {
 
   // ((uid | STRING_LITERAL) ('(' decimalLiteral ')')? | expression) sortType = (ASC | DESC)?
   visitIndexColumnName (ctx) {
+    const sortOrder = ctx.DESC() ? { sortOrder: 'desc' } : {};
     if (ctx.uid()) {
       return {
         type: CONSTRAINT_TYPE.COLUMN,
         value: ctx.uid().accept(this),
+        ...sortOrder,
       };
     }
 
@@ -812,12 +814,14 @@ export default class MySQLASTGen extends MySQLParserVisitor {
       return {
         type: CONSTRAINT_TYPE.STRING,
         value: quotedString.slice(1, quotedString.length - 1),
+        ...sortOrder,
       };
     }
 
     return {
       type: CONSTRAINT_TYPE.EXPRESSION,
       value: ctx.expression().getText(),
+      ...sortOrder,
     };
   }
 

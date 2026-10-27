@@ -876,7 +876,13 @@ export default class Parser {
           throw new PartialParsingError(e.token, leftExpression, e.handlerContext);
         }
       } else if (token.kind === SyntaxTokenKind.LBRACKET) {
-        if (hasTrailingSpaces(this.previous())) {
+        // A space before '[' starts a settings list, such as `name varchar [not null]`,
+        // except directly inside '(' or '[', where no settings list can follow an expression
+        if (
+          hasTrailingSpaces(this.previous())
+          && this.contextStack.top() !== ParsingContext.GroupExpression
+          && this.contextStack.top() !== ParsingContext.ListExpression
+        ) {
           break;
         }
         try {

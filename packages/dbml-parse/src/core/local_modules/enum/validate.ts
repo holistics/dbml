@@ -8,6 +8,7 @@ import {
 import {
   isExpressionAQuotedString, isExpressionAVariableNode,
   aggregateSettingList, isValidName,
+  isValidAlias,
 } from '@/core/utils/validate';
 
 export default class EnumValidator {
@@ -61,9 +62,13 @@ export default class EnumValidator {
   }
 
   private validateAlias (aliasNode?: SyntaxNode): CompileError[] {
-    if (aliasNode) {
+    if (!aliasNode) {
+      return [];
+    }
+
+    if (!isValidAlias(aliasNode)) {
       return [
-        new CompileError(CompileErrorCode.UNEXPECTED_ALIAS, 'An Enum shouldn\'t have an alias', aliasNode),
+        new CompileError(CompileErrorCode.INVALID_ALIAS, 'Enum aliases can only contain alphanumeric and underscore unless surrounded by double quotes', aliasNode),
       ];
     }
 

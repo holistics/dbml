@@ -5,13 +5,15 @@ class IndexColumn extends Element {
    * @param {import('../../types/model_structure/indexColumn').RawIndexColumn} param0
    */
   constructor ({
-    type, value, index, token,
+    type, value, sortOrder, index, token,
   }) {
     super();
     /** @type {string} */
     this.type = type;
     /** @type {string} */
     this.value = value;
+    /** @type {'desc' | undefined} */
+    this.sortOrder = sortOrder;
     /** @type {import('../../types/model_structure/indexes').default} */
     this.index = index;
     /** @type {import('../../types/model_structure/element').Token} */
@@ -42,6 +44,7 @@ class IndexColumn extends Element {
     return {
       type: this.type,
       value: this.value,
+      ...(this.sortOrder && { sortOrder: this.sortOrder }),
     };
   }
 

@@ -9,6 +9,7 @@ import {
   ElementDeclarationNode,
   FunctionApplicationNode,
   FunctionExpressionNode,
+  IdentifierStreamNode,
   InfixExpressionNode,
   ListExpressionNode,
   LiteralNode,
@@ -496,6 +497,18 @@ export function isValidIndexName (
     (value instanceof PrimaryExpressionNode && value.expression instanceof VariableNode)
     || value instanceof FunctionExpressionNode
   );
+}
+
+// The sort order of an index column written `name [asc]` or `name [desc]`,
+// or undefined when the column has no such setting
+export function getIndexColumnSortOrder (
+  value?: SyntaxNode,
+): 'asc' | 'desc' | undefined {
+  if (!(value instanceof ArrayNode) || value.indexer?.elementList.length !== 1) return undefined;
+  const [setting] = value.indexer.elementList;
+  if (setting.colon || setting.value || !(setting.name instanceof IdentifierStreamNode)) return undefined;
+  const order = extractStringFromIdentifierStream(setting.name)?.toLowerCase();
+  return order === 'asc' || order === 'desc' ? order : undefined;
 }
 
 // Extracts the rightmost variable node from an expression
