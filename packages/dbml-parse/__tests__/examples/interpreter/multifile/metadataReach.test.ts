@@ -2,7 +2,8 @@ import { describe, expect, test } from 'vitest';
 import type { CustomMetadata, Database } from '@/index';
 import { CompileErrorCode } from '@/index';
 import { excludeMetadataValueToken } from '../../../utils';
-import { fp, getDatabase, setupCompiler } from './utils';
+import { Filepath } from '@/index';
+import { getDatabase, setupCompiler } from './utils';
 
 // A Metadata block applies in program P only when P reaches the block's file and the block's Target is visible from P.
 // P is /p.dbml. Each case places the same block in a different file and checks P's own output.
@@ -103,7 +104,7 @@ describe('[example] multifile interpreter - Metadata reach', () => {
       '/p.dbml': `${USE_BASE}${block('Metadata Table nope')}`,
     });
 
-    const result = compiler.interpretFile(fp('/p.dbml'));
+    const result = compiler.interpretFile(Filepath.from('/p.dbml'));
     expect(result.getErrors().map((e) => e.code)).toContain(CompileErrorCode.BINDING_ERROR);
     expect(result.getErrors().map((e) => e.diagnostic)).toContain('Cannot find metadata target element: `Table nope`');
   });
@@ -111,11 +112,13 @@ describe('[example] multifile interpreter - Metadata reach', () => {
   test('an ambiguous Ref target reports a binding error', () => {
     const { compiler } = setupCompiler({
       '/base.dbml': BASE,
-      '/dup.dbml': `${USE_BASE}Ref r: posts.id > users.id\n`,
-      '/p.dbml': `${USE_BASE}use * from './dup.dbml'\n${block('Metadata Ref r')}`,
+      '/dup.dbml': `${USE_BASE}Ref r: posts.id > users.id
+`,
+      '/p.dbml': `${USE_BASE}use * from './dup.dbml'
+${block('Metadata Ref r')}`,
     });
 
-    const result = compiler.interpretFile(fp('/p.dbml'));
+    const result = compiler.interpretFile(Filepath.from('/p.dbml'));
     expect(result.getErrors().map((e) => e.code)).toContain(CompileErrorCode.BINDING_ERROR);
     expect(result.getErrors().map((e) => e.diagnostic)).toContain("Ref 'r' is ambiguous: it has multiple definitions");
   });
