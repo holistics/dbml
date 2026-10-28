@@ -1,5 +1,5 @@
 import { getMemberChain } from '@/core/parser/utils';
-import type { InternedNodeMetadata, NodeMetadata } from '@/core/types/symbol/metadata';
+import { InternedNodeMetadata, MetadataElementMetadata, NodeMetadata } from '@/core/types/symbol/metadata';
 import { UNHANDLED } from '@/core/types/module';
 import {
   SyntaxNode,
@@ -9,8 +9,6 @@ import {
 import {
   type InternedNodeSymbol,
   type NodeSymbol,
-  SchemaSymbol,
-  SymbolKind,
 } from '@/core/types/symbol';
 import { getRightmostVariable, isAccessExpression, isExpressionAVariableNode } from '@/core/utils/validate';
 import type Compiler from '../index';
@@ -22,6 +20,9 @@ export interface ResolutionIndex {
 }
 
 // Build full resolution index: references + metadata + symbol parent, one scan of all files
+// A symbol's metadata is the metadata targeting it or any of its members (recursively, through `use`/alias to the original),
+// a metadata's (e.g. a Ref's) metadata is the metadata directly targeting it (see NodeMetadata.targets).
+// Each list is deduped and ordered by file order of parseProject then declaration start.
 export function resolutionIndex (this: Compiler): ResolutionIndex {
   const references = new Map<InternedNodeSymbol, SyntaxNode[]>();
   const metadata = new Map<InternedNodeSymbol | InternedNodeMetadata, NodeMetadata[]>();
@@ -53,15 +54,15 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
     }
   };
 
-  const pushMetadata = (m: NodeMetadata) => {
-    for (const owner of m.owners(this)) {
-      const key = owner.intern();
+  const pushMetadata = (meta: NodeMetadata) => {
+    for (const target of meta.targets(this)) {
+      const key = target.intern();
       let arr = metadata.get(key);
       if (!arr) {
         arr = [];
         metadata.set(key, arr);
       }
-      arr.push(m);
+      arr.push(meta);
     }
   };
 
@@ -120,9 +121,7 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
       }
       arr.push(symbol);
 
-      if (child instanceof SchemaSymbol && child.isKind(SymbolKind.Schema)) {
-        buildParents(compiler, child);
-      }
+      buildParents(compiler, child);
     }
   }
 
@@ -132,15 +131,45 @@ export function resolutionIndex (this: Compiler): ResolutionIndex {
     if (programSymbol) buildParents(this, programSymbol);
   }
 
+  // Accumulate each symbol's metadata from its members
+  const fileOrder = new Map<string, number>();
+  [...astMap.keys()].forEach((absolute, i) => fileOrder.set(absolute, i));
+  const rank = (meta: NodeMetadata) => fileOrder.get(meta.declaration.filepath.absolute) ?? Number.MAX_SAFE_INTEGER;
+
+  const accumulated = new Map(metadata);
+  const visitedAccumulate = new Set<InternedNodeSymbol>();
+
+  function accumulate (compiler: Compiler, symbol: NodeSymbol): NodeMetadata[] {
+    const key = symbol.intern();
+    if (visitedAccumulate.has(key)) return accumulated.get(key) ?? [];
+    visitedAccumulate.add(key);
+
+    const result = new Map<InternedNodeMetadata, NodeMetadata>();
+    for (const meta of metadata.get(key) ?? []) result.set(meta.intern(), meta);
+    for (const member of compiler.symbolMembers(symbol).getFiltered(UNHANDLED) ?? []) {
+      for (const meta of accumulate(compiler, member.originalSymbol)) result.set(meta.intern(), meta);
+    }
+
+    const sorted = [...result.values()].sort((a, b) => (rank(a) - rank(b)) || (a.declaration.start - b.declaration.start));
+    accumulated.set(key, sorted);
+    return sorted;
+  }
+
+  for (const astReport of astMap.values()) {
+    const ast = astReport.getValue().ast;
+    const programSymbol = this.nodeSymbol(ast).getFiltered(UNHANDLED);
+    if (programSymbol) accumulate(this, programSymbol);
+  }
+
   return {
     references,
-    metadata,
+    metadata: accumulated,
     parents,
   };
 }
 
 // Lookup parent symbols that contain this symbol as a member
-export function symbolParent (this: Compiler, symbol: NodeSymbol): NodeSymbol[] {
+export function symbolParents (this: Compiler, symbol: NodeSymbol): NodeSymbol[] {
   const index = this.resolutionIndex();
   return index.parents.get(symbol.intern()) ?? [];
 }
@@ -151,7 +180,7 @@ export function symbolReferences (this: Compiler, symbol: NodeSymbol): SyntaxNod
   return index.references.get(symbol.intern()) ?? [];
 }
 
-// Lookup metadata for a symbol, or for a metadata acting as a Target (e.g. a Ref), from the cached index
+// Lookup metadata targeting a symbol or any of its members, or directly targeting a metadata acting as a Target (e.g. a Ref), from the cached index
 export function symbolMetadata (this: Compiler, target: NodeSymbol | NodeMetadata): NodeMetadata[] {
   const index = this.resolutionIndex();
   return index.metadata.get(target.intern()) ?? [];

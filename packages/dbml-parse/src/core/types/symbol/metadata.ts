@@ -19,7 +19,7 @@ import type {
   TablePartialSymbol,
   TableSymbol,
 } from '../symbol';
-import { SymbolKind } from '../symbol';
+import { MetadataKind, MetadataTargetKind, SymbolKind } from './kind';
 import type { Internable } from '../internable';
 import type { RelationshipOp, RelationCardinality } from '../relation';
 import { getMultiplicities, parseCardinality } from '../relation';
@@ -27,20 +27,12 @@ import { UNHANDLED } from '../module';
 import { ElementKind, SettingName } from '../keywords';
 import {
   getBody,
+  destructureComplexVariable,
   destructureComplexVariableTuple,
   destructureCallExpression,
 } from '@/core/utils/expression';
-
-export enum MetadataKind {
-  Ref = 'ref',
-  Dep = 'dep',
-  PartialRef = 'partial ref',
-  TableChecks = 'table checks',
-  Indexes = 'indexes',
-  Records = 'records',
-  Project = 'project',
-  MetadataElement = 'metadata element',
-}
+import { getProgramSymbol } from '@/core/global_modules/utils';
+import { namedRefsIn } from '@/core/global_modules/ref/utils';
 
 declare const __nodeMetadataBrand: unique symbol;
 export type NodeMetadataId = number & { readonly [__nodeMetadataBrand]: true };
@@ -65,23 +57,26 @@ export abstract class NodeMetadata implements Internable<InternedNodeMetadata> {
   }
 
   /**
-    * The elements this declaration belongs to (see Owner in CONTEXT.md). Used to build the resolution index.
-    * Cycle rule: nothing reachable from here may call resolutionIndex, symbolMetadata, symbolReferences or appliedMetadata,
-    * because the index is built from owners().
-    */
-  abstract owners (compiler: Compiler): (NodeSymbol | NodeMetadata)[];
-
-  /**
-    * Whether this declaration is Visible from `program` (it Applies there): the program reaches the declaration's file
-    * and every endpoint table is Visible from the program (isSymbolVisible). A missing endpoint means it is visible nowhere.
-    * Cycle rule: same as owners(), must not touch the resolution index.
+    * Whether this declaration applies in `program`: the program reaches the declaration's file, and the elements
+    * the declaration is bound to by syntax are in the program's nested schema.
+    * Cycle rule: never reads the resolution index (resolutionIndex, symbolMetadata, symbolReferences, symbolParents),
+    * because the index is built from declaredTargets().
     */
   isVisibleFrom (compiler: Compiler, program: ProgramSymbol): boolean {
     if (!compiler.reachableFiles(program.filepath).some((f) => f.equals(this.declaration.filepath))) return false;
-    const owners = this.owners(compiler);
-    if (owners.length === 0) return false;
-    return owners.every((owner) => owner instanceof NodeMetadata ? owner.isVisibleFrom(compiler, program) : compiler.isSymbolVisible(program, owner));
-  }
+
+    const targets = this.targets(compiler);
+    if (targets.length === 0) return false;
+
+    return targets.every((t) => t instanceof NodeMetadata ? t.isVisibleFrom(compiler, program) : program.inNestedSchema(compiler, t));
+  };
+
+  /**
+    * The candidate targets of this declaration (what it is bound to by syntax), always `originalSymbol` for symbols.
+    * Used to build the resolution index.
+    * WARN: Cycle rule: NEVER reads the resolution index (resolutionIndex, symbolMetadata, symbolReferences, symbolParents).
+    */
+  abstract targets (compiler: Compiler): (NodeSymbol | NodeMetadata)[];
 }
 
 // Standalone Ref: `Ref name: a.x > b.y [settings]`
@@ -258,15 +253,12 @@ export class RefMetadata extends NodeMetadata {
     return this.declaration;
   }
 
-  /**
-    * Every endpoint table owns the Ref, in a fixed order: the left-endpoint table first (inline: the container), then the right one.
-    * The first Owner is the one that emits the Ref.
-    */
-  override owners (compiler: Compiler): NodeSymbol[] {
+  /** The endpoint tables: the left-endpoint table (inline: the container), then the right one */
+  override targets (compiler: Compiler): TableSymbol[] {
     const leftTableSymbol = this.leftTable(compiler);
     const rightTableSymbol = this.rightTable(compiler);
     if (!leftTableSymbol || !rightTableSymbol) return [];
-    return filterDuplicateOwners([leftTableSymbol, rightTableSymbol]);
+    return filterDuplicateSymbols([leftTableSymbol, rightTableSymbol]);
   }
 }
 
@@ -400,15 +392,12 @@ export class DepMetadata extends NodeMetadata {
     return compiler.nodeSymbol(colNode).getFiltered(UNHANDLED) as ColumnSymbol | undefined;
   }
 
-  /**
-    * Every endpoint table owns the Dep, in a fixed order: the container first for an inline Dep,
-    * the downstream table of the first edge first for a standalone Dep. The first Owner is the one that emits the Dep.
-    */
-  override owners (compiler: Compiler): NodeSymbol[] {
+  /** The endpoint tables of the Dep */
+  override targets (compiler: Compiler): TableSymbol[] {
     const first = this.declaration instanceof AttributeNode
       ? this.container(compiler)
       : this.downstreamTables(compiler)[0];
-    return filterDuplicateOwners([
+    return filterDuplicateSymbols([
       first,
       ...this.upstreamTables(compiler),
       ...this.downstreamTables(compiler),
@@ -494,8 +483,11 @@ export class PartialRefMetadata extends NodeMetadata {
   }
 
   // The TablePartial the Ref is declared on
-  override owners (compiler: Compiler): NodeSymbol[] {
-    return [this.leftTablePartial(compiler)].filter((tp) => !!tp);
+  override targets (compiler: Compiler): TablePartialSymbol[] {
+    const leftTablePartial = this.leftTablePartial(compiler);
+    const rightTable = this.rightTable(compiler);
+    if (!leftTablePartial || !rightTable) return [];
+    return [leftTablePartial, rightTable];
   }
 }
 
@@ -510,13 +502,10 @@ export class TableChecksMetadata extends NodeMetadata {
     this.ownerTable = declaration.parentNode?.parentOfKind(ElementDeclarationNode);
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
+  override targets (compiler: Compiler): NodeSymbol[] {
     if (!this.ownerTable) return [];
     const ownerSymbol = compiler.nodeSymbol(this.ownerTable).getFiltered(UNHANDLED);
-    if (!ownerSymbol) return [];
-    return [
-      ownerSymbol.originalSymbol,
-    ];
+    return [ownerSymbol].filter((s) => !!s);
   }
 }
 
@@ -531,13 +520,10 @@ export class IndexesMetadata extends NodeMetadata {
     this.ownerTable = declaration.parentNode?.parentOfKind(ElementDeclarationNode);
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
+  override targets (compiler: Compiler): NodeSymbol[] {
     if (!this.ownerTable) return [];
     const ownerSymbol = compiler.nodeSymbol(this.ownerTable).getFiltered(UNHANDLED);
-    if (!ownerSymbol) return [];
-    return [
-      ownerSymbol.originalSymbol,
-    ];
+    return [ownerSymbol].filter((s) => !!s);
   }
 }
 
@@ -574,7 +560,7 @@ export class RecordsMetadata extends NodeMetadata {
     return !!s?.[SettingName.Example]?.length;
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
+  override targets (compiler: Compiler): TableSymbol[] {
     return [this.table(compiler)].filter((t) => !!t);
   }
 }
@@ -589,18 +575,33 @@ export class MetadataElementMetadata extends NodeMetadata {
     super(declaration);
   }
 
-  // The element affected by this metadata block (Table/Column/Schema/.etc, or a named Ref), if it resolves to exactly one. Related: Compiler.metadataTargets.
-  target (compiler: Compiler): NodeSymbol | NodeMetadata | undefined {
-    const targets = compiler.metadataTargets(this);
-    return targets.length === 1 ? targets[0] : undefined;
+  /** Reaches the declaration's file only; the target's applicability is checked when attaching */
+  override isVisibleFrom (compiler: Compiler, program: ProgramSymbol): boolean {
+    return compiler.reachableFiles(program.filepath).some((f) => f.equals(this.declaration.filepath));
   }
 
-  override owners (compiler: Compiler): (NodeSymbol | NodeMetadata)[] {
-    const target = this.target(compiler);
-    if (!target) return [];
-    return [
-      target instanceof NodeMetadata ? target : target.originalSymbol,
-    ];
+  /**
+    * The symbols/Refs named by the header. 0 = not found, 2+ = ambiguous (the block is then registered nowhere).
+    */
+  override targets (compiler: Compiler): (NodeSymbol | NodeMetadata)[] {
+    const programSymbol = getProgramSymbol(compiler, this.declaration.filepath);
+    if (!programSymbol) return [];
+
+    const targetKind = getMetadataTargetKind(this.declaration);
+    const nameParts = destructureComplexVariable(this.declaration.name);
+    if (!nameParts?.length || !targetKind) return [];
+
+    if (targetKind === MetadataTargetKind.Ref) {
+      return namedRefsIn(compiler, programSymbol).filter((r) => r.name(compiler) === nameParts[0]);
+    }
+
+    let symbol: NodeSymbol | undefined = programSymbol;
+    for (const { name, symbolKind } of mapNamePartToSymbolKind(nameParts, targetKind)) {
+      if (!symbol) break;
+      symbol = compiler.lookupMembers(symbol, symbolKind, name);
+    }
+
+    return symbol && symbol !== programSymbol ? [symbol.originalSymbol] : [];
   }
 }
 
@@ -619,19 +620,13 @@ export class ProjectMetadata extends NodeMetadata {
     return program.filepath.equals(this.declaration.filepath);
   }
 
-  override owners (compiler: Compiler): NodeSymbol[] {
-    const filepath = this.declaration.filepath;
-    const programNode = compiler.parseFile(filepath).getValue().ast;
-    const symbol = compiler.nodeSymbol(programNode).getFiltered(UNHANDLED);
-    return symbol
-      ? [
-          symbol,
-        ]
-      : [];
+  override targets (compiler: Compiler): ProgramSymbol[] {
+    const programSymbol = getProgramSymbol(compiler, this.declaration.filepath);
+    return programSymbol ? [programSymbol] : [];
   }
 }
 
-function filterDuplicateOwners<S extends NodeSymbol> (symbols: (S | undefined)[]): S[] {
+function filterDuplicateSymbols<S extends NodeSymbol> (symbols: (S | undefined)[]): S[] {
   const seen = new Set<InternedNodeSymbol>();
   const result: S[] = [];
   for (const symbol of symbols) {
@@ -699,4 +694,44 @@ function extractTableFromDepEndpoint (compiler: Compiler, expr: SyntaxNode | und
     return compiler.nodeReferee(secondLast).getFiltered(UNHANDLED)?.originalSymbol as TableSymbol | undefined;
   }
   return undefined;
+}
+
+export function getMetadataTargetKind (node: ElementDeclarationNode): MetadataTargetKind | undefined {
+  const value = node.targetKind?.value?.toLowerCase();
+  return Object.values(MetadataTargetKind).find((k) => k.toLowerCase() === value);
+}
+
+export type NameWithSymbolKind = {
+  name: string;
+  symbolKind: SymbolKind;
+};
+
+/** @internal Exported for testing only. */
+export function mapNamePartToSymbolKind (nameParts: string[], targetKind: Exclude<MetadataTargetKind, MetadataTargetKind.Ref>): NameWithSymbolKind[] {
+  if (nameParts.length === 0) return [];
+
+  let kindParts: SymbolKind[];
+
+  switch (targetKind) {
+    case MetadataTargetKind.Table:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.Table];
+      break;
+    case MetadataTargetKind.Column:
+      if (nameParts.length === 1) kindParts = [SymbolKind.Column];
+      else kindParts = [...Array(nameParts.length - 2).fill(SymbolKind.Schema), SymbolKind.Table, SymbolKind.Column];
+      break;
+    case MetadataTargetKind.TableGroup:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.TableGroup];
+      break;
+    case MetadataTargetKind.Note:
+      kindParts = [...Array(nameParts.length - 1).fill(SymbolKind.Schema), SymbolKind.StickyNote];
+      break;
+    // Exhaustiveness checking
+    default: {
+      const _: never = targetKind;
+      break;
+    }
+  }
+
+  return nameParts.map((namePart, idx) => ({ name: namePart, symbolKind: kindParts[idx] }));
 }

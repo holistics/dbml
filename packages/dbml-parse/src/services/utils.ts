@@ -42,17 +42,5 @@ export function namedRefAt (compiler: Compiler, node: SyntaxNode): RefMetadata |
 
   const block = compiler.nodeMetadata(metadataNode).getFiltered(UNHANDLED);
   if (!(block instanceof MetadataElementMetadata)) return undefined;
-  const target = block.target(compiler);
-  return target instanceof RefMetadata ? target : undefined;
-}
-
-// The name nodes of a named Ref: its declaration name and the header target names of the Metadata blocks aimed at it
-export function namedRefNameNodes (compiler: Compiler, ref: RefMetadata): SyntaxNode[] {
-  const blockNames = compiler.symbolMetadata(ref)
-    .filter((m): m is MetadataElementMetadata => m instanceof MetadataElementMetadata)
-    .flatMap((m) => m.declaration.name ?? []);
-  return [
-    ...(ref.declaration instanceof ElementDeclarationNode && ref.declaration.name ? [ref.declaration.name] : []),
-    ...blockNames,
-  ];
+  return block.targets(compiler).filter((t) => compiler.symbolMetadata(t).includes(block)).find((o) => o instanceof RefMetadata);
 }

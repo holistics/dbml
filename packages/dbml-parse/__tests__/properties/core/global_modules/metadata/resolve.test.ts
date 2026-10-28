@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import * as fc from 'fast-check';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
-import { SymbolKind, MetadataTargetKind } from '@/core/types/symbol';
-import { mapNamePartToSymbolKind } from '@/core/global_modules/metadata/utils';
+import { SymbolKind, MetadataTargetKind, mapNamePartToSymbolKind } from '@/core/types/symbol';
 
 const PROPERTY_TEST_CONFIG = {
   numRuns: 200,

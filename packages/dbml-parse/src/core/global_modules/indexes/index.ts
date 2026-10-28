@@ -1,16 +1,11 @@
 import type Compiler from '@/compiler/index';
 import { ElementKind } from '@/core/types/keywords';
-import { IndexesMetadata, MetadataKind } from '@/core/types/symbol/metadata';
-import type { NodeMetadata } from '@/core/types/symbol/metadata';
+import { IndexesMetadata, MetadataKind, SymbolKind } from '@/core/types/symbol';
+import type { NodeSymbol, NodeMetadata } from '@/core/types/symbol';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
-import { ElementDeclarationNode } from '@/core/types/nodes';
-import type { SyntaxNode } from '@/core/types/nodes';
+import { ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type { SchemaElement } from '@/core/types/schemaJson';
-import {
-  type NodeSymbol,
-  SymbolKind,
-} from '@/core/types/symbol';
 import type { SyntaxToken } from '@/core/types/tokens';
 import type { GlobalModule } from '../types';
 import IndexesBinder from './bind';
