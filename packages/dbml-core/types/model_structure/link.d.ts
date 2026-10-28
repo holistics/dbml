@@ -17,7 +17,7 @@ declare class Link extends Element {
     settings: ArchSettings;
     database: Database;
     dbState: DbState;
-    constructor(raw: Omit<RawLink, 'from' | 'to'> & { fromId: number; fromType: ArchElementType; toId: number; toType: ArchElementType; database: Database });
+    constructor(raw: Omit<RawLink, 'from' | 'fromRole' | 'to' | 'toRole'> & { fromId: number; fromType: ArchElementType; toId: number; toType: ArchElementType; database: Database });
     generateId(): void;
     export(): Omit<NormalizedLink, 'id' | 'fromId' | 'fromType' | 'toId' | 'toType'>;
     normalize(model: NormalizedModel): void;

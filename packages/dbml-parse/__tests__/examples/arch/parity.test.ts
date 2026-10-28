@@ -284,7 +284,8 @@ describe('a note written as markdown', () => {
     '}',
     'Server parse',
     'Group "@dbml/parse" as pkg {',
-    '  lex parse',
+    '  lex',
+    '  parse',
     "  Note: '''",
     '  **The front end**',
     '',
@@ -561,8 +562,8 @@ describe('a brand is a setting, not a keyword', () => {
     expect(diagnostics.map((d) => d.code)).toEqual(['bad-image']);
   });
 
-  it('has 31 roles and no brands among them', () => {
-    expect(Object.keys(BUILTIN_ROLES)).toHaveLength(31);
+  it('has 32 roles and no brands among them', () => {
+    expect(Object.keys(BUILTIN_ROLES)).toHaveLength(32);
     for (const brand of ['Postgres', 'Mongo', 'Redis', 'HAProxy', 'Docker', 'Kubernetes']) {
       expect(BUILTIN_ROLES[brand], brand).toBeUndefined();
     }
@@ -725,11 +726,11 @@ describe('metadata follows DBML', () => {
     expect(model.elements.get('dbdocs-dev')?.settings).toMatchObject({ owner: 'platform-team' });
   });
 
-  it('says so when the stated role is not what that thing is', () => {
+  it('names nothing when the stated role is not what that thing is', () => {
     const { diagnostics } = draw("Server api\nMetadata Database api {\n  owner: 'x'\n}");
-    expect(diagnostics.map((d) => d.code)).toEqual(['metadata-role-mismatch']);
-    expect(diagnostics[0].severity).toBe('warning');
-    expect(diagnostics[0].message).toContain('Server');
+    expect(diagnostics.map((d) => d.code)).toEqual(['unknown-metadata-target']);
+    expect(diagnostics[0].severity).toBe('error');
+    expect(diagnostics[0].message).toBe('Database api is not declared anywhere');
   });
 
   it('refuses what DBML refuses, in the words DBML uses', () => {

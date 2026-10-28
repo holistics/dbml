@@ -62,7 +62,7 @@ import {
 } from './queries/resolutionIndex';
 import { symbolUses } from './queries/symbol/symbolUses';
 import {
-  renameTable, renameElement, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
+  renameTable, renameElement, removeElement, syncDiagramView, syncDep, updateElementSetting, updateElementSettingEdit,
 } from './queries/transform';
 import {
   addDoubleQuoteIfNeeded, escapeString, formatRecordValue, isValidIdentifier, normalizeQualifiedName, splitQualifiedIdentifier, unescapeString,
@@ -117,6 +117,7 @@ export default class Compiler {
       ? this.explicitDialect.parser ?? {}
       : {
           allowBodylessElement: kind === 'arch',
+          allowRoleReference: kind === 'arch',
         };
   }
 
@@ -364,6 +365,7 @@ export default class Compiler {
   // transform queries
   renameTable = renameTable.bind(this);
   renameElement = renameElement.bind(this);
+  removeElement = removeElement.bind(this);
   updateElementSetting = updateElementSetting.bind(this);
   updateElementSettingEdit = updateElementSettingEdit.bind(this);
   syncDiagramView = syncDiagramView.bind(this);

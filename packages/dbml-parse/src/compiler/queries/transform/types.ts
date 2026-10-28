@@ -71,9 +71,11 @@ export interface TableGroupIdentifier {
 }
 
 // An architecture node, group or sticky note, by its handle (a note's handle is its name)
+// `role` tells apart elements that share a handle (`Server api`, `Group api`); without it NAME_PRECEDENCE picks
 export interface ArchElementIdentifier {
   kind?: typeof SymbolKind.Element;
   name: string;
+  role?: string;
 }
 
 // An architecture link, matched in either direction
@@ -81,4 +83,6 @@ export interface ArchLinkIdentifier {
   kind?: 'Link';
   from: string;
   to: string;
+  fromRole?: string;
+  toRole?: string;
 }

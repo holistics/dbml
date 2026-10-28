@@ -67,6 +67,8 @@ export {
   isEndpointOptional,
   makeRelationshipRequired,
   BUILTIN_ROLES,
+  NAME_PRECEDENCE,
+  fullName,
 } from '@dbml/parse';
 
 export { inferMultiplicitiesFromColumns } from './transform/relations';

@@ -20,6 +20,7 @@ export const DRAWN_ICONS: string[] = [
   'key',
   'gateway',
   'globe',
+  'dns',
   'cloud',
   'firewall',
   'shield',

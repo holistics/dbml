@@ -1,8 +1,13 @@
+import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
-  archSort, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, isTopLevelNote, linkPartsOf, nameOf,
+  archSort, handleOf, inlineLinksOf, isTopLevel, isTopLevelNote, roleOf,
 } from '@/core/arch/read';
+import { resolveName, rolePrecedence } from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
-import type { AttributeNode, ElementDeclarationNode, ListExpressionNode } from '@/core/types/nodes';
+import { UNHANDLED } from '@/core/types/module';
+import type { AttributeNode, ElementDeclarationNode, ListExpressionNode, SyntaxNode } from '@/core/types/nodes';
+import { LinkMetadata } from '@/core/types/symbol/metadata';
+import { isExpressionAVariableNode } from '@/core/utils/validate';
 import type Compiler from '../../../index';
 import type { TextEdit } from '../applyTextEdits';
 
@@ -19,34 +24,45 @@ const isElement = (declaration: ElementDeclarationNode): boolean => {
   return sort === 'node' || sort === 'group' || isTopLevelNote(declaration);
 };
 
-export function findArchElement (compiler: Compiler, filepath: Filepath, handle: string): ElementDeclarationNode | undefined {
-  return archDeclarations(compiler, filepath).find((d) => isElement(d) && handleOf(d) === handle);
+// The element with that handle, and that role when one is given; else the first by NAME_PRECEDENCE
+export function findArchElement (compiler: Compiler, filepath: Filepath, handle: string, role?: string): ElementDeclarationNode | undefined {
+  return archDeclarations(compiler, filepath)
+    .filter((d) => isElement(d) && handleOf(d) === handle && (!role || roleOf(d) === role))
+    .sort((a, b) => rolePrecedence(roleOf(a)) - rolePrecedence(roleOf(b)))[0];
 }
+
+// Whether a name written in a link, a group or Metadata means `target`
+export function refersTo (compiler: Compiler, node: SyntaxNode | undefined, target: ElementDeclarationNode): boolean {
+  if (!node || !isExpressionAVariableNode(node)) return false;
+  return compiler.nodeReferee(node).getFiltered(UNHANDLED)?.originalSymbol.declaration === target;
+}
+
+// How the app writes a reference to an element, group or sticky note: always its role and handle,
+// so the reference means that element whatever else shares the handle
+export const fullName = (handle: string, role: string): string => `${role} ${isValidIdentifier(handle) ? handle : `"${handle}"`}`;
 
 export type ArchLinkDefinition =
   | { kind: 'standalone'; declaration: ElementDeclarationNode }
   | { kind: 'inline'; element: ElementDeclarationNode; attribute: AttributeNode; op: string };
 
-const joins = (left: string | undefined, right: string | undefined, from: string, to: string): boolean => (
-  (left === from && right === to) || (left === to && right === from)
-);
-
 // The first link between `from` and `to` in either direction, in source order: `Link: a > b` or an inline `[link: > b]` on `a`
-export function findArchLink (compiler: Compiler, filepath: Filepath, from: string, to: string): ArchLinkDefinition | undefined {
+export function findArchLink (compiler: Compiler, filepath: Filepath, from: string, to: string, fromRole?: string, toRole?: string): ArchLinkDefinition | undefined {
+  const a = resolveName(compiler, filepath, from, fromRole)?.originalSymbol;
+  const b = resolveName(compiler, filepath, to, toRole)?.originalSymbol;
+  if (!a || !b) return undefined;
+  const joins = ([left, right]: unknown[]) => (left === a && right === b) || (left === b && right === a);
   for (const declaration of archDeclarations(compiler, filepath)) {
     if (archSort(declaration) === 'link') {
-      const parts = linkPartsOf(declaration);
-      if (parts && joins(nameOf(endpointNode(parts.infix.left)), nameOf(endpointNode(parts.infix.right)), from, to)) {
-        return { kind: 'standalone', declaration };
-      }
+      if (joins(new LinkMetadata(declaration).endpoints(compiler))) return { kind: 'standalone', declaration };
       continue;
     }
     if (!isElement(declaration)) continue;
     for (const attribute of inlineLinksOf(declaration)) {
-      const inline = inlineLinkOf(attribute);
-      if (inline && joins(handleOf(declaration), nameOf(inline.target), from, to)) {
+      const metadata = new LinkMetadata(attribute);
+      const op = metadata.op();
+      if (op && joins(metadata.endpoints(compiler))) {
         return {
-          kind: 'inline', element: declaration, attribute, op: inline.op,
+          kind: 'inline', element: declaration, attribute, op,
         };
       }
     }

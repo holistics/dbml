@@ -116,4 +116,18 @@ describe('@dbml/core - architecture files', () => {
     const single = (new Parser()).parse('Table users {\n  id int [pk]\n}', 'dbmlv2').normalize();
     expect(DbmlExporter.export(model, { includeRecords: true })).toBe(DbmlExporter.export(single, { includeRecords: true }));
   });
+
+  test('a Server and a Group may share a handle, and links and members find each by its role', () => {
+    const source = '---\ndiagram_type: arch\n---\nServer c\nServer api\nGroup api { }\nLink: c > api\nLink: c > Group api\nGroup g {\n  Group api\n  c\n}';
+    const model = normalizeProject({ '/d.dbml': source }, '/d.dbml');
+    const server = Object.values(model.nodes ?? {}).find((node) => node.name === 'api')!;
+    const group = Object.values(model.groups ?? {}).find((g) => g.name === 'api')!;
+    const outer = Object.values(model.groups ?? {}).find((g) => g.name === 'g')!;
+    const links = Object.values(model.links ?? {}).map((link) => [link.toType, link.toId]);
+    expect(links).toEqual([['node', server.id], ['group', group.id]]);
+    expect(outer.childTypes[0]).toBe('group');
+    expect(outer.childIds[0]).toBe(group.id);
+    expect(group.groupId).toBe(outer.id);
+    expect(server.groupId).toBeNull();
+  });
 });

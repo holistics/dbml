@@ -173,7 +173,8 @@ Metadata api1 {
     const source = `Server api
 Database db
 Group prod [color: '#c0453a'] {
-  api db
+  api
+  db
 }
 Link: api > db [proto: HTTPS]
 Ref: db < api.web
@@ -186,14 +187,15 @@ Metadata api {
     expect(rename(source, 'api', 'web')).toBe(`Server web
 Database db
 Group prod [color: '#c0453a'] {
-  web db
+  Server web
+  db
 }
-Link: web > db [proto: HTTPS]
-Ref: db < web.web
+Link: Server web > db [proto: HTTPS]
+Ref: db < Server web.web
 Metadata Server web {
   owner: 'x'
 }
-Metadata web {
+Metadata Server web {
   team: 'y'
 }`);
     expect(errorsOf(rename(source, 'api', 'web'))).toEqual([]);
@@ -213,9 +215,9 @@ Metadata Server api {
     expect(result).toBe(`Server "API 2"
 Database db
 Group prod {
-  "API 2"
+  Server "API 2"
 }
-Link: "API 2" > db
+Link: Server "API 2" > db
 Metadata Server "API 2" {
   owner: 'x'
 }`);
@@ -246,8 +248,8 @@ Metadata api {
 }`;
     expect(rename(source, 'api', 'web')).toBe(`Server "web"
 Database db
-Link: "web" > db
-Metadata web {
+Link: Server "web" > db
+Metadata Server "web" {
   owner: 'x'
 }`);
   });
@@ -261,10 +263,11 @@ Note memo {
   'text'
 }
 Group outer {
-  prod memo
+  prod
+  memo
 }`;
-    expect(rename(source, 'prod', 'live')).toBe(source.replace('Group prod', 'Group live').replace('prod memo', 'live memo'));
-    expect(rename(source, 'memo', 'remark')).toBe(source.replace('Note memo', 'Note remark').replace('prod memo', 'prod remark'));
+    expect(rename(source, 'prod', 'live')).toBe(source.replace('Group prod', 'Group live').replace('  prod\n', '  Group live\n'));
+    expect(rename(source, 'memo', 'remark')).toBe(source.replace('Note memo', 'Note remark').replace('  memo\n', '  Note remark\n'));
   });
 
   it('leaves a link setting value that happens to match the name', () => {
@@ -273,7 +276,7 @@ Database db
 Link: api > db [label: api]`;
     expect(rename(source, 'api', 'web')).toBe(`Server web
 Database db
-Link: web > db [label: api]`);
+Link: Server web > db [label: api]`);
   });
 
   it('is a no-op when the new handle is already taken', () => {

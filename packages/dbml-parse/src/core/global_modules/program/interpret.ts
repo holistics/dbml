@@ -102,38 +102,41 @@ export default class ProgramInterpreter {
   private finishArch () {
     const isArch = this.compiler.parsedFileKind(this.filepath) === 'arch';
 
+    // A handle can repeat across roles, so an element is keyed by both
+    const keyOf = (handle: string, role: string) => `${role}\u0000${handle}`;
     // The first group to list an element owns it
-    const handles = new Set([
-      ...[
-        ...this.arch.nodes,
-        ...this.arch.groups,
-      ].map((e) => e.alias ?? e.name),
-      ...this.db.notes.map((note) => note.name),
+    const elements = new Set([
+      ...this.arch.nodes.map((node) => keyOf(node.alias ?? node.name, node.role)),
+      ...this.arch.groups.map((group) => keyOf(group.alias ?? group.name, 'Group')),
+      ...this.db.notes.map((note) => keyOf(note.name, 'Note')),
     ]);
     const parent = new Map<string, string>();
     for (const group of this.arch.groups) {
-      const handle = group.alias ?? group.name;
+      const key = keyOf(group.alias ?? group.name, 'Group');
       for (const child of group.children) {
-        if (handles.has(child) && !parent.has(child)) parent.set(child, handle);
+        const childKey = keyOf(child.handle, child.role);
+        if (elements.has(childKey) && !parent.has(childKey)) parent.set(childKey, key);
       }
     }
     for (const group of this.arch.groups) {
-      const handle = group.alias ?? group.name;
-      group.children = group.children.filter((child) => parent.get(child) === handle);
+      const key = keyOf(group.alias ?? group.name, 'Group');
+      group.children = group.children.filter((child) => parent.get(keyOf(child.handle, child.role)) === key);
     }
 
     // A repeated link, or a link into its own container, still draws, with a warning
     const seen = new Set<string>();
     for (const { link, declaration } of this.arch.links) {
+      const from = keyOf(link.from, link.fromRole);
+      const to = keyOf(link.to, link.toRole);
       const key = [
-        link.from,
-        link.to,
-      ].sort().join('\u0000');
+        from,
+        to,
+      ].sort().join('\u0001');
       if (seen.has(key)) {
         this.warnings.push(new CompileWarning(CompileErrorCode.DUPLICATE_LINK, `${link.from} and ${link.to} are already connected`, declaration));
       }
       seen.add(key);
-      if (parent.get(link.from) === link.to || parent.get(link.to) === link.from) {
+      if (parent.get(from) === to || parent.get(to) === from) {
         this.warnings.push(new CompileWarning(CompileErrorCode.NESTED_ENDPOINTS, `${link.from} is already inside ${link.to}`, declaration));
       }
     }
@@ -205,7 +208,7 @@ export default class ProgramInterpreter {
       this.warnings.push(...result.getWarnings());
       this.infos.push(...result.getInfos());
       const value = result.getValue();
-      if (value) this.pushElement(use, value);
+      if (value) this.pushElement(use, importedUnder(value, use));
     }
 
     const sourceName = original instanceof TableSymbol
@@ -576,4 +579,11 @@ function projectRowsOf (program: ProgramNode): Record<string, string> {
     }
   }
   return out;
+}
+
+// `use { Server api as api2 }`: in this file the element is `api2`, and it still shows the name its own file gave it
+function importedUnder (value: SchemaElement | SchemaElement[], use: UseSymbol): SchemaElement | SchemaElement[] {
+  if (!use.isKind(SymbolKind.Element) || Array.isArray(value) || use.name === undefined) return value;
+  const element = value as Node | Group;
+  return (element.alias ?? element.name) === use.name ? value : { ...element, alias: use.name };
 }

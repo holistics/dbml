@@ -76,7 +76,7 @@ describe('[example] inline links', () => {
   test('renaming an element without an alias renames it inside inline links', () => {
     const compiler = compilerFor({ '/main.dbml': `${ARCH}Server api [link: > db]\nDatabase db` });
     expect(compiler.renameElement(MAIN, 'db', 'main_db').get(MAIN.absolute))
-      .toBe(`${ARCH}Server api [link: > main_db]\nDatabase main_db`);
+      .toBe(`${ARCH}Server api [link: > Database main_db]\nDatabase main_db`);
   });
 
   test('a color on an inline link moves it out to a Link that can carry it, as an inline ref does', () => {
@@ -84,9 +84,9 @@ describe('[example] inline links', () => {
       .updateElementSetting(MAIN, { kind: 'Link', from: 'api', to: 'db' } as never, 'color', value);
 
     expect(color('Server api [link: > db]\nDatabase db', '#ff0000'))
-      .toBe(`${ARCH}Server api\nDatabase db\n\nLink: api > db [color: #ff0000]\n`);
+      .toBe(`${ARCH}Server api\nDatabase db\n\nLink: Server api > Database db [color: #ff0000]\n`);
     expect(color('Server api [color: #00ff00, link: > db]\nDatabase db', '#ff0000'))
-      .toBe(`${ARCH}Server api [color: #00ff00]\nDatabase db\n\nLink: api > db [color: #ff0000]\n`);
+      .toBe(`${ARCH}Server api [color: #00ff00]\nDatabase db\n\nLink: Server api > Database db [color: #ff0000]\n`);
     expect(color('Server api [link: > db]\nDatabase db', null)).toBe(`${ARCH}Server api [link: > db]\nDatabase db`);
   });
 });

@@ -170,6 +170,8 @@ export enum CompileErrorCode {
   BAD_IMAGE,
   DUPLICATE_LINK,
   NESTED_ENDPOINTS,
+  BAD_MEMBER,
+  AMBIGUOUS_NAME,
 }
 
 export interface RelatedLocation {

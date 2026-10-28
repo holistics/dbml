@@ -44,6 +44,21 @@ Server "DBDocs API Servers" as dbdocs_api
 The name is what the canvas shows. The handle is what links, groups and metadata use. With no
 `as`, the name is the handle.
 
+With `as`, the name is only a label: nothing refers to it, so it can change without touching any
+reference, and two boxes may show the same label. Without `as`, the name is the handle, and renaming
+it on the canvas updates every link, group and metadata in the file that names it.
+
+A quoted name with no `as` is written in double quotes wherever it is referred to:
+
+```text
+Server "API 1"
+Link: b > "API 1"
+```
+
+Elements of different roles may share a handle: `Server api`, `Group api` and `Note api` can live in
+one diagram. Two elements of the same role may not, imports included. An alias is unique among every
+handle, whatever its role.
+
 Properties go in a body, one per line:
 
 ```text
@@ -95,7 +110,7 @@ Database orders_db {
 
 ## Built-in Roles
 
-31 roles ship with the language, and they are the only roles. A diagram maps one to one to
+32 roles ship with the language, and they are the only roles. A diagram maps one to one to
 infrastructure code, so there are no custom roles. A word that is not a role is an error that
 names the nearest roles.
 
@@ -103,10 +118,25 @@ names the nearest roles.
 |---|---|
 | compute | `Server` `Function` `Container` `Service` `Registry` |
 | data | `Database` `Cache` `Queue` `Topic` `Storage` `Bucket` `Warehouse` `Search` |
-| network | `LoadBalancer` `Proxy` `VPN` `Gateway` `Firewall` `Router` `Secret` |
+| network | `LoadBalancer` `Proxy` `VPN` `Gateway` `Firewall` `Router` `Secret` `DNS` |
 | edge | `CDN` `Internet` |
 | people | `Client` `Browser` `Mobile` `Team` |
 | operations | `Monitoring` `Logging` `Alerting` `Scheduler` `Pipeline` |
+
+**Role precedence.** A reference may name the role before the handle, `Server api`, to say which
+element it means. Without a role, a handle that more than one element has means the first of them in
+this order, and the editor warns: the roles in the table above, then `Group`, then `Note`.
+
+```text
+Server Function Container Service Registry
+Database Cache Queue Topic Storage Bucket Warehouse Search
+LoadBalancer Proxy VPN Gateway Firewall Router Secret DNS
+CDN Internet
+Client Browser Mobile Team
+Monitoring Logging Alerting Scheduler Pipeline
+Group
+Note
+```
 
 ## Group Definition
 
@@ -115,6 +145,17 @@ separated by spaces.
 
 ```text
 Group "dbdiagram API servers" as dbdiagram_api { api1 api2 }
+```
+
+Members on the line of `{` are handles only. A member on a line of its own is one member: a handle,
+or a role and a handle when the handle alone would mean another element.
+
+```text
+Group backend {
+  Server api
+  Group api
+  sessions
+}
 ```
 
 A group may list another group, so nesting needs no new syntax:
@@ -136,12 +177,28 @@ Group "Private network" as private_net {
 
 A link is a line between two handles. Four operators:
 
+The arrow shows who opens the connection. Data may travel both ways over it; say where it goes in a
+setting when it matters.
+
 | Operator | Meaning |
 |---|---|
-| `>` | one way, left to right |
-| `<` | one way, right to left |
-| `<>` | both ways |
-| `-` | no direction |
+| `>` | the left side opens the connection, the right side answers |
+| `<` | the right side opens the connection |
+| `<>` | each side opens its own connections to the other |
+| `-` | not stated |
+
+```text
+Link: api > db                                   // the API reads from and writes to the database
+Link: standby > primary [proto: replication]     // the standby connects to the primary and pulls its changes
+Link: browser > ws [proto: WebSocket]            // the browser opens it; messages go both ways over it
+Link: billing <> orders                          // Orders calls Billing to charge; Billing calls Orders back with a webhook
+```
+
+Either end may name its role, when the handle alone would mean another element:
+
+```text
+Link: client > Group api
+```
 
 ```text
 Link: internet > cloudflare
@@ -152,17 +209,21 @@ Link: api - sessions
 `proto` and `host` describe the conversation, so they live on the line rather than inside a box:
 the same server answers on more than one of them.
 
-A link may end on a group. The API talks to the replica set, not to whichever member happens to
-be primary today:
+A link may end on a group. It goes to the group as a whole and implies no links to its members:
+which members it reaches depends on what the group is. Draw the member links when they matter.
 
 ```text
-Link: dbdiagram_api > mongo_rs
+Group "Mongo replica set" as mongo_rs { mongo1 mongo2 mongo3 }
+Link: dbdiagram_api > mongo_rs     // the API talks to the replica set, not to whichever member is primary today
+
+Group "Private network" as private_net { api mongo_rs redis }
+Link: internet > private_net       // traffic enters the network; it says nothing about which hosts it reaches
 ```
 
 **Inline links.** A link can also be written on the element it leaves, with `link` or `ref`:
 
 ```text
-Server api [link: > db, link: < queue, ref: <> cache]
+Server api [link: > db, link: < queue, ref: <> cache, link: > Group backend]
 ```
 
 ## Note Definition
@@ -195,6 +256,10 @@ Metadata api1 {
   runbook: 'wiki/dbdiagram-api'
 }
 ```
+
+The role may be written before the target, `Metadata Server api1 { ... }`, to say which element it
+means. Without one, it follows the role precedence and the editor warns when the handle is shared. A
+quoted name is written in double quotes: `Metadata "API 1" { ... }`.
 
 Fields must be written as `key: value`. They are not drawn; they show in the inspector and
 travel with the model.
@@ -245,6 +310,15 @@ To import only some of them, name each one with its role:
 use {
   Monitoring grafana
 } from './monitoring.arch'
+```
+
+`as` imports an element under another handle. In this file only that handle refers to it, and the
+box keeps the name its own file gave it, so a local element may keep the original handle:
+
+```text
+use { Monitoring grafana as grafana_shared } from './monitoring.arch'
+Monitoring grafana
+Link: grafana > grafana_shared
 ```
 
 ## Syntax Consistency

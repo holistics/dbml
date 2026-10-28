@@ -29,8 +29,8 @@ import {
   destructureCallExpression,
 } from '@/core/utils/expression';
 import { getProgramSymbol } from '@/core/global_modules/utils';
-import { lookupVisible } from '@/core/global_modules/arch/utils';
-import { endpointNode, inlineLinkOf, linkPartsOf } from '@/core/arch/read';
+import { resolveName } from '@/core/global_modules/arch/utils';
+import { type Ref, inlineLinkOf, linkPartsOf } from '@/core/arch/read';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { getRightmostVariable } from '@/core/utils/validate';
 
@@ -634,14 +634,13 @@ export class LinkMetadata extends NodeMetadata {
   op (): string | undefined {
     return this.declaration instanceof AttributeNode
       ? inlineLinkOf(this.declaration)?.op
-      : linkPartsOf(this.declaration)?.infix.op;
+      : linkPartsOf(this.declaration)?.op;
   }
 
   endpoints (compiler: Compiler): [NodeSymbol | undefined, NodeSymbol | undefined] {
-    const resolve = (side: SyntaxNode) => {
-      const node = endpointNode(side);
-      return isExpressionAVariableNode(node) ? compiler.nodeReferee(node).getFiltered(UNHANDLED)?.originalSymbol : undefined;
-    };
+    const resolve = (ref: Ref | undefined) => (ref && isExpressionAVariableNode(ref.node)
+      ? compiler.nodeReferee(ref.node).getFiltered(UNHANDLED)?.originalSymbol
+      : undefined);
 
     if (this.declaration instanceof AttributeNode) {
       const inline = inlineLinkOf(this.declaration);
@@ -652,7 +651,7 @@ export class LinkMetadata extends NodeMetadata {
       ];
       return [
         compiler.nodeSymbol(element).getFiltered(UNHANDLED)?.originalSymbol,
-        resolve(inline.target),
+        resolve(inline),
       ];
     }
 
@@ -662,8 +661,8 @@ export class LinkMetadata extends NodeMetadata {
       undefined,
     ];
     return [
-      resolve(parts.infix.left),
-      resolve(parts.infix.right),
+      resolve(parts.from),
+      resolve(parts.to),
     ];
   }
 
@@ -683,7 +682,7 @@ export class ArchMetadataElementMetadata extends MetadataElementMetadata {
     if (this.declaration.name) return super.target(compiler);
     const name = this.declaration.targetKind?.value;
     if (!name) return undefined;
-    return lookupVisible(compiler, this.declaration.filepath, SymbolKind.Element, name)?.originalSymbol;
+    return resolveName(compiler, this.declaration.filepath, name, undefined, [SymbolKind.Element])?.originalSymbol;
   }
 }
 

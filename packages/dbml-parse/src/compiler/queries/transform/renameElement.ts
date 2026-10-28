@@ -1,33 +1,38 @@
 import { isValidIdentifier } from '@/compiler/queries/utils';
 import {
-  archSort, bodyOf, declarationWord, endpointNode, inlineLinkOf, inlineLinksOf, linkPartsOf, nameOf,
+  type Ref, archSort, refsOf, roleOf,
 } from '@/core/arch/read';
-import { lookupVisible } from '@/core/global_modules/arch/utils';
+import {
+  candidatesOf, isAliasSymbol, resolveName, roleOfSymbol,
+} from '@/core/global_modules/arch/utils';
 import { Filepath } from '@/core/types/filepath';
-import { ElementDeclarationNode, FunctionApplicationNode, type SyntaxNode } from '@/core/types/nodes';
+import { BlockExpressionNode, ElementDeclarationNode, type SyntaxNode } from '@/core/types/nodes';
 import { SymbolKind } from '@/core/types/symbol';
-import { SyntaxToken } from '@/core/types/tokens';
-import { isExpressionAVariableNode } from '@/core/utils/validate';
+import type { SyntaxToken } from '@/core/types/tokens';
 import type Compiler from '../../index';
 import { TextEdit, applyTextEdits } from './applyTextEdits';
-import { archDeclarations, findArchElement } from './utils/arch';
+import { memberEdit } from './removeElement';
+import { archDeclarations, findArchElement, refersTo } from './utils/arch';
 
 /**
  * With an `as` alias only the name changes. Without one, every link endpoint, group member and
- * metadata target in the same file that names it is renamed too.
- * An empty map means no change (lookup miss or name collision).
+ * metadata target in the same file that means it is renamed too, written by full name (`Server web`).
+ * `role` picks among elements sharing the handle. An empty map means no change (lookup miss or name collision).
  */
 export function renameElement (
   this: Compiler,
   filepath: Filepath,
   oldHandle: string,
   newName: string,
+  role?: string,
 ): Map<string, string> {
-  const declaration = findArchElement(this, filepath, oldHandle);
-  if (!declaration?.name) return new Map();
+  const declaration = findArchElement(this, filepath, oldHandle, role);
+  const targetRole = declaration && roleOf(declaration);
+  if (!declaration?.name || !targetRole) return new Map();
 
   const renamesHandle = !declaration.alias;
-  const taken = lookupVisible(this, filepath, SymbolKind.Element, newName) ?? lookupVisible(this, filepath, SymbolKind.StickyNote, newName);
+  const others = candidatesOf(this, filepath, newName).filter((symbol) => symbol.originalSymbol.declaration !== declaration);
+  const taken = others.some((symbol) => roleOfSymbol(symbol) === targetRole || isAliasSymbol(symbol));
   if (renamesHandle && newName !== oldHandle && taken) {
     return new Map();
   }
@@ -44,14 +49,19 @@ export function renameElement (
     },
   ];
   if (renamesHandle) {
-    // The kind position of `Metadata api { }` takes only a bare word, so a quoted name moves to the name position
-    const kindPositionText = isValidIdentifier(newName) ? newName : `${declarationWord(declaration)} ${newText}`;
-    for (const ref of handleReferences(archDeclarations(this, filepath), oldHandle)) {
-      edits.push({
-        start: ref.start,
-        end: ref.end,
-        newText: ref instanceof SyntaxToken ? kindPositionText : newText,
-      });
+    // The app writes every reference it touches by full name, keeping the declaration's quoting
+    const declarations = archDeclarations(this, filepath);
+    for (const ref of references(this, declarations, declaration)) {
+      edits.push(...writeRef(source, ref, targetRole, newText));
+    }
+    // Once the new name is shared, a bare reference to another element with that name gets its full name too
+    for (const other of others) {
+      const otherRole = roleOfSymbol(other);
+      const target = other.originalSymbol.declaration;
+      if (!otherRole || !(target instanceof ElementDeclarationNode)) continue;
+      for (const ref of references(this, declarations, target)) {
+        if ('token' in ref || !ref.role) edits.push(...writeRef(source, ref, otherRole, quotedHandle(source, target)));
+      }
     }
   }
 
@@ -63,48 +73,58 @@ export function renameElement (
   ]);
 }
 
-function handleReferences (declarations: ElementDeclarationNode[], handle: string): (SyntaxNode | SyntaxToken)[] {
-  const names = (node: SyntaxNode | undefined): node is SyntaxNode => isExpressionAVariableNode(node) && nameOf(node) === handle;
-  const refs: (SyntaxNode | SyntaxToken)[] = [];
+// A reference as rename sees it: a name in a link, an inline link or a group, or a Metadata target
+type Written = (Ref & { group?: ElementDeclarationNode }) | { token: SyntaxToken };
 
+function references (compiler: Compiler, declarations: ElementDeclarationNode[], target: ElementDeclarationNode): Written[] {
+  const out: Written[] = [];
   for (const declaration of declarations) {
-    // `[link: > api]` on any element names `api` too
-    refs.push(...inlineLinksOf(declaration).map((attribute) => inlineLinkOf(attribute)?.target).filter(names));
-
-    switch (archSort(declaration)) {
-      case 'link': {
-        const parts = linkPartsOf(declaration);
-        if (!parts) break;
-        refs.push(...[
-          endpointNode(parts.infix.left),
-          endpointNode(parts.infix.right),
-        ].filter(names));
-        break;
-      }
-
-      case 'group':
-        for (const row of bodyOf(declaration)) {
-          if (!(row instanceof FunctionApplicationNode)) continue;
-          refs.push(...[
-            row.callee,
-            ...row.args,
-          ].filter(names));
-        }
-        break;
-
-      // `Metadata Server api { }` names its target in the name position, `Metadata api { }` in the kind position
-      case 'metadata':
-        if (declaration.name) {
-          if (names(declaration.name)) refs.push(declaration.name);
-        } else if (declaration.targetKind?.value === handle) {
-          refs.push(declaration.targetKind);
-        }
-        break;
-
-      default:
-        break;
+    for (const ref of refsOf(declaration)) {
+      if (refersTo(compiler, ref.node, target)) out.push(archSort(declaration) === 'group' ? { ...ref, group: declaration } : ref);
     }
+    if (archSort(declaration) !== 'metadata') continue;
+    // `Metadata Server api { }` names its target in the name position, `Metadata api { }` in the kind position
+    if (declaration.name) {
+      if (refersTo(compiler, declaration.name, target)) out.push({ node: declaration.name, role: declaration.targetKind?.value });
+      continue;
+    }
+    const value = declaration.targetKind?.value;
+    const found = value === undefined ? undefined : resolveName(compiler, declaration.filepath, value, undefined, [SymbolKind.Element]);
+    if (declaration.targetKind && found?.originalSymbol.declaration === target) out.push({ token: declaration.targetKind });
   }
+  return out;
+}
 
-  return refs;
+// The text that names the element: its role, then its name
+function writeRef (source: string, ref: Written, role: string, quoted: string): TextEdit[] {
+  const text = `${role} ${quoted}`;
+  if ('token' in ref) return [{ start: ref.token.start, end: ref.token.end, newText: text }];
+  if (ref.roleNode) return [{ start: ref.roleNode.start, end: ref.node.end, newText: text }];
+  // `Metadata Server api { }` already writes the role, before the name
+  if (ref.role) return [{ start: ref.node.start, end: ref.node.end, newText: quoted }];
+  // On the line of `{` a group lists names only, so the member moves to a line of its own
+  if (ref.braceLine && ref.group?.body instanceof BlockExpressionNode && ref.group.body.blockCloseBrace) {
+    const close = ref.group.body.blockCloseBrace;
+    const lineStart = source.lastIndexOf('\n', close.start - 1) + 1;
+    const closeOnOwnLine = !source.slice(lineStart, close.start).trim();
+    return [
+      memberEdit(source, ref.node),
+      closeOnOwnLine
+        ? { start: lineStart, end: lineStart, newText: `  ${text}\n` }
+        : { start: spaceBefore(source, close.start), end: close.start, newText: `\n  ${text}\n` },
+    ];
+  }
+  return [{ start: ref.node.start, end: ref.node.end, newText: text }];
+}
+
+function spaceBefore (source: string, at: number): number {
+  let start = at;
+  while (start > 0 && (source[start - 1] === ' ' || source[start - 1] === '\t')) start -= 1;
+  return start;
+}
+
+// An element's handle as its declaration writes it, quoted or not
+function quotedHandle (source: string, declaration: ElementDeclarationNode): string {
+  const node = declaration.alias ?? declaration.name!;
+  return source.substring(node.start, node.end);
 }

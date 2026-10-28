@@ -1,6 +1,6 @@
 import type Compiler from '@/compiler';
 import {
-  archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, isTopLevelNote, linkPartsOf, nameOf,
+  archSort, bodyOf, declarationWord, handleOf, inlineLinkOf, inlineLinksOf, isTopLevel, isTopLevelNote, linkPartsOf, membersOf, nameOf,
   propertyOf, readBody, rowOf, settingsOf,
 } from '@/core/arch/read';
 import { NO_CUSTOM_ROLE_MESSAGE } from '@/core/arch/vocabulary';
@@ -19,7 +19,7 @@ function inlineLinkErrors (declaration: ElementDeclarationNode): CompileError[] 
       errors.push(new CompileError(CompileErrorCode.EMPTY_LINK, 'An inline link needs an endpoint:  [link: > b]', attribute));
       continue;
     }
-    if (!nameOf(inlineLinkOf(attribute)?.target)) {
+    if (!nameOf(inlineLinkOf(attribute)?.node)) {
       errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'An inline link reads  [link: > b],  [link: < b],  [link: <> b]  or  [link: - b]', attribute));
     }
   }
@@ -40,6 +40,11 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
         break;
       }
       errors.push(...inlineLinkErrors(declaration));
+      if (sort === 'group') {
+        for (const row of membersOf(declaration).bad) {
+          errors.push(new CompileError(CompileErrorCode.BAD_MEMBER, 'A member line holds one member: a name, or a role and a name (Server api)', row));
+        }
+      }
       for (const problem of readBody(declaration, settingsOf(declaration.attributeList), sort === 'node').problems) {
         errors.push(new CompileError(
           problem.code === 'bad' ? CompileErrorCode.BAD_PROPERTY : CompileErrorCode.DUPLICATE_PROPERTY,
@@ -61,7 +66,7 @@ function validate (declaration: ElementDeclarationNode): Report<void> {
         break;
       }
       const parts = linkPartsOf(declaration);
-      if (!parts || !nameOf(endpointNode(parts.infix.left)) || !nameOf(endpointNode(parts.infix.right))) {
+      if (!parts || !nameOf(parts.from?.node) || !nameOf(parts.to?.node)) {
         errors.push(new CompileError(CompileErrorCode.BAD_LINK, 'A Link reads  a > b,  a < b,  a <> b  or  a - b', declaration));
       }
       break;

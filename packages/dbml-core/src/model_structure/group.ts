@@ -4,15 +4,15 @@ import type { NormalizedModel } from '../../types/model_structure/database';
 import type DatabaseType from '../../types/model_structure/database';
 import type DbStateType from '../../types/model_structure/dbState';
 import type { ArchElementType } from '../../types/model_structure/link';
-import type { ArchSettings, Group as RawGroup } from '@dbml/parse';
+import type { ArchRef, ArchSettings, Group as RawGroup } from '@dbml/parse';
 
 // Members are resolved once every element exists (`Database.processArch`).
 class Group extends Element {
   declare id: number;
   name: string;
   alias: string | null;
-  // Handles as written; `childIds` and `childTypes` hold the elements they name, in the same order
-  children: string[];
+  // Handles and roles as written; `childIds` and `childTypes` hold the elements they name, in the same order
+  children: ArchRef[];
   childIds: number[];
   childTypes: ArchElementType[];
   settings: ArchSettings;

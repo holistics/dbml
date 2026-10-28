@@ -14,6 +14,7 @@ import {
   VariableNode,
 } from '@/core/types/nodes';
 import { SyntaxTokenKind } from '@/core/types/tokens';
+import { roleName } from '@/core/arch/vocabulary';
 import type { ArchSettingValue, ArchSettings } from '@/core/types/schemaJson';
 
 // What a top-level declaration in an architecture file is, from its first word
@@ -68,6 +69,40 @@ export function nameOf (node?: SyntaxNode): string | undefined {
 
 // The name links, groups and metadata use: the `as` word, or the name when there is none
 export const handleOf = (node: ElementDeclarationNode): string | undefined => nameOf(node.alias) ?? nameOf(node.name);
+
+// The role a reference may name: a built-in role, `Group` or `Note`, in its declared spelling
+export function roleWord (text: string | undefined): string | undefined {
+  if (text === undefined) return undefined;
+  const lower = text.toLowerCase();
+  if (lower === 'group') return 'Group';
+  if (lower === 'note') return 'Note';
+  return roleName(text);
+}
+
+// The role an element is declared with: `Server api` is a Server, a group a Group, a sticky note a Note
+export function roleOf (node: ElementDeclarationNode): string | undefined {
+  if (isTopLevelNote(node)) return 'Note';
+  if (archSort(node) === 'group') return 'Group';
+  const word = declarationWord(node);
+  return word === undefined ? undefined : roleName(word) ?? word;
+}
+
+// A name in a link, an inline link or a group, with the role written before it if any:  api,  Server api
+export interface Ref {
+  node: SyntaxNode;
+  role?: string;
+  roleNode?: SyntaxNode;
+  // a group member on the line of `{`, where a role cannot be written
+  braceLine?: boolean;
+}
+
+// One word is a name; two are a role and a name. undefined when the first of two is not a role, or for more words.
+export function refOf (words: SyntaxNode[]): Ref | undefined {
+  if (words.length === 1) return { node: endpointNode(words[0]) };
+  if (words.length !== 2) return undefined;
+  const role = roleWord(nameOf(words[0]));
+  return role ? { node: endpointNode(words[1]), role, roleNode: words[0] } : undefined;
+}
 
 // A quoted value stays a string; only a bare number is a number
 export function numberOf (node?: SyntaxNode): number | null {
@@ -173,19 +208,29 @@ export const LINK_OPS = new Set([
 
 export interface LinkParts {
   row: Row | undefined;
-  infix: Infix;
+  op: string;
+  // undefined when that side is not a name or a role and a name
+  from: Ref | undefined;
+  to: Ref | undefined;
 }
 
-// `Link: a > b [settings]`, or undefined when the body is not one of the four operators
+const isLinkInfix = (node: SyntaxNode | undefined): boolean => !!node && LINK_OPS.has(infixOf(node)?.op ?? '');
+
+// `Link: a > b [settings]`, `Link: client > Server api`: the row's words split at the one operator.
+// `client > Server api` parses as `client > Server` applied to `api`, so the words are put back in order first.
 export function linkPartsOf (declaration: ElementDeclarationNode): LinkParts | undefined {
   const [statement] = bodyOf(declaration);
   if (!statement) return undefined;
   const row = rowOf(statement);
-  const infix = infixOf(row?.callee ?? statement);
-  if (!infix || !LINK_OPS.has(infix.op)) return undefined;
+  const words = row ? [row.callee, ...row.args].filter((word): word is SyntaxNode => !!word) : [statement];
+  const at = words.findIndex(isLinkInfix);
+  if (at < 0 || words.slice(at + 1).some(isLinkInfix)) return undefined;
+  const infix = infixOf(words[at])!;
   return {
     row,
-    infix,
+    op: infix.op,
+    from: refOf([...words.slice(0, at), infix.left]),
+    to: refOf([infix.right, ...words.slice(at + 1)]),
   };
 }
 
@@ -198,21 +243,66 @@ export function inlineLinksOf (declaration: ElementDeclarationNode): AttributeNo
     .filter((attribute): attribute is AttributeNode => attribute instanceof AttributeNode && isInlineLink(attribute));
 }
 
-export interface InlineLink {
+export interface InlineLink extends Ref {
   op: string;
-  target: SyntaxNode;
 }
 
-// undefined when the value is not one of the four operators followed by a name
+// undefined when the value is not one of the four operators followed by a name, or a role and a name
 export function inlineLinkOf (attribute: AttributeNode): InlineLink | undefined {
   const { value } = attribute;
-  if (!(value instanceof PrefixExpressionNode) || !value.expression) return undefined;
-  const op = value.op?.value;
+  const applied = value instanceof FunctionApplicationNode ? value : undefined;
+  const prefix = applied ? applied.callee : value;
+  if (!(prefix instanceof PrefixExpressionNode) || !prefix.expression) return undefined;
+  const op = prefix.op?.value;
   if (!op || !LINK_OPS.has(op)) return undefined;
-  return {
-    op,
-    target: endpointNode(value.expression),
-  };
+  const ref = refOf([prefix.expression, ...(applied?.args ?? [])]);
+  return ref && { op, ...ref };
+}
+
+// The members a group lists. Words on the line of `{` are names only; on a line of its own a member is a name, or a role and a name.
+export interface Members {
+  refs: Ref[];
+  // own-line rows that are neither
+  bad: SyntaxNode[];
+}
+
+export function membersOf (group: ElementDeclarationNode): Members {
+  const out: Members = { refs: [], bad: [] };
+  const brace = group.body instanceof BlockExpressionNode ? group.body.blockOpenBrace : undefined;
+  for (const row of bodyOf(group)) {
+    if (row instanceof ElementDeclarationNode) continue;
+    const parsed = rowOf(row);
+    const words = parsed ? [parsed.callee, ...parsed.args].filter((word): word is SyntaxNode => !!word) : [row];
+    if (!brace || row.startPos.line === brace.startPos.line) {
+      out.refs.push(...words.map((word) => ({ node: word, braceLine: true })));
+      continue;
+    }
+    const ref = refOf(words);
+    if (ref) out.refs.push(ref);
+    else out.bad.push(row);
+  }
+  return out;
+}
+
+// The names a declaration refers to: its inline links, a group's members, a link's two ends
+export function refsOf (declaration: ElementDeclarationNode): Ref[] {
+  const refs: Ref[] = inlineLinksOf(declaration)
+    .map(inlineLinkOf)
+    .filter((link): link is InlineLink => !!link);
+  switch (archSort(declaration)) {
+    case 'group':
+      refs.push(...membersOf(declaration).refs);
+      break;
+    case 'link': {
+      const parts = linkPartsOf(declaration);
+      if (parts?.from) refs.push(parts.from);
+      if (parts?.to) refs.push(parts.to);
+      break;
+    }
+    default:
+      break;
+  }
+  return refs;
 }
 
 // `owner: 'scott'` on a line of its own is a nested declaration whose type is the key

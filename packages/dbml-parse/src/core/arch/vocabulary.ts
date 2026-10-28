@@ -29,6 +29,7 @@ export const BUILTIN_ROLES: Record<string, RoleSpec> = {
   Firewall: { icon: 'firewall', category: 'net' },
   Router: { icon: 'router', category: 'net' },
   Secret: { icon: 'key', category: 'net' },
+  DNS: { icon: 'dns', category: 'net' },
   CDN: { icon: 'globe', category: 'edge' },
   Internet: { icon: 'cloud', category: 'edge' },
   Client: { icon: 'person', category: 'people' },
@@ -46,6 +47,9 @@ const ROLE_BY_LOWER = new Map(Object.keys(BUILTIN_ROLES).map((name) => [name.toL
 
 // The role's declared spelling, whatever case was typed
 export const roleName = (typed: string): string | undefined => ROLE_BY_LOWER.get(typed.toLowerCase());
+
+// Which element a name without a role means when several share it: the first here wins
+export const NAME_PRECEDENCE: readonly string[] = [...Object.keys(BUILTIN_ROLES), 'Group', 'Note'];
 
 export const NO_CUSTOM_ROLE_MESSAGE = 'Custom roles are not supported. Use a built-in role; `type` sets the mark (a mark name or an image URL) and `color` the colour.';
 

@@ -507,7 +507,8 @@ export class AttributeNode extends SyntaxNode {
 
   colon?: SyntaxToken;
 
-  value?: NormalExpressionNode | IdentifierStreamNode;
+  // A FunctionApplicationNode only in an architecture file's role reference:  [link: > Server api]
+  value?: NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode;
 
   constructor (
     {
@@ -517,7 +518,7 @@ export class AttributeNode extends SyntaxNode {
     }: {
       name?: IdentifierStreamNode | PrimaryExpressionNode;
       colon?: SyntaxToken;
-      value?: NormalExpressionNode | IdentifierStreamNode;
+      value?: NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode;
     },
     id: SyntaxNodeId,
     filepath: Filepath,

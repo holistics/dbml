@@ -1,30 +1,52 @@
 import type Compiler from '@/compiler';
 import { isIconName, resolveIcon } from '@/core/arch/icons';
 import {
-  IMAGE_REFUSED, IMAGE_URL, archSort, bodyOf, declarationWord, linkPartsOf, nameOf, noteDeclarationOf,
+  IMAGE_REFUSED, IMAGE_URL, type Ref, archSort, bodyOf, declarationWord, inlineLinkOf, linkPartsOf, membersOf, nameOf, noteDeclarationOf,
   noteTextOf, propertyOf, readBody, settingsOf,
 } from '@/core/arch/read';
 import { roleName, suggestIcon } from '@/core/arch/vocabulary';
 import { CompileErrorCode, CompileWarning } from '@/core/types/errors';
 import type { Filepath } from '@/core/types/filepath';
 import { UNHANDLED } from '@/core/types/module';
-import { ElementDeclarationNode, FunctionApplicationNode } from '@/core/types/nodes';
+import { AttributeNode, ElementDeclarationNode } from '@/core/types/nodes';
 import Report from '@/core/types/report';
 import type {
-  ArchSettings, Group, Link, LinkOp, Node,
+  ArchRef, ArchSettings, Group, Link, LinkOp, Node,
 } from '@/core/types/schemaJson';
-import type { ElementSymbol } from '@/core/types/symbol';
+import { type ElementSymbol, type NodeSymbol, SymbolKind } from '@/core/types/symbol';
 import { ArchMetadataElementMetadata, type LinkMetadata } from '@/core/types/symbol/metadata';
 import { getTokenPosition } from '@/core/utils/interpret';
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import { metadataFilePrecedence } from '../metadata/utils';
 import { getProgramSymbol } from '../utils';
-import { originalHandle } from './utils';
+import { candidatesOf, localHandle, roleOfSymbol } from './utils';
 
 // Warnings are raised here because DBML's validator and binder pass on errors only
 
+// A name with no role that more than one element answers to: NAME_PRECEDENCE picks one, and the author is told which
+function ambiguity (compiler: Compiler, name: string | undefined, at: Ref['node'], kinds?: SymbolKind[]): CompileWarning[] {
+  if (name === undefined) return [];
+  const meant = candidatesOf(compiler, at.filepath, name, kinds).map((symbol) => `${roleOfSymbol(symbol)} ${name}`);
+  if (meant.length < 2) return [];
+  const [used, ...others] = meant;
+  const listed = `${meant.slice(0, -1).join(', ')} and ${meant[meant.length - 1]}`;
+  const rest = others.length === 1 ? `${others[0]} for the other` : `${others.slice(0, -1).join(', ')} or ${others[others.length - 1]} for the others`;
+  return [
+    new CompileWarning(CompileErrorCode.AMBIGUOUS_NAME, `${name} matches ${listed}; ${used} is used. Write ${rest}.`, at),
+  ];
+}
+
+const refAmbiguity = (compiler: Compiler, ref: Ref | undefined): CompileWarning[] => (ref && !ref.role ? ambiguity(compiler, nameOf(ref.node), ref.node) : []);
+
+// How the model names what a link or a group points at
+function archRef (compiler: Compiler, symbol: NodeSymbol | undefined, filepath: Filepath): ArchRef | undefined {
+  const handle = symbol && localHandle(compiler, symbol, filepath);
+  const role = symbol && roleOfSymbol(symbol);
+  return handle === undefined || role === undefined ? undefined : { handle, role };
+}
+
 // `Metadata` blocks outrank the element's own settings: imported files first, later imports over earlier, this file last
-function applyMetadata (compiler: Compiler, symbol: ElementSymbol, filepath: Filepath, settings: ArchSettings, role?: string): CompileWarning[] {
+function applyMetadata (compiler: Compiler, symbol: ElementSymbol, filepath: Filepath, settings: ArchSettings): CompileWarning[] {
   const warnings: CompileWarning[] = [];
   const program = getProgramSymbol(compiler, filepath);
   if (!program) return warnings;
@@ -38,15 +60,8 @@ function applyMetadata (compiler: Compiler, symbol: ElementSymbol, filepath: Fil
     });
   for (const block of blocks) {
     Object.assign(settings, interpretArchMetadata(block).getValue());
-    // `Metadata Database api` where `api` is a Server still applies, with a warning
-    const stated = block.declaration.name ? block.declaration.targetKind?.value : undefined;
-    if (role && stated && role.toLowerCase() !== stated.toLowerCase()) {
-      warnings.push(new CompileWarning(
-        CompileErrorCode.METADATA_ROLE_MISMATCH,
-        `${nameOf(block.declaration.name)} is a ${role}, not a ${stated}`,
-        block.declaration,
-      ));
-    }
+    // `Metadata api { }` names no role, so the name may match more than one element
+    if (!block.declaration.name) warnings.push(...ambiguity(compiler, block.declaration.targetKind?.value, block.declaration, [SymbolKind.Element]));
   }
   return warnings;
 }
@@ -75,20 +90,16 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
   readBody(declaration, settings, sort === 'node');
 
   if (sort === 'group') {
-    const children: string[] = [];
-    for (const row of bodyOf(declaration)) {
-      if (!(row instanceof FunctionApplicationNode)) continue;
-      for (const part of [
-        row.callee,
-        ...row.args,
-      ]) {
-        if (!isExpressionAVariableNode(part)) continue;
-        const member = compiler.nodeReferee(part).getFiltered(UNHANDLED);
-        const handle = member && originalHandle(compiler, member, filepath);
-        if (handle !== undefined && !children.includes(handle)) children.push(handle);
-      }
+    const children: ArchRef[] = [];
+    const warnings: CompileWarning[] = [];
+    for (const ref of membersOf(declaration).refs) {
+      if (!isExpressionAVariableNode(ref.node)) continue;
+      const child = archRef(compiler, compiler.nodeReferee(ref.node).getFiltered(UNHANDLED), filepath);
+      if (!child) continue;
+      warnings.push(...refAmbiguity(compiler, ref));
+      if (!children.some((other) => other.handle === child.handle && other.role === child.role)) children.push(child);
     }
-    const warnings = applyMetadata(compiler, symbol, filepath, settings);
+    warnings.push(...applyMetadata(compiler, symbol, filepath, settings));
     return new Report({
       name,
       alias,
@@ -104,7 +115,7 @@ export function interpretElement (compiler: Compiler, symbol: ElementSymbol, fil
   const warnings = brandWarnings(settings.type, declaration);
   const word = declarationWord(declaration)!;
   const role = roleName(word) ?? word;
-  warnings.push(...applyMetadata(compiler, symbol, filepath, settings, role));
+  warnings.push(...applyMetadata(compiler, symbol, filepath, settings));
   return new Report({
     name,
     alias,
@@ -149,21 +160,27 @@ function brandWarnings (raw: unknown, declaration: ElementDeclarationNode): Comp
 export function interpretLink (compiler: Compiler, metadata: LinkMetadata, filepath: Filepath): Report<Link | undefined> {
   const { declaration } = metadata;
   const op = metadata.op();
-  const [from, to] = metadata.endpoints(compiler);
-  const fromHandle = from && originalHandle(compiler, from, filepath);
-  const toHandle = to && originalHandle(compiler, to, filepath);
-  if (!op || fromHandle === undefined || toHandle === undefined) return new Report(undefined);
+  const [fromSymbol, toSymbol] = metadata.endpoints(compiler);
+  const from = archRef(compiler, fromSymbol, filepath);
+  const to = archRef(compiler, toSymbol, filepath);
+  if (!op || !from || !to) return new Report(undefined);
   // an inline link has no settings list of its own: the brackets it sits in are the element's
   const settings = declaration instanceof ElementDeclarationNode
     ? settingsOf(linkPartsOf(declaration)?.row?.settings ?? declaration.attributeList)
     : {};
+  const parts = declaration instanceof ElementDeclarationNode ? linkPartsOf(declaration) : undefined;
+  const warnings = declaration instanceof AttributeNode
+    ? refAmbiguity(compiler, inlineLinkOf(declaration))
+    : [...refAmbiguity(compiler, parts?.from), ...refAmbiguity(compiler, parts?.to)];
   return new Report({
-    from: fromHandle,
-    to: toHandle,
+    from: from.handle,
+    fromRole: from.role,
+    to: to.handle,
+    toRole: to.role,
     op: op as LinkOp,
     settings,
     token: getTokenPosition(declaration),
-  });
+  }, [], warnings);
 }
 
 // The `key: 'value'` rows of a `Metadata` block; a bad or repeated row is reported by validation and skipped here

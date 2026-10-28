@@ -1,4 +1,4 @@
-import type { ArchSettings, Group as RawGroup } from '@dbml/parse';
+import type { ArchRef, ArchSettings, Group as RawGroup } from '@dbml/parse';
 import Element, { Token } from './element';
 import Database from './database';
 import DbState from './dbState';
@@ -9,7 +9,7 @@ declare class Group extends Element {
     id: number;
     name: string;
     alias: string | null;
-    children: string[];
+    children: ArchRef[];
     childIds: number[];
     childTypes: ArchElementType[];
     settings: ArchSettings;

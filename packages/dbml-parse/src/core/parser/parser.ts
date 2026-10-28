@@ -72,6 +72,8 @@ class PartialParsingError<T extends SyntaxNode> {
 export interface ParserOptions {
   // Allow an element declaration with no body: `Database mongo1` as a complete statement
   allowBodylessElement?: boolean;
+  // Allow a role before a name in an inline link:  [link: > Server api]
+  allowRoleReference?: boolean;
 }
 
 export default class Parser {
@@ -515,7 +517,9 @@ export default class Parser {
     // A `metadata` block carries a second identifier (the target kind) before the name
     if (isMetadataKeyword(args.type)) {
       try {
-        this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
+        // An architecture file may name a quoted target with no role:  Metadata "API 1" { }
+        if (this.options.allowRoleReference) this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING);
+        else this.consume('Expect a metadata target kind', SyntaxTokenKind.IDENTIFIER);
         args.targetKind = this.previous();
       } catch (e) {
         if (!(e instanceof PartialParsingError)) {
@@ -1479,13 +1483,17 @@ export default class Parser {
     }
   };
 
-  private attributeValue (): NormalExpressionNode | IdentifierStreamNode {
-    let value: NormalExpressionNode | IdentifierStreamNode | undefined;
+  private attributeValue (): NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode {
+    let value: NormalExpressionNode | IdentifierStreamNode | FunctionApplicationNode | undefined;
     try {
       value = this.peek().kind === SyntaxTokenKind.IDENTIFIER
         && this.peek(1).kind === SyntaxTokenKind.IDENTIFIER
         ? this.attributeName()
         : this.normalExpression();
+      // `> Server api` reads as `> Server` applied to `api`, the way a Link row reads
+      if (this.options.allowRoleReference && value instanceof PrefixExpressionNode && this.check(SyntaxTokenKind.IDENTIFIER, SyntaxTokenKind.QUOTED_STRING)) {
+        value = this.nodeFactory.create(FunctionApplicationNode, { callee: value, args: [this.primaryExpression()] });
+      }
     } catch (e) {
       if (!(e instanceof PartialParsingError) || !this.canHandle(e)) {
         throw e;

@@ -1,7 +1,7 @@
 import type Compiler from '@/compiler';
 import {
-  archSort, bodyOf, declarationWord, endpointNode, handleOf, inlineLinkOf, inlineLinksOf, isInlineLink, isTopLevel, isTopLevelNote,
-  linkPartsOf, nameOf, topLevelDeclaration,
+  type Ref, archSort, bodyOf, declarationWord, handleOf, inlineLinkOf, inlineLinksOf, isInlineLink, isTopLevel, isTopLevelNote,
+  linkPartsOf, membersOf, nameOf, roleWord, topLevelDeclaration,
 } from '@/core/arch/read';
 import { roleName, suggestRole } from '@/core/arch/vocabulary';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
@@ -17,32 +17,14 @@ import { ArchMetadataElementMetadata, LinkMetadata, type NodeMetadata } from '@/
 import { isExpressionAVariableNode } from '@/core/utils/validate';
 import type { GlobalModule } from '../types';
 import { interpretArchMetadata, interpretElement, interpretLink } from './interpret';
-import { lookupVisible } from './utils';
-
-// A member name in a group's body: a word of a row directly in the body
-function isGroupMember (node: SyntaxNode, group: ElementDeclarationNode): boolean {
-  const row = node.parentNode;
-  if (!(row instanceof FunctionApplicationNode) || !(group.body instanceof BlockExpressionNode) || row.parentNode !== group.body) return false;
-  return row.callee === node || row.args.includes(node as never);
-}
-
-function isLinkEndpoint (node: SyntaxNode, link: ElementDeclarationNode): boolean {
-  const parts = linkPartsOf(link);
-  return !!parts && (endpointNode(parts.infix.left) === node || endpointNode(parts.infix.right) === node);
-}
+import { lookupVisible, resolveName } from './utils';
 
 // Nodes, groups and notes take `[link: > b]`
 const takesInlineLinks = (declaration: ElementDeclarationNode): boolean => ['node', 'group'].includes(archSort(declaration) ?? '') || isTopLevelNote(declaration);
 
-// A name an arch element or a sticky note answers to. Two lookups: one lookup over both kinds returns whichever was declared first.
-const lookupElementOrNote = (compiler: Compiler, node: SyntaxNode, name: string): NodeSymbol | undefined => lookupVisible(compiler, node.filepath, SymbolKind.Element, name)
-  ?? lookupVisible(compiler, node.filepath, SymbolKind.StickyNote, name);
+const describe = (name: string, role?: string): string => (role ? `${role} ${name}` : name);
 
-function isInlineLinkTarget (node: SyntaxNode, declaration: ElementDeclarationNode): boolean {
-  return inlineLinksOf(declaration).some((attribute) => inlineLinkOf(attribute)?.target === node);
-}
-
-const notDeclared = (code: CompileErrorCode, name: string, at: SyntaxNode) => new CompileError(code, `${name} is not declared anywhere`, at);
+const notDeclared = (code: CompileErrorCode, name: string, at: SyntaxNode, role?: string) => new CompileError(code, `${describe(name, role)} is not declared anywhere`, at);
 
 // A table visible under that name, which a link or a group cannot use
 function tableError (compiler: Compiler, node: SyntaxNode, name: string, rule: string): CompileError | undefined {
@@ -51,11 +33,11 @@ function tableError (compiler: Compiler, node: SyntaxNode, name: string, rule: s
 }
 
 // A link end, written in `Link: a > b` or after the operator of an inline `[link: > b]`
-function linkEndpointReferee (compiler: Compiler, node: SyntaxNode, name: string, at: SyntaxNode): Report<NodeSymbol | undefined> {
-  const found = lookupElementOrNote(compiler, node, name);
+function linkEndpointReferee (compiler: Compiler, ref: Ref, name: string, at: SyntaxNode): Report<NodeSymbol | undefined> {
+  const found = resolveName(compiler, ref.node.filepath, name, ref.role);
   if (found) return new Report(found);
   return new Report(undefined, [
-    tableError(compiler, node, name, 'a link joins elements') ?? notDeclared(CompileErrorCode.UNKNOWN_ENDPOINT, name, at),
+    (ref.role ? undefined : tableError(compiler, ref.node, name, 'a link joins elements')) ?? notDeclared(CompileErrorCode.UNKNOWN_ENDPOINT, name, at, ref.role),
   ]);
 }
 
@@ -63,30 +45,36 @@ function nodeRefereeOfDeclaration (compiler: Compiler, node: SyntaxNode, declara
   const name = nameOf(node);
   if (name === undefined) return new Report(undefined);
 
-  if (takesInlineLinks(declaration) && isInlineLinkTarget(node, declaration)) {
-    return linkEndpointReferee(compiler, node, name, node);
-  }
+  const inline = takesInlineLinks(declaration)
+    ? inlineLinksOf(declaration).map(inlineLinkOf).find((link) => link?.node === node)
+    : undefined;
+  if (inline) return linkEndpointReferee(compiler, inline, name, node);
 
   switch (archSort(declaration)) {
     case 'group': {
       // A name never declared is left out of the group, not reported; a table is reported
-      if (!isGroupMember(node, declaration)) return new Report(undefined);
-      const found = lookupElementOrNote(compiler, node, name);
-      const table = found ? undefined : tableError(compiler, node, name, 'a group lists elements and groups');
+      const ref = membersOf(declaration).refs.find((member) => member.node === node);
+      if (!ref) return new Report(undefined);
+      const found = resolveName(compiler, node.filepath, name, ref.role);
+      const table = found || ref.role ? undefined : tableError(compiler, node, name, 'a group lists elements and groups');
       return new Report(found, table ? [table] : []);
     }
 
-    case 'link':
-      if (!isLinkEndpoint(node, declaration)) return new Report(undefined);
-      return linkEndpointReferee(compiler, node, name, declaration);
+    case 'link': {
+      const parts = linkPartsOf(declaration);
+      const ref = [parts?.from, parts?.to].find((end) => end?.node === node);
+      if (!ref) return new Report(undefined);
+      return linkEndpointReferee(compiler, ref, name, declaration);
+    }
 
     case 'metadata': {
       if (!declaration.name?.containsEq(node)) return new Report(undefined);
-      const found = lookupVisible(compiler, node.filepath, SymbolKind.Element, name);
+      const role = roleWord(declaration.targetKind?.value);
+      const found = resolveName(compiler, node.filepath, name, role, [SymbolKind.Element]);
       return found
         ? new Report(found)
         : new Report(undefined, [
-            notDeclared(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration),
+            notDeclared(CompileErrorCode.UNKNOWN_METADATA_TARGET, name, declaration, role ?? declaration.targetKind?.value),
           ]);
     }
 
@@ -101,7 +89,7 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
 
   if (takesInlineLinks(declaration)) {
     for (const attribute of inlineLinksOf(declaration)) {
-      const target = inlineLinkOf(attribute)?.target;
+      const target = inlineLinkOf(attribute)?.node;
       if (target && isExpressionAVariableNode(target)) errors.push(...compiler.nodeReferee(target).getErrors());
     }
   }
@@ -114,26 +102,15 @@ function bindDeclaration (compiler: Compiler, declaration: ElementDeclarationNod
       break;
 
     case 'group':
-      for (const row of bodyOf(declaration)) {
-        if (!(row instanceof FunctionApplicationNode)) continue;
-        for (const part of [
-          row.callee,
-          ...row.args,
-        ]) {
-          if (isExpressionAVariableNode(part)) errors.push(...compiler.nodeReferee(part).getErrors());
-        }
+      for (const { node } of membersOf(declaration).refs) {
+        if (isExpressionAVariableNode(node)) errors.push(...compiler.nodeReferee(node).getErrors());
       }
       break;
 
     case 'link': {
       const parts = linkPartsOf(declaration);
-      if (!parts) break;
-      for (const side of [
-        parts.infix.left,
-        parts.infix.right,
-      ]) {
-        const node = endpointNode(side);
-        if (isExpressionAVariableNode(node)) errors.push(...compiler.nodeReferee(node).getErrors());
+      for (const end of [parts?.from, parts?.to]) {
+        if (end && isExpressionAVariableNode(end.node)) errors.push(...compiler.nodeReferee(end.node).getErrors());
       }
       break;
     }

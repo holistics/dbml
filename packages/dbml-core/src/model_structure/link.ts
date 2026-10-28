@@ -19,7 +19,7 @@ class Link extends Element {
 
   constructor ({
     fromId, fromType, toId, toType, op, settings, token, database,
-  }: Omit<RawLink, 'from' | 'to'> & { fromId: number; fromType: ArchElementType; toId: number; toType: ArchElementType; database: any }) {
+  }: Omit<RawLink, 'from' | 'fromRole' | 'to' | 'toRole'> & { fromId: number; fromType: ArchElementType; toId: number; toType: ArchElementType; database: any }) {
     super(token as Token);
     this.fromId = fromId;
     this.fromType = fromType;

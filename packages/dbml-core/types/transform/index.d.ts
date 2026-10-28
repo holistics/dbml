@@ -12,7 +12,8 @@ export function renameTable(
 export function renameElement(
   oldHandle: string,
   newName: string,
-  dbmlCode: string
+  dbmlCode: string,
+  role?: string,
 ): string;
 
 export function updateElementSettingEdit(

@@ -14,11 +14,12 @@ export function renameTable (oldName: string | TableIdentifier, newName: string 
   return changes.get(DEFAULT_ENTRY.absolute) ?? dbmlCode;
 }
 
-export function renameElement (oldHandle: string, newName: string, dbmlCode: string): string {
+// `role` picks among elements sharing the handle (`Server api`, `Group api`)
+export function renameElement (oldHandle: string, newName: string, dbmlCode: string, role?: string): string {
   const layout = new MemoryProjectLayout();
   layout.setSource(DEFAULT_ENTRY, dbmlCode);
   const compiler = new Compiler(layout);
-  const changes = compiler.renameElement(DEFAULT_ENTRY, oldHandle, newName);
+  const changes = compiler.renameElement(DEFAULT_ENTRY, oldHandle, newName, role);
   return changes.get(DEFAULT_ENTRY.absolute) ?? dbmlCode;
 }
 

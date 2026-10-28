@@ -31,7 +31,7 @@ describe('[example] a note in an architecture file is a sticky note', () => {
     const { errors, db } = compile("Server api\nNote memo { 'hello' }\nGroup g { api memo }\nLink: api > memo");
     expect(errors).toEqual([]);
     expect(db?.notes.map((n) => [n.name, n.content])).toEqual([['memo', 'hello']]);
-    expect(db?.groups?.[0].children).toEqual(['api', 'memo']);
+    expect(db?.groups?.[0].children).toEqual([{ handle: 'api', role: 'Server' }, { handle: 'memo', role: 'Note' }]);
     expect(linksOf(db)).toEqual([['api', '>', 'memo']]);
   });
 
@@ -53,9 +53,10 @@ describe('[example] a note in an architecture file is a sticky note', () => {
     expect(db?.notes.map((n) => [n.name, n.content])).toEqual([['memo', '']]);
   });
 
-  test('a note and a node cannot share a name, whichever comes first', () => {
-    expect(compile("Server memo\nNote memo { 'x' }").errors).toEqual([CompileErrorCode.DUPLICATE_NAME]);
-    expect(compile("Note memo { 'x' }\nServer memo").errors).toEqual([CompileErrorCode.DUPLICATE_NAME]);
+  test('a note and a node may share a name, two notes may not', () => {
+    expect(compile("Server memo\nNote memo { 'x' }").errors).toEqual([]);
+    expect(compile("Note memo { 'x' }\nServer memo").errors).toEqual([]);
+    expect(compile("Note memo { 'x' }\nNote memo { 'y' }").errors).toEqual([CompileErrorCode.DUPLICATE_NAME]);
   });
 
   test('Metadata does not target a note', () => {
@@ -66,31 +67,31 @@ describe('[example] a note in an architecture file is a sticky note', () => {
     const files = { '/notes.dbml': `${ARCH}Note memo { 'shared' }` };
     const plain = compile("use { Note memo } from './notes'\nServer api\nGroup g { api memo }\nLink: api > memo", files);
     expect(plain.errors).toEqual([]);
-    expect(plain.db?.groups?.[0].children).toEqual(['api', 'memo']);
+    expect(plain.db?.groups?.[0].children).toEqual([{ handle: 'api', role: 'Server' }, { handle: 'memo', role: 'Note' }]);
     expect(linksOf(plain.db)).toEqual([['api', '>', 'memo']]);
 
     const renamed = compile("use { Note memo as m } from './notes'\nServer api\nGroup g { api m }\nLink: api > m", files);
     expect(renamed.errors).toEqual([]);
     expect(renamed.db?.notes.map((n) => n.name)).toEqual(['m']);
-    expect(renamed.db?.groups?.[0].children).toEqual(['api', 'm']);
+    expect(renamed.db?.groups?.[0].children).toEqual([{ handle: 'api', role: 'Server' }, { handle: 'm', role: 'Note' }]);
     expect(linksOf(renamed.db)).toEqual([['api', '>', 'm']]);
   });
 
   test('a color on an inline link written on a note moves it out to a Link', () => {
     const compiler = compilerFor({ '/main.dbml': `${ARCH}Server a\nNote memo [link: - a] { 'x' }` });
     expect(compiler.updateElementSetting(MAIN, { kind: 'Link', from: 'memo', to: 'a' } as never, 'color', '#ff0000'))
-      .toBe(`${ARCH}Server a\nNote memo { 'x' }\n\nLink: memo - a [color: #ff0000]\n`);
+      .toBe(`${ARCH}Server a\nNote memo { 'x' }\n\nLink: Note memo - Server a [color: #ff0000]\n`);
   });
 
-  test('a rename that would take a note\'s name is refused', () => {
+  test('a rename may take a note\'s name, since the roles differ', () => {
     const compiler = compilerFor({ '/main.dbml': `${ARCH}Server api\nNote memo { 'x' }` });
-    expect(compiler.renameElement(MAIN, 'api', 'memo').size).toBe(0);
+    expect(compiler.renameElement(MAIN, 'api', 'memo').get(MAIN.absolute)).toBe(`${ARCH}Server memo\nNote memo { 'x' }`);
   });
 
   test('renaming a note updates the groups and links that name it', () => {
     const compiler = compilerFor({ '/main.dbml': `${ARCH}Server api\nNote memo { 'x' }\nGroup g { api memo }\nLink: api > memo` });
     expect(compiler.renameElement(MAIN, 'memo', 'remark').get(MAIN.absolute))
-      .toBe(`${ARCH}Server api\nNote remark { 'x' }\nGroup g { api remark }\nLink: api > remark`);
+      .toBe(`${ARCH}Server api\nNote remark { 'x' }\nGroup g { api\n  Note remark\n}\nLink: api > Note remark`);
   });
 
   test('a note in a DBML file is still an ordinary sticky note', () => {

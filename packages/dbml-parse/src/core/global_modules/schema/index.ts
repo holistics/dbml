@@ -1,6 +1,8 @@
 import type Compiler from '@/compiler/index';
 import { DEFAULT_SCHEMA_NAME } from '@/constants';
 import { schemaMembership } from '@/compiler/queries/files/usableMembers';
+import { roleOf } from '@/core/arch/read';
+import { isAliasSymbol } from '../arch/utils';
 import { CompileError, CompileErrorCode } from '@/core/types/errors';
 import { type Filepath } from '@/core/types/filepath';
 import { PASS_THROUGH, type PassThrough, UNHANDLED } from '@/core/types/module';
@@ -114,14 +116,16 @@ export const schemaModule: GlobalModule = {
     });
 
     // 6. Duplicate checking
-    // Links and groups in an architecture file name elements and notes alike, so a note can't reuse an element's name
+    // In an architecture file elements, groups and notes are checked together: by role and name, and an alias against every name
     const isArch = compiler.parsedFileKind(symbol.filepath) === 'arch';
-    const keyKind = (member: NodeSymbol) => (isArch && member.isKind(SymbolKind.StickyNote) ? SymbolKind.Element : member.kind);
+    const isArchMember = (member: NodeSymbol) => isArch && (member.isKind(SymbolKind.Element) || member.isKind(SymbolKind.StickyNote));
+    const keyKind = (member: NodeSymbol) => (isArchMember(member) ? SymbolKind.Element : member.kind);
     const seen = new Map<string, NodeSymbol>();
+    const archSeen = new Map<string, ArchIdentity[]>();
     for (const member of uniqueExpandedMembers) {
       const key = `${keyKind(member)}:${member.name}`;
-      const existing = seen.get(key);
-      if (existing) {
+      const clashes = isArchMember(member) ? archClash(archSeen, member) : seen.has(key);
+      if (clashes) {
         // Schemas with the same name merge (e.g. two schema aliases to the same name)
         if (member.isKind(SymbolKind.Schema)) continue;
         const kind = keyKind(member);
@@ -142,6 +146,27 @@ export const schemaModule: GlobalModule = {
     return new Report(uniqueExpandedMembers, errors);
   },
 };
+
+interface ArchIdentity {
+  role: string | undefined;
+  isAlias: boolean;
+}
+
+// Two architecture identifiers clash on the same name when they have the same role, or when either is an alias.
+// Records the member when it does not clash.
+function archClash (seen: Map<string, ArchIdentity[]>, member: NodeSymbol): boolean {
+  const original = member.originalSymbol.declaration;
+  const declaration = original instanceof ElementDeclarationNode ? original : undefined;
+  const identity: ArchIdentity = {
+    role: declaration && roleOf(declaration),
+    isAlias: isAliasSymbol(member),
+  };
+  const name = member.name ?? '';
+  const others = seen.get(name) ?? [];
+  if (others.some((other) => other.role === identity.role || other.isAlias || identity.isAlias)) return true;
+  seen.set(name, [...others, identity]);
+  return false;
+}
 
 function getDuplicateSchemaMemberError (kind: SymbolKind, name: string, schemaLabel: string, errorNode: SyntaxNode): CompileError {
   switch (kind) {

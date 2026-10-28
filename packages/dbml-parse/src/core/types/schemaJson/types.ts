@@ -94,7 +94,8 @@ export interface Database {
 export type ArchSettingValue = string | number | boolean;
 export type ArchSettings = Record<string, ArchSettingValue>;
 
-// `Server "API 1" as api1 { ... }`. The handle (`alias`, or `name` when there is none) is unique.
+// `Server "API 1" as api1 { ... }`. The handle (`alias`, or `name` when there is none) is unique per role;
+// an alias is unique among every handle.
 export interface Node {
   name: string;
   alias: string | null;
@@ -115,8 +116,8 @@ export interface Node {
 export interface Group {
   name: string;
   alias: string | null;
-  // Handles of the members this group owns, in written order
-  children: string[];
+  // The members this group owns, in written order: handle and role (`Group` for a group, `Note` for a sticky note)
+  children: ArchRef[];
   settings: ArchSettings;
   note: {
     value: string;
@@ -127,10 +128,18 @@ export interface Group {
 
 export type LinkOp = '>' | '<' | '<>' | '-';
 
+// An element, group or sticky note as a link or a group names it: a handle can repeat across roles
+export interface ArchRef {
+  handle: string;
+  role: string;
+}
+
 export interface Link {
-  // Handles of the two endpoints
+  // Handles and roles of the two endpoints
   from: string;
+  fromRole: string;
   to: string;
+  toRole: string;
   op: LinkOp;
   settings: ArchSettings;
   token: TokenPosition;

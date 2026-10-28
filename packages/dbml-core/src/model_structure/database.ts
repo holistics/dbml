@@ -119,18 +119,20 @@ class Database extends Element {
     nodes.forEach((node) => this.nodes.push(new Node({ ...node, database: this })));
     groups.forEach((group) => this.groups.push(new Group({ ...group, database: this })));
 
-    // Nodes and groups by handle (alias, else name), notes by name
-    const byHandle = new Map<string, { type: ArchElementType; element: Node | Group | StickyNote }>();
-    const add = (handle: string, type: ArchElementType, element: Node | Group | StickyNote) => {
-      if (!byHandle.has(handle)) byHandle.set(handle, { type, element });
+    // By role and handle (alias, else name): a handle can repeat across roles. A group's role is `Group`, a note's `Note`.
+    const keyOf = (handle: string, role: string) => `${role}\u0000${handle}`;
+    const byKey = new Map<string, { type: ArchElementType; element: Node | Group | StickyNote }>();
+    const add = (handle: string, role: string, type: ArchElementType, element: Node | Group | StickyNote) => {
+      const key = keyOf(handle, role);
+      if (!byKey.has(key)) byKey.set(key, { type, element });
     };
-    this.nodes.forEach((node) => add(node.alias ?? node.name, 'node', node));
-    this.groups.forEach((group) => add(group.alias ?? group.name, 'group', group));
-    this.notes.forEach((note) => add(note.name, 'note', note));
+    this.nodes.forEach((node) => add(node.alias ?? node.name, node.role, 'node', node));
+    this.groups.forEach((group) => add(group.alias ?? group.name, 'Group', 'group', group));
+    this.notes.forEach((note) => add(note.name, 'Note', 'note', note));
 
     this.groups.forEach((group) => {
-      group.children.forEach((handle) => {
-        const child = byHandle.get(handle);
+      group.children.forEach(({ handle, role }) => {
+        const child = byKey.get(keyOf(handle, role));
         if (!child) return;
         group.childIds.push(child.element.id);
         group.childTypes.push(child.type);
@@ -138,9 +140,11 @@ class Database extends Element {
       });
     });
 
-    links.forEach(({ from, to, ...link }) => {
-      const fromElement = byHandle.get(from);
-      const toElement = byHandle.get(to);
+    links.forEach(({
+      from, fromRole, to, toRole, ...link
+    }) => {
+      const fromElement = byKey.get(keyOf(from, fromRole));
+      const toElement = byKey.get(keyOf(to, toRole));
       if (!fromElement || !toElement) return;
       this.links.push(new Link({
         ...link,

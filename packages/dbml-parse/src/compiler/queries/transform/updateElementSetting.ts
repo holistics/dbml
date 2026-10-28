@@ -11,9 +11,12 @@ import {
   lookupElementSymbol,
   formatEndpoint, formatSetting, findRefDefinition, findDepDefinition,
 } from './utils';
-import { findArchElement, findArchLink, removeAttributeEdit } from './utils/arch';
-import { addDoubleQuoteIfNeeded } from '@/compiler/queries/utils';
-import { bodyOf, handleOf, linkPartsOf } from '@/core/arch/read';
+import {
+  findArchElement, findArchLink, fullName, removeAttributeEdit,
+} from './utils/arch';
+import { localHandle, roleOfSymbol } from '@/core/global_modules/arch/utils';
+import { LinkMetadata } from '@/core/types/symbol/metadata';
+import { bodyOf, handleOf, linkPartsOf, roleOf } from '@/core/arch/read';
 import { FunctionApplicationNode, type PrefixExpressionNode, type SyntaxNode } from '@/core/types/nodes';
 
 export function updateElementSettingEdit (
@@ -158,7 +161,7 @@ function updateRefSettingEdit (compiler: Compiler, filepath: Filepath, target: R
 }
 
 function updateArchElementSettingEdit (compiler: Compiler, filepath: Filepath, target: ArchElementIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
-  const declaration = findArchElement(compiler, filepath, target.name);
+  const declaration = findArchElement(compiler, filepath, target.name, target.role);
   if (!declaration) return [];
 
   const edit = updateSettingEdit(declaration, settingName, value, compiler.getSource(filepath) ?? '');
@@ -171,15 +174,19 @@ function updateArchElementSettingEdit (compiler: Compiler, filepath: Filepath, t
 
 function updateArchLinkSettingEdit (compiler: Compiler, filepath: Filepath, target: ArchLinkIdentifier, settingName: string, value: string | null | undefined): TextEdit[] {
   const source = compiler.getSource(filepath) ?? '';
-  const definition = findArchLink(compiler, filepath, target.from, target.to);
+  const definition = findArchLink(compiler, filepath, target.from, target.to, target.fromRole, target.toRole);
   if (!definition) return [];
 
   // An inline link has no list of its own, so it moves out to a `Link:` that can carry the setting, as an inline ref does
   if (definition.kind === 'inline') {
-    const written = (definition.attribute.value as PrefixExpressionNode | undefined)?.expression;
-    if (value === null || !definition.element.attributeList || !written) return [];
+    const handle = handleOf(definition.element);
+    const role = roleOf(definition.element);
+    const target = new LinkMetadata(definition.attribute).endpoints(compiler)[1];
+    const targetHandle = target && localHandle(compiler, target, filepath);
+    const targetRole = target && roleOfSymbol(target);
+    if (value === null || !definition.element.attributeList || handle === undefined || !role || targetHandle === undefined || !targetRole) return [];
     const setting = formatSetting(settingName, value);
-    const line = `Link: ${addDoubleQuoteIfNeeded(handleOf(definition.element) ?? '')} ${definition.op} ${source.substring(written.start, written.end)}`;
+    const line = `Link: ${fullName(handle, role)} ${definition.op} ${fullName(targetHandle, targetRole)}`;
     return [
       removeAttributeEdit(definition.element.attributeList, definition.attribute, source),
       { start: source.length, end: source.length, newText: `\n\n${setting ? `${line} [${setting}]` : line}\n` },
