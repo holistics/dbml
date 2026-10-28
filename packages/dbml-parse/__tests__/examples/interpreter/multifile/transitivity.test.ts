@@ -105,7 +105,9 @@ Table t2 { id int [pk] }
 
 describe('[example] same real name via 2 paths deduplicates', () => {
   const { compiler } = setupCompiler({
-    '/base.dbml': 'Table users { id int [pk]\n  email varchar\n}',
+    '/base.dbml': `Table users { id int [pk]
+  email varchar
+}`,
     '/alt.dbml': "reuse { table users } from './base.dbml'",
     '/main.dbml': `
 use { table users } from './base.dbml'
@@ -130,7 +132,10 @@ use { table users } from './alt.dbml'
 
 describe('[example] same symbol via 2 paths, refs to both names, duplicate ref error', () => {
   const { compiler } = setupCompiler({
-    '/base.dbml': 'Table users { id int [pk] }\nTable orders { id int [pk]\n  user_id int\n}',
+    '/base.dbml': `Table users { id int [pk] }
+Table orders { id int [pk]
+  user_id int
+}`,
     '/alt.dbml': "reuse { table users } from './base.dbml'",
     '/main.dbml': `
 use { table users } from './base.dbml'

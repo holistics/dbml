@@ -3,10 +3,11 @@ import type Compiler from '@/compiler';
 import { UNHANDLED } from '@/core/types/module';
 import { ProgramSymbol } from '@/core/types/symbol';
 import { RefMetadata } from '@/core/types/symbol/metadata';
-import { fp, setupCompiler } from '../interpreter/multifile/utils';
+import { Filepath } from '@/index';
+import { setupCompiler } from '../interpreter/multifile/utils';
 
-function visible (compiler: Compiler, path: string) {
-  const ast = compiler.parseFile(fp(path)).getValue().ast;
+function getVisibleRefs (compiler: Compiler, path: string) {
+  const ast = compiler.parseFile(Filepath.from(path)).getValue().ast;
   const program = compiler.nodeSymbol(ast).getFiltered(UNHANDLED) as ProgramSymbol;
   return compiler.namedRefsIn(program).map((meta) => ({ name: meta.name(compiler), filepath: meta.declaration.filepath, meta }));
 }
@@ -26,8 +27,8 @@ Ref: posts.id - users.id
     test('lists named local refs only', () => {
       const { compiler } = setupCompiler({ '/orders.dbml': ORDERS });
 
-      const refs = visible(compiler, '/orders.dbml');
-      expect(refs.map((s) => s.name)).toEqual(['user_posts']);
+      const refs = getVisibleRefs(compiler, '/orders.dbml');
+      expect(refs.map((entry) => entry.name)).toEqual(['user_posts']);
       expect(refs[0].meta).toBeInstanceOf(RefMetadata);
     });
 
@@ -37,9 +38,9 @@ Ref: posts.id - users.id
         '/reporting.dbml': "use * from './orders.dbml'",
       });
 
-      const refs = visible(compiler, '/reporting.dbml');
-      expect(refs.map((s) => s.name)).toEqual(['user_posts']);
-      expect(refs[0].filepath.equals(fp('/orders.dbml'))).toBe(true);
+      const refs = getVisibleRefs(compiler, '/reporting.dbml');
+      expect(refs.map((entry) => entry.name)).toEqual(['user_posts']);
+      expect(refs[0].filepath.equals(Filepath.from('/orders.dbml'))).toBe(true);
     });
 
     test('does not list a ref whose endpoint table is not visible', () => {
@@ -48,19 +49,24 @@ Ref: posts.id - users.id
         '/reporting.dbml': "use { table users } from './orders.dbml'",
       });
 
-      expect(visible(compiler, '/reporting.dbml')).toEqual([]);
+      expect(getVisibleRefs(compiler, '/reporting.dbml')).toEqual([]);
     });
 
     test('lists every same-named ref from different files', () => {
       const { compiler } = setupCompiler({
-        '/a.dbml': 'Table a1 { id int }\nTable a2 { a1_id int }\nRef r: a2.a1_id > a1.id',
-        '/b.dbml': 'Table b1 { id int }\nTable b2 { b1_id int }\nRef r: b2.b1_id > b1.id',
-        '/main.dbml': "use * from './a.dbml'\nuse * from './b.dbml'",
+        '/a.dbml': `Table a1 { id int }
+Table a2 { a1_id int }
+Ref r: a2.a1_id > a1.id`,
+        '/b.dbml': `Table b1 { id int }
+Table b2 { b1_id int }
+Ref r: b2.b1_id > b1.id`,
+        '/main.dbml': `use * from './a.dbml'
+use * from './b.dbml'`,
       });
 
-      const refs = visible(compiler, '/main.dbml');
-      expect(refs.map((s) => s.name)).toEqual(['r', 'r']);
-      expect(new Set(refs.map((s) => s.filepath.absolute)).size).toBe(2);
+      const refs = getVisibleRefs(compiler, '/main.dbml');
+      expect(refs.map((entry) => entry.name)).toEqual(['r', 'r']);
+      expect(new Set(refs.map((entry) => entry.filepath.absolute)).size).toBe(2);
     });
   });
 });

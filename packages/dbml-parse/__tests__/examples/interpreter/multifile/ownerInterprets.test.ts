@@ -1,17 +1,24 @@
 import { describe, expect, test } from 'vitest';
-import { CompileErrorCode } from '@/index';
-import { fp, setupCompiler } from './utils';
+import { CompileErrorCode, Filepath } from '@/index';
+import { setupCompiler } from './utils';
 
 // Each declaration is interpreted by its Owner. A Ref/Dep/Records block with several Owner tables is emitted once, by its Primary Owner.
 describe('[example] multifile interpreter - Owner interprets', () => {
   test('a cross-file Ref whose Primary Owner is imported is emitted exactly once', () => {
     const { compiler } = setupCompiler({
-      '/posts.dbml': 'Table posts {\n  id int [pk]\n  user_id int\n}',
-      '/users.dbml': 'Table users {\n  id int [pk]\n}',
-      '/main.dbml': "use * from './posts.dbml'\nuse * from './users.dbml'\nRef r: posts.user_id > users.id",
+      '/posts.dbml': `Table posts {
+  id int [pk]
+  user_id int
+}`,
+      '/users.dbml': `Table users {
+  id int [pk]
+}`,
+      '/main.dbml': `use * from './posts.dbml'
+use * from './users.dbml'
+Ref r: posts.user_id > users.id`,
     });
 
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(Filepath.from('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
     const db = result.getValue()! as any;
     expect(db.refs).toHaveLength(1);
@@ -20,11 +27,18 @@ describe('[example] multifile interpreter - Owner interprets', () => {
 
   test('a Ref whose left table is visible but right table is not is not emitted and reports nothing', () => {
     const { compiler } = setupCompiler({
-      '/orders.dbml': 'Table users {\n  id int [pk]\n}\nTable posts {\n  id int [pk]\n  user_id int\n}\nRef r: posts.user_id > users.id',
-      '/main.dbml': "use { table posts } from './orders.dbml'",
+      '/orders.dbml': `Table users {
+  id int [pk]
+}
+Table posts {
+  id int [pk]
+  user_id int
+}
+Ref r: posts.user_id > users.id`,
+      '/main.dbml': `use { table posts } from './orders.dbml'`,
     });
 
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(Filepath.from('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
     expect((result.getValue()! as any).refs).toHaveLength(0);
   });
@@ -46,7 +60,7 @@ Table users {
 Ref: posts.user_id > users.id`,
     });
 
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(Filepath.from('/main.dbml'));
     expect(result.getErrors()).toHaveLength(0);
     const db = result.getValue()! as any;
     expect(db.refs).toHaveLength(1);
@@ -55,13 +69,23 @@ Ref: posts.user_id > users.id`,
 
   test('Records for one table in two applying files report a duplicate on both and emit none', () => {
     const { compiler } = setupCompiler({
-      '/base.dbml': 'Table users {\n  id int [pk]\n}',
-      '/r1.dbml': "use * from './base.dbml'\nrecords users(id) {\n  1\n}",
-      '/r2.dbml': "use * from './base.dbml'\nrecords users(id) {\n  2\n}",
-      '/main.dbml': "use * from './base.dbml'\nuse * from './r1.dbml'\nuse * from './r2.dbml'",
+      '/base.dbml': `Table users {
+  id int [pk]
+}`,
+      '/r1.dbml': `use * from './base.dbml'
+records users(id) {
+  1
+}`,
+      '/r2.dbml': `use * from './base.dbml'
+records users(id) {
+  2
+}`,
+      '/main.dbml': `use * from './base.dbml'
+use * from './r1.dbml'
+use * from './r2.dbml'`,
     });
 
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(Filepath.from('/main.dbml'));
     const dups = result.getErrors().filter((e) => e.code === CompileErrorCode.DUPLICATE_RECORDS_FOR_TABLE);
     expect(dups).toHaveLength(2);
     expect(new Set(dups.map((e) => e.filepath.absolute)).size).toBe(2);
@@ -70,17 +94,27 @@ Ref: posts.user_id > users.id`,
 
   test('Metadata Ref targeting a Ref that does not apply reports an unknown target and attaches nothing', () => {
     const { compiler } = setupCompiler({
-      '/orders.dbml': 'Table users {\n  id int [pk]\n}\nTable posts {\n  id int [pk]\n  user_id int\n}\nRef r: posts.user_id > users.id',
-      '/main.dbml': "use { table posts } from './orders.dbml'\nMetadata Ref r {\n  owner: 'x'\n}",
+      '/orders.dbml': `Table users {
+  id int [pk]
+}
+Table posts {
+  id int [pk]
+  user_id int
+}
+Ref r: posts.user_id > users.id`,
+      '/main.dbml': `use { table posts } from './orders.dbml'
+Metadata Ref r {
+  owner: 'x'
+}`,
     });
 
-    const result = compiler.interpretFile(fp('/main.dbml'));
+    const result = compiler.interpretFile(Filepath.from('/main.dbml'));
     expect(result.getErrors().map((e) => e.diagnostic)).toContain('Cannot find metadata target element: `Ref r`');
-    expect(compiler.parse.rawDb(fp('/main.dbml'))?.refs ?? []).toHaveLength(0);
+    expect(compiler.parse.rawDb(Filepath.from('/main.dbml'))?.refs ?? []).toHaveLength(0);
 
     // The defining file is unaffected
-    const orders = compiler.interpretFile(fp('/orders.dbml'));
+    const orders = compiler.interpretFile(Filepath.from('/orders.dbml'));
     expect(orders.getErrors()).toHaveLength(0);
-    expect((orders.getValue()! as any).refs.find((r: any) => r.name === 'r')?.metadata ?? {}).toEqual({});
+    expect((orders.getValue()! as any).refs.find((ref: any) => ref.name === 'r')?.metadata ?? {}).toEqual({});
   });
 });
